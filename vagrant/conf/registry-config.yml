@@ -1,0 +1,13 @@
+version: 0.1
+loglevel: debug
+storage:
+  filesystem:
+    rootdirectory: /var/lib/docker-registry
+http:
+  addr: 0.0.0.0:5000
+auth:
+  token:
+    realm: http://portus.test.lan:5000/v2/token
+    service: registry.test.lan
+    issuer: portus.test.lan
+    rootcertbundle: /vagrant/conf/ca_bundle/ca.crt

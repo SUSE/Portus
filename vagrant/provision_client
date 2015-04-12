@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Docker runtime deps (that's required because we are not going to install our package)
+zypper -n in apparmor-parser bridge-utils e2fsprogs git-core libsqlite3-0 perl-Error
+
+# Download docker 1.6.0 experimental binary, it's required to play with
+# API v2 of the registry
+curl https://test.docker.com/builds/Linux/x86_64/docker-1.6.0-rc5 -o /usr/bin/docker
+chmod 755 /usr/bin/docker
+
+# still required because we are not using our package
+cat <<EOF > /usr/lib/systemd/system/docker.service
+[Unit]
+Description=Docker
+Requires=network.target
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker -d --insecure-registry registry.test.lan:5000
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# still required because we are not using our package
+groupadd docker
+usermod -aG docker vagrant
+
+systemctl enable docker
+systemctl start docker
+
+docker pull busybox
+docker pull jess/mitmproxy
