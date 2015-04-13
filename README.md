@@ -7,9 +7,21 @@ Docker registry.
 
 ## Specs
 
+
+### Authentication
+
 Portus implements the [token based authentication system](https://github.com/docker/distribution/blob/master/docs/spec/auth/token.md)
 described by the new ersion of the Docker registry.
 
+### Notifications
+
+The registry can be configured to notify a 3rd party about the events that took
+place (eg: push, pull,...).
+
+This is described by [this](https://github.com/docker/distribution/blob/master/docs/notifications.md).
+
+Portus can takes advantage of this feature to be aware of all the Docker images
+pushed to the registry.
 
 ## Development environment
 

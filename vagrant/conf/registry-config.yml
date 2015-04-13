@@ -11,3 +11,10 @@ auth:
     service: registry.test.lan
     issuer: portus.test.lan
     rootcertbundle: /vagrant/conf/ca_bundle/ca.crt
+notifications:
+  endpoints:
+    - name: portus
+      url: http://portus.test.lan:5000/event
+      timeout: 500ms
+      threshold: 5
+      backoff: 1s
