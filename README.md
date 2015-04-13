@@ -13,6 +13,9 @@ Docker registry.
 Portus implements the [token based authentication system](https://github.com/docker/distribution/blob/master/docs/spec/auth/token.md)
 described by the new ersion of the Docker registry.
 
+[This](https://gitlab.suse.de/docker/portus/wikis/authentication-process) page
+contains more details about the ongoing efforts to implement authentication.
+
 ### Notifications
 
 The registry can be configured to notify a 3rd party about the events that took
