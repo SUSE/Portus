@@ -36,6 +36,19 @@ three nodes:
 All the nodes are based on openSUSE 13.2 x86_64. VirtualBox is the chosen
 provisioner.
 
+
+### Sinatra POF
+
+There's a really stupid sinatra app that can be used to fake the new UI.
+
+To play with it:
+
+```
+vagrant ssh portus
+sudo gem install sinatra shotgun
+shotgun.ruby2.1 -p 5000 /vagrant/app.rb
+```
+
 ### Intercepting all the traffic sent to the registry
 
 On the client node execute:
