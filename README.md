@@ -38,6 +38,14 @@ three nodes:
 All the nodes are based on openSUSE 13.2 x86_64. VirtualBox is the chosen
 provisioner.
 
+Port 5000 of the `portus` node is forwarded to port 5000 of the machine running
+the hypervisor. This makes possible to access Portus' web interface from the
+development laptop.
+
+At the same time all the Portus' checkout is shared inside of all the boxes
+under the `/vagrant` path. That makes possible to develop portus on your laptop
+and have the changes automatically sent to the `portus` box.
+
 ### Intercepting all the traffic sent to the registry
 
 On the client node execute:

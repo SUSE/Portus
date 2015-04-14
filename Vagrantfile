@@ -32,6 +32,7 @@ EOS
     node.vm.box_check_update = true
     node.vm.hostname = 'portus.test.lan'
     config.vm.network :private_network, ip: '192.168.1.3', virtualbox__intnet: true
+    config.vm.network 'forwarded_port', guest: 5000, host: 5000
 
     config.vm.provision 'shell',
       path: 'vagrant/setup_private_network',
@@ -44,6 +45,7 @@ zypper -n in gcc \
   git-core \
   libstdc++-devel \
   libxml2-devel \
+  libxslt-devel \
   make \
   nodejs \
   patch \
@@ -51,7 +53,12 @@ zypper -n in gcc \
   rubygem-bundler \
   sqlite3-devel \
   zlib-devel
-cd /vagrant && sudo -u vagrant bundler install
+cd /vagrant
+sudo -u vagrant bundle config build.nokogiri --use-system-libraries
+sudo -u vagrant bundle install
+sudo -u vagrant bundle exec rake db:create
+sudo -u vagrant bundle exec rake db:migrate
+sudo -u vagrant bundle exec rails server -b 0.0.0.0 -p 5000
 EOS
   end
 
