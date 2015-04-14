@@ -17,7 +17,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/docker -d --insecure-registry registry.test.lan:5000
+ExecStart=/usr/bin/docker -d --insecure-registry registry.test.lan
 
 [Install]
 WantedBy=multi-user.target
@@ -31,4 +31,3 @@ systemctl enable docker
 systemctl start docker
 
 docker pull busybox
-docker pull jess/mitmproxy
