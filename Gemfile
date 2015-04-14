@@ -17,6 +17,8 @@ gem 'activerecord-session_store'
 # TODO: wait for sprockets 3.0 support
 # https://github.com/metaskills/less-rails/issues/100
 gem 'sprockets', '~> 2.12.3'
+gem 'jwt'
+gem 'base32'
 
 group :development do
   gem 'quiet_assets'
