@@ -38,6 +38,19 @@ EOS
       args: '192.168.1.3'
     node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
+    node.vm.provision 'shell', inline: <<EOS
+zypper -n in gcc /
+  gcc-c++ /
+  libstdc++-devel /
+  libxml2-devel /
+  make /
+  patch /
+  ruby2.1-devel /
+  rubygem-bundler /
+  sqlite3-devel /
+  zlib-devel
+cd /vagrant && bundler install
+EOS
   end
 
   config.vm.define :client do |node|
