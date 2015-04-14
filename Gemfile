@@ -19,6 +19,7 @@ gem 'activerecord-session_store'
 gem 'sprockets', '~> 2.12.3'
 gem 'jwt'
 gem 'base32'
+gem 'active_model_serializers'
 
 group :development do
   gem 'quiet_assets'
