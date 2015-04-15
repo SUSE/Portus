@@ -23,17 +23,17 @@ describe '/v2/token' do
     context 'as invalid user' do
 
       it 'denies access when the password is wrong' do
-        get v2_token_url, { service: 'test', account: 'account', scope: 'scope' }, invalid_auth_header
+        get v2_token_url, { service: 'test', account: 'account', scope: 'repo:foo:push' }, invalid_auth_header
         expect(response.status).to eq 401
       end
 
       it 'denies access when the user does not exist' do
-        get v2_token_url, { service: 'test', account: 'account', scope: 'scope' }, nonexistent_auth_header
+        get v2_token_url, { service: 'test', account: 'account', scope: 'repo:foo:push' }, nonexistent_auth_header
         expect(response.status).to eq 401
       end
 
       it 'denies access when basic auth credentials are not defined' do
-        get v2_token_url, { service: 'test', account: 'account', scope: 'scope' }
+        get v2_token_url, { service: 'test', account: 'account', scope: 'repo:foo:push' }
         expect(response.status).to eq 401
       end
 
@@ -42,7 +42,7 @@ describe '/v2/token' do
     context 'as valid user' do
 
       it 'performs a request with given data' do
-        get v2_token_url, { service: 'test', account: 'account', scope: 'scope' }, valid_auth_header
+        get v2_token_url, { service: 'test', account: 'account', scope: 'repo:foo:push' }, valid_auth_header
         expect(response.status).to eq 200
       end
 
@@ -56,6 +56,25 @@ describe '/v2/token' do
         expect(payload['access'][0]['name']).to eq 'foo'
         expect(payload['access'][0]['actions'][0]).to eq 'push'
       end
+
+      context 'no scope requested' do
+
+        before do
+          get v2_token_url, { service: 'test', account: 'account' }, valid_auth_header
+        end
+
+        it 'respond with 200' do
+          expect(response.status).to eq 200
+        end
+
+        it 'decoded payload should not contain access key' do
+          token = JSON.parse(response.body)['token']
+          payload = JWT.decode(token, nil, false, { leeway: 2 })[0]
+          expect(payload).to_not have_key('access')
+        end
+
+      end
+
     end
 
   end

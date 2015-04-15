@@ -18,7 +18,7 @@ class JwtToken < OpenStruct
       hash[:nbf]     = not_before
       hash[:iat]     = issued_at
       hash[:jti]     = jwt_id
-      hash[:access]  = authorized_access
+      hash[:access]  = authorized_access if scope
     end
   end
 
@@ -56,7 +56,7 @@ class JwtToken < OpenStruct
     Hash.new.tap do |hash|
       hash[:type]    = resource_type
       hash[:name]    = resource_name
-      hash[:actions] = [ resource_action ]
+      hash[:actions] = resource_action.split(',')
     end
   end
 

@@ -8,6 +8,7 @@ class Api::V2::TokensController < Api::BaseController
         service: params[:service],
         scope: params[:scope]
     )
+    logger.tagged('jwt_token', 'claim') { logger.debug @token.claim }
     respond_with(@token)
   end
 
