@@ -10,7 +10,7 @@ auth:
     realm: http://portus.test.lan/v2/token
     service: registry.test.lan
     issuer: portus.test.lan
-    rootcertbundle: /vagrant/vagrant/conf/ca_bundle/ca.crt
+    rootcertbundle: /vagrant/vagrant/conf/ca_bundle/server.crt
 notifications:
   endpoints:
     - name: portus
