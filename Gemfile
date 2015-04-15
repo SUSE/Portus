@@ -20,6 +20,7 @@ gem 'sprockets', '~> 2.12.3'
 gem 'jwt'
 gem 'base32'
 gem 'active_model_serializers'
+gem 'devise'
 
 group :development do
   gem 'quiet_assets'

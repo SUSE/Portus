@@ -6,3 +6,4 @@
 /tmp
 /.vagrant
 /coverage
+.ruby-version
