@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus)
+[![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus)
+
 Portus: a user interface for the [next generation of Docker registry](https://github.com/docker/distribution).
 
 Portus targets [version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
