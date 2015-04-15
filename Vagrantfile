@@ -14,6 +14,7 @@ Vagrant.configure('2') do |config|
     node.vm.box_check_update = true
     node.vm.hostname = 'registry.test.lan'
     config.vm.network :private_network, ip: '192.168.1.2', virtualbox__intnet: true
+    config.vm.network :forwarded_port, host: 44242, guest: 80
 
     config.vm.provision 'shell',
       path: 'vagrant/setup_private_network',

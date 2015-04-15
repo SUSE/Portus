@@ -14,7 +14,7 @@ auth:
 notifications:
   endpoints:
     - name: portus
-      url: http://portus.test.lan/event
+      url: http://portus.test.lan/v2/webhooks/events
       timeout: 500ms
       threshold: 5
       backoff: 1s
