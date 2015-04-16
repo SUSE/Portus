@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }
   root 'application#index'
 
   namespace :v2, module: 'api/v2', defaults: { format: :json } do
@@ -9,5 +9,7 @@ Rails.application.routes.draw do
       resources :events, only: [ :create ]
     end
   end
+
+  resource :dashboard, only: [ :show ]
 
 end

@@ -21,6 +21,7 @@ gem 'jwt'
 gem 'base32'
 gem 'active_model_serializers'
 gem 'devise'
+gem 'jquery-turbolinks'
 
 group :development do
   gem 'quiet_assets'
@@ -37,10 +38,10 @@ group :development, :test do
   gem 'hirb'
   gem 'wirb'
   gem 'wirble'
-  gem 'rubocop', '~> 0.27.1', require: false
   gem 'sqlite3'
   gem 'factory_girl_rails'
   gem 'ffaker'
+  gem 'rubocop', '~> 0.27.1', require: false
 end
 
 group :test do

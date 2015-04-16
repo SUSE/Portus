@@ -1,0 +1,208 @@
+inherit_from: .rubocop_todo.yml
+
+# Align the elements of an array literal if they span more than one line.
+Style/AlignArray:
+  Enabled: true
+
+# Check that whens are aligned relative to case keyword
+Style/AlignHash:
+  Enabled: true
+
+# Do not indent whens relative to their case keywords
+Style/CaseIndentation:
+  Enabled: true
+
+# Use guard clauses to return early from methods instead of wrapping whole body in if/end
+Style/GuardClause:
+  Enabled: false
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+
+# Use of 'self' where it is not needed to qualify a member
+Style/RedundantSelf:
+  Enabled: true
+
+# Things deprecated in current ruby API
+Lint/DeprecatedClassMethods:
+  Enabled: true
+
+# Do not compare with nil. Use .nil? instead
+Style/NilComparison:
+  Enabled: true
+
+# Use one empty line between method definitions
+Style/EmptyLineBetweenDefs:
+  Enabled: true
+
+# There should be only one empty line in designated place
+Style/EmptyLines:
+  Enabled: false
+
+# Keep a blank line before and after private.
+Style/EmptyLinesAroundAccessModifier:
+  Enabled: true
+
+# Do not insert empty line after class definition and before closing class
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+# Use hash literal {} instead of Hash.new
+Style/EmptyLiteral:
+  Enabled: true
+
+# Prefer `each` over `for i`
+Style/For:
+  Enabled: true
+
+# Wrap your assignment in condition if you mean it, otherwise it is most likely equality check
+Lint/AssignmentInCondition:
+  Enabled: true
+
+# Align blocks of code properly
+Lint/BlockAlignment:
+  Enabled: true
+
+# Do not use literal in conditions. We have it enabled for now
+Lint/LiteralInCondition:
+  Enabled: true
+
+# Prefer `Kernel#loop -> break` over `begin -> while`
+Lint/Loop:
+  Enabled: true
+
+# do not put space before arguments when they are in parentheses
+Lint/ParenthesesAsGroupedExpression:
+  Enabled: true
+
+# Do not rescue Exceptions class itself
+Lint/RescueException:
+  Enabled: true
+
+# do not shadow local variables in blocks, choose other name
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
+
+# use _ or variable_name to explicitly mark variable as unused
+Lint/UnusedBlockArgument:
+  Enabled: true
+
+# use _ or _argument_name to explicitly mark argument as unused
+Lint/UnusedMethodArgument:
+  Enabled: true
+
+# avoid useless assignment
+Lint/UselessAssignment:
+  Enabled: true
+
+# Do not use variables in void context
+Lint/Void:
+  Enabled: true
+
+# Prefer single quotes over doubled when interpolation is not needed
+Style/StringLiterals:
+  Enabled: true
+
+# Checks for ambiguous regexp literals in the first argument of a method invocation without parentheses
+# do_something /pattern/i => do_something(/pattern/i)
+Lint/AmbiguousRegexpLiteral:
+  Enabled: true
+
+# Checks for calls to debugger or pry
+Lint/Debugger:
+  Enabled: true
+
+# Checks whether the end keywords are aligned properly
+Lint/EndAlignment:
+  Enabled: true
+
+# Checks for *rescue* blocks with no body
+Lint/HandleExceptions:
+  Enabled: true
+
+# Checks for string conversion in string interpolation which is redundant
+Lint/StringConversionInInterpolation:
+  Enabled: true
+
+# Enforces spaces between hash contents and braces; has --auto-correct
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: true
+
+# Enforces spaces between block contents and braces; has --auto-correct
+Style/SpaceInsideBlockBraces:
+  Enabled: true
+  SpaceBeforeBlockParameters: false
+
+# Enforces spaces separating the block from the previous keyword; has --auto-correct
+Style/SpaceBeforeBlockBraces:
+  Enabled: true
+
+# Contrary to the name, denies wrapping hash parameters in brackets
+# We decided not to follow this rule
+Style/BracesAroundHashParameters:
+  Enabled: false
+
+# Forces files to end with a single black line; supports --auto-correct
+Style/TrailingBlankLines:
+  Enabled: true
+
+# Forces lines not to have spaces on the right end; supports --auto-correct
+Style/TrailingWhitespace:
+  Enabled: true
+
+# This cop checks for underscore-prefixed variables that are actually used.
+Lint/UnderscorePrefixedVariableName:
+  Enabled: true
+
+# This cop checks for access modifiers without any code.
+Lint/UselessAccessModifier:
+  Enabled: true
+
+# This cop checks for excessive nesting of conditional and looping constructs.
+# Despite the cop’s name, blocks are not considered as an extra level of nesting.
+Metrics/BlockNesting:
+  Max: 3
+
+
+# This cop checks if the length a class exceeds some maximum value.
+# Configuration parameters: CountComments.
+Metrics/ClassLength:
+  Max: 160
+
+# The cyclomatic complexity is the number of linearly independent paths through a method.
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+# In comments, annotation keywords (TODOs and FIXMEs and so on) should be all
+# upper case, followed by a colon and a space, then a note describing the
+# problem.
+Style/CommentAnnotation:
+  Enabled: true
+
+# Commented lines should have the same identation (before the '#' sign), as non-
+# commented would have in the same block.
+Style/CommentIndentation:
+  Enabled: true
+
+# Hash#has_key? is deprecated in favor of Hash#key?.
+Style/DeprecatedHashMethods:
+  Enabled: true
+
+# Top-level classes and modules should be documented.
+# We are not doing that, as we're not writing a library (2014.12.03)
+Style/Documentation:
+  Enabled: false
+
+# Multiline method chains should have dot at the beginning of the new line
+Style/DotPosition:
+  Enabled: true
+
+AllCops:
+  Include:
+    - Rakefile
+    - config.ru
+  Exclude:
+    - vendor/**/*
+    - db/schema.rb
+    - tmp/**/*
+    - bin/**/*
