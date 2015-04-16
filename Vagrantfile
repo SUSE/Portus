@@ -21,6 +21,7 @@ Vagrant.configure('2') do |config|
       args:'192.168.1.2'
     node.vm.provision 'shell', path: 'vagrant/provision_registry'
     node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
+    node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: <<EOS
 cp /vagrant/vagrant/conf/registry-config.yml /etc/registry-config.yml
 systemctl restart registry
