@@ -9,11 +9,11 @@ describe '/v2/token' do
     let(:user) { create(:user, password: password) }
 
     let(:valid_auth_header) do
-      { 'HTTP_AUTHORIZATION' => auth_mech.encode_credentials(user.email, password) }
+      { 'HTTP_AUTHORIZATION' => auth_mech.encode_credentials(user.username, password) }
     end
 
     let(:invalid_auth_header) do
-      { 'HTTP_AUTHORIZATION' => auth_mech.encode_credentials(user.email, 'wrong_password') }
+      { 'HTTP_AUTHORIZATION' => auth_mech.encode_credentials(user.username, 'wrong_password') }
     end
 
     let(:nonexistent_auth_header) do

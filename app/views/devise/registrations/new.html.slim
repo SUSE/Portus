@@ -1,25 +1,15 @@
-h2 Sign up
-
-= form_for(resource, as: resource_name, url: { action: 'create' }) do |f|
-  = devise_error_messages!
-  .field
-    = f.label :username
-    br
-    = f.text_field :username, autofocus: true
-  .field
-    = f.label :email
-    br
-    = f.email_field :email, autofocus: true
-  .field
-    - if @validatable
-      = f.label :password
-      em = "(#{@minimum_password_length} characters minimum)"
-      br
-    = f.password_field :password, autocomplete: 'off'
-  .field
-    = f.label :password_confirmation
-    br
-    = f.password_field :password_confirmation, autocomplete: 'off'
-  .actions
-    = f.submit 'Sign up'
-= render 'devise/shared/links'
+section.sign-up
+  .center-panel
+    .col-md-4.col-sm-2.col-xs-1
+    .col-md-4.col-sm-8.col-xs-10.text-center
+      = devise_error_messages!
+      = image_tag 'user-profile/avatar-lg.jpg', class: 'img circle login-picture border-transparent'
+      = form_for(resource, as: resource_name, url: { action: 'create' }) do |f|
+        = f.email_field :email, autofocus: true, class: 'form-control input-lg first', placeholder: 'Email'
+        = f.text_field :username, class: 'form-control input-lg', placeholder: 'Username'
+        = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password'
+        = f.password_field :password_confirmation, class: 'form-control input-lg last', placeholder: 'Password again'
+        button.btn.btn-primary.btn-block.btn-lg type="submit"
+          i.fa.fa-check
+          | Sign Up
+        i.pull-right = link_to 'Sign In', new_user_session_url

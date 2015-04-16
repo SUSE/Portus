@@ -46,7 +46,7 @@ describe JwtToken do
                          subject.claim.deep_stringify_keys,
                          subject.private_key,
                          'RS256',
-                         { 'kid' => described_class.jwt_kid(subject.private_key)}
+                         { 'kid' => described_class.jwt_kid(subject.private_key) }
       )
       subject.encoded_token
     end

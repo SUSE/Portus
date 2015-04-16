@@ -82,7 +82,7 @@ class JwtToken < OpenStruct
       sha256 = Digest::SHA256.new
       sha256.update(private_key.public_key.to_der)
       payload = StringIO.new(sha256.digest).read(30)
-      Base32.encode(payload).split('').each_slice(4).inject([]) do |mem, slice|
+      Base32.encode(payload).split('').each_slice(4).each_with_object([]) do |slice, mem|
         mem << slice.join
         mem
       end.join(':')
