@@ -53,7 +53,9 @@ class JwtToken < OpenStruct
   end
 
   def not_before
-    Time.zone.now.to_i
+    # TODO: misaligned clocks on Portus, Registry and Client
+    # https://github.com/SUSE/Portus/issues/9
+    Time.zone.now.to_i - 5.seconds
   end
 
   def issued_at
