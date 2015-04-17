@@ -33,7 +33,7 @@ RSpec.describe RepositoriesController, type: :controller do
     it 'assigns all repositories as @repositories' do
       repository = create(:repository)
       get :index, {}, valid_session
-      expect(assigns(:repositories)).to eq([repository])
+      expect(assigns(:repositories).ids).to eq([repository.id])
     end
   end
 
