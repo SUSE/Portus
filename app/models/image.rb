@@ -2,6 +2,8 @@ class Image < ActiveRecord::Base
   belongs_to :repository
   has_many :tags
 
+  PUSH_EVENT_FIND_TOKEN_REGEXP = %r|manifests/(?<tag>.*)$|
+
   def self.handle_push_event(event)
     if event['target']['repository'].include?('/')
       repo_name, image_name = event['target']['repository'].split('/', 2)
@@ -9,7 +11,7 @@ class Image < ActiveRecord::Base
       image_name = event['target']['repository']
     end
 
-    match = %r|manifests/(?<tag>.*)$|.match(event['target']['url'])
+    match = PUSH_EVENT_FIND_TOKEN_REGEXP.match(event['target']['url'])
     if match
       tag_name = match['tag']
     else
