@@ -8,9 +8,7 @@ describe '/v2/token' do
 
     it 'handles the notification and accepts it' do
       expect_any_instance_of(RegistryNotification).to receive(:process!)
-      post v2_webhooks_events_url,
-        data.to_json,
-        { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
+      post v2_webhooks_events_url, data.to_json, format: :json
       expect(response).to be_success
     end
 
