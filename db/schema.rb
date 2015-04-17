@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20150416122030) do
   end
 
   add_index "images", ["name"], name: "index_images_on_name", unique: true
+  add_index "images", ["repository_id"], name: "index_images_on_repository_id"
 
   create_table "repositories", force: :cascade do |t|
     t.string   "name"
@@ -36,6 +37,8 @@ ActiveRecord::Schema.define(version: 20150416122030) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end
+
+  add_index "tags", ["image_id"], name: "index_tags_on_image_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username",               default: "", null: false
