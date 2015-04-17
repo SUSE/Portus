@@ -1,5 +1,4 @@
 ENV['RAILS_ENV'] ||= 'test'
-Dir[("#{File.expand_path('../support', __FILE__)}/**/*.rb")].each { |f| require f }
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
