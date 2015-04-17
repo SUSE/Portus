@@ -1,3 +1,5 @@
+require_relative '../support/models/registry_raw_event'
+
 FactoryGirl.define do
   factory :raw_push_manifest_event, class: RegistryRawEvent do
     action "push"
