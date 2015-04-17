@@ -24,6 +24,11 @@ RSpec.describe RepositoriesController, type: :controller do
   # in order to pass any filters (e.g. authentication) defined in
   # RepositoriesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
+  let(:user) { create(:user) }
+
+  before :each do
+    sign_in user
+  end
 
   describe 'GET #index' do
     it 'assigns all repositories as @repositories' do
