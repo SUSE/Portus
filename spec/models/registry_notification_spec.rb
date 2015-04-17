@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe RegistryNotification do
-  let(:registry_notification_data) {
+  let(:registry_notification_data) do
     {
       'events' => [
         attributes_for(:raw_push_manifest_event).stringify_keys,
@@ -9,7 +9,7 @@ describe RegistryNotification do
         attributes_for(:raw_pull_event).stringify_keys
       ]
     }
-  }
+  end
 
   it 'filters the irrelevant events' do
     notification = RegistryNotification.new(registry_notification_data)
@@ -19,7 +19,7 @@ describe RegistryNotification do
 
   it 'process all the events' do
     notification = RegistryNotification.new(registry_notification_data)
-    notification.events.each { |e | expect(e).to receive(:process!) }
+    notification.events.each {|e| expect(e).to receive(:process!) }
     notification.process!
   end
 end
