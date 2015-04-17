@@ -11,7 +11,7 @@ class Registry::AuthScope
   end
 
   def resource
-    raise ResourceIsNotDefined unless(klass = Object.const_get(@resource_type.capitalize) rescue nil)
+    raise ResourceIsNotDefined unless (klass = Object.const_get(@resource_type.capitalize) rescue nil)
     raise ResourceIsNotFound unless (found_resource = klass.find_by(name: @resource_name))
     found_resource
   end
