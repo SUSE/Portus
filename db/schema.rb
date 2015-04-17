@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416122030) do
+ActiveRecord::Schema.define(version: 20150417100647) do
 
   create_table "images", force: :cascade do |t|
     t.string   "name",          default: "", null: false
@@ -21,15 +21,16 @@ ActiveRecord::Schema.define(version: 20150416122030) do
   end
 
   add_index "images", ["name"], name: "index_images_on_name", unique: true
-  add_index "images", ["repository_id"], name: "index_images_on_repository_id"
 
   create_table "repositories", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "team_id"
   end
 
   add_index "repositories", ["name"], name: "index_repositories_on_name", unique: true
+  add_index "repositories", ["team_id"], name: "index_repositories_on_team_id"
 
   create_table "tags", force: :cascade do |t|
     t.string   "name",       default: "latest", null: false
@@ -38,7 +39,14 @@ ActiveRecord::Schema.define(version: 20150416122030) do
     t.datetime "updated_at",                    null: false
   end
 
-  add_index "tags", ["image_id"], name: "index_tags_on_image_id"
+  create_table "teams", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "teams", ["owner_id"], name: "index_teams_on_owner_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username",               default: "", null: false

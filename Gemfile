@@ -23,6 +23,7 @@ gem 'active_model_serializers'
 gem 'devise'
 gem 'jquery-turbolinks'
 gem 'gravatar_image_tag'
+gem 'rails-observers'
 
 group :development do
   gem 'quiet_assets'

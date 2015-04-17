@@ -9,6 +9,7 @@ require 'capybara/rspec'
 require 'database_cleaner'
 require 'ffaker'
 require 'factory_girl_rails'
+require 'pundit/rspec'
 
 # Schema and seeds handling
 # ActiveRecord::Schema.verbose = false

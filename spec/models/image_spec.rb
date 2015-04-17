@@ -1,6 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe Image, type: :model do
+describe Image do
+
+  it { should belong_to(:repository) }
+  it { should have_many(:tags) }
+
   describe 'handle push event' do
     let(:tag) { 'latest' }
     let(:image_name) { 'busybox' }
