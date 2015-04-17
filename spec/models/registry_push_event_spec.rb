@@ -4,9 +4,9 @@ describe RegistryPushEvent do
   let(:registry_notification_data) {
     {
       'events' => [
-        attributes_for(:raw_push_manifest_event),
-        attributes_for(:raw_push_layer_event),
-        attributes_for(:raw_pull_event),
+        attributes_for(:raw_push_manifest_event).stringify_keys,
+        attributes_for(:raw_push_layer_event).stringify_keys,
+        attributes_for(:raw_pull_event).stringify_keys
       ]
     }
   }
