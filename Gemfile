@@ -22,6 +22,7 @@ gem 'base32'
 gem 'active_model_serializers'
 gem 'devise'
 gem 'jquery-turbolinks'
+gem 'gravatar_image_tag'
 
 group :development do
   gem 'quiet_assets'
