@@ -8,4 +8,8 @@ class ApplicationController < ActionController::Base
     dashboard_url
   end
 
+  def after_sign_out_path_for(_resource)
+    new_user_session_url
+  end
+
 end
