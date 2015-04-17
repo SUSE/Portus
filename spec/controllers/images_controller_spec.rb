@@ -19,7 +19,6 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe ImagesController, type: :controller do
-
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # ImagesController. Be sure to keep this updated too.
@@ -41,9 +40,8 @@ RSpec.describe ImagesController, type: :controller do
   describe 'GET #show' do
     it 'assigns the requested image as @image' do
       image = create(:image)
-      get :show, {:id => image.to_param}, valid_session
+      get :show, { id: image.to_param }, valid_session
       expect(assigns(:image)).to eq(image)
     end
   end
-
 end

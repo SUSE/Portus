@@ -19,7 +19,6 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe RepositoriesController, type: :controller do
-
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # RepositoriesController. Be sure to keep this updated too.
@@ -41,7 +40,7 @@ RSpec.describe RepositoriesController, type: :controller do
   describe 'GET #show' do
     it 'assigns the requested repository as @repository' do
       repository = create(:repository)
-      get :show, {:id => repository.to_param}, valid_session
+      get :show, { id: repository.to_param }, valid_session
       expect(assigns(:repository)).to eq(repository)
     end
   end

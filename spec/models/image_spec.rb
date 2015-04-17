@@ -6,16 +6,16 @@ RSpec.describe Image, type: :model do
     let(:image_name) { 'busybox' }
 
     context 'when dealing with a top level image' do
-      let(:event) {
+      let(:event) do
         {
           'target' => {
             'repository' => image_name,
             'url' =>  "http://registry.test.lan/v2/#{image_name}/manifests/#{tag}"
           }
         }
-      }
+      end
 
-      context "when the image is not known by Portus" do
+      context 'when the image is not known by Portus' do
         it 'should create image and tag objects' do
           image = Image.handle_push_event(event)
 
@@ -31,7 +31,7 @@ RSpec.describe Image, type: :model do
         end
       end
 
-      context "when a new version of an already known image" do
+      context 'when a new version of an already known image' do
         it 'should create a new tag' do
           image = create(:image, name: image_name)
           image.tags << Tag.new(name: '1.0.0')
@@ -53,14 +53,14 @@ RSpec.describe Image, type: :model do
 
     context 'when the image is inside of repository' do
       let(:repository_name) { 'SUSE' }
-      let(:event) {
+      let(:event) do
         {
           'target' => {
             'repository' => "#{repository_name}/#{image_name}",
             'url' =>  "http://registry.test.lan/v2/#{repository_name}/#{image_name}/manifests/#{tag}"
           }
         }
-      }
+      end
 
       context 'when the repository is not known by Portus' do
         it 'should create a repository with a taggd image' do
