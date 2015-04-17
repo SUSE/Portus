@@ -5,19 +5,14 @@ class RepositoriesController < ApplicationController
   def index
     @repositories = Repository.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @repositories }
-    end
+    respond_with(@repositories)
   end
 
   # GET /repositories/1
   # GET /repositories/1.json
   def show
     @repository = Repository.find(params[:id])
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @repository }
-    end
+
+    respond_with(@repository)
   end
 end
