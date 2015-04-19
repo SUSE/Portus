@@ -1,32 +1,31 @@
 [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus)
 [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus)
 
-Portus: a user interface for the [next generation of Docker registry](https://github.com/docker/distribution).
-
 Portus targets [version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
 of the Docker registry API. It aims to act both as
 an authoritzation server and as a user interface for the next generation of the
 Docker registry.
 
-## Specs
+## Features
 
-### Authentication
+### Fine-grained control of permissions
+
+Portus supports the concept of users and teams. Each user has its personal Docker namespace where she has read (aka `docker pull`) and write (aka `docker push`) access.
+
+A team is a group of users that have read and write access to a certain namespace.
 
 Portus implements the [token based authentication system](https://github.com/docker/distribution/blob/master/docs/spec/auth/token.md)
-described by the new ersion of the Docker registry.
+described by the new version of the Docker registry. This can be used to have full control over the images served by an instance of the Docker registry.
 
-[This](https://gitlab.suse.de/docker/portus/wikis/authentication-process) page
-contains more details about the ongoing efforts to implement authentication.
+### Web interface for Docker registry
 
-### Notifications
+Portus provides quick access to all the images available on your private instance of Docker registry. User's privileges are taken into account to make sure private images (the ones requiring special rights also for `docker pull`) are not shown to unauthorized personnel.
 
-The registry can be configured to notify a 3rd party about the events that took
-place (eg: push, pull,...).
+## Current limitations
 
-This is described by [this](https://github.com/docker/distribution/blob/master/docs/notifications.md).
+Portus' knowledge of the images available on the private instance of a Docker registry is built using the [notifications](https://github.com/docker/distribution/blob/master/docs/notifications.md) sent by the Docker registry itself.
 
-Portus can takes advantage of this feature to be aware of all the Docker images
-pushed to the registry.
+If Portus is unreachable when a new image is being pushed to the Docker registry, Portus won't be aware of it. This issue is going to be solved by next versions of Portus.
 
 ## Development environment
 
@@ -35,13 +34,13 @@ three nodes:
 
   * `registry.test.lan`: this is the node running the next generation of the
     Docker registry.
-  * `portus`: this is the node running portus itself.
-  * `client`: a node where latest version of Docker is installed
+  * `portus.test.lan`: this is the node running portus itself.
+  * `client.test.lan`: a node where latest version of Docker is installed
 
 All the nodes are based on openSUSE 13.2 x86_64. VirtualBox is the chosen
 provisioner.
 
-Port 5000 of the `portus` node is forwarded to port 5000 of the machine running
+Port 80 of the `portus` node is forwarded to port 5000 of the machine running
 the hypervisor. This makes possible to access Portus' web interface from the
 development laptop.
 
@@ -49,17 +48,3 @@ At the same time all the Portus' checkout is shared inside of all the boxes
 under the `/vagrant` path. That makes possible to develop portus on your laptop
 and have the changes automatically sent to the `portus` box.
 
-### Intercepting all the traffic sent to the registry
-
-On the client node execute:
-
-```
-docker run -ti --rm --add-host=registry.test.lan:192.168.1.2 -p 5000:5000 jess/mitmproxy -p 5000 -R http://registry.test.lan:5000
-```
-
-Now on the client node do:
-
-```
-docker tag busybox localhost:5000/busybox
-docker push localhost:5000/busybox
-```
