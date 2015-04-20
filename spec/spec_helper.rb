@@ -1,5 +1,5 @@
 require 'simplecov'
-require 'webmock'
+require 'webmock/rspec'
 require 'vcr'
 
 SimpleCov.minimum_coverage 100
