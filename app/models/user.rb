@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
 
   def create_personal_repository!
     team = Team.find_or_create_by!(name: username, owner: self)
-    Repository.create!(team: team, name: username)
+    Repository.find_or_create_by!(team: team, name: username)
   end
 
 end

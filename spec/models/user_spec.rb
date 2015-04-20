@@ -15,7 +15,9 @@ describe User do
     end
 
     it 'creates a repository under a team with the name of username' do
-      expect(Repository).to receive(:create!).with(name: subject.username, team: instance_of(Team))
+      team_double = double('team_double')
+      allow(Team).to receive(:find_or_create_by!).and_return(team_double)
+      expect(Repository).to receive(:find_or_create_by!).with(name: subject.username, team: team_double)
       subject.create_personal_repository!
     end
 

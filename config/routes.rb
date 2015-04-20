@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   root 'dashboards#show'
 
   namespace :v2, module: 'api/v2', defaults: { format: :json } do
-    root to: 'api/base#ping', as: :ping
+    root to: 'ping#ping', as: :ping
     resource :token, only: [ :show ]
     resource :webhooks, only: [] do
       resources :events, only: [ :create ]

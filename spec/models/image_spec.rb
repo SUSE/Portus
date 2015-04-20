@@ -6,6 +6,7 @@ describe Image do
   it { should have_many(:tags) }
 
   describe 'handle push event' do
+
     let(:tag) { 'latest' }
     let(:image_name) { 'busybox' }
 

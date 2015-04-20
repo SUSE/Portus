@@ -49,6 +49,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.include Devise::TestHelpers, type: :controller
   config.include FactoryGirl::Syntax::Methods
+  config.infer_base_class_for_anonymous_controllers = false
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
@@ -59,10 +60,6 @@ RSpec.configure do |config|
       end
       FactoryGirl.lint factories_to_lint
     end
-  end
-
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
   end
 
   config.around(:each) do |example|
