@@ -10,6 +10,26 @@ describe Image do
     let(:tag) { 'latest' }
     let(:image_name) { 'busybox' }
 
+    context 'event does not match regexp of manifest' do
+
+      let(:event) do
+        {
+          'target' => {
+            'repository' => image_name,
+            'url' =>  "http://registry.test.lan/v2/#{image_name}/wrong/#{tag}"
+          }
+        }
+      end
+
+      it 'sends event to logger' do
+        error_msg = 'Cannot find tag inside of event url: http://registry.test.lan/v2/busybox/wrong/latest'
+        expect(Rails.logger).to receive(:error).with(error_msg)
+        Image.handle_push_event(event)
+      end
+
+    end
+
+
     context 'when dealing with a top level image' do
       let(:event) do
         {

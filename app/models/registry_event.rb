@@ -9,10 +9,11 @@ class RegistryEvent
     @data['action']
   end
 
-  def process!
-  end
+  def process!; end
 
+  #:nocov: TODO: not implemented
   def relevant?
     false
   end
+  #:nocov:
 end

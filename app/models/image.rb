@@ -15,9 +15,9 @@ class Image < ActiveRecord::Base
     if match
       tag_name = match['tag']
     else
-      logger.error("Cannot find tag inside of event url: #{event['tag']}")
+      logger.error("Cannot find tag inside of event url: #{event['target']['url']}")
       return nil
-      #TODO: raise exception?
+      # TODO: raise exception?
     end
 
     if repo_name

@@ -4,21 +4,29 @@ describe Api::BaseController do
 
   controller do
 
-    def ping
+    def ping1
       raise Registry::AuthScope::ResourceIsNotDefined
     end
 
-    def pong
+    def ping2
       raise Registry::AuthScope::ResourceIsNotFound
     end
 
   end
 
+  before do
+    @routes.draw do
+      get '/ping1', to: 'api/base#ping1'
+      get '/ping2', to: 'api/base#ping2'
+    end
+  end
+
   describe '.?deny_access' do
 
-    it 'catched when Registry::AuthScope::ResourceIsNotDefined raised' do
-      get :ping
-      expect(controller).to receive(:deny_access)
+    it 'outputs empty body with 401 response status' do
+      get :ping1
+      expect(response.status).to eq 401
+      expect(response.body).to be_empty
     end
 
   end
