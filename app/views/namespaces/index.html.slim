@@ -1,0 +1,6 @@
+h1 Listing namespaces
+
+ul
+  - @namespaces.each do |namespace|
+    li= link_to namespace.name, namespace
+

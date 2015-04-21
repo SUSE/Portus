@@ -1,14 +1,14 @@
 class Image < ActiveRecord::Base
-  belongs_to :repository
+  belongs_to :namespace
   has_many :tags
 
   PUSH_EVENT_FIND_TOKEN_REGEXP = %r|manifests/(?<tag>.*)$|
 
   def self.handle_push_event(event)
     if event['target']['repository'].include?('/')
-      repo_name, image_name = event['target']['repository'].split('/', 2)
+      namespace_name, repo_name = event['target']['repository'].split('/', 2)
     else
-      image_name = event['target']['repository']
+      repo_name = event['target']['repository']
     end
 
     match = PUSH_EVENT_FIND_TOKEN_REGEXP.match(event['target']['url'])
@@ -20,15 +20,17 @@ class Image < ActiveRecord::Base
       # TODO: raise exception?
     end
 
-    if repo_name
-      repository = Repository.where(name: repo_name).first_or_create(name: repo_name)
+    if namespace_name
+      namespace = Namespace.where(name: namespace_name).
+        first_or_create(name: namespace_name)
     end
 
-    image = Image.where(name: image_name).first_or_create(name: image_name)
-    image.tags.where(name: tag_name).first_or_create(name: tag_name)
+    repository = Repository.where(name: repo_name).
+      first_or_create(name: repo_name)
+    repository.tags.where(name: tag_name).first_or_create(name: tag_name)
 
-    repository.images << image if repository
-    image
+    namespace.repositories << repository if namespace
+    repository
   end
 
 end

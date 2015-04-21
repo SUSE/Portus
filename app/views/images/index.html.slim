@@ -8,5 +8,5 @@ table
   tbody
     - @images.each do |image|
       tr
-        td= link_to image.repository.name, image.repository
+        td= link_to image.namespace.name, image.namespace
         td= link_to image.name, image

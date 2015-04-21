@@ -1,0 +1,9 @@
+h1= "Namespace #{@namespace.name}"
+
+h2 Repositories
+
+ul
+  - @namespace.repositories.each do |repository|
+    li= link_to "#{@namespace.name}/#{repository.name}", repository
+
+= link_to 'Back', namespaces_path

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe Repository do
+describe Namespace do
 
-  it { should have_many(:images) }
+  it { should have_many(:repositories) }
   it { should belong_to(:team) }
   it { should validate_presence_of(:name) }
 

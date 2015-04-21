@@ -1,9 +1,0 @@
-h1= "Repository #{@repository.name}"
-
-h2 Images
-
-ul
-  - @repository.images.each do |image|
-    li= link_to "#{@repository.name}/#{image.name}", image
-
-= link_to 'Back', repositories_path

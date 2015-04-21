@@ -1,4 +1,4 @@
-class Registry::AuthScope
+class Namespace::AuthScope
 
   class ResourceIsNotDefined < StandardError; end
   class ResourceIsNotFound < StandardError; end

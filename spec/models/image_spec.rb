@@ -2,21 +2,21 @@ require 'rails_helper'
 
 describe Image do
 
-  it { should belong_to(:repository) }
+  it { should belong_to(:namespace) }
   it { should have_many(:tags) }
 
   describe 'handle push event' do
 
     let(:tag) { 'latest' }
-    let(:image_name) { 'busybox' }
+    let(:repository_name) { 'busybox' }
 
     context 'event does not match regexp of manifest' do
 
       let(:event) do
         {
           'target' => {
-            'repository' => image_name,
-            'url' =>  "http://registry.test.lan/v2/#{image_name}/wrong/#{tag}"
+            'repository' => repository_name,
+            'url' =>  "http://registry.test.lan/v2/#{repository_name}/wrong/#{tag}"
           }
         }
       end
@@ -34,8 +34,8 @@ describe Image do
       let(:event) do
         {
           'target' => {
-            'repository' => image_name,
-            'url' =>  "http://registry.test.lan/v2/#{image_name}/manifests/#{tag}"
+            'repository' => repository_name,
+            'url' =>  "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
           }
         }
       end
@@ -49,7 +49,7 @@ describe Image do
           expect(Image.count).to eq 1
           expect(Tag.count).to eq 1
 
-          expect(image.repository).to be_nil
+          expect(image.namespace).to be_nil
           expect(image.name).to eq(image_name)
           expect(image.tags.count).to eq 1
           expect(image.tags.first.name).to eq tag
@@ -68,7 +68,7 @@ describe Image do
           expect(Image.count).to eq 1
           expect(Tag.count).to eq 2
 
-          expect(image.repository).to be_nil
+          expect(image.namespace).to be_nil
           expect(image.name).to eq(image_name)
           expect(image.tags.count).to eq 2
           expect(image.tags.map(&:name)).to include('1.0.0', tag)
@@ -76,38 +76,38 @@ describe Image do
       end
     end
 
-    context 'when the image is inside of repository' do
-      let(:repository_name) { 'SUSE' }
+    context 'when the image is inside of namespace' do
+      let(:namespace_name) { 'SUSE' }
       let(:event) do
         {
           'target' => {
-            'repository' => "#{repository_name}/#{image_name}",
-            'url' =>  "http://registry.test.lan/v2/#{repository_name}/#{image_name}/manifests/#{tag}"
+            'repository' => "#{namespace_name}/#{repository_name}",
+            'url' =>  "http://registry.test.lan/v2/#{namespace_name}/#{repository_name}/manifests/#{tag}"
           }
         }
       end
 
-      context 'when the repository is not known by Portus' do
-        it 'should create a repository with a taggd image' do
-          create(:repository, name: 'openSUSE')
+      context 'when the namespaceis not known by Portus' do
+        it 'should create a namespace with a tagged image' do
+          create(:namespace, name: 'openSUSE')
 
           image = Image.handle_push_event(event)
 
           expect(image).not_to be_nil
-          expect(Repository.count).to eq 2
+          expect(Namespace.count).to eq 2
           expect(Image.count).to eq 1
           expect(Tag.count).to eq 1
 
-          expect(image.repository.name).to eq(repository_name)
+          expect(image.namespace.name).to eq(namespace_name)
           expect(image.name).to eq(image_name)
           expect(image.tags.count).to eq(1)
           expect(image.tags.first.name).to eq(tag)
         end
       end
 
-      context 'when the repository is known by Portus' do
+      context 'when the namespace is known by Portus' do
         before :each do
-          create(:repository, name: repository_name)
+          create(:namespace, name: namespace_name)
         end
 
         it 'should create image and tag objects when the image is unknown to portus' do
@@ -118,7 +118,7 @@ describe Image do
           expect(Image.count).to eq 1
           expect(Tag.count).to eq 1
 
-          expect(image.repository.name).to eq(repository_name)
+          expect(image.namespace.name).to eq(namespace_name)
           expect(image.name).to eq(image_name)
           expect(image.tags.count).to eq 1
           expect(image.tags.first.name).to eq tag
@@ -135,7 +135,7 @@ describe Image do
           expect(Image.count).to eq 1
           expect(Tag.count).to eq 2
 
-          expect(image.repository.name).to eq(repository_name)
+          expect(image.namespace.name).to eq(namespace_name)
           expect(image.name).to eq(image_name)
           expect(image.tags.count).to eq 2
           expect(image.tags.map(&:name)).to include('1.0.0', tag)
