@@ -1,0 +1,12 @@
+h1 Listing Repositories
+
+table
+  thead
+    tr
+      th Namespace
+      th Repository
+  tbody
+    - @repositories.each do |repository|
+      tr
+        td= link_to repository.namespace.name, repository.namespace
+        td= link_to repository.name, repository

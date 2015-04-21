@@ -1,4 +1,4 @@
-class Image < ActiveRecord::Base
+class Repository < ActiveRecord::Base
   belongs_to :namespace
   has_many :tags
 

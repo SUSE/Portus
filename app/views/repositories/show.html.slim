@@ -1,0 +1,12 @@
+h1
+  = link_to @repository.namespace.name, @repository.namespace
+  | /
+  = @repository.name
+
+h2 Tags
+
+ul
+  - @repository.tags.each do |tag|
+    li= tag.name
+
+= link_to 'Back', repositories_path

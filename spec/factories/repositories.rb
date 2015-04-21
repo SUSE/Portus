@@ -1,7 +1,7 @@
 FactoryGirl.define do
-  factory :image do
+  factory :repository do
     sequence :name do |n|
-      "image#{n}"
+      "repository#{n}"
     end
   end
 end
