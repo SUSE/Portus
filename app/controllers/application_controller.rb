@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
   protect_from_forgery with: :exception
 
+  respond_to :html
+
   def after_sign_in_path_for(_resource)
     dashboard_url
   end

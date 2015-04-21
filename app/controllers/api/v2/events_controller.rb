@@ -1,8 +1,8 @@
 class Api::V2::EventsController < Api::BaseController
 
   def create
-    event = JSON.parse(request.body.read)
-    ap event
+    notification = RegistryNotification.new(JSON.parse(request.body.read))
+    notification.process!
     head status: :accepted
   end
 
