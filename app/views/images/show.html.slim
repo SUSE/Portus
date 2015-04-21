@@ -1,0 +1,12 @@
+h1
+  = link_to @image.repository.name, @image.repository
+  | /
+  = @image.name
+
+h2 Tags
+
+ul
+  - @image.tags.each do |tag|
+    li= tag.name
+
+= link_to 'Back', images_path

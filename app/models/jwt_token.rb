@@ -32,31 +32,15 @@ class JwtToken < OpenStruct
 
   private
 
-  # TODO: Move to class RegistryAccessScope
-  # TODO: track specs to get better definition on what is scope is and how it is constructed
-  def resource_type
-    scope.split(':')[0]
-  end
-
-  # TODO: Move to class RegistryAccessScope
-  def resource_name
-    scope.split(':')[1]
-  end
-
-  # TODO: Move to class RegistryAccessScope
-  def resource_action
-    scope.split(':')[2]
-  end
-
   def authorized_access
     [ single_action ]
   end
 
   def single_action
     Hash.new.tap do |hash|
-      hash[:type]    = resource_type
-      hash[:name]    = resource_name
-      hash[:actions] = resource_action.split(',')
+      hash[:type]    = scope.resource_type
+      hash[:name]    = scope.resource.name
+      hash[:actions] = scope.actions
     end
   end
 
@@ -69,7 +53,9 @@ class JwtToken < OpenStruct
   end
 
   def not_before
-    Time.zone.now.to_i
+    # TODO: misaligned clocks on Portus, Registry and Client
+    # https://github.com/SUSE/Portus/issues/9
+    Time.zone.now.to_i - 5.seconds
   end
 
   def issued_at

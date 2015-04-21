@@ -9,6 +9,7 @@ require 'capybara/rspec'
 require 'database_cleaner'
 require 'ffaker'
 require 'factory_girl_rails'
+require 'pundit/rspec'
 
 # Schema and seeds handling
 # ActiveRecord::Schema.verbose = false
@@ -48,17 +49,17 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.include Devise::TestHelpers, type: :controller
   config.include FactoryGirl::Syntax::Methods
+  config.infer_base_class_for_anonymous_controllers = true
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.cleaning do
-      FactoryGirl.lint
+      factories_to_lint = FactoryGirl.factories.reject do |factory|
+        factory.name =~ /raw_.*_event/
+      end
+      FactoryGirl.lint factories_to_lint
     end
-  end
-
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
   end
 
   config.around(:each) do |example|

@@ -6,6 +6,12 @@ describe JwtToken do
     FFaker.letterify((['????']*12).join(':')).upcase
   end
 
+  let(:scope) { Registry::AuthScope.new('repository:samalba/my-app:push') }
+
+  before do
+    allow(scope).to receive(:resource).and_return(double(name: 'samalba'))
+  end
+
   describe '.new' do
 
     it 'populates instance of account' do
@@ -14,8 +20,8 @@ describe JwtToken do
     end
 
     it 'populates instance of scope' do
-      token = described_class.new(scope: 'scope_1')
-      expect(token.scope).to eq 'scope_1'
+      token = described_class.new(scope: scope)
+      expect(token.scope).to eq scope
     end
 
     it 'populates instance of service' do
@@ -38,7 +44,7 @@ describe JwtToken do
   describe '#encoded_token' do
 
     subject do
-      described_class.new(account: 'jlhawn', scope: 'repository:samalba/my-app:push', service: 'registry.docker.com')
+      described_class.new(account: 'jlhawn', scope: scope, service: 'registry.docker.com')
     end
 
     it 'calls JWT#encode with claim with stringified_keys' do
@@ -75,7 +81,7 @@ describe JwtToken do
     subject do
       described_class.new(
         account: 'jlhawn',
-        scope:   'repository:samalba/my-app:push',
+        scope:   scope,
         service: 'registry.docker.com'
       )
     end
@@ -160,24 +166,24 @@ describe JwtToken do
 
       describe ':type' do
 
-        it 'has type set to #resource_type' do
-          expect(subject.claim[:access].first[:type]).to eq subject.send(:resource_type)
+        it 'has type set to scope#requested_resource_type' do
+          expect(subject.claim[:access].first[:type]).to eq scope.send(:requested_resource_type)
         end
 
       end
 
       describe ':name' do
 
-        it 'has name set to #resource_name' do
-          expect(subject.claim[:access].first[:name]).to eq subject.send(:resource_name)
+        it 'has name set to scope#requested_resource_name' do
+          expect(subject.claim[:access].first[:name]).to eq scope.resource.name
         end
 
       end
 
       describe ':actions' do
 
-        it 'has name set to #resource_name' do
-          expect(subject.claim[:access].first[:actions]).to eq [subject.send(:resource_action)]
+        it 'has actions set to actions from scope' do
+          expect(subject.claim[:access].first[:actions]).to eq scope.actions
         end
 
       end
