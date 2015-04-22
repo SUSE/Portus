@@ -45,7 +45,7 @@ describe Repository do
           repository = Repository.handle_push_event(event)
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 0
+          expect(Namespace.count).to eq 0
           expect(Repository.count).to eq 1
           expect(Tag.count).to eq 1
 
@@ -64,7 +64,7 @@ describe Repository do
           repository = Repository.handle_push_event(event)
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 0
+          expect(Namespace.count).to eq 0
           expect(Repository.count).to eq 1
           expect(Tag.count).to eq 2
 

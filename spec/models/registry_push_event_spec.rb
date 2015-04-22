@@ -15,7 +15,7 @@ describe RegistryPushEvent do
     notification = RegistryNotification.new(registry_notification_data)
     event = notification.events.find {|e| e.action == 'push' }
 
-    expect(Image).to receive(:handle_push_event) { event.data }
+    expect(Repository).to receive(:handle_push_event) { event.data }
     event.process!
   end
 end

@@ -6,7 +6,7 @@ describe JwtToken do
     FFaker.letterify((['????']*12).join(':')).upcase
   end
 
-  let(:scope) { Registry::AuthScope.new('repository:samalba/my-app:push') }
+  let(:scope) { Namespace::AuthScope.new('repository:samalba/my-app:push') }
 
   before do
     allow(scope).to receive(:resource).and_return(double(name: 'samalba'))

@@ -4,7 +4,7 @@ class Api::V2::TokensController < Api::BaseController
 
   def show
     if params[:scope]
-      registry_scope = Registry::AuthScope.new(params[:scope])
+      registry_scope = Namespace::AuthScope.new(params[:scope])
       authorize registry_scope.resource, :pull?
       authorize registry_scope.resource, :push?
     end

@@ -4,8 +4,8 @@ class Api::BaseController < ActionController::Base
 
   respond_to :json
 
-  rescue_from Registry::AuthScope::ResourceIsNotDefined, with: :deny_access
-  rescue_from Registry::AuthScope::ResourceIsNotFound, with: :deny_access
+  rescue_from Namespace::AuthScope::ResourceIsNotDefined, with: :deny_access
+  rescue_from Namespace::AuthScope::ResourceIsNotFound, with: :deny_access
 
   protected
 
