@@ -1,7 +1,7 @@
 class RegistryPushEvent < RegistryEvent
   def process!
     return unless relevant?
-    Image.handle_push_event(@data)
+    Repository.handle_push_event(@data)
   end
 
   def relevant?

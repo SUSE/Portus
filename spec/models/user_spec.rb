@@ -7,18 +7,18 @@ describe User do
   it { should validate_uniqueness_of(:email) }
   it { should validate_uniqueness_of(:username) }
 
-  describe '#create_personal_repository!' do
+  describe '#create_personal_namespace!' do
 
     it 'creates a team with the name of username' do
       expect(Team).to receive(:find_or_create_by!).with(name: subject.username, owner: subject)
-      subject.create_personal_repository!
+      subject.create_personal_namespace!
     end
 
-    it 'creates a repository under a team with the name of username' do
+    it 'creates a namespace under a team with the name of username' do
       team_double = double('team_double')
       allow(Team).to receive(:find_or_create_by!).and_return(team_double)
-      expect(Repository).to receive(:find_or_create_by!).with(name: subject.username, team: team_double)
-      subject.create_personal_repository!
+      expect(Namespace).to receive(:find_or_create_by!).with(name: subject.username, team: team_double)
+      subject.create_personal_namespace!
     end
 
   end

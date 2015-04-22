@@ -5,9 +5,9 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, uniqueness: true
 
-  def create_personal_repository!
+  def create_personal_namespace!
     team = Team.find_or_create_by!(name: username, owner: self)
-    Repository.find_or_create_by!(team: team, name: username)
+    Namespace.find_or_create_by!(team: team, name: username)
   end
 
 end

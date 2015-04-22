@@ -39,7 +39,7 @@ class JwtToken < OpenStruct
   def single_action
     Hash.new.tap do |hash|
       hash[:type]    = scope.resource_type
-      hash[:name]    = scope.resource.name
+      hash[:name]    = scope.resource_name
       hash[:actions] = scope.actions
     end
   end

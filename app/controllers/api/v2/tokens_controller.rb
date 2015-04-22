@@ -4,15 +4,15 @@ class Api::V2::TokensController < Api::BaseController
 
   def show
     if params[:scope]
-      registry_scope = Registry::AuthScope.new(params[:scope])
-      authorize registry_scope.resource, :pull?
-      authorize registry_scope.resource, :push?
+      scope = scope_handler(params[:scope])
+      authorize scope.resource, :pull?
+      authorize scope.resource, :push?
     end
 
     @token = JwtToken.new(
       account: params[:account],
       service: params[:service],
-      scope: registry_scope
+      scope: scope
     )
 
     logger.tagged('jwt_token', 'claim') { logger.debug @token.claim }

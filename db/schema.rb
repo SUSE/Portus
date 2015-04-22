@@ -13,31 +13,34 @@
 
 ActiveRecord::Schema.define(version: 20150417100647) do
 
-  create_table "images", force: :cascade do |t|
-    t.string   "name",          default: "", null: false
-    t.integer  "repository_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "images", ["name"], name: "index_images_on_name", unique: true
-
-  create_table "repositories", force: :cascade do |t|
+  create_table "namespaces", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "team_id"
   end
 
+  add_index "namespaces", ["name"], name: "index_namespaces_on_name", unique: true
+  add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id"
+
+  create_table "repositories", force: :cascade do |t|
+    t.string   "name",         default: "", null: false
+    t.integer  "namespace_id"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   add_index "repositories", ["name"], name: "index_repositories_on_name", unique: true
-  add_index "repositories", ["team_id"], name: "index_repositories_on_team_id"
+  add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id"
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name",       default: "latest", null: false
-    t.integer  "image_id",                      null: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.string   "name",          default: "latest", null: false
+    t.integer  "repository_id",                    null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
+
+  add_index "tags", ["repository_id"], name: "index_tags_on_repository_id"
 
   create_table "teams", force: :cascade do |t|
     t.string   "name"

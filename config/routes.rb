@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :images, only: [ :index, :show ]
+  resources :namespaces, only: [ :index, :show ]
   resources :repositories, only: [ :index, :show ]
   devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }
   root 'dashboards#show'
