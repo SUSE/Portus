@@ -65,15 +65,14 @@ describe Registry do
         false,
         username,
         password)
-      tag = '2.0.0'
 
       begin
         VCR.turned_off do
           WebMock.disable_net_connect!
           stub_request(:get, "http://#{registry_server}/v2/")
-            .to_return(headers: {'www-authenticate' => 'service=foo,Bearer realm=http://bar.test.lan/token'}, status: 401)
+            .to_return(headers: { 'www-authenticate' => 'service=foo,Bearer realm=http://bar.test.lan/token' }, status: 401)
 
-          stub_request(:get, "http://flavio:this%20is%20a%20test@bar.test.lan/token?account=flavio&service=foo")
+          stub_request(:get, 'http://flavio:this%20is%20a%20test@bar.test.lan/token?account=flavio&service=foo')
             .to_return(status: 401)
 
           expect do
@@ -91,13 +90,12 @@ describe Registry do
         false,
         username,
         password)
-      tag = '2.0.0'
 
       begin
         VCR.turned_off do
           WebMock.disable_net_connect!
           stub_request(:get, "http://#{registry_server}/v2/")
-            .to_return(headers: {'www-authenticate' => 'foo=bar'}, status: 401)
+            .to_return(headers: { 'www-authenticate' => 'foo=bar' }, status: 401)
 
           expect do
             registry.get_request('')
@@ -107,19 +105,19 @@ describe Registry do
         WebMock.allow_net_connect!
       end
     end
+
     it 'raises a NoBearerRealmException when the bearer realm is not found' do
       registry = Registry.new(
         registry_server,
         false,
         username,
         password)
-      tag = '2.0.0'
 
       begin
         VCR.turned_off do
           WebMock.disable_net_connect!
           stub_request(:get, "http://#{registry_server}/v2/")
-            .to_return(headers: {'www-authenticate' => 'foo=bar'}, status: 401)
+            .to_return(headers: { 'www-authenticate' => 'foo=bar' }, status: 401)
 
           expect do
             registry.get_request('')
