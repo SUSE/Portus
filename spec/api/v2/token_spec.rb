@@ -92,7 +92,7 @@ describe '/v2/token' do
       end
 
       it 'denies access to a namespace owned by another user' do
-        qa_user = create(:user, username: 'qa_user')
+        create(:user, username: 'qa_user')
 
         get v2_token_url,
             { service: 'test', account: user.username, scope: 'repository:qa_user/busybox:push' },

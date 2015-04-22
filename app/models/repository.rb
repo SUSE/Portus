@@ -21,12 +21,12 @@ class Repository < ActiveRecord::Base
     end
 
     if namespace_name
-      namespace = Namespace.where(name: namespace_name).
-        first_or_create(name: namespace_name)
+      namespace = Namespace.where(name: namespace_name)
+        .first_or_create(name: namespace_name)
     end
 
-    repository = Repository.where(name: repo_name).
-      first_or_create(name: repo_name)
+    repository = Repository.where(name: repo_name)
+      .first_or_create(name: repo_name)
     repository.tags.where(name: tag_name).first_or_create(name: tag_name)
 
     namespace.repositories << repository if namespace
