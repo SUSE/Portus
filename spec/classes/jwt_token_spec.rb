@@ -167,7 +167,7 @@ describe JwtToken do
       describe ':type' do
 
         it 'has type set to scope#requested_resource_type' do
-          expect(subject.claim[:access].first[:type]).to eq scope.send(:requested_resource_type)
+          expect(subject.claim[:access].first[:type]).to eq scope.resource_type
         end
 
       end
@@ -175,7 +175,7 @@ describe JwtToken do
       describe ':name' do
 
         it 'has name set to scope#requested_resource_name' do
-          expect(subject.claim[:access].first[:name]).to eq scope.resource.name
+          expect(subject.claim[:access].first[:name]).to eq scope.resource_name
         end
 
       end
