@@ -59,7 +59,7 @@ describe '/v2/token' do
         expect(payload['sub']).to eq 'account'
         expect(payload['aud']).to eq 'test'
         expect(payload['access'][0]['type']).to eq 'repository'
-        expect(payload['access'][0]['name']).to eq 'foo_namespace'
+        expect(payload['access'][0]['name']).to eq 'foo_namespace/me'
         expect(payload['access'][0]['actions'][0]).to eq 'push'
       end
 
@@ -79,6 +79,32 @@ describe '/v2/token' do
           expect(payload).to_not have_key('access')
         end
 
+      end
+
+    end
+
+    context 'request push access' do
+      it 'denies access to the global namespace' do
+        get v2_token_url,
+            { service: 'test', account: user.username, scope: 'repository:busybox:pull,push' },
+            valid_auth_header
+        expect(response.status).to eq 401
+      end
+
+      it 'denies access to a namespace owned by another user' do
+        qa_user = create(:user, username: 'qa_user')
+
+        get v2_token_url,
+            { service: 'test', account: user.username, scope: 'repository:qa_user/busybox:push' },
+            valid_auth_header
+        expect(response.status).to eq 401
+      end
+
+      it 'allows access to the owner' do
+        get v2_token_url,
+            { service: 'test', account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
+            valid_auth_header
+        expect(response.status).to eq 200
       end
 
     end

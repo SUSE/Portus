@@ -8,11 +8,11 @@ class NamespacePolicy
   end
 
   def pull?
-    user == (namespace.team.owner)
+    push?
   end
 
   def push?
-    pull?
+    user == (namespace.team.owner)
   end
 
 end
