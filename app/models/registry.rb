@@ -52,7 +52,7 @@ class Registry
         request_auth_token(res)
         return get_request(path, false)
       else
-        fail AuthorizationError, "Cannot obtain authentication token, check your username and password: #{res}"
+        # this will never happen, request_auth_token will raise an exception
       end
     else
       res

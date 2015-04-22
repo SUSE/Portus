@@ -58,6 +58,77 @@ describe Registry do
         end.to raise_error(Registry::AuthorizationError)
       end
     end
+
+    it 'raises an AuthorizationError when the credentials are always wrong' do
+      registry = Registry.new(
+        registry_server,
+        false,
+        username,
+        password)
+      tag = '2.0.0'
+
+      begin
+        VCR.turned_off do
+          WebMock.disable_net_connect!
+          stub_request(:get, "http://#{registry_server}/v2/")
+            .to_return(headers: {'www-authenticate' => 'service=foo,Bearer realm=http://bar.test.lan/token'}, status: 401)
+
+          stub_request(:get, "http://flavio:this%20is%20a%20test@bar.test.lan/token?account=flavio&service=foo")
+            .to_return(status: 401)
+
+          expect do
+            registry.get_request('')
+          end.to raise_error(Registry::AuthorizationError)
+        end
+      ensure
+        WebMock.allow_net_connect!
+      end
+    end
+
+    it 'raises a NoBearerRealmException when the bearer realm is not found' do
+      registry = Registry.new(
+        registry_server,
+        false,
+        username,
+        password)
+      tag = '2.0.0'
+
+      begin
+        VCR.turned_off do
+          WebMock.disable_net_connect!
+          stub_request(:get, "http://#{registry_server}/v2/")
+            .to_return(headers: {'www-authenticate' => 'foo=bar'}, status: 401)
+
+          expect do
+            registry.get_request('')
+          end.to raise_error(Registry::NoBearerRealmException)
+        end
+      ensure
+        WebMock.allow_net_connect!
+      end
+    end
+    it 'raises a NoBearerRealmException when the bearer realm is not found' do
+      registry = Registry.new(
+        registry_server,
+        false,
+        username,
+        password)
+      tag = '2.0.0'
+
+      begin
+        VCR.turned_off do
+          WebMock.disable_net_connect!
+          stub_request(:get, "http://#{registry_server}/v2/")
+            .to_return(headers: {'www-authenticate' => 'foo=bar'}, status: 401)
+
+          expect do
+            registry.get_request('')
+          end.to raise_error(Registry::NoBearerRealmException)
+        end
+      ensure
+        WebMock.allow_net_connect!
+      end
+    end
   end
 
   context 'fetching Image manifest' do
@@ -91,5 +162,29 @@ describe Registry do
         end.to raise_error(Registry::ManifestNotFoundError)
       end
     end
+
+    it 'raises an exception when the return code is different from 200 or 401' do
+      registry = Registry.new(
+        registry_server,
+        false,
+        username,
+        password)
+      tag = '2.0.0'
+
+      begin
+        VCR.turned_off do
+          WebMock.disable_net_connect!
+          stub_request(:get, "http://#{registry_server}/v2/#{repository}/manifests/#{tag}")
+            .to_return(body: 'BOOM', status: 500)
+
+          expect do
+            registry.manifest(repository, tag)
+          end.to raise_error(RuntimeError)
+        end
+      ensure
+        WebMock.allow_net_connect!
+      end
+    end
+
   end
 end

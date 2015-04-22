@@ -81,6 +81,16 @@ describe '/v2/token' do
 
       end
 
+      context 'unknown scope requested' do
+        before do
+          get v2_token_url, { service: 'test', account: 'account', scope: 'whale:foo,bar' }, valid_auth_header
+        end
+
+        it 'respond with 401' do
+          expect(response.status).to eq 401
+        end
+      end
+
     end
 
     context 'request push access' do
