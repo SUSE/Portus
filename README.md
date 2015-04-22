@@ -48,3 +48,8 @@ At the same time all the Portus' checkout is shared inside of all the boxes
 under the `/vagrant` path. That makes possible to develop portus on your laptop
 and have the changes automatically sent to the `portus` box.
 
+## Licensing
+
+Portus is licensed under the Apache License, Version 2.0. See
+[LICENSE](https://github.com/SUSE/Portus/blob/master/LICENSE) for the full
+license text.
