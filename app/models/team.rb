@@ -10,7 +10,7 @@ class Team < ActiveRecord::Base
   private
 
   def downcase!
-    self.name.downcase!
+    name.downcase!
   end
 
 end
