@@ -1,9 +1,22 @@
-h1= "Namespace #{@namespace.name}"
-
-h2 Repositories
-
-ul
-  - @namespace.repositories.each do |repository|
-    li= link_to "#{@namespace.name}/#{repository.name}", repository
-
-= link_to 'Back', namespaces_path
+.[class="panel panel-default"]
+  .panel-heading
+    h1= "Namespace #{@namespace.name}"
+  .panel-body
+    .table-responsive
+      table[class="table table-stripped table-hover"]
+        col.col-50
+        col.col-40
+        col.col-10
+        thead
+          tr
+            th Repository
+            th # Tags
+            th
+        tbody
+          - @namespace.repositories.each do |repository|
+            tr
+              td= link_to "#{@namespace.name}/#{repository.name}", repository
+              td= repository.tags.count
+              td
+                a[href="#{url_for repository}" class="btn btn-default"]
+                  i[class="fa fa-eye fa-lg"]

@@ -1,6 +1,22 @@
-h1 Listing namespaces
-
-ul
-  - @namespaces.each do |namespace|
-    li= link_to namespace.name, namespace
-
+.[class="panel panel-default"]
+  .panel-heading
+    h1 Namespaces
+  .panel-body
+    .table-responsive
+      table[class="table table-stripped table-hover"]
+        col.col-50
+        col.col-40
+        col.col-10
+        thead
+          tr
+            th Name
+            th # Repositories
+            th
+        tbody
+          - @namespaces.each do |namespace|
+            tr
+              td= link_to namespace.name, namespace
+              td= namespace.repositories.count
+              td
+                a[href="#{url_for namespace}" class="btn btn-default"]
+                  i[class="fa fa-eye fa-lg"]

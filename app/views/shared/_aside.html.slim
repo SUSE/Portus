@@ -1,0 +1,14 @@
+aside
+  ul
+    li.active
+      a[href="#{url_for dashboard_path}"]
+        i[class="fa fa-dashboard"]
+        | Dashboard
+      - if current_page?(url_for dashboard_path)
+        .list-selected
+    li.active
+      a[href="#{url_for current_user.personal_namespace}"]
+        i[class="fa fa-user"]
+        | Images
+      - if current_page?(url_for current_user.personal_namespace)
+        .list-selected

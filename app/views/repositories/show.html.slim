@@ -1,12 +1,25 @@
-h1
-  = link_to @repository.namespace.name, @repository.namespace
-  | /
-  = @repository.name
-
-h2 Tags
-
-ul
-  - @repository.tags.each do |tag|
-    li= tag.name
-
-= link_to 'Back', repositories_path
+.[class="panel panel-default"]
+  .panel-heading
+    h1
+      = link_to @repository.namespace.name, @repository.namespace
+      | /
+      = @repository.name
+  .panel-body
+    .table-responsive
+      table[class="table table-stripped table-hover"]
+        col.col-40
+        col.col-20
+        col.col-40
+        thead
+          tr
+            th Repository
+            th Tag
+            th Pushed at
+        tbody
+          - @repository.tags.each do |tag|
+            tr
+              td= "#{@repository.namespace.name}/#{@repository.name}"
+              td
+                .[class="label label-success"]
+                  = tag.name
+              td= tag.created_at

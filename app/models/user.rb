@@ -10,4 +10,8 @@ class User < ActiveRecord::Base
     Namespace.find_or_create_by!(team: team, name: username)
   end
 
+  def personal_namespace
+    Namespace.find_by!(name: self.username)
+  end
+
 end
