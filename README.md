@@ -48,6 +48,10 @@ At the same time all the Portus' checkout is shared inside of all the boxes
 under the `/vagrant` path. That makes possible to develop portus on your laptop
 and have the changes automatically sent to the `portus` box.
 
+**Note well:** this is just a development environment. Portus is running with
+`RAILS_ENV` set to `development`. The communication between all the nodes is
+not protected by ssl.
+
 ## Licensing
 
 Portus is licensed under the Apache License, Version 2.0. See
