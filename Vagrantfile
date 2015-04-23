@@ -13,8 +13,8 @@ Vagrant.configure('2') do |config|
     node.vm.box = 'flavio/opensuse13-2'
     node.vm.box_check_update = true
     node.vm.hostname = 'registry.test.lan'
-    config.vm.network :private_network, ip: '192.168.1.2', virtualbox__intnet: true
-    config.vm.network :forwarded_port, host: 44242, guest: 80
+    node.vm.network :private_network, ip: '192.168.1.2', virtualbox__intnet: true
+    node.vm.network :forwarded_port, host: 44242, guest: 80
 
     config.vm.provision 'shell',
       path: 'vagrant/setup_private_network',
@@ -32,8 +32,8 @@ EOS
     node.vm.box = 'flavio/opensuse13-2'
     node.vm.box_check_update = true
     node.vm.hostname = 'portus.test.lan'
-    config.vm.network :private_network, ip: '192.168.1.3', virtualbox__intnet: true
-    config.vm.network 'forwarded_port', guest: 80, host: 5000
+    node.vm.network :private_network, ip: '192.168.1.3', virtualbox__intnet: true
+    node.vm.network 'forwarded_port', guest: 80, host: 5000
 
     config.vm.provision 'shell',
       path: 'vagrant/setup_private_network',
@@ -82,7 +82,7 @@ EOS
     node.vm.box = 'flavio/opensuse13-2'
     node.vm.box_check_update = true
     node.vm.hostname = 'client.test.lan'
-    config.vm.network :private_network, ip: '192.168.1.4', virtualbox__intnet: true
+    node.vm.network :private_network, ip: '192.168.1.4', virtualbox__intnet: true
 
     config.vm.provision 'shell',
       path: 'vagrant/setup_private_network',
