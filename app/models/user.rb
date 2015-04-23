@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   end
 
   def personal_namespace
-    Namespace.find_by!(name: self.username)
+    Namespace.find_by!(name: username)
   end
 
 end
