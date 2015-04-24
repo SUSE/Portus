@@ -93,30 +93,41 @@ describe '/v2/token' do
 
     end
 
-    context 'request push access' do
-      it 'denies access to the global namespace' do
-        get v2_token_url,
-            { service: 'test', account: user.username, scope: 'repository:busybox:pull,push' },
-            valid_auth_header
-        expect(response.status).to eq 401
+    context 'reposity scope' do
+
+      context 'push scope' do
+        it 'denies access to the global namespace' do
+          get v2_token_url,
+              { service: 'test', account: user.username, scope: 'repository:busybox:pull,push' },
+              valid_auth_header
+          expect(response.status).to eq 401
+        end
+
+        it 'denies access to a namespace owned by another user' do
+          create(:user, username: 'qa_user')
+
+          get v2_token_url,
+              { service: 'test', account: user.username, scope: 'repository:qa_user/busybox:push' },
+              valid_auth_header
+          expect(response.status).to eq 401
+        end
+
+        it 'allows access to the owner' do
+          get v2_token_url,
+              { service: 'test', account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
+              valid_auth_header
+          expect(response.status).to eq 200
+        end
       end
 
-      it 'denies access to a namespace owned by another user' do
-        create(:user, username: 'qa_user')
-
-        get v2_token_url,
-            { service: 'test', account: user.username, scope: 'repository:qa_user/busybox:push' },
-            valid_auth_header
-        expect(response.status).to eq 401
+      context 'unknown scope' do
+        it 'denies access' do
+          get v2_token_url,
+              { service: 'test', account: user.username, scope: 'repository:busybox:fork' },
+              valid_auth_header
+          expect(response.status).to eq 401
+        end
       end
-
-      it 'allows access to the owner' do
-        get v2_token_url,
-            { service: 'test', account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
-            valid_auth_header
-        expect(response.status).to eq 200
-      end
-
     end
 
   end

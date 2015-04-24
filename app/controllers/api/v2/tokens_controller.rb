@@ -4,15 +4,17 @@ class Api::V2::TokensController < Api::BaseController
 
   def show
     if params[:scope]
-      scope = scope_handler(params[:scope])
-      authorize scope.resource, :pull?
-      authorize scope.resource, :push?
+      logger.info "SCOPE is #{params[:scope]}"
+      auth_scope, scopes = scope_handler(params[:scope])
+      scopes.each do |scope|
+        authorize auth_scope.resource, "#{scope}?".to_sym
+      end
     end
 
     @token = JwtToken.new(
       account: params[:account],
       service: params[:service],
-      scope: scope
+      scope: auth_scope
     )
 
     logger.tagged('jwt_token', 'claim') { logger.debug @token.claim }
