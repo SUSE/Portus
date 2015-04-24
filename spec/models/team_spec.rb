@@ -7,9 +7,9 @@ describe Team do
   it { should validate_presence_of(:owner) }
   it { should have_many(:namespaces) }
 
-  it 'downcases the name on creation' do
-    team = FactoryGirl.create(:team, name: 'TeAm')
-    expect(team.name).to eq('team')
+  it 'checks whether the given name is downcased or not' do
+    expect { FactoryGirl.create(:team, name: 'TeAm') }.to raise_error
+    expect { FactoryGirl.create(:team, name: 'team') }.not_to raise_error
   end
 
 end

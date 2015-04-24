@@ -5,12 +5,12 @@ class Team < ActiveRecord::Base
 
   validates :name, :owner, presence: true
 
-  before_create :downcase!
+  before_create :downcase?
 
   private
 
-  def downcase!
-    name.downcase!
+  def downcase?
+    name.downcase == name
   end
 
 end
