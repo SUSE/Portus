@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150417100647) do
+ActiveRecord::Schema.define(version: 20150426115313) do
 
   create_table "namespaces", force: :cascade do |t|
     t.string   "name"
@@ -41,6 +41,16 @@ ActiveRecord::Schema.define(version: 20150417100647) do
   end
 
   add_index "tags", ["repository_id"], name: "index_tags_on_repository_id"
+
+  create_table "team_users", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "team_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "team_users", ["team_id"], name: "index_team_users_on_team_id"
+  add_index "team_users", ["user_id"], name: "index_team_users_on_user_id"
 
   create_table "teams", force: :cascade do |t|
     t.string   "name"

@@ -5,8 +5,12 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, uniqueness: true
 
+  has_many :team_users
+  has_many :teams, through: :team_users
+
   def create_personal_namespace!
     team = Team.find_or_create_by!(name: username, owner: self)
+    team.users = [self]
     Namespace.find_or_create_by!(team: team, name: username)
   end
 
