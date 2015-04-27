@@ -65,6 +65,7 @@ bundle config build.nokogiri --use-system-libraries
 bundle install
 bundle exec rake db:create
 bundle exec rake db:migrate
+bundle exec rake db:seed
 
 sudo gem install passenger
 passenger-install-apache2-module.ruby2.1 -a
