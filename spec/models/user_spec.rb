@@ -9,16 +9,12 @@ describe User do
 
   describe '#create_personal_namespace!' do
 
-    it 'creates a team with the name of username' do
-      expect(Team).to receive(:find_or_create_by!).with(name: subject.username, owner: subject)
-      subject.create_personal_namespace!
-    end
-
-    it 'creates a namespace under a team with the name of username' do
-      team_double = double('team_double')
-      allow(Team).to receive(:find_or_create_by!).and_return(team_double)
-      expect(Namespace).to receive(:find_or_create_by!).with(name: subject.username, team: team_double)
-      subject.create_personal_namespace!
+    it 'creates a team and a namespace with the name of username' do
+      user = FactoryGirl.create(:user)
+      user.create_personal_namespace!
+      team = Team.find_by!(name: user.username)
+      Namespace.find_by!(name: user.username)
+      TeamUser.find_by!(user: user, team: team)
     end
 
   end

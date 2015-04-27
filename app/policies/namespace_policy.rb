@@ -12,7 +12,7 @@ class NamespacePolicy
   end
 
   def push?
-    user == (namespace.team.owner)
+    namespace.team.users.exists?(user.id)
   end
 
 end

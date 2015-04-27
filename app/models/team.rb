@@ -5,6 +5,9 @@ class Team < ActiveRecord::Base
 
   validates :name, :owner, presence: true
 
+  has_many :team_users
+  has_many :users, through: :team_users
+
   before_create :downcase?
 
   private
