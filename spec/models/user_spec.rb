@@ -13,7 +13,8 @@ describe User do
       subject.create_personal_namespace!
       team = Team.find_by!(name: subject.username)
       Namespace.find_by!(name: subject.username)
-      TeamUser.find_by!(user: subject, team: team)
+      tu = TeamUser.find_by!(user: subject, team: team)
+      assert tu.owner
     end
 
   end
