@@ -14,7 +14,14 @@ feature 'Signup feature' do
     expect(page).to have_field('user_email')
   end
 
+  scenario 'If the admin user has been created, I am not able to create it' do
+    create(:user, admin: true)
+    visit new_user_registration_url
+    expect(page).to_not have_content('Set this user as the admin.')
+  end
+
   scenario 'As a guest I am able to signup' do
+    expect(page).to have_content('Set this user as the admin.')
     fill_in 'user_username', with: user.username
     fill_in 'user_email', with: user.email
     fill_in 'user_password', with: user.password
