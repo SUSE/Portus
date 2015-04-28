@@ -1,8 +1,8 @@
 FactoryGirl.define do
 
   factory :team do
-    name { FFaker::NatoAlphabet.code.downcase }
-    association :owner, factory: :user
+    name   { FFaker::NatoAlphabet.code.downcase }
+    owners {|t| [t.association(:user)] }
   end
 
 end
