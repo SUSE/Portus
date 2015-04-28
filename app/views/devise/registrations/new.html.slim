@@ -5,10 +5,10 @@ section.sign-up
       = devise_error_messages!
       = image_tag 'user-profile/avatar-lg.jpg', class: 'img circle login-picture border-transparent'
       = form_for(resource, as: resource_name, url: { action: 'create' }) do |f|
-        = f.email_field :email, autofocus: true, class: 'form-control input-lg first', placeholder: 'Email'
-        = f.text_field :username, class: 'form-control input-lg', placeholder: 'Username'
-        = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password'
-        = f.password_field :password_confirmation, class: 'form-control input-lg last', placeholder: 'Password again'
+        = f.email_field :email, autofocus: true, class: 'form-control input-lg first', placeholder: 'Email', required: true
+        = f.text_field :username, class: 'form-control input-lg', placeholder: 'Username', required: true
+        = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password', required: true
+        = f.password_field :password_confirmation, class: 'form-control input-lg last', placeholder: 'Password again', required: true
         button.btn.btn-primary.btn-block.btn-lg type="submit"
           i.fa.fa-check
           | Sign Up
