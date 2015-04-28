@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe User do
 
-  subject { build(:user) }
+  subject { create(:user) }
 
   it { should validate_uniqueness_of(:email) }
   it { should validate_uniqueness_of(:username) }
@@ -10,11 +10,10 @@ describe User do
   describe '#create_personal_namespace!' do
 
     it 'creates a team and a namespace with the name of username' do
-      user = FactoryGirl.create(:user)
-      user.create_personal_namespace!
-      team = Team.find_by!(name: user.username)
-      Namespace.find_by!(name: user.username)
-      TeamUser.find_by!(user: user, team: team)
+      subject.create_personal_namespace!
+      team = Team.find_by!(name: subject.username)
+      Namespace.find_by!(name: subject.username)
+      TeamUser.find_by!(user: subject, team: team)
     end
 
   end

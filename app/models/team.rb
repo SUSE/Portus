@@ -1,6 +1,6 @@
 class Team < ActiveRecord::Base
 
-  validates :name, presence: true
+  validates :name, :owners, presence: true
 
   has_many :namespaces
 
