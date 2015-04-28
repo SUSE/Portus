@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150427092952) do
+ActiveRecord::Schema.define(version: 20150428081530) do
 
   create_table "namespaces", force: :cascade do |t|
     t.string   "name"
@@ -45,8 +45,9 @@ ActiveRecord::Schema.define(version: 20150427092952) do
   create_table "team_users", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "team_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "owner",      default: false
   end
 
   add_index "team_users", ["team_id"], name: "index_team_users_on_team_id"
@@ -54,12 +55,9 @@ ActiveRecord::Schema.define(version: 20150427092952) do
 
   create_table "teams", force: :cascade do |t|
     t.string   "name"
-    t.integer  "owner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
-  add_index "teams", ["owner_id"], name: "index_teams_on_owner_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username",               default: "",    null: false

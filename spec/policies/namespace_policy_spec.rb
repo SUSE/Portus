@@ -4,12 +4,8 @@ describe NamespacePolicy do
 
   subject { described_class }
 
-  let(:user) { FactoryGirl.create(:user) }
-  let(:team) do
-    t = FactoryGirl.create(:team, owner: user)
-    t.users = [user]
-    t
-  end
+  let(:user)      { FactoryGirl.create(:user) }
+  let(:team)      { FactoryGirl.create(:team, owners: [user])  }
   let(:namespace) { FactoryGirl.create(:namespace, team: team) }
 
   permissions :pull? do
