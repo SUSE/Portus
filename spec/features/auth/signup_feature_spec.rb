@@ -1,8 +1,9 @@
 require 'rails_helper'
 
-feature 'Signup feature' do
+feature 'Signup feature', focus: true do
 
   before do
+    create(:user, admin: true)
     visit new_user_registration_url
   end
 
@@ -15,13 +16,13 @@ feature 'Signup feature' do
   end
 
   scenario 'If the admin user has been created, I am not able to create it' do
-    create(:user, admin: true)
+    User.delete_all
     visit new_user_registration_url
-    expect(page).to_not have_content('Set this user as the admin.')
+    expect(page).to have_content('Create admin')
   end
 
   scenario 'As a guest I am able to signup' do
-    expect(page).to have_content('Set this user as the admin.')
+    expect(page).to_not have_content('Create admin')
     fill_in 'user_username', with: user.username
     fill_in 'user_email', with: user.email
     fill_in 'user_password', with: user.password
