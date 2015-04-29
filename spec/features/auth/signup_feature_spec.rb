@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Signup feature', focus: true do
+feature 'Signup feature' do
 
   before do
     create(:user, admin: true)
