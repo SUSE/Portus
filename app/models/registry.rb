@@ -40,13 +40,7 @@ class Registry
     req = Net::HTTP::Get.new(uri)
     req['Authorization'] = "Bearer #{@token}" if @token
 
-    res = Net::HTTP.start(
-      uri.hostname,
-      uri.port,
-      use_ssl: uri.scheme == 'https') do |http|
-      http.request(req)
-    end
-
+    res = get_response_token(uri, req)
     if res.code.to_i == 401
       if request_auth_token
         request_auth_token(res)
@@ -69,13 +63,7 @@ class Registry
     req = Net::HTTP::Get.new(uri)
     req.basic_auth(@username, @password) if has_credentials?
 
-    res = Net::HTTP.start(
-      uri.hostname,
-      uri.port,
-      use_ssl: uri.scheme == 'https') do |http|
-      http.request(req)
-    end
-
+    res = get_response_token(uri, req)
     if res.code.to_i == 200
       @token = JSON.parse(res.body)['token']
     else
@@ -106,5 +94,14 @@ class Registry
     end
 
     [auth_args['Bearer realm'], query_params]
+  end
+
+  # Performs an HTTP request to the given URI and request object. It returns an
+  # HTTP response that has been sent from the registry.
+  def get_response_token(uri, req)
+    https = uri.scheme == 'https'
+    Net::HTTP.start(uri.hostname, uri.port, use_ssl: https) do |http|
+      http.request(req)
+    end
   end
 end

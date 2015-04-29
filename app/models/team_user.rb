@@ -1,4 +1,4 @@
-# Class describing a memeber of a team
+# Class describing a member of a team
 
 # Meaning of the role column:
 #   * viewer: has RO access to the namespaces associated with the team
