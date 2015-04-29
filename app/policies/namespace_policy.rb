@@ -8,11 +8,14 @@ class NamespacePolicy
   end
 
   def pull?
-    push?
+    # All the members of the team have READ access
+    namespace.team.users.exists?(user.id)
   end
 
   def push?
-    namespace.team.users.exists?(user.id)
+    # only owners and contributors have WRITE access
+    namespace.team.owners.exists?(user.id) ||
+    namespace.team.contributors.exists?(user.id)
   end
 
 end

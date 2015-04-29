@@ -4,7 +4,6 @@ class Api::V2::TokensController < Api::BaseController
 
   def show
     if params[:scope]
-      logger.info "SCOPE is #{params[:scope]}"
       auth_scope, scopes = scope_handler(params[:scope])
       scopes.each do |scope|
         authorize auth_scope.resource, "#{scope}?".to_sym
