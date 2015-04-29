@@ -14,7 +14,7 @@ describe User do
       team = Team.find_by!(name: subject.username)
       Namespace.find_by!(name: subject.username)
       tu = TeamUser.find_by!(user: subject, team: team)
-      assert tu.owner
+      expect(team.owners).to include(subject)
     end
 
   end
