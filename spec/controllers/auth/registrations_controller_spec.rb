@@ -17,7 +17,7 @@ describe Auth::RegistrationsController do
         password: '12341234',
         'password_confirmation': '12341234'
       }
-      assert !User.find_by!(username: 'portus').admin
+      expect(User.find_by!(username: 'portus')).not_to be_admin
     end
 
     it 'handles the admin column properly' do
@@ -28,7 +28,7 @@ describe Auth::RegistrationsController do
         'password_confirmation': '12341234',
         admin: true
       }
-      assert User.find_by!(username: 'portus').admin
+      expect(User.find_by!(username: 'portus')).to be_admin
     end
 
     it 'omits the value of admin if there is already another admin' do
@@ -40,7 +40,7 @@ describe Auth::RegistrationsController do
         'password_confirmation': '12341234',
         admin: true
       }
-      assert !User.find_by!(username: 'portus').admin
+      expect(User.find_by!(username: 'portus')).not_to be_admin
     end
 
   end
