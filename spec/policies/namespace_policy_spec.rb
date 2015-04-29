@@ -34,6 +34,11 @@ describe NamespacePolicy do
       expect(subject).to_not permit(user, namespace)
     end
 
+    it 'allows access to any user if the namespace is public' do
+      namespace.public = true
+      expect(subject).to permit(user, namespace)
+    end
+
   end
 
   permissions :push? do
