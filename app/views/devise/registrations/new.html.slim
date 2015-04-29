@@ -9,7 +9,14 @@ section.sign-up
         = f.text_field :username, class: 'form-control input-lg', placeholder: 'Username', required: true
         = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password', required: true
         = f.password_field :password_confirmation, class: 'form-control input-lg last', placeholder: 'Password again', required: true
+
+        - unless @admin
+          = f.hidden_field :admin, value: true
+
         button.btn.btn-primary.btn-block.btn-lg type="submit"
           i.fa.fa-check
-          | Sign Up
+          - if @admin
+            | Sign Up
+          - else
+            | Create admin
         i.pull-right = link_to 'Sign In', new_user_session_url
