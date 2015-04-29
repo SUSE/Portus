@@ -8,8 +8,9 @@ class NamespacePolicy
   end
 
   def pull?
-    # All the members of the team have READ access
-    namespace.team.users.exists?(user.id)
+    # All the members of the team have READ access or anyone if
+    # the namespace is public
+    namespace.public? || namespace.team.users.exists?(user.id)
   end
 
   def push?
