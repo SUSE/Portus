@@ -4,36 +4,54 @@ describe NamespacePolicy do
 
   subject { described_class }
 
-  let(:user)      { FactoryGirl.create(:user) }
-  let(:team)      { FactoryGirl.create(:team, owners: [user])  }
-  let(:namespace) { FactoryGirl.create(:namespace, team: team) }
+  let(:user)        { create(:user) }
+  let(:owner)       { create(:user) }
+  let(:viewer)      { create(:user) }
+  let(:contributor) { create(:user) }
+  let(:team) do
+    create(:team,
+           owners: [ owner ],
+           contributors: [ contributor ],
+           viewers: [ viewer ])
+  end
+  let(:namespace) { team.namespaces.first }
 
   permissions :pull? do
 
-    it 'allows access to user who is the owner of the team behind namespace' do
-      expect(subject).to permit(user, namespace)
+    it 'allows access to user with viewer role' do
+      expect(subject).to permit(viewer, namespace)
     end
 
-    it 'disallows access to user who is not the owner of the team behind namespace' do
-      expect(subject).to_not permit(build(:user), namespace)
+    it 'allows access to user with contributor role' do
+      expect(subject).to permit(contributor, namespace)
+    end
+
+    it 'allows access to user with owner role' do
+      expect(subject).to permit(owner, namespace)
+    end
+
+    it 'disallows access to user who is not part of the team' do
+      expect(subject).to_not permit(user, namespace)
     end
 
   end
 
   permissions :push? do
 
-    it 'allows access to user who is the owner of the team behind namespace' do
-      expect(subject).to permit(user, namespace)
+    it 'disallow access to user with viewer role' do
+      expect(subject).to_not permit(viewer, namespace)
     end
 
-    it 'allows access to users that are members of the team behind a namespace' do
-      user2 = FactoryGirl.create(:user)
-      team.users = [user, user2]
-      expect(subject).to permit(user2, namespace)
+    it 'allows access to user with contributor role' do
+      expect(subject).to permit(contributor, namespace)
     end
 
-    it 'disallows access to user who is not the owner of the team behind namespace' do
-      expect(subject).to_not permit(build(:user), namespace)
+    it 'allows access to user with owner role' do
+      expect(subject).to permit(owner, namespace)
+    end
+
+    it 'disallows access to user who is not part of the team' do
+      expect(subject).to_not permit(user, namespace)
     end
 
   end

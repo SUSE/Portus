@@ -91,43 +91,31 @@ describe '/v2/token' do
         end
       end
 
-    end
+      context 'reposity scope' do
 
-    context 'reposity scope' do
-
-      context 'push scope' do
-        it 'denies access to the global namespace' do
-          get v2_token_url,
-              { service: 'test', account: user.username, scope: 'repository:busybox:pull,push' },
-              valid_auth_header
-          expect(response.status).to eq 401
-        end
-
-        it 'denies access to a namespace owned by another user' do
-          create(:user, username: 'qa_user')
+        it 'delegates authentication to the Namespace policy' do
+          expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
+            .with(user.personal_namespace, :push?)
+          expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
+            .with(user.personal_namespace, :pull?)
 
           get v2_token_url,
-              { service: 'test', account: user.username, scope: 'repository:qa_user/busybox:push' },
-              valid_auth_header
-          expect(response.status).to eq 401
-        end
-
-        it 'allows access to the owner' do
-          get v2_token_url,
-              { service: 'test', account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
-              valid_auth_header
-          expect(response.status).to eq 200
+            { service: 'test', account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
+            valid_auth_header
         end
       end
 
       context 'unknown scope' do
+
         it 'denies access' do
           get v2_token_url,
               { service: 'test', account: user.username, scope: 'repository:busybox:fork' },
               valid_auth_header
           expect(response.status).to eq 401
         end
+
       end
+
     end
 
   end
