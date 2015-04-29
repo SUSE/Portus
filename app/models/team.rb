@@ -15,6 +15,10 @@ class Team < ActiveRecord::Base
 
   before_create :downcase?
 
+  def create_team_namespace!
+    Namespace.find_or_create_by!(team: self, name: name)
+  end
+
   private
 
   def downcase?

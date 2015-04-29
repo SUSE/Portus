@@ -8,12 +8,10 @@ class User < ActiveRecord::Base
   has_many :team_users
   has_many :teams, through: :team_users
 
-  def create_personal_namespace!
-    team = Team.find_by(name: username)
-    if team.nil?
-      team = Team.create!(name: username, owners: [self])
+  def create_personal_team!
+    if Team.find_by(name: username).nil?
+      Team.create!(name: username, owners: [self])
     end
-    Namespace.find_or_create_by!(team: team, name: username)
   end
 
   def personal_namespace
