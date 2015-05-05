@@ -1,0 +1,18 @@
+h1 Create new team
+
+= form_for(@team) do |f|
+  - if @team.errors.any?
+    #error_explanation
+      h2
+        = pluralize(@team.errors.count, "error")
+        | prohibited this team from being saved:
+      ul
+        - @team.errors.full_messages.each do |message|
+          li= message
+
+  .form-group
+      = f.label :name
+      = f.text_field :name, class: 'form-control', placeholder: 'Enter name'
+
+  .actions
+      = f.submit

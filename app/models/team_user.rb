@@ -7,6 +7,9 @@
 class TeamUser < ActiveRecord::Base
   enum role: [:viewer, :contributor, :owner]
 
+  validates :team, presence: true
+  validates :user, presence: true, uniqueness: { scope: :team }
+
   belongs_to :team
   belongs_to :user
 end

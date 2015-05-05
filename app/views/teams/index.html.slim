@@ -1,0 +1,28 @@
+.[class="panel panel-default"]
+  .[class="panel-heading clearfix"]
+    h2[class="panel-title pull-left"]Teams you are member of
+    .[class="btn-group pull-right"]
+      =link_to "Create", new_team_path, {class: 'btn btn-primary', role: 'button'}
+  .panel-body
+    .table-responsive
+      table[class="table table-striped table-hover"]
+        colgroup
+          col[class="col-30"]
+          col[class="col-30"]
+          col[class="col-20"]
+          col[class="col-20"]
+        thead
+          tr
+            th Team
+            th Role
+            th Number of members
+            th Number of namespaces
+        tbody
+          - @teams.each do |team|
+            tr
+              td= link_to team.name, team
+              td= role_within_team(team)
+              td= team.users.count
+              td= team.namespaces.count
+
+

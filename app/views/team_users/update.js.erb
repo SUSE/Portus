@@ -1,0 +1,6 @@
+<% if team_user.errors.empty? %>
+  $("#team_user_<%= team_user.id %> td div.role").html("<%= team_user.role %>");
+  $("#change_role_team_user_<%= team_user.id %>").fadeToggle();
+<% else %>
+  alert("Something went wrong!")
+<% end %>

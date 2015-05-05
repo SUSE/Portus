@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :teams
+  resources :team_users, only: [ :create, :destroy, :update ]
   resources :namespaces, only: [ :index, :show ]
   resources :repositories, only: [ :index, :show ]
   devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }

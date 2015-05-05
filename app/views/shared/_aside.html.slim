@@ -9,6 +9,12 @@ aside
     li.active
       a[href="#{url_for current_user.personal_namespace}"]
         i[class="fa fa-user"]
-        | Images
+        | Personal repositories
       - if current_page?(url_for current_user.personal_namespace)
+        .list-selected
+    li.active
+      a[href="#{url_for teams_path}"]
+        i[class="fa fa-users"]
+        | Teams
+      - if current_page?(url_for teams_path)
         .list-selected
