@@ -1,16 +1,6 @@
-var el = $('#new-team-user-form');
-
 <% if @team_user.errors.any? %>
-
-  // Create a list of errors
-  var errors = $('<ul />');
-
-  <% @team_user.errors.full_messages.each do |error| %>
-    errors.append('<li><%= escape_javascript( error ) %></li>');
-  <% end %>
-
-  // Display errors on form
-  el.find('.errors').html(errors);
+  $('#alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
+  $('#alert').fadeIn();
 <% else %>
   $("<%= escape_javascript(render @team_user) %>").appendTo("#team_users");
   $('#notice p').html("New user added to the team");
