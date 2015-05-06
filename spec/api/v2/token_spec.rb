@@ -94,10 +94,11 @@ describe '/v2/token' do
       context 'reposity scope' do
 
         it 'delegates authentication to the Namespace policy' do
+          personal_namespace = Namespace.find_by(name: user.username)
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
-            .with(user.personal_namespace, :push?)
+            .with(personal_namespace, :push?)
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
-            .with(user.personal_namespace, :pull?)
+            .with(personal_namespace, :pull?)
 
           get v2_token_url,
             { service: 'test', account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
