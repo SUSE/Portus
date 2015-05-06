@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: [:show]
-  after_action :verify_policy_scoped, :only => :index
+  after_action :verify_policy_scoped, only: :index
 
   # GET /teams
   def index

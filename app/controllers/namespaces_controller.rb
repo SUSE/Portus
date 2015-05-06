@@ -2,8 +2,8 @@ class NamespacesController < ApplicationController
   respond_to :html, :js
   before_action :set_namespace, only: [:toggle_public, :show]
 
-  after_action :verify_authorized, :except => :index
-  after_action :verify_policy_scoped, :only => :index
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 
   # GET /namespaces
   # GET /namespaces.json
@@ -32,7 +32,7 @@ class NamespacesController < ApplicationController
       if @namespace.save
         format.js { respond_with @namespace }
       else
-        format.js {respond_with @namespace.errors, status: :unprocessable_entity }
+        format.js { respond_with @namespace.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -43,7 +43,7 @@ class NamespacesController < ApplicationController
 
     #authorize @namespace
     @namespace.update_attributes(public: !(@namespace.public?))
-    render template: 'namespaces/toggle_public', locals: {namespace: @namespace}
+    render template: 'namespaces/toggle_public', locals: { namespace: @namespace }
   end
 
   private
