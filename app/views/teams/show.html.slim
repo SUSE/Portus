@@ -26,15 +26,14 @@ ul
       .form-group
         = f.label :role, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]})
+          = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
       .form-group
         = f.label :user, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.text_field(:user, class: 'form-control', placeholder: 'username')
+          = f.text_field(:user, class: 'form-control', placeholder: 'Name')
       .form-group
         .[class='col-md-offset-2 col-md-7']
           = f.submit('Add', class: 'btn btn-primary')
-      .errors
 
 .[class="panel panel-default"]
   .[class="panel-heading"]
@@ -85,7 +84,6 @@ p It is possible to add read only (pull) access to all Portus users by toggling
       .form-group
         .[class='col-md-offset-2 col-md-7']
           = f.submit('Add', class: 'btn btn-primary')
-      .errors
 
 .[class="panel panel-default"]
   .[class="panel-heading"]
@@ -105,6 +103,3 @@ p It is possible to add read only (pull) access to all Portus users by toggling
         tbody#namespaces
           - @team.namespaces.each do |namespace|
             = render(namespace)
-
-
-
