@@ -1,4 +1,4 @@
-- if flash[:notice]
+#notice[class="#{flash[:notice] ? '' : 'collapse'}"]
   .alert.alert-info.alert-dismissible.fade.in.text-left
     .row
       .col-sm-2.alert-icon
@@ -7,15 +7,17 @@
         button.close data-dismiss="alert" type="button"
           span aria-hidden="true" &times;
           span.sr-only Close
-        = flash[:notice]
+        p
+          = flash[:notice]
 
-- if flash[:alert]
-  .alert.alert-info.alert-dismissible.fade.in.text-left
+#alert[class="#{flash[:alert] ? '' : 'collapse'}"]
+  .alert.alert-danger.alert-dismissible.fade.in.text-left
     .row
       .col-sm-2.alert-icon
-        i.fa.fa-info-circle.fa-3x
+        i.fa.fa-exclamation-circle.fa-3x
       .col-sm-10
         button.close data-dismiss="alert" type="button"
           span aria-hidden="true" &times;
           span.sr-only Close
-        = flash[:alert]
+        p
+          = flash[:alert]
