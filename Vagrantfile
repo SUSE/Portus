@@ -66,7 +66,7 @@ bundle install
 bundle exec rake db:create
 bundle exec rake db:migrate
 
-sudo gem install passenger
+sudo gem install passenger -v 5.0.7
 passenger-install-apache2-module.ruby2.1 -a
 
 cp /vagrant/vagrant/conf/portus/sysconfig_apache2 /etc/sysconfig/apache2
