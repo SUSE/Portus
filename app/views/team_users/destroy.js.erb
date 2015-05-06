@@ -1,2 +1,6 @@
+<% if error %>
+  $('#alert p').html("<%= escape_javascript(error) %>");
+  $('#alert').fadeToggle();
+<% else %>
 $("#team_user_<%= team_user_id %>").remove();
-
+<% end %>
