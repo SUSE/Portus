@@ -1,0 +1,14 @@
+tr[id="namespace_#{namespace.id}"]
+  td= link_to namespace.name, namespace
+  td= namespace.repositories.count
+  td
+    - if is_namespace_owner?(namespace)
+      a[class="btn btn-default"
+          data-remote="true"
+          data-method="put"
+          rel="nofollow"
+          href=url_for(toggle_public_namespace_path(namespace))
+          ]
+          i[class="fa fa-toggle-#{namespace.public? ? 'on': 'off'} fa-lg"]
+    - else
+      i[class="fa fa-toggle-#{namespace.public? ? 'on': 'off'} fa-lg"]

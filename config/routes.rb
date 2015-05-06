@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :teams
   resources :team_users, only: [ :create, :destroy, :update ]
-  resources :namespaces, only: [ :index, :show ]
+  resources :namespaces, only: [ :create, :index, :show ] do
+    put 'toggle_public', on: :member
+  end
   resources :repositories, only: [ :index, :show ]
   devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }
   root 'dashboards#show'

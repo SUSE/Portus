@@ -10,13 +10,8 @@
         thead
           tr
             th Name
-            th # Repositories
-            th
+            th Repositories
+            th Public
         tbody
           - @namespaces.each do |namespace|
-            tr
-              td= link_to namespace.name, namespace
-              td= namespace.repositories.count
-              td
-                a[href="#{url_for namespace}" class="btn btn-default"]
-                  i[class="fa fa-eye fa-lg"]
+            = render(namespace)

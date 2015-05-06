@@ -10,7 +10,7 @@ tr[id="team_user_#{team_user.id}"]
           .[class='col-md-offset-2 col-md-7']
         = f.submit('Save', class: 'btn btn-primary')
         .errors
-  - if is_owner?(team_user.team)
+  - if is_team_owner?(team_user.team)
     td
       button[class="btn btn-default btn-edit-role"
         value="#{team_user.id}"]

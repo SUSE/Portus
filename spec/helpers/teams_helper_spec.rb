@@ -12,20 +12,20 @@ RSpec.describe TeamsHelper, type: :helper do
            viewers: [ viewer ])
   end
 
-  describe 'is_owner?' do
+  describe 'is_team_owner?' do
     it 'returns true if current user is an owner of the team' do
       sign_in owner
-      expect(helper.is_owner?(team)).to be true
+      expect(helper.is_team_owner?(team)).to be true
     end
 
     it 'returns false if current user is a viewer of the team' do
       sign_in viewer
-      expect(helper.is_owner?(team)).to be false
+      expect(helper.is_team_owner?(team)).to be false
     end
 
     it 'returns false if current user is a contributor of the team' do
       sign_in contributor
-      expect(helper.is_owner?(team)).to be false
+      expect(helper.is_team_owner?(team)).to be false
     end
   end
 

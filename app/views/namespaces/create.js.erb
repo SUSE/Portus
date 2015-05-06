@@ -1,0 +1,17 @@
+var el = $('#new-namespace-form');
+
+<% if @namespace.errors.any? %>
+
+  // Create a list of errors
+  var errors = $('<ul />');
+
+  <% @namespace.errors.full_messages.each do |error| %>
+    errors.append('<li><%= escape_javascript( error ) %></li>');
+  <% end %>
+
+  // Display errors on form
+  el.find('.errors').html(errors);
+<% else %>
+  $("<%= escape_javascript(render @namespace) %>").appendTo("#namespaces");
+<% end %>
+

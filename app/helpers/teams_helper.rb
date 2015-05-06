@@ -1,6 +1,6 @@
 module TeamsHelper
 
-  def is_owner?(team)
+  def is_team_owner?(team)
     team.owners.exists?(current_user.id)
   end
 
