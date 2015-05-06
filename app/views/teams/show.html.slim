@@ -30,7 +30,7 @@ ul
       .form-group
         = f.label :user, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.text_area(:user, class: 'form-control', placeholder: 'username')
+          = f.text_field(:user, class: 'form-control', placeholder: 'username')
       .form-group
         .[class='col-md-offset-2 col-md-7']
           = f.submit('Add', class: 'btn btn-primary')
@@ -81,7 +81,7 @@ p It is possible to add read only (pull) access to all Portus users by toggling
       .form-group
         = f.label :namespace, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.text_area(:namespace, class: 'form-control', placeholder: 'name')
+          = f.text_field(:namespace, class: 'form-control', placeholder: 'name')
       .form-group
         .[class='col-md-offset-2 col-md-7']
           = f.submit('Add', class: 'btn btn-primary')
