@@ -1,16 +1,12 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: [:show]
   after_action :verify_policy_scoped, only: :index
+  respond_to :js, :html
 
   # GET /teams
   def index
     @teams = policy_scope(Team)
     respond_with(@teams)
-  end
-
-  # GET /teams/new
-  def new
-    @team = Team.new
   end
 
   # GET /teams/1
@@ -29,7 +25,7 @@ class TeamsController < ApplicationController
       flash[:notice] = 'Team was successfully created'
       respond_with(@team)
     else
-      render :new
+      respond_with @team.errors, status: :unprocessable_entity
     end
   end
 

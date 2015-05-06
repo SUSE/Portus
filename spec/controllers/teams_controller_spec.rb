@@ -43,24 +43,17 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    describe 'GET #new' do
-      it 'assigns a new team as @team' do
-        get :new
-        expect(assigns(:team)).to be_a_new(Team)
-      end
-    end
-
     describe 'POST #create' do
       context 'with valid params' do
         it 'creates a new Team' do
           expect do
-            post :create, { team: valid_attributes }
+            post :create, { team: valid_attributes, format: :js }
           end.to change(Team, :count).by(1)
           expect(assigns(:team).owners.exists?(owner.id))
         end
 
         it 'assigns a newly created team as @team' do
-          post :create, { team: valid_attributes }
+          post :create, { team: valid_attributes, format: :js }
           expect(assigns(:team)).to be_a(Team)
           expect(assigns(:team)).to be_persisted
         end
@@ -73,13 +66,9 @@ RSpec.describe TeamsController, type: :controller do
 
       context 'with invalid params' do
         it 'assigns a newly created but unsaved team as @team' do
-          post :create, { team: invalid_attributes }
+          post :create, { team: invalid_attributes, format: :js }
           expect(assigns(:team)).to be_a_new(Team)
-        end
-
-        it "re-renders the 'new' template" do
-          post :create, { team: invalid_attributes }
-          expect(response).to render_template('new')
+          expect(response.status).to eq 422
         end
       end
     end
