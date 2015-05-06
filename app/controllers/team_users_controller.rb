@@ -28,7 +28,7 @@ class TeamUsersController < ApplicationController
   def destroy
     authorize @team_user
     team = @team_user.team
-    locals = {}
+    locals = { error: nil }
     if team.owners.exists?(@team_user.user.id) &&
       team.owners.count == 1
       locals[:error] = 'Cannot remove the only owner of the team'

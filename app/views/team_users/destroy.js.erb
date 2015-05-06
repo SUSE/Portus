@@ -1,6 +1,8 @@
 <% if error %>
   $('#alert p').html("<%= escape_javascript(error) %>");
-  $('#alert').fadeToggle();
+  $('#alert').fadeIn();
 <% else %>
-$("#team_user_<%= team_user_id %>").remove();
+  $("#team_user_<%= team_user_id %>").remove();
+  $('#notice p').html("User removed from the team");
+  $('#notice').fadeIn();
 <% end %>

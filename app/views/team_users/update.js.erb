@@ -3,5 +3,5 @@
   $("#change_role_team_user_<%= team_user.id %>").fadeToggle();
 <% else %>
   $('#alert p').html("<%= escape_javascript(team_user.errors.full_messages.join('<br/>')) %>");
-  $('#alert').fadeToggle();
+  $('#alert').fadeIn();
 <% end %>

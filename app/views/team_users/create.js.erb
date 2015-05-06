@@ -13,5 +13,7 @@ var el = $('#new-team-user-form');
   el.find('.errors').html(errors);
 <% else %>
   $("<%= escape_javascript(render @team_user) %>").appendTo("#team_users");
+  $('#notice p').html("New user added to the team");
+  $('#notice').fadeIn();
 <% end %>
 
