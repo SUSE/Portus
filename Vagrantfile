@@ -24,6 +24,7 @@ Vagrant.configure('2') do |config|
     node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: <<EOS
 cp /vagrant/vagrant/conf/registry-config.yml /etc/registry-config.yml
+systemctl enable registry
 systemctl restart registry
 EOS
   end
