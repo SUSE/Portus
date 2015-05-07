@@ -22,7 +22,6 @@ class TeamsController < ApplicationController
     @team.owners << current_user
 
     if @team.save
-      flash[:notice] = 'Team was successfully created'
       respond_with(@team)
     else
       respond_with @team.errors, status: :unprocessable_entity

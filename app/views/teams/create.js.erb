@@ -5,7 +5,7 @@ var el = $('#new-team-user-form');
   $('#alert').fadeIn();
 <% else %>
   $("<%= escape_javascript(render @team) %>").appendTo("#teams");
-  $('#notice p').html("New team created");
+  $('#notice p').html("The team '<%= @team.name %>' was created successfully");
   $('#notice').fadeIn();
   $('#add_team_form').fadeOut();
   $('#add_team_btn i').addClass("fa-chevron-down")
