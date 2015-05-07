@@ -1,7 +1,7 @@
 .clearfix
   .pull-right
     a#add_team_btn[class="btn btn-primary js-toggle-button" role="button"]
-      | Create 
+      | Create
       i[class="fa fa-chevron-down"]
 
 #add_team_form[class="collapse"]
@@ -9,7 +9,7 @@
       .form-group
         = f.label :name, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.text_field(:name, class: 'form-control')
+          = f.text_field(:name, class: 'form-control', required: true)
       .form-group
         .[class='col-md-offset-2 col-md-7']
           = f.submit('Add', class: 'btn btn-primary')

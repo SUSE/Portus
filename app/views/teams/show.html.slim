@@ -18,7 +18,7 @@ ul
   .clearfix
     .pull-right
       a[id="add_team_user_btn" class="btn btn-primary js-toggle-button" role="button"]
-        | Add members 
+        | Add members
         i[class="fa fa-chevron-down"]
   .[id="add_team_user_form" class="collapse"]
     = form_for :team_user, url: team_users_path, remote: true, html: {id: 'new-team-user-form', class: 'form-horizontal', role: 'form'} do |f|
@@ -30,7 +30,7 @@ ul
       .form-group
         = f.label :user, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.text_field(:user, class: 'form-control', placeholder: 'Name')
+          = f.text_field(:user, class: 'form-control', placeholder: 'Name', required: true)
       .form-group
         .[class='col-md-offset-2 col-md-7']
           = f.submit('Add', class: 'btn btn-primary')
@@ -72,7 +72,7 @@ p It is possible to add read only (pull) access to all Portus users by toggling
   .clearfix
     .pull-right
       a[id="add_namespace_btn" class="btn btn-primary js-toggle-button" role="button"]
-        | Add namespace 
+        | Add namespace
         i[class="fa fa-chevron-down"]
   .[id="add_namespace_form" class="collapse"]
     = form_for :namespace, url: namespaces_path, remote: true, html: {id: 'new-namespace-form', class: 'form-horizontal', role: 'form'} do |f|
@@ -80,7 +80,7 @@ p It is possible to add read only (pull) access to all Portus users by toggling
       .form-group
         = f.label :namespace, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.text_field(:namespace, class: 'form-control', placeholder: 'Name')
+          = f.text_field(:namespace, class: 'form-control', placeholder: 'Name', required: true)
       .form-group
         .[class='col-md-offset-2 col-md-7']
           = f.submit('Add', class: 'btn btn-primary')
