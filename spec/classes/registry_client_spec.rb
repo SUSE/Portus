@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Registry do
+describe RegistryClient do
   let(:registry_server) { 'registry.test.lan' }
   let(:username) { 'flavio' }
   let(:password) { 'this is a test' }
@@ -10,7 +10,7 @@ describe Registry do
       VCR.turned_off do
         WebMock.disable_net_connect!
         s = stub_request(:get, "https://#{registry_server}/v2/")
-        registry = Registry.new(registry_server)
+        registry = RegistryClient.new(registry_server)
         registry.get_request('')
         expect(s).to have_been_requested
       end
@@ -21,11 +21,11 @@ describe Registry do
 
   it 'fails if the registry has authentication enabled and no credentials are set' do
     path = ''
-    registry = Registry.new(registry_server, false)
+    registry = RegistryClient.new(registry_server, false)
     VCR.use_cassette('registry/missing_credentials', record: :none) do
       expect do
         registry.get_request(path)
-      end.to raise_error(Registry::CredentialsMissingError)
+      end.to raise_error(RegistryClient::CredentialsMissingError)
     end
   end
 
@@ -33,7 +33,7 @@ describe Registry do
     let(:path) { '' }
 
     it 'can obtain an authentication token' do
-      registry = Registry.new(
+      registry = RegistryClient.new(
         registry_server,
         false,
         username,
@@ -46,7 +46,7 @@ describe Registry do
     end
 
     it 'raise an exception when the user credentials are wrong' do
-      registry = Registry.new(
+      registry = RegistryClient.new(
         registry_server,
         false,
         username,
@@ -55,12 +55,12 @@ describe Registry do
       VCR.use_cassette('registry/wrong_authentication', record: :none) do
         expect do
           registry.get_request(path)
-        end.to raise_error(Registry::AuthorizationError)
+        end.to raise_error(RegistryClient::AuthorizationError)
       end
     end
 
     it 'raises an AuthorizationError when the credentials are always wrong' do
-      registry = Registry.new(
+      registry = RegistryClient.new(
         registry_server,
         false,
         username,
@@ -77,7 +77,7 @@ describe Registry do
 
           expect do
             registry.get_request('')
-          end.to raise_error(Registry::AuthorizationError)
+          end.to raise_error(RegistryClient::AuthorizationError)
         end
       ensure
         WebMock.allow_net_connect!
@@ -85,7 +85,7 @@ describe Registry do
     end
 
     it 'raises a NoBearerRealmException when the bearer realm is not found' do
-      registry = Registry.new(
+      registry = RegistryClient.new(
         registry_server,
         false,
         username,
@@ -99,7 +99,7 @@ describe Registry do
 
           expect do
             registry.get_request('')
-          end.to raise_error(Registry::NoBearerRealmException)
+          end.to raise_error(RegistryClient::NoBearerRealmException)
         end
       ensure
         WebMock.allow_net_connect!
@@ -107,7 +107,7 @@ describe Registry do
     end
 
     it 'raises a NoBearerRealmException when the bearer realm is not found' do
-      registry = Registry.new(
+      registry = RegistryClient.new(
         registry_server,
         false,
         username,
@@ -121,7 +121,7 @@ describe Registry do
 
           expect do
             registry.get_request('')
-          end.to raise_error(Registry::NoBearerRealmException)
+          end.to raise_error(RegistryClient::NoBearerRealmException)
         end
       ensure
         WebMock.allow_net_connect!
@@ -135,7 +135,7 @@ describe Registry do
 
     it 'authenticates and fetches the image manifest' do
       VCR.use_cassette('registry/get_image_manifest', record: :none) do
-        registry = Registry.new(
+        registry = RegistryClient.new(
           registry_server,
           false,
           username,
@@ -149,7 +149,7 @@ describe Registry do
 
     it 'fails if the image is not found' do
       VCR.use_cassette('registry/get_missing_image_manifest', record: :none) do
-        registry = Registry.new(
+        registry = RegistryClient.new(
           registry_server,
           false,
           username,
@@ -157,12 +157,12 @@ describe Registry do
 
         expect do
           registry.manifest(repository, '2.0.0')
-        end.to raise_error(Registry::ManifestNotFoundError)
+        end.to raise_error(RegistryClient::ManifestNotFoundError)
       end
     end
 
     it 'raises an exception when the return code is different from 200 or 401' do
-      registry = Registry.new(
+      registry = RegistryClient.new(
         registry_server,
         false,
         username,

@@ -1,4 +1,4 @@
-class Registry
+class RegistryClient
   class NoBearerRealmException < RuntimeError
   end
 
