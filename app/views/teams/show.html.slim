@@ -102,4 +102,4 @@ p It is possible to add read only (pull) access to all Portus users by toggling
             th Public
         tbody#namespaces
           - @team.namespaces.each do |namespace|
-            = render(namespace)
+            = render partial: 'namespaces/namespace', locals: { show_owner: false, namespace: namespace }

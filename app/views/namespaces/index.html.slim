@@ -9,13 +9,15 @@ p A namespace groups a series of repositories.
     .table-responsive
       table[class="table table-stripped table-hover"]
         col.col-50
-        col.col-40
+        col.col-20
+        col.col-20
         col.col-10
         thead
           tr
             th Name
+            th Owner
             th Repositories
             th Public
         tbody
           - @namespaces.each do |namespace|
-            = render(namespace)
+            = render partial: 'namespace', locals: { show_owner: true, namespace: namespace}
