@@ -7,8 +7,14 @@ aside
       - if current_page?(url_for dashboard_path)
         .list-selected
     li.active
-      a[href="#{url_for current_user.personal_namespace}"]
-        i[class="fa fa-user"]
-        | Images
-      - if current_page?(url_for current_user.personal_namespace)
+      a[href="#{url_for namespaces_path}"]
+        i[class="fa fa-ship"]
+        | Namespaces
+      - if current_page?(url_for namespaces_path)
+        .list-selected
+    li.active
+      a[href="#{url_for teams_path}"]
+        i[class="fa fa-users"]
+        | Teams
+      - if current_page?(url_for teams_path)
         .list-selected

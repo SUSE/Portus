@@ -1,0 +1,11 @@
+<% if @namespace.errors.any? %>
+  $('#alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
+  $('#alert').fadeIn();
+<% else %>
+  $("<%= escape_javascript(render @namespace) %>").appendTo("#namespaces");
+  $('#notice p').html("New namespace created");
+  $('#notice').fadeIn();
+  $('#add_namespace_form').fadeOut();
+  $('#add_namespace_btn i').addClass("fa-chevron-down")
+  $('#add_namespace_btn i').removeClass("fa-chevron-up")
+<% end %>

@@ -1,6 +1,10 @@
+h1 Namespaces
+
+p A namespace groups a series of repositories.
+
 .[class="panel panel-default"]
   .panel-heading
-    h1 Namespaces
+    h2[class='panel-title panel-heading'] Namespaces you have access to
   .panel-body
     .table-responsive
       table[class="table table-stripped table-hover"]
@@ -10,13 +14,8 @@
         thead
           tr
             th Name
-            th # Repositories
-            th
+            th Repositories
+            th Public
         tbody
           - @namespaces.each do |namespace|
-            tr
-              td= link_to namespace.name, namespace
-              td= namespace.repositories.count
-              td
-                a[href="#{url_for namespace}" class="btn btn-default"]
-                  i[class="fa fa-eye fa-lg"]
+            = render(namespace)

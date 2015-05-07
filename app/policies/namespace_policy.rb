@@ -19,4 +19,32 @@ class NamespacePolicy
     namespace.team.contributors.exists?(user.id)
   end
 
+  def show?
+    pull?
+  end
+
+  def create?
+    push?
+  end
+
+  def toggle_public?
+    namespace.team.owners.exists?(user.id)
+  end
+
+  class Scope
+    attr_reader :user, :scope
+
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      scope
+        .joins(team: [:team_users])
+        .where('namespaces.public = ? OR team_users.user_id = ?',  true, user.id)
+    end
+  end
+
+
 end

@@ -13,9 +13,4 @@ class User < ActiveRecord::Base
       Team.create!(name: username, owners: [self])
     end
   end
-
-  def personal_namespace
-    Namespace.find_by!(name: username)
-  end
-
 end

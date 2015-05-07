@@ -1,0 +1,25 @@
+tr[id="team_user_#{team_user.id}"]
+  td= team_user.user.username
+  td
+    .role= team_user.role.titleize
+    .[id="change_role_team_user_#{team_user.id}" class="collapse"]
+      = form_for team_user, remote: true, html: {class: 'form-inline', role: 'form'} do |f|
+        .form-group
+          = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
+          .[class='col-md-offset-2 col-md-7']
+        = f.submit('Save', class: 'btn btn-primary')
+        .errors
+  - if is_team_owner?(team_user.team)
+    td
+      button[class="btn btn-default btn-edit-role"
+        value="#{team_user.id}"]
+        i[class="fa fa-pencil fa-lg"]
+    td
+      a[class="btn btn-default"
+        data-method="delete"
+        rel="nofollow"
+        data-remote="true"
+        data-confirm="Are you sure?"
+        href=url_for(team_user)
+        ]
+        i[class="fa fa-trash fa-lg"]

@@ -1,0 +1,105 @@
+h1= "Team '#{@team.name}'"
+
+h2 Members
+
+p There are three types of users inside of a team:
+ul
+  li
+    i Viewer
+    | : has read only access. Only pull operations are permitted.
+  li
+    i Contributor
+    | : has read and write access. Both pull and push operations are permitted.
+  li
+    i Owner
+    | : like 'contributor', but can also manage the team.
+
+- if is_team_owner?(@team)
+  .clearfix
+    .pull-right
+      a[id="add_team_user_btn" class="btn btn-primary js-toggle-button" role="button"]
+        | Add members 
+        i[class="fa fa-chevron-down"]
+  .[id="add_team_user_form" class="collapse"]
+    = form_for :team_user, url: team_users_path, remote: true, html: {id: 'new-team-user-form', class: 'form-horizontal', role: 'form'} do |f|
+      = f.hidden_field(:team, value: @team.name)
+      .form-group
+        = f.label :role, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
+      .form-group
+        = f.label :user, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_field(:user, class: 'form-control', placeholder: 'Name')
+      .form-group
+        .[class='col-md-offset-2 col-md-7']
+          = f.submit('Add', class: 'btn btn-primary')
+
+.[class="panel panel-default"]
+  .[class="panel-heading"]
+    h3[class='panel-title panel-heading'] Members of team '#{@team.name}'
+  .panel-body
+    .table-responsive
+      table[class="table table-striped table-hover"]
+        colgroup
+          - if is_team_owner?(@team)
+            col.col-40
+            col.col-40
+            col.col-10
+            col.col-10
+          - else
+            col.col-50
+            col.col-50
+        thead
+          tr
+            th User
+            th Role
+            - if is_team_owner?(@team)
+              th Edit
+              th Remove
+        tbody#team_users
+          - @team.team_users.each do |tu|
+            = render(tu)
+
+h2 Namespaces
+
+p A team can own one or more namespaces. By default all the namespaces can
+  be accessed only by the members of the team.
+p It is possible to add read only (pull) access to all Portus users by toggling
+  the "public" flag.
+
+- if is_team_owner?(@team)
+  .clearfix
+    .pull-right
+      a[id="add_namespace_btn" class="btn btn-primary js-toggle-button" role="button"]
+        | Add namespace 
+        i[class="fa fa-chevron-down"]
+  .[id="add_namespace_form" class="collapse"]
+    = form_for :namespace, url: namespaces_path, remote: true, html: {id: 'new-namespace-form', class: 'form-horizontal', role: 'form'} do |f|
+      = f.hidden_field(:team, value: @team.name)
+      .form-group
+        = f.label :namespace, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_field(:namespace, class: 'form-control', placeholder: 'Name')
+      .form-group
+        .[class='col-md-offset-2 col-md-7']
+          = f.submit('Add', class: 'btn btn-primary')
+
+.[class="panel panel-default"]
+  .[class="panel-heading"]
+    h3[class='panel-title panel-heading'] Namespaces owned by team '#{@team.name}'
+  .panel-body
+    .table-responsive
+      table[class="table table-striped table-hover"]
+        colgroup
+          col.col-50
+          col.col-40
+          col.col-10
+        thead
+          tr
+            th Namespace
+            th Repositories
+            th Public
+        tbody#namespaces
+          - @team.namespaces.each do |namespace|
+            = render(namespace)
