@@ -29,6 +29,15 @@ describe TeamUsersController do
         delete :destroy, id: team.team_users.find_by(role: TeamUser.roles['viewer']).id, format: 'js'
         expect(team.viewers.exists?(user.id)).to be false
       end
+
+      it 'redirects to the teams page when the user removes himself' do
+        user = create(:user)
+        team.owners << user
+
+        delete :destroy, id: team.team_users.find_by(user_id: owner.id).id, format: 'js'
+        expect(team.owners.exists?(owner.id)).to be false
+        expect(response.body).to eq("window.location = '/teams'")
+      end
     end
 
     describe 'PUT #update' do
@@ -48,6 +57,17 @@ describe TeamUsersController do
                      team_user: { role: 'contributor' }, format: 'js'
         expect(team.contributors.exists?(user.id)).to be true
         expect(assigns(:team_user).errors).to be_empty
+      end
+
+      it 'forces a page reload when the current user changes his role' do
+        user = create(:user)
+        team.owners << user
+
+        put :update, id: team.team_users.find_by(user_id: owner.id).id,
+                     team_user: { role: 'contributor' }, format: 'js'
+        expect(team.contributors.exists?(owner.id)).to be true
+        expect(assigns(:team_user).errors).to be_empty
+        expect(response.body).to eq("window.location = '/teams/#{team.id}'")
       end
     end
 

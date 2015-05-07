@@ -29,6 +29,7 @@ class TeamUsersController < ApplicationController
     authorize @team_user
     team = @team_user.team
     locals = { error: nil }
+    seppuku = @team_user.user == current_user
     if team.owners.exists?(@team_user.user.id) &&
       team.owners.count == 1
       locals[:error] = 'Cannot remove the only owner of the team'
@@ -36,7 +37,13 @@ class TeamUsersController < ApplicationController
       @team_user.destroy
       locals[:team_user_id] = params[:id]
     end
-    render template: 'team_users/destroy', locals: locals
+    if seppuku
+      # redirecting to the teams page, current user just removed himself from
+      # the team
+      render js: "window.location = '/teams'"
+    else
+      render template: 'team_users/destroy', locals: locals
+    end
   end
 
   # PATCH/PUT /team_users/1
@@ -49,10 +56,16 @@ class TeamUsersController < ApplicationController
       team.owners.count == 1 &&
       team_user_params['role'] != 'owner'
       @team_user.errors.add(:role, 'cannot be changed for the only owner of the team')
+      render template: 'team_users/update', locals: { team_user: @team_user }
     else
       @team_user.update(team_user_params)
+      if @team_user.user == current_user
+        # force reload to ensure all the owner-only attributes disappear
+        render js: "window.location = '/teams/#{team.id}'"
+      else
+        render template: 'team_users/update', locals: { team_user: @team_user }
+      end
     end
-    render template: 'team_users/update', locals: { team_user: @team_user }
   end
 
   private
