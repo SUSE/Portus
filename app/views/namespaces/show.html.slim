@@ -1,6 +1,14 @@
+h1= "Namespace #{@namespace.name}"
+
+- if @namespace.name != current_user.username
+  p
+    | This namespace is owned by the 
+    = link_to @namespace.team.name, @namespace.team
+    |  team.
+
 .[class="panel panel-default"]
   .panel-heading
-    h1= "Namespace #{@namespace.name}"
+    h3[class='panel-title panel-heading'] Repositories part of '#{@namespace.name}'
   .panel-body
     .table-responsive
       table[class="table table-stripped table-hover"]

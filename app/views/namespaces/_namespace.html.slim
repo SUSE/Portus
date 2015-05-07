@@ -1,5 +1,7 @@
 tr[id="namespace_#{namespace.id}"]
   td= link_to namespace.name, namespace
+  - if show_owner
+    td= link_to namespace.team.name, namespace.team
   td= namespace.repositories.count
   td
     - if is_namespace_owner?(namespace)
