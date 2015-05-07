@@ -1,5 +1,7 @@
-$('#namespace_<%= namespace.id %> td a i').addClass("fa-toggle-<%= namespace.public? ? 'on' : 'off' %>");
-$('#namespace_<%= namespace.id %> td a i').removeClass("fa-toggle-<%= namespace.public? ? 'off' : 'on' %>");
+$('#namespace_<%= namespace.id %> td .visibility i').addClass("fa-eye<%= namespace.public? ? '' : '-slash' %>");
+$('#namespace_<%= namespace.id %> td .visibility i').removeClass("fa-eye<%= namespace.public? ? '-slash' : '' %>");
 
 $('#notice p').html("Namespace '<%= namespace.name %>' is now <%= namespace.public? ? 'public' : 'private' %>");
 $('#notice').fadeIn();
+$('#namespace_<%= namespace.id %> td .visibility').toggle();
+$('#change_namespace_<%= namespace.id %>').toggle();

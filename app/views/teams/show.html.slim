@@ -93,13 +93,15 @@ p It is possible to add read only (pull) access to all Portus users by toggling
       table[class="table table-striped table-hover"]
         colgroup
           col.col-50
-          col.col-40
+          col.col-30
+          col.col-10
           col.col-10
         thead
           tr
             th Namespace
             th Repositories
             th Public
+            th Edit
         tbody#namespaces
           - @team.namespaces.each do |namespace|
             = render(namespace)

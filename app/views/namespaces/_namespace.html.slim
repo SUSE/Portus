@@ -2,13 +2,20 @@ tr[id="namespace_#{namespace.id}"]
   td= link_to namespace.name, namespace
   td= namespace.repositories.count
   td
-    - if is_namespace_owner?(namespace)
+    .visibility
+      i[class="fa fa-eye#{namespace.public? ? '': '-slash'} fa-lg"]
+    .[id="change_namespace_#{namespace.id}" class="collapse"]
       a[class="btn btn-default"
-          data-remote="true"
-          data-method="put"
-          rel="nofollow"
-          href=url_for(toggle_public_namespace_path(namespace))
-          ]
+        data-remote="true"
+        data-method="put"
+        rel="nofollow"
+        href=url_for(toggle_public_namespace_path(namespace))]
           i[class="fa fa-toggle-#{namespace.public? ? 'on': 'off'} fa-lg"]
+  td
+    - if is_namespace_owner?(namespace)
+      button[class="btn btn-default btn-edit-namespace" value="#{namespace.id}"]
+        i[class="fa fa-pencil fa-lg"]
     - else
-      i[class="fa fa-toggle-#{namespace.public? ? 'on': 'off'} fa-lg"]
+      button[class="btn btn-default btn-edit-namespace" disabled]
+        i[class="fa fa-pencil fa-lg"]
+
