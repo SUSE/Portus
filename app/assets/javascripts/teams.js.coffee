@@ -15,7 +15,7 @@ $(document).on "page:change", ->
 
   $('#add_namespace_btn').on 'click', (event) =>
     $('#add_namespace_form').fadeToggle 400, "swing", ->
-      if $('#add_namespace_form').css("display").is(':visible')
+      if $('#add_namespace_form').is(':visible')
         $('#add_namespace_btn i').addClass("fa-chevron-up")
         $('#add_namespace_btn i').removeClass("fa-chevron-down")
       else
@@ -24,7 +24,7 @@ $(document).on "page:change", ->
 
   $('#add_team_btn').on 'click', (event) =>
     $('#add_team_form').fadeToggle 400, "swing", ->
-      if $('#add_team_form').css("display") == "block"
+      if $('#add_team_form').is(':visible')
         $('#add_team_btn i').addClass("fa-chevron-up")
         $('#add_team_btn i').removeClass("fa-chevron-down")
       else
