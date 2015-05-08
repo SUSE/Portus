@@ -41,7 +41,6 @@ class NamespacesController < ApplicationController
   def toggle_public
     authorize @namespace
 
-    #authorize @namespace
     @namespace.update_attributes(public: !(@namespace.public?))
     render template: 'namespaces/toggle_public', locals: { namespace: @namespace }
   end
