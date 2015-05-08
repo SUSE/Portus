@@ -1,7 +1,7 @@
 module TeamsHelper
 
-  def is_team_owner?(team)
-    team.owners.exists?(current_user.id)
+  def can_manage_team?(team)
+    current_user.admin? || team.owners.exists?(current_user.id)
   end
 
   def role_within_team(team)

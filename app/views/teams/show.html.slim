@@ -14,7 +14,7 @@ ul
     i Owner
     | : like 'contributor', but can also manage the team.
 
-- if is_team_owner?(@team)
+- if can_manage_team?(@team)
   .clearfix
     .pull-right
       a[id="add_team_user_btn" class="btn btn-primary js-toggle-button" role="button"]
@@ -42,7 +42,7 @@ ul
     .table-responsive
       table[class="table table-striped table-hover"]
         colgroup
-          - if is_team_owner?(@team)
+          - if can_manage_team?(@team)
             col.col-40
             col.col-40
             col.col-10
@@ -54,7 +54,7 @@ ul
           tr
             th User
             th Role
-            - if is_team_owner?(@team)
+            - if can_manage_team?(@team)
               th Edit
               th Remove
         tbody#team_users
@@ -68,7 +68,7 @@ p A team can own one or more namespaces. By default all the namespaces can
 p It is possible to add read only (pull) access to all Portus users by toggling
   the "public" flag.
 
-- if is_team_owner?(@team)
+- if can_manage_team?(@team)
   .clearfix
     .pull-right
       a[id="add_namespace_btn" class="btn btn-primary js-toggle-button" role="button"]
