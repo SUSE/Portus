@@ -5,6 +5,12 @@ module TeamsHelper
   end
 
   def role_within_team(team)
-    team.team_users.find_by(user_id: current_user.id).role
+    team_user = team.team_users.find_by(user_id: current_user.id)
+    if team_user
+      team_user.role.titleize
+    else
+      # That happens when the admin user access a team he's not part of
+      '-'
+    end
   end
 end

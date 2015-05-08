@@ -1,0 +1,34 @@
+h1 Users
+
+.[class="panel panel-default"]
+  .panel-heading
+    h2[class='panel-title panel-heading'] Registered users
+  .panel-body
+    .table-responsive
+      table[class="table table-stripped table-hover"]
+        col.col-40
+        col.col-40
+        col.col-10
+        col.col-10
+        thead
+          tr
+            th Name
+            th Email
+            th Admin
+            th Namespaces
+            th Teams
+        tbody
+          - @users.each do |user|
+            tr[id="user_#{user.id}"]
+              td= user.username
+              td= user.email
+              td
+                a[class="btn btn-default"
+                  data-remote="true"
+                  data-method="put"
+                  rel="nofollow"
+                  href=url_for(toggle_admin_admin_user_path(user))]
+                    i[class="fa fa-toggle-#{user.admin? ? 'on': 'off'} fa-lg"]
+
+              td= user.teams.reduce(0){ |sum, t| sum += t.namespaces.count}
+              td= user.teams.count

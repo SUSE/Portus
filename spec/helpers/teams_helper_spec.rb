@@ -32,7 +32,12 @@ RSpec.describe TeamsHelper, type: :helper do
   describe 'role within team' do
     it 'returns the role of the current user inside of the team' do
       sign_in viewer
-      expect(helper.role_within_team(team)).to eq 'viewer'
+      expect(helper.role_within_team(team)).to eq 'Viewer'
+    end
+
+    it 'returns - for users that are not part of the team' do
+      sign_in create(:user, admin: true)
+      expect(helper.role_within_team(team)).to eq '-'
     end
   end
 end
