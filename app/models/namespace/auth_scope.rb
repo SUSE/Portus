@@ -4,13 +4,14 @@ class Namespace::AuthScope
 
   attr_accessor :resource, :actions, :resource_type, :resource_name
 
-  def initialize(scope_string)
+  def initialize(registry, scope_string)
     @scope_string = scope_string
+    @registry = registry
     parse_scope_string!
   end
 
   def resource
-    raise ResourceIsNotFound unless (found_resource = Namespace.find_by(name: @namespace_name))
+    raise ResourceIsNotFound unless (found_resource = @registry.namespaces.find_by(name: @namespace_name))
     found_resource
   end
 

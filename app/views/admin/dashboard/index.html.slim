@@ -2,6 +2,21 @@
   .[class="col-md-3 col-xs-6"]
     .panel-overview
       .panel-heading
+        = link_to 'Registry', admin_registries_path
+      .panel-body
+        .row
+          .col-xs-4
+            i.fa.fa-server.registries
+          .col-xs-8
+            - if Registry.count == 0
+              span.fa-3x
+               | None
+            - else
+              span.fa-3x= Registry.count
+
+  .[class="col-md-3 col-xs-6"]
+    .panel-overview
+      .panel-heading
         = link_to 'Users', admin_users_path
       .panel-body
         .row

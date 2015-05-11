@@ -3,8 +3,11 @@ class Api::V2::TokensController < Api::BaseController
   before_filter :authenticate_user!
 
   def show
+    registry = Registry.find_by(hostname: params['service'])
+    raise RegistryNotHandled if registry.nil?
+
     if params[:scope]
-      auth_scope, scopes = scope_handler(params[:scope])
+      auth_scope, scopes = scope_handler(registry, params[:scope])
       scopes.each do |scope|
         authorize auth_scope.resource, "#{scope}?".to_sym
       end

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :dashboard, only: [ :index ]
+    resources :registries, only: [ :index, :create, :new ]
     resources :namespaces, only: [ :index ]
     resources :teams, only: [ :index ]
     resources :users, only: [ :index ] do

@@ -1,5 +1,6 @@
 class Api::BaseController < ActionController::Base
   class ScopeNotHandled < StandardError; end
+  class RegistryNotHandled < StandardError; end
 
   include Pundit
 
@@ -8,6 +9,7 @@ class Api::BaseController < ActionController::Base
   rescue_from Namespace::AuthScope::ResourceIsNotFound, with: :deny_access
   rescue_from Pundit::NotAuthorizedError, with: :deny_access
   rescue_from ScopeNotHandled, with: :deny_access
+  rescue_from RegistryNotHandled, with: :deny_access
 
   protected
 
@@ -15,12 +17,12 @@ class Api::BaseController < ActionController::Base
     head :unauthorized
   end
 
-  def scope_handler(scope_string)
+  def scope_handler(registry, scope_string)
     type = scope_string.split(':', 3)[0]
 
     case type
     when 'repository'
-      auth_scope = Namespace::AuthScope.new(scope_string)
+      auth_scope = Namespace::AuthScope.new(registry, scope_string)
     else
       logger.error "Scope not handled: #{type}"
       raise ScopeNotHandled
