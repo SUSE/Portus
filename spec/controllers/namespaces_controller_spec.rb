@@ -67,7 +67,7 @@ describe NamespacesController do
     let(:valid_attributes) do
       {
         team: team.name,
-        namespace: 'qa team namespace'
+        namespace: 'qa_team_namespace'
       }
     end
 

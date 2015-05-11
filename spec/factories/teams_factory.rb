@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :team do
-    name   { FFaker::NatoAlphabet.code.downcase }
+    sequence(:name) {|n| "team_name#{n}" }
     owners {|t| [t.association(:user)] }
   end
 

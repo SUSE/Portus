@@ -18,7 +18,9 @@ class Team < ActiveRecord::Base
   def create_team_namespace!
     # TODO: change once we allow more registries to be handled by portus
     registry = Registry.first
-    Namespace.find_or_create_by!(team: self, name: name, registry: registry)
+    Namespace.find_or_create_by!(team: self,
+                                 name: Namespace.sanitize_name(name),
+                                 registry: registry)
   end
 
   private
