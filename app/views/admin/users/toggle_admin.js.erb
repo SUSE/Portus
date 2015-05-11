@@ -1,0 +1,5 @@
+$('#user_<%= user.id %> td a i').addClass("fa-toggle-<%= user.admin? ? 'on' : 'off' %>");
+$('#user_<%= user.id %> td a i').removeClass("fa-toggle-<%= user.admin? ? 'off' : 'on' %>");
+
+$('#notice p').html("User '<%= user.username %>' is <%= user.admin? ? 'now' : 'no longer' %> an admin");
+$('#notice').fadeIn();

@@ -8,7 +8,7 @@ class TeamUserPolicy
   end
 
   def is_owner?
-    @team_user.team.owners.exists?(user.id)
+    user.admin? || @team_user.team.owners.exists?(user.id)
   end
 
   alias_method :destroy?, :is_owner?

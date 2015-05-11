@@ -4,6 +4,7 @@ describe TeamUserPolicy do
 
   subject { described_class }
 
+  let(:admin)       { create(:user, admin: true) }
   let(:user)        { create(:user) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
@@ -26,13 +27,17 @@ describe TeamUserPolicy do
       expect(subject).to_not permit(contributor, team_user)
     end
 
-    it 'allows access to a member of the team with owner role', bug: true do
+    it 'allows access to a member of the team with owner role' do
       expect(subject).to permit(owner, team_user)
     end
 
     it 'denies access to an owner of another group' do
       create(:team, owners: [user])
       expect(subject).to_not permit(user, team_user)
+    end
+
+    it 'allows access to admin user even if he is not part of the team' do
+      expect(subject).to permit(admin, team_user)
     end
 
   end

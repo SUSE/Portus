@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe TeamsHelper, type: :helper do
 
+  let(:admin)       { create(:user, admin: true) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
   let(:contributor) { create(:user) }
@@ -12,27 +13,37 @@ RSpec.describe TeamsHelper, type: :helper do
            viewers: [ viewer ])
   end
 
-  describe 'is_team_owner?' do
+  describe 'can_manage_team?' do
     it 'returns true if current user is an owner of the team' do
       sign_in owner
-      expect(helper.is_team_owner?(team)).to be true
+      expect(helper.can_manage_team?(team)).to be true
     end
 
     it 'returns false if current user is a viewer of the team' do
       sign_in viewer
-      expect(helper.is_team_owner?(team)).to be false
+      expect(helper.can_manage_team?(team)).to be false
     end
 
     it 'returns false if current user is a contributor of the team' do
       sign_in contributor
-      expect(helper.is_team_owner?(team)).to be false
+      expect(helper.can_manage_team?(team)).to be false
+    end
+
+    it 'returns false if current user is an admin even if he is not related with the team' do
+      sign_in admin
+      expect(helper.can_manage_team?(team)).to be true
     end
   end
 
   describe 'role within team' do
     it 'returns the role of the current user inside of the team' do
       sign_in viewer
-      expect(helper.role_within_team(team)).to eq 'viewer'
+      expect(helper.role_within_team(team)).to eq 'Viewer'
+    end
+
+    it 'returns - for users that are not part of the team' do
+      sign_in create(:user, admin: true)
+      expect(helper.role_within_team(team)).to eq '-'
     end
   end
 end

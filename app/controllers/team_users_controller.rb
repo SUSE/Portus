@@ -29,7 +29,7 @@ class TeamUsersController < ApplicationController
     authorize @team_user
     team = @team_user.team
     locals = { error: nil }
-    seppuku = @team_user.user == current_user
+    seppuku = @team_user.user == current_user && !current_user.admin?
     if team.owners.exists?(@team_user.user.id) &&
       team.owners.count == 1
       locals[:error] = 'Cannot remove the only owner of the team'

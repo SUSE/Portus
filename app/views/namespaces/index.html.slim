@@ -18,4 +18,4 @@ p A namespace groups a series of repositories.
             th Public
         tbody
           - @namespaces.each do |namespace|
-            = render(namespace)
+            = render partial: 'namespaces/namespace', locals: {namespace: namespace}

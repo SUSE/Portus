@@ -16,5 +16,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :admin do
+    resources :dashboard, only: [ :index ]
+    resources :namespaces, only: [ :index ]
+    resources :teams, only: [ :index ]
+    resources :users, only: [ :index ] do
+      put 'toggle_admin', on: :member
+    end
+  end
+
   resource :dashboard, only: [ :show ]
 end

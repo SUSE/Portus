@@ -4,6 +4,7 @@ describe NamespacePolicy do
 
   subject { described_class }
 
+  let(:admin)       { create(:user, admin: true) }
   let(:user)        { create(:user) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
@@ -39,6 +40,10 @@ describe NamespacePolicy do
       expect(subject).to permit(user, namespace)
     end
 
+    it 'allows access to admin users even if they are not part of the team' do
+      expect(subject).to permit(admin, namespace)
+    end
+
   end
 
   permissions :push? do
@@ -57,6 +62,10 @@ describe NamespacePolicy do
 
     it 'disallows access to user who is not part of the team' do
       expect(subject).to_not permit(user, namespace)
+    end
+
+    it 'allows access to admin users even if they are not part of the team' do
+      expect(subject).to permit(admin, namespace)
     end
 
   end

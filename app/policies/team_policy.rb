@@ -8,7 +8,7 @@ class TeamPolicy
   end
 
   def is_member?
-    @team.users.exists?(user.id)
+    user.admin? || @team.users.exists?(user.id)
   end
 
   alias_method :show?, :is_member?

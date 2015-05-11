@@ -10,11 +10,12 @@ class NamespacePolicy
   def pull?
     # All the members of the team have READ access or anyone if
     # the namespace is public
-    namespace.public? || namespace.team.users.exists?(user.id)
+    user.admin? || namespace.public? || namespace.team.users.exists?(user.id)
   end
 
   def push?
     # only owners and contributors have WRITE access
+    user.admin? ||
     namespace.team.owners.exists?(user.id) ||
     namespace.team.contributors.exists?(user.id)
   end
@@ -28,7 +29,7 @@ class NamespacePolicy
   end
 
   def toggle_public?
-    namespace.team.owners.exists?(user.id)
+    user.admin? || namespace.team.owners.exists?(user.id)
   end
 
   class Scope

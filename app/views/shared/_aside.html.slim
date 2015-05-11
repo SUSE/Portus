@@ -12,3 +12,10 @@ aside
         | Teams
       - if current_page?(url_for teams_path)
         .list-selected
+    - if current_user.admin?
+      li.active
+        a[href="#{url_for controller: 'admin/dashboard', action: 'index'}"]
+          i[class="fa fa-cogs"]
+          | Admin
+        - if current_page?(url_for controller: 'admin/dashboard', action: 'index')
+          .list-selected
