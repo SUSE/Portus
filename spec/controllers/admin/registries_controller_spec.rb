@@ -7,15 +7,15 @@ RSpec.describe Admin::RegistriesController, type: :controller do
     sign_in admin
   end
 
-  describe "GET #index" do
-    it "returns http success" do
+  describe 'GET #index' do
+    it 'returns http success' do
       get :index
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #new" do
-    it "returns http success" do
+  describe 'GET #new' do
+    it 'returns http success' do
       get :new
       expect(response).to have_http_status(:success)
     end
@@ -36,7 +36,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
         post :create, { registry: attributes_for(:registry) }
         registry = Registry.last
 
-        Namespace.all.each { |n| expect(n.registry).to eq(registry) }
+        Namespace.all.each {|n| expect(n.registry).to eq(registry) }
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
     context 'wrong params' do
       it 'redirects to the new page' do
         expect do
-          post :create, { registry: {name: 'foo' } }
+          post :create, { registry: { name: 'foo' } }
         end.to change(Registry, :count).by(0)
       end
     end
