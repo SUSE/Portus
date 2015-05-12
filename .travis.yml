@@ -11,3 +11,12 @@ before_script:
 script:
   - 'bundle exec rspec spec'
   - 'bundle exec rubocop'
+env:
+  global:
+# OSC_CREDENTIALS are kept secret
+# In order to update them, run:
+#   travis encrypt OSC_CREDENTIALS=user:password
+# more info at: http://docs.travis-ci.com/user/environment-variables/#Secure-Variables
+  - secure: vQWaRrlAYbX7QzuQF/MkDcJr/yDZE4ChCEC87QEKSPBJC6m5Ya8+bW16pIfXr9+CxLNPesS1H5uWyWhf5gmXLdhG+kU41hGrtsvryA0XLEle05LXM/Ype7NnJXn/zEmJp/A6uFcZKTj4vtx+3M9SGxqq8vdsm2hYfmBjiPkwQdPpT5UIdICDUK0tYCB4EiWIyX/2YLnkLsLmH9lFcZGjOBqKlOsm18Xlkp1b1tJHyRj4ysSLSoxuc4wLkBzyU6+13xC1GTXRPQ6l2kLYv/lhZNMEVWvAh2tEQGPstfSMYG07PZFGni06Wk6Bh3aR/i6UqtdgFZe6VR2FYMYEk4r2vdRpNaTDeuKYTWpCDd5/L/ezvRBsEdg6s1LUgIAYt33DHE/ccEKA7pf+vKyXEm8yYpx0DMEqYFT3/bp7g4a6nTrwZDUZWdJHEtzTKtlI/nO/KNHVXZeI0cf8iwtDAcJQNZLQISPBIdZRWVZmO0q+PBHKGt3jn3qcL2dpNvUN5GVCJnpr9hKEVsJ7RCVvP5Z2NmucQDVrxbMMB0mSRzU+pATHzAtk8z3s4MpuRrRDEF7xAmXEcjqYCpW00jMlfvURd+IAFlvdPL4z60wURJng+nr4iX/bKJz8/kIgE/MerAcJr2HH8MG920zs1C4VxO6HYNs4lRAxYxHUOOAjVasjX8U=
+after_success:
+  - packaging/suse/package_and_push_to_obs.sh

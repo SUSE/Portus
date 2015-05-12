@@ -52,6 +52,10 @@ and have the changes automatically sent to the `portus` box.
 `RAILS_ENV` set to `development`. The communication between all the nodes is
 not protected by ssl.
 
+## Continuous integration
+
+Continuous integration is run with [travis](http://travis-ci.org) and the [opensuse build service](http://build.opensuse.org). For details, see the .travis.yml file.
+
 ## Licensing
 
 Portus is licensed under the Apache License, Version 2.0. See
