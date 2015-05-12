@@ -72,7 +72,23 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
     end
+  end
 
+  describe 'activity tracking' do
+    before :each do
+      sign_in owner
+    end
+
+    it 'creation of new teams' do
+      expect do
+        post :create, { team: valid_attributes, format: :js }
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq('team.create')
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(team)
+    end
   end
 
 end

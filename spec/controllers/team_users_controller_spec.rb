@@ -130,4 +130,62 @@ describe TeamUsersController do
     end
   end
 
+  describe 'activity tracking' do
+    before :each do
+      sign_in owner
+    end
+
+    it 'tracks addition a team member' do
+      new_user = create(:user)
+      new_user_role = 'owner'
+
+      expect do
+        post :create,
+             team_user: { team: team.name, user: new_user.username, role: TeamUser.roles[new_user_role] },
+             format: 'js'
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq('team.add_member')
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(team)
+      expect(activity.recipient).to eq(new_user)
+      expect(activity.parameters).to eq({ role: new_user_role })
+    end
+
+    it 'tracks removal of team members' do
+      user = create(:user)
+      team.viewers << user
+
+      expect do
+        delete :destroy, id: team.team_users.find_by(role: TeamUser.roles['viewer']).id, format: 'js'
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq('team.remove_member')
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(team)
+      expect(activity.recipient).to eq(user)
+      expect(activity.parameters).to eq({ role: 'viewer' })
+    end
+
+    it 'tracks changes of role' do
+      user = create(:user)
+      team.viewers << user
+
+      expect do
+        put :update, id: team.team_users.find_by(role: TeamUser.roles['viewer']).id,
+            team_user: { role: 'contributor' }, format: 'js'
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq('team.change_member_role')
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(team)
+      expect(activity.recipient).to eq(user)
+      expect(activity.parameters).to eq({ old_role: 'viewer', new_role: 'contributor' })
+    end
+
+  end
+
 end

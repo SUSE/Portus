@@ -30,6 +30,7 @@ class NamespacesController < ApplicationController
 
     respond_to do |format|
       if @namespace.save
+        @namespace.create_activity :create, owner: current_user
         format.js { respond_with @namespace }
       else
         format.js { respond_with @namespace.errors, status: :unprocessable_entity }
@@ -42,6 +43,11 @@ class NamespacesController < ApplicationController
     authorize @namespace
 
     @namespace.update_attributes(public: !(@namespace.public?))
+    if @namespace.public?
+      @namespace.create_activity :public, owner: current_user
+    else
+      @namespace.create_activity :private, owner: current_user
+    end
     render template: 'namespaces/toggle_public', locals: { namespace: @namespace }
   end
 

@@ -21,6 +21,7 @@ gem 'devise'
 gem 'jquery-turbolinks'
 gem 'gravatar_image_tag'
 gem 'rails-observers'
+gem 'public_activity'
 
 #TODO remove as soon as we migrate to PostgreSQL
 gem 'sqlite3'

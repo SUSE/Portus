@@ -158,6 +158,11 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
+    public_activity (1.4.2)
+      actionpack (>= 3.0.0)
+      activerecord (>= 3.0)
+      i18n (>= 0.5.0)
+      railties (>= 3.0.0)
     pundit (1.0.0)
       activesupport (>= 3.0.0)
     quiet_assets (1.1.0)
@@ -327,6 +332,7 @@ DEPENDENCIES
   less-rails
   poltergeist
   pry-rails
+  public_activity
   pundit
   quiet_assets
   rack-mini-profiler

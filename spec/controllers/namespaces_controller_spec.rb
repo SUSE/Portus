@@ -61,6 +61,7 @@ describe NamespacesController do
 
       expect(response.status).to eq 401
     end
+
   end
 
   describe 'POST #create' do
@@ -155,5 +156,51 @@ describe NamespacesController do
     end
   end
 
+  describe 'activity tracking' do
+    before :each do
+      sign_in owner
+    end
 
+    it 'tracks namespace creation' do
+      post_params = {
+        namespace: { team: team.name, namespace: 'qa_team_namespace' },
+        format: :js
+      }
+
+      expect do
+        post :create, post_params
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq('namespace.create')
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(Namespace.last)
+    end
+
+    it 'tracks set namespace private' do
+      namespace.update_attributes(public: true)
+
+      expect do
+        put :toggle_public, id: namespace.id, format: :js
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq('namespace.private')
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(namespace)
+    end
+
+    it 'tracks set namespace public' do
+      namespace.update_attributes(public: false)
+
+      expect do
+        put :toggle_public, id: namespace.id, format: :js
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq('namespace.public')
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(namespace)
+    end
+  end
 end
