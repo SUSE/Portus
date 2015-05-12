@@ -25,35 +25,45 @@ gem 'rails-observers'
 #TODO remove as soon as we migrate to PostgreSQL
 gem 'sqlite3'
 
-group :development do
-  gem 'quiet_assets'
-  gem 'pry-rails'
-  gem 'git-review', require: false
-  gem 'rack-mini-profiler', require: false
-end
+# In order to create the Gemfile.lock required for packaging
+# meaning that it should contain only the production packages
+# run:
+#
+# PACKAGING=yes bundle list
 
-group :development, :test do
-  gem 'byebug'
-  gem 'web-console', '~> 2.0.0.beta4'
-  gem 'thin'
-  gem 'awesome_print'
-  gem 'hirb'
-  gem 'wirb'
-  gem 'wirble'
-  gem 'sqlite3'
-  gem 'factory_girl_rails'
-  gem 'ffaker'
-  gem 'rubocop', '~> 0.27.1', require: false
-end
+unless ENV['PACKAGING'] && ENV['PACKAGING'] == "yes"
 
-group :test do
-  gem 'shoulda'
-  gem 'rspec-rails'
-  gem 'vcr'
-  gem 'webmock', require: false
-  gem 'simplecov', require: false
-  gem 'capybara'
-  gem 'poltergeist', require: false
-  gem 'database_cleaner'
-  gem 'json-schema'
+  group :development do
+    gem 'quiet_assets'
+    gem 'pry-rails'
+    gem 'git-review', require: false
+    gem 'rack-mini-profiler', require: false
+  end
+
+  group :development, :test do
+    gem 'byebug'
+    gem 'web-console', '~> 2.0.0.beta4'
+    gem 'thin'
+    gem 'awesome_print'
+    gem 'hirb'
+    gem 'wirb'
+    gem 'wirble'
+    gem 'sqlite3'
+    gem 'factory_girl_rails'
+    gem 'ffaker'
+    gem 'rubocop', '~> 0.27.1', require: false
+  end
+
+  group :test do
+    gem 'shoulda'
+    gem 'rspec-rails'
+    gem 'vcr'
+    gem 'webmock', require: false
+    gem 'simplecov', require: false
+    gem 'capybara'
+    gem 'poltergeist', require: false
+    gem 'database_cleaner'
+    gem 'json-schema'
+  end
+
 end
