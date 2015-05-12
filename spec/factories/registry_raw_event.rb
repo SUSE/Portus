@@ -7,6 +7,12 @@ FactoryGirl.define do
       'repository' => 'foo/busybox',
       'url' =>  'http://registry.test.lan/v2/foo/manifests/latest'
     })
+    request({
+      'host' => 'registry.test.lan'
+    })
+    actor({
+      'name' => 'flavio'
+    })
   end
 
   factory :raw_push_layer_event, class: RegistryRawEvent do
@@ -15,6 +21,12 @@ FactoryGirl.define do
       'repository' => 'foo/busybox',
       'url' =>  'http://registry.test.lan/v2/foo/layer/123'
     })
+    request({
+      'host' => 'registry.test.lan'
+    })
+    actor({
+      'name' => 'flavio'
+    })
   end
 
   factory :raw_pull_event, class: RegistryRawEvent do
@@ -22,6 +34,12 @@ FactoryGirl.define do
     target({
       'repository' => 'foo/busybox',
       'url' =>  'http://registry.test.lan/v2/foo/manifests/latest'
+    })
+    request({
+      'host' => 'registry.test.lan'
+    })
+    actor({
+      'name' => 'flavio'
     })
   end
 end

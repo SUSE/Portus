@@ -9,16 +9,17 @@ describe Repository do
 
     let(:tag) { 'latest' }
     let(:repository_name) { 'busybox' }
+    let(:registry) { create(:registry) }
+    let(:user) { create(:user) }
 
     context 'event does not match regexp of manifest' do
 
       let(:event) do
-        {
-          'target' => {
-            'repository' => repository_name,
-            'url' =>  "http://registry.test.lan/v2/#{repository_name}/wrong/#{tag}"
-          }
-        }
+        e = attributes_for(:raw_push_manifest_event).stringify_keys
+        e['target']['repository'] = repository_name
+        e['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/wrong/#{tag}"
+        e['request']['host'] = registry.hostname
+        e
       end
 
       it 'sends event to logger' do
@@ -29,27 +30,30 @@ describe Repository do
 
     end
 
-
     context 'when dealing with a top level repository' do
-      let(:event) do
-        {
-          'target' => {
-            'repository' => repository_name,
-            'url' =>  "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
-          }
-        }
+      before :each do
+        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event['target']['repository'] = repository_name
+        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
+        @event['request']['host'] = registry.hostname
+        @event['actor']['name'] = user.username
+ 
+        @global_namespace = Namespace.new(name: nil, registry: registry)
+        @global_namespace.save(validate: false)
       end
 
       context 'when the repository is not known by Portus' do
         it 'should create repository and tag objects' do
-          repository = Repository.handle_push_event(event)
+          repository = nil
+          expect do
+            repository = Repository.handle_push_event(@event)
+          end.to change(Namespace, :count).by(0)
 
           expect(repository).not_to be_nil
-          expect(Namespace.count).to eq 0
           expect(Repository.count).to eq 1
           expect(Tag.count).to eq 1
 
-          expect(repository.namespace).to be_nil
+          expect(repository.namespace).to eq(@global_namespace)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 1
           expect(repository.tags.first.name).to eq tag
@@ -57,18 +61,23 @@ describe Repository do
       end
 
       context 'when a new version of an already known repository' do
-        it 'should create a new tag' do
+        before :each do
           repository = create(:repository, name: repository_name)
           repository.tags << Tag.new(name: '1.0.0')
+        end
 
-          repository = Repository.handle_push_event(event)
+        it 'should create a new tag' do
+          repository = nil
+          expect do
+            repository = Repository.handle_push_event(@event)
+          end.to change(Namespace, :count).by(0)
 
           expect(repository).not_to be_nil
-          expect(Namespace.count).to eq 0
+          expect(Namespace.count).to eq 2
           expect(Repository.count).to eq 1
           expect(Tag.count).to eq 2
 
-          expect(repository.namespace).to be_nil
+          expect(repository.namespace).to eq(@global_namespace)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 2
           expect(repository.tags.map(&:name)).to include('1.0.0', tag)
@@ -76,42 +85,31 @@ describe Repository do
       end
     end
 
-    context 'when the repository is inside of namespace' do
+    context 'not global repository' do
       let(:namespace_name) { 'suse' }
-      let(:event) do
-        {
-          'target' => {
-            'repository' => "#{namespace_name}/#{repository_name}",
-            'url' =>  "http://registry.test.lan/v2/#{namespace_name}/#{repository_name}/manifests/#{tag}"
-          }
-        }
+
+      before :each do
+        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event['target']['repository'] = "#{namespace_name}/#{repository_name}"
+        @event['target']['url'] = "http://registry.test.lan/v2/#{namespace_name}/#{repository_name}/manifests/#{tag}"
+        @event['request']['host'] = registry.hostname
+        @event['actor']['name'] = user.username
       end
 
-      context 'when the namespaceis not known by Portus' do
-        it 'should create a namespace with a tagged repository' do
-          create(:namespace, name: 'opensuse')
-
-          repository = Repository.handle_push_event(event)
-
-          expect(repository).not_to be_nil
-          expect(Namespace.count).to eq 2
-          expect(Repository.count).to eq 1
-          expect(Tag.count).to eq 1
-
-          expect(repository.namespace.name).to eq(namespace_name)
-          expect(repository.name).to eq(repository_name)
-          expect(repository.tags.count).to eq(1)
-          expect(repository.tags.first.name).to eq(tag)
+      context 'when the namespace is not known by Portus' do
+        it 'does not create the namespace' do
+          repository = Repository.handle_push_event(@event)
+          expect(repository).to be_nil
         end
       end
 
       context 'when the namespace is known by Portus' do
         before :each do
-          create(:namespace, name: namespace_name)
+          @namespace = create(:namespace, name: namespace_name, registry: registry)
         end
 
         it 'should create repository and tag objects when the repository is unknown to portus' do
-          repository = Repository.handle_push_event(event)
+          repository = Repository.handle_push_event(@event)
 
           expect(repository).not_to be_nil
           expect(Repository.count).to eq 1
@@ -125,10 +123,10 @@ describe Repository do
         end
 
         it 'should create a new tag when the repository is already known to portus' do
-          repository = create(:repository, name: repository_name)
+          repository = create(:repository, name: repository_name, namespace: @namespace)
           repository.tags << Tag.new(name: '1.0.0')
 
-          repository = Repository.handle_push_event(event)
+          repository = Repository.handle_push_event(@event)
 
           expect(repository).not_to be_nil
           expect(Repository.count).to eq 1
