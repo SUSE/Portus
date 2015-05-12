@@ -77,7 +77,7 @@ describe Repository do
     end
 
     context 'when the repository is inside of namespace' do
-      let(:namespace_name) { 'SUSE' }
+      let(:namespace_name) { 'suse' }
       let(:event) do
         {
           'target' => {
@@ -89,7 +89,7 @@ describe Repository do
 
       context 'when the namespaceis not known by Portus' do
         it 'should create a namespace with a tagged repository' do
-          create(:namespace, name: 'openSUSE')
+          create(:namespace, name: 'opensuse')
 
           repository = Repository.handle_push_event(event)
 
