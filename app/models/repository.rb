@@ -39,7 +39,8 @@ class Repository < ActiveRecord::Base
 
     repository = Repository.where(name: repo_name)
       .first_or_create(name: repo_name)
-    repository.tags.where(name: tag_name).first_or_create(name: tag_name)
+    tag = repository.tags.where(name: tag_name).first_or_create(name: tag_name)
+    tag.create_activity(:push, owner: actor)
 
     namespace.repositories << repository if namespace
     repository

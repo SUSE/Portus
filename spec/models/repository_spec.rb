@@ -37,7 +37,7 @@ describe Repository do
         @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
         @event['request']['host'] = registry.hostname
         @event['actor']['name'] = user.username
- 
+
         @global_namespace = Namespace.new(name: nil, registry: registry)
         @global_namespace.save(validate: false)
       end
@@ -57,6 +57,18 @@ describe Repository do
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 1
           expect(repository.tags.first.name).to eq tag
+        end
+
+        it 'tracks the event' do
+          repository = nil
+          expect do
+            repository = Repository.handle_push_event(@event)
+          end.to change(PublicActivity::Activity, :count).by(1)
+
+          activity = PublicActivity::Activity.last
+          expect(activity.key).to eq('tag.push')
+          expect(activity.owner).to eq(user)
+          expect(activity.trackable).to eq(repository.tags.last)
         end
       end
 
@@ -81,6 +93,18 @@ describe Repository do
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 2
           expect(repository.tags.map(&:name)).to include('1.0.0', tag)
+        end
+
+        it 'tracks the event' do
+          repository = nil
+          expect do
+            repository = Repository.handle_push_event(@event)
+          end.to change(PublicActivity::Activity, :count).by(1)
+
+          activity = PublicActivity::Activity.last
+          expect(activity.key).to eq('tag.push')
+          expect(activity.owner).to eq(user)
+          expect(activity.trackable).to eq(repository.tags.find_by(name: tag))
         end
       end
     end
@@ -141,4 +165,5 @@ describe Repository do
       end
     end
   end
+
 end
