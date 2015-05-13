@@ -1,7 +1,7 @@
 class DashboardController < ApplicationController
 
   def index
-     @activities = PublicActivity::Activity.order('created_at desc')
+     @activities = policy_scope(PublicActivity::Activity)
   end
 
 end
