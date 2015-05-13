@@ -21,7 +21,7 @@ class Repository < ActiveRecord::Base
 
     registry = Registry.find_by(hostname: event['request']['host'])
     if registry.nil?
-      logger.error "Cannot find registry with hostname #{event['request']['host']}"
+      logger.info("Ignoring event coming from unknown registry #{event['request']['host']}")
       return
     end
 

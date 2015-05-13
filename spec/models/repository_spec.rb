@@ -25,7 +25,50 @@ describe Repository do
       it 'sends event to logger' do
         error_msg = 'Cannot find tag inside of event url: http://registry.test.lan/v2/busybox/wrong/latest'
         expect(Rails.logger).to receive(:error).with(error_msg)
-        Repository.handle_push_event(event)
+        expect do
+          Repository.handle_push_event(event)
+        end.to change(Repository, :count).by(0)
+      end
+
+    end
+
+    context 'event comes from an unknown registry' do
+      before :each do
+        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event['target']['repository'] = repository_name
+        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
+        @event['request']['host'] = 'unknown-registry.test.lan'
+        @event['actor']['name'] = user.username
+
+        @global_namespace = Namespace.new(name: nil, registry: registry)
+        @global_namespace.save(validate: false)
+      end
+
+      it 'sends event to logger' do
+        expect(Rails.logger).to receive(:info)
+        expect do
+          Repository.handle_push_event(@event)
+        end.to change(Repository, :count).by(0)
+      end
+    end
+
+    context 'event comes from an unknown user' do
+      before :each do
+        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event['target']['repository'] = repository_name
+        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
+        @event['request']['host'] = registry.hostname
+        @event['actor']['name'] = 'a_ghost'
+
+        @global_namespace = Namespace.new(name: nil, registry: registry)
+        @global_namespace.save(validate: false)
+      end
+
+      it 'sends event to logger' do
+        expect(Rails.logger).to receive(:error)
+        expect do
+          Repository.handle_push_event(@event)
+        end.to change(Repository, :count).by(0)
       end
 
     end
