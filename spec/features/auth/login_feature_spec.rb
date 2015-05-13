@@ -14,7 +14,7 @@ feature 'Login feature' do
     fill_in 'user_username', with: user.username
     fill_in 'user_password', with: user.password
     click_button 'Login'
-    expect(page).to have_content('Your stats')
+    expect(page).to have_content('Dashboard')
   end
 
   scenario 'Wrong password results in an error message' do
@@ -26,7 +26,7 @@ feature 'Login feature' do
   end
 
   scenario 'When guest is trying to access dashboard - he should be redirected to login page' do
-    visit dashboard_url
+    visit root_url
     expect(current_url).to eq new_user_session_url
   end
 

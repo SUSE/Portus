@@ -6,7 +6,8 @@ Rails.application.routes.draw do
   end
   resources :repositories, only: [ :index, :show ]
   devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }
-  root 'namespaces#index'
+  resource :dashboard, only: [ :index ]
+  root 'dashboard#index'
 
   namespace :v2, module: 'api/v2', defaults: { format: :json } do
     root to: 'ping#ping', as: :ping
@@ -26,5 +27,4 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :dashboard, only: [ :show ]
 end

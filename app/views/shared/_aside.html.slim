@@ -1,10 +1,16 @@
 aside
   ul
     li.active
+      a[href="#{url_for root_path}"]
+        i[class="fa fa-dashboard"]
+        | Dashboard
+      - if current_page?(url_for root_path) || current_page?(root_path)
+        .list-selected
+    li.active
       a[href="#{url_for namespaces_path}"]
         i[class="fa fa-ship"]
         | Namespaces
-      - if current_page?(url_for namespaces_path) || current_page?(root_path)
+      - if current_page?(url_for namespaces_path)
         .list-selected
     li.active
       a[href="#{url_for teams_path}"]
