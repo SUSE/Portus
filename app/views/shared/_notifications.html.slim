@@ -16,24 +16,24 @@
 
 #notice[class="#{flash[:notice] ? '' : 'collapse'}"]
   .alert.alert-info.alert-dismissible.fade.in.text-left
+    button.close data-dismiss="alert" type="button"
+      span aria-hidden="true" &times;
+      span.sr-only Close
     .row
       .col-sm-2.alert-icon
         i.fa.fa-info-circle.fa-3x
-      .col-sm-10
-        button.close data-dismiss="alert" type="button"
-          span aria-hidden="true" &times;
-          span.sr-only Close
+      .col-sm-9
         p
           = flash[:notice]
 
 #alert[class="#{flash[:alert] ? '' : 'collapse'}"]
   .alert.alert-danger.alert-dismissible.fade.in.text-left
+    button.close data-dismiss="alert" type="button"
+      span aria-hidden="true" &times;
+      span.sr-only Close
     .row
       .col-sm-2.alert-icon
         i.fa.fa-exclamation-circle.fa-3x
-      .col-sm-10
-        button.close data-dismiss="alert" type="button"
-          span aria-hidden="true" &times;
-          span.sr-only Close
+      .col-sm-9
         p
           = flash[:alert]
