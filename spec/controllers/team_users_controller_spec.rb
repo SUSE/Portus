@@ -175,7 +175,7 @@ describe TeamUsersController do
 
       expect do
         put :update, id: team.team_users.find_by(role: TeamUser.roles['viewer']).id,
-            team_user: { role: 'contributor' }, format: 'js'
+                     team_user: { role: 'contributor' }, format: 'js'
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.last
