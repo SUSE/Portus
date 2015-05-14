@@ -55,8 +55,9 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
       create(:activity_namespace_private,
              trackable_id: namespace.id,
              owner_id: activity_owner.id)
-      create(:activity_tag_push,
-             trackable_id: tag.id,
+      create(:activity_repository_push,
+             trackable_id: tag.repository.id,
+             recipient_id: tag.id,
              owner_id: activity_owner.id)
 
     end

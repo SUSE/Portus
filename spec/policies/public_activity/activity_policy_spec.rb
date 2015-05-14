@@ -62,7 +62,7 @@ describe PublicActivity::ActivityPolicy do
       expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
     end
 
-    it 'returns pertinent tag events' do
+    it 'returns pertinent repository events' do
       namespace2 = create(:namespace,
                           registry: registry,
                           team: create(:team,
@@ -78,13 +78,15 @@ describe PublicActivity::ActivityPolicy do
       public_tag = create(:tag, repository: create(:repository, namespace: public_namespace) )
 
       activities = [
-        create(:activity_tag_push,
-               trackable_id: tag.id,
+        create(:activity_repository_push,
+               trackable_id: tag.repository.id,
+               recipient_id: tag.id,
                owner_id: activity_owner.id),
         # Tag made inside of public namespaces are shown even
         # if the user does not control their namespace
-        create(:activity_tag_push,
-               trackable_id: public_tag.id,
+        create(:activity_repository_push,
+               trackable_id: public_tag.repository.id,
+               recipient_id: public_tag.id,
                owner_id: activity_owner.id)
       ]
 
@@ -101,8 +103,9 @@ describe PublicActivity::ActivityPolicy do
         create(:activity_namespace_create,
                trackable_id: namespace.id,
                owner_id: activity_owner.id),
-        create(:activity_tag_push,
-               trackable_id: tag.id,
+        create(:activity_repository_push,
+               trackable_id: tag.repository.id,
+               recipient_id: tag.id,
                owner_id: activity_owner.id)
       ]
 

@@ -1,4 +1,6 @@
 class Repository < ActiveRecord::Base
+  include PublicActivity::Common
+
   belongs_to :namespace
   has_many :tags
 
@@ -40,7 +42,7 @@ class Repository < ActiveRecord::Base
     repository = Repository.where(name: repo_name)
       .first_or_create(name: repo_name)
     tag = repository.tags.where(name: tag_name).first_or_create(name: tag_name)
-    tag.create_activity(:push, owner: actor)
+    repository.create_activity(:push, owner: actor, recipient: tag)
 
     namespace.repositories << repository if namespace
     repository

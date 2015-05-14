@@ -45,10 +45,11 @@ FactoryGirl.define do
     trackable_type 'Namespace'
   end
 
-  factory :activity_tag_push, class: PublicActivity::Activity do
+  factory :activity_repository_push, class: PublicActivity::Activity do
     owner_type 'User'
-    key 'tag.push'
-    trackable_type 'Tag'
+    key 'repository.push'
+    trackable_type 'Repository'
+    recipient_type 'Tag'
   end
 
 end

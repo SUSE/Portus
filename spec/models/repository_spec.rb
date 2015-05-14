@@ -109,9 +109,10 @@ describe Repository do
           end.to change(PublicActivity::Activity, :count).by(1)
 
           activity = PublicActivity::Activity.last
-          expect(activity.key).to eq('tag.push')
+          expect(activity.key).to eq('repository.push')
           expect(activity.owner).to eq(user)
-          expect(activity.trackable).to eq(repository.tags.last)
+          expect(activity.trackable).to eq(repository)
+          expect(activity.recipient).to eq(repository.tags.last)
         end
       end
 
@@ -145,9 +146,10 @@ describe Repository do
           end.to change(PublicActivity::Activity, :count).by(1)
 
           activity = PublicActivity::Activity.last
-          expect(activity.key).to eq('tag.push')
+          expect(activity.key).to eq('repository.push')
           expect(activity.owner).to eq(user)
-          expect(activity.trackable).to eq(repository.tags.find_by(name: tag))
+          expect(activity.recipient).to eq(repository.tags.find_by(name: tag))
+          expect(activity.trackable).to eq(repository)
         end
       end
     end

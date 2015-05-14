@@ -27,17 +27,16 @@ class PublicActivity::ActivityPolicy
 
       # Show tag events for repositories inside of namespaces controller by
       # a team the user is part of, or tags part of public namespaces.
-      tag_activities = @scope
-        .joins('INNER JOIN tags ON activities.trackable_id = tags.id ' \
-               'INNER JOIN repositories ON tags.repository_id = repositories.id ' \
+      repository_activities = @scope
+        .joins('INNER JOIN repositories ON activities.trackable_id = repositories.id ' \
                'INNER JOIN namespaces ON namespaces.id = repositories.namespace_id ' \
                'INNER JOIN teams ON namespaces.team_id = teams.id ' \
                'INNER JOIN team_users ON teams.id = team_users.team_id')
         .where('activities.trackable_type = ? AND ' \
                '(team_users.user_id = ? OR namespaces.public = ?)',
-               'Tag', user.id, true)
+               'Repository', user.id, true)
 
-      team_activities.union_all(namespace_activities).union_all(tag_activities)
+      team_activities.union_all(namespace_activities).union_all(repository_activities)
     end
   end
 end
