@@ -37,7 +37,7 @@ class PublicActivity::ActivityPolicy
                '(team_users.user_id = ? OR namespaces.public = ?)',
                'Tag', user.id, true)
 
-      team_activities.union_all(namespace_activities).union_all(tag_activities).order('created_at desc')
+      team_activities.union_all(namespace_activities).union_all(tag_activities)
     end
   end
 end
