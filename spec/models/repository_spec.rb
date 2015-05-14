@@ -15,7 +15,7 @@ describe Repository do
     context 'event does not match regexp of manifest' do
 
       let(:event) do
-        e = attributes_for(:raw_push_manifest_event).stringify_keys
+        e = build(:raw_push_manifest_event).to_test_hash
         e['target']['repository'] = repository_name
         e['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/wrong/#{tag}"
         e['request']['host'] = registry.hostname
@@ -34,7 +34,7 @@ describe Repository do
 
     context 'event comes from an unknown registry' do
       before :each do
-        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = repository_name
         @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
         @event['request']['host'] = 'unknown-registry.test.lan'
@@ -54,7 +54,7 @@ describe Repository do
 
     context 'event comes from an unknown user' do
       before :each do
-        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = repository_name
         @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
         @event['request']['host'] = registry.hostname
@@ -75,7 +75,7 @@ describe Repository do
 
     context 'when dealing with a top level repository' do
       before :each do
-        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = repository_name
         @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
         @event['request']['host'] = registry.hostname
@@ -158,7 +158,7 @@ describe Repository do
       let(:namespace_name) { 'suse' }
 
       before :each do
-        @event = attributes_for(:raw_push_manifest_event).stringify_keys
+        @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = "#{namespace_name}/#{repository_name}"
         @event['target']['url'] = "http://registry.test.lan/v2/#{namespace_name}/#{repository_name}/manifests/#{tag}"
         @event['request']['host'] = registry.hostname
