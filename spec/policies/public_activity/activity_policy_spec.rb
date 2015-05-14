@@ -118,18 +118,20 @@ describe PublicActivity::ActivityPolicy do
            owner_id: activity_owner.id)
   end
 
-  def create_activity_team_add_member(team, event_owner, new_member)
+  def create_activity_team_add_member(team, event_owner, new_member, role='viewer')
     create(:activity_team_add_member,
            trackable_id: team.id,
            owner_id: event_owner.id,
-           recipient_id: new_member.id)
+           recipient_id: new_member.id,
+           parameters: { role: role })
   end
 
-  def create_activity_team_remove_member(team, event_owner, old_member)
+  def create_activity_team_remove_member(team, event_owner, old_member, role='viewer')
     create(:activity_team_remove_member,
            trackable_id: team.id,
            owner_id: event_owner.id,
-           recipient_id: old_member.id)
+           recipient_id: old_member.id,
+           parameters: { role: role })
   end
 
   def create_activity_team_change_member_role(team, event_owner, member, old_role, new_role)
