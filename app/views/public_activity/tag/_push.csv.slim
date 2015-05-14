@@ -1,0 +1,1 @@
+= CSV.generate_line(['repository', "#{activity.trackable.repository.namespace.name}/#{activity.trackable.repository.name}:#{activity.trackable.name}", 'push tag', '-', activity.owner.username, activity.created_at, "-"])

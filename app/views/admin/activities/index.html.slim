@@ -1,0 +1,10 @@
+h1
+  .pull-left
+    | Activities
+  .pull-right
+    a.btn.btn-primary[role="button" href="#{url_for(admin_activities_path(format: :csv))}"]
+      i.fa.fa-download
+  .clearfix
+
+- @activities.each do |activity|
+  = render_activity(activity)

@@ -66,6 +66,7 @@ unless ENV['PACKAGING'] && ENV['PACKAGING'] == "yes"
     gem 'poltergeist', require: false
     gem 'database_cleaner'
     gem 'json-schema'
+    gem 'timecop'
   end
 
 end

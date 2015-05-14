@@ -276,6 +276,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
+    timecop (0.7.3)
     turbolinks (2.5.3)
       coffee-rails
     twitter-bootstrap-rails (3.2.0)
@@ -351,6 +352,7 @@ DEPENDENCIES
   sqlite3
   therubyracer
   thin
+  timecop
   turbolinks
   twitter-bootstrap-rails
   uglifier

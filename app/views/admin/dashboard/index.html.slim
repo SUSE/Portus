@@ -48,3 +48,14 @@
             i.fa.fa-ship.namespaces
           .col-xs-8
             span.fa-3x= Namespace.count
+
+
+h2
+  | Recent activities
+  = link_to "[All]", admin_activities_path
+
+- if @recent_activities.empty?
+  p No activities in the last 24 hours.
+- else
+  - @recent_activities.each do |activity|
+    = render_activity(activity)
