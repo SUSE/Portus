@@ -7,8 +7,8 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     sign_in admin
   end
 
-  describe "GET #index" do
-    it "returns http success" do
+  describe 'GET #index' do
+    it 'returns http success' do
       get :index
       expect(response).to have_http_status(:success)
     end
@@ -64,8 +64,8 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     it 'generates a csv file' do
       get :index, format: :csv
       expect(response.headers).to match({
-        "Content-Disposition" => "attachment; filename=\"activities.csv\"", 
-        "Content-Type"=>"text/csv"})
+        'Content-Disposition' => "attachment; filename=\"activities.csv\"",
+        'Content-Type'=>'text/csv' })
 
       csv = <<CSV
 Tracked item,Item,Event,Recipient,Triggered by,Time,Notes

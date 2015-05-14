@@ -6,4 +6,3 @@ FactoryGirl.define do
     repository
   end
 end
-

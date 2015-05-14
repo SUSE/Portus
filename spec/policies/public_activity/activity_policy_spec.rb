@@ -107,7 +107,7 @@ describe PublicActivity::ActivityPolicy do
       ]
 
       expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
-     end
+    end
   end
 
   private
