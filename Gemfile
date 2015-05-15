@@ -21,6 +21,8 @@ gem 'devise'
 gem 'jquery-turbolinks'
 gem 'gravatar_image_tag'
 gem 'rails-observers'
+gem 'public_activity'
+gem 'active_record_union'
 
 #TODO remove as soon as we migrate to PostgreSQL
 gem 'sqlite3'
@@ -64,6 +66,7 @@ unless ENV['PACKAGING'] && ENV['PACKAGING'] == "yes"
     gem 'poltergeist', require: false
     gem 'database_cleaner'
     gem 'json-schema'
+    gem 'timecop'
   end
 
 end

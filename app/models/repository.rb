@@ -1,4 +1,6 @@
 class Repository < ActiveRecord::Base
+  include PublicActivity::Common
+
   belongs_to :namespace
   has_many :tags
 
@@ -16,18 +18,31 @@ class Repository < ActiveRecord::Base
       tag_name = match['tag']
     else
       logger.error("Cannot find tag inside of event url: #{event['target']['url']}")
-      return nil
-      # TODO: raise exception?
+      return
     end
 
-    if namespace_name
-      namespace = Namespace.where(name: namespace_name)
-        .first_or_create(name: namespace_name)
+    registry = Registry.find_by(hostname: event['request']['host'])
+    if registry.nil?
+      logger.info("Ignoring event coming from unknown registry #{event['request']['host']}")
+      return
+    end
+
+    namespace = registry.namespaces.find_by(name: namespace_name)
+    if namespace.nil?
+      logger.error "Cannot find namespace #{namespace_name} under registry #{registry.hostname}"
+      return
+    end
+
+    actor = User.find_by(username: event['actor']['name'])
+    if actor.nil?
+      logger.error "Cannot find user #{event['actor']['name']}"
+      return
     end
 
     repository = Repository.where(name: repo_name)
       .first_or_create(name: repo_name)
-    repository.tags.where(name: tag_name).first_or_create(name: tag_name)
+    tag = repository.tags.where(name: tag_name).first_or_create(name: tag_name)
+    repository.create_activity(:push, owner: actor, recipient: tag)
 
     namespace.repositories << repository if namespace
     repository
