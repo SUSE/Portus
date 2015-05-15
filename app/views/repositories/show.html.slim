@@ -9,11 +9,12 @@
       table[class="table table-stripped table-hover"]
         col.col-40
         col.col-20
-        col.col-40
+        col.col-20
         thead
           tr
             th Repository
             th Tag
+            th Author
             th Pushed at
         tbody
           - @repository.tags.each do |tag|
@@ -22,4 +23,5 @@
               td
                 .[class="label label-success"]
                   = tag.name
+              td= tag.author.username
               td= tag.created_at
