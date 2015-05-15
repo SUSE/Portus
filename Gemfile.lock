@@ -205,6 +205,7 @@ GEM
     ref (1.0.5)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    rotp (2.1.0)
     rspec-core (3.2.3)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.1)
@@ -342,6 +343,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (~> 4.2.1)
   rails-observers
+  rotp
   rspec-rails
   rubocop (~> 0.27.1)
   sass-rails
