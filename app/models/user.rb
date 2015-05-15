@@ -5,7 +5,9 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, uniqueness: true,
                        format: { with: /\A[a-z0-9]{4,30}\Z/,
-                                 message: 'Accepted format: "\A[a-z0-9]{4,30}\Z"' }
+                                 message: 'Accepted format: "\A[a-z0-9]{4,30}\Z"' },
+                       exclusion: { in: %w(portus),
+                                    message: '%{value} is reserved.' }
 
   has_many :team_users
   has_many :teams, through: :team_users

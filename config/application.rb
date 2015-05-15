@@ -24,5 +24,7 @@ module Portus
     config.active_record.raise_in_transactional_callbacks = true
 
     config.active_record.observers = :user_observer, :team_observer
+
+    config.otp_secret = ROTP::Base32.random_base32
   end
 end

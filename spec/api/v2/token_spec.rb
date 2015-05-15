@@ -24,20 +24,54 @@ describe '/v2/token' do
     context 'as invalid user' do
 
       it 'denies access when the password is wrong' do
-        get v2_token_url, { service: 'test', account: 'account', scope: 'repository:foo/me:push' }, invalid_auth_header
+        get v2_token_url, { service: registry.hostname, account: 'account', scope: 'repository:foo/me:push' }, invalid_auth_header
         expect(response.status).to eq 401
       end
 
       it 'denies access when the user does not exist' do
-        get v2_token_url, { service: 'test', account: 'account', scope: 'repository:foo/me:push' }, nonexistent_auth_header
+        get v2_token_url, { service: registry.hostname, account: 'account', scope: 'repository:foo/me:push' }, nonexistent_auth_header
         expect(response.status).to eq 401
       end
 
       it 'denies access when basic auth credentials are not defined' do
-        get v2_token_url, { service: 'test', account: 'account', scope: 'repository:foo/me:push' }
+        get v2_token_url, { service: registry.hostname, account: 'account', scope: 'repository:foo/me:push' }
         expect(response.status).to eq 401
       end
 
+    end
+
+    context 'as the special portus user' do
+
+      it 'allows access when the one time password is valid' do
+        totp = ROTP::TOTP.new(Rails.application.config.otp_secret)
+        auth_header = {
+          'HTTP_AUTHORIZATION' => auth_mech.encode_credentials('portus', totp.now)
+        }
+
+        get v2_token_url, {
+          service: registry.hostname,
+          account: 'portus',
+          scope: 'repository:foo/me:push' },
+          auth_header
+        expect(response.status).to eq 200
+      end
+
+      it 'blocks access when the time based OTP is not valid' do
+        auth_header = {}
+
+        Timecop.freeze(30.seconds.ago) do
+          totp = ROTP::TOTP.new(Rails.application.config.otp_secret)
+          auth_header['HTTP_AUTHORIZATION'] = auth_mech.encode_credentials(
+            'portus', totp.now)
+        end
+
+        get v2_token_url, {
+          service: registry.hostname,
+          account: 'portus',
+          scope: 'repository:foo/me:push' },
+          auth_header
+        expect(response.status).to eq 401
+      end
     end
 
     context 'as valid user' do
