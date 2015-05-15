@@ -39,6 +39,7 @@ feature 'Signup feature' do
     fill_in 'user_password_confirmation', with: user.password
     click_button('Sign Up')
     expect(page).to have_content('1 error prohibited this user from being saved: Email is invalid')
+    expect(page).to_not have_content('Create admin')
   end
 
 end
