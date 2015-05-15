@@ -7,7 +7,7 @@ describe Repository do
 
   describe 'handle push event' do
 
-    let(:tag) { 'latest' }
+    let(:tag_name) { 'latest' }
     let(:repository_name) { 'busybox' }
     let(:registry) { create(:registry) }
     let(:user) { create(:user) }
@@ -17,7 +17,7 @@ describe Repository do
       let(:event) do
         e = build(:raw_push_manifest_event).to_test_hash
         e['target']['repository'] = repository_name
-        e['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/wrong/#{tag}"
+        e['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/wrong/#{tag_name}"
         e['request']['host'] = registry.hostname
         e
       end
@@ -36,7 +36,7 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = repository_name
-        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
+        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
         @event['request']['host'] = 'unknown-registry.test.lan'
         @event['actor']['name'] = user.username
 
@@ -56,7 +56,7 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = repository_name
-        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
+        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
         @event['request']['host'] = registry.hostname
         @event['actor']['name'] = 'a_ghost'
 
@@ -77,7 +77,7 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = repository_name
-        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag}"
+        @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
         @event['request']['host'] = registry.hostname
         @event['actor']['name'] = user.username
 
@@ -99,7 +99,8 @@ describe Repository do
           expect(repository.namespace).to eq(@global_namespace)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 1
-          expect(repository.tags.first.name).to eq tag
+          expect(repository.tags.first.name).to eq tag_name
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
 
         it 'tracks the event' do
@@ -113,6 +114,7 @@ describe Repository do
           expect(activity.owner).to eq(user)
           expect(activity.trackable).to eq(repository)
           expect(activity.recipient).to eq(repository.tags.last)
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
       end
 
@@ -136,7 +138,8 @@ describe Repository do
           expect(repository.namespace).to eq(@global_namespace)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 2
-          expect(repository.tags.map(&:name)).to include('1.0.0', tag)
+          expect(repository.tags.map(&:name)).to include('1.0.0', tag_name)
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
 
         it 'tracks the event' do
@@ -148,8 +151,9 @@ describe Repository do
           activity = PublicActivity::Activity.last
           expect(activity.key).to eq('repository.push')
           expect(activity.owner).to eq(user)
-          expect(activity.recipient).to eq(repository.tags.find_by(name: tag))
+          expect(activity.recipient).to eq(repository.tags.find_by(name: tag_name))
           expect(activity.trackable).to eq(repository)
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
       end
     end
@@ -160,7 +164,7 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event['target']['repository'] = "#{namespace_name}/#{repository_name}"
-        @event['target']['url'] = "http://registry.test.lan/v2/#{namespace_name}/#{repository_name}/manifests/#{tag}"
+        @event['target']['url'] = "http://registry.test.lan/v2/#{namespace_name}/#{repository_name}/manifests/#{tag_name}"
         @event['request']['host'] = registry.hostname
         @event['actor']['name'] = user.username
       end
@@ -188,7 +192,8 @@ describe Repository do
           expect(repository.namespace.name).to eq(namespace_name)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 1
-          expect(repository.tags.first.name).to eq tag
+          expect(repository.tags.first.name).to eq tag_name
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
 
         it 'should create a new tag when the repository is already known to portus' do
@@ -205,7 +210,8 @@ describe Repository do
           expect(repository.namespace.name).to eq(namespace_name)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 2
-          expect(repository.tags.map(&:name)).to include('1.0.0', tag)
+          expect(repository.tags.map(&:name)).to include('1.0.0', tag_name)
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
       end
     end
