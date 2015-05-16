@@ -4,6 +4,7 @@ describe NamespacePolicy do
 
   subject { described_class }
 
+  let(:registry)    { create(:registry) }
   let(:admin)       { create(:user, admin: true) }
   let(:user)        { create(:user) }
   let(:owner)       { create(:user) }
@@ -44,6 +45,10 @@ describe NamespacePolicy do
       expect(subject).to permit(admin, namespace)
     end
 
+    it 'always allows access to a global namespace' do
+      expect(subject).to permit(create(:user), registry.global_namespace)
+    end
+
   end
 
   permissions :push? do
@@ -64,8 +69,14 @@ describe NamespacePolicy do
       expect(subject).to_not permit(user, namespace)
     end
 
-    it 'allows access to admin users even if they are not part of the team' do
-      expect(subject).to permit(admin, namespace)
+    context 'global namespace' do
+      it 'allows access to administrators' do
+        expect(subject).to permit(admin, registry.global_namespace)
+      end
+
+      it 'denies access to other users' do
+        expect(subject).not_to permit(user, registry.global_namespace)
+      end
     end
 
   end

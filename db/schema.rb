@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150515111638) do
+ActiveRecord::Schema.define(version: 20150515114145) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20150515111638) do
     t.integer  "team_id"
     t.boolean  "public",      default: false
     t.integer  "registry_id"
+    t.boolean  "global",      default: false
   end
 
   add_index "namespaces", ["name"], name: "index_namespaces_on_name", unique: true

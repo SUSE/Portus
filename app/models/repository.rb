@@ -27,7 +27,12 @@ class Repository < ActiveRecord::Base
       return
     end
 
-    namespace = registry.namespaces.find_by(name: namespace_name)
+    if namespace_name
+      namespace = registry.namespaces.find_by(name: namespace_name)
+    else
+      namespace = registry.global_namespace
+    end
+
     if namespace.nil?
       logger.error "Cannot find namespace #{namespace_name} under registry #{registry.hostname}"
       return

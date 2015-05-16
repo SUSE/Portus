@@ -10,7 +10,8 @@ class NamespacePolicy
   def pull?
     # All the members of the team have READ access or anyone if
     # the namespace is public
-    user.admin? || namespace.public? || namespace.team.users.exists?(user.id)
+    # Everybody can pull from the global namespace
+    namespace.global? || user.admin? || namespace.public? || namespace.team.users.exists?(user.id)
   end
 
   def push?

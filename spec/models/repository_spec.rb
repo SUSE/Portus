@@ -39,9 +39,6 @@ describe Repository do
         @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
         @event['request']['host'] = 'unknown-registry.test.lan'
         @event['actor']['name'] = user.username
-
-        @global_namespace = Namespace.new(name: nil, registry: registry)
-        @global_namespace.save(validate: false)
       end
 
       it 'sends event to logger' do
@@ -59,9 +56,6 @@ describe Repository do
         @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
         @event['request']['host'] = registry.hostname
         @event['actor']['name'] = 'a_ghost'
-
-        @global_namespace = Namespace.new(name: nil, registry: registry)
-        @global_namespace.save(validate: false)
       end
 
       it 'sends event to logger' do
@@ -80,9 +74,6 @@ describe Repository do
         @event['target']['url'] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
         @event['request']['host'] = registry.hostname
         @event['actor']['name'] = user.username
-
-        @global_namespace = Namespace.new(name: nil, registry: registry)
-        @global_namespace.save(validate: false)
       end
 
       context 'when the repository is not known by Portus' do
@@ -96,7 +87,7 @@ describe Repository do
           expect(Repository.count).to eq 1
           expect(Tag.count).to eq 1
 
-          expect(repository.namespace).to eq(@global_namespace)
+          expect(repository.namespace).to eq(registry.global_namespace)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 1
           expect(repository.tags.first.name).to eq tag_name
@@ -131,11 +122,10 @@ describe Repository do
           end.to change(Namespace, :count).by(0)
 
           expect(repository).not_to be_nil
-          expect(Namespace.count).to eq 2
           expect(Repository.count).to eq 1
           expect(Tag.count).to eq 2
 
-          expect(repository.namespace).to eq(@global_namespace)
+          expect(repository.namespace).to eq(registry.global_namespace)
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 2
           expect(repository.tags.map(&:name)).to include('1.0.0', tag_name)
