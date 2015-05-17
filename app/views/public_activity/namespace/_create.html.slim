@@ -1,0 +1,14 @@
+.alert.alert-info.activity
+  .row
+    .col-xs-1
+      = gravatar_image_tag(activity.owner.email)
+    .col-xs-11
+      .pull-right
+        = time_ago_in_words(activity.created_at)
+      .clearfix
+        .details
+          = "#{activity.owner.username} created the "
+          = link_to activity.trackable.name, activity.trackable
+          = " namespace under the "
+          = link_to activity.trackable.team.name, activity.trackable.team
+          = " team"

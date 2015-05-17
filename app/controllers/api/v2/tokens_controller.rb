@@ -1,12 +1,25 @@
 class Api::V2::TokensController < Api::BaseController
 
-  before_filter :authenticate_user!
+  before_filter :authenticate
+
+  def authenticate
+    if params['account'] == 'portus'
+      totp = ROTP::TOTP.new(Rails.application.config.otp_secret)
+
+      authenticate_with_http_basic do |u, p|
+        raise WrongPortusOTP if u != 'portus' || p != totp.now
+      end
+    else
+      authenticate_user!
+    end
+  end
 
   def show
     registry = Registry.find_by(hostname: params['service'])
     raise RegistryNotHandled if registry.nil?
 
-    if params[:scope]
+    # The 'portus' user can do anything
+    if params[:scope] && params['account'] != 'portus'
       auth_scope, scopes = scope_handler(registry, params[:scope])
       scopes.each do |scope|
         authorize auth_scope.resource, "#{scope}?".to_sym

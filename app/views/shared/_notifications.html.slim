@@ -14,26 +14,9 @@
           - else
             p Ask an administrator to complete configuration.
 
-#notice[class="#{flash[:notice] ? '' : 'collapse'}"]
-  .alert.alert-info.alert-dismissible.fade.in.text-left
-    button.close data-dismiss="alert" type="button"
-      span aria-hidden="true" &times;
-      span.sr-only Close
-    .row
-      .col-sm-2.alert-icon
-        i.fa.fa-info-circle.fa-3x
-      .col-sm-9
-        p
-          = flash[:notice]
 
-#alert[class="#{flash[:alert] ? '' : 'collapse'}"]
-  .alert.alert-danger.alert-dismissible.fade.in.text-left
-    button.close data-dismiss="alert" type="button"
-      span aria-hidden="true" &times;
-      span.sr-only Close
-    .row
-      .col-sm-2.alert-icon
-        i.fa.fa-exclamation-circle.fa-3x
-      .col-sm-9
-        p
-          = flash[:alert]
+= render template: 'shared/_notification.html.slim',
+    locals: { messages: [flash[:notice]], alert: 'info' }
+
+= render template: 'shared/_notification.html.slim',
+    locals: { messages: [flash[:alert]], alert: 'danger' }

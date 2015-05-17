@@ -17,6 +17,10 @@ class TeamUsersController < ApplicationController
     end
 
     if @team_user.errors.empty? && @team_user.save
+      team.create_activity :add_member,
+                           owner: current_user,
+                           recipient: @team_user.user,
+                           parameters: { role: @team_user.role }
       respond_with @team_user
     else
       respond_with @team_user.errors, status: :unprocessable_entity
@@ -34,7 +38,14 @@ class TeamUsersController < ApplicationController
       team.owners.count == 1
       locals[:error] = 'Cannot remove the only owner of the team'
     else
+      user = @team_user.user
+      user_role = @team_user.role
       @team_user.destroy
+
+      team.create_activity :remove_member,
+                           owner: current_user,
+                           recipient: user,
+                           parameters: { role: user_role }
       locals[:team_user_id] = params[:id]
     end
     if seppuku
@@ -58,7 +69,16 @@ class TeamUsersController < ApplicationController
       @team_user.errors.add(:role, 'cannot be changed for the only owner of the team')
       render template: 'team_users/update', locals: { team_user: @team_user }
     else
+      old_role = @team_user.role
       @team_user.update(team_user_params)
+
+      team.create_activity :change_member_role,
+                           owner: current_user,
+                           recipient: @team_user.user,
+                           parameters: {
+                             old_role: old_role,
+                             new_role: team_user_params['role'] }
+
       if @team_user.user == current_user
         # force reload to ensure all the owner-only attributes disappear
         render js: "window.location = '/teams/#{team.id}'"

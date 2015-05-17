@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   respond_to :html
 
   def after_sign_in_path_for(_resource)
-    dashboard_url
+    root_url
   end
 
   def after_sign_out_path_for(_resource)

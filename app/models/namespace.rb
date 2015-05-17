@@ -1,4 +1,5 @@
 class Namespace < ActiveRecord::Base
+  include PublicActivity::Common
 
   NAME_ALLOWED_CHARS = 'a-z0-9\-_'
 

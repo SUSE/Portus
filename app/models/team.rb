@@ -1,4 +1,5 @@
 class Team < ActiveRecord::Base
+  include PublicActivity::Common
 
   validates :name, :owners, presence: true
 
