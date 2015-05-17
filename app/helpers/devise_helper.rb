@@ -4,7 +4,7 @@ module DeviseHelper
 
     render(
       template: 'shared/_notification.html.slim',
-      layout: nil ,
+      layout: nil,
       locals: {
         alert: 'danger',
         messages: resource.errors.full_messages
