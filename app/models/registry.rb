@@ -11,7 +11,7 @@ class Registry < ActiveRecord::Base
     team.namespaces.last.update_attributes({
       registry: self,
       public: true,
-      global: true})
+      global: true })
   end
 
   def global_namespace

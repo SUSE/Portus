@@ -11,7 +11,7 @@ class Namespace < ActiveRecord::Base
             format: {
               with: /\A[#{NAME_ALLOWED_CHARS}]+\Z/,
               message: 'Only allowed letters: [a-z0-9-_]' }
-  validates :public, inclusion: { in: [true]}, if: :global?
+  validates :public, inclusion: { in: [true] }, if: :global?
 
   def self.sanitize_name(name)
     name.downcase.gsub(/\s+/, '_').gsub(/[^#{NAME_ALLOWED_CHARS}]/, '')

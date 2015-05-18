@@ -100,7 +100,7 @@ describe NamespacePolicy do
     end
 
     context 'global namespace' do
-      let(:namespace) { create(:namespace, global:true, public: true) }
+      let(:namespace) { create(:namespace, global: true, public: true) }
 
       it 'disallow access to everybody' do
         expect(subject).to_not permit(admin, namespace)
