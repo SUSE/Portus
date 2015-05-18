@@ -39,7 +39,7 @@ RSpec.describe TeamsController, type: :controller do
         create(:team)
 
         get :index
-        expect(assigns(:teams)).to match_array(owner.teams)
+        expect(assigns(:teams)).to be_empty
       end
     end
 
