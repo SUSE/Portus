@@ -1,18 +1,14 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2.1'
-gem 'therubyracer'
-gem 'less-rails'
 gem 'jquery-rails'
 gem 'turbolinks'
 gem 'slim'
 gem 'coffee-rails'
-gem 'twitter-bootstrap-rails' #, github: 'seyhunak/twitter-bootstrap-rails', ref: '67f160dd'
-gem 'sass-rails'
+gem 'bootstrap-sass', '~> 3.3.4'
+gem 'sass-rails', '>= 3.2'
 gem 'uglifier'
 gem 'pundit'
-# TODO: wait for sprockets 3.0 support
-# https://github.com/metaskills/less-rails/issues/100
 gem 'sprockets', '~> 2.12.3'
 gem 'jwt'
 gem 'base32'

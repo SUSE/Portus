@@ -1,4 +1,4 @@
-//@media (max-width: @screen-tablet) {
+//@media (max-width: $screen-tablet) {
 //  body:not([class="login"]) {
 //    .container-fluid {
 //      padding-left: 0px;
@@ -8,27 +8,27 @@
 //    }
 //  }
 //  header {
-//    background: @header-logo-bg;
-//    border-bottom: 3px solid darken(@header-logo-bg, 5%);
+//    background: $header-logo-bg;
+//    border-bottom: 3px solid darken($header-logo-bg, 5%);
 //  }
 //}
 //
 ////icons in alerts
-//@media (max-width: @screen-sm-max) {
+//@media (max-width: $screen-sm-max) {
 //  .alert-icon {
 //    .fa {
 //      .fa-lg;
 //    }
 //  }
 //}
-//@media (min-width: @screen-sm-min) {
+//@media (min-width: $screen-sm-min) {
 //  .alert-icon {
 //    .fa {
 //      .fa-2x;
 //    }
 //  }
 //}
-//@media (min-width: @screen-md-min) {
+//@media (min-width: $screen-md-min) {
 //  .alert-icon {
 //    .fa {
 //      .fa-3x;
