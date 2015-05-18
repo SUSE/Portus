@@ -1,7 +1,5 @@
-/*
-*= require 'bootstrap'
-*/
-
+@import "bootstrap-sprockets";
+@import "bootstrap-portus";
 
 .table > thead > tr > th,
 .table > tbody > tr > th,

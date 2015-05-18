@@ -1,30 +1,30 @@
 //reset all panels border-radius
 .panel {
-  border-radius: @border-radious;
-  box-shadow: 0px 3px 0px @panel-shadow;
+  border-radius: $border-radious;
+  box-shadow: 0px 3px 0px $panel-shadow;
   .panel-heading {
-    color: @body-text;
+    color: $body-text;
     border-bottom: 0;
   }
 }
 
 
 .panel-company {
-  .panel;
-  .panel-default;
+  @extend .panel;
+  @extend .panel-default;
   border: 0;
-  background: @bg-panel-company;
-  min-height: @height-dashboard-panel-first-row;
+  background: $bg-panel-company;
+  min-height: $height-dashboard-panel-first-row;
   position: relative;
   .panel-body {
-    color: @text-panel-company;
+    color: $text-panel-company;
     padding: 0;
     position: relative;
     .row {
       margin: 0;
     }
     a {
-      color: @text-panel-company;
+      color: $text-panel-company;
     }
     ul {
       padding: 0;
@@ -39,14 +39,14 @@
     h2 {
       padding-top: 1.5em;
       padding-bottom: 0.3em;
-      @media (max-width: @screen-xs-max) {
+      @media (max-width: $screen-xs-max) {
         padding-top: 0.3em;
       }
       a, i {
-        color: @url-panel-company;
+        color: $url-panel-company;
         text-decoration: none;
-        @media (max-width: @screen-xs-max) {
-          color: @text-panel-company;
+        @media (max-width: $screen-xs-max) {
+          color: $text-panel-company;
         }
       }
     }
@@ -54,16 +54,16 @@
       width: 150px;
       height: 150px;
       margin-top: 15px;
-      @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
         width: 120px;
         height: 120px;
       }
     }
     .panel-company-bg {
-      background: @top-bg-panel-company;
+      background: $top-bg-panel-company;
       background-size: cover;
       left: 0px;
-      min-height: @height-dashboard-panel-first-row / 2;
+      min-height: $height-dashboard-panel-first-row / 2;
       position: absolute;
       top: 0px;
       width: 100%;
@@ -79,12 +79,12 @@
 
 
 .panel-last-login {
-  .panel;
-  .panel-default;
-  min-height: @height-dashboard-panel-first-row;
+  @extend .panel;
+  @extend .panel-default;
+  min-height: $height-dashboard-panel-first-row;
   .panel-body {
-    color: @gray-light;
-    font-family: @raleway;
+    color: $gray-light;
+    font-family: $raleway;
     font-weight: 700;
     font-size: 1.5em;
     .fa {
@@ -94,10 +94,10 @@
 }
 
 .panel-overview {
-  .panel;
-  .panel-default;
+  @extend .panel;
+  @extend .panel-default;
   .fa {
-    color: @overview-icon-color;
+    color: $overview-icon-color;
     border-radius: 100%;
     padding: 0.4em 0.3em 0em 0.3em ;
     width: 2em;
@@ -105,16 +105,16 @@
     text-align: center;
 //    .fa-2x;
     &.users {
-      background: @overview-icon-users-bg;
+      background: $overview-icon-users-bg;
     }
     &.teams {
-      background: @overview-icon-teams-bg;
+      background: $overview-icon-teams-bg;
     }
     &.namespaces {
-      background: @overview-icon-namespaces-bg;
+      background: $overview-icon-namespaces-bg;
     }
     &.registries {
-      background: @overview-icon-registries-bg;
+      background: $overview-icon-registries-bg;
     }
   }
 
@@ -154,7 +154,7 @@
   }
 }
 
-@media (min-width: @screen-md-max) {
+@media (min-width: $screen-md-max) {
   .panel-products {
     div[class*="col-"]:nth-of-type(2) {
       padding-top: 10px;

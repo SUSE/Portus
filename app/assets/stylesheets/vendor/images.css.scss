@@ -2,12 +2,12 @@
   border-radius: 100%;
 }
 .border-transparent {
-  border: @logo-company-border-size solid @logo-company-border-colour;
+  border: $logo-company-border-size solid $logo-company-border-colour;
 }
 
 ul.display-list {
   li {
-    border-bottom: @ul-display-list-border-bottom;
+    border-bottom: $ul-display-list-border-bottom;
     padding-bottom: 0.5em;
     margin-bottom: 0.5em;
     a {
@@ -16,7 +16,7 @@ ul.display-list {
       text-decoration: none;
     }
     a:hover {
-      background: @ul-display-list-background-hover;
+      background: $ul-display-list-background-hover;
     }
     figure {
       width: 100%;
@@ -27,8 +27,8 @@ ul.display-list {
       }
       img {
         max-width: 100%;
-        max-height: @display-list-size-height;
-        border-radius: @border-radious;
+        max-height: $display-list-size-height;
+        border-radius: $border-radious;
       }
       figcaption {
         padding-left: 1em;
@@ -50,7 +50,7 @@ ul.display-list {
     }
   }
   .view-img {
-    background: @gray-darker;
+    background: $gray-darker;
     left: 0px;
     opacity: 0;
     position: absolute;
@@ -101,13 +101,13 @@ figure {
   vertical-align: top;
   margin: 0 .5em 0 0;
   img {
-    border-radius: @border-radious;
+    border-radius: $border-radious;
     max-width: 100%;
-    height: @max-image-size;
+    height: $max-image-size;
   }
   .edit-buttons {
     .fa-star {
-      color: lighten(@alert-warning-border, 10%);
+      color: lighten($alert-warning-border, 10%);
       padding: 6px 12px;
     }
   }

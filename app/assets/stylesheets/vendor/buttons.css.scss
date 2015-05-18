@@ -1,23 +1,23 @@
 .edit-buttons {
-  background: @transparent-icon-menu-bg;
-  border-radius: @border-radious;
+  background: $transparent-icon-menu-bg;
+  border-radius: $border-radious;
   position: absolute;
   right: 6px;
   top: 6px;
   z-index: 100;
   .fa, a {
-    color: @transparent-icon-menu-font-colour;
+    color: $transparent-icon-menu-font-colour;
     cursor: pointer;
   }
   .fa:hover, a:hover, a:hover .fa {
-    color: @white
+    color: $white
   }
   a:last-of-type .fa {
     margin-right: 0
   }
 }
 .btn {
-  border-radius: @border-radious;
+  border-radius: $border-radious;
 }
 
 .login, .sign-up {
@@ -45,7 +45,7 @@
 
 #open_main_menu {
   display: block;
-  color: @white;
+  color: $white;
   padding-top: 7px;
   margin-right: 10px;
   cursor: pointer;
