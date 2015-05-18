@@ -1,0 +1,30 @@
+@import "bootstrap-sprockets";
+@import 'bootstrap';
+@import 'bootstrap/variables';
+
+@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
+@import url(//fonts.googleapis.com/css?family=Raleway:400,300,700,900);
+
+@import 'variables.scss';
+@import 'vendor/activities.scss';
+@import 'vendor/alerts.scss';
+@import 'vendor/buttons.scss';
+@import 'vendor/images.scss';
+@import 'vendor/labels.scss';
+@import 'vendor/layout.scss';
+@import 'vendor/links.scss';
+@import 'vendor/lists.scss';
+@import 'vendor/mixings.scss';
+@import 'vendor/panels.scss';
+@import 'vendor/responsive_tools.scss';
+@import 'vendor/table.scss';
+@import 'vendor/backgrounds.scss';
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  vertical-align: middle;
+}
