@@ -6,7 +6,8 @@ class Registry < ActiveRecord::Base
   def create_global_namespace!
     team = Team.create(
       name: Namespace.sanitize_name(hostname),
-      owners: [User.where(admin: true).first])
+      owners: [User.where(admin: true).first],
+      hidden: true)
     team.namespaces.last.update_attributes({
       registry: self,
       public: true,

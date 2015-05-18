@@ -30,7 +30,7 @@ class NamespacePolicy
   end
 
   def toggle_public?
-    user.admin? || namespace.team.owners.exists?(user.id)
+    !namespace.global? && (user.admin? || namespace.team.owners.exists?(user.id))
   end
 
   class Scope
@@ -44,7 +44,10 @@ class NamespacePolicy
     def resolve
       scope
         .joins(team: [:team_users])
-        .where('namespaces.public = ? OR team_users.user_id = ?',  true, user.id)
+        .where(
+          '(namespaces.public = :public OR team_users.user_id = :user_id) AND ' \
+          'namespaces.global = :global AND namespaces.name != :username',
+          public: true, user_id: user.id, global: false, username: user.username)
     end
   end
 
