@@ -1,0 +1,111 @@
+
+// colours
+$blue:        #459ba8;
+$dark-green:  #00A388;
+$green:       #c5d647;
+$gray-light:  #cecece;
+$gray-mid:    #5b5b5b;
+$light-blue:  #78c5d6;
+$orange:      #f28c33;
+$orange-dark: #FF5E38;
+$pink:        #e868a2;
+$purple:      #bf62a6;
+$red:         #B9121B;
+$white:       #ffffff;
+$yellow:      #f5d63d;
+
+$transparent-icon-menu-bg:             rgba(0, 0, 0, 0.4);
+$transparent-icon-menu-font-colour:    rgba(255, 255, 255, 0.9);
+
+$primary-colour: $dark-green;
+
+
+//colours in meaninful variables
+
+$header-user-bg:       $primary-colour;
+$header-logo-bg:       darken($header-user-bg, 10%);
+$header-text-colour:   $white;
+
+$aside:                $gray-darker;
+$link-aside:           $white;
+$text-aside:           $white;
+
+$footer-copyright-bg:  darken($gray-lighter, 10%);
+$footer-aside-bg:      darken($aside, 10%);
+$footer-login:         rgba(0, 0, 0, 0.5);
+$footer-login-color:   $white;
+
+$body-bg:              url('layout/bg.png') $gray-lighter;
+$body-text:            $gray-mid;
+
+$url-panel-company:    $white;
+$text-panel-company:   $gray-mid;
+$bg-panel-company:     $white;
+$top-bg-panel-company: url('layout/company-panel-bg.jpg');
+
+$add-more-media-border-colour:        lighten($gray-mid, 40%);
+$add-more-media-border-colour-hover:  lighten($gray-mid, 30%);
+$add-more-media-background:           lighten($gray-light, 10%);
+$add-more-media-background-hover:     lighten($gray-light, 6%);
+$add-more-media-color:                lighten($gray-mid, 25%);
+$add-more-media-color-hover:          lighten($gray-mid, 20%);
+
+
+//sizes
+$height-dashboard-panel-first-row:    200px; 
+$body-text-size:                      13px;
+$aside-width:                         250px;
+$max-image-size:                      150px;
+
+
+//fonts
+$raleway:              'Raleway', sans-serif;
+
+//border 
+$border-radious:                 2px;
+$add-more-media-border:          1px solid $add-more-media-border-colour;
+$add-more-media-border-hover:    1px solid $add-more-media-border-colour-hover;
+
+//alerts
+$alert-success-bg:      $white;
+$alert-success-border:  $dark-green; 
+$alert-success-text:    $body-text;
+
+$alert-info-bg:         $white; 
+$alert-info-border:     $blue; 
+$alert-info-text:       $body-text;
+
+$alert-warning-bg:      $white; 
+$alert-warning-border:  $orange; 
+$alert-warning-text:    $body-text;
+
+$alert-danger-bg:       $white; 
+$alert-danger-border:   $red; 
+$alert-danger-text:     $body-text;
+
+//panels
+$panel-shadow:                 $gray-light;
+$panel-shadow-login:           rgba(0, 0, 0, 0.3);
+$logo-company-border-colour:   rgba(255, 255, 255, 0.3);
+$logo-company-border-size:     7px;
+
+
+//image
+
+$image-shadow:                 $gray-light;
+$display-list-size-height:      80px;
+
+
+// overview
+$overview-icon-color:                   $white;
+$overview-icon-users-bg:                $blue;
+$overview-icon-teams-bg:                $dark-green;
+$overview-icon-namespaces-bg:           $orange;
+$overview-icon-registries-bg:           $purple;
+
+
+// lists
+
+$ul-display-list-border-bottom:       1px dotted $gray-light;
+$ul-display-list-background-hover:    lighten($gray-light, 15%);
+
