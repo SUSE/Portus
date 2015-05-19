@@ -4,7 +4,7 @@ h1 New Registry
   .form-group
     = f.label :name, {class: 'control-label col-md-2'}
     .col-md-7
-      = f.text_field(:name, class: 'form-control', required: true)
+      = f.text_field(:name, class: 'form-control', required: true, autofocus: true)
   .form-group
     = f.label :hostname, {class: 'control-label col-md-2'}
     .col-md-7
