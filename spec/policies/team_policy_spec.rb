@@ -28,7 +28,15 @@ describe TeamPolicy do
     it 'returns only teams having the user as a memeber' do
       # Another team not related with 'owner'
       create(:team, owners: [ create(:user) ])
-      expect(Pundit.policy_scope(member, Team).to_a).to match_array(member.teams)
+
+      expected_list = [team]
+      expect(Pundit.policy_scope(member, Team).to_a).to match_array(expected_list)
+    end
+
+    it 'never shows the team associated with personal repository' do
+      user = create(:user)
+      expect(user.teams).not_to be_empty
+      expect(Pundit.policy_scope(user, Team).to_a).to be_empty
     end
   end
 

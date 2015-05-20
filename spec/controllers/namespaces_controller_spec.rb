@@ -3,6 +3,7 @@ require 'rails_helper'
 describe NamespacesController do
 
   let(:valid_session) { {} }
+  let(:registry) { create(:registry) }
   let(:user) { create(:user) }
   let(:viewer) { create(:user) }
   let(:contributor) { create(:user) }
@@ -13,9 +14,11 @@ describe NamespacesController do
            viewers: [ user, viewer ],
            contributors: [ contributor ])
   end
-  let(:namespace) { create(:namespace, team: team) }
+  let(:namespace) { create(:namespace, team: team, registry: registry) }
 
   before :each do
+    # trigger creation of registry
+    registry
     sign_in user
   end
 
@@ -23,7 +26,9 @@ describe NamespacesController do
 
     it 'assigns all namespaces as @namespaces' do
       get :index, {}, valid_session
-      expect(assigns(:namespaces).ids).to match_array(Namespace.all.ids)
+      expect(assigns(:special_namespaces)).to match_array(
+        [Namespace.find_by(name: user.username), Namespace.find_by(global: true)])
+      expect(assigns(:namespaces).ids).to be_empty
     end
 
   end

@@ -14,7 +14,8 @@ class User < ActiveRecord::Base
 
   def create_personal_team!
     if Team.find_by(name: username).nil?
-      Team.create!(name: username, owners: [self])
+      Team.create!(name: username, owners: [self], hidden: true)
     end
   end
+
 end

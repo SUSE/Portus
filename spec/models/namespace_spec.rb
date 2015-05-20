@@ -22,4 +22,12 @@ describe Namespace do
     end
   end
 
+  context 'global namespace' do
+    it 'must be public' do
+      namespace = create(:namespace, global: true, public: true)
+      namespace.public = false
+      expect(namespace.save).to be false
+    end
+  end
+
 end

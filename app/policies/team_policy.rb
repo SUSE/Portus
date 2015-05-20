@@ -22,7 +22,7 @@ class TeamPolicy
     end
 
     def resolve
-      user.teams
+      user.teams.where(hidden: false)
     end
   end
 

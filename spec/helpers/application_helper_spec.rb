@@ -36,4 +36,19 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
+  describe 'namespace_clean_name' do
+    context 'non global namespace' do
+      it 'returns the name of the namespace' do
+        expect(helper.namespace_clean_name(namespace)).to eq(namespace.name)
+      end
+    end
+
+    context 'global namespace' do
+      it 'returns the name of the namespace' do
+        global_namespace = create(:namespace, global: true, public: true)
+        expect(helper.namespace_clean_name(global_namespace)).to eq('Global namespace')
+      end
+    end
+  end
+
 end

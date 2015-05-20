@@ -18,6 +18,7 @@ describe User do
       Namespace.find_by!(name: subject.username)
       TeamUser.find_by!(user: subject, team: team)
       expect(team.owners).to include(subject)
+      expect(team).to be_hidden
     end
 
   end

@@ -1,8 +1,8 @@
 tr[id="namespace_#{namespace.id}"]
-  td= link_to namespace.name, namespace
+  td= link_to namespace_clean_name(namespace), namespace
   td= namespace.repositories.count
   td
-    - if can_manage_namespace?(namespace)
+    - if can_manage_namespace?(namespace) && !namespace.global
       a[class="btn btn-default"
           data-remote="true"
           data-method="put"
