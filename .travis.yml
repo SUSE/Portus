@@ -1,6 +1,10 @@
 language: ruby
 rvm:
   - 2.1.3
+addons:
+  postgresql: "9.3"
+before_script:
+  - psql -c 'create database portus_test;' -U postgres
 script:
   - 'bundle exec rspec spec'
   - 'bundle exec rubocop'

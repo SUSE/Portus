@@ -61,7 +61,14 @@ zypper -n in apache2-devel \
   ruby2.1-devel \
   rubygem-bundler \
   sqlite3-devel \
+  postgresql-devel \
+  postgresql-server \
   zlib-devel
+
+systemctl start postgresql
+sudo cp /vagrant/vagrant/conf/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf
+systemctl restart postgresql
+systemctl enable postgresql
 
 cd /vagrant
 bundle config build.nokogiri --use-system-libraries

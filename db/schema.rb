@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20150518142223) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id"
     t.string   "trackable_type"
@@ -26,10 +29,10 @@ ActiveRecord::Schema.define(version: 20150518142223) do
     t.datetime "updated_at"
   end
 
-  add_index "activities", ["key"], name: "index_activities_on_key"
-  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
-  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type"
-  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
+  add_index "activities", ["key"], name: "index_activities_on_key", using: :btree
+  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
+  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
+  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
   create_table "namespaces", force: :cascade do |t|
     t.string   "name"
@@ -41,9 +44,9 @@ ActiveRecord::Schema.define(version: 20150518142223) do
     t.boolean  "global",      default: false
   end
 
-  add_index "namespaces", ["name"], name: "index_namespaces_on_name", unique: true
-  add_index "namespaces", ["registry_id"], name: "index_namespaces_on_registry_id"
-  add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id"
+  add_index "namespaces", ["name"], name: "index_namespaces_on_name", unique: true, using: :btree
+  add_index "namespaces", ["registry_id"], name: "index_namespaces_on_registry_id", using: :btree
+  add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id", using: :btree
 
   create_table "registries", force: :cascade do |t|
     t.string   "name",       null: false
@@ -52,8 +55,8 @@ ActiveRecord::Schema.define(version: 20150518142223) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true
-  add_index "registries", ["name"], name: "index_registries_on_name", unique: true
+  add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true, using: :btree
+  add_index "registries", ["name"], name: "index_registries_on_name", unique: true, using: :btree
 
   create_table "repositories", force: :cascade do |t|
     t.string   "name",         default: "", null: false
@@ -62,8 +65,8 @@ ActiveRecord::Schema.define(version: 20150518142223) do
     t.datetime "updated_at",                null: false
   end
 
-  add_index "repositories", ["name"], name: "index_repositories_on_name", unique: true
-  add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id"
+  add_index "repositories", ["name"], name: "index_repositories_on_name", unique: true, using: :btree
+  add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string   "name",          default: "latest", null: false
@@ -73,8 +76,8 @@ ActiveRecord::Schema.define(version: 20150518142223) do
     t.integer  "user_id"
   end
 
-  add_index "tags", ["repository_id"], name: "index_tags_on_repository_id"
-  add_index "tags", ["user_id"], name: "index_tags_on_user_id"
+  add_index "tags", ["repository_id"], name: "index_tags_on_repository_id", using: :btree
+  add_index "tags", ["user_id"], name: "index_tags_on_user_id", using: :btree
 
   create_table "team_users", force: :cascade do |t|
     t.integer  "user_id"
@@ -84,8 +87,8 @@ ActiveRecord::Schema.define(version: 20150518142223) do
     t.integer  "role",       default: 0
   end
 
-  add_index "team_users", ["team_id"], name: "index_team_users_on_team_id"
-  add_index "team_users", ["user_id"], name: "index_team_users_on_user_id"
+  add_index "team_users", ["team_id"], name: "index_team_users_on_team_id", using: :btree
+  add_index "team_users", ["user_id"], name: "index_team_users_on_user_id", using: :btree
 
   create_table "teams", force: :cascade do |t|
     t.string   "name"
@@ -111,8 +114,8 @@ ActiveRecord::Schema.define(version: 20150518142223) do
     t.boolean  "admin",                  default: false
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  add_index "users", ["username"], name: "index_users_on_username", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
 end
