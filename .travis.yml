@@ -1,6 +1,8 @@
 language: ruby
 rvm:
   - 2.1.3
+before_script:
+    - mysql -e 'create database portus_test;'
 script:
   - 'bundle exec rspec spec'
   - 'bundle exec rubocop'
