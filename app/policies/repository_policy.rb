@@ -9,7 +9,7 @@ class RepositoryPolicy
 
     def resolve
       @scope
-        .joins(:namespace => {:team => :users})
+        .joins(namespace: { team: :users })
         .where('namespaces.public = :namespace_public OR ' \
                'users.id = :user_id',
                namespace_public: true, user_id: @user.id)

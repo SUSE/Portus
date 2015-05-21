@@ -9,8 +9,8 @@ class Repository < ActiveRecord::Base
     attributes :name
     attributes namespace_name: 'namespace.name'
 
-    options :name, :type => :fulltext
-    options :namespace_name, :type => :fulltext
+    options :name, type: :fulltext
+    options :namespace_name, type: :fulltext
   end
 
   PUSH_EVENT_FIND_TOKEN_REGEXP = %r|manifests/(?<tag>.*)$|
