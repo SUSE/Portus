@@ -137,6 +137,7 @@ GEM
     minitest (5.6.1)
     multi_json (1.11.0)
     multipart-post (2.0.0)
+    mysql2 (0.3.18)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     octokit (2.0.0)
@@ -261,7 +262,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    sqlite3 (1.3.10)
     temple (0.7.5)
     thin (1.6.3)
       daemons (~> 1.0, >= 1.0.9)
@@ -323,6 +323,7 @@ DEPENDENCIES
   jquery-turbolinks
   json-schema
   jwt
+  mysql2
   poltergeist
   pry-rails
   public_activity
@@ -339,7 +340,6 @@ DEPENDENCIES
   simplecov
   slim
   sprockets (~> 2.12.3)
-  sqlite3
   thin
   timecop
   turbolinks

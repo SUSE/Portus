@@ -20,9 +20,7 @@ gem 'rails-observers'
 gem 'public_activity'
 gem 'active_record_union'
 gem 'rotp'
-
-#TODO remove as soon as we migrate to PostgreSQL
-gem 'sqlite3'
+gem 'mysql2'
 
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
@@ -47,7 +45,6 @@ unless ENV['PACKAGING'] && ENV['PACKAGING'] == "yes"
     gem 'hirb'
     gem 'wirb'
     gem 'wirble'
-    gem 'sqlite3'
     gem 'factory_girl_rails'
     gem 'ffaker'
     gem 'rubocop', '~> 0.27.1', require: false

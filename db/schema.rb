@@ -14,105 +14,105 @@
 ActiveRecord::Schema.define(version: 20150518142223) do
 
   create_table "activities", force: :cascade do |t|
-    t.integer  "trackable_id"
-    t.string   "trackable_type"
-    t.integer  "owner_id"
-    t.string   "owner_type"
-    t.string   "key"
-    t.text     "parameters"
-    t.integer  "recipient_id"
-    t.string   "recipient_type"
+    t.integer  "trackable_id",   limit: 4
+    t.string   "trackable_type", limit: 255
+    t.integer  "owner_id",       limit: 4
+    t.string   "owner_type",     limit: 255
+    t.string   "key",            limit: 255
+    t.text     "parameters",     limit: 65535
+    t.integer  "recipient_id",   limit: 4
+    t.string   "recipient_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "activities", ["key"], name: "index_activities_on_key"
-  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
-  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type"
-  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
+  add_index "activities", ["key"], name: "index_activities_on_key", using: :btree
+  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
+  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
+  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
   create_table "namespaces", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "team_id"
-    t.boolean  "public",      default: false
-    t.integer  "registry_id"
-    t.boolean  "global",      default: false
+    t.string   "name",        limit: 255
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.integer  "team_id",     limit: 4
+    t.boolean  "public",      limit: 1,   default: false
+    t.integer  "registry_id", limit: 4
+    t.boolean  "global",      limit: 1,   default: false
   end
 
-  add_index "namespaces", ["name"], name: "index_namespaces_on_name", unique: true
-  add_index "namespaces", ["registry_id"], name: "index_namespaces_on_registry_id"
-  add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id"
+  add_index "namespaces", ["name"], name: "index_namespaces_on_name", unique: true, using: :btree
+  add_index "namespaces", ["registry_id"], name: "index_namespaces_on_registry_id", using: :btree
+  add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id", using: :btree
 
   create_table "registries", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.string   "hostname",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true
-  add_index "registries", ["name"], name: "index_registries_on_name", unique: true
-
-  create_table "repositories", force: :cascade do |t|
-    t.string   "name",         default: "", null: false
-    t.integer  "namespace_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-  end
-
-  add_index "repositories", ["name"], name: "index_repositories_on_name", unique: true
-  add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id"
-
-  create_table "tags", force: :cascade do |t|
-    t.string   "name",          default: "latest", null: false
-    t.integer  "repository_id",                    null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-    t.integer  "user_id"
-  end
-
-  add_index "tags", ["repository_id"], name: "index_tags_on_repository_id"
-  add_index "tags", ["user_id"], name: "index_tags_on_user_id"
-
-  create_table "team_users", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "team_id"
+    t.string   "name",       limit: 255, null: false
+    t.string   "hostname",   limit: 255, null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.integer  "role",       default: 0
   end
 
-  add_index "team_users", ["team_id"], name: "index_team_users_on_team_id"
-  add_index "team_users", ["user_id"], name: "index_team_users_on_user_id"
+  add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true, using: :btree
+  add_index "registries", ["name"], name: "index_registries_on_name", unique: true, using: :btree
+
+  create_table "repositories", force: :cascade do |t|
+    t.string   "name",         limit: 255, default: "", null: false
+    t.integer  "namespace_id", limit: 4
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+  end
+
+  add_index "repositories", ["name"], name: "index_repositories_on_name", unique: true, using: :btree
+  add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "name",          limit: 255, default: "latest", null: false
+    t.integer  "repository_id", limit: 4,                      null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.integer  "user_id",       limit: 4
+  end
+
+  add_index "tags", ["repository_id"], name: "index_tags_on_repository_id", using: :btree
+  add_index "tags", ["user_id"], name: "index_tags_on_user_id", using: :btree
+
+  create_table "team_users", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "team_id",    limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.integer  "role",       limit: 4, default: 0
+  end
+
+  add_index "team_users", ["team_id"], name: "index_team_users_on_team_id", using: :btree
+  add_index "team_users", ["user_id"], name: "index_team_users_on_user_id", using: :btree
 
   create_table "teams", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.boolean  "hidden",     default: false
+    t.string   "name",       limit: 255
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.boolean  "hidden",     limit: 1,   default: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "username",               default: "",    null: false
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
-    t.string   "reset_password_token"
+    t.string   "username",               limit: 255, default: "",    null: false
+    t.string   "email",                  limit: 255, default: "",    null: false
+    t.string   "encrypted_password",     limit: 255, default: "",    null: false
+    t.string   "reset_password_token",   limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",          limit: 4,   default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
+    t.string   "current_sign_in_ip",     limit: 255
+    t.string   "last_sign_in_ip",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "admin",                  default: false
+    t.boolean  "admin",                  limit: 1,   default: false
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  add_index "users", ["username"], name: "index_users_on_username", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
 end

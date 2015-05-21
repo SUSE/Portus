@@ -51,17 +51,21 @@ zypper -n in apache2-devel \
   gcc-c++ \
   git-core \
   libcurl-devel \
+  libmysqlclient-devel \
   libopenssl-devel \
   libstdc++-devel \
   libxml2-devel \
   libxslt-devel \
   make \
+  mariadb \
   nodejs \
   patch \
   ruby2.1-devel \
   rubygem-bundler \
-  sqlite3-devel \
   zlib-devel
+
+systemctl enable mysql
+systemctl start mysql
 
 cd /vagrant
 bundle config build.nokogiri --use-system-libraries
