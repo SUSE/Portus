@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   resources :teams, only: [ :index, :show, :create ]
   resources :team_users, only: [ :create, :destroy, :update ]
   resources :namespaces, only: [ :create, :index, :show ] do
@@ -7,6 +8,7 @@ Rails.application.routes.draw do
   resources :repositories, only: [ :index, :show ]
   devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }
   resource :dashboard, only: [ :index ]
+  resources :search, only: [ :index ]
   root 'dashboard#index'
 
   namespace :v2, module: 'api/v2', defaults: { format: :json } do
