@@ -1,8 +1,17 @@
 class Repository < ActiveRecord::Base
   include PublicActivity::Common
+  include SearchCop
 
   belongs_to :namespace
   has_many :tags
+
+  search_scope :search do
+    attributes :name
+    attributes namespace_name: 'namespace.name'
+
+    options :name, type: :fulltext
+    options :namespace_name, type: :fulltext
+  end
 
   PUSH_EVENT_FIND_TOKEN_REGEXP = %r|manifests/(?<tag>.*)$|
 

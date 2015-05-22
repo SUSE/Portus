@@ -21,6 +21,7 @@ gem 'public_activity'
 gem 'active_record_union'
 gem 'rotp'
 gem 'mysql2'
+gem 'search_cop'
 
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages

@@ -1,7 +1,15 @@
 .logo-header.col-xs-12
   h3 Portus
   i#open_main_menu.fa.fa-bars.fa-lg.pull-left.visible-xs
+
+.search-header.col-xs-6
+  = form_tag search_index_path, method: 'get', class: 'navbar-form' do
+    button[type="submit" class="btn btn-default"]
+      i.fa.fa-search
+    = search_field_tag 'search', params[:search], class: 'form-control pull-left', placeholder: 'Search'
+
 .pull-right.user-header.hidden-xs
+
   .hidden-xs
     = gravatar_image_tag(current_user.email)
     = link_to edit_user_registration_url, class: 'nav-a' do
