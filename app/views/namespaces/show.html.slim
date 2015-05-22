@@ -4,19 +4,14 @@
   .panel-body
     .table-responsive
       table[class="table table-stripped table-hover"]
-        col.col-50
+        col.col-60
         col.col-40
-        col.col-10
         thead
           tr
             th Repository
             th # Tags
-            th
         tbody
           - @namespace.repositories.each do |repository|
             tr
-              td= link_to "#{@namespace.name}/#{repository.name}", repository
+              td= link_to repository.name, repository
               td= repository.tags.count
-              td
-                a[href="#{url_for repository}" class="btn btn-default"]
-                  i[class="fa fa-eye fa-lg"]
