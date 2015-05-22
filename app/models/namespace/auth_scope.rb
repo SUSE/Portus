@@ -11,7 +11,16 @@ class Namespace::AuthScope
   end
 
   def resource
-    raise ResourceIsNotFound unless (found_resource = @registry.namespaces.find_by(name: @namespace_name))
+    if @namespace_name.blank?
+      found_resource = @registry.namespaces.find_by(global: true)
+    else
+      found_resource = @registry.namespaces.find_by(name: @namespace_name)
+    end
+
+    if found_resource.nil?
+      Rails.logger.warn "Namespace::AuthScope - Cannot find namespace with name #{@namespace_name}"
+      raise ResourceIsNotFound
+    end
     found_resource
   end
 

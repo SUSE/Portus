@@ -22,7 +22,12 @@ class Api::V2::TokensController < Api::BaseController
     if params[:scope] && params['account'] != 'portus'
       auth_scope, scopes = scope_handler(registry, params[:scope])
       scopes.each do |scope|
-        authorize auth_scope.resource, "#{scope}?".to_sym
+        begin
+          authorize auth_scope.resource, "#{scope}?".to_sym
+        rescue NoMethodError
+          logger.warn "Cannot handle scope #{scope}"
+          fail ScopeNotHandled, "Cannot handle scope #{scope}"
+        end
       end
     end
 
