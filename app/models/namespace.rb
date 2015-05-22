@@ -8,6 +8,7 @@ class Namespace < ActiveRecord::Base
   belongs_to :team
   validates :name,
             presence: true,
+            uniqueness: { scope: 'registry_id' },
             format: {
               with: /\A[#{NAME_ALLOWED_CHARS}]+\Z/,
               message: 'Only allowed letters: [a-z0-9-_]' }
