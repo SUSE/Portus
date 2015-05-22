@@ -5,7 +5,6 @@ section.login
       .col-md-4.col-sm-8.col-xs-10.text-center
         = render 'shared/notifications'
         = devise_error_messages!
-        = image_tag 'user-profile/avatar-lg.jpg', class: 'img circle login-picture border-transparent'
         = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
           = f.text_field :username, class: 'input form-control input-lg first', placeholder: 'Username', autofocus: true, required: true
           = f.password_field :password, class: 'input form-control input-lg last', placeholder: 'Password', autocomplete: false, required: true
