@@ -6,7 +6,7 @@ module ApplicationHelper
 
   def namespace_clean_name(namespace)
     if namespace.global?
-      'Global namespace'
+      namespace.registry.hostname
     else
       namespace.name
     end

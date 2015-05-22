@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ApplicationHelper, type: :helper do
 
+  let(:registry)    { create(:registry) }
   let(:admin)       { create(:user, admin: true) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
@@ -45,8 +46,8 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     context 'global namespace' do
       it 'returns the name of the namespace' do
-        global_namespace = create(:namespace, global: true, public: true)
-        expect(helper.namespace_clean_name(global_namespace)).to eq('Global namespace')
+        global_namespace = create(:namespace, global: true, public: true, registry: registry)
+        expect(helper.namespace_clean_name(global_namespace)).to eq(registry.hostname)
       end
     end
   end

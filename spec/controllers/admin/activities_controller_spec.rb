@@ -20,11 +20,15 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     let(:user) { create(:user, username: 'sammy') }
     let(:another_user) { create(:user, username: 'dean') }
     let(:activity_owner) { create(:user, username: 'castiel') }
-    let(:registry) { create(:registry) }
+    let(:registry) { create(:registry, hostname: 'registry.test.lan') }
+    let(:global_namespace) { create(:namespace, name: 'globalnamespace', registry: registry, global: true, team: global_team, public: true) }
     let(:namespace) { create(:namespace, name: 'patched_images', registry: registry, team: team) }
     let(:team) { create(:team, name: 'qa', owners: [user] ) }
+    let(:global_team) { create(:team, name: 'globalteam', owners: [user] ) }
     let(:repository) { create(:repository, name: 'sles12', namespace: namespace) }
     let(:tag) { create(:tag, name: '1.0.0', repository: repository) }
+    let(:global_repository) { create(:repository, name: 'sles11sp3', namespace: global_namespace) }
+    let(:global_tag) { create(:tag, name: '1.0.0', repository: global_repository) }
 
     before :each do
       Timecop.freeze(Time.gm(2015))
@@ -59,7 +63,10 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
              trackable_id: tag.repository.id,
              recipient_id: tag.id,
              owner_id: activity_owner.id)
-
+      create(:activity_repository_push,
+             trackable_id: global_tag.repository.id,
+             recipient_id: global_tag.id,
+             owner_id: activity_owner.id)
     end
 
     it 'generates a csv file' do
@@ -78,6 +85,7 @@ namespace,patched_images,create,-,castiel,2015-01-01 00:00:00 UTC,owned by team 
 namespace,patched_images,make public,-,castiel,2015-01-01 00:00:00 UTC,-
 namespace,patched_images,make private,-,castiel,2015-01-01 00:00:00 UTC,-
 repository,patched_images/sles12:1.0.0,push tag,-,castiel,2015-01-01 00:00:00 UTC,-
+repository,registry.test.lan/sles11sp3:1.0.0,push tag,-,castiel,2015-01-01 00:00:00 UTC,-
 CSV
 
       expect(response.body).to eq(csv)
