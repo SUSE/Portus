@@ -9,8 +9,16 @@ class User < ActiveRecord::Base
                        exclusion: { in: %w(portus),
                                     message: '%{value} is reserved.' }
 
+  validate :private_namespace_available, on: :create
+
   has_many :team_users
   has_many :teams, through: :team_users
+
+  def private_namespace_available
+    if Namespace.exists?(name: username)
+      errors.add(:username, 'cannot be used as name for private namespace')
+    end
+  end
 
   def create_personal_team!
     if Team.find_by(name: username).nil?

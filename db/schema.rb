@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150521145620) do
+ActiveRecord::Schema.define(version: 20150522144027) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(version: 20150521145620) do
     t.boolean  "global",      limit: 1,   default: false
   end
 
+  add_index "namespaces", ["name", "registry_id"], name: "index_namespaces_on_name_and_registry_id", unique: true, using: :btree
   add_index "namespaces", ["name"], name: "fulltext_index_namespaces_on_name", type: :fulltext
-  add_index "namespaces", ["name"], name: "index_namespaces_on_name", unique: true, using: :btree
   add_index "namespaces", ["registry_id"], name: "index_namespaces_on_registry_id", using: :btree
   add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id", using: :btree
 
@@ -63,8 +63,8 @@ ActiveRecord::Schema.define(version: 20150521145620) do
     t.datetime "updated_at",                            null: false
   end
 
+  add_index "repositories", ["name", "namespace_id"], name: "index_repositories_on_name_and_namespace_id", unique: true, using: :btree
   add_index "repositories", ["name"], name: "fulltext_index_repositories_on_name", type: :fulltext
-  add_index "repositories", ["name"], name: "index_repositories_on_name", unique: true, using: :btree
   add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 20150521145620) do
     t.integer  "user_id",       limit: 4
   end
 
+  add_index "tags", ["name", "repository_id"], name: "index_tags_on_name_and_repository_id", unique: true, using: :btree
   add_index "tags", ["repository_id"], name: "index_tags_on_repository_id", using: :btree
   add_index "tags", ["user_id"], name: "index_tags_on_user_id", using: :btree
 
@@ -95,6 +96,8 @@ ActiveRecord::Schema.define(version: 20150521145620) do
     t.datetime "updated_at",                             null: false
     t.boolean  "hidden",     limit: 1,   default: false
   end
+
+  add_index "teams", ["name"], name: "index_teams_on_name", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",               limit: 255, default: "",    null: false

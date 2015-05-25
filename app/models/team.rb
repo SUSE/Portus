@@ -1,8 +1,8 @@
 class Team < ActiveRecord::Base
   include PublicActivity::Common
 
-  validates :name, :owners, presence: true
-
+  validates :name, presence: true, uniqueness: true
+  validates :owners, presence: true
   has_many :namespaces
 
   has_many :team_users
