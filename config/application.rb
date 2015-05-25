@@ -23,7 +23,7 @@ module Portus
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
-    config.active_record.observers = :user_observer, :team_observer, :registry_observer
+    config.active_record.observers = :user_observer, :registry_observer
 
     config.otp_secret = ROTP::Base32.random_base32
   end

@@ -8,10 +8,12 @@ class Registry < ActiveRecord::Base
       name: Namespace.sanitize_name(hostname),
       owners: [User.where(admin: true).first],
       hidden: true)
-    team.namespaces.last.update_attributes({
+    Namespace.create!(
+      name: Namespace.sanitize_name(hostname),
       registry: self,
       public: true,
-      global: true })
+      global: true,
+      team: team)
   end
 
   def global_namespace
