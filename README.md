@@ -52,6 +52,23 @@ and have the changes automatically sent to the `portus` box.
 `RAILS_ENV` set to `development`. The communication between all the nodes is
 not protected by ssl.
 
+## Continuous integration
+
+Continuous integration is run with [travis](http://travis-ci.org) and the [opensuse build service](http://build.opensuse.org). For details, see the .travis.yml file.
+
+## Release
+
+In order to release we make use of the open build service. The process is:
+
+1- tag source code as X.Y.Z
+2- create a project for X.Y.Z, for example Virtualization:containters:Portus:Releases:X.Y.Z
+3- submit all the packages there from Virtualization:containers:Portus
+4- define the variable "deliberable_version" as X.Y.Z in the project metaconfiguration
+5- in the Portus package, add a service to download source code with tag X.Y.Z
+6- wait for the packages to finish
+7- submit to Factory
+
+
 ## Licensing
 
 Portus is licensed under the Apache License, Version 2.0. See
