@@ -19,9 +19,6 @@ year=$(date +%Y)
 [ ! -d build ] || rm -rf build
 
 additional_native_build_requirements() {
-  if [ $1 == "sqlite3" ];then
-    echo "BuildRequires: sqlite3-devel\nRequires: sqlite3\n"
-  fi
   if [ $1 == "nokogiri" ];then
     echo "BuildRequires: libxml2-devel libxslt-devel\nRequires: libxml2 libxslt\n"
   fi
