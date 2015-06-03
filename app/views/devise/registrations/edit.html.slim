@@ -1,31 +1,50 @@
-h2 Edit #{resource_name.to_s.humanize}s
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
-  = devise_error_messages!
-  .field
-    = f.label :email
-    br
-    = f.email_field :email, autofocus: true
-  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-    div
-      Currently waiting confirmation for: #{resource.unconfirmed_email}
-  .field
-    = f.label :password
-    i
-      | (leave blank if you don't want to change it)
-    br
-    = f.password_field :password, autocomplete: 'off'
-  .field
-    = f.label :password_confirmation
-    br
-    = f.password_field :password_confirmation, autocomplete: 'off'
-  .field
-    = f.label :current_password
-    i
-      | (we need your current password to confirm your changes)
-    br
-    = f.password_field :current_password, autocomplete: 'off'
-  .actions
-    = f.submit 'Update'
-  h3 Cancel my account
-  p Unhappy? #{button_to 'Cancel my account', registration_path(resource_name), data: { confirm: 'Are you sure?' }, method: :delete }
-  = link_to 'Back', :back
+
+#profile
+
+  .[class="panel panel-default"]
+    .panel-heading
+      h2[class='panel-title panel-heading'] Public Profile
+    .panel-body
+      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'profile' }) do |f|
+        .form-group
+          .field
+            = f.label :email
+            = f.text_field(:email, class: 'form-control', required: true)
+        .form-group
+          .actions
+            = f.submit('Update', class: 'btn btn-primary', disabled: true)
+
+  .[class="panel panel-default"]
+    .panel-heading
+      h2[class='panel-title panel-heading'] Change Password
+    .panel-body
+      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'password' }) do |f|
+        - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+          div
+            Currently waiting confirmation for: #{resource.unconfirmed_email}
+        .form-group
+          .field
+            = f.label :current_password, class: 'control-label'
+            = f.password_field :current_password, autocomplete: 'off', class: 'form-control'
+            br
+          .field
+            = f.label :password, class: 'control-label'
+            = f.password_field :password, autocomplete: 'off', class: 'form-control'
+            br
+          .field
+            = f.label :password_confirmation, class: 'control-label'
+            = f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control'
+        .form-group
+          .actions
+            = f.submit('Change', class: 'btn btn-primary', disabled: true)
+
+
+  .[class="panel panel-default"]
+    .panel-heading
+      h2[class='panel-title panel-heading'] Cancel account
+    .panel-body
+      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :delete }, data: { confirm: 'Are you sure?' }) do |f|
+        p
+          | Don't make any rush decissions, once you cancel your account there is no going back.
+        .actions
+          = f.submit('Cancel your account', class: 'btn btn-danger')

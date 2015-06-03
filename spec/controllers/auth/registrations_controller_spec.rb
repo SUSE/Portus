@@ -45,4 +45,67 @@ describe Auth::RegistrationsController do
 
   end
 
+  describe 'PUT #update' do
+
+    let!(:user) { create(:user, admin: true) }
+
+    before :each do
+      request.env['devise.mapping'] = Devise.mappings[:user]
+      sign_in user
+    end
+
+    it 'does not allow invalid emails' do
+      email = User.find(user.id).email
+      put :update, user: { 'email' => 'invalidone' }
+      expect(User.find(user.id).email).to eq(email)
+      put :update, user: { 'email' => 'valid@example.com' }
+      expect(User.find(user.id).email).to eq('valid@example.com')
+    end
+
+    # NOTE: since the tests on passwords also have to take care that even if
+    # there are other parameters (e.g. emails), they are ignored when there are
+    # password parameters, these tests will always have an extra parameter.
+
+    it 'does not allow empty passwords' do
+      put :update, user: {
+        'email' => 'user@example.com',
+        'current_password' => 'test-password',
+        'password' => '',
+        'password_confirmation' => ''
+      }
+      expect(User.find(user.id).valid_password?('test-password')).to be true
+    end
+
+    it 'checks that the old password is ok' do
+      put :update, user: {
+        'email' => 'user@example.com',
+        'current_password' => 'test-passwor',
+        'password' => 'new-password',
+        'password_confirmation' => 'new-password'
+      }
+      expect(User.find(user.id).valid_password?('test-password')).to be true
+    end
+
+    it 'checks that the new password and its confirmation match' do
+      put :update, user: {
+        'email' => 'user@example.com',
+        'current_password' => 'test-password',
+        'password' => 'new-password',
+        'password_confirmation' => 'new-passwor'
+      }
+      expect(User.find(user.id).valid_password?('test-password')).to be true
+    end
+
+    it 'changes the password when everything is alright' do
+      put :update, user: {
+        'email' => 'user@example.com',
+        'current_password' => 'test-password',
+        'password' => 'new-password',
+        'password_confirmation' => 'new-passwor'
+      }
+      expect(User.find(user.id).valid_password?('test-password')).to be true
+    end
+
+  end
+
 end
