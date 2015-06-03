@@ -32,3 +32,16 @@
 #profile .panel {
   max-width: 700px;
 }
+
+#profile .gravatar label {
+  font-weight: normal;
+
+  input {
+    padding: 0;
+    margin:0;
+    vertical-align: middle;
+    margin-right: 5px;
+    position: relative;
+    top: -1px;
+  }
+}

@@ -7,6 +7,14 @@ jQuery ->
     else
       $('#edit_user.profile .btn').removeAttr('disabled')
 
+  gravatar = $('#user_gravatar').is(':checked')
+  $('#user_gravatar').click ->
+    if $('#user_gravatar').is(':checked') == gravatar
+      $('#edit_user.profile .btn').attr('disabled', 'disabled')
+    else
+      $('#edit_user.profile .btn').removeAttr('disabled')
+
+
   $('#edit_user.password .form-control').keyup ->
     current = $('#user_current_password').val()
     password = $('#user_password').val()
