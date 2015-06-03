@@ -10,6 +10,11 @@
           .field
             = f.label :email
             = f.text_field(:email, class: 'form-control', required: true)
+            br
+          .field.gravatar
+            = f.label :gravatar
+              = f.check_box(:gravatar)
+              | Get the profile picture from Gravatar.
         .form-group
           .actions
             = f.submit('Update', class: 'btn btn-primary', disabled: true)

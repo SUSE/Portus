@@ -12,7 +12,9 @@ class Auth::RegistrationsController < Devise::RegistrationsController
         :password, :password_confirmation, :current_password
       ))
     else
-      current_user.update_without_password(params.require(:user).permit(:email))
+      current_user.update_without_password(params.require(:user).permit(
+        :email, :gravatar
+      ))
     end
 
     if success

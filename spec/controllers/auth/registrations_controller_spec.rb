@@ -62,6 +62,14 @@ describe Auth::RegistrationsController do
       expect(User.find(user.id).email).to eq('valid@example.com')
     end
 
+    it 'changes the Gravatar settings accordingly' do
+      expect(User.find(user.id).gravatar?).to be true
+      put :update, user: { 'gravatar' => 0 }
+      expect(User.find(user.id).gravatar?).to be false
+      put :update, user: { 'gravatar' => 1 }
+      expect(User.find(user.id).gravatar?).to be true
+    end
+
     # NOTE: since the tests on passwords also have to take care that even if
     # there are other parameters (e.g. emails), they are ignored when there are
     # password parameters, these tests will always have an extra parameter.
