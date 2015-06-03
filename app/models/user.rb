@@ -20,10 +20,20 @@ class User < ActiveRecord::Base
     end
   end
 
-  def create_personal_team!
-    if Team.find_by(name: username).nil?
-      Team.create!(name: username, owners: [self], hidden: true)
+  def create_personal_namespace!
+    # the registry is not configured yet, we cannot create the namespace
+    return unless Registry.any?
+
+    team = Team.find_by(name: username)
+    if team.nil?
+      team = Team.create!(name: username, owners: [self], hidden: true)
     end
+
+    Namespace.find_or_create_by!(
+      team: team,
+      name: username,
+      registry: Registry.last # TODO: fix once we handle more registries
+    )
   end
 
 end

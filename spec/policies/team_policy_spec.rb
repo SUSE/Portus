@@ -4,9 +4,13 @@ describe TeamPolicy do
 
   subject { described_class }
 
-  let(:admin) { create(:user, admin: true) }
   let(:member) { create(:user) }
   let(:team) { create(:team, owners: [ member ]) }
+
+  before :each do
+    @admin = create(:user, admin: true)
+    create(:registry)
+  end
 
   permissions :is_member? do
 
@@ -19,7 +23,7 @@ describe TeamPolicy do
     end
 
     it 'allows access to an admin even if he is not part of the team' do
-      expect(subject).to permit(admin, team)
+      expect(subject).to permit(@admin, team)
     end
 
   end

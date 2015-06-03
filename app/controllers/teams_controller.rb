@@ -23,7 +23,6 @@ class TeamsController < ApplicationController
 
     if @team.save
       @team.create_activity :create, owner: current_user
-      @team.namespaces.first.create_activity :create, owner: current_user
       respond_with(@team)
     else
       respond_with @team.errors, status: :unprocessable_entity
