@@ -62,7 +62,7 @@ describe Auth::RegistrationsController do
       expect(User.find(user.id).email).to eq('valid@example.com')
     end
 
-    it 'changes the Gravatar settings accordingly', focus: true do
+    it 'changes the Gravatar settings accordingly' do
       expect(User.find(user.id).gravatar?).to be true
       put :update, user: { 'gravatar' => 0 }
       expect(User.find(user.id).gravatar?).to be false
