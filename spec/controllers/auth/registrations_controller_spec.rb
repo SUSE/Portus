@@ -108,4 +108,18 @@ describe Auth::RegistrationsController do
 
   end
 
+  describe 'DELETE #destroy' do
+
+    let!(:user) { create(:user, admin: true) }
+
+    before :each do
+      request.env['devise.mapping'] = Devise.mappings[:user]
+    end
+
+    it 'does not allow the removal of users' do
+      delete :destroy, id: user.id
+      expect(User.find(user.id)).to_not be nil
+    end
+  end
+
 end

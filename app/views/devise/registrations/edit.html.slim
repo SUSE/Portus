@@ -37,14 +37,3 @@
         .form-group
           .actions
             = f.submit('Change', class: 'btn btn-primary', disabled: true)
-
-
-  .[class="panel panel-default"]
-    .panel-heading
-      h2[class='panel-title panel-heading'] Cancel account
-    .panel-body
-      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :delete }, data: { confirm: 'Are you sure?' }) do |f|
-        p
-          | Don't make any rush decissions, once you cancel your account there is no going back.
-        .actions
-          = f.submit('Cancel your account', class: 'btn btn-danger')
