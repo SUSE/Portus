@@ -1,18 +1,10 @@
 class Repository < ActiveRecord::Base
+  include NameValidator
   include PublicActivity::Common
   include SearchCop
 
-  NAME_ALLOWED_CHARS = 'a-z0-9\-_'
-
   belongs_to :namespace
   has_many :tags
-
-  validates :name,
-            presence: true,
-            uniqueness: { scope: 'namespace_id' },
-            format: {
-              with: /\A[#{NAME_ALLOWED_CHARS}]+\Z/,
-              message: 'Only allowed letters: [a-z0-9-_]' }
 
   search_scope :search do
     attributes :name
