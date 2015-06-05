@@ -1,17 +1,10 @@
 class Namespace < ActiveRecord::Base
+  include NameValidator
   include PublicActivity::Common
-
-  NAME_ALLOWED_CHARS = 'a-z0-9\-_'
 
   has_many :repositories
   belongs_to :registry
   belongs_to :team
-  validates :name,
-            presence: true,
-            uniqueness: { scope: 'registry_id' },
-            format: {
-              with: /\A[#{NAME_ALLOWED_CHARS}]+\Z/,
-              message: 'Only allowed letters: [a-z0-9-_]' }
   validates :public, inclusion: { in: [true] }, if: :global?
 
   def self.sanitize_name(name)
