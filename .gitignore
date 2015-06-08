@@ -10,3 +10,4 @@
 /coverage
 .ruby-version
 /public/assets
+/config/config.yml

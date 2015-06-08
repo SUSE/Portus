@@ -11,7 +11,11 @@
 .pull-right.user-header.hidden-xs
 
   .hidden-xs
-    = gravatar_image_tag(current_user.email)
+    - if APP_CONFIG['gravatar']
+      = gravatar_image_tag(current_user.email)
+    - else
+      i.fa.fa-user.fa-1x
+
     = link_to edit_user_registration_url, class: 'nav-a' do
       span.username = current_user.username
   = link_to destroy_user_session_url, method: :delete, class: 'btn btn-default', id: 'logout' do
