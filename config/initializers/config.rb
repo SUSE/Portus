@@ -7,6 +7,6 @@ if File.exist?(path)
 else
   # If the config.yml file does not exist, go on with some defaults.
   {
-    'gravatar': true
+    'gravatar' => true
   }
 end
