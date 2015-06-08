@@ -40,7 +40,7 @@ Source:         %{branch}.tar.gz
 Group:          System/Management
 %define portusdir /srv/Portus
 
-Requires:       ruby
+Requires:       ruby >= 2.1
 BuildRequires:  fdupes
 BuildRequires:  ruby-macros >= 5
 # We expect apache2 and passenger because we are installing the apache
