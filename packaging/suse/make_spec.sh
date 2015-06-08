@@ -23,7 +23,7 @@ additional_native_build_requirements() {
     echo "BuildRequires: libxml2-devel libxslt-devel\nRequires: libxml2 libxslt\n"
   fi
   if [ $1 == "mysql2" ];then
-    echo "BuildRequires: libmysqlclient-devel\nRequires: libmysqlclient18\n"
+    echo "BuildRequires: libmysqlclient-devel\nRequires: libmysqlclient18\nRecommends: mariadb\n"
   fi
 }
 
