@@ -24,6 +24,17 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  # Devise does not allow to disable routes on purpose. Ideally, though we
+  # could still be able to disable the `destroy` method through the
+  # `routes.rb` file as described in the wiki (by disabling all the routes and
+  # calling `devise_scope` manually). However, this solution has the caveat
+  # that it would ignore some calls (e.g. the `layout` call above). Therefore,
+  # the best solution is to just implement a `destroy` method that just returns
+  # a 404.
+  def destroy
+    render nothing: true, status: 404
+  end
+
   def check_admin
     @admin = User.exists?(admin: true)
   end
