@@ -3,9 +3,9 @@
 
 @import "bootstrap-sprockets";
 @import 'bootstrap/variables';
-@import 'vendor/variables';
+@import 'vendor/lifeitup/variables';
 @import 'bootstrap';
-@import 'vendor/lifeitup';
+@import 'vendor/lifeitup/lifeitup';
 
 .table > thead > tr > th,
 .table > tbody > tr > th,
