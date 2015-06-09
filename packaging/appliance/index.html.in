@@ -1,0 +1,54 @@
+<html>
+<head>
+</head>
+<body>
+
+  <h1>Welcome to the Portus Appliance!</h1>
+
+  <p>This appliance is meant to be used as a demo for Portus. Portus targets version 2 of the Docker registry API. It aims to act both as an authoritzation server and as a user interface for the next generation of the Docker registry.</p>
+
+  <a href="https://github.com/SUSE/Portus/wiki">See more on Portus</a>
+
+  <p>Portus works with SSL. In order to verify it, you'll need the root certificate</p>
+
+  <a href="__HOSTNAME__-ca.crt">Download root certificate</a>
+
+  <p>Add this certificate to your system certificates. If you are running SUSE linux, you can do that by:</p>
+
+
+    cp __HOSTNAME__-ca.crt /etc/pki/trust/anchors/ && update-ca-certificates
+
+  
+  <h2><a href="https://__HOSTNAME__">Go to portus application</a></h2>
+
+Example of usage:
+<ul>
+  <li>Add yourself as admin</li>
+  <li>Add registry as __HOSTNAME__:5000</li>
+  <li>Download certificate to /etc/docker/certs.d/__HOSTNAME__:5000</li>
+</ul>
+<br/>
+<ul>
+  <li>docker login __HOSTNAME__:5000</li>
+  <li>docker pull busybox</li>
+  <li>docker tag -f busybox __HOSTNAME__:5000/busybox</li>
+  <li>docker push __HOSTNAME__:5000/busybox</li>
+</ul>
+
+<p>If you want to change the hostname, run</p>
+/etc/init.d/portus-firstboot SERVERNAME
+
+<p>If you want to use your certificates, upload them to</p>
+<ul>
+  <li>/etc/apache2/SERVERNAME-server.crt</li>
+  <li>/etc/apache2/SERVERNAME-server.key</li>
+  <li>/etc/apache2/SERVERNAME-ca.crt</li>
+</ul>
+<p>and then run</p>
+
+/etc/init.d/portus-firstboot SERVERNAME
+
+<p><a href="https://github.com/SUSE/Portus/">Source code</a></p>
+Enjoy!
+</body>
+</html>
