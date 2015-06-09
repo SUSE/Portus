@@ -5,6 +5,20 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   before_filter :check_admin, only: [ :new, :create ]
   before_filter :configure_sign_up_params, only: [ :create ]
 
+  def create
+    build_resource(sign_up_params)
+
+    resource.save
+    if resource.persisted?
+      set_flash_message :notice, :signed_up
+      sign_up(resource_name, resource)
+      respond_with resource, location: after_sign_up_path_for(resource)
+    else
+      redirect_to new_user_registration_url,
+        alert: resource.errors.full_messages[0]
+    end
+  end
+
   def update
     success =
     if password_update?
