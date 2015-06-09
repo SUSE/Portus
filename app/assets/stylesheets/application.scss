@@ -4,8 +4,12 @@
 @import "bootstrap-sprockets";
 @import 'bootstrap/variables';
 @import 'vendor/lifeitup/variables';
+@import 'variables';
 @import 'bootstrap';
 @import 'vendor/lifeitup/lifeitup';
+
+//custom style over lifeitup
+@import 'layout';
 
 .table > thead > tr > th,
 .table > tbody > tr > th,
