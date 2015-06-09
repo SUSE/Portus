@@ -41,7 +41,6 @@ feature 'Signup feature' do
     expect(page).to have_content('Email is invalid')
     expect(page).to_not have_content('Create admin')
     expect(current_url).to eq new_user_registration_url
-
   end
 
 end
