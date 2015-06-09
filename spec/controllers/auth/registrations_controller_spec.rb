@@ -114,6 +114,7 @@ describe Auth::RegistrationsController do
 
     before :each do
       request.env['devise.mapping'] = Devise.mappings[:user]
+      sign_in user
     end
 
     it 'does not allow the removal of users' do
