@@ -62,3 +62,21 @@ header {
     }
   }
 }
+
+body.login {
+  background: url("layout/bg-login.png") no-repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-position: top center;
+}
+
+.center-panel {
+  margin-top: 2em
+}
+@media (max-width: $screen-sm-max) {
+  .center-panel {
+    margin-top: 2em
+  }
+}
