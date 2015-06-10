@@ -8,7 +8,7 @@ var el = $('#new-team-user-form');
   $('#notice p').html("The team '<%= @team.name %>' was created successfully");
   $('#notice').fadeIn();
   $('#add_team_form').fadeOut();
-  $('#add_team_btn i').addClass("fa-chevron-down")
-  $('#add_team_btn i').removeClass("fa-chevron-up")
+  $('#add_team_btn i').addClass("fa-plus-circle")
+  $('#add_team_btn i').removeClass("fa-minus-circle")
 <% end %>
 
