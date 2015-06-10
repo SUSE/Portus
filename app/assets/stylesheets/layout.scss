@@ -16,6 +16,7 @@ header {
   }
   .search-header {
     padding-top: 5px;
+    position: relative;
     .navbar-form {
       padding: 0;
       input[type="search"] {
@@ -41,7 +42,20 @@ header {
         border-top: 1px solid $white;
         border-bottom: 1px solid $white;
         border-right: 1px solid $white;
+        display: none;
       }
+
+    }
+    .header-open-search {
+      border: 1px solid transparent;
+      color: $white;
+      cursor: pointer;
+      position: absolute;
+      top: 8px;
+      left: 0;
+    }
+    .header-search-form .search-field {
+      display: none;
     }
   }
 }

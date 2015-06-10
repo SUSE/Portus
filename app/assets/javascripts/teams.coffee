@@ -37,3 +37,5 @@ $(document).on "page:change", ->
       else
         $('#add_team_btn i').removeClass("fa-chevron-up")
         $('#add_team_btn i').addClass("fa-chevron-down")
+
+  openSearchForm()

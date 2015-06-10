@@ -3,10 +3,13 @@
   i#open_main_menu.fa.fa-bars.fa-lg.pull-left.visible-xs
 
 .search-header.col-xs-4.hidden-xs
-  = form_tag search_index_path, method: 'get', class: 'navbar-form' do
-    = search_field_tag 'search', params[:search], class: 'form-control', placeholder: 'Search'
-    button[type="submit" class="btn btn-default"]
-      i.fa.fa-search
+  .btn.btn-default.header-open-search
+    i.fa.fa-search
+  .header-search-form
+    = form_tag search_index_path, method: 'get', class: 'navbar-form' do
+      = search_field_tag 'search', params[:search], class: 'form-control search-field', placeholder: 'Search'
+      button[type="submit" class="btn btn-default"]
+        i.fa.fa-search
 
 
 .pull-right.user-header.hidden-xs

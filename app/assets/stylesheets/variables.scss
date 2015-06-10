@@ -47,13 +47,13 @@ $footer-aside-bg:      darken($aside, 10%);
 $footer-login:         rgba(0, 0, 0, 0.5);
 $footer-login-color:   $white;
 
-$body-bg:              url('../images/layout/bg.png') $gray-lighter;
+$body-bg:              url('layout/bg.png') $gray-lighter;
 $body-text:            $gray-mid;
 
 $url-panel-company:    $white;
 $text-panel-company:   $gray-mid;
 $bg-panel-company:     $white;
-$top-bg-panel-company: url('../images/layout/company-panel-bg.jpg');
+$top-bg-panel-company: url('layout/company-panel-bg.jpg');
 
 $add-more-media-border-colour:        lighten($gray-mid, 40%);
 $add-more-media-border-colour-hover:  lighten($gray-mid, 30%);
