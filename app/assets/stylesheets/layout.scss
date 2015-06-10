@@ -53,6 +53,9 @@ header {
       position: absolute;
       top: 12px;
       left: 0;
+      &:hover {
+        border: 1px solid transparent;
+      }
     }
     .header-search-form .search-field {
       display: none;

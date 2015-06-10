@@ -8,8 +8,9 @@
 @import 'bootstrap';
 @import 'vendor/lifeitup/lifeitup';
 
-//custom style over lifeitup
+//custom style overriding lifeitup
 @import 'layout';
+@import 'buttons';
 
 .table > thead > tr > th,
 .table > tbody > tr > th,

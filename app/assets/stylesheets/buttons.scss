@@ -1,0 +1,3 @@
+header .btn-default {
+  @include button-variant($white, transparent, $white);
+}
