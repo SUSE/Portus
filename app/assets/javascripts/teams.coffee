@@ -4,12 +4,12 @@ $(document).on "page:change", ->
     $('#team_user_role').val('viewer')
     $('#add_team_user_form').toggle 400, "swing", ->
       if $('#add_team_user_form').is(':visible')
-        $('#add_team_user_btn i').addClass("fa-chevron-up")
-        $('#add_team_user_btn i').removeClass("fa-chevron-down")
+        $('#add_team_user_btn i').addClass("fa-minus-circle")
+        $('#add_team_user_btn i').removeClass("fa-plus-circle")
         $('#team_user_user').focus()
       else
-        $('#add_team_user_btn i').removeClass("fa-chevron-up")
-        $('#add_team_user_btn i').addClass("fa-chevron-down")
+        $('#add_team_user_btn i').removeClass("fa-minus-circle")
+        $('#add_team_user_btn i').addClass("fa-plus-circle")
 
   for btn_edit_role in $(".btn-edit-role")
     $(btn_edit_role).on 'click', (event) =>
@@ -20,20 +20,22 @@ $(document).on "page:change", ->
     $('#namespace_namespace').val('')
     $('#add_namespace_form').toggle 400, "swing", ->
       if $('#add_namespace_form').is(':visible')
-        $('#add_namespace_btn i').addClass("fa-chevron-up")
-        $('#add_namespace_btn i').removeClass("fa-chevron-down")
+        $('#add_namespace_btn i').addClass("fa-minus-circle")
+        $('#add_namespace_btn i').removeClass("fa-plus-circle")
         $('#namespace_namespace').focus()
       else
-        $('#add_namespace_btn i').removeClass("fa-chevron-up")
-        $('#add_namespace_btn i').addClass("fa-chevron-down")
+        $('#add_namespace_btn i').removeClass("fa-minus-circle")
+        $('#add_namespace_btn i').addClass("fa-plus-circle")
 
   $('#add_team_btn').on 'click', (event) =>
     $('#team_name').val('')
     $('#add_team_form').toggle 400, "swing", ->
       if $('#add_team_form').is(':visible')
-        $('#add_team_btn i').addClass("fa-chevron-up")
-        $('#add_team_btn i').removeClass("fa-chevron-down")
+        $('#add_team_btn i').addClass("fa-minus-circle")
+        $('#add_team_btn i').removeClass("fa-plus-circle")
         $('#team_name').focus()
       else
-        $('#add_team_btn i').removeClass("fa-chevron-up")
-        $('#add_team_btn i').addClass("fa-chevron-down")
+        $('#add_team_btn i').removeClass("fa-minus-circle")
+        $('#add_team_btn i').addClass("fa-plus-circle")
+
+  openSearchForm()

@@ -1,13 +1,13 @@
-section.login
-  section.row-1
-    .center-panel
-      .col-md-4.col-sm-2.col-xs-1
-      .col-md-4.col-sm-8.col-xs-10.text-center
-        = render 'shared/notifications'
-        = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-          = f.text_field :username, class: 'input form-control input-lg first', placeholder: 'Username', autofocus: true, required: true
-          = f.password_field :password, class: 'input form-control input-lg last', placeholder: 'Password', autocomplete: false, required: true
-          = f.button class: 'classbutton btn btn-primary btn-block btn-lg' do
-            i.fa.fa-check Login
+section.row-0
+  .center-panel
+    .col-md-4.col-sm-2.col-xs-1
+    .col-md-4.col-sm-8.col-xs-10.text-center
+      = render 'shared/notifications'
+      = image_tag 'layout/portus-logo-login-page.png', class: 'login-picture'
+      = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+        = f.text_field :username, class: 'input form-control input-lg first', placeholder: 'Username', autofocus: true, required: true
+        = f.password_field :password, class: 'input form-control input-lg last', placeholder: 'Password', autocomplete: false, required: true
+        = f.button class: 'classbutton btn btn-primary btn-block btn-lg' do
+          i.fa.fa-check Login
 
-          i.pull-right = link_to 'Sign Up', new_user_registration_url
+        .text-center = link_to 'or, Create a new account', new_user_registration_url

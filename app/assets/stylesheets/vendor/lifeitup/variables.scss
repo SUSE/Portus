@@ -1,15 +1,14 @@
-//Overriding Lifeitup colours
 //main colours
 //TIP: get your favurite pallet from here: http://coolors.co/app/
-$first-colour:  #205683;
-$second-colour: #68B0AB;
-$third-colour:  #0A1A28;
+$first-colour:   #F12D60;
+$second-colour: #F2DC5D;
+$third-colour:  #2A2D34;
 
 // colours for the general layout
 $gray-light:  #cecece;
 $gray-mid:    #5b5b5b;
-$orange-dark: #FF715B;
-$red:         #982649;
+$orange-dark: #FF5E38;
+$red:         #B9121B;
 $white:       #ffffff;
 
 
@@ -27,7 +26,7 @@ $purple:      #bf62a6;
 $transparent-icon-menu-bg:             rgba(0, 0, 0, 0.4);
 $transparent-icon-menu-font-colour:    rgba(255, 255, 255, 0.9);
 
-//Primary colour: all calls-to-action will use this colour. Usually, you want to use your brand's colour here, which,
+//Primary colour: all calls-to-action will use this colour. Usually, you want to use your brand's colour here, which, 
 //should be what you used for the $first-colour variable.
 
 $primary-colour: $first-colour;
@@ -47,13 +46,13 @@ $footer-aside-bg:      darken($aside, 10%);
 $footer-login:         rgba(0, 0, 0, 0.5);
 $footer-login-color:   $white;
 
-$body-bg:              url('layout/bg.png') $gray-lighter;
+$body-bg:              url('../images/layout/bg.png') $gray-lighter;
 $body-text:            $gray-mid;
 
 $url-panel-company:    $white;
 $text-panel-company:   $gray-mid;
 $bg-panel-company:     $white;
-$top-bg-panel-company: url('layout/company-panel-bg.jpg');
+$top-bg-panel-company: url('../images/layout/company-panel-bg.jpg');
 
 $add-more-media-border-colour:        lighten($gray-mid, 40%);
 $add-more-media-border-colour-hover:  lighten($gray-mid, 30%);
@@ -64,7 +63,7 @@ $add-more-media-color-hover:          lighten($gray-mid, 20%);
 
 
 //sizes
-$height-dashboard-panel-first-row:    200px;
+$height-dashboard-panel-first-row:    200px; 
 $body-text-size:                      13px;
 $aside-width:                         250px;
 $max-image-size:                      150px;
@@ -73,26 +72,26 @@ $max-image-size:                      150px;
 //fonts
 $raleway:              'Raleway', sans-serif;
 
-//border
+//border 
 $border-radious:                 2px;
 $add-more-media-border:          1px solid $add-more-media-border-colour;
 $add-more-media-border-hover:    1px solid $add-more-media-border-colour-hover;
 
 //alerts
 $alert-success-bg:      $white;
-$alert-success-border:  $dark-green;
+$alert-success-border:  $dark-green; 
 $alert-success-text:    $body-text;
 
-$alert-info-bg:         $white;
-$alert-info-border:     $blue;
+$alert-info-bg:         $white; 
+$alert-info-border:     $blue; 
 $alert-info-text:       $body-text;
 
-$alert-warning-bg:      $white;
-$alert-warning-border:  $orange;
+$alert-warning-bg:      $white; 
+$alert-warning-border:  $orange; 
 $alert-warning-text:    $body-text;
 
-$alert-danger-bg:       $white;
-$alert-danger-border:   $red;
+$alert-danger-bg:       $white; 
+$alert-danger-border:   $red; 
 $alert-danger-text:     $body-text;
 
 //panels
@@ -110,10 +109,10 @@ $display-list-size-height:      80px;
 
 // overview
 $overview-icon-color:                   $white;
-$overview-icon-registries-bg:           #F2DC5D;
-$overview-icon-users-bg:                #E76B74;
-$overview-icon-teams-bg:                #3F826D;
-$overview-icon-namespaces-bg:           #9AC4F8;
+$overview-icon-times-contacted-bg:      #F2DC5D;
+$overview-icon-visits-bg:               #E76B74;
+$overview-icon-new-articles-bg:         #3F826D;
+$overview-icon-popular-article-bg:      #9AC4F8;
 
 
 // lists
@@ -123,13 +122,13 @@ $ul-display-list-background-hover:    lighten($gray-light, 15%);
 
 // Buttons
 
-$btn-primary-color:  $white;
-$btn-primary-bg:     $primary-colour;
+$btn-primary-color:  $white; 
+$btn-primary-bg:     $primary-colour; 
 $btn-primary-border: $primary-colour;
 
 
-$btn-default-color:  $primary-colour;
-$btn-default-bg:     transparent;
+$btn-default-color:  $primary-colour; 
+$btn-default-bg:     transparent; 
 $btn-default-border: $primary-colour;
 
 
