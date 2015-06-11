@@ -46,8 +46,10 @@
             span.fa-3x= Namespace.count
 
 
-h2
-  | Recent activities #{link_to "[All]", admin_activities_path}
+h1
+  | Recent activities
+  small
+    = link_to "View all activities", admin_activities_path
 
 - if @recent_activities.empty?
   p No activities in the last 24 hours.
