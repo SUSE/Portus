@@ -18,4 +18,8 @@ header .btn-default {
 header #logout.btn.btn-default {
   background: rgba(255,255,255,0.2);
   border: 1px solid transparent;
+  &:hover {
+    color: $second-colour;
+    background: rgba(255,255,255,0.7);
+  }
 }

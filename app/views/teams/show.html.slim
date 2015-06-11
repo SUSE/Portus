@@ -1,25 +1,4 @@
-h1= "Team '#{@team.name}'"
-
-h2 Members
-
-p There are three types of users inside of a team:
-ul
-  li
-    i Viewer
-    | : has read only access. Only pull operations are permitted.
-  li
-    i Contributor
-    | : has read and write access. Both pull and push operations are permitted.
-  li
-    i Owner
-    | : like 'contributor', but can also manage the team.
-
 - if can_manage_team?(@team)
-  .clearfix
-    .pull-right
-      a[id="add_team_user_btn" class="btn btn-primary js-toggle-button" role="button"]
-        | Add members
-        i[class="fa fa-chevron-down"]
   .[id="add_team_user_form" class="collapse"]
     = form_for :team_user, url: team_users_path, remote: true, html: {id: 'new-team-user-form', class: 'form-horizontal', role: 'form'} do |f|
       = f.hidden_field(:team, value: @team.name)
@@ -37,7 +16,20 @@ ul
 
 .[class="panel panel-default"]
   .[class="panel-heading"]
-    h3[class='panel-title panel-heading'] Members of team '#{@team.name}'
+    h5
+      ' Members of
+      strong
+        '#{@team.name}
+      small
+        a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-trigger="focus" data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>" data-original-title="What's this?" tabindex="0" data-html="true"]
+          i.fa.fa-info-circle
+
+      - if can_manage_team?(@team)
+        .pull-right
+          a[id="add_team_user_btn" class="btn btn-xs btn-link js-toggle-button" role="button"]
+            | Add members
+            i[class="fa fa-chevron-down"]
+
   .panel-body
     .table-responsive
       table[class="table table-striped table-hover"]
@@ -61,19 +53,8 @@ ul
           - @team.team_users.each do |tu|
             = render(tu)
 
-h2 Namespaces
-
-p A team can own one or more namespaces. By default all the namespaces can
-  be accessed only by the members of the team.
-p It is possible to add read only (pull) access to all Portus users by toggling
-  the "public" flag.
 
 - if can_manage_team?(@team)
-  .clearfix
-    .pull-right
-      a[id="add_namespace_btn" class="btn btn-primary js-toggle-button" role="button"]
-        | Add namespace
-        i[class="fa fa-chevron-down"]
   .[id="add_namespace_form" class="collapse"]
     = form_for :namespace, url: namespaces_path, remote: true, html: {id: 'new-namespace-form', class: 'form-horizontal', role: 'form'} do |f|
       = f.hidden_field(:team, value: @team.name)
@@ -87,7 +68,18 @@ p It is possible to add read only (pull) access to all Portus users by toggling
 
 .[class="panel panel-default"]
   .[class="panel-heading"]
-    h3[class='panel-title panel-heading'] Namespaces owned by team '#{@team.name}'
+    h5
+      ' Namespaces owned by
+      strong
+        '#{@team.name}
+      small
+        a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-trigger="focus" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to all Portus users by toggling the "public" flag.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
+          i.fa.fa-info-circle
+      - if can_manage_team?(@team)
+        .pull-right
+          a[id="add_namespace_btn" class="btn btn-xs btn-link js-toggle-button" role="button"]
+            | Add namespace
+            i[class="fa fa-chevron-down"]
   .panel-body
     .table-responsive
       table[class="table table-striped table-hover"]
