@@ -15,6 +15,7 @@ feature 'Login feature' do
     fill_in 'user_password', with: user.password
     click_button 'Login'
     expect(page).to have_content('Dashboard')
+    expect(page).to_not have_content('Signed in')
   end
 
   scenario 'Wrong password results in an error message' do

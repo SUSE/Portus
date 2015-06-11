@@ -15,6 +15,7 @@ feature 'Logout feature' do
   scenario 'Redirects to login screen' do
     click_link('logout')
     expect(current_url).to eq new_user_session_url
+    expect(page).to_not have_content('Signed out')
   end
 
   scenario 'After login guest redirects to login page when he attempts to access dashboard again' do
