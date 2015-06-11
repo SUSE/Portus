@@ -11,6 +11,6 @@ function openSearchForm () {
       $(this).remove();
     });
     $('.header-search-form .btn-default').show('slow');
-    $('.search-field').show('slow');
+    $('.search-field').show('slow').focus();
   });
 }
