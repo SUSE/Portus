@@ -19,4 +19,5 @@ section.sign-up
             | Create account
           - else
             | Create admin
-        .text-center = link_to 'I already have an account. Login.', new_user_session_url
+        - if @admin
+          .text-center = link_to 'I already have an account. Login.', new_user_session_url
