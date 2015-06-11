@@ -11,7 +11,7 @@ feature 'Signup feature' do
 
   scenario 'As a guest I am able to signup from login page' do
     visit new_user_session_url
-    click_link('Sign Up')
+    click_link('Create a new account')
     expect(page).to have_field('user_email')
   end
 
@@ -27,7 +27,7 @@ feature 'Signup feature' do
     fill_in 'user_email', with: user.email
     fill_in 'user_password', with: user.password
     fill_in 'user_password_confirmation', with: user.password
-    click_button('Sign Up')
+    click_button('Create account')
     expect(page).to have_content('Dashboard')
     expect(current_url).to eq root_url
   end
@@ -37,7 +37,7 @@ feature 'Signup feature' do
     fill_in 'user_email', with: 'gibberish'
     fill_in 'user_password', with: user.password
     fill_in 'user_password_confirmation', with: user.password
-    click_button('Sign Up')
+    click_button('Create account')
     expect(page).to have_content('Email is invalid')
     expect(page).to_not have_content('Create admin')
     expect(current_url).to eq new_user_registration_url
