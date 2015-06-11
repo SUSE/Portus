@@ -1,6 +1,9 @@
 .[class="panel panel-default"]
   .panel-heading
-    h1= namespace_clean_name(@namespace)
+    h5
+      'Namespace:
+      strong
+        = namespace_clean_name(@namespace)
   .panel-body
     .table-responsive
       table[class="table table-stripped table-hover"]
