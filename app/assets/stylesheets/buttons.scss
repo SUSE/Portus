@@ -12,4 +12,10 @@ header .btn-default {
   button[type="submit"] {
     margin-bottom: 1em;
   }
+
+}
+
+header #logout.btn.btn-default {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid transparent;
 }

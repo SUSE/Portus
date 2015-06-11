@@ -14,11 +14,20 @@ header {
       color: $white;
     }
   }
+  .username-logout {
+    display: inline-block;
+    vertical-align: top;
+  }
   .search-header {
-    padding-top: 5px;
     position: relative;
+    display: inline-block;
+    width: 250px;
+    vertical-align: top;
+    margin-right: 15px;
+    margin-top: 4px;
     .navbar-form {
       padding: 0;
+      margin: 0;
       input[type="search"] {
         border-radius: 4px 0 0 4px;
         background: transparent;
@@ -44,15 +53,14 @@ header {
         border-right: 1px solid $white;
         display: none;
       }
-
     }
     .header-open-search {
       border: 1px solid transparent;
       color: $white;
       cursor: pointer;
       position: absolute;
-      top: 12px;
-      left: 0;
+      top: 0;
+      right: 0;
       &:hover {
         border: 1px solid transparent;
       }
