@@ -58,7 +58,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
       admin.reload
       expect(admin).to be_admin
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(403)
     end
 
   end

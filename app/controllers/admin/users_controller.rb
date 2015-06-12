@@ -10,7 +10,7 @@ class Admin::UsersController < Admin::BaseController
     user = User.find(params[:id])
 
     if user == current_user
-      render nothing: true, status: 404
+      render nothing: true, status: 403
     else
       user.update_attributes(admin: !(user.admin?))
       render template: 'admin/users/toggle_admin', locals: { user: user }
