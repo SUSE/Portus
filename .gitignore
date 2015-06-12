@@ -1,8 +1,6 @@
 /.bundle
 /bundle
 /**/*.swp
-/db/*.sqlite3
-/db/*.sqlite3-journal
 /log/*
 !/log/.keep
 /tmp
