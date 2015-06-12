@@ -53,12 +53,12 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(response.status).to eq 200
     end
 
-    it 'changes the admin value and redirects to the root when the user changes himself' do
+    it 'does not allow the current user to "un-admin" itself' do
       put :toggle_admin, id: admin.id, format: :js
 
       admin.reload
-      expect(admin).not_to be_admin
-      expect(response.body).to eq("window.location = '/'")
+      expect(admin).to be_admin
+      expect(response.status).to eq(403)
     end
 
   end

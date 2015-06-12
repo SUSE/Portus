@@ -23,12 +23,15 @@ h1 Users
               td= user.username
               td= user.email
               td
-                a[class="btn btn-default"
-                  data-remote="true"
-                  data-method="put"
-                  rel="nofollow"
-                  href=url_for(toggle_admin_admin_user_path(user))]
-                    i[class="fa fa-toggle-#{user.admin? ? 'on': 'off'} fa-lg"]
+                - if current_user.id == user.id
+                  i[class="fa fa-toggle-#{user.admin? ? 'on': 'off'} fa-lg"]
+                - else
+                  a[class="btn btn-default"
+                    data-remote="true"
+                    data-method="put"
+                    rel="nofollow"
+                    href=url_for(toggle_admin_admin_user_path(user))]
+                      i[class="fa fa-toggle-#{user.admin? ? 'on': 'off'} fa-lg"]
 
               td= user.teams.reduce(0){ |sum, t| sum += t.namespaces.count}
               td= user.teams.count
