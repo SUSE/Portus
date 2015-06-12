@@ -28,7 +28,7 @@ feature 'Signup feature' do
     fill_in 'user_password', with: user.password
     fill_in 'user_password_confirmation', with: user.password
     click_button('Create account')
-    expect(page).to have_content('Dashboard')
+    expect(page).to have_content('Activities')
     expect(current_url).to eq root_url
   end
 
