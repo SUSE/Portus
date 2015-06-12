@@ -22,9 +22,11 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   def update
     success =
     if password_update?
-      current_user.update_with_password(params.require(:user).permit(
+      succ = current_user.update_with_password(params.require(:user).permit(
         :password, :password_confirmation, :current_password
       ))
+      sign_in(current_user, bypass: true) if succ
+      succ
     else
       current_user.update_without_password(params.require(:user).permit(:email))
     end
