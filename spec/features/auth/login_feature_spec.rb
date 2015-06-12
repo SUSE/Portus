@@ -14,7 +14,7 @@ feature 'Login feature' do
     fill_in 'user_username', with: user.username
     fill_in 'user_password', with: user.password
     click_button 'Login'
-    expect(page).to have_content('Dashboard')
+    expect(page).to have_content('Activities')
     expect(page).to_not have_content('Signed in')
   end
 
