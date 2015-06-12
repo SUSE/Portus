@@ -24,4 +24,3 @@ feature 'Update password feature' do
     expect(current_url).to eq edit_user_registration_url
   end
 end
-
