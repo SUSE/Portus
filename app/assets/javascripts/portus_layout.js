@@ -13,4 +13,12 @@ function openSearchForm () {
     $('.header-search-form .btn-default').show('slow');
     $('.search-field').show('slow').focus();
   });
+
+  $('#search').keyup(function() {
+    if ($('#search').val() == '') {
+      $('.header-search-form button').attr('disabled', 'disabled')
+    } else {
+      $('.header-search-form button').removeAttr('disabled')
+    }
+  })
 }

@@ -9,7 +9,7 @@
     .header-search-form
       = form_tag search_index_path, method: 'get', class: 'navbar-form' do
         = search_field_tag 'search', params[:search], autofocus: 'autofocus', class: 'form-control search-field', placeholder: 'Search'
-        button[type="submit" class="btn btn-default"]
+        button[type="submit" class="btn btn-default" disabled]
           i.fa.fa-search
   .username-logout
     .hidden-xs
