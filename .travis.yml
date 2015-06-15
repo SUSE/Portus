@@ -1,6 +1,12 @@
 language: ruby
 rvm:
+  # The version used at SLE12
+  - 2.1.2
+
+  # The version used at openSUSE 13.2
   - 2.1.3
+
+  # Future versions
   - 2.2
   - ruby-head
 matrix:
