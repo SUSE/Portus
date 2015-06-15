@@ -6,6 +6,5 @@
 /tmp
 /.vagrant
 /coverage
-.ruby-version
 /public/assets
 /config/config-local.yml
