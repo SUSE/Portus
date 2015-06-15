@@ -47,6 +47,14 @@ feature 'Signup feature' do
     expect(page).to have_css('section.first-user')
   end
 
+  scenario 'It does not exist a link to login if there are no users' do
+    expect(page).to have_content('Login')
+
+    User.delete_all
+    visit new_user_registration_url
+    expect(page).to_not have_content('Login')
+  end
+
   scenario 'As a guest I can see error prohibiting my registration to be completed' do
     fill_in 'user_username', with: user.username
     fill_in 'user_email', with: 'gibberish'
