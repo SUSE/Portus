@@ -16,10 +16,11 @@ tr[id="team_user_#{team_user.id}"]
         i[class="fa fa-pencil fa-lg"]
     td
       a[class="btn btn-default"
-        data-method="delete"
-        rel="nofollow"
-        data-remote="true"
-        data-confirm="Are you sure?"
-        href=url_for(team_user)
+        data-placement="left"
+        data-toggle="popover"
+        data-content='<p>Are you sure?</p><a class="btn btn-default" data-method="delete" rel="nofollow" data-remote="true" href="#{url_for(team_user)}">Yes</a>'
+        data-html="true"
+        tabindex="0"
+        role="button"
         ]
         i[class="fa fa-trash fa-lg"]
