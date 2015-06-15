@@ -18,10 +18,10 @@ before_install:
     sudo bash .travis_mariadb.sh
     "
 before_script:
-    - mysql -e 'create database portus_test;'
+  - mysql -e 'create database portus_test;'
 script:
-  - 'bundle exec rspec spec'
-  - 'bundle exec rubocop'
+  - bundle exec rspec spec
+  - bundle exec rubocop
 env:
   global:
 # OSC_CREDENTIALS are kept secret
