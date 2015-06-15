@@ -12,6 +12,14 @@ $(document).on "page:change", ->
         $('#add_team_user_btn i').addClass("fa-plus-circle")
 
   $('body').on('click', '.btn-edit-role', (event) ->
+    el = $(this).find('i.fa')
+    if el.hasClass('fa-pencil')
+      el.removeClass('fa-pencil')
+      el.addClass('fa-ban')
+    else
+      el.removeClass('fa-ban')
+      el.addClass('fa-pencil')
+
     $('#team_user_' + event.currentTarget.value + ' td .role').toggle()
     $('#change_role_team_user_' + event.currentTarget.value).toggle()
   )
