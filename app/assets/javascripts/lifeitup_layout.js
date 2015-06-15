@@ -61,7 +61,10 @@ function layout_resizer () {
 // init popovers
 
 $(function () {
-  $('[data-toggle="popover"]').popover()
+  $('body').popover({
+    selector: '[data-toggle="popover"]',
+    trigger: 'focus'
+  })
   // to destroy the popovers that are hidden
   $('[data-toggle="popover"]').on('hidden.bs.popover', function () {
     var popover = $('.popover').not('.in');

@@ -21,7 +21,7 @@
       strong
         '#{@team.name}
       small
-        a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-trigger="focus" data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>" data-original-title="What's this?" tabindex="0" data-html="true"]
+        a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>" data-original-title="What's this?" tabindex="0" data-html="true"]
           i.fa.fa-info-circle
 
       - if can_manage_team?(@team)
@@ -73,7 +73,7 @@
       strong
         '#{@team.name}
       small
-        a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-trigger="focus" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to all Portus users by toggling the "public" flag.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
+        a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to all Portus users by toggling the "public" flag.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
           i.fa.fa-info-circle
       - if can_manage_team?(@team)
         .pull-right
