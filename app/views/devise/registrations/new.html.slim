@@ -1,4 +1,4 @@
-section.sign-up
+section.sign-up class=(@have_users ? '' : 'first-user')
   .center-panel
     .col-md-4.col-sm-2.col-xs-1
     .col-md-4.col-sm-8.col-xs-10.text-center
@@ -19,5 +19,5 @@ section.sign-up
             | Create account
           - else
             | Create admin
-        - if @admin
+        - if @have_users
           .text-center = link_to 'I already have an account. Login.', new_user_session_url
