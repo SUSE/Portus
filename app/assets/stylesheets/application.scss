@@ -3,10 +3,10 @@
 
 @import "bootstrap-sprockets";
 @import 'bootstrap/variables';
-@import 'vendor/lifeitup/variables';
+@import 'lifeitup/variables';
 @import 'variables';
 @import 'bootstrap';
-@import 'vendor/lifeitup/lifeitup';
+@import 'lifeitup/lifeitup';
 
 //custom style overriding lifeitup
 @import 'layout';
