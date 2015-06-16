@@ -15,9 +15,9 @@ $(document).on "page:change", ->
     el = $(this).find('i.fa')
     if el.hasClass('fa-pencil')
       el.removeClass('fa-pencil')
-      el.addClass('fa-ban')
+      el.addClass('fa-close')
     else
-      el.removeClass('fa-ban')
+      el.removeClass('fa-close')
       el.addClass('fa-pencil')
 
     $('#team_user_' + event.currentTarget.value + ' td .role').toggle()
