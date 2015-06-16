@@ -16,7 +16,7 @@ Vagrant.configure('2') do |config|
     node.vm.network :private_network, ip: '192.168.1.2', virtualbox__intnet: true
     node.vm.network :forwarded_port, host: 44242, guest: 80
 
-    config.vm.provision 'shell',
+    node.vm.provision 'shell',
       path: 'vagrant/setup_private_network',
       args:'192.168.1.2'
     node.vm.provision 'shell', path: 'vagrant/provision_registry'
@@ -25,7 +25,7 @@ Vagrant.configure('2') do |config|
     node.vm.provision 'shell', inline: <<EOS
 mkdir /etc/registry
 cp /vagrant/vagrant/conf/ca_bundle/server.crt /etc/registry/portus.crt
-cp /vagrant/vagrant/conf/registry-config.yml /etc/registry-config.yml
+cp /vagrant/vagrant/conf/registry-config.yml /etc/registry/config.yml
 systemctl enable registry
 systemctl restart registry
 EOS
@@ -38,7 +38,7 @@ EOS
     node.vm.network :private_network, ip: '192.168.1.3', virtualbox__intnet: true
     node.vm.network 'forwarded_port', guest: 80, host: 5000
 
-    config.vm.provision 'shell',
+    node.vm.provision 'shell',
       path: 'vagrant/setup_private_network',
       args: '192.168.1.3'
     node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
@@ -91,7 +91,7 @@ EOS
     node.vm.hostname = 'client.test.lan'
     node.vm.network :private_network, ip: '192.168.1.4', virtualbox__intnet: true
 
-    config.vm.provision 'shell',
+    node.vm.provision 'shell',
       path: 'vagrant/setup_private_network',
       args: '192.168.1.4'
     node.vm.provision 'shell', path: 'vagrant/provision_client'
