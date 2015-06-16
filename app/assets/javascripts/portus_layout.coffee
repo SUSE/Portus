@@ -1,6 +1,6 @@
 # Jquery to give the final touches to Portus layout
 
-openSearchForm = ->
+window.openSearchForm = ->
   $('.header-open-search').on 'click', ->
     $(this).fadeOut '300', ->
       $(this).remove()
