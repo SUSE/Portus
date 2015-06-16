@@ -5,8 +5,9 @@
   $("#change_role_team_user_<%= team_user.id %>").fadeToggle(function() {
     $("#team_user_<%= team_user.id %> td div.role").fadeToggle();
   });
-  el.removeClass('fa-close')
-  el.addClass('fa-pencil')
+  var el = $("#team_user_<%= team_user.id %> td .btn-edit-role i.fa");
+  el.removeClass('fa-close');
+  el.addClass('fa-pencil');
 <% else %>
   $('#alert p').html("<%= escape_javascript(team_user.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
