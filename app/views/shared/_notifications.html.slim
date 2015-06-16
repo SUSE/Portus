@@ -18,7 +18,7 @@
 
 
 = render template: 'shared/_notification.html.slim',
-    locals: { messages: [flash[:notice]], alert: 'info' }
+    locals: { messages: flash[:notice], alert: 'info' }
 
 = render template: 'shared/_notification.html.slim',
-    locals: { messages: [flash[:alert]], alert: 'danger' }
+    locals: { messages: flash[:alert], alert: 'danger' }

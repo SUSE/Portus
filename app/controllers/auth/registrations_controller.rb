@@ -22,7 +22,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
       respond_with resource, location: after_sign_up_path_for(resource)
     else
       redirect_to new_user_registration_url,
-        alert: resource.errors.full_messages[0]
+        alert: resource.errors.full_messages
     end
   end
 
@@ -43,7 +43,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
         notice: 'Profile updated successfully!'
     else
       redirect_to edit_user_registration_url,
-        alert: resource.errors.full_messages[0]
+        alert: resource.errors.full_messages
     end
   end
 
