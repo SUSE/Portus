@@ -1,5 +1,6 @@
 <html>
 <head>
+  <link rel="stylesheet" media="all" href="https://__HOSTNAME__/assets/__APPLICATION_CSS__" />
 </head>
 <body>
 
