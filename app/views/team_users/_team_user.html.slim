@@ -4,10 +4,12 @@ tr[id="team_user_#{team_user.id}"]
     .role= team_user.role.titleize
     .[id="change_role_team_user_#{team_user.id}" class="collapse"]
       = form_for team_user, remote: true, html: {class: 'form-inline', role: 'form'} do |f|
-        .form-group
-          = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
-          .[class='col-md-offset-2 col-md-7']
-        = f.submit('Save', class: 'btn btn-primary')
+        = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
+        .[class='col-md-offset-2 col-md-7']
+        = button_tag(type: 'submit', class: 'btn btn-primary') do
+          i.fa.fa-check
+          'Save
+
         .errors
   - if can_manage_team?(team_user.team)
     td
@@ -18,7 +20,8 @@ tr[id="team_user_#{team_user.id}"]
       a[class="btn btn-default"
         data-placement="left"
         data-toggle="popover"
-        data-content='<p>Are you sure?</p><a class="btn btn-default" data-method="delete" rel="nofollow" data-remote="true" href="#{url_for(team_user)}">Yes</a>'
+        data-title="Please confirm"
+        data-content='<p>Are you sure you want to remove this team member?</p><a class="btn btn-default">No</a> <a class="btn btn-primary" data-method="delete" rel="nofollow" data-remote="true" href="#{url_for(team_user)}">Yes</a>'
         data-html="true"
         tabindex="0"
         role="button"
