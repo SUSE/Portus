@@ -66,4 +66,17 @@ feature 'Signup feature' do
     expect(current_url).to eq new_user_registration_url
   end
 
+  scenario 'Multiple errors are displayed in a list' do
+    fill_in 'user_username', with: user.username
+    fill_in 'user_email', with: 'gibberish'
+    fill_in 'user_password', with: '12341234'
+    fill_in 'user_password_confirmation', with: '532'
+    click_button('Create account')
+
+    expect(page).to have_css('#alert ul')
+    expect(page).to have_selector('#alert ul li', count: 2)
+    expect(page).to have_selector('#alert ul li', text: 'Email is invalid')
+    expect(page).to have_selector('#alert ul li', text: 'Password confirmation doesn\'t match Password')
+  end
+
 end
