@@ -83,6 +83,11 @@ cp %{_libdir}/ruby/gems/%{rb_ver}/cache/*.gem vendor/cache
 export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
 export PACKAGING=yes
 SKIP_MIGRATION="yes" SECRET_KEY_BASE="assets_precompilation" RAILS_ENV=production bundle exec rake assets:precompile
+
+# patch landing_page
+APPLICATION_CSS=$(find . -name application-*.css 2> /dev/null | rev | cut -d"/" -f1 | rev)
+sed -e "s/__APPLICATON_CSS__/$APPLICATION_CSS/g" -i public/landing.html.in
+
 bundle install --local --deployment
 rm -rf vendor/cache
 
