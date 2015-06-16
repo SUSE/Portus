@@ -11,10 +11,18 @@ $(document).on "page:change", ->
         $('#add_team_user_btn i').removeClass("fa-minus-circle")
         $('#add_team_user_btn i').addClass("fa-plus-circle")
 
-  for btn_edit_role in $(".btn-edit-role")
-    $(btn_edit_role).on 'click', (event) =>
-      $('#team_user_' + event.currentTarget.value + ' td .role').toggle()
-      $('#change_role_team_user_' + event.currentTarget.value).toggle()
+  $('body').on('click', '.btn-edit-role', (event) ->
+    el = $(this).find('i.fa')
+    if el.hasClass('fa-pencil')
+      el.removeClass('fa-pencil')
+      el.addClass('fa-close')
+    else
+      el.removeClass('fa-close')
+      el.addClass('fa-pencil')
+
+    $('#team_user_' + event.currentTarget.value + ' td .role').toggle()
+    $('#change_role_team_user_' + event.currentTarget.value).toggle()
+  )
 
   $('#add_namespace_btn').on 'click', (event) =>
     $('#namespace_namespace').val('')
