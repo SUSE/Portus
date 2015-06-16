@@ -1,5 +1,3 @@
-var el = $('#new-team-user-form');
-
 <% if @team.errors.any? %>
   $('#alert p').html("<%= escape_javascript(@team.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
