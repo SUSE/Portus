@@ -9,7 +9,14 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }
   resource :dashboard, only: [ :index ]
   resources :search, only: [ :index ]
-  root 'dashboard#index'
+
+  authenticated :user do
+    root 'dashboard#index', as: :authenticated_root
+  end
+
+  devise_scope :user do
+    root to: 'auth/sessions#new'
+  end
 
   namespace :v2, module: 'api/v2', defaults: { format: :json } do
     root to: 'ping#ping', as: :ping

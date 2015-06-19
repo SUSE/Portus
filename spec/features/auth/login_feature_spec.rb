@@ -8,6 +8,11 @@ feature 'Login feature' do
     visit new_user_session_url
   end
 
+  scenario 'It does not show any flash when accessing for the first time', focus: true do
+    visit root_url
+    expect(page).to_not have_content('You need to sign in or sign up before continuing.')
+  end
+
   scenario 'Existing user is able using his login and password to login into Portus' do
     # TODO: DRY it out - share with other scenarious outside this feature
     expect(page).to_not have_content('Invalid username or password')
