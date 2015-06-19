@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2.1'
-gem 'jquery-rails'
+gem 'rails', '~> 4.2.2'
+gem 'jquery-rails', '~> 4.0.4'
 gem 'turbolinks'
 gem 'slim'
 gem 'coffee-rails'
@@ -40,7 +40,7 @@ unless ENV['PACKAGING'] && ENV['PACKAGING'] == "yes"
 
   group :development, :test do
     gem 'byebug'
-    gem 'web-console', '~> 2.0.0.beta4'
+    gem 'web-console', '~> 2.1.3'
     gem 'thin'
     gem 'awesome_print'
     gem 'hirb'
