@@ -8,7 +8,7 @@ feature 'Login feature' do
     visit new_user_session_url
   end
 
-  scenario 'It does not show any flash when accessing for the first time', focus: true do
+  scenario 'It does not show any flash when accessing for the first time' do
     visit root_url
     expect(page).to_not have_content('You need to sign in or sign up before continuing.')
   end
@@ -33,7 +33,8 @@ feature 'Login feature' do
 
   scenario 'When guest is trying to access dashboard - he should be redirected to login page' do
     visit root_url
-    expect(current_url).to eq new_user_session_url
+    expect(page).to have_content('Login')
+    expect(current_url).to eq root_url
   end
 
 end
