@@ -1,17 +1,10 @@
 class RegistryClient
-  class NoBearerRealmException < RuntimeError
-  end
+  class NoBearerRealmException < RuntimeError; end
+  class AuthorizationError < RuntimeError; end
+  class ManifestNotFoundError < RuntimeError; end
+  class CredentialsMissingError < RuntimeError; end
 
-  class AuthorizationError < RuntimeError
-  end
-
-  class ManifestNotFoundError < RuntimeError
-  end
-
-  class CredentialsMissingError < RuntimeError
-  end
-
-  def initialize(host, use_ssl=true, username=nil, password=nil)
+  def initialize(host, use_ssl = true, username = nil, password = nil)
     @host = host
     @use_ssl = use_ssl
     @base_url = "http#{'s' if @use_ssl}://#{@host}/v2/"
@@ -19,11 +12,11 @@ class RegistryClient
     @password = password
   end
 
-  def has_credentials?
+  def credentials?
     @username && @password
   end
 
-  def manifest(repository, tag='latest')
+  def manifest(repository, tag = 'latest')
     res = get_request("#{repository}/manifests/#{tag}")
     if res.code.to_i == 200
       JSON.parse(res.body)
@@ -35,18 +28,17 @@ class RegistryClient
     end
   end
 
-  def get_request(path, request_auth_token=true)
+  def get_request(path, request_auth_token = true)
     uri = URI.join(@base_url, path)
     req = Net::HTTP::Get.new(uri)
     req['Authorization'] = "Bearer #{@token}" if @token
 
     res = get_response_token(uri, req)
     if res.code.to_i == 401
+      # Note that request_auth_token will raise an exception on error.
       if request_auth_token
         request_auth_token(res)
         return get_request(path, false)
-      else
-        # this will never happen, request_auth_token will raise an exception
       end
     else
       res
@@ -61,7 +53,7 @@ class RegistryClient
     uri = URI("#{bearer_realm}?#{query.to_query}")
 
     req = Net::HTTP::Get.new(uri)
-    req.basic_auth(@username, @password) if has_credentials?
+    req.basic_auth(@username, @password) if credentials?
 
     res = get_response_token(uri, req)
     if res.code.to_i == 200
@@ -73,12 +65,12 @@ class RegistryClient
   end
 
   def parse_unhauthorized_response(res)
-    auth_args = res.to_hash['www-authenticate'].first.split(',').each_with_object({}) do |i,h|
-      key,val = i.split('=')
+    auth_args = res.to_hash['www-authenticate'].first.split(',').each_with_object({}) do |i, h|
+      key, val = i.split('=')
       h[key] = val.gsub('"', '')
     end
 
-    unless has_credentials?
+    unless credentials?
       fail CredentialsMissingError, "Registry #{@host} has authorization enabled, "\
         'user credentials not specified'
     end

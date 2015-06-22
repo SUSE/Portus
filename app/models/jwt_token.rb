@@ -1,7 +1,6 @@
 require 'ostruct'
 
 class JwtToken < OpenStruct
-
   # TODO: expected to have account, service, scope for .new
 
   def encoded_token
@@ -10,7 +9,7 @@ class JwtToken < OpenStruct
   end
 
   def claim
-    Hash.new.tap do |hash|
+    {}.tap do |hash|
       hash[:iss]     = Rails.application.secrets.machine_fqdn
       hash[:sub]     = account
       hash[:aud]     = service
@@ -33,11 +32,11 @@ class JwtToken < OpenStruct
   private
 
   def authorized_access
-    [ single_action ]
+    [single_action]
   end
 
   def single_action
-    Hash.new.tap do |hash|
+    {}.tap do |hash|
       hash[:type]    = scope.resource_type
       hash[:name]    = scope.resource_name
       hash[:actions] = scope.actions
@@ -63,7 +62,6 @@ class JwtToken < OpenStruct
   end
 
   class << self
-
     def jwt_kid(private_key)
       sha256 = Digest::SHA256.new
       sha256.update(private_key.public_key.to_der)
@@ -73,7 +71,5 @@ class JwtToken < OpenStruct
         mem
       end.join(':')
     end
-
   end
-
 end

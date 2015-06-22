@@ -14,7 +14,7 @@ class Repository < ActiveRecord::Base
     options :namespace_name, type: :fulltext
   end
 
-  PUSH_EVENT_FIND_TOKEN_REGEXP = %r|manifests/(?<tag>.*)$|
+  PUSH_EVENT_FIND_TOKEN_REGEXP = %r{manifests/(?<tag>.*)$}
 
   def self.handle_push_event(event)
     if event['target']['repository'].include?('/')
@@ -63,5 +63,4 @@ class Repository < ActiveRecord::Base
     namespace.repositories << repository if namespace
     repository
   end
-
 end

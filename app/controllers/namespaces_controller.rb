@@ -58,5 +58,4 @@ class NamespacesController < ApplicationController
   def set_namespace
     @namespace = Namespace.find(params[:id])
   end
-
 end

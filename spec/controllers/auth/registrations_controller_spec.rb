@@ -34,7 +34,7 @@ describe Auth::RegistrationsController do
     it 'omits the value of admin if there is already another admin' do
       create(:user, admin: true)
       post :create, user: {
-        'username'=> 'wonnabeadministrator',
+        'username' => 'wonnabeadministrator',
         'email' => 'wonnabeadministrator@test.com',
         'password' => '12341234',
         'password_confirmation' => '12341234',

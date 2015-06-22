@@ -3,7 +3,7 @@ require 'rails_helper'
 describe JwtToken do
 
   let(:fake_kid) do
-    FFaker.letterify((['????']*12).join(':')).upcase
+    FFaker.letterify((['????'] * 12).join(':')).upcase
   end
 
   let(:registry) { create(:registry) }
@@ -50,10 +50,10 @@ describe JwtToken do
 
     it 'calls JWT#encode with claim with stringified_keys' do
       expect(JWT).to receive(:encode).with(
-                         subject.claim.deep_stringify_keys,
-                         subject.private_key,
-                         'RS256',
-                         { 'kid' => described_class.jwt_kid(subject.private_key) }
+        subject.claim.deep_stringify_keys,
+        subject.private_key,
+        'RS256',
+        'kid' => described_class.jwt_kid(subject.private_key)
       )
       subject.encoded_token
     end

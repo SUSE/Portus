@@ -21,5 +21,4 @@ class Team < ActiveRecord::Base
   def downcase?
     name.downcase == name
   end
-
 end

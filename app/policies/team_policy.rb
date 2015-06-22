@@ -7,11 +7,11 @@ class TeamPolicy
     @team = team
   end
 
-  def is_member?
+  def member?
     user.admin? || @team.users.exists?(user.id)
   end
 
-  alias_method :show?, :is_member?
+  alias_method :show?, :member?
 
   class Scope
     attr_reader :user, :scope
@@ -25,5 +25,4 @@ class TeamPolicy
       user.teams.where(hidden: false)
     end
   end
-
 end

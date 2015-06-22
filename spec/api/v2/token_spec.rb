@@ -34,7 +34,7 @@ describe '/v2/token' do
       end
 
       it 'denies access when basic auth credentials are not defined' do
-        get v2_token_url, { service: registry.hostname, account: 'account', scope: 'repository:foo/me:push' }
+        get v2_token_url, service: registry.hostname, account: 'account', scope: 'repository:foo/me:push'
         expect(response.status).to eq 401
       end
 
@@ -97,7 +97,7 @@ describe '/v2/token' do
       it 'decoded payload should conform with params sent' do
         get v2_token_url, valid_request, valid_auth_header
         token = JSON.parse(response.body)['token']
-        payload = JWT.decode(token, nil, false, { leeway: 2 })[0]
+        payload = JWT.decode(token, nil, false, leeway: 2)[0]
         expect(payload['sub']).to eq 'account'
         expect(payload['aud']).to eq registry.hostname
         expect(payload['access'][0]['type']).to eq 'repository'
@@ -116,7 +116,7 @@ describe '/v2/token' do
 
         it 'decoded payload should not contain access key' do
           token = JSON.parse(response.body)['token']
-          payload = JWT.decode(token, nil, false, { leeway: 2 })[0]
+          payload = JWT.decode(token, nil, false, leeway: 2)[0]
           expect(payload).to_not have_key('access')
         end
 
@@ -171,9 +171,15 @@ describe '/v2/token' do
                                registry: registry)
             wrong_registry = create(:registry)
 
-            get v2_token_url,
-              { service: wrong_registry.hostname, account: user.username, scope: "repository:#{namespace.name}/busybox:push,pull" },
+            get(
+              v2_token_url,
+              {
+                service: wrong_registry.hostname,
+                account: user.username,
+                scope: "repository:#{namespace.name}/busybox:push,pull"
+              },
               valid_auth_header
+            )
             expect(response.status).to eq(401)
           end
         end

@@ -19,7 +19,7 @@ describe RegistryNotification do
 
   it 'process all the events' do
     notification = RegistryNotification.new(registry_notification_data)
-    notification.events.each {|e| expect(e).to receive(:process!) }
+    notification.events.each { |e| expect(e).to receive(:process!) }
     notification.process!
   end
 end

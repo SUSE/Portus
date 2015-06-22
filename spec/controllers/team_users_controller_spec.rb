@@ -6,8 +6,8 @@ describe TeamUsersController do
   let(:contributor) { create(:user) }
   let(:team) do
     create(:team,
-           owners: [ owner ],
-           contributors: [ contributor ])
+           owners: [owner],
+           contributors: [contributor])
   end
 
   describe 'as an owner of the team' do
@@ -150,7 +150,7 @@ describe TeamUsersController do
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(team)
       expect(activity.recipient).to eq(new_user)
-      expect(activity.parameters).to eq({ role: new_user_role })
+      expect(activity.parameters).to eq(role: new_user_role)
     end
 
     it 'tracks removal of team members' do
@@ -166,7 +166,7 @@ describe TeamUsersController do
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(team)
       expect(activity.recipient).to eq(user)
-      expect(activity.parameters).to eq({ role: 'viewer' })
+      expect(activity.parameters).to eq(role: 'viewer')
     end
 
     it 'tracks changes of role' do
@@ -183,7 +183,7 @@ describe TeamUsersController do
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(team)
       expect(activity.recipient).to eq(user)
-      expect(activity.parameters).to eq({ old_role: 'viewer', new_role: 'contributor' })
+      expect(activity.parameters).to eq(old_role: 'viewer', new_role: 'contributor')
     end
 
   end

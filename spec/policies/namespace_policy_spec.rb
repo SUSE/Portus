@@ -10,9 +10,9 @@ describe NamespacePolicy do
   let(:contributor) { create(:user) }
   let(:team) do
     create(:team,
-           owners: [ owner ],
-           contributors: [ contributor ],
-           viewers: [ viewer ])
+           owners: [owner],
+           contributors: [contributor],
+           viewers: [viewer])
   end
   let(:namespace) { create(:namespace, registry: @registry, team: team) }
 

@@ -10,9 +10,9 @@ describe NamespacesController do
   let(:owner) { create(:user) }
   let(:team) do
     create(:team,
-           owners: [ owner ],
-           viewers: [ user, viewer ],
-           contributors: [ contributor ])
+           owners: [owner],
+           viewers: [user, viewer],
+           contributors: [contributor])
   end
   let(:namespace) { create(:namespace, team: team, registry: registry) }
 

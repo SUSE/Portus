@@ -10,5 +10,4 @@ class Namespace < ActiveRecord::Base
   def self.sanitize_name(name)
     name.downcase.gsub(/\s+/, '_').gsub(/[^#{NAME_ALLOWED_CHARS}]/, '')
   end
-
 end

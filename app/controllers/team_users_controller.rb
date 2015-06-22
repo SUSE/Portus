@@ -12,9 +12,7 @@ class TeamUsersController < ApplicationController
     @team_user = TeamUser.new(team: team, user: user, role: params['team_user']['role'])
     authorize @team_user
 
-    if user.nil?
-      @team_user.errors.add(:user, 'cannot be found')
-    end
+    @team_user.errors.add(:user, 'cannot be found') if user.nil?
 
     if @team_user.errors.empty? && @team_user.save
       team.create_activity :add_member,
@@ -94,6 +92,4 @@ class TeamUsersController < ApplicationController
   def set_team
     @team_user = TeamUser.find(params[:id])
   end
-
-
 end

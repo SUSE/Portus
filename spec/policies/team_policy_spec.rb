@@ -5,14 +5,14 @@ describe TeamPolicy do
   subject { described_class }
 
   let(:member) { create(:user) }
-  let(:team) { create(:team, owners: [ member ]) }
+  let(:team) { create(:team, owners: [member]) }
 
   before :each do
     @admin = create(:user, admin: true)
     create(:registry)
   end
 
-  permissions :is_member? do
+  permissions :member? do
 
     it 'denies access to a user who is not part of the team' do
       expect(subject).to_not permit(create(:user), team)
@@ -31,7 +31,7 @@ describe TeamPolicy do
   describe 'scope' do
     it 'returns only teams having the user as a memeber' do
       # Another team not related with 'owner'
-      create(:team, owners: [ create(:user) ])
+      create(:team, owners: [create(:user)])
 
       expected_list = [team]
       expect(Pundit.policy_scope(member, Team).to_a).to match_array(expected_list)

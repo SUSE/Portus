@@ -23,8 +23,8 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     let(:registry) { create(:registry, hostname: 'registry.test.lan') }
     let(:global_namespace) { create(:namespace, name: 'globalnamespace', registry: registry, global: true, team: global_team, public: true) }
     let(:namespace) { create(:namespace, name: 'patched_images', registry: registry, team: team) }
-    let(:team) { create(:team, name: 'qa', owners: [user] ) }
-    let(:global_team) { create(:team, name: 'globalteam', owners: [user] ) }
+    let(:team) { create(:team, name: 'qa', owners: [user]) }
+    let(:global_team) { create(:team, name: 'globalteam', owners: [user]) }
     let(:repository) { create(:repository, name: 'sles12', namespace: namespace) }
     let(:tag) { create(:tag, name: '1.0.0', repository: repository) }
     let(:global_repository) { create(:repository, name: 'sles11sp3', namespace: global_namespace) }
@@ -71,9 +71,10 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
 
     it 'generates a csv file' do
       get :index, format: :csv
-      expect(response.headers).to match({
-        'Content-Disposition' => "attachment; filename=\"activities.csv\"",
-        'Content-Type'=>'text/csv' })
+      expect(response.headers).to match(
+        'Content-Disposition' => 'attachment; filename="activities.csv"',
+        'Content-Type' => 'text/csv'
+      )
 
       csv = <<CSV
 Tracked item,Item,Event,Recipient,Triggered by,Time,Notes

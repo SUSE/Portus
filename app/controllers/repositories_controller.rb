@@ -1,5 +1,4 @@
 class RepositoriesController < ApplicationController
-
   # GET /repositories
   # GET /repositories.json
   def index

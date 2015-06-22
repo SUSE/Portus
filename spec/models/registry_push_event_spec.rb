@@ -13,7 +13,7 @@ describe RegistryPushEvent do
 
   it 'should trigger image creation' do
     notification = RegistryNotification.new(registry_notification_data)
-    event = notification.events.find {|e| e.action == 'push' }
+    event = notification.events.find { |e| e.action == 'push' }
 
     expect(Repository).to receive(:handle_push_event) { event.data }
     event.process!
