@@ -33,7 +33,7 @@ class Namespace::AuthScope
   end
 
   def requested_resource_namespace_name
-    @resource_name.split('/').first unless @resource_name.include?('/')
+    @resource_name.split('/').first if @resource_name.include?('/')
   end
 
   def requested_actions

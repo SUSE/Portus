@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   has_many :teams, through: :team_users
 
   def private_namespace_available
-    return if Namespace.exists?(name: username)
+    return unless Namespace.exists?(name: username)
     errors.add(:username, 'cannot be used as name for private namespace')
   end
 

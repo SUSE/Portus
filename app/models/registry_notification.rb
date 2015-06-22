@@ -8,7 +8,7 @@ class RegistryNotification
   end
 
   def process!
-    @events.each(&:process)
+    @events.each(&:process!)
   end
 
   private

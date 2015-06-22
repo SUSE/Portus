@@ -43,9 +43,9 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-# We use a compact style instead of the default nested.
+# It's convenient to mix both.
 Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
+  Enabled: false
 
 # It complains on code that is just fine.
 Style/MultilineOperationIndentation:
