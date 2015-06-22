@@ -85,8 +85,8 @@ export PACKAGING=yes
 SKIP_MIGRATION="yes" SECRET_KEY_BASE="assets_precompilation" RAILS_ENV=production bundle exec rake assets:precompile
 
 # patch landing_page
-APPLICATION_CSS=$(find . -name application-*.css 2> /dev/null | rev | cut -d"/" -f1 | rev)
-sed -e "s/__APPLICATION_CSS__/$APPLICATION_CSS/g" -i public/landing.html.in
+APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
+cp $APPLICATION_CSS public/landing.css
 
 bundle install --local --deployment
 rm -rf vendor/cache
