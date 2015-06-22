@@ -1,5 +1,5 @@
 class Api::V2::TokensController < Api::BaseController
-  before_filter :authenticate
+  before_action :authenticate
 
   def authenticate
     if params['account'] == 'portus'

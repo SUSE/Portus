@@ -1,5 +1,5 @@
 $(document).on "page:change", ->
-  $('#add_team_user_btn').on 'click', (event) =>
+  $('#add_team_user_btn').on 'click', (event) ->
     $('#team_user_user').val('')
     $('#team_user_role').val('viewer')
     $('#add_team_user_form').toggle 400, "swing", ->
@@ -24,8 +24,13 @@ $(document).on "page:change", ->
     $('#change_role_team_user_' + event.currentTarget.value).toggle()
   )
 
-  $('#add_namespace_btn').on 'click', (event) =>
+  $('#add_namespace_btn').on 'click', (event) ->
     $('#namespace_namespace').val('')
+
+    # When we are creating this on the namespaces page.
+    if $('#namespace_team')
+      $('#namespace_team').val('')
+
     $('#add_namespace_form').toggle 400, "swing", ->
       if $('#add_namespace_form').is(':visible')
         $('#add_namespace_btn i').addClass("fa-minus-circle")
@@ -35,7 +40,7 @@ $(document).on "page:change", ->
         $('#add_namespace_btn i').removeClass("fa-minus-circle")
         $('#add_namespace_btn i').addClass("fa-plus-circle")
 
-  $('#add_team_btn').on 'click', (event) =>
+  $('#add_team_btn').on 'click', (event) ->
     $('#team_name').val('')
     $('#add_team_form').toggle 400, "swing", ->
       if $('#add_team_form').is(':visible')

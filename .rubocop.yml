@@ -65,6 +65,8 @@ Style/Documentation:
   Enabled: false
 
 AllCops:
+  RunRailsCops: true
+
   Exclude:
     # Files that are out of our control and that are not excluded in the
     # default config of rubocop.

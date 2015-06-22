@@ -3,6 +3,25 @@ h1
   small
     a[data-placement="right" data-toggle="popover" data-container="h1" data-content="A namespace groups a series of repositories." data-original-title="What's this?" tabindex="0"]
       i.fa.fa-info-circle
+  .pull-right
+    a#add_namespace_btn[class="btn btn-xs btn-link js-toggle-button" role="button"]
+      | Create new namespace
+      i[class="fa fa-plus-circle"]
+
+#add_namespace_form[class="collapse"]
+  = form_for :namespace, url: namespaces_path, remote: true, html: {id: 'new-namespace-form', class: 'form-horizontal', role: 'form'} do |f|
+      .form-group
+        = f.label :namespace, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_field(:namespace, class: 'form-control', required: true, placeholder: "Name")
+      .form-group
+        = f.label :team, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_field(:team, class: 'form-control', required: true, placeholder: "Name of the team")
+      .form-group
+        .[class='col-md-offset-2 col-md-7']
+          = f.submit('Create', class: 'btn btn-primary')
+
 
 .[class="panel panel-default"]
   .panel-heading
@@ -23,7 +42,6 @@ h1
           - @special_namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
 
-
 .[class="panel panel-default"]
   .panel-heading
     h5
@@ -39,6 +57,6 @@ h1
             th Name
             th Repositories
             th Public
-        tbody
+        tbody#accessible-namespaces
           - @namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
