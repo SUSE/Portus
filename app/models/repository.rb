@@ -14,53 +14,31 @@ class Repository < ActiveRecord::Base
     options :namespace_name, type: :fulltext
   end
 
-  PUSH_EVENT_FIND_TOKEN_REGEXP = %r{manifests/(?<tag>.*)$}
-
+  # Handle a push event from the registry.
   def self.handle_push_event(event)
-    if event['target']['repository'].include?('/')
-      namespace_name, repo_name = event['target']['repository'].split('/', 2)
-    else
-      repo_name = event['target']['repository']
-    end
+    registry = Registry.find_from_event(event)
+    return if registry.nil?
 
-    match = PUSH_EVENT_FIND_TOKEN_REGEXP.match(event['target']['url'])
-    if match
-      tag_name = match['tag']
-    else
-      logger.error("Cannot find tag inside of event url: #{event['target']['url']}")
-      return
-    end
+    namespace, repo_name, tag_name = registry.get_namespace_from_event(event)
+    return if namespace.nil?
 
-    registry = Registry.find_by(hostname: event['request']['host'])
-    if registry.nil?
-      logger.info("Ignoring event coming from unknown registry #{event['request']['host']}")
-      return
-    end
-
-    if namespace_name
-      namespace = registry.namespaces.find_by(name: namespace_name)
-    else
-      namespace = registry.global_namespace
-    end
-
-    if namespace.nil?
-      logger.error "Cannot find namespace #{namespace_name} under registry #{registry.hostname}"
-      return
-    end
-
-    actor = User.find_by(username: event['actor']['name'])
-    if actor.nil?
-      logger.error "Cannot find user #{event['actor']['name']}"
-      return
-    end
-
-    repository = Repository.where(name: repo_name)
-      .first_or_create(name: repo_name)
-    tag = repository.tags.where(name: tag_name)
-      .first_or_create(name: tag_name, author: actor)
-    repository.create_activity(:push, owner: actor, recipient: tag)
+    repository = Repository.add_repo(event, repo_name, tag_name)
+    return if repository.nil?
 
     namespace.repositories << repository if namespace
+    repository
+  end
+
+  # Add the repository with the given `repo` name and the given `tag`. The
+  # actor is guessed from the given `event`.
+  def self.add_repo(event, repo, tag)
+    actor = User.find_from_event(event)
+    return if actor.nil?
+
+    repository = Repository.where(name: repo).first_or_create(name: repo)
+    tag = repository.tags.where(name: tag)
+      .first_or_create(name: tag, author: actor)
+    repository.create_activity(:push, owner: actor, recipient: tag)
     repository
   end
 end
