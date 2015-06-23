@@ -21,7 +21,7 @@ before_script:
   - mysql -e 'create database portus_test;'
 script:
   - bundle exec rspec spec
-  - bundle exec rubocop
+  - bundle exec rubocop -F
 env:
   global:
 # OSC_CREDENTIALS are kept secret
