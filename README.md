@@ -1,10 +1,11 @@
-[![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus)
-[![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus)
+# Portus [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus) [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus)
 
 Portus targets [version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
 of the Docker registry API. It aims to act both as
 an authoritzation server and as a user interface for the next generation of the
 Docker registry.
+
+![preview](https://raw.githubusercontent.com/SUSE/Portus/master/doc/portus.png)
 
 ## Features
 

@@ -1,6 +1,6 @@
 <html>
 <head>
-  <link rel="stylesheet" media="all" href="https://__HOSTNAME__/assets/__APPLICATION_CSS__" />
+  <link rel="stylesheet" media="all" href="landing.css" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <style>
     #wrapper {
