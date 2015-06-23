@@ -24,18 +24,10 @@ Metrics/MethodLength:
 
 # This metric is *really* small by default. This value makes more sense.
 Metrics/AbcSize:
-  Max: 226
+  Max: 30
 
 # Not worth it, since numbers like ports are too weird in this format.
 Style/NumericLiterals:
-  Enabled: false
-
-# TODO: this is just for the Repository.handle_push_event.
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
-# TODO: this is just for the Repository.handle_push_event.
-Metrics/PerceivedComplexity:
   Enabled: false
 
 # It's convenient to mix both.
