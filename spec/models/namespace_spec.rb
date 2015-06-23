@@ -30,4 +30,24 @@ describe Namespace do
     end
   end
 
+  describe 'namespace_clean_name' do
+    let(:registry)    { create(:registry) }
+    let(:owner)       { create(:user) }
+    let(:team)        { create(:team, owners: [owner]) }
+    let(:namespace)   { create(:namespace, team: team) }
+
+    context 'non global namespace' do
+      it 'returns the name of the namespace' do
+        expect(namespace.clean_name).to eq(namespace.name)
+      end
+    end
+
+    context 'global namespace' do
+      it 'returns the name of the namespace' do
+        global_namespace = create(:namespace, global: true, public: true, registry: registry)
+        expect(global_namespace.clean_name).to eq(registry.hostname)
+      end
+    end
+  end
+
 end

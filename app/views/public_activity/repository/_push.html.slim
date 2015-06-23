@@ -8,6 +8,6 @@
       .clearfix
         .details
           = "#{activity.owner.username} pushed "
-          = link_to namespace_clean_name(activity.trackable.namespace), activity.trackable.namespace
+          = link_to activity.trackable.namespace.clean_name, activity.trackable.namespace
           | /
           = link_to "#{activity.trackable.name}:#{activity.recipient.name}", activity.trackable
