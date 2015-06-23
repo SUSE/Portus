@@ -26,11 +26,6 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Max: 226
 
-# Our use of "raise vs fail" is inconsitent. This is something that could be
-# improved in the future, but it's not too much of a trouble right now.
-Style/SignalException:
-  Enabled: false
-
 # Not worth it, since numbers like ports are too weird in this format.
 Style/NumericLiterals:
   Enabled: false
