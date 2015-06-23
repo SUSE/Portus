@@ -5,7 +5,7 @@ of the Docker registry API. It aims to act both as
 an authoritzation server and as a user interface for the next generation of the
 Docker registry.
 
-![preview](https://raw.githubusercontent.com/SUSE/Portus/screenshot/doc/portus.png)
+![preview](https://raw.githubusercontent.com/SUSE/Portus/master/doc/portus.png)
 
 ## Features
 
