@@ -1,5 +1,4 @@
 class Admin::RegistriesController < Admin::BaseController
-
   # GET /admin/registries/
   def index
     @registries = Registry.all
@@ -7,7 +6,7 @@ class Admin::RegistriesController < Admin::BaseController
 
   # GET /admin/registries/new
   def new
-   @registry = Registry.new
+    @registry = Registry.new
   end
 
   # POST /admin/registries
@@ -33,5 +32,4 @@ class Admin::RegistriesController < Admin::BaseController
   def registries_params
     params.require(:registry).permit(:name, :hostname)
   end
-
 end

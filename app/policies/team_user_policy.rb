@@ -7,12 +7,11 @@ class TeamUserPolicy
     @team_user = team_user
   end
 
-  def is_owner?
+  def owner?
     user.admin? || @team_user.team.owners.exists?(user.id)
   end
 
-  alias_method :destroy?, :is_owner?
-  alias_method :update?, :is_owner?
-  alias_method :create?, :is_owner?
-
+  alias_method :destroy?, :owner?
+  alias_method :update?, :owner?
+  alias_method :create?, :owner?
 end

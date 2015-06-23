@@ -15,5 +15,4 @@ class RepositoryPolicy
                namespace_public: true, user_id: @user.id)
     end
   end
-
 end

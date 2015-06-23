@@ -6,5 +6,4 @@ class Admin::BaseController < ApplicationController
   def ensure_admin!
     deny_access unless current_user.admin?
   end
-
 end

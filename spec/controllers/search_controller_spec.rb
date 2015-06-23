@@ -4,13 +4,13 @@ RSpec.describe SearchController, type: :controller do
 
   let(:registry)    { create(:registry) }
   let(:user)        { create(:user) }
-  let(:team)        { create(:team, owners: [ user ]) }
+  let(:team)        { create(:team, owners: [user]) }
 
   before :each do
     sign_in user
 
     namespace = create(:namespace, team: team, registry: registry)
-    @repository= create(:repository, namespace: namespace)
+    @repository = create(:repository, namespace: namespace)
   end
 
   describe 'GET #index' do

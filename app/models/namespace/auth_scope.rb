@@ -1,5 +1,4 @@
 class Namespace::AuthScope
-
   class ResourceIsNotFound < StandardError; end
 
   attr_accessor :resource, :actions, :resource_type, :resource_name
@@ -34,15 +33,10 @@ class Namespace::AuthScope
   end
 
   def requested_resource_namespace_name
-    if @resource_name.include?('/')
-      @resource_name.split('/').first
-    else
-      nil
-    end
+    @resource_name.split('/').first if @resource_name.include?('/')
   end
 
   def requested_actions
     @scope_string.split(':')[2].split(',')
   end
-
 end

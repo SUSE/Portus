@@ -16,9 +16,11 @@ Vagrant.configure('2') do |config|
     node.vm.network :private_network, ip: '192.168.1.2', virtualbox__intnet: true
     node.vm.network :forwarded_port, host: 44242, guest: 80
 
-    node.vm.provision 'shell',
+    node.vm.provision(
+      'shell',
       path: 'vagrant/setup_private_network',
-      args:'192.168.1.2'
+      args: '192.168.1.2'
+    )
     node.vm.provision 'shell', path: 'vagrant/provision_registry'
     node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
@@ -38,9 +40,11 @@ EOS
     node.vm.network :private_network, ip: '192.168.1.3', virtualbox__intnet: true
     node.vm.network 'forwarded_port', guest: 80, host: 5000
 
-    node.vm.provision 'shell',
+    node.vm.provision(
+      'shell',
       path: 'vagrant/setup_private_network',
       args: '192.168.1.3'
+    )
     node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: <<EOS
@@ -91,9 +95,11 @@ EOS
     node.vm.hostname = 'client.test.lan'
     node.vm.network :private_network, ip: '192.168.1.4', virtualbox__intnet: true
 
-    node.vm.provision 'shell',
+    node.vm.provision(
+      'shell',
       path: 'vagrant/setup_private_network',
       args: '192.168.1.4'
+    )
     node.vm.provision 'shell', path: 'vagrant/provision_client'
     node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'

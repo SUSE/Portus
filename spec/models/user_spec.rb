@@ -11,7 +11,7 @@ describe User do
 
   it 'should block user creation when the private namespace is not available' do
     name = 'coolname'
-    team = create(:team, owners: [ subject ])
+    team = create(:team, owners: [subject])
     create(:namespace, team: team, name: name)
     user = build(:user, username: name)
     expect(user.save).to be false

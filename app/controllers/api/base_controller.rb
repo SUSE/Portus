@@ -34,5 +34,4 @@ class Api::BaseController < ActionController::Base
 
     [auth_scope, scopes]
   end
-
 end

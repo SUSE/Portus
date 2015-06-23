@@ -1,9 +1,8 @@
 class Auth::RegistrationsController < Devise::RegistrationsController
-
   layout 'authentication', except: :edit
 
-  before_action :check_admin, only: [ :new, :create ]
-  before_action :configure_sign_up_params, only: [ :create ]
+  before_action :check_admin, only: [:new, :create]
+  before_action :configure_sign_up_params, only: [:create]
 
   # Re-implemented so the template has the auxiliary variables regarding if
   # there are more users on the system or this is the first user to be created.
@@ -64,9 +63,8 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
   def configure_sign_up_params
     devise_parameter_sanitizer.for(:sign_up) << :email
-    unless User.exists?(admin: true)
-      devise_parameter_sanitizer.for(:sign_up) << :admin
-    end
+    return if User.exists?(admin: true)
+    devise_parameter_sanitizer.for(:sign_up) << :admin
   end
 
   protected
@@ -78,5 +76,4 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     !user[:current_password].blank? || !user[:password].blank? ||
       !user[:password_confirmation].blank?
   end
-
 end

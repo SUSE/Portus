@@ -7,8 +7,8 @@ describe RepositoryPolicy do
   let(:registry)    { create(:registry) }
   let(:user)        { create(:user) }
   let(:user2)       { create(:user) }
-  let(:team)        { create(:team, owners: [ user ]) }
-  let(:team2)       { create(:team, owners: [ user2 ]) }
+  let(:team)        { create(:team, owners: [user]) }
+  let(:team2)       { create(:team, owners: [user2]) }
 
   describe 'scope' do
 
@@ -20,7 +20,7 @@ describe RepositoryPolicy do
       @private_repository = create(:repository, namespace: private_namespace)
 
       namespace = create(:namespace, team: team, registry: registry)
-      @repository= create(:repository, namespace: namespace)
+      @repository = create(:repository, namespace: namespace)
     end
 
     it 'include repositories that are part of public namespaces' do

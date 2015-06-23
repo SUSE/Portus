@@ -1,5 +1,4 @@
 class Auth::SessionsController < Devise::SessionsController
-
   layout 'authentication'
 
   # Re-implementing. The logic is: if there is already a user that can log in,
@@ -27,5 +26,4 @@ class Auth::SessionsController < Devise::SessionsController
     super
     flash[:notice] = nil
   end
-
 end

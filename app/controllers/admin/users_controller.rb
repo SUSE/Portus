@@ -16,5 +16,4 @@ class Admin::UsersController < Admin::BaseController
       render template: 'admin/users/toggle_admin', locals: { user: user }
     end
   end
-
 end

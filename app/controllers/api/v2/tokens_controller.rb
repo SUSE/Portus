@@ -1,5 +1,4 @@
 class Api::V2::TokensController < Api::BaseController
-
   before_action :authenticate
 
   def authenticate
@@ -40,5 +39,4 @@ class Api::V2::TokensController < Api::BaseController
     logger.tagged('jwt_token', 'claim') { logger.debug @token.claim }
     respond_with(@token)
   end
-
 end

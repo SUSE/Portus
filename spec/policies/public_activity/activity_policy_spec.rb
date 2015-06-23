@@ -7,7 +7,7 @@ describe PublicActivity::ActivityPolicy do
   let(:activity_owner) { create(:user) }
   let(:registry) { create(:registry) }
   let(:namespace) { create(:namespace, registry: registry, team: team) }
-  let(:team) { create(:team, owners: [user] ) }
+  let(:team) { create(:team, owners: [user]) }
   let(:repository) { create(:repository, namespace: namespace) }
   let(:tag) { create(:tag, repository: repository) }
 
@@ -23,7 +23,7 @@ describe PublicActivity::ActivityPolicy do
         create_activity_team_remove_member(team, activity_owner, another_user)
       ]
 
-      #ignored events, not related with a team the user is member of
+      # ignored events, not related with a team the user is member of
       create_activity_team_create(create(:team), another_user)
 
       expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
@@ -67,15 +67,15 @@ describe PublicActivity::ActivityPolicy do
                           registry: registry,
                           team: create(:team,
                                        owners: [another_user]))
-      private_tag = create(:tag, repository: create(:repository, namespace: namespace2) )
+      private_tag = create(:tag, repository: create(:repository, namespace: namespace2))
 
       public_namespace = create(:namespace,
                                 registry: registry,
                                 public: true,
                                 team: create(:team,
                                              owners: [another_user],
-                                             namespaces: [namespace2] ))
-      public_tag = create(:tag, repository: create(:repository, namespace: public_namespace) )
+                                             namespaces: [namespace2]))
+      public_tag = create(:tag, repository: create(:repository, namespace: public_namespace))
 
       activities = [
         create(:activity_repository_push,
@@ -121,7 +121,7 @@ describe PublicActivity::ActivityPolicy do
            owner_id: activity_owner.id)
   end
 
-  def create_activity_team_add_member(team, event_owner, new_member, role='viewer')
+  def create_activity_team_add_member(team, event_owner, new_member, role = 'viewer')
     create(:activity_team_add_member,
            trackable_id: team.id,
            owner_id: event_owner.id,
@@ -129,7 +129,7 @@ describe PublicActivity::ActivityPolicy do
            parameters: { role: role })
   end
 
-  def create_activity_team_remove_member(team, event_owner, old_member, role='viewer')
+  def create_activity_team_remove_member(team, event_owner, old_member, role = 'viewer')
     create(:activity_team_remove_member,
            trackable_id: team.id,
            owner_id: event_owner.id,

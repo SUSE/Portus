@@ -29,7 +29,7 @@ gem 'search_cop'
 #
 # PACKAGING=yes bundle list
 
-unless ENV['PACKAGING'] && ENV['PACKAGING'] == "yes"
+unless ENV['PACKAGING'] && ENV['PACKAGING'] == 'yes'
 
   group :development do
     gem 'quiet_assets'
@@ -48,7 +48,7 @@ unless ENV['PACKAGING'] && ENV['PACKAGING'] == "yes"
     gem 'wirble'
     gem 'factory_girl_rails'
     gem 'ffaker'
-    gem 'rubocop', '~> 0.27.1', require: false
+    gem 'rubocop', require: false
   end
 
   group :test do

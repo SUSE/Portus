@@ -40,7 +40,7 @@ Capybara.configure do |config|
   config.default_selector = :css
 end
 
-Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 DatabaseCleaner.clean_with(:truncation)
 

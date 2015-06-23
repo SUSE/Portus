@@ -13,5 +13,4 @@ class Admin::ActivitiesController < Admin::BaseController
       end
     end
   end
-
 end

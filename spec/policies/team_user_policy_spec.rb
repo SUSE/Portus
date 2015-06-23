@@ -11,13 +11,13 @@ describe TeamUserPolicy do
   let(:contributor) { create(:user) }
   let(:team) do
     create(:team,
-           owners: [ owner ],
-           contributors: [ contributor ],
-           viewers: [ viewer ])
+           owners: [owner],
+           contributors: [contributor],
+           viewers: [viewer])
   end
   let(:team_user) { TeamUser.new(team: team) }
 
-  permissions :is_owner? do
+  permissions :owner? do
 
     it 'denies access to a member of the team with viewer role' do
       expect(subject).to_not permit(viewer, team_user)

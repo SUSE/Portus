@@ -1,5 +1,4 @@
 class RegistryObserver < ActiveRecord::Observer
-
   def after_create(registry)
     registry.create_global_namespace!
 
@@ -9,5 +8,4 @@ class RegistryObserver < ActiveRecord::Observer
     # TODO: change code once we support multiple registries
     User.all.each(&:create_personal_namespace!)
   end
-
 end

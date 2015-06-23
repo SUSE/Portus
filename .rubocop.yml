@@ -1,468 +1,77 @@
-# Offense count: 1
-Lint/AmbiguousOperator:
+
+# It's actually better for the eyes to add a new line around the block body if
+# it's a big chunk of code (e.g. in tests).
+Style/EmptyLinesAroundBlockBody:
   Enabled: false
 
-# Offense count: 122
-Metrics/AbcSize:
-  Max: 226
-
-# Offense count: 1433
-# Configuration parameters: AllowURI, URISchemes.
+# NOTE: the default for this is 80 columns long. This is a bit inconvenient for
+# us, since we have *lots* of lines that would fail on this. Instead of fixing
+# this now, we'll fix it in the future.
 Metrics/LineLength:
-  Max: 198
+  Max: 180
+  # To make it possible to copy or click on URIs in the code, we allow lines
+  # contaning a URI to be longer than Max.
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
 
-# Offense count: 90
+# NOTE: as in the one before, this would be nice but there are too many errors
+# on this and it's not urgent.
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
   Max: 252
 
-# Offense count: 1
-# Configuration parameters: CountKeywordArgs.
-Metrics/ParameterLists:
-  Max: 6
+# This metric is *really* small by default. This value makes more sense.
+Metrics/AbcSize:
+  Max: 226
 
-# Offense count: 17
-Metrics/PerceivedComplexity:
-  Max: 20
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/Alias:
-  Enabled: false
-
-# Offense count: 30
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AlignParameters:
-  Enabled: false
-
-# Offense count: 66
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AndOr:
-  Enabled: false
-
-# Offense count: 1
-Style/AsciiComments:
-  Enabled: false
-
-# Offense count: 96
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-# Offense count: 7
-Style/DoubleNegation:
-  Enabled: false
-
-# Offense count: 550
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Offense count: 12
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundMethodBody:
-  Enabled: false
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyLinesAroundModuleBody:
-  Enabled: false
-
-# Offense count: 4
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/FormatString:
-  Enabled: false
-
-# Offense count: 1
-# Configuration parameters: MaxLineLength.
-Style/IfUnlessModifier:
-  Enabled: false
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/IndentArray:
-  Enabled: false
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/IndentHash:
-  Enabled: false
-
-# Offense count: 8
-# Cop supports --auto-correct.
-Style/IndentationConsistency:
-  Enabled: false
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: Width.
-Style/IndentationWidth:
-  Enabled: false
-
-# Offense count: 8
-Style/Lambda:
-  Enabled: false
-
-# Offense count: 15
-# Cop supports --auto-correct.
-Style/LeadingCommentSpace:
-  Enabled: false
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/LineEndConcatenation:
-  Enabled: false
-
-# Offense count: 5
-# Cop supports --auto-correct.
-Style/MethodCallParentheses:
-  Enabled: false
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/MethodDefParentheses:
-  Enabled: false
-
-# Offense count: 11
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/MultilineOperationIndentation:
-  Enabled: false
-
-# Offense count: 3
-# Configuration parameters: EnforcedStyle, MinBodyLength, SupportedStyles.
-Style/Next:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/Not:
-  Enabled: false
-
-# Offense count: 11
-# Cop supports --auto-correct.
-Style/NumericLiterals:
-  MinDigits: 14
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: AllowSafeAssignment.
-Style/ParenthesesAroundCondition:
-  Enabled: false
-
-# Offense count: 11
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Enabled: false
-
-# Offense count: 5
-# Configuration parameters: NamePrefix, NamePrefixBlacklist.
-Style/PredicateName:
-  Enabled: false
-
-# Offense count: 2
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/RaiseArgs:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Enabled: false
-
-# Offense count: 2
-# Configuration parameters: MaxSlashes.
-Style/RegexpLiteral:
-  Enabled: false
-
-# Offense count: 2
-Style/RescueModifier:
-  Enabled: false
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Enabled: false
-
-# Offense count: 17
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
+# Our use of "raise vs fail" is inconsitent. This is something that could be
+# improved in the future, but it's not too much of a trouble right now.
 Style/SignalException:
   Enabled: false
 
-# Offense count: 122
-# Cop supports --auto-correct.
-Style/SingleSpaceBeforeFirstArg:
+# Not worth it, since numbers like ports are too weird in this format.
+Style/NumericLiterals:
   Enabled: false
 
-# Offense count: 30
-# Cop supports --auto-correct.
-Style/SpaceAfterComma:
-  Enabled: false
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/SpaceAfterMethodName:
-  Enabled: false
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/SpaceAroundEqualsInParameterDefault:
-  Enabled: false
-
-# Offense count: 25
-# Cop supports --auto-correct.
-Style/SpaceAroundOperators:
-  Enabled: false
-
-# Offense count: 36
-# Cop supports --auto-correct.
-Style/SpaceInsideBrackets:
-  Enabled: false
-
-# Offense count: 38
-# Cop supports --auto-correct.
-Style/SpaceInsideParens:
-  Enabled: false
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoredMethods.
-Style/SymbolProc:
-  Enabled: false
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
-Style/TrailingComma:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, Whitelist.
-Style/TrivialAccessors:
-  Enabled: false
-
-# Offense count: 25
-# Cop supports --auto-correct.
-# Configuration parameters: WordRegex.
-Style/WordArray:
-  MinSize: 7
-
-# Align the elements of an array literal if they span more than one line.
-Style/AlignArray:
-  Enabled: true
-
-# Check that whens are aligned relative to case keyword
-Style/AlignHash:
-  Enabled: true
-
-# Do not indent whens relative to their case keywords
-Style/CaseIndentation:
-  Enabled: true
-
-# Use guard clauses to return early from methods instead of wrapping whole body in if/end
-Style/GuardClause:
-  Enabled: false
-
-Style/HashSyntax:
-  EnforcedStyle: ruby19
-
-# Use of 'self' where it is not needed to qualify a member
-Style/RedundantSelf:
-  Enabled: true
-
-# Things deprecated in current ruby API
-Lint/DeprecatedClassMethods:
-  Enabled: true
-
-# Do not compare with nil. Use .nil? instead
-Style/NilComparison:
-  Enabled: true
-
-# Use one empty line between method definitions
-Style/EmptyLineBetweenDefs:
-  Enabled: true
-
-# There should be only one empty line in designated place
-Style/EmptyLines:
-  Enabled: false
-
-# Keep a blank line before and after private.
-Style/EmptyLinesAroundAccessModifier:
-  Enabled: true
-
-# Do not insert empty line after class definition and before closing class
-Style/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Use hash literal {} instead of Hash.new
-Style/EmptyLiteral:
-  Enabled: true
-
-# Prefer `each` over `for i`
-Style/For:
-  Enabled: true
-
-# Wrap your assignment in condition if you mean it, otherwise it is most likely equality check
-Lint/AssignmentInCondition:
-  Enabled: true
-
-# Align blocks of code properly
-Lint/BlockAlignment:
-  Enabled: true
-
-# Do not use literal in conditions. We have it enabled for now
-Lint/LiteralInCondition:
-  Enabled: true
-
-# Prefer `Kernel#loop -> break` over `begin -> while`
-Lint/Loop:
-  Enabled: true
-
-# do not put space before arguments when they are in parentheses
-Lint/ParenthesesAsGroupedExpression:
-  Enabled: true
-
-# Do not rescue Exceptions class itself
-Lint/RescueException:
-  Enabled: true
-
-# do not shadow local variables in blocks, choose other name
-Lint/ShadowingOuterLocalVariable:
-  Enabled: false
-
-# use _ or variable_name to explicitly mark variable as unused
-Lint/UnusedBlockArgument:
-  Enabled: true
-
-# use _ or _argument_name to explicitly mark argument as unused
-Lint/UnusedMethodArgument:
-  Enabled: true
-
-# avoid useless assignment
-Lint/UselessAssignment:
-  Enabled: true
-
-# Do not use variables in void context
-Lint/Void:
-  Enabled: true
-
-# Prefer single quotes over doubled when interpolation is not needed
-Style/StringLiterals:
-  Enabled: true
-
-# Checks for ambiguous regexp literals in the first argument of a method invocation without parentheses
-# do_something /pattern/i => do_something(/pattern/i)
-Lint/AmbiguousRegexpLiteral:
-  Enabled: true
-
-# Checks for calls to debugger or pry
-Lint/Debugger:
-  Enabled: true
-
-# Checks whether the end keywords are aligned properly
-Lint/EndAlignment:
-  Enabled: true
-
-# Checks for *rescue* blocks with no body
-Lint/HandleExceptions:
-  Enabled: true
-
-# Checks for string conversion in string interpolation which is redundant
-Lint/StringConversionInInterpolation:
-  Enabled: true
-
-# Enforces spaces between hash contents and braces; has --auto-correct
-Style/SpaceInsideHashLiteralBraces:
-  Enabled: true
-
-# Enforces spaces between block contents and braces; has --auto-correct
-Style/SpaceInsideBlockBraces:
-  Enabled: true
-  SpaceBeforeBlockParameters: false
-
-# Enforces spaces separating the block from the previous keyword; has --auto-correct
-Style/SpaceBeforeBlockBraces:
-  Enabled: true
-
-# Contrary to the name, denies wrapping hash parameters in brackets
-# We decided not to follow this rule
-Style/BracesAroundHashParameters:
-  Enabled: false
-
-# Forces files to end with a single black line; supports --auto-correct
-Style/TrailingBlankLines:
-  Enabled: true
-
-# Forces lines not to have spaces on the right end; supports --auto-correct
-Style/TrailingWhitespace:
-  Enabled: true
-
-# This cop checks for underscore-prefixed variables that are actually used.
-Lint/UnderscorePrefixedVariableName:
-  Enabled: true
-
-# This cop checks for access modifiers without any code.
-Lint/UselessAccessModifier:
-  Enabled: true
-
-# This cop checks for excessive nesting of conditional and looping constructs.
-# Despite the cop’s name, blocks are not considered as an extra level of nesting.
-Metrics/BlockNesting:
-  Max: 3
-
-
-# This cop checks if the length a class exceeds some maximum value.
-# Configuration parameters: CountComments.
-Metrics/ClassLength:
-  Max: 160
-
-# The cyclomatic complexity is the number of linearly independent paths through a method.
+# TODO: this is just for the Repository.handle_push_event.
 Metrics/CyclomaticComplexity:
-  Max: 10
+  Enabled: false
 
-# In comments, annotation keywords (TODOs and FIXMEs and so on) should be all
-# upper case, followed by a colon and a space, then a note describing the
-# problem.
-Style/CommentAnnotation:
-  Enabled: true
+# TODO: this is just for the Repository.handle_push_event.
+Metrics/PerceivedComplexity:
+  Enabled: false
 
-# Commented lines should have the same identation (before the '#' sign), as non-
-# commented would have in the same block.
-Style/CommentIndentation:
-  Enabled: true
+# It's convenient to mix both.
+Style/ClassAndModuleChildren:
+  Enabled: false
 
-# Hash#has_key? is deprecated in favor of Hash#key?.
-Style/DeprecatedHashMethods:
-  Enabled: true
+# It complains on code that is just fine.
+Style/MultilineOperationIndentation:
+  Enabled: false
 
-# Top-level classes and modules should be documented.
-# We are not doing that, as we're not writing a library (2014.12.03)
+# It complains on code that is just fine.
+Style/FirstParameterIndentation:
+  Enabled: false
+
+# It complains on code that is just fine.
+Style/AlignParameters:
+  Enabled: false
+
+# NOTE: This would be nice, but there are too many errors on this for now and
+# it's not urgent.
 Style/Documentation:
   Enabled: false
 
-# Multiline method chains should have dot at the beginning of the new line
-Style/DotPosition:
-  Enabled: true
-
 AllCops:
   RunRailsCops: true
-  Include:
-    - Rakefile
-    - config.ru
+
   Exclude:
-    - vendor/**/*
+    # Files that are out of our control and that are not excluded in the
+    # default config of rubocop.
     - db/schema.rb
-    - tmp/**/*
-    - bin/**/*
+    - db/migrate/*
+    - bin/*
+    - vendor/**/*
+

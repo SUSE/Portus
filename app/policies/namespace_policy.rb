@@ -50,6 +50,4 @@ class NamespacePolicy
           public: true, user_id: user.id, global: false, username: user.username)
     end
   end
-
-
 end
