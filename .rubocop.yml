@@ -73,4 +73,5 @@ AllCops:
     - db/schema.rb
     - db/migrate/*
     - bin/*
+    - vendor/*
 
