@@ -1,7 +1,7 @@
 .[class="panel panel-default"]
   .panel-heading
     h1
-      = link_to @repository.namespace.name, @repository.namespace
+      = link_to @repository.namespace.clean_name, @repository.namespace
       | /
       = @repository.name
   .panel-body
