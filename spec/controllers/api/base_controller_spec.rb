@@ -5,11 +5,11 @@ describe Api::BaseController do
   controller do
 
     def ping1
-      raise Api::BaseController::ScopeNotHandled
+      fail Api::BaseController::ScopeNotHandled
     end
 
     def ping2
-      raise Namespace::AuthScope::ResourceIsNotFound
+      fail Namespace::AuthScope::ResourceIsNotFound
     end
 
   end

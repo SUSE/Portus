@@ -18,7 +18,7 @@ class Namespace::AuthScope
 
     if found_resource.nil?
       Rails.logger.warn "Namespace::AuthScope - Cannot find namespace with name #{@namespace_name}"
-      raise ResourceIsNotFound
+      fail ResourceIsNotFound
     end
     found_resource
   end

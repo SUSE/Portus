@@ -27,7 +27,7 @@ class Api::BaseController < ActionController::Base
       auth_scope = Namespace::AuthScope.new(registry, scope_string)
     else
       logger.error "Scope not handled: #{type}"
-      raise ScopeNotHandled
+      fail ScopeNotHandled
     end
 
     scopes = scope_string.split(':', 3)[2].split(',')

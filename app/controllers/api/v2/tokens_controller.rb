@@ -6,7 +6,7 @@ class Api::V2::TokensController < Api::BaseController
       totp = ROTP::TOTP.new(Rails.application.config.otp_secret)
 
       authenticate_with_http_basic do |u, p|
-        raise WrongPortusOTP if u != 'portus' || p != totp.now
+        fail WrongPortusOTP if u != 'portus' || p != totp.now
       end
     else
       authenticate_user!
@@ -15,7 +15,7 @@ class Api::V2::TokensController < Api::BaseController
 
   def show
     registry = Registry.find_by(hostname: params['service'])
-    raise RegistryNotHandled if registry.nil?
+    fail RegistryNotHandled if registry.nil?
 
     # The 'portus' user can do anything
     if params[:scope] && params['account'] != 'portus'
@@ -25,7 +25,7 @@ class Api::V2::TokensController < Api::BaseController
           authorize auth_scope.resource, "#{scope}?".to_sym
         rescue NoMethodError
           logger.warn "Cannot handle scope #{scope}"
-          fail ScopeNotHandled, "Cannot handle scope #{scope}"
+          raise ScopeNotHandled, "Cannot handle scope #{scope}"
         end
       end
     end
