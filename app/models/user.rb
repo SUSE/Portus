@@ -40,4 +40,14 @@ class User < ActiveRecord::Base
     logger.error "Cannot find user #{event['actor']['name']}" if actor.nil?
     actor
   end
+
+  # Toggle the 'admin' attribute for this user. It will also update the
+  # registry accordingly.
+  def toggle_admin!
+    admin = !admin?
+    return unless update_attributes(admin: admin) && Registry.any?
+
+    team = Registry.first.global_namespace.team
+    admin ? team.owners << self : team.owners.delete(self)
+  end
 end
