@@ -111,7 +111,8 @@ describe Repository do
 
       context 'when a new version of an already known repository' do
         before :each do
-          repository = create(:repository, name: repository_name)
+          repository = create(:repository, name: repository_name,
+                                           namespace: registry.global_namespace)
           repository.tags << Tag.new(name: '1.0.0')
         end
 
@@ -144,6 +145,29 @@ describe Repository do
           expect(activity.recipient).to eq(repository.tags.find_by(name: tag_name))
           expect(activity.trackable).to eq(repository)
           expect(repository.tags.find_by(name: tag_name).author).to eq(user)
+        end
+      end
+
+      context 're-tagging of a known image from one namespace to another' do
+        let(:repository_namespaced_name) { 'portus/busybox' }
+        let(:admin) { create(:user, admin: true) }
+
+        before :each do
+          team_user = create(:team, owners: [admin])
+          @ns = create(:namespace, name: 'portus', team: team_user, registry: registry)
+          create(:repository, name: 'busybox', namespace: registry.global_namespace)
+        end
+
+        it 'preserves the previous namespace' do
+          event = @event
+          event['target']['repository'] = repository_namespaced_name
+          event['target']['url'] = "http://registry.test.lan/v2/#{repository_namespaced_name}/manifests/#{tag_name}"
+          Repository.handle_push_event(event)
+
+          repos = Repository.all.order('id ASC')
+          expect(repos.count).to be(2)
+          expect(repos.first.namespace.id).to be(registry.global_namespace.id)
+          expect(repos.last.namespace.id).to be(@ns.id)
         end
       end
     end
