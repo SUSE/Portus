@@ -11,4 +11,22 @@ describe Team do
     expect { FactoryGirl.create(:team, name: 'team') }.not_to raise_error
   end
 
+  it 'Counts all the non special teams' do
+    # The registry does not count.
+    # NOTE: the registry factory also creates a user.
+    create(:registry)
+    expect(Team.all_non_special).to be_empty
+    expect(Team.count).to be(2)
+
+    # Creating a proper team, this counts.
+    create(:team, owners: [User.first])
+    expect(Team.all_non_special.count).to be(1)
+    expect(Team.count).to be(3)
+
+    # Personal namespaces don't count.
+    user = create(:user)
+    user.create_personal_namespace!
+    expect(Team.all_non_special.count).to be(1)
+    expect(Team.count).to be(4)
+  end
 end
