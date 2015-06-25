@@ -22,7 +22,7 @@ class Repository < ActiveRecord::Base
     namespace, repo_name, tag_name = registry.get_namespace_from_event(event)
     return if namespace.nil?
 
-    repository = Repository.add_repo(event, repo_name, tag_name)
+    repository = Repository.add_repo(event, namespace, repo_name, tag_name)
     return if repository.nil?
 
     namespace.repositories << repository if namespace
@@ -31,11 +31,16 @@ class Repository < ActiveRecord::Base
 
   # Add the repository with the given `repo` name and the given `tag`. The
   # actor is guessed from the given `event`.
-  def self.add_repo(event, repo, tag)
+  def self.add_repo(event, namespace, repo, tag)
     actor = User.find_from_event(event)
     return if actor.nil?
 
-    repository = Repository.where(name: repo).first_or_create(name: repo)
+    # Get or create the repository as "namespace/repo"
+    repository = Repository.find_by(namespace: namespace, name: repo)
+    if repository.nil?
+      repository = Repository.create(namespace: namespace, name: repo)
+    end
+
     tag = repository.tags.where(name: tag)
       .first_or_create(name: tag, author: actor)
     repository.create_activity(:push, owner: actor, recipient: tag)
