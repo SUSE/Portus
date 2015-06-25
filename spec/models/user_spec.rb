@@ -52,4 +52,29 @@ describe User do
     end
 
   end
+
+  describe '#toggle_admin' do
+    let!(:registry) { create(:registry) }
+    let!(:user) { create(:user) }
+
+    it 'Toggles the admin attribute' do
+      # We have a registry and the admin user is the owner.
+      admin = User.where(admin: true).first
+      owners = registry.global_namespace.team.owners
+      expect(owners.count).to be(1)
+      expect(owners.first.id).to be(admin.id)
+
+      # Now we set the new user as another admin.
+      user.toggle_admin!
+      owners = registry.global_namespace.team.owners
+      expect(user.admin?).to be true
+      expect(owners.count).to be(2)
+
+      # Now we remove it as an admin again
+      user.toggle_admin!
+      owners = registry.global_namespace.team.owners
+      expect(owners.count).to be(1)
+      expect(owners.first.id).to be(admin.id)
+    end
+  end
 end
