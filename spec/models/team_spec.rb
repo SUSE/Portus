@@ -14,12 +14,12 @@ describe Team do
   it 'Counts all the non special teams' do
     # The registry does not count.
     # NOTE: the registry factory also creates a user.
-    registry = create(:registry)
+    create(:registry)
     expect(Team.all_non_special).to be_empty
     expect(Team.count).to be(2)
 
     # Creating a proper team, this counts.
-    team = create(:team, owners: [User.first])
+    create(:team, owners: [User.first])
     expect(Team.all_non_special.count).to be(1)
     expect(Team.count).to be(3)
 
