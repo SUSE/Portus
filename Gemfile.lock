@@ -66,6 +66,8 @@ GEM
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     cliver (0.3.2)
+    codeclimate-test-reporter (0.4.7)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -316,6 +318,7 @@ DEPENDENCIES
   bootstrap-sass (~> 3.3.4)
   byebug
   capybara
+  codeclimate-test-reporter
   coffee-rails
   database_cleaner
   devise
@@ -357,4 +360,4 @@ DEPENDENCIES
   wirble
 
 BUNDLED WITH
-   1.10.3
+   1.10.5
