@@ -62,6 +62,7 @@ unless ENV['PACKAGING'] && ENV['PACKAGING'] == 'yes'
     gem 'database_cleaner'
     gem 'json-schema'
     gem 'timecop'
+    gem 'codeclimate-test-reporter', group: :test, require: nil
   end
 
 end
