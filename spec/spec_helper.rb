@@ -13,6 +13,9 @@ VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr_cassettes'
   c.hook_into :webmock
   c.ignore_localhost = true
+
+  # So code coverage reports can be submitted to codeclimate.com
+  c.ignore_hosts 'codeclimate.com'
 end
 
 RSpec.configure do |config|
