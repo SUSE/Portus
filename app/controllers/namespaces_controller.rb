@@ -27,7 +27,11 @@ class NamespacesController < ApplicationController
   def create
     team = Team.find_by!(name: params['namespace']['team'])
 
-    @namespace = Namespace.new(team: team, name: params['namespace']['namespace'])
+    @namespace = Namespace.new(
+      team:     team,
+      name:     params['namespace']['namespace'],
+      registry: Registry.first
+    )
     authorize @namespace
 
     respond_to do |format|
