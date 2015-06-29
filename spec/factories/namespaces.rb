@@ -3,5 +3,7 @@ FactoryGirl.define do
     sequence :name do |n|
       "namespace#{n}"
     end
+
+    registry { association(:registry) }
   end
 end
