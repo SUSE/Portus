@@ -75,7 +75,7 @@
       small
         a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to all Portus users by toggling the "public" flag.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
           i.fa.fa-info-circle
-      - if can_manage_team?(@team)
+      - if can_manage_team?(@team) && Registry.any?
         .pull-right
           a[id="add_namespace_btn" class="btn btn-xs btn-link js-toggle-button" role="button"]
             | Add namespace
