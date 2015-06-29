@@ -6,6 +6,9 @@ class ChangeRegistryIdFromNamespace < ActiveRecord::Migration
     registry = Registry.first
     if registry
       Namespace.where(registry_id: nil).update_all(registry_id: registry.id)
+      PublicActivity::Activity.
+        where(trackable_type: 'Namespace').
+        update_all(trackable_id: registry.id)
     else
       fail <<-HERE.strip_heredoc
       It appears that you dont have a Registry!
