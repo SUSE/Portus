@@ -64,8 +64,8 @@ In order to release we make use of the open build service. The process is:
 1. tag source code as X.Y.Z
 2. create a project for X.Y.Z, for example Virtualization:containters:Portus:Releases:X.Y.Z
 3. submit all the packages there from Virtualization:containers:Portus
-4. define the variable "deliberable_version" as X.Y.Z in the project metaconfiguration
-5. in the Portus package, add a service to download source code with tag X.Y.Z
+4. edit Portus.spec file and set Version to X.Y.Z and branch to X.Y.Z
+5. in the Portus package, change the \_service to download source code with tag X.Y.Z
 6. in the Portus Appliance package, fix the repos to point to this release
 7. wait for the packages to finish
 8. submit to Factory
