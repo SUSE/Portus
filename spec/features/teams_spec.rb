@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Teams support', focus: true do
+feature 'Teams support' do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:user, admin: true) }
   let!(:team) { create(:team, owners: [user]) }
@@ -15,8 +15,8 @@ feature 'Teams support', focus: true do
     # The form appears after clicking the "Add namespace" link.
     expect(find('#add_namespace_form', visible: false)).to_not be_visible
     find('#add_namespace_btn').click
+    wait_for_effect_on('#add_namespace_form')
     expect(find('#add_namespace_form')).to be_visible
-    sleep 1
     id = page.evaluate_script('document.activeElement.id')
     expect(id).to eq 'namespace_namespace'
 
@@ -28,7 +28,7 @@ feature 'Teams support', focus: true do
     # See the response.
     namespace = Namespace.find_by(name: 'new-namespace')
     expect(page).to have_css("#namespace_#{namespace.id}")
-    sleep 2
+    wait_for_effect_on('#add_namespace_form')
     expect(find('#add_namespace_form', visible: false)).to_not be_visible
   end
 end

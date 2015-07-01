@@ -5,23 +5,30 @@
 #   https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
 #
 # Therefore, we add the "wait_for_ajax" method, that will be used for these
-# corner cases.
-module WaitForAjax
-  # Wait for all the AJAX requests to have concluded. It respects the timeout
-  # defined by `Capybara.default_wait_time`.
+# corner cases. All the public methods respect a timeout of
+# `Capybara.default_wait_time`.
+module WaitForEvents
+  # Wait for all the AJAX requests to have concluded.
   def wait_for_ajax
-    Timeout.timeout(Capybara.default_wait_time) do
-      loop until finished_all_ajax_requests?
-    end
+    wait_until_zero('jQuery.active')
+  end
+
+  # Wait for all the effects on the given selector to have concluded.
+  def wait_for_effect_on(selector)
+    wait_until_zero("$('#{selector}').queue().length")
   end
 
   private
 
-  def finished_all_ajax_requests?
-    page.evaluate_script('jQuery.active').zero?
+  # Wait until the given JS snippet evaluates to zero. This is done while
+  # respecting the set `Capybara.default_wait_time` timeout.
+  def wait_until_zero(js)
+    Timeout.timeout(Capybara.default_wait_time) do
+      loop until page.evaluate_script(js).zero?
+    end
   end
 end
 
 RSpec.configure do |config|
-  config.include WaitForAjax, type: :feature
+  config.include WaitForEvents, type: :feature
 end
