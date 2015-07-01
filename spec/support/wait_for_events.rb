@@ -4,7 +4,7 @@
 #
 #   https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
 #
-# Therefore, we add the "wait_for_ajax" method, that will be used for these
+# Therefore, we add some methods for waiting that will be used for these
 # corner cases. All the public methods respect a timeout of
 # `Capybara.default_wait_time`.
 module WaitForEvents
