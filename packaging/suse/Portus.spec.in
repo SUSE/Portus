@@ -17,21 +17,13 @@
 
 Name:           Portus
 
-# If deliverable_version is defined in the project metaconfiguration,
-# we expect the source tarball to be named after it (i.e. tagged
-# upstream with this version).
-# We will set the version to this value.
-#
-# Otherwise, we will use version and branch set by the continuos
-# integration system.
+# When you release a new version, set Version and branch accordingly.
+# For example:
+# Version:      1.0.0
+# %define branch 1.0.0
 
-%if 0%{?deliverable_version}
-Version:       %{deliverable_version}
-%define branch %{deliverable_version}
-%else
 Version:        __VERSION__
 %define branch __BRANCH__
-%endif
 Release:        0.0.1
 License:        Apache-2.0
 Summary:        Authorization service and fronted for Docker registry (v2)
