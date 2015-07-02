@@ -17,8 +17,7 @@ feature 'Teams support' do
     find('#add_namespace_btn').click
     wait_for_effect_on('#add_namespace_form')
     expect(find('#add_namespace_form')).to be_visible
-    id = page.evaluate_script('document.activeElement.id')
-    expect(id).to eq 'namespace_namespace'
+    expect(focused_element_id).to eq 'namespace_namespace'
 
     # Fill the form and wait for the AJAX response.
     fill_in 'Namespace', with: 'new-namespace'
