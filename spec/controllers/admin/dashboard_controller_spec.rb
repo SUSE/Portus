@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Admin::DashboardController, type: :controller do
 
-  let(:admin) { create(:user, admin: true) }
+  let(:admin) { create(:admin) }
   let(:user) { create(:user) }
 
   context 'as admin user' do

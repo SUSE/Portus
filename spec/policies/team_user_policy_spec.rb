@@ -4,7 +4,7 @@ describe TeamUserPolicy do
 
   subject { described_class }
 
-  let(:admin)       { create(:user, admin: true) }
+  let(:admin)       { create(:admin) }
   let(:user)        { create(:user) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }

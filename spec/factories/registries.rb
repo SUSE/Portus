@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :registry do
-    before(:create) { create(:user, admin: true) }
+    before(:create) { create(:admin) }
     sequence :hostname do |n|
       "registry hostname #{n}"
     end

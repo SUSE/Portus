@@ -3,7 +3,7 @@ require 'rails_helper'
 describe RegistryObserver do
 
   before :each do
-    @admin = create(:user, admin: true)
+    @admin = create(:admin)
     @user  = create(:user)
 
     expect(Namespace.count).to be(0)

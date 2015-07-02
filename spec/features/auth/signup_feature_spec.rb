@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'Signup feature' do
 
   before do
-    create(:user, admin: true)
+    create(:admin)
     visit new_user_registration_url
   end
 
@@ -79,4 +79,10 @@ feature 'Signup feature' do
     expect(page).to have_selector('#alert ul li', text: 'Password confirmation doesn\'t match Password')
   end
 
+  scenario 'If there are users on the system, and can move through sign_in and sign_up' do
+    click_link('Login')
+    expect(current_path).to eql(new_user_session_path)
+    click_link('Create a new account')
+    expect(current_path).to eql(new_user_registration_path)
+  end
 end

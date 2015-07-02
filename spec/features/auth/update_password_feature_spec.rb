@@ -5,10 +5,7 @@ feature 'Update password feature' do
   let!(:user) { create(:user) }
 
   before do
-    visit new_user_session_url
-    fill_in 'user_username', with: user.username
-    fill_in 'user_password', with: user.password
-    click_button 'Login'
+    login_as user, scope: :user
     visit edit_user_registration_url
   end
 

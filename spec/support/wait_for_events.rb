@@ -18,14 +18,20 @@ module WaitForEvents
     wait_until_zero("$('#{selector}').queue().length")
   end
 
+  # This method will loop until the given block evaluates to true. It will
+  # respect to default timeout as specifyied by Capybara.
+  def wait_until(&blk)
+    Timeout.timeout(Capybara.default_wait_time) do
+      loop until blk.call
+    end
+  end
+
   private
 
   # Wait until the given JS snippet evaluates to zero. This is done while
   # respecting the set `Capybara.default_wait_time` timeout.
   def wait_until_zero(js)
-    Timeout.timeout(Capybara.default_wait_time) do
-      loop until page.evaluate_script(js).zero?
-    end
+    wait_until { page.evaluate_script(js).zero? }
   end
 end
 

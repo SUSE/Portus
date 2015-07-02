@@ -8,7 +8,7 @@ describe TeamPolicy do
   let(:team) { create(:team, owners: [member]) }
 
   before :each do
-    @admin = create(:user, admin: true)
+    @admin = create(:admin)
     create(:registry)
   end
 

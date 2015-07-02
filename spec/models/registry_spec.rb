@@ -7,7 +7,7 @@ RSpec.describe Registry, type: :model do
   describe '#create_global_namespace' do
     it 'adds all existing admins to the global team' do
       # NOTE: the :registry factory already creates an admin
-      create(:user, admin: true)
+      create(:admin)
       registry = create(:registry)
 
       owners = registry.global_namespace.team.owners.order('username ASC')

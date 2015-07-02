@@ -14,11 +14,14 @@ feature 'Login feature' do
   end
 
   scenario 'Existing user is able using his login and password to login into Portus' do
-    # TODO: DRY it out - share with other scenarious outside this feature
     expect(page).to_not have_content('Invalid username or password')
+
+    # We don't use Capybara's `login_as` method on purpose, because we are
+    # testing the UI for logging in.
     fill_in 'user_username', with: user.username
     fill_in 'user_password', with: user.password
     click_button 'Login'
+
     expect(page).to have_content('Activities')
     expect(page).to_not have_content('Signed in')
   end

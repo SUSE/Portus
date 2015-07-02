@@ -37,7 +37,7 @@ describe User do
 
     context 'registry defined' do
       before :each do
-        create(:user, admin: true)
+        create(:admin)
         create(:registry)
       end
 
