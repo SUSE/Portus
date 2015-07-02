@@ -150,7 +150,7 @@ describe Repository do
 
       context 're-tagging of a known image from one namespace to another' do
         let(:repository_namespaced_name) { 'portus/busybox' }
-        let(:admin) { create(:user, admin: true) }
+        let(:admin) { create(:admin) }
 
         before :each do
           team_user = create(:team, owners: [admin])

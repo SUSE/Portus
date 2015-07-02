@@ -17,7 +17,7 @@ describe NamespacePolicy do
   let(:namespace) { create(:namespace, registry: @registry, team: team) }
 
   before :each do
-    @admin = create(:user, admin: true)
+    @admin = create(:admin)
     @registry = create(:registry)
   end
 

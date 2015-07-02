@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe TeamsHelper, type: :helper do
 
-  let(:admin)       { create(:user, admin: true) }
+  let(:admin)       { create(:admin) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
   let(:contributor) { create(:user) }
@@ -42,7 +42,7 @@ RSpec.describe TeamsHelper, type: :helper do
     end
 
     it 'returns - for users that are not part of the team' do
-      sign_in create(:user, admin: true)
+      sign_in create(:admin)
       expect(helper.role_within_team(team)).to eq '-'
     end
   end

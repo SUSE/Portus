@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ApplicationHelper, type: :helper do
 
   let(:registry)    { create(:registry) }
-  let(:admin)       { create(:user, admin: true) }
+  let(:admin)       { create(:admin) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
   let(:contributor) { create(:user) }

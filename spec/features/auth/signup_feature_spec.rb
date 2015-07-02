@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'Signup feature' do
 
   before do
-    create(:user, admin: true)
+    create(:admin)
     visit new_user_registration_url
   end
 

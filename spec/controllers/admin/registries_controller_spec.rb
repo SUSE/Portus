@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Admin::RegistriesController, type: :controller do
-  let(:admin) { create(:user, admin: true) }
+  let(:admin) { create(:admin) }
 
   before :each do
     sign_in admin

@@ -32,7 +32,7 @@ describe Auth::RegistrationsController do
     end
 
     it 'omits the value of admin if there is already another admin' do
-      create(:user, admin: true)
+      create(:admin)
       post :create, user: {
         'username' => 'wonnabeadministrator',
         'email' => 'wonnabeadministrator@test.com',
@@ -47,7 +47,7 @@ describe Auth::RegistrationsController do
 
   describe 'PUT #update' do
 
-    let!(:user) { create(:user, admin: true) }
+    let!(:user) { create(:admin) }
 
     before :each do
       request.env['devise.mapping'] = Devise.mappings[:user]
@@ -110,7 +110,7 @@ describe Auth::RegistrationsController do
 
   describe 'DELETE #destroy' do
 
-    let!(:user) { create(:user, admin: true) }
+    let!(:user) { create(:admin) }
 
     before :each do
       request.env['devise.mapping'] = Devise.mappings[:user]

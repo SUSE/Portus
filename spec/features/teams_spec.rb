@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Teams support' do
   let!(:registry) { create(:registry) }
-  let!(:user) { create(:user, admin: true) }
+  let!(:user) { create(:admin) }
   let!(:team) { create(:team, owners: [user]) }
 
   before do
