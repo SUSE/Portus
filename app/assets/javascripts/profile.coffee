@@ -2,7 +2,8 @@
 jQuery ->
   email = $('#user_email').val()
   $('#user_email').keyup ->
-    if $('#user_email').val() == email
+    val = $('#user_email').val()
+    if val == email || val == ''
       $('#edit_user.profile .btn').attr('disabled', 'disabled')
     else
       $('#edit_user.profile .btn').removeAttr('disabled')
