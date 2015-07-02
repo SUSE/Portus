@@ -5,11 +5,7 @@ feature 'Gravatar support' do
   let!(:user) { create(:user) }
 
   before do
-    # TODO: DRY it out - share with other scenarious outside this feature
-    visit root_url
-    fill_in 'user_username', with: user.username
-    fill_in 'user_password', with: user.password
-    click_button 'Login'
+    login user
   end
 
   scenario 'If gravatar support is on, there should be an image' do
