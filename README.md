@@ -61,14 +61,18 @@ Continuous integration is run with [travis](http://travis-ci.org) and the [opens
 
 In order to release we make use of the open build service. The process is:
 
-1. tag source code as X.Y.Z
-2. create a project for X.Y.Z, for example Virtualization:containters:Portus:Releases:X.Y.Z
-3. submit all the packages there from Virtualization:containers:Portus
-4. edit Portus.spec file and set Version to X.Y.Z and branch to X.Y.Z
-5. in the Portus package, change the \_service to download source code with tag X.Y.Z
-6. in the Portus Appliance package, fix the repos to point to this release
-7. wait for the packages to finish
-8. submit to Factory
+1. update VERSION file
+2. update CHANGELOG (based on github issues)
+3. commit with message "Bump version X.Y.Z"
+4. tag source code as X.Y.Z
+5. create a project for X.Y.Z, for example Virtualization:containters:Portus:Releases:X.Y.Z
+6. submit all the packages there from Virtualization:containers:Portus
+7. edit Portus.spec file and set Version to X.Y.Z and branch to X.Y.Z
+8. in the Portus package, change the \_service to download source code with tag X.Y.Z
+9. edit changes file with the contents of CHANGELOG
+10. in the Portus Appliance package, fix the repos to point to this release
+11. wait for the packages to finish
+12. submit to Factory
 
 
 ## Licensing
