@@ -38,7 +38,7 @@ three nodes:
   * `portus.test.lan`: this is the node running portus itself.
   * `client.test.lan`: a node where latest version of Docker is installed
 
-All the nodes are based on openSUSE 13.2 x86_64. VirtualBox is the chosen
+All the nodes are based on openSUSE 13.2 x86\_64. VirtualBox is the chosen
 provisioner.
 
 Port 80 of the `portus` node is forwarded to port 5000 of the machine running
@@ -55,7 +55,7 @@ not protected by ssl.
 
 ## Continuous integration
 
-Continuous integration is run with [travis](http://travis-ci.org) and the [opensuse build service](http://build.opensuse.org). For details, see the .travis.yml file.
+Continuous integration is run with [Travis](https://travis-ci.org/SUSE/Portus) and the [Opensuse Build Service](http://build.opensuse.org). For details, see the .travis.yml file.
 
 ## Release
 
