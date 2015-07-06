@@ -10,7 +10,7 @@ $ bundle
 $ bundle exec jekyll serve
 ```
 
-After that, you will have to site available at `localhost:4000`.
+After that, you will have the site available at `localhost:4000`.
 
 ## Licensing
 
