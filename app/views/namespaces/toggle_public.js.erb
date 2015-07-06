@@ -1,5 +1,0 @@
-$('#namespace_<%= namespace.id %> td a i').addClass("fa-toggle-<%= namespace.public? ? 'on' : 'off' %>");
-$('#namespace_<%= namespace.id %> td a i').removeClass("fa-toggle-<%= namespace.public? ? 'off' : 'on' %>");
-
-$('#notice p').html("Namespace '<%= namespace.name %>' is now <%= namespace.public? ? 'public' : 'private' %>");
-$('#notice').fadeIn();
