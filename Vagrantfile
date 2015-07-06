@@ -25,7 +25,7 @@ Vagrant.configure('2') do |config|
     node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
     node.vm.provision 'shell', inline: <<EOS
-mkdir /etc/registry
+mkdir -p /etc/registry
 cp /vagrant/vagrant/conf/ca_bundle/server.crt /etc/registry/portus.crt
 cp /vagrant/vagrant/conf/registry-config.yml /etc/registry/config.yml
 systemctl enable registry
