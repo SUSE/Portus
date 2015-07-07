@@ -1,5 +1,41 @@
 # Contributing to Portus
 
+## Provide tests
+
+In Portus we are *really* scared of changes that either bring new bugs to the
+codebase or that break existing code. That's why we are really committed to
+keep a thorough test suite. For this reason, any new Pull Request *always* has
+to provide tests for the change that is being made. The `spec` directory is
+full of tests that might serve as an example if you are not sure how to
+implement tests for your Pull Request. Moreover, we make use of
+[Travis-CI](https://travis-ci.org/SUSE/Portus), so we will only merge your
+Pull Request once we get a green light from Travis.
+
+## Mind the Style
+
+We believe that in order to have a healthy codebase we need to abide to a
+certain code style. We use [rubocop](https://github.com/bbatsov/rubocop) for
+this matter, which is a tool that has proved to be useful. So, before
+submitting your Pull Request, make sure that `rubocop` is passing for you.
+If you want to know the style we are enforcing, note the following:
+
+- We mainly use the default configuration as stated
+[here](https://github.com/bbatsov/rubocop#defaults).
+- We've made some small changes to the defaults, as you can see
+[here](https://github.com/SUSE/Portus/blob/master/.rubocop.yml). Moreover, note
+that all these changes have a comment explaining the reasoning behind it.
+
+Finally, note that `rubocop` is called on Travis-CI. This means that your Pull
+Request will not be merged until `rubocop` approves your changes.
+
+## Update the Changelog
+
+We keep a changelog in the `CHANGELOG.md` file. This is useful to understand
+what has changed between each version. When you implement a new feature, or a
+fix for an issue, please also update the `CHANGELOG.md` file accordingly. We
+don't follow a strict style for the changelog, just try to be consistent with
+the rest of the file.
+
 ## Sign your work
 
 The sign-off is a simple line at the end of the explanation for the patch. Your
