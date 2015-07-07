@@ -2,14 +2,12 @@
 
 ## Provide tests
 
-In Portus we are *really* scared of changes that either bring new bugs to the
-codebase or that break existing code. That's why we are really committed to
-keep a thorough test suite. For this reason, any new Pull Request *always* has
-to provide tests for the change that is being made. The `spec` directory is
-full of tests that might serve as an example if you are not sure how to
-implement tests for your Pull Request. Moreover, we make use of
-[Travis-CI](https://travis-ci.org/SUSE/Portus), so we will only merge your
-Pull Request once we get a green light from Travis.
+In Portus we are *really* committed to keep a thorough test suite. For this
+reason, any new Pull Request *always* has to provide tests for the change
+that is being made. The `spec` directory is full of tests that might serve
+as an example if you are not sure how to implement tests for your Pull Request.
+Moreover, we make use of [Travis-CI](https://travis-ci.org/SUSE/Portus), so we
+will only merge your Pull Request once we get a green light from Travis.
 
 ## Mind the Style
 
