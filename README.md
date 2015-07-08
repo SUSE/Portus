@@ -30,6 +30,55 @@ If Portus is unreachable when a new image is being pushed to the Docker registry
 
 ## Development environment
 
+### Docker
+
+It is possible to use docker-compose to spin up a small development/demo
+environment.
+
+The environment consists of two Docker containers linked together:
+
+  * web: this is the container running Portus. It's based on the
+    [official rails](https://registry.hub.docker.com/_/rails/) Docker image.
+
+  * db: this is the container running the database required by Portus. It's
+    based on the
+    [official mariadb](https://registry.hub.docker.com/_/mariadb/) Docker image.
+
+First of all ensure you have [docker-compose](https://www.docker.com/docker-compose)
+installed. Then do:
+
+```
+docker-compose up
+```
+
+This will:
+  * download the `rails` Docker image from the Docker Hub
+  * build the `web` Docker image
+  * download the `mariadb` docker image from the Docker Hub
+  * start the `db` container and link it against a running insitance of the `web` container.
+
+The next step is to create Portus' database:
+
+```
+docker-compose run web rake db:create
+```
+
+Then populate the database by running Rails' migrations (**note well:** this
+might need to be done from time to time, when new migrations are added):
+
+```
+docker-compose run rake db:migrate
+```
+
+Now everything is ready to be used. Portus' UI will be accessible on
+[http://localhost:3000](http://localhost:3000).
+
+#### Demo
+
+[![asciicast](https://asciinema.org/a/23185.png)](https://asciinema.org/a/23185)
+
+### Vagrant
+
 This project contains a Vagrant based development environment which consists of
 three nodes:
 
