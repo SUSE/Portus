@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Portus by SUSE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
@@ -14,7 +14,7 @@
   <body>
     <section class="page-header">
       <img src="../Portus/images/logo.png" align="middle">
-      <br><br>     
+      <br><br>
       <a href="https://github.com/SUSE/Portus" class="btn">View on GitHub</a>
       <a href="https://github.com/SUSE/Portus/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/SUSE/Portus/tarball/master" class="btn">Download .tar.gz</a>
@@ -25,12 +25,14 @@
       <h2>
 <a id="what-is-portus--home-page" class="anchor" href="#what-is-portus--home-page" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Portus</h2>
 
-<p>Portus is an open source authorization service and user interface for the next generation of Docker Registry.</p>
+<p>Portus is an open source authorization service and user interface for the next generation Docker Registry.</p>
 
 <h2>
-<a id="why-using-portus-home-page" class="anchor" href="#why-using-portus-home-page" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why using Portus</h2>
+<a id="why-use-portus-home-page" class="anchor" href="#why-use-portus-home-page" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why use Portus</h2>
 
-<p>The Docker Hub is a wonderful place, but what can you do if you cannot or don't want to push your data to it? You can setup your private instance of Docker registry but then everybody inside of your organization will be able to push and pull privileges over all your images. Also how are you going to keep track of all the awesome images that have been pushed to your private registry?</p>
+<p>The Docker Hub is a wonderful place, but what if you cannot, or do not wish to push your images to a thrid party registry? You may setup a private instance of the Docker registry, but then everyone in your organization has push and pull privileges over all of your images.</p>
+
+<p>How do you keep track of all of the images in your private registry?</p>
 
 <p>Portus to the rescue!</p>
 
@@ -41,14 +43,13 @@
 
       <p>
         Portus implements the new authorization scheme defined by the latest version of
-        the Docker registry. It allows to have fine grained control over all your
-        images deciding who can
-        pull and push them.
+        the Docker registry. It allows for fine grained control over all of your
+        images. You decide which users and teams are allowed to push or pull images.
       </p>
 
       <h2>
-        <a id="easily-manage-users-within-teams" class="anchor" href="#easily-manage-users-within-teams" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Easily manage users within teams
+        <a id="easily-manage-users-with-teams" class="anchor" href="#easily-manage-users-with-teams" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+        Easily manage users with teams.
       </h2>
 
       <p>
@@ -61,7 +62,7 @@
         <ul>
           <li><b>Viewers</b>: can only pull images.</li>
           <li><b>Contributors</b>: can push and pull images</li>
-          <li><b>Owners</b>: like contributos, but can also add and remove users to the team.</li>
+          <li><b>Owners</b>: like contributors, but can also add and remove users to the team.</li>
         </ul>
       </p>
 
@@ -89,12 +90,12 @@
 
       <p>
         Keep everything under control. All the relevant events are
-        automatically logged by Portus and are available for consultation
-        to the admin users.
+        automatically logged by Portus and are available for analysis
+        by admin users.
       </p>
 
       <p>
-        Non-admin users can use this feature to be keep up with relevant
+        Non-admin users can also use this feature to be keep up with relevant
         changes.
       </p>
 
@@ -105,12 +106,12 @@
 
       <p>
         Portus is available on <a href="https://github.com/SUSE/Portus"> GitHub</a>, but also as a ready to go <a href="https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance"> appliance</a> based on openSUSE. <br>
-        All Portus documentation, including the installation guide is available in our <a href="https://github.com/SUSE/Portus/wiki"> wiki</a>. 
+        All Portus documentation, including the installation guide is available in our <a href="https://github.com/SUSE/Portus/wiki"> wiki</a>.
       </p>
 
       <h2>
         <a id="audit" class="anchor" href="#audit" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Feedback, comments, contributions? 
+        Feedback, comments, contributions?
       </h2>
       <p>
         Open an <a href="https://github.com/SUSE/Portus/issues"> issue</a> or subscribe to the <a href="http://lists.suse.com/mailman/listinfo/containers">containers@lists.suse.com</a> mailing list.
