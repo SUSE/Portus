@@ -7,7 +7,7 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #606c71; }
+  color: #143855; }
 
 a {
   color: #1e6bb8;
@@ -56,8 +56,8 @@ a {
 .page-header {
   color: #fff;
   text-align: center;
-  background-color: #159957;
-  background-image: linear-gradient(120deg, #155799, #159957); }
+  background-color: #fff;
+  background-image: linear-gradient(120deg, #205683, #68b0ab) }
 
 @media screen and (min-width: 64em) {
   .page-header {
@@ -111,8 +111,8 @@ a {
 .main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-weight: normal;
-  color: #159957; }
+  font-weight: bold;
+  color: #383e41; }
 .main-content p {
   margin-bottom: 1em; }
 .main-content code {
