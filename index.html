@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>Portus by SUSE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
@@ -33,8 +34,72 @@
 
 <p>Portus to the rescue!</p>
 
+      <h2>
+        <a id="secure" class="anchor" href="#secure" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+        Secure
+      </h2>
+
+      <p>
+        Portus implements the new authorization scheme defined by the latest version of
+        the Docker registry. It allows to have fine grained control over all your
+        images deciding who can
+        pull and push them.
+      </p>
+
+      <h2>
+        <a id="easily-manage-users-within-teams" class="anchor" href="#easily-manage-users-within-teams" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+        Easily manage users within teams
+      </h2>
+
+      <p>
+        Map your company organization inside of Portus, define as many teams as you
+        want and add and remove users from them.
+      </p>
+
+      <p>
+        Teams have three different types of users to allow full granularity:
+        <ul>
+          <li><b>Viewers</b>: can only pull images.</li>
+          <li><b>Contributors</b>: can push and pull images</li>
+          <li><b>Owners</b>: like contributos, but can also add and remove users to the team.</li>
+        </ul>
+      </p>
+
+      <h2>
+        <a id="search" class="anchor" href="#search" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+        Search
+      </h2>
+
+      <p>
+        Portus provides an intuitive overview of the contents of your
+        private registry. It also features a search capability to find
+        images even faster.
+      </p>
+
+      <p>
+        User privileges are constantly taken into account, even when
+        browsing the contents of the repository or when performing
+        searches.
+      </p>
+
+      <h2>
+        <a id="audit" class="anchor" href="#audit" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+        Audit
+      </h2>
+
+      <p>
+        Keep everything under control. All the relevant events are
+        automatically logged by Portus and are available for consultation
+        to the admin users.
+      </p>
+
+      <p>
+        Non-admin users can use this feature to be keep up with relevant
+        changes.
+      </p>
+
       <footer class="site-footer">
-        <span class="site-footer-owner">Created with &lt;3 by the <a href="https://www.suse.com/">SUSE</a> team.</span>
+        <span class="site-footer-owner">Created with <i class="fa fa-heart fa-1"></i> by the <a href="https://www.suse.com/">SUSE</a> team.</span>
       </footer>
 
     </section>
