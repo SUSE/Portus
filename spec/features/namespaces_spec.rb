@@ -25,7 +25,7 @@ feature 'Namespaces support' do
       expect(current_path).to eql namespaces_path
     end
 
-    scenario 'An user cannot create a namespace that already exists', focus: true, js: true do
+    scenario 'An user cannot create a namespace that already exists', js: true do
       namespaces_count = Namespace.count
 
       visit namespaces_path
@@ -37,7 +37,6 @@ feature 'Namespaces support' do
       click_button 'Create'
       wait_for_ajax
       wait_for_effect_on('#alert')
-      save_screenshot 'after.png', full: true
       expect(Namespace.count).to eql namespaces_count
       expect(current_path).to eql namespaces_path
       expect(page).to have_content('Name has already been taken')
