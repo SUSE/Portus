@@ -59,7 +59,7 @@ describe '/v2/token' do
       it 'blocks access when the time based OTP is not valid' do
         auth_header = {}
 
-        Timecop.freeze(30.seconds.ago) do
+        Timecop.travel(30.seconds.ago) do
           totp = ROTP::TOTP.new(Rails.application.config.otp_secret)
           auth_header['HTTP_AUTHORIZATION'] = auth_mech.encode_credentials(
             'portus', totp.now)

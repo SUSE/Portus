@@ -31,7 +31,7 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     let(:global_tag) { create(:tag, name: '1.0.0', repository: global_repository) }
 
     before :each do
-      Timecop.freeze(Time.gm(2015))
+      Timecop.travel(Time.gm(2015))
       create(:activity_team_create,
              trackable_id: team.id,
              owner_id: activity_owner.id)

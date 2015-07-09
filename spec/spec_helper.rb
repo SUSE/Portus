@@ -19,7 +19,6 @@ VCR.configure do |c|
 end
 
 RSpec.configure do |config|
-
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
@@ -28,6 +27,11 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  config.order = :random
+  # Some tests use Timecop, just make sure that everything is as expected
+  # after returning from it.
+  config.before :each do
+    Timecop.return
+  end
 
+  config.order = :random
 end
