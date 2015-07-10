@@ -83,7 +83,24 @@ describe NamespacesController do
       }
     end
 
+    let(:hidden_attributes) do
+      {
+        team:      Team.where(hidden: true).first,
+        namespace: 'qa_team_namespace'
+      }
+    end
+
     context 'as a contributor of the team that is going to control the namespace' do
+
+      it 'is not possible to create a namespace inside of a hidden team' do
+        sign_in contributor
+        post_params = { namespace: hidden_attributes, format: :js }
+
+        expect do
+          post :create, post_params
+        end.not_to change(Namespace, :count)
+        expect(response.status).to eq(404)
+      end
 
       it 'creates a new namespace' do
         sign_in contributor

@@ -31,7 +31,7 @@ feature 'Namespaces support' do
       visit namespaces_path
       find('#add_namespace_btn').click
       fill_in 'Namespace', with: Namespace.first.name
-      fill_in 'Team', with: Team.first.name
+      fill_in 'Team', with: Team.where(hidden: false).first.name
       wait_for_effect_on('#add_namespace_form')
 
       click_button 'Create'
@@ -40,6 +40,24 @@ feature 'Namespaces support' do
       expect(Namespace.count).to eql namespaces_count
       expect(current_path).to eql namespaces_path
       expect(page).to have_content('Name has already been taken')
+      expect(page).to have_css('#alert .alert.alert-dismissible.alert-info')
+    end
+
+    scenario 'An user cannot create a namespace for a hidden team', js: true do
+      namespaces_count = Namespace.count
+
+      visit namespaces_path
+      find('#add_namespace_btn').click
+      fill_in 'Namespace', with: Namespace.first.name
+      fill_in 'Team', with: Team.where(hidden: true).first.name
+      wait_for_effect_on('#add_namespace_form')
+
+      click_button 'Create'
+      wait_for_ajax
+      wait_for_effect_on('#alert')
+      expect(Namespace.count).to eql namespaces_count
+      expect(current_path).to eql namespaces_path
+      expect(page).to have_content('Selected team does not exist')
       expect(page).to have_css('#alert .alert.alert-dismissible.alert-info')
     end
 
