@@ -40,7 +40,7 @@ describe RepositoryPolicy do
       namespace = create(:namespace, team: team, name: 'mssola')
       create(:repository, namespace: namespace, name: 'repository')
 
-      %w{repository rep epo}.each do |name|
+      %w(repository rep epo).each do |name|
         repo = Pundit.policy_scope(user, Repository).search(name)
         expect(repo.name).to eql 'Repository'
       end

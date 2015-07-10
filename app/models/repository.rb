@@ -10,11 +10,11 @@ class Repository < ActiveRecord::Base
     attributes :name
     attributes namespace_name: 'namespace.name'
 
-    # TODO (mssola): we are experiencing some issues with MariaDB's fulltext
+    # TODO: (mssola): we are experiencing some issues with MariaDB's fulltext
     # support. Because of that, the following two options have been disabled
     # until we find a solution for it.
-    #options :name, type: :fulltext
-    #options :namespace_name, type: :fulltext
+    # options :name, type: :fulltext
+    # options :namespace_name, type: :fulltext
   end
 
   # Handle a push event from the registry.
