@@ -11,7 +11,6 @@ describe RepositoryPolicy do
   let(:team2)       { create(:team, owners: [user2]) }
 
   describe 'scope' do
-
     before :each do
       public_namespace = create(:namespace, team: team2, public: true, registry: registry)
       @public_repository = create(:repository, namespace: public_namespace)
@@ -34,7 +33,17 @@ describe RepositoryPolicy do
     it 'never shows repositories inside of private namespaces' do
       expect(Pundit.policy_scope(user, Repository).to_a).not_to include(@private_repository)
     end
-
   end
 
+  describe 'search' do
+    it 'finds the same repository regardless to how it has been written'  do
+      namespace = create(:namespace, team: team, name: 'mssola')
+      create(:repository, namespace: namespace, name: 'repository')
+
+      %w{repository rep epo}.each do |name|
+        repo = Pundit.policy_scope(user, Repository).search(name)
+        expect(repo.name).to eql 'Repository'
+      end
+    end
+  end
 end
