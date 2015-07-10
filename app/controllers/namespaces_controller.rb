@@ -1,6 +1,7 @@
 class NamespacesController < ApplicationController
   respond_to :html, :js
   before_action :set_namespace, only: [:toggle_public, :show]
+  before_action :check_team, only: [:create]
 
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
@@ -25,10 +26,8 @@ class NamespacesController < ApplicationController
   # POST /namespace
   # POST /namespace.json
   def create
-    team = Team.find_by!(name: params['namespace']['team'])
-
     @namespace = Namespace.new(
-      team:     team,
+      team:     @team,
       name:     params['namespace']['namespace'],
       registry: Registry.first
     )
@@ -59,6 +58,18 @@ class NamespacesController < ApplicationController
   end
 
   private
+
+  # Check that the given team exists and that is not hidden. This hook is used
+  # only as a helper of the `create` method.
+  def check_team
+    @team = Team.find_by(name: params['namespace']['team'], hidden: false)
+    return unless @team.nil?
+
+    @error = 'Selected team does not exist.'
+    respond_to do |format|
+      format.js { respond_with nil, status: :not_found }
+    end
+  end
 
   def set_namespace
     @namespace = Namespace.find(params[:id])

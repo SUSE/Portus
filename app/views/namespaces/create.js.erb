@@ -1,4 +1,7 @@
-<% if @namespace.errors.any? %>
+<% if @error %>
+  $('#alert p').html("<%= escape_javascript(@error) %>");
+  $('#alert').fadeIn();
+<% elsif @namespace.errors.any? %>
   $('#alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
 <% else %>
