@@ -1,5 +1,6 @@
 class SearchController < ApplicationController
   def index
-    @repositories = policy_scope(Repository).search(params[:search])
+    search = params[:search].split(':').first
+    @repositories = policy_scope(Repository).search(search)
   end
 end
