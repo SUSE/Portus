@@ -15,11 +15,11 @@ feature 'Teams support' do
 
       visit teams_path
       find('#add_team_btn').click
-      wait_for_effect_on('#new-team-form')
+      wait_for_effect_on('#add_team_form')
 
       click_button 'Add'
       wait_for_ajax
-      wait_for_effect_on('#new-team-form')
+      wait_for_effect_on('#add_team_form')
       expect(Team.count).to eql teams_count
       expect(current_path).to eql teams_path
     end
@@ -30,7 +30,7 @@ feature 'Teams support' do
       visit teams_path
       find('#add_team_btn').click
       fill_in 'Name', with: Team.first.name
-      wait_for_effect_on('#new-team-form')
+      wait_for_effect_on('#add_team_form')
 
       click_button 'Add'
       wait_for_ajax
@@ -47,11 +47,11 @@ feature 'Teams support' do
       visit teams_path
       find('#add_team_btn').click
       fill_in 'Name', with: 'valid-team'
-      wait_for_effect_on('#new-team-form')
+      wait_for_effect_on('#add_team_form')
 
       click_button 'Add'
       wait_for_ajax
-      wait_for_effect_on('#new-team-form')
+      wait_for_effect_on('#add_team_form')
       expect(Team.count).to eql teams_count + 1
       expect(current_path).to eql teams_path
       expect(page).to have_content('valid-team')
@@ -63,13 +63,13 @@ feature 'Teams support' do
       expect(page).to_not have_css('#add_team_btn i.fa-minus-circle')
 
       find('#add_team_btn').click
-      wait_for_effect_on('#new-team-form')
+      wait_for_effect_on('#add_team_form')
 
       expect(page).to_not have_css('#add_team_btn i.fa-plus-circle')
       expect(page).to have_css('#add_team_btn i.fa-minus-circle')
 
       find('#add_team_btn').click
-      wait_for_effect_on('#new-team-form')
+      wait_for_effect_on('#add_team_form')
 
       expect(page).to have_css('#add_team_btn i.fa-plus-circle')
       expect(page).to_not have_css('#add_team_btn i.fa-minus-circle')

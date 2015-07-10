@@ -16,11 +16,11 @@ feature 'Namespaces support' do
 
       visit namespaces_path
       find('#add_namespace_btn').click
-      wait_for_effect_on('#new-namespace-form')
+      wait_for_effect_on('#add_namespace_form')
 
       click_button 'Create'
       wait_for_ajax
-      wait_for_effect_on('#new-namespace-form')
+      wait_for_effect_on('#add_namespace_form')
       expect(Namespace.count).to eql namespaces_count
       expect(current_path).to eql namespaces_path
     end
@@ -32,7 +32,7 @@ feature 'Namespaces support' do
       find('#add_namespace_btn').click
       fill_in 'Namespace', with: Namespace.first.name
       fill_in 'Team', with: Team.first.name
-      wait_for_effect_on('#new-namespace-form')
+      wait_for_effect_on('#add_namespace_form')
 
       click_button 'Create'
       wait_for_ajax
@@ -50,11 +50,11 @@ feature 'Namespaces support' do
       find('#add_namespace_btn').click
       fill_in 'Namespace', with: 'valid-namespace'
       fill_in 'Team', with: namespace.team.name
-      wait_for_effect_on('#new-namespace-form')
+      wait_for_effect_on('#add_namespace_form')
 
       click_button 'Create'
       wait_for_ajax
-      wait_for_effect_on('#new-namespace-form')
+      wait_for_effect_on('#add_namespace_form')
 
       expect(Namespace.count).to eql namespaces_count + 1
       expect(current_path).to eql namespaces_path
@@ -72,13 +72,13 @@ feature 'Namespaces support' do
       expect(page).to_not have_css('#add_namespace_btn i.fa-minus-circle')
 
       find('#add_namespace_btn').click
-      wait_for_effect_on('#new-namespace-form')
+      wait_for_effect_on('#add_namespace_form')
 
       expect(page).to_not have_css('#add_namespace_btn i.fa-plus-circle')
       expect(page).to have_css('#add_namespace_btn i.fa-minus-circle')
 
       find('#add_namespace_btn').click
-      wait_for_effect_on('#new-namespace-form')
+      wait_for_effect_on('#add_namespace_form')
 
       expect(page).to have_css('#add_namespace_btn i.fa-plus-circle')
       expect(page).to_not have_css('#add_namespace_btn i.fa-minus-circle')
