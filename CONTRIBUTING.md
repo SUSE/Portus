@@ -9,6 +9,10 @@ as an example if you are not sure how to implement tests for your Pull Request.
 Moreover, we make use of [Travis-CI](https://travis-ci.org/SUSE/Portus), so we
 will only merge your Pull Request once we get a green light from Travis.
 
+You might want to take a look at
+[this](https://github.com/SUSE/Portus/wiki/How-we-test-Portus) section from the
+wiki where our test infrastructure is more thoroughly explained.
+
 ## Mind the Style
 
 We believe that in order to have a healthy codebase we need to abide to a
