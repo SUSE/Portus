@@ -1,128 +1,68 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
   <head>
-    <meta charset="UTF-8">
     <title>Portus by SUSE</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <!-- bootstrap + Portus theme -->
+    <link href="assets/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <!--external libraries CSS -->
+    <link href="assets/stylesheets/animate/animate.css"              type="text/css" rel="stylesheet" />
+    <link href="assets/stylesheets/fontawesome/font-awesome.min.css" type="text/css" rel="stylesheet" />
+    <!--external libraries JS -->
+    <script src="assets/js/jquery.min.js"      type="text/javascript"></script>
+    <script src="assets/js/bootstrap.min.js"   type="text/javascript"></script>
+    <script src="assets/js/wow.js"             type="text/javascript"></script>
+    <script src="assets/js/smoothscroll.js"    type="text/javascript"></script>
+    <script src="assets/js/jquery-cookie.js"   type="text/javascript" charset="utf-8"></script>
+    <script src="assets/js/jquery-lang.js"     type="text/javascript" charset="utf-8"></script>
+    <!--portus js-->
+    <script src="assets/js/portus-language.js" type="text/javascript"></script>
+    <script src="assets/js/portus.js" type="text/javascript"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <section class="page-header">
-      <img src="../Portus/images/logo.png" align="middle">
-      <br><br>
-      <a href="https://github.com/SUSE/Portus" class="btn">View on GitHub</a>
-      <a href="https://github.com/SUSE/Portus/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/SUSE/Portus/tarball/master" class="btn">Download .tar.gz</a>
-      <h1><font face="Pacifico" color="white">Claim control of your Docker images!</font></h1>
-    </section>
-
-    <section class="main-content">
-      <h2>
-<a id="what-is-portus--home-page" class="anchor" href="#what-is-portus--home-page" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Portus</h2>
-
-<p>Portus is an open source authorization service and user interface for the next generation Docker Registry.</p>
-
-<h2>
-<a id="why-use-portus-home-page" class="anchor" href="#why-use-portus-home-page" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why use Portus</h2>
-
-<p>The Docker Hub is a wonderful place, but what if you cannot, or do not wish to push your images to a thrid party registry? You may setup a private instance of the Docker registry, but then everyone in your organization has push and pull privileges over all of your images.</p>
-
-<p>How do you keep track of all of the images in your private registry?</p>
-
-<p>Portus to the rescue!</p>
-
-      <h2>
-        <a id="secure" class="anchor" href="#secure" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Secure
-      </h2>
-
-      <p>
-        Portus implements the new authorization scheme defined by the latest version of
-        the Docker registry. It allows for fine grained control over all of your
-        images. You decide which users and teams are allowed to push or pull images.
-      </p>
-
-      <h2>
-        <a id="easily-manage-users-with-teams" class="anchor" href="#easily-manage-users-with-teams" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Easily manage users with teams.
-      </h2>
-
-      <p>
-        Map your company organization inside of Portus, define as many teams as you
-        want and add and remove users from them.
-      </p>
-
-      <p>
-        Teams have three different types of users to allow full granularity:
-        <ul>
-          <li><b>Viewers</b>: can only pull images.</li>
-          <li><b>Contributors</b>: can push and pull images</li>
-          <li><b>Owners</b>: like contributors, but can also add and remove users to the team.</li>
-        </ul>
-      </p>
-
-      <h2>
-        <a id="search" class="anchor" href="#search" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Search
-      </h2>
-
-      <p>
-        Portus provides an intuitive overview of the contents of your
-        private registry. It also features a search capability to find
-        images even faster.
-      </p>
-
-      <p>
-        User privileges are constantly taken into account, even when
-        browsing the contents of the repository or when performing
-        searches.
-      </p>
-
-      <h2>
-        <a id="audit" class="anchor" href="#audit" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Audit
-      </h2>
-
-      <p>
-        Keep everything under control. All the relevant events are
-        automatically logged by Portus and are available for analysis
-        by admin users.
-      </p>
-
-      <p>
-        Non-admin users can also use this feature to be keep up with relevant
-        changes.
-      </p>
-
-      <h2>
-        <a id="audit" class="anchor" href="#audit" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Try Portus
-      </h2>
-
-      <p>
-        Portus is available on <a href="https://github.com/SUSE/Portus"> GitHub</a>, but also as a ready to go <a href="https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance"> appliance</a> based on openSUSE. <br>
-        All Portus documentation, including the installation guide is available in our <a href="https://github.com/SUSE/Portus/wiki"> wiki</a>.
-      </p>
-
-      <h2>
-        <a id="audit" class="anchor" href="#audit" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-        Feedback, comments, contributions?
-      </h2>
-      <p>
-        Open an <a href="https://github.com/SUSE/Portus/issues"> issue</a> or subscribe to the <a href="http://lists.suse.com/mailman/listinfo/containers">containers@lists.suse.com</a> mailing list.
-      </p>
-      <footer class="site-footer">
-        <span class="site-footer-owner">Created with <i class="fa fa-heart fa-1"></i> by the <a href="https://www.suse.com/">SUSE</a> team.</span>
-      </footer>
+    <header>
+      <div class="container">
+        <img src="assets/images/logo-header.png" class="wow zoomIn">
+      </div>
+    </header>
+    <section id="welcome" class="text-center">
+      <h2 class="text-uppercase" lang="en">Claim control of your</h2>
+      <h1 class="text-uppercase">Docker images</h1>
+      <hr>
+      <a href="https://github.com/SUSE/Portus" class="btn btn-default">View on GitHub</a>
+      <a href="https://github.com/SUSE/Portus/zipball/master" class="btn btn-default">Download .zip</a>
+      <a href="https://github.com/SUSE/Portus/tarball/master" class="btn btn-default">Download .tar.gz</a>
 
     </section>
-
-
+    <section id="what-is-portus" class="container text-center">
+      <h2>What is Portus</h2>
+      <p>Portus is an open source authorization service and user interface for the next generation Docker Registry.</p>
+      <img class="docker-logo" src="assets/images/docker-logo.jpg" />
+      <img class="portus-computer" src="assets/images/portus-computer.jpg" />
+    </section>
+    <footer>
+      <div class="row row-0">
+        <div class="col-sm-8 col-sm-offset-2 text-center">Created with <i class="fa fa-heart"></i> by the SUSE team</div>
+        <div class="col-sm-2">
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="selected-language">English</span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+              <li><a href="#" class="change-language" data-language-value="en">English</a></li>
+              <li><a href="#" class="change-language" data-language-value="es">Spanish</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
-
