@@ -37,9 +37,9 @@
         <h2 class="text-uppercase wow fadeInUp" lang="en">Claim control of your</h2>
         <h1 class="text-uppercase wow fadeInUp" lang="en">Docker images</h1>
         <hr class="wow zoomIn" data-wow-delay="500ms">
-        <a href="https://github.com/SUSE/Portus" class="btn btn-default wow fadeInUp" data-wow-delay="700ms" lang="en">View on GitHub</a>
-        <a href="https://github.com/SUSE/Portus/zipball/master" class="btn btn-default wow fadeInUp" data-wow-delay="800ms" lang="en">Download .zip</a>
-        <a href="https://github.com/SUSE/Portus/tarball/master" class="btn btn-default wow fadeInUp" data-wow-delay="900ms" lang="en">Download .tar.gz</a>
+        <a href="https://github.com/SUSE/Portus" class="btn btn-primary wow fadeInUp" data-wow-delay="700ms" lang="en">View on GitHub</a>
+        <a href="https://github.com/SUSE/Portus/zipball/master" class="btn btn-primary wow fadeInUp" data-wow-delay="800ms" lang="en">Download .zip</a>
+        <a href="https://github.com/SUSE/Portus/tarball/master" class="btn btn-primary wow fadeInUp" data-wow-delay="900ms" lang="en">Download .tar.gz</a>
       </div>
     </section>
     <section id="what-is-portus" class="text-center fixit-container">
@@ -78,13 +78,35 @@
         <h2 class="wow fadeInUp" lang="en">Easily manage users with teams</h2>
         <p class="wow fadeInUp" lang="en">Map your company organization inside of Portus, define as many teams as you want and add and remove users from them.</p>
         <p class="wow fadeInUp" lang="en">Teams have three different types of users to allow full granularity:</p>
+        <div class="row users-container">
+          <div class="col-sm-4">
+            <div class="portus-users">
+              <i class="fa fa-eye fa-5x"></i>
+            </div>
+            <h3 lang="en">Viewers</h3>
+            <p lang="en">Can only pull images.</p>
+          </div>
+          <div class="col-sm-4">
+            <div class="portus-users">
+              <i class="fa fa-users fa-5x"></i>
+            </div>
+            <h3 lang="en">Contributors</h3>
+            <p lang="en">Can push and pull images.</p>
+          </div>
+          <div class="col-sm-4">
+            <div class="portus-users">
+              <i class="fa fa-male fa-5x"></i>
+            </div>
+            <h3 lang="en">Owners</h3>
+            <p lang="en">Like contributors, but can also add and remove users to the team.</p>
+          </div>
+        </div>
       </div>
     </section>
     <footer>
       <div class="row row-0">
-        <div class="col-sm-8 col-sm-offset-2 text-center" lang="en">Created with <i class="fa fa-heart"></i> by the SUSE team</div>
         <div class="col-sm-2">
-          <div class="dropdown">
+          <div class="dropup">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="selected-language">English</span>
               <span class="caret"></span>
@@ -95,6 +117,7 @@
             </ul>
           </div>
         </div>
+        <div class="col-sm-8 text-center" lang="en">Created with <i class="fa fa-heart secondary-colour"></i> by the SUSE team</div>
       </div>
     </footer>
   </body>
