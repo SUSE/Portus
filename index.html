@@ -28,21 +28,22 @@
   </head>
   <body>
     <header>
-      <div class="container">
+      <div class="container-fluid">
         <img src="assets/images/logo-header.png">
       </div>
     </header>
     <section id="welcome" class="text-center">
-      <h2 class="text-uppercase wow fadeInUp" lang="en">Claim control of your</h2>
-      <h1 class="text-uppercase wow fadeInUp" lang="en">Docker images</h1>
-      <hr class="wow zoomIn" data-wow-delay="500ms">
-      <a href="https://github.com/SUSE/Portus" class="btn btn-default wow fadeInUp" data-wow-delay="700ms" lang="en">View on GitHub</a>
-      <a href="https://github.com/SUSE/Portus/zipball/master" class="btn btn-default wow fadeInUp" data-wow-delay="800ms" lang="en">Download .zip</a>
-      <a href="https://github.com/SUSE/Portus/tarball/master" class="btn btn-default wow fadeInUp" data-wow-delay="900ms" lang="en">Download .tar.gz</a>
-
+      <div class="container-fluid">
+        <h2 class="text-uppercase wow fadeInUp" lang="en">Claim control of your</h2>
+        <h1 class="text-uppercase wow fadeInUp" lang="en">Docker images</h1>
+        <hr class="wow zoomIn" data-wow-delay="500ms">
+        <a href="https://github.com/SUSE/Portus" class="btn btn-default wow fadeInUp" data-wow-delay="700ms" lang="en">View on GitHub</a>
+        <a href="https://github.com/SUSE/Portus/zipball/master" class="btn btn-default wow fadeInUp" data-wow-delay="800ms" lang="en">Download .zip</a>
+        <a href="https://github.com/SUSE/Portus/tarball/master" class="btn btn-default wow fadeInUp" data-wow-delay="900ms" lang="en">Download .tar.gz</a>
+      </div>
     </section>
     <section id="what-is-portus" class="text-center fixit-container">
-      <div class="container">
+      <div class="container-fluid">
         <h2 class="wow fadeInUp" lang="en">What is Portus</h2>
         <p class="wow fadeInUp" lang="en">Portus is an open source authorization service and user interface for the next generation Docker Registry.</p>
         <img class="docker-logo fixit-element" src="assets/images/docker-logo.png" />
@@ -50,13 +51,33 @@
       </div>
     </section>
     <section id="why-use-portus" class="text-center">
-      <div class="container">
+      <div class="container-fluid">
         <h2 class="wow fadeInUp text-uppercase" lang="en">Why use Portus</h2>
-        <p>The Docker Hub is a wonderful place, but what if you cannot, or do not wish to push your images to a thrid party registry? You may setup a private instance of the Docker registry, but then everyone in your organization has push and pull privileges over all of your images.
+        <p lang="en">The Docker Hub is a wonderful place, but what if you cannot, or do not wish to push your images to a thrid party registry? You may setup a private instance of the Docker registry, but then everyone in your organization has push and pull privileges over all of your images.
         </p>
-        <p>How do you keep track of all of the images in your private registry?</p>
-        <h4>Portus to the rescue!</h4>
+        <p lang="en">How do you keep track of all of the images in your private registry?</p>
+        <h4 lang="en">Portus to the rescue!</h4>
         <i class="fa fa-life-ring fa-5x"></i>
+      </div>
+    </section>
+    <section id="secure">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-6 wow fadeInLeft">
+            <h2 class="wow fadeInUp" lang="en">Secure</h2>
+            <p class="wow fadeInUp" lang="en">Portus implements the new authorization scheme defined by the latest version of the Docker registry. It allows for fine grained control over all of your images. You decide which users and teams are allowed to push or pull images.</p>
+          </div>
+          <div class="col-sm-6 text-center wow fadeInRight">
+            <img src="assets/images/secure.png" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="manage-users" class="text-center">
+      <div class="container-fluid">
+        <h2 class="wow fadeInUp" lang="en">Easily manage users with teams</h2>
+        <p class="wow fadeInUp" lang="en">Map your company organization inside of Portus, define as many teams as you want and add and remove users from them.</p>
+        <p class="wow fadeInUp" lang="en">Teams have three different types of users to allow full granularity:</p>
       </div>
     </section>
     <footer>
