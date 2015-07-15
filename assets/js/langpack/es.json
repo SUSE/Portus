@@ -19,7 +19,7 @@
     "Qué es Portus",
 
     "Portus is an open source authorization service and user interface for the next generation Docker Registry.":
-    "Portus es un servicio de autorización de libre código e interfaz de usuario para la próxima generación de Registros Docker",
+    "Portus es un servicio de autorización de código libre e interfaz de usuario para la próxima generación de Registros Docker",
 
     "Why use Portus":
     "Por qué Portus",
@@ -40,13 +40,13 @@
     "Portus implementa el nuevo esquema de autorización definido por la última versión del registro de Docker. Permite el control fino de todas tus imágenes. Tú decides qué usuarios y equipos tienen permizo de hacer push o pull de imágenes",
 
     "Easily manage users with teams":
-    "Maneja usuarios con equipos fácilmente",
+    "Maneja usuarios fácilmente con equipos",
 
     "Map your company organization inside of Portus, define as many teams as you want and add and remove users from them.":
-    "Mapea la organización de to empresa dentro de Portus, define tantos equipos como quieras y agrega o elimina usuarios desde estos.",
+    "Mapea la organización de tu empresa dentro de Portus, define tantos equipos como quieras y agrega o elimina usuarios desde estos.",
 
     "Teams have three different types of users to allow full granularity:":
-    "Los equipos tienen tres tipos diferentes que permiten granularidad completa:",
+    "Los equipos tienen tres tipos diferentes que permiten una granularidad completa:",
 
     "Viewers":
     "Visores",
@@ -55,7 +55,7 @@
     "Sólo pueden hacer pull de imágenes.",
 
     "Contributors":
-    "Contribuyentes",
+    "Contribuidores",
 
     "Can push and pull images.":
     "Pueden hacer push y pull de imágenes.",
@@ -73,13 +73,13 @@
     "Portus provee una visión general intuitiva del contenido de tu registro privado. También dispone de la posibilidad de buscar y encontrar imágenes incluso más rápido",
 
     "User privileges are constantly taken into account, even when browsing the contents of the repository or when performing searches.":
-    "Los privilegios de usuarios son constantemente tenidos en cuenta, incluso navegando contenido del repositorio o realizando una búsqueda.",
+    "Portus tienen en cuenta constantemente los privilegios de los usuarios, incluso navegando el contenido del repositorio o realizando una búsqueda.",
 
     "Audit":
     "Audita",
 
     "Keep everything under control. All the relevant events are automatically logged by Portus and are available for analysis by admin users.":
-    "Mantén todo bajo control. Todos los eventos relevantes son automáticamente registrados por Portus y están disponibles para análisis de parte de usuarios admin.",
+    "Mantén todo bajo control. Todos los eventos relevantes son automáticamente registrados por Portus y están disponibles para ser analizados por los administradores.",
 
     "Non-admin users can also use this feature to keep up with relevant changes.":
     "Usuarios no-admin también pueden utilizar esta opción para estar al día con los cambios relevantes.",
@@ -103,7 +103,7 @@
     "Toda la documentación Portus, incluida la guía de instalación, se encuentra disponible en nuestra",
 
     "Feedback, comments, contributions?":
-    "Comentarios, contribución?",
+    "Comentarios, contribuciones?",
 
     "Open an":
     "Reporta un",
@@ -117,10 +117,10 @@
     "mailing list.":
     "lista de correo.",
 
-    "Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team":
-    "Creado con <i class='fa fa-heart secondary-colour'></i> por el equipo SUSE"
+    "Created with":
+    "Creado con",
 
-
-
+    "by the SUSE team":
+    "por el equipo de SUSE"
   }
 }
