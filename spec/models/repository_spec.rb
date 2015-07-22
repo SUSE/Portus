@@ -4,6 +4,7 @@ describe Repository do
 
   it { should belong_to(:namespace) }
   it { should have_many(:tags) }
+  it { should have_many(:stars) }
 
   describe 'handle push event' do
 

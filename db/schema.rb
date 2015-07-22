@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150629080516) do
+ActiveRecord::Schema.define(version: 20150722194840) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -67,6 +67,16 @@ ActiveRecord::Schema.define(version: 20150629080516) do
   add_index "repositories", ["name"], name: "fulltext_index_repositories_on_name", type: :fulltext
   add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id", using: :btree
 
+  create_table "stars", force: :cascade do |t|
+    t.integer  "user_id",       limit: 4
+    t.integer  "repository_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "stars", ["repository_id"], name: "index_stars_on_repository_id", using: :btree
+  add_index "stars", ["user_id"], name: "index_stars_on_user_id", using: :btree
+
   create_table "tags", force: :cascade do |t|
     t.string   "name",          limit: 255, default: "latest", null: false
     t.integer  "repository_id", limit: 4,                      null: false
@@ -120,4 +130,6 @@ ActiveRecord::Schema.define(version: 20150629080516) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
+  add_foreign_key "stars", "repositories"
+  add_foreign_key "stars", "users"
 end

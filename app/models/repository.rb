@@ -5,6 +5,7 @@ class Repository < ActiveRecord::Base
 
   belongs_to :namespace
   has_many :tags
+  has_many :stars
 
   search_scope :search do
     attributes :name
