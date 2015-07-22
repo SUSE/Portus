@@ -1,6 +1,7 @@
 tr[id="namespace_#{namespace.id}"]
   td= link_to namespace.clean_name, namespace
   td= namespace.repositories.count
+  td= time_tag namespace.created_at
   td
     - if can_manage_namespace?(namespace) && !namespace.global
       a[class="btn btn-default"
