@@ -113,6 +113,10 @@ describe NamespacePolicy do
   end
 
   describe 'scope' do
+    before :each do
+      # force creation of namespace
+      namespace
+    end
 
     it 'shows namespaces controlled by teams the user is member of' do
       expected = team.namespaces
@@ -132,6 +136,13 @@ describe NamespacePolicy do
       expect(Namespace.find_by(name: user.username)).not_to be_nil
       create(:namespace, global: true, public: true)
       expect(Pundit.policy_scope(create(:user), Namespace).to_a).to be_empty
+    end
+
+    it 'does not show duplicates' do
+      # Namespaces controlled by the team that are also public are listed twice
+      expected = team.namespaces
+      expected.first.update_attributes(public: true)
+      expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
     end
 
   end
