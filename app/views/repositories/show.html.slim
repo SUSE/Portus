@@ -4,6 +4,14 @@
       = link_to @repository.namespace.clean_name, @repository.namespace
       | /
       = @repository.name
+      button.btn.btn-sm.pull-right
+        - if can_star_repository?(@repository)
+          = link_to 'Star', star_repository_path(@repository), method: :post
+          i.fa.fa-star-o
+        - else
+          = link_to 'Unstar', unstar_repository_path(@repository), method: :post
+          i.fa.fa-star
+        = @repository.stars.count
   .panel-body
     .table-responsive
       table[class="table table-stripped table-hover"]

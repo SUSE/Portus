@@ -18,6 +18,19 @@ class Repository < ActiveRecord::Base
     # options :namespace_name, type: :fulltext
   end
 
+  def unstar(user)
+    star = stars.find_by(user: user)
+    star.destroy if star
+  end
+
+  def star(user)
+    stars.create(user: user)
+  end
+
+  def starred_by?(user)
+    stars.exists? user: user
+  end
+
   # Handle a push event from the registry.
   def self.handle_push_event(event)
     registry = Registry.find_from_event(event)

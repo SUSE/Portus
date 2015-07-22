@@ -5,7 +5,12 @@ Rails.application.routes.draw do
   resources :namespaces, only: [:create, :index, :show] do
     put 'toggle_public', on: :member
   end
-  resources :repositories, only: [:index, :show]
+
+  resources :repositories, only: [:index, :show] do
+    post :star, on: :member
+    post :unstar, on: :member
+  end
+
   devise_for :users, controllers: { registrations: 'auth/registrations', sessions: 'auth/sessions' }
   resource :dashboard, only: [:index]
   resources :search, only: [:index]

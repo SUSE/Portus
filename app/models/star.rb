@@ -1,7 +1,7 @@
 class Star < ActiveRecord::Base
   belongs_to :repository
-  belongs_to :author, class_name: 'User', foreign_key: 'user_id'
+  belongs_to :user
 
   validates :repository, presence: true
-  validates :author, presence: true, uniqueness: { scope: :repository }
+  validates :user, presence: true, uniqueness: { scope: :repository }
 end
