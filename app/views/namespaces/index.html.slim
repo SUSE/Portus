@@ -32,13 +32,15 @@ h1
   .panel-body
     .table-responsive
       table[class="table table-stripped table-hover"]
-        col.col-50
         col.col-40
+        col.col-30
+        col.col-20
         col.col-10
         thead
           tr
             th Name
             th Repositories
+            th Created At
             th Public
         tbody
           - @special_namespaces.each do |namespace|
@@ -51,13 +53,15 @@ h1
   .panel-body
     .table-responsive
       table[class="table table-stripped table-hover"]
-        col.col-50
         col.col-40
+        col.col-30
+        col.col-20
         col.col-10
         thead
           tr
             th Name
             th Repositories
+            th Created At
             th Public
         tbody#accessible-namespaces
           - @namespaces.each do |namespace|
