@@ -2,7 +2,7 @@ class Admin::UsersController < Admin::BaseController
   respond_to :html, :js
 
   def index
-    @users = User.all
+    @users = User.all.page(params[:page])
   end
 
   # PATCH/PUT /admin/user/1/toggle_admin

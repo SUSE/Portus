@@ -1,10 +1,10 @@
-.[class="panel panel-default"]
+.panel.panel-default
   .panel-heading
     h5
       ' Special namespaces
   .panel-body
     .table-responsive
-      table[class="table table-stripped table-hover"]
+      table.table.table-stripped.table-hover
         col.col-50
         col.col-40
         col.col-10
@@ -16,15 +16,16 @@
         tbody
           - @special_namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
+  .panel-footer= paginate(@special_namespaces, param_name: 'special_page')
 
 
-.[class="panel panel-default"]
+.panel.panel-default
   .panel-heading
     h5
       ' Other namespaces
   .panel-body
     .table-responsive
-      table[class="table table-stripped table-hover"]
+      table.table.table-stripped.table-hover
         col.col-50
         col.col-40
         col.col-10
@@ -36,3 +37,4 @@
         tbody
           - @namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
+  .panel-footer= paginate(@namespaces)

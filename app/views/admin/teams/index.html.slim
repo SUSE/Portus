@@ -1,16 +1,16 @@
-.[class="panel panel-default"]
-  .[class="panel-heading clearfix"]
+.panel.panel-default
+  .panel-heading.clearfix
     h5
       ' Teams
   .panel-body
     .table-responsive
-      table[class="table table-striped table-hover"]
+      table.table.table-striped.table-hover
         colgroup
-          col[class="col-30"]
-          col[class="col-30"]
-          col[class="col-10"]
-          col[class="col-15"]
-          col[class="col-15"]
+          col.col-30
+          col.col-30
+          col.col-10
+          col.col-15
+          col.col-15
         thead
           tr
             th Team
@@ -21,3 +21,4 @@
         tbody#teams
           - @teams.each do |team|
             = render partial: 'teams/team', locals: { team: team }
+  .panel-footer= paginate(@teams)

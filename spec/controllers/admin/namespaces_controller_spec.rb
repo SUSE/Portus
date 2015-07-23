@@ -11,6 +11,12 @@ RSpec.describe Admin::NamespacesController, type: :controller do
     end
 
     describe 'GET #index' do
+      it 'paginates namespaces' do
+        get :index
+        expect(assigns(:special_namespaces)).to respond_to(:total_pages)
+        expect(assigns(:namespaces)).to respond_to(:total_pages)
+      end
+
       it 'returns http success' do
         get :index
         expect(response).to have_http_status(:success)
