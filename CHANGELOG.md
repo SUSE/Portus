@@ -1,7 +1,6 @@
 ## Upcoming Version
 
-- Teams page is now paginated
-- Teams namespaces and users are now paginated in team detail page
+- Added pagination feature
 
 ## 1.0.1
 
