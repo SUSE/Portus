@@ -5,9 +5,9 @@ feature 'Repositories support' do
   let!(:user) { create(:admin) }
   let!(:team) { create(:team, owners: [user]) }
   let!(:namespace) { create(:namespace, team: team) }
-  let!(:repository) {create(:repository, namespace: namespace)}
-  let!(:starred_repo) {create(:repository, namespace: namespace)}
-  let!(:star) {create(:star, user: user, repository: starred_repo)}
+  let!(:repository) { create(:repository, namespace: namespace) }
+  let!(:starred_repo) { create(:repository, namespace: namespace) }
+  let!(:star) { create(:star, user: user, repository: starred_repo) }
 
   before do
     login_as user, scope: :user
@@ -24,8 +24,8 @@ feature 'Repositories support' do
 
       # See the response.
       repo = Repository.find(repository.id)
-      expect(page).to have_css("#unstar_repo")
-      expect(find("#star-counter")).to have_content("1")
+      expect(page).to have_css('#unstar_repo')
+      expect(find('#star-counter')).to have_content('1')
       expect(repo.stars.count).to be 1
     end
 
@@ -39,8 +39,8 @@ feature 'Repositories support' do
 
       # See the response.
       repo = Repository.find(repository.id)
-      expect(page).to have_css("#star_repo")
-      expect(find("#star-counter")).to have_content("0")
+      expect(page).to have_css('#star_repo')
+      expect(find('#star-counter')).to have_content('0')
       expect(repo.stars.count).to be 0
     end
   end

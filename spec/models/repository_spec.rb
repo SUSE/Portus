@@ -6,31 +6,29 @@ describe Repository do
   it { should have_many(:tags) }
   it { should have_many(:stars) }
 
-  it 'should identify if it is already starred by a user' do
-    star = create(:star)
-    user = star.user
-    other_user = create :user
-    expect(star.repository.starred_by?(user)).to be true
-    expect(star.repository.starred_by?(other_user)).to be false
-  end
+  describe 'starrable behaviour' do
+    let(:user) { create(:user) }
+    let(:repository) { create(:repository) }
+    let(:star) { create(:star, user: user, repository: repository) }
+    let(:other_user) { create(:user) }
 
-  it 'should be starrable by a user' do
-    repository = create :repository
-    user = create :user
-    otherUser = create :user
-    other_user.star(user)
-    expect(repository.starred_by?(user)).to be true
-    expect(repository.starred_by?(other_user)).to be false
-  end
+    it 'should identify if it is already starred by a user' do
+      expect(star.repository.starred_by?(user)).to be true
+      expect(star.repository.starred_by?(other_user)).to be false
+    end
 
-  it 'should be unstarrable by a user' do
-    star = create(:star)
-    user = star.user
-    other_user = create :user
-    repository = star.repository
-    repository.unstar user
-    expect(repository.starred_by?(user)).to be false
-    expect(repository.starred_by?(other_user)).to be false
+    it 'should be starrable by a user' do
+      repository.star(user)
+      expect(repository.starred_by?(user)).to be true
+      expect(repository.starred_by?(other_user)).to be false
+    end
+
+    it 'should be unstarrable by a user' do
+      repository = star.repository
+      repository.unstar(user)
+      expect(repository.starred_by?(user)).to be false
+      expect(repository.starred_by?(other_user)).to be false
+    end
   end
 
   describe 'handle push event' do
