@@ -9,28 +9,28 @@ describe Repository do
   it 'should identify if it is already starred by a user' do
     star = create(:star)
     user = star.user
-    otherUser = create :user
+    other_user = create :user
     expect(star.repository.starred_by?(user)).to be true
-    expect(star.repository.starred_by?(otherUser)).to be false
+    expect(star.repository.starred_by?(other_user)).to be false
   end
 
   it 'should be starrable by a user' do
     repository = create :repository
     user = create :user
     otherUser = create :user
-    repository.star(user)
+    other_user.star(user)
     expect(repository.starred_by?(user)).to be true
-    expect(repository.starred_by?(otherUser)).to be false
+    expect(repository.starred_by?(other_user)).to be false
   end
 
   it 'should be unstarrable by a user' do
     star = create(:star)
     user = star.user
-    otherUser = create :user
+    other_user = create :user
     repository = star.repository
     repository.unstar user
     expect(repository.starred_by?(user)).to be false
-    expect(repository.starred_by?(otherUser)).to be false
+    expect(repository.starred_by?(other_user)).to be false
   end
 
   describe 'handle push event' do
