@@ -20,6 +20,8 @@ class NamespacesController < ApplicationController
   # GET /namespaces/1.json
   def show
     authorize @namespace
+    @repositories = @namespace.repositories.page(params[:page])
+
     respond_with(@namespace)
   end
 

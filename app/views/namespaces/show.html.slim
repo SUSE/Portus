@@ -14,7 +14,8 @@
             th Repository
             th # Tags
         tbody
-          - @namespace.repositories.each do |repository|
+          - @repositories.each do |repository|
             tr
               td= link_to repository.name, repository
               td= repository.tags.count
+  .panel-footer= paginate(@repositories)

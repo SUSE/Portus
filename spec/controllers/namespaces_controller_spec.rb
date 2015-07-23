@@ -40,6 +40,13 @@ describe NamespacesController do
   end
 
   describe 'GET #show' do
+    it 'should paginate repositories' do
+      sign_in owner
+      get :show, id: namespace.id
+
+      expect(assigns(:repositories)).to respond_to(:total_pages)
+    end
+
     it 'allows team members to view the page' do
       sign_in owner
       get :show, id: namespace.id
