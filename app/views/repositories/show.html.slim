@@ -4,12 +4,12 @@
       = link_to @repository.namespace.clean_name, @repository.namespace
       | /
       = @repository.name
-      .pull-right
+      #repo-stars.pull-right
         - if can_star_repository?(@repository)
-          = link_to 'Star', star_repository_path(@repository), method: :post, id: 'star_repo', class: 'btn btn-small btn-default'
+          = link_to 'Star', star_repository_path(@repository), method: :post, class: 'btn btn-small btn-default', remote: true
           i.fa.fa-star-o
         - else
-          = link_to 'Unstar', unstar_repository_path(@repository), method: :post, id: 'unstar_repo', class: 'btn btn-small btn-default'
+          = link_to 'Unstar', unstar_repository_path(@repository), method: :post, class: 'btn btn-small btn-default', remote: true
           i.fa.fa-star
         span#star-counter= @repository.stars.count
   .panel-body

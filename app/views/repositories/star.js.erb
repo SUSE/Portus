@@ -1,0 +1,15 @@
+<% if @repository.errors.any? %>
+  $('#alert p').html("<%= escape_javascript(@repository.errors.full_messages.join('<br/>')) %>");
+  $('#alert').fadeIn();
+<% else %>
+(function () {
+  var link = $('#repo-stars a');
+  var icon = $('#repo-stars i')
+  var counter = $('#repo-stars #star-counter');
+  link.html("<%= escape_javascript(t('Unstar')) %>");
+  link.attr("href", "<%= escape_javascript(unstar_repository_path(@repository)) %>");
+  icon.addClass("fa-star");
+  icon.removeClass("fa-star-o");
+  counter.html("<%= escape_javascript(@repository.stars.count.to_s) %>");
+})();
+<% end %>

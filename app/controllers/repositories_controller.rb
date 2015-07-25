@@ -22,6 +22,7 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(repository_path(@repository)) }
       format.json { render json: @repository }
+      format.js   {}
     end
   end
 
@@ -32,6 +33,7 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(repository_path(@repository)) }
       format.json { render json: @repository }
+      format.js   {}
     end
   end
 
