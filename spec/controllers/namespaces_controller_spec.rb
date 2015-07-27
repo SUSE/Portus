@@ -31,9 +31,22 @@ describe NamespacesController do
       expect(assigns(:namespaces).ids).to be_empty
     end
 
+    it 'paginates namespaces' do
+      get :index, {}, valid_session
+      expect(assigns(:special_namespaces)).to respond_to(:total_pages)
+      expect(assigns(:namespaces)).to respond_to(:total_pages)
+    end
+
   end
 
   describe 'GET #show' do
+    it 'should paginate repositories' do
+      sign_in owner
+      get :show, id: namespace.id
+
+      expect(assigns(:repositories)).to respond_to(:total_pages)
+    end
+
     it 'allows team members to view the page' do
       sign_in owner
       get :show, id: namespace.id

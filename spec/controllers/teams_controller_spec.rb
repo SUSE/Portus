@@ -13,6 +13,19 @@ RSpec.describe TeamsController, type: :controller do
   let(:team) { create(:team, owners: [owner]) }
 
   describe 'GET #show' do
+
+    it 'paginates team users' do
+      sign_in owner
+      get :show, id: team.id
+      expect(assigns(:team_users)).to respond_to(:total_pages)
+    end
+
+    it 'paginates namespaces' do
+      sign_in owner
+      get :show, id: team.id
+      expect(assigns(:team_namespaces)).to respond_to(:total_pages)
+    end
+
     it 'allows team members to view the page' do
       sign_in owner
       get :show, id: team.id
@@ -34,6 +47,11 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     describe 'GET #index' do
+      it 'paginates teams' do
+        get :index
+        expect(assigns(:teams)).to respond_to(:total_pages)
+      end
+
       it 'returns the informations about the teams the user is associated with' do
         # another team the user has nothing to do with
         create(:team)

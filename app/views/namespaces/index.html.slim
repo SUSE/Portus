@@ -5,12 +5,12 @@ h1
       i.fa.fa-info-circle
   - if Registry.any?
     .pull-right
-      a#add_namespace_btn[class="btn btn-xs btn-link js-toggle-button" role="button"]
+      a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
         | Create new namespace
-        i[class="fa fa-plus-circle"]
+        i.fa.fa-plus-circle
 
 - if Registry.any?
-  #add_namespace_form[class="collapse"]
+  #add_namespace_form.collapse
     = form_for :namespace, url: namespaces_path, remote: true, html: {id: 'new-namespace-form', class: 'form-horizontal', role: 'form'} do |f|
         .form-group
           = f.label :namespace, {class: 'control-label col-md-2'}
@@ -21,17 +21,17 @@ h1
           .col-md-7
             = f.text_field(:team, class: 'form-control', required: true, placeholder: "Name of the team")
         .form-group
-          .[class='col-md-offset-2 col-md-7']
+          .col-md-offset-2.col-md-7
             = f.submit('Create', class: 'btn btn-primary')
 
 
-.[class="panel panel-default"]
+.panel.panel-default
   .panel-heading
     h5
       ' Special namespaces
   .panel-body
     .table-responsive
-      table[class="table table-stripped table-hover"]
+      table.table.table-stripped.table-hover
         col.col-40
         col.col-30
         col.col-20
@@ -45,14 +45,15 @@ h1
         tbody
           - @special_namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
+  .panel-footer= paginate(@special_namespaces, param_name: 'special_page')
 
-.[class="panel panel-default"]
+.panel.panel-default
   .panel-heading
     h5
       ' Namespaces you have access to
   .panel-body
     .table-responsive
-      table[class="table table-stripped table-hover"]
+      table.table.table-stripped.table-hover
         col.col-40
         col.col-30
         col.col-20
@@ -66,3 +67,4 @@ h1
         tbody#accessible-namespaces
           - @namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
+  .panel-footer= paginate(@namespaces)

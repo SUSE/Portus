@@ -5,13 +5,13 @@
   p No registry configured. Please configure one.
   = link_to "Create", new_admin_registry_path, {class: 'btn btn-primary', role: 'button'}
 - else
-  .[class="panel panel-default"]
+  .panel.panel-default
     .panel-heading
       h5
         ' Registries
     .panel-body
       .table-responsive
-        table[class="table table-stripped table-hover"]
+        table.table.table-stripped.table-hover
           col.col-40
           col.col-40
           col.col-10
@@ -29,5 +29,3 @@
   p
     strong Note well:
     |  right now Portus is designed to handle only a single private Registry.
-
-

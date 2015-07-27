@@ -1,10 +1,10 @@
-.[class="panel panel-default"]
+.panel.panel-default
   .panel-heading
     h5
       ' Registered users
   .panel-body
     .table-responsive
-      table[class="table table-stripped table-hover"]
+      table.table.table-stripped.table-hover
         col.col-40
         col.col-40
         col.col-10
@@ -23,14 +23,15 @@
               td= user.email
               td
                 - if current_user.id == user.id
-                  i[class="fa fa-toggle-#{user.admin? ? 'on': 'off'} fa-lg"]
+                  i.fa.fa-lg[class="fa-toggle-#{user.admin? ? 'on': 'off'}"]
                 - else
                   a[class="btn btn-default"
                     data-remote="true"
                     data-method="put"
                     rel="nofollow"
                     href=url_for(toggle_admin_admin_user_path(user))]
-                      i[class="fa fa-toggle-#{user.admin? ? 'on': 'off'} fa-lg"]
+                      i.fa.fa-lg[class="fa-toggle-#{user.admin? ? 'on': 'off'}"]
 
               td= user.teams.reduce(0){ |sum, t| sum += t.namespaces.count}
               td= user.teams.count
+  .panel-footer= paginate(@users)

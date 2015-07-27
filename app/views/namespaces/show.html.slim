@@ -1,4 +1,4 @@
-.[class="panel panel-default"]
+.panel.panel-default
   .panel-heading
     h5
       'Namespace:
@@ -6,7 +6,7 @@
         = @namespace.clean_name
   .panel-body
     .table-responsive
-      table[class="table table-stripped table-hover"]
+      table.table.table-stripped.table-hover
         col.col-60
         col.col-40
         thead
@@ -14,7 +14,8 @@
             th Repository
             th # Tags
         tbody
-          - @namespace.repositories.each do |repository|
+          - @repositories.each do |repository|
             tr
               td= link_to repository.name, repository
               td= repository.tags.count
+  .panel-footer= paginate(@repositories)
