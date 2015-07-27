@@ -68,6 +68,11 @@ zypper -n in apache2-devel \
   rubygem-bundler \
   zlib-devel
 
+zypper ar -f http://download.opensuse.org/repositories/devel:/openQA/openSUSE_13.2/ phantomjs
+zypper --gpg-auto-import-keys ref
+
+zypper -n in phantomjs
+
 systemctl enable mysql
 systemctl start mysql
 
