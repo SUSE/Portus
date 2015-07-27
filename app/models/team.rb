@@ -27,6 +27,8 @@ class Team < ActiveRecord::Base
   private
 
   def downcase?
-    name.downcase == name
+    is_downcase = name.downcase == name
+    errors.add(:name, "namespace names cannot contain uppercase letters") unless is_downcase
+    is_downcase
   end
 end
