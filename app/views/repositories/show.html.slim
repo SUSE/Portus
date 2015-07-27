@@ -1,4 +1,4 @@
-.[class="panel panel-default"]
+.panel.panel-default
   .panel-heading
     h1
       = link_to @repository.namespace.clean_name, @repository.namespace
@@ -6,7 +6,7 @@
       = @repository.name
   .panel-body
     .table-responsive
-      table[class="table table-stripped table-hover"]
+      table.table.table-stripped.table-hover
         col.col-40
         col.col-40
         col.col-20
@@ -19,7 +19,7 @@
           - @repository.tags.each do |tag|
             tr
               td
-                .[class="label label-success"]
+                .label.label-success
                   = tag.name
               td= tag.author.username
               td= tag.created_at
