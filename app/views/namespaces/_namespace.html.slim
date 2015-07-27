@@ -1,15 +1,14 @@
-tr[id="namespace_#{namespace.id}"]
+tr id="namespace_#{namespace.id}"
   td= link_to namespace.clean_name, namespace
   td= namespace.repositories.count
   td= time_tag namespace.created_at
   td
     - if can_manage_namespace?(namespace) && !namespace.global
-      a[class="btn btn-default"
-          data-remote="true"
+      a.btn.btn-default[data-remote="true"
           data-method="put"
           rel="nofollow"
           href=url_for(toggle_public_namespace_path(namespace))
           ]
-          i[class="fa fa-toggle-#{namespace.public? ? 'on': 'off'} fa-lg"]
+          i.fa.fa-lg class="fa-toggle-#{namespace.public? ? 'on': 'off'}"
     - else
-      i[class="fa fa-toggle-#{namespace.public? ? 'on': 'off'} fa-lg"]
+      i.fa.fa-lg class="fa-toggle-#{namespace.public? ? 'on': 'off'}"
