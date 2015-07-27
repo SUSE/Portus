@@ -10,7 +10,7 @@ class NamespacesController < ApplicationController
   # GET /namespaces.json
   def index
     @special_namespaces = Namespace.where(
-      'global = ? OR namespaces.name = ?', true, current_user.username).page(params[:per_page])
+      'global = ? OR namespaces.name = ?', true, current_user.username)
     @namespaces = policy_scope(Namespace).page(params[:page])
 
     respond_with(@namespaces)

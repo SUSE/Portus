@@ -16,8 +16,6 @@
         tbody
           - @special_namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
-  .panel-footer= paginate(@special_namespaces, param_name: 'special_page')
-
 
 .panel.panel-default
   .panel-heading
