@@ -7,6 +7,7 @@
   var icon = $('#repo-stars i')
   var counter = $('#repo-stars #star-counter');
   link.html("<%= escape_javascript(t('Unstar')) %>");
+  link.attr("id", "unstar_repo");
   link.attr("href", "<%= escape_javascript(unstar_repository_path(@repository)) %>");
   icon.addClass("fa-star");
   icon.removeClass("fa-star-o");

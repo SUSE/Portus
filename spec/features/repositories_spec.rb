@@ -20,6 +20,7 @@ feature 'Repositories support' do
       # The form appears after clicking the "Add namespace" link.
       expect(find('#star_repo')).to be_visible
       find('#star_repo').click
+      wait_for_ajax
       expect(current_path).to eq repository_path(repository)
 
       # See the response.
@@ -35,6 +36,7 @@ feature 'Repositories support' do
       # The form appears after clicking the "Add namespace" link.
       expect(find('#unstar_repo')).to be_visible
       find('#unstar_repo').click
+      wait_for_ajax
       expect(current_path).to eq repository_path(starred_repo)
 
       # See the response.
