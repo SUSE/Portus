@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
 
   has_many :team_users
   has_many :teams, through: :team_users
+  has_many :stars
 
   def private_namespace_available
     return unless Namespace.exists?(name: username)

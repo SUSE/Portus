@@ -29,4 +29,24 @@ describe RepositoriesController do
 
   end
 
+  describe 'POST #star' do
+
+    it 'assigns the requested repository as @repository' do
+      repository = create(:repository)
+      post :star, { id: repository.to_param }, valid_session
+      expect(assigns(:repository)).to eq(repository)
+    end
+
+  end
+
+  describe 'POST #unstar' do
+
+    it 'assigns the requested repository as @repository' do
+      repository = create(:repository, :starred)
+      post :unstar, { id: repository.to_param }, valid_session
+      expect(assigns(:repository)).to eq(repository)
+    end
+
+  end
+
 end

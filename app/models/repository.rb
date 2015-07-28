@@ -5,6 +5,7 @@ class Repository < ActiveRecord::Base
 
   belongs_to :namespace
   has_many :tags
+  has_many :stars
 
   search_scope :search do
     attributes :name
@@ -15,6 +16,19 @@ class Repository < ActiveRecord::Base
     # until we find a solution for it.
     # options :name, type: :fulltext
     # options :namespace_name, type: :fulltext
+  end
+
+  def unstar(user)
+    star = stars.find_by(user: user)
+    star.destroy if star
+  end
+
+  def star(user)
+    stars.create(user: user)
+  end
+
+  def starred_by?(user)
+    stars.exists? user: user
   end
 
   # Handle a push event from the registry.
