@@ -14,19 +14,11 @@ class Team < ActiveRecord::Base
   has_many :viewers, -> { where 'team_users.role' => TeamUser.roles['viewer'] },
     through: :team_users, source: :user
 
-  before_create :downcase?
-
   # Returns all the teams that are not special. By special team we mean:
   #   - It's the global namespace (see: Registry#create_global_namespace!).
   #   - It's a personal namespace (see: User#create_personal_namespace!).
   def self.all_non_special
     # Right now, all the special namespaces are simply marked as hidden.
     Team.where(hidden: false)
-  end
-
-  private
-
-  def downcase?
-    name.downcase == name
   end
 end
