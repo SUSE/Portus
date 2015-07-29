@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150722194840) do
+ActiveRecord::Schema.define(version: 20150728224900) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -47,10 +47,11 @@ ActiveRecord::Schema.define(version: 20150722194840) do
   add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id", using: :btree
 
   create_table "registries", force: :cascade do |t|
-    t.string   "name",       limit: 255, null: false
-    t.string   "hostname",   limit: 255, null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",       limit: 255,                 null: false
+    t.string   "hostname",   limit: 255,                 null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.boolean  "use_ssl",    limit: 1,   default: false
   end
 
   add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true, using: :btree

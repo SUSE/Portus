@@ -1,7 +1,11 @@
 class Registry < ActiveRecord::Base
+  extend Memoist
   has_many :namespaces
   validates :name, presence: true, uniqueness: true
   validates :hostname, presence: true, uniqueness: true
+  validates :use_ssl, presence: true
+
+
 
   def create_global_namespace!
     team = Team.create(

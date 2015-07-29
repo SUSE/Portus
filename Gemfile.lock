@@ -136,6 +136,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    memoist (0.12.0)
     method_source (0.8.2)
     mime-types (2.6.1)
     mini_portile (0.6.2)
@@ -335,6 +336,7 @@ DEPENDENCIES
   json-schema
   jwt
   kaminari
+  memoist
   mysql2
   poltergeist
   pry-rails
