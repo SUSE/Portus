@@ -41,7 +41,7 @@ class RegistryClient
   end
 
   def catalog
-    res = get_request("_catalog")
+    res = get_request('_catalog')
     if res.code.to_i == 200
       JSON.parse(res.body)
     else

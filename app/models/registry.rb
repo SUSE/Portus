@@ -5,8 +5,6 @@ class Registry < ActiveRecord::Base
   validates :hostname, presence: true, uniqueness: true
   validates :use_ssl, presence: true
 
-
-
   def create_global_namespace!
     team = Team.create(
       name: Namespace.sanitize_name(hostname),
@@ -29,6 +27,8 @@ class Registry < ActiveRecord::Base
   end
   memoize :client
 
+  EXPLODE_REPO_NAME_REGEXP = %r{(?<namespace_name>.*)\/(?<repository_name>.*)}
+
   def synchronize!
     # 1. Fetch repositories names from Catalog API /v2/_catalog
     catalog_repositories = client.catalog['repositories']
@@ -37,11 +37,11 @@ class Registry < ActiveRecord::Base
       return nil if repository_fullname.nil? || repository_fullname.empty?
       logger.debug "Detected repo for synchronization: #{repository_fullname}"
       if !repository_fullname.include? '/'
-        {repository_name: repository_fullname}
+        { repository_name: repository_fullname }
       else
         # Extract namespac e_name
-        match = /(?<namespace_name>.*)\/(?<repository_name>.*)/.match(repository_fullname)
-        {namespace_name: match['namespace_name'], repository_name: match['repository_name']}
+        match = EXPLODE_REPO_NAME_REGEXP.match(repository_fullname)
+        { namespace_name: match['namespace_name'], repository_name: match['repository_name'] }
       end
     end
 
@@ -58,9 +58,7 @@ class Registry < ActiveRecord::Base
     end
 
     # 4. Synchronize each repository in catalog
-    repositories.flat_map do |repository|
-      repository.synchronize!
-    end
+    repositories.flat_map(&:synchronize!)
   end
 
   # Find the registry for the given push event.

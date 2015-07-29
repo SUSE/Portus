@@ -137,7 +137,7 @@ describe RegistryClient do
           false,
           username,
           password)
-        res = registry.tags("busybox")
+        res = registry.tags('busybox')
         expect(res['tags'].count).to be 2
       end
     end
