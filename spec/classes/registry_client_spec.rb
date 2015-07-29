@@ -129,6 +129,41 @@ describe RegistryClient do
     end
   end
 
+  context 'fetching Repository catalog' do
+    it 'authenticates and fetches the registry catalog' do
+      VCR.use_cassette('registry/get_registry_catalog', record: :none) do
+        registry = RegistryClient.new(
+          registry_server,
+          false,
+          username,
+          password)
+        catalog = registry.catalog
+        expect(catalog['repositories'].count).to be 1
+      end
+    end
+
+    it 'raises an exception when the return code is different from 200' do
+      registry = RegistryClient.new(
+        registry_server,
+        false,
+        username,
+        password)
+      begin
+        VCR.turned_off do
+          WebMock.disable_net_connect!
+          stub_request(:get, "http://#{registry_server}/v2/_catalog")
+            .to_return(body: 'BOOM', status: 500)
+
+          expect do
+            registry.catalog
+          end.to raise_error(RuntimeError)
+        end
+      ensure
+        WebMock.allow_net_connect!
+      end
+    end
+  end
+
   context 'fetching Image manifest' do
     let(:repository) { 'foo/busybox' }
     let(:tag) { '1.0.0' }

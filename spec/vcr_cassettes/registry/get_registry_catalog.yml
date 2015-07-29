@@ -1,0 +1,37 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://registry.test.lan/v2/_catalog
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - registry.test.lan
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Docker-Distribution-Api-Version:
+      - registry/2.0
+      Date:
+      - Tue, 28 Jul 2015 04:50:36 GMT
+      Content-Length:
+      - '61'
+    body:
+      encoding: UTF-8
+      string: |
+        {"repositories":["foo/busybox"]}
+    http_version:
+  recorded_at: Tue, 28 Jul 2015 04:50:36 GMT
+recorded_with: VCR 2.9.3

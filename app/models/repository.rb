@@ -31,6 +31,21 @@ class Repository < ActiveRecord::Base
     stars.exists? user: user
   end
 
+  def synchronize!
+    namespace.registry.client.tags(full_name)['tags'].map do |tag|
+      logger.debug "Synchonizing Tag: #{name}:#{tag}"
+      tags.find_or_create_by!(name: tag).sinchronize!
+    end
+  end
+
+  def full_name
+    if namespace.global?
+      name
+    else
+      "#{namespace.name}/#{name}"
+    end
+  end
+
   # Handle a push event from the registry.
   def self.handle_push_event(event)
     registry = Registry.find_from_event(event)
