@@ -129,7 +129,21 @@ describe RegistryClient do
     end
   end
 
-  context 'fetching Repository catalog' do
+  context 'fetching Repository tags' do
+    it 'authenticates and fetches the repository tags' do
+      VCR.use_cassette('registry/get_repository_tags', record: :none) do
+        registry = RegistryClient.new(
+          registry_server,
+          false,
+          username,
+          password)
+        res = registry.tags("busybox")
+        expect(res['tags'].count).to be 2
+      end
+    end
+  end
+
+  context 'fetching Registry catalog' do
     it 'authenticates and fetches the registry catalog' do
       VCR.use_cassette('registry/get_registry_catalog', record: :none) do
         registry = RegistryClient.new(
