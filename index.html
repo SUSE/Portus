@@ -139,7 +139,9 @@
             <pre>
 $ git clone https://github.com/SUSE/Portus.git
 $ cd Portus
-$ docker-compose up
+$ docker-compose up -d
+$ docker-compose run web rake db:create
+$ docker-compose run web rake db:migrate
             </pre>
           </div>
           <div class="col-sm-6 text-left">
