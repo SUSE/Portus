@@ -4,6 +4,10 @@ default: &default
 
 development:
   <<: *default
+  host: db
+  username: root
+  password: portus
+
   database: portus_development
 
 # Warning: The database defined as "test" will be erased and

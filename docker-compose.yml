@@ -1,11 +1,25 @@
+web:
+  extends:
+    file: docker/compose-common.yml
+    service: web
+  volumes:
+    - .:/portus
+  links:
+    - db
+  command: thin start
+
 db:
   image: mariadb
   environment:
     MYSQL_ROOT_PASSWORD: portus
-web:
-  build: .
-  command: bundle exec rails s -p 3000 -b '0.0.0.0'
-  ports:
-    - "3000:3000"
+
+registry:
+  extends:
+    file: docker/compose-common.yml
+    service: registry
+  volumes:
+    - docker/registry:/registry
+  entrypoint: /registry/entry.sh
+  env_file: docker/environment
   links:
-    - db
+    - web

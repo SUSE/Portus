@@ -1,0 +1,20 @@
+version: 0.1
+loglevel: debug
+storage:
+  filesystem:
+    rootdirectory: /var/lib/docker-registry
+http:
+  addr: 0.0.0.0:5000
+auth:
+  token:
+    realm: http://melange.in.da.house:3000/v2/token
+    service: melange.in.da.house:5000
+    issuer: portus.test.lan
+    rootcertbundle: /registry/portus.crt
+notifications:
+  endpoints:
+    - name: portus
+      url: http://web:3000/v2/webhooks/events
+      timeout: 500ms
+      threshold: 5
+      backoff: 1s

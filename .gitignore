@@ -8,3 +8,4 @@
 /coverage
 /public/assets
 /config/config-local.yml
+docker/environment
