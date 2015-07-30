@@ -32,9 +32,14 @@ class Repository < ActiveRecord::Base
   end
 
   def synchronize!
-    namespace.registry.client.tags(full_name)['tags'].map do |tag|
-      logger.debug "Synchonizing Tag: #{name}:#{tag}"
-      tags.find_or_create_by!(name: tag).sinchronize!
+    tags_response = namespace.registry.client.tags(full_name)
+    update_from_tags!(tags_response)
+  end
+
+  def update_from_tags!(tags_response)
+    tags_response['tags'].map do |tag|
+      logger.debug "Synchonizing Tag: #{full_name}:#{tag}"
+      tags.find_or_create_by!(name: tag).synchronize!
     end
   end
 

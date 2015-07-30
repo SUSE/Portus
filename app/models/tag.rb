@@ -10,4 +10,15 @@ class Tag < ActiveRecord::Base
             format: {
               with: /\A[A-Za-z0-9_\.\-]{1,128}\Z/,
               message: 'Only allowed letters: [A-Za-z0-9_.-]{1,128}' }
+
+  def synchronize!
+    manifest = repository.namespace.registry.client.manifest(repository.full_name, name)
+    save_from_manifest!(manifest)
+  end
+
+  def save_from_manifest!(manifest)
+    self.architecture = manifest['architecture']
+    manifest['fsLayers'].map { |layer|  fs_layers.find_or_create_by!(blob_sum: layer['blobSum']) }
+    self.save!
+  end
 end

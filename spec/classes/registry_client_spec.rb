@@ -155,7 +155,7 @@ describe RegistryClient do
             .to_return(body: 'BOOM', status: 404)
 
           expect do
-            res = registry.tags('busybox')
+            registry.tags('busybox')
           end.to raise_error(RegistryClient::RepositoryNotFoundError)
         end
       ensure

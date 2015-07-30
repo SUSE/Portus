@@ -31,11 +31,15 @@ class Registry < ActiveRecord::Base
 
   def synchronize!
     # 1. Fetch repositories names from Catalog API /v2/_catalog
-    catalog_repositories = client.catalog['repositories']
+    catalog = client.catalog
+    update_from_catalog!(catalog)
+  end
+
+  def update_from_catalog!(catalog)
     # 2. Figure out namespace/repo K/V
-    repository_addresses = catalog_repositories.reject(&:nil?).map do |repository_fullname|
+    repository_addresses = catalog['repositories'].reject(&:nil?).map do |repository_fullname|
       logger.debug "Detected repo for synchronization: #{repository_fullname}"
-      return  { 'repository_name' => repository_fullname } unless repository_fullname.include? '/'
+      next { 'repository_name' => repository_fullname } unless repository_fullname.include? '/'
       EXPLODE_REPO_NAME_REGEXP.match(repository_fullname)
     end
 
@@ -44,10 +48,10 @@ class Registry < ActiveRecord::Base
       .reject { |address| address.nil? || address[:repository_name].nil? }
       .map do |address|
         logger.debug "Loading repo for sycnhronization: #{address[:namespace_name]}/#{address[:repository_name]}"
-        return Repository.find_or_create_by!(name: address['repository_name'], namespace: global_namespace) unless address[:namespace_name].nil?
+        next Repository.find_or_create_by!(name: address['repository_name'], namespace: global_namespace) if address['namespace_name'].nil?
         namespaces
           .find_or_create_by!(name: address['namespace_name'])
-          .find_or_create_by!(name: address['repository_name'])
+          .repositories.find_or_create_by!(name: address['repository_name'])
       end
 
     # 4. Synchronize each repository in catalog
