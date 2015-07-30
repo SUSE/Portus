@@ -2,6 +2,8 @@ class Tag < ActiveRecord::Base
   belongs_to :repository
   belongs_to :author, class_name: 'User', foreign_key: 'user_id'
 
+  has_many :fs_layers
+
   validates :name,
             presence: true,
             uniqueness: { scope: 'repository_id' },

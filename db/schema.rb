@@ -31,6 +31,13 @@ ActiveRecord::Schema.define(version: 20150730202622) do
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
+  create_table "fs_layers", id: false, force: :cascade do |t|
+    t.string  "blob_sum", limit: 255, null: false
+    t.integer "tag_id",   limit: 4,   null: false
+  end
+
+  add_index "fs_layers", ["tag_id"], name: "index_fs_layers_on_tag_id", using: :btree
+
   create_table "namespaces", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.datetime "created_at",                              null: false
