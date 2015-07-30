@@ -39,11 +39,8 @@ class Repository < ActiveRecord::Base
   end
 
   def full_name
-    if namespace.global?
-      name
-    else
-      "#{namespace.name}/#{name}"
-    end
+    return name if namespace.global?
+    "#{namespace.name}/#{name}"
   end
 
   # Handle a push event from the registry.
