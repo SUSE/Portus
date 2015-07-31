@@ -1,7 +1,7 @@
 class Auth::RegistrationsController < Devise::RegistrationsController
   layout 'authentication', except: :edit
 
-  before_action :check_admin, only: [:new, :create, :disable]
+  before_action :check_admin, only: [:new, :create]
   before_action :configure_sign_up_params, only: [:create]
   before_action :authenticate_user!, only: [:disable]
 
