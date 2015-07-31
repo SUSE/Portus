@@ -22,6 +22,13 @@ describe '/v2/token' do
     end
 
     context 'as invalid user' do
+      let(:valid_request) do
+        {
+          service: registry.hostname,
+          account: 'account',
+          scope: 'repository:foo_namespace/me:push'
+        }
+      end
 
       it 'denies access when the password is wrong' do
         get v2_token_url, { service: registry.hostname, account: 'account', scope: 'repository:foo/me:push' }, invalid_auth_header
@@ -38,6 +45,11 @@ describe '/v2/token' do
         expect(response.status).to eq 401
       end
 
+      it 'denies access to a disabled user' do
+        user.update_attributes(enabled: false)
+        get v2_token_url, valid_request, valid_auth_header
+        expect(response.status).to eq 401
+      end
     end
 
     context 'as the special portus user' do
