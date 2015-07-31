@@ -1,3 +1,9 @@
 /.bundle
 /bundle
 _site
+docker
+coverage
+log
+tmp
+.vagrant
+
