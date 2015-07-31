@@ -42,6 +42,11 @@ class User < ActiveRecord::Base
     actor
   end
 
+  # Returns all the enabled admins in the system.
+  def self.admins
+    User.where(enabled: true, admin: true)
+  end
+
   # Toggle the 'admin' attribute for this user. It will also update the
   # registry accordingly.
   def toggle_admin!
@@ -50,5 +55,24 @@ class User < ActiveRecord::Base
 
     team = Registry.first.global_namespace.team
     admin ? team.owners << self : team.owners.delete(self)
+  end
+
+  ##
+  # Disabling users.
+
+  # Disable this user and remove all its associations with teams.
+  def disable!
+    return unless update_attributes(enabled: false)
+    TeamUser.where(user: id).delete_all
+  end
+
+  # This method is picked up by Devise before signing in a user.
+  def active_for_authentication?
+    super && enabled?
+  end
+
+  # The flashy message to be shown for disabled users that try to login.
+  def inactive_message
+    'Sorry, this account has been disabled.'
   end
 end

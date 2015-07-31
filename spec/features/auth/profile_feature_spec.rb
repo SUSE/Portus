@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'Update password feature' do
-  let!(:user) { create(:user) }
+  let!(:user) { create(:admin) }
 
   before do
     login_as user, scope: :user
@@ -52,5 +52,21 @@ feature 'Update password feature' do
     click_button 'Change'
     expect(current_path).to eq edit_user_registration_path
     expect(User.first.valid_password?('12341234')).to be true
+  end
+
+  # Disabling user
+
+  scenario 'It disables the current user', js: true, focus: true do
+    create(:admin)
+    visit edit_user_registration_path
+
+    click_button 'Disable'
+    wait_until { current_path == root_path }
+    expect(current_path).to eq root_path
+    expect(page).to have_content('Login')
+  end
+
+  scenario 'The "disable" pannel does not exists if it\'s the only admin', js: true do
+    expect(page).to_not have_css('#disable-form')
   end
 end

@@ -1,0 +1,14 @@
+
+if (window.location.pathname == '/admin/users') {
+  // We are on the admin panel.
+  $("#user_<%= user.id %>").fadeOut('normal', function() {
+    $("#user_<%= user.id %>").remove();
+  });
+
+  $('#alert p').html("User '<%= user.username %>' has been disabled.");
+  $('#alert').fadeIn();
+} else {
+  // The user profile page.
+  window.location.pathname = '/';
+}
+

@@ -109,7 +109,6 @@ describe Auth::RegistrationsController do
   end
 
   describe 'DELETE #destroy' do
-
     let!(:user) { create(:admin) }
 
     before :each do
@@ -123,4 +122,46 @@ describe Auth::RegistrationsController do
     end
   end
 
+  describe 'PUT #disable_user' do
+    let!(:admin) { create(:admin) }
+    let!(:user) { create(:user) }
+
+    before :each do
+      request.env['devise.mapping'] = Devise.mappings[:user]
+    end
+
+    it 'does not allow to disable the only admin' do
+      sign_in admin
+      put :disable, id: admin.id
+      expect(response.status).to be 403
+    end
+
+    it 'does not allow a regular user to disable another' do
+      sign_in user
+      put :disable, id: admin.id
+      expect(response.status).to be 403
+    end
+
+    it 'allows a user to disable himself' do
+      sign_in user
+      put :disable, id: user.id, format: :erb
+      expect(response.status).to be 200
+      expect(User.find(user.id).enabled?).to be false
+    end
+
+    it 'allows the admin to disable a regular user' do
+      sign_in admin
+      put :disable, id: user.id, format: :erb
+      expect(response.status).to be 200
+      expect(User.find(user.id).enabled?).to be false
+    end
+
+    it 'allows an admin to disable another admin' do
+      admin2 = create(:admin)
+      sign_in admin
+      put :disable, id: admin2.id, format: :erb
+      expect(response.status).to be 200
+      expect(User.find(admin2.id).enabled?).to be false
+    end
+  end
 end

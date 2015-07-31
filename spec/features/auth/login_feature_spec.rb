@@ -40,4 +40,14 @@ feature 'Login feature' do
     expect(current_url).to eq root_url
   end
 
+  scenario 'A disabled user cannot login' do
+    user.disable!
+    fill_in 'user_username', with: user.username
+    fill_in 'user_password', with: user.password
+    click_button 'Login'
+
+    expect(page).to have_content(user.inactive_message)
+    expect(page).to have_content('Login')
+    expect(current_url).to eq new_user_session_url
+  end
 end

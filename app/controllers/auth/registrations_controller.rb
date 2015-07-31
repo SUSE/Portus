@@ -1,8 +1,9 @@
 class Auth::RegistrationsController < Devise::RegistrationsController
   layout 'authentication', except: :edit
 
-  before_action :check_admin, only: [:new, :create]
+  before_action :check_admin, only: [:new, :create, :disable]
   before_action :configure_sign_up_params, only: [:create]
+  before_action :authenticate_user!, only: [:disable]
 
   # Re-implemented so the template has the auxiliary variables regarding if
   # there are more users on the system or this is the first user to be created.
@@ -25,6 +26,11 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def edit
+    @admin_count = User.admins.count
+    super
+  end
+
   def update
     success =
     if password_update?
@@ -43,6 +49,19 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     else
       redirect_to edit_user_registration_url,
         alert: resource.errors.full_messages
+    end
+  end
+
+  # Disable a user.
+  def disable
+    user = User.find(params[:id])
+
+    if can_disable?(user)
+      render nothing: true, status: 403
+    else
+      user.disable!
+      sign_out user if current_user == user
+      render template: 'auth/registrations/disabled', locals: { user: user, path: request.fullpath }
     end
   end
 
@@ -75,5 +94,19 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     user = params[:user]
     !user[:current_password].blank? || !user[:password].blank? ||
       !user[:password_confirmation].blank?
+  end
+
+  # Returns whether the given user can be disabled or not. The following rules
+  # apply:
+  #   1. A user can disable himself unless it's the last admin on the system.
+  #   2. The admin user is the only one that can disable other users.
+  def can_disable?(user)
+    if current_user == user
+      # An admin cannot disable himself if he's the only admin in the system.
+      current_user.admin? && User.admins.count == 1
+    else
+      # Only admin users can disable other users.
+      !current_user.admin?
+    end
   end
 end
