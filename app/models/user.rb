@@ -14,6 +14,9 @@ class User < ActiveRecord::Base
   has_many :teams, through: :team_users
   has_many :stars
 
+  scope :enabled, -> { where enabled: true }
+  scope :admins,  -> { where enabled: true, admin: true }
+
   def private_namespace_available
     return unless Namespace.exists?(name: username)
     errors.add(:username, 'cannot be used as name for private namespace')
@@ -40,11 +43,6 @@ class User < ActiveRecord::Base
     actor = User.find_by(username: event['actor']['name'])
     logger.error "Cannot find user #{event['actor']['name']}" if actor.nil?
     actor
-  end
-
-  # Returns all the enabled admins in the system.
-  def self.admins
-    User.where(enabled: true, admin: true)
   end
 
   # Toggle the 'admin' attribute for this user. It will also update the
