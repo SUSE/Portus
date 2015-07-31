@@ -58,12 +58,6 @@ class User < ActiveRecord::Base
   ##
   # Disabling users.
 
-  # Disable this user and remove all its associations with teams.
-  def disable!
-    return unless update_attributes(enabled: false)
-    TeamUser.where(user: id).delete_all
-  end
-
   # This method is picked up by Devise before signing in a user.
   def active_for_authentication?
     super && enabled?

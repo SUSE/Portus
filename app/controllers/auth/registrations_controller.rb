@@ -59,7 +59,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     if can_disable?(user)
       render nothing: true, status: 403
     else
-      user.disable!
+      user.update_attributes(enabled: false)
       sign_out user if current_user == user
       render template: 'auth/registrations/disabled', locals: { user: user, path: request.fullpath }
     end

@@ -94,21 +94,9 @@ describe User do
     let!(:user) { create(:user) }
     let!(:team) { create(:team, owners: [admin], viewers: [user]) }
 
-    it 'invalidates a user and removes all its associations with teams' do
-      expect(User.count).to eq 2
-      expect(TeamUser.count).to eq 2
-      expect(TeamUser.where(user: user.id)).to_not be_empty
-
-      user.disable!
-
-      expect(User.count).to eq 2
-      expect(TeamUser.count).to eq 1
-      expect(TeamUser.where(user: user.id)).to be_empty
-    end
-
     it 'interacts with Devise as expected' do
       expect(user.active_for_authentication?).to be true
-      user.disable!
+      user.update_attributes(enabled: false)
       expect(user.active_for_authentication?).to be false
     end
   end

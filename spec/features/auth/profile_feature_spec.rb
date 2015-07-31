@@ -56,7 +56,7 @@ feature 'Update password feature' do
 
   # Disabling user
 
-  scenario 'It disables the current user', js: true, focus: true do
+  scenario 'It disables the current user', js: true do
     create(:admin)
     visit edit_user_registration_path
 

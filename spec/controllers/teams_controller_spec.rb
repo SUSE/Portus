@@ -39,6 +39,18 @@ RSpec.describe TeamsController, type: :controller do
 
       expect(response.status).to eq 401
     end
+
+    it 'does not display disabled users' do
+      user = create(:user, enabled: false)
+      TeamUser.create(team: team, user: user, role: TeamUser.roles['viewer'])
+      sign_in owner
+
+      get :show, id: team.id
+
+      expect(response.status).to eq 200
+      expect(TeamUser.count).to be 2
+      expect(assigns(:team_users).count).to be 1
+    end
   end
 
   describe 'as a portus user' do

@@ -41,7 +41,7 @@ feature 'Login feature' do
   end
 
   scenario 'A disabled user cannot login' do
-    user.disable!
+    user.update_attributes(enabled: false)
     fill_in 'user_username', with: user.username
     fill_in 'user_password', with: user.password
     click_button 'Login'
