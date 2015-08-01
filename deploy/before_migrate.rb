@@ -1,5 +1,5 @@
 rails_env = new_resource.environment["RAILS_ENV"]
-config.secret_key = '1'
+config.secret_key = new_resource.environment["SECRET_KEY_BASE"]
 Chef::Log.info("Precompiling assets for RAILS_ENV=#{rails_env}...")
 execute "rake assets:precompile" do
   cwd release_path
