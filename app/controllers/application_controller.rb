@@ -20,6 +20,6 @@ class ApplicationController < ActionController::Base
   protected
 
   def deny_access
-    render text: 'Access Denied', status: :unauthorized
+    render text: "Access Denied", status: :unauthorized
   end
 end

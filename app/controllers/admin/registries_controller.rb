@@ -13,7 +13,7 @@ class Admin::RegistriesController < Admin::BaseController
   def create
     if Registry.count > 0
       redirect_to admin_registries_path,
-        alert: 'No more than one registry is currently supported'
+        alert: "No more than one registry is currently supported"
       return
     end
 
@@ -21,7 +21,7 @@ class Admin::RegistriesController < Admin::BaseController
 
     if @registry.save
       Namespace.update_all(registry_id: @registry.id)
-      redirect_to admin_registries_path, notice: 'Registry was successfully created.'
+      redirect_to admin_registries_path, notice: "Registry was successfully created."
     else
       render :new
     end

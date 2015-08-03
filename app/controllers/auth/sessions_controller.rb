@@ -1,5 +1,5 @@
 class Auth::SessionsController < Devise::SessionsController
-  layout 'authentication'
+  layout "authentication"
 
   # Re-implementing. The logic is: if there is already a user that can log in,
   # work as usual. Otherwise, redirect always to the signup page.

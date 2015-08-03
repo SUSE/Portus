@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'fileutils'
+require "fileutils"
 
 interfaces = `ip link show`.split("\n").grep(/enp/).map do |l|
   l =~ /.*(enp\ds\d):/
@@ -17,30 +17,30 @@ internal_interface = interfaces.find do |dev|
 end
 
 if internal_interface.nil?
-  puts 'Cannot find network interface used by private network'
-  puts 'Assuming everything has already been configured'
+  puts "Cannot find network interface used by private network"
+  puts "Assuming everything has already been configured"
   exit(0)
 end
 
 target_cfg = "/etc/sysconfig/network/ifcfg-#{internal_interface}"
 
-if File.exist?('/etc/sysconfig/network/ifcfg-eth1')
-  FileUtils.mv('/etc/sysconfig/network/ifcfg-eth1', target_cfg)
-  cfg = File.read(target_cfg).gsub('eth1', internal_interface)
-  File.open(target_cfg, 'w') do |file|
+if File.exist?("/etc/sysconfig/network/ifcfg-eth1")
+  FileUtils.mv("/etc/sysconfig/network/ifcfg-eth1", target_cfg)
+  cfg = File.read(target_cfg).gsub("eth1", internal_interface)
+  File.open(target_cfg, "w") do |file|
     file.write(cfg)
     file.write("STARTMODE='auto'\n")
   end
   if ARGV.empty?
-    puts 'Restarting network configuration'
-    system('systemctl restart network')
+    puts "Restarting network configuration"
+    system("systemctl restart network")
   else
     system("/sbin/ifconfig #{internal_interface} #{ARGV[0]} up")
   end
 elsif File.exist?(target_cfg)
   puts "Previous network configuration found for #{internal_interface}"
-  puts 'Reloading network configuration'
-  system('systemctl reload network')
+  puts "Reloading network configuration"
+  system("systemctl reload network")
 else
   $stderr.write("Cannot find configuration for the chosen internal interface\n")
   exit(1)

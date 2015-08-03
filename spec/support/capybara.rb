@@ -1,13 +1,13 @@
 
-require 'capybara/rails'
-require 'capybara/rspec'
-require 'capybara/poltergeist'
+require "capybara/rails"
+require "capybara/rspec"
+require "capybara/poltergeist"
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(
     app,
-    js_errors: false,
-    phantomjs_options: ['--load-images=no']
+    js_errors:         false,
+    phantomjs_options: ["--load-images=no"]
   )
 end
 

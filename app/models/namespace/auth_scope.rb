@@ -18,7 +18,7 @@ class Namespace::AuthScope
 
     if found_resource.nil?
       Rails.logger.warn "Namespace::AuthScope - Cannot find namespace with name #{@namespace_name}"
-      fail ResourceIsNotFound
+      raise ResourceIsNotFound
     end
     found_resource
   end
@@ -26,17 +26,17 @@ class Namespace::AuthScope
   private
 
   def parse_scope_string!
-    @resource_type    = @scope_string.split(':')[0]
-    @resource_name    = @scope_string.split(':')[1]
+    @resource_type    = @scope_string.split(":")[0]
+    @resource_name    = @scope_string.split(":")[1]
     @namespace_name   = requested_resource_namespace_name
     @actions          = requested_actions
   end
 
   def requested_resource_namespace_name
-    @resource_name.split('/').first if @resource_name.include?('/')
+    @resource_name.split("/").first if @resource_name.include?("/")
   end
 
   def requested_actions
-    @scope_string.split(':')[2].split(',')
+    @scope_string.split(":")[2].split(",")
   end
 end

@@ -20,17 +20,17 @@ class Api::BaseController < ActionController::Base
   end
 
   def scope_handler(registry, scope_string)
-    type = scope_string.split(':', 3)[0]
+    type = scope_string.split(":", 3)[0]
 
     case type
-    when 'repository'
+    when "repository"
       auth_scope = Namespace::AuthScope.new(registry, scope_string)
     else
       logger.error "Scope not handled: #{type}"
-      fail ScopeNotHandled
+      raise ScopeNotHandled
     end
 
-    scopes = scope_string.split(':', 3)[2].split(',')
+    scopes = scope_string.split(":", 3)[2].split(",")
 
     [auth_scope, scopes]
   end

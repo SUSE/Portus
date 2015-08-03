@@ -1,11 +1,11 @@
-require 'ostruct'
+require "ostruct"
 
 class JwtToken < OpenStruct
   # TODO: expected to have account, service, scope for .new
 
   def encoded_token
-    headers = { 'kid' => self.class.jwt_kid(private_key) }
-    JWT.encode(claim.deep_stringify_keys, private_key, 'RS256', headers)
+    headers = { "kid" => self.class.jwt_kid(private_key) }
+    JWT.encode(claim.deep_stringify_keys, private_key, "RS256", headers)
   end
 
   def claim
@@ -66,10 +66,10 @@ class JwtToken < OpenStruct
       sha256 = Digest::SHA256.new
       sha256.update(private_key.public_key.to_der)
       payload = StringIO.new(sha256.digest).read(30)
-      Base32.encode(payload).split('').each_slice(4).each_with_object([]) do |slice, mem|
+      Base32.encode(payload).split("").each_slice(4).each_with_object([]) do |slice, mem|
         mem << slice.join
         mem
-      end.join(':')
+      end.join(":")
     end
   end
 end

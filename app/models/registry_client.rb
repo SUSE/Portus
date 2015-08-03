@@ -7,7 +7,7 @@ class RegistryClient
   def initialize(host, use_ssl = true, username = nil, password = nil)
     @host = host
     @use_ssl = use_ssl
-    @base_url = "http#{'s' if @use_ssl}://#{@host}/v2/"
+    @base_url = "http#{"s" if @use_ssl}://#{@host}/v2/"
     @username = username
     @password = password
   end
@@ -16,14 +16,14 @@ class RegistryClient
     @username && @password
   end
 
-  def manifest(repository, tag = 'latest')
+  def manifest(repository, tag = "latest")
     res = get_request("#{repository}/manifests/#{tag}")
     if res.code.to_i == 200
       JSON.parse(res.body)
     elsif res.code.to_i == 404
-      fail ManifestNotFoundError, "Cannot find manifest for #{repository}:#{tag}"
+      raise ManifestNotFoundError, "Cannot find manifest for #{repository}:#{tag}"
     else
-      fail "Something went wrong while fetching manifest for #{repository}:#{tag}:" \
+      raise "Something went wrong while fetching manifest for #{repository}:#{tag}:" \
         "[#{res.code}] - #{res.body}"
     end
   end
@@ -31,7 +31,7 @@ class RegistryClient
   def get_request(path, request_auth_token = true)
     uri = URI.join(@base_url, path)
     req = Net::HTTP::Get.new(uri)
-    req['Authorization'] = "Bearer #{@token}" if @token
+    req["Authorization"] = "Bearer #{@token}" if @token
 
     res = get_response_token(uri, req)
     if res.code.to_i == 401
@@ -57,41 +57,41 @@ class RegistryClient
 
     res = get_response_token(uri, req)
     if res.code.to_i == 200
-      @token = JSON.parse(res.body)['token']
+      @token = JSON.parse(res.body)["token"]
     else
       @token = nil
-      fail AuthorizationError, "Cannot obtain authorization token: #{res}"
+      raise AuthorizationError, "Cannot obtain authorization token: #{res}"
     end
   end
 
   def parse_unhauthorized_response(res)
-    auth_args = res.to_hash['www-authenticate'].first.split(',').each_with_object({}) do |i, h|
-      key, val = i.split('=')
-      h[key] = val.gsub('"', '')
+    auth_args = res.to_hash["www-authenticate"].first.split(",").each_with_object({}) do |i, h|
+      key, val = i.split("=")
+      h[key] = val.gsub('"', "")
     end
 
     unless credentials?
-      fail CredentialsMissingError, "Registry #{@host} has authorization enabled, "\
-        'user credentials not specified'
+      raise CredentialsMissingError, "Registry #{@host} has authorization enabled, "\
+        "user credentials not specified"
     end
 
     query_params = {
-      'service' => auth_args['service'],
-      'account' => @username
+      "service" => auth_args["service"],
+      "account" => @username
     }
-    query_params['scope'] = auth_args['scope'] if auth_args.key?('scope')
+    query_params["scope"] = auth_args["scope"] if auth_args.key?("scope")
 
-    unless auth_args.key?('Bearer realm')
-      fail(NoBearerRealmException, 'Cannot find bearer realm')
+    unless auth_args.key?("Bearer realm")
+      raise(NoBearerRealmException, "Cannot find bearer realm")
     end
 
-    [auth_args['Bearer realm'], query_params]
+    [auth_args["Bearer realm"], query_params]
   end
 
   # Performs an HTTP request to the given URI and request object. It returns an
   # HTTP response that has been sent from the registry.
   def get_response_token(uri, req)
-    https = uri.scheme == 'https'
+    https = uri.scheme == "https"
     Net::HTTP.start(uri.hostname, uri.port, use_ssl: https) do |http|
       http.request(req)
     end

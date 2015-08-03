@@ -7,11 +7,11 @@ class Team < ActiveRecord::Base
 
   has_many :team_users
   has_many :users, through: :team_users
-  has_many :owners, -> { where 'team_users.role' => TeamUser.roles['owner'] },
+  has_many :owners, -> { where "team_users.role" => TeamUser.roles["owner"] },
     through: :team_users, source: :user
-  has_many :contributors, -> { where 'team_users.role' => TeamUser.roles['contributor'] },
+  has_many :contributors, -> { where "team_users.role" => TeamUser.roles["contributor"] },
     through: :team_users, source: :user
-  has_many :viewers, -> { where 'team_users.role' => TeamUser.roles['viewer'] },
+  has_many :viewers, -> { where "team_users.role" => TeamUser.roles["viewer"] },
     through: :team_users, source: :user
 
   # Returns all the teams that are not special. By special team we mean:

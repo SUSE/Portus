@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe RepositoriesHelper, type: :helper do
 
@@ -8,9 +8,9 @@ RSpec.describe RepositoriesHelper, type: :helper do
   let(:contributor) { create(:user) }
   let(:team) do
     create(:team,
-           owners: [owner],
+           owners:       [owner],
            contributors: [contributor],
-           viewers: [viewer])
+           viewers:      [viewer])
   end
   let(:namespace) { create(:namespace, team: team) }
   let(:repository) { create(:repository, namespace: namespace) }
@@ -19,12 +19,12 @@ RSpec.describe RepositoriesHelper, type: :helper do
   let(:viewer_star) { create(:star, repository: starred_repository, user: viewer) }
   let(:contributor_star) { create(:star, repository: starred_repository, user: contributor) }
 
-  describe 'can_star_repository?' do
-    it 'returns true if current user has not starred repo`' do
+  describe "can_star_repository?" do
+    it "returns true if current user has not starred repo`" do
       sign_in owner
       expect(helper.can_star_repository?(repository)).to be true
     end
-    it 'returns false if current user has already starred repo`' do
+    it "returns false if current user has already starred repo`" do
       sign_in owner
       owner_star
       expect(helper.can_star_repository?(starred_repository)).to be false

@@ -9,7 +9,7 @@ class Repository < ActiveRecord::Base
 
   search_scope :search do
     attributes :name
-    attributes namespace_name: 'namespace.name'
+    attributes namespace_name: "namespace.name"
 
     # TODO: (mssola): we are experiencing some issues with MariaDB's fulltext
     # support. Because of that, the following two options have been disabled

@@ -14,7 +14,7 @@ class Admin::UsersController < Admin::BaseController
       render nothing: true, status: 403
     else
       user.toggle_admin!
-      render template: 'admin/users/toggle_admin', locals: { user: user }
+      render template: "admin/users/toggle_admin", locals: { user: user }
     end
   end
 end

@@ -7,7 +7,7 @@
 class TeamUser < ActiveRecord::Base
   enum role: [:viewer, :contributor, :owner]
 
-  scope :enabled, -> { joins(:user).where('users.enabled' => true) }
+  scope :enabled, -> { joins(:user).where("users.enabled" => true) }
 
   validates :team, presence: true
   validates :user, presence: true, uniqueness: { scope: :team }

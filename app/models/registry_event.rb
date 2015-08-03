@@ -6,7 +6,7 @@ class RegistryEvent
   end
 
   def action
-    @data['action']
+    @data["action"]
   end
 
   def process!; end

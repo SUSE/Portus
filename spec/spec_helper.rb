@@ -1,21 +1,21 @@
 
-require 'codeclimate-test-reporter'
+require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
-require 'simplecov'
-require 'webmock/rspec'
-require 'vcr'
+require "simplecov"
+require "webmock/rspec"
+require "vcr"
 
 SimpleCov.minimum_coverage 100
-SimpleCov.start 'rails'
+SimpleCov.start "rails"
 
 VCR.configure do |c|
-  c.cassette_library_dir = 'spec/vcr_cassettes'
+  c.cassette_library_dir = "spec/vcr_cassettes"
   c.hook_into :webmock
   c.ignore_localhost = true
 
   # So code coverage reports can be submitted to codeclimate.com
-  c.ignore_hosts 'codeclimate.com'
+  c.ignore_hosts "codeclimate.com"
 end
 
 RSpec.configure do |config|
