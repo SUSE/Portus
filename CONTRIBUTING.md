@@ -1,5 +1,17 @@
 # Contributing to Portus
 
+## Check for assigned people
+
+We are using Github Issues for submitting known issues (e.g. bugs, features,
+etc.). Some issues will have someone assigned, meaning that there's already
+someone that takes responsability for fixing said issue. This is not done to
+discourage contributions, rather to not step in the work that has already been
+done by the assignee. If you want to work on a known issue with someone already
+assigned to it, please consider contacting the assignee first (e.g. by
+mentioning the assignee in a new comment on the specific issue). This way you
+can contribute with ideas, or even with code if the assignee decides that you
+can step in.
+
 ## Provide tests
 
 In Portus we are *really* committed to keep a thorough test suite. For this
