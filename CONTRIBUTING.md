@@ -12,6 +12,9 @@ mentioning the assignee in a new comment on the specific issue). This way you
 can contribute with ideas, or even with code if the assignee decides that you
 can step in.
 
+If you plan to work on a non assigned issue, please add a comment on the issue
+to prevent duplicated work.
+
 ## Provide tests
 
 In Portus we are *really* committed to keep a thorough test suite. For this
