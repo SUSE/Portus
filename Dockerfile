@@ -5,6 +5,7 @@ RUN mkdir /portus
 WORKDIR /portus
 ADD . /portus
 RUN bundle install
-RUN mv /portus/config/database-docker-compose.yml /portus/config/database.yml
+
+ENV COMPOSE=1
 
 EXPOSE 3000
