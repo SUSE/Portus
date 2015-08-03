@@ -84,12 +84,14 @@
       table.table.table-striped.table-hover
         colgroup
           col.col-50
-          col.col-40
+          col.col-30
+          col.col-20
           col.col-10
         thead
           tr
             th Namespace
             th Repositories
+            th Created At
             th Public
         tbody#namespaces
           - @team_namespaces.each do |namespace|
