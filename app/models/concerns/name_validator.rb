@@ -4,13 +4,13 @@ module NameValidator
   NAME_ALLOWED_CHARS = 'a-z0-9\-_'
 
   included do
-    key = name == 'Namespace' ? 'registry' : 'namespace'
+    key = name == "Namespace" ? "registry" : "namespace"
 
     validates :name,
-              presence: true,
+              presence:   true,
               uniqueness: { scope: "#{key}_id" },
-              format: {
-                with: /\A[#{NAME_ALLOWED_CHARS}]+\Z/,
-                message: 'Only allowed letters: [a-z0-9-_]' }
+              format:     {
+                with:    /\A[#{NAME_ALLOWED_CHARS}]+\Z/,
+                message: "Only allowed letters: [a-z0-9-_]" }
   end
 end

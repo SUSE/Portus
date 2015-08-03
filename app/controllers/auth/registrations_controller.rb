@@ -1,5 +1,5 @@
 class Auth::RegistrationsController < Devise::RegistrationsController
-  layout 'authentication', except: :edit
+  layout "authentication", except: :edit
 
   before_action :check_admin, only: [:new, :create]
   before_action :configure_sign_up_params, only: [:create]
@@ -34,9 +34,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   def update
     success =
     if password_update?
-      succ = current_user.update_with_password(params.require(:user).permit(
-        :password, :password_confirmation, :current_password
-      ))
+      succ = current_user.update_with_password(params.require(:user).permit(:password, :password_confirmation, :current_password))
       sign_in(current_user, bypass: true) if succ
       succ
     else
@@ -45,7 +43,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
     if success
       redirect_to edit_user_registration_url,
-        notice: 'Profile updated successfully!'
+        notice: "Profile updated successfully!"
     else
       redirect_to edit_user_registration_url,
         alert: resource.errors.full_messages
@@ -61,7 +59,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     else
       user.update_attributes(enabled: false)
       sign_out user if current_user == user
-      render template: 'auth/registrations/disabled', locals: { user: user, path: request.fullpath }
+      render template: "auth/registrations/disabled", locals: { user: user, path: request.fullpath }
     end
   end
 

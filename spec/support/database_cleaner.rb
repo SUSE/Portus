@@ -1,5 +1,5 @@
 
-require 'database_cleaner'
+require "database_cleaner"
 
 # DatabaseCleaner has been configured like this:
 #

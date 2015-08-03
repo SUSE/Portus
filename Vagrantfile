@@ -1,30 +1,30 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure('2') do |config|
-  config.vm.provider 'virtualbox' do |vb|
+Vagrant.configure("2") do |config|
+  config.vm.provider "virtualbox" do |vb|
     # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ['modifyvm', :id, '--memory', '1024']
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
     # Useful when something bad happens
     # vb.gui = true
   end
 
   config.vm.define :registry do |node|
-    node.vm.box = 'flavio/opensuse13-2'
+    node.vm.box = "flavio/opensuse13-2"
     node.vm.box_check_update = true
-    node.vm.hostname = 'registry.test.lan'
-    node.vm.network :private_network, ip: '192.168.1.2', virtualbox__intnet: true
+    node.vm.hostname = "registry.test.lan"
+    node.vm.network :private_network, ip: "192.168.1.2", virtualbox__intnet: true
     node.vm.network :forwarded_port, host: 44242, guest: 80
 
     node.vm.provision(
-      'shell',
-      path: 'vagrant/setup_private_network',
-      args: '192.168.1.2'
+      "shell",
+      path: "vagrant/setup_private_network",
+      args: "192.168.1.2"
     )
-    node.vm.provision 'shell', path: 'vagrant/provision_registry'
-    node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
-    node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
-    node.vm.provision 'shell', inline: <<EOS
+    node.vm.provision "shell", path: "vagrant/provision_registry"
+    node.vm.provision "shell", inline: "echo 192.168.1.2 registry.test.lan >> /etc/hosts"
+    node.vm.provision "shell", inline: "echo 192.168.1.3 portus.test.lan >> /etc/hosts"
+    node.vm.provision "shell", inline: <<EOS
 mkdir -p /etc/registry
 cp /vagrant/vagrant/conf/ca_bundle/server.crt /etc/registry/portus.crt
 cp /vagrant/vagrant/conf/registry-config.yml /etc/registry/config.yml
@@ -34,20 +34,20 @@ EOS
   end
 
   config.vm.define :portus do |node|
-    node.vm.box = 'flavio/opensuse13-2'
+    node.vm.box = "flavio/opensuse13-2"
     node.vm.box_check_update = true
-    node.vm.hostname = 'portus.test.lan'
-    node.vm.network :private_network, ip: '192.168.1.3', virtualbox__intnet: true
-    node.vm.network 'forwarded_port', guest: 80, host: 5000
+    node.vm.hostname = "portus.test.lan"
+    node.vm.network :private_network, ip: "192.168.1.3", virtualbox__intnet: true
+    node.vm.network "forwarded_port", guest: 80, host: 5000
 
     node.vm.provision(
-      'shell',
-      path: 'vagrant/setup_private_network',
-      args: '192.168.1.3'
+      "shell",
+      path: "vagrant/setup_private_network",
+      args: "192.168.1.3"
     )
-    node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
-    node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
-    node.vm.provision 'shell', inline: <<EOS
+    node.vm.provision "shell", inline: "echo 192.168.1.2 registry.test.lan >> /etc/hosts"
+    node.vm.provision "shell", inline: "echo 192.168.1.3 portus.test.lan >> /etc/hosts"
+    node.vm.provision "shell", inline: <<EOS
 zypper -n in tcpdump
 
 zypper -n in apache2-devel \
@@ -95,19 +95,19 @@ EOS
   end
 
   config.vm.define :client do |node|
-    node.vm.box = 'flavio/opensuse13-2'
+    node.vm.box = "flavio/opensuse13-2"
     node.vm.box_check_update = true
-    node.vm.hostname = 'client.test.lan'
-    node.vm.network :private_network, ip: '192.168.1.4', virtualbox__intnet: true
+    node.vm.hostname = "client.test.lan"
+    node.vm.network :private_network, ip: "192.168.1.4", virtualbox__intnet: true
 
     node.vm.provision(
-      'shell',
-      path: 'vagrant/setup_private_network',
-      args: '192.168.1.4'
+      "shell",
+      path: "vagrant/setup_private_network",
+      args: "192.168.1.4"
     )
-    node.vm.provision 'shell', path: 'vagrant/provision_client'
-    node.vm.provision 'shell', inline: 'echo 192.168.1.2 registry.test.lan >> /etc/hosts'
-    node.vm.provision 'shell', inline: 'echo 192.168.1.3 portus.test.lan >> /etc/hosts'
+    node.vm.provision "shell", path: "vagrant/provision_client"
+    node.vm.provision "shell", inline: "echo 192.168.1.2 registry.test.lan >> /etc/hosts"
+    node.vm.provision "shell", inline: "echo 192.168.1.3 portus.test.lan >> /etc/hosts"
   end
 
 end

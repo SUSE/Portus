@@ -5,6 +5,6 @@ class RegistryPushEvent < RegistryEvent
   end
 
   def relevant?
-    @data['target']['url'].include?('manifest')
+    @data["target"]["url"].include?("manifest")
   end
 end

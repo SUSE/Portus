@@ -3,10 +3,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:username]
 
   validates :username, presence: true, uniqueness: true,
-                       format: { with: /\A[a-z0-9]{4,30}\Z/,
+                       format: { with:    /\A[a-z0-9]{4,30}\Z/,
                                  message: 'Accepted format: "\A[a-z0-9]{4,30}\Z"' },
-                       exclusion: { in: %w(portus),
-                                    message: '%{value} is reserved.' }
+                       exclusion: { in:      %w(portus),
+                                    message: "%{value} is reserved." }
 
   validate :private_namespace_available, on: :create
 
@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
 
   def private_namespace_available
     return unless Namespace.exists?(name: username)
-    errors.add(:username, 'cannot be used as name for private namespace')
+    errors.add(:username, "cannot be used as name for private namespace")
   end
 
   def create_personal_namespace!
@@ -32,16 +32,16 @@ class User < ActiveRecord::Base
     end
 
     Namespace.find_or_create_by!(
-      team: team,
-      name: username,
+      team:     team,
+      name:     username,
       registry: Registry.last # TODO: fix once we handle more registries
     )
   end
 
   # Find the user that can be guessed from the given push event.
   def self.find_from_event(event)
-    actor = User.find_by(username: event['actor']['name'])
-    logger.error "Cannot find user #{event['actor']['name']}" if actor.nil?
+    actor = User.find_by(username: event["actor"]["name"])
+    logger.error "Cannot find user #{event["actor"]["name"]}" if actor.nil?
     actor
   end
 
@@ -65,6 +65,6 @@ class User < ActiveRecord::Base
 
   # The flashy message to be shown for disabled users that try to login.
   def inactive_message
-    'Sorry, this account has been disabled.'
+    "Sorry, this account has been disabled."
   end
 end

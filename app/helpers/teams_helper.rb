@@ -9,7 +9,7 @@ module TeamsHelper
       team_user.role.titleize
     else
       # That happens when the admin user access a team he's not part of
-      '-'
+      "-"
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe RepositoriesController do
 
@@ -9,9 +9,9 @@ describe RepositoriesController do
     sign_in user
   end
 
-  describe 'GET #index' do
+  describe "GET #index" do
 
-    it 'assigns all repositories as @repositories' do
+    it "assigns all repositories as @repositories" do
       repository = create(:repository)
       get :index, {}, valid_session
       expect(assigns(:repositories)).to eq([repository])
@@ -19,9 +19,9 @@ describe RepositoriesController do
 
   end
 
-  describe 'GET #show' do
+  describe "GET #show" do
 
-    it 'assigns the requested repository as @repository' do
+    it "assigns the requested repository as @repository" do
       repository = create(:repository)
       get :show, { id: repository.to_param }, valid_session
       expect(assigns(:repository)).to eq(repository)
@@ -29,9 +29,9 @@ describe RepositoriesController do
 
   end
 
-  describe 'POST #star' do
+  describe "POST #star" do
 
-    it 'assigns the requested repository as @repository' do
+    it "assigns the requested repository as @repository" do
       repository = create(:repository)
       post :star, { id: repository.to_param }, valid_session
       expect(assigns(:repository)).to eq(repository)
@@ -39,9 +39,9 @@ describe RepositoriesController do
 
   end
 
-  describe 'POST #unstar' do
+  describe "POST #unstar" do
 
-    it 'assigns the requested repository as @repository' do
+    it "assigns the requested repository as @repository" do
       repository = create(:repository, :starred)
       post :unstar, { id: repository.to_param }, valid_session
       expect(assigns(:repository)).to eq(repository)

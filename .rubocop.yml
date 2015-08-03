@@ -1,12 +1,9 @@
 
-# It's actually better for the eyes to add a new line around the block body if
-# it's a big chunk of code (e.g. in tests).
-Style/EmptyLinesAroundBlockBody:
-  Enabled: false
+inherit_from:
+  - ./config/rubocop-suse.yml
 
-# NOTE: the default for this is 80 columns long. This is a bit inconvenient for
-# us, since we have *lots* of lines that would fail on this. Instead of fixing
-# this now, we'll fix it in the future.
+# TODO: (mssola) the default for this in SUSE's style guide is 100 columns.
+# This is almost fine for us. In the near future I will fix this.
 Metrics/LineLength:
   Max: 180
   # To make it possible to copy or click on URIs in the code, we allow lines
@@ -16,38 +13,25 @@ Metrics/LineLength:
     - http
     - https
 
-# NOTE: as in the one before, this would be nice but there are too many errors
-# on this and it's not urgent.
-# Configuration parameters: CountComments.
+# TODO: (mssola) Some methods are offending this cop. In the SUSE's style guide
+# the approach is to use Rubocop's default value. In the near future I will
+# fix this.
 Metrics/MethodLength:
   Max: 252
 
-# This metric is *really* small by default. This value makes more sense.
-Metrics/AbcSize:
-  Max: 30
-
 # Not worth it, since numbers like ports are too weird in this format.
+# NOTE: this is being discussed in the SUSE's coding style repo:
+# https://github.com/SUSE/style-guides/pull/11
 Style/NumericLiterals:
   Enabled: false
 
-# It's convenient to mix both.
+# It's convenient to mix both. This is something that SUSE's style guide does
+# not specify, so we take the approach that we were following already.
 Style/ClassAndModuleChildren:
   Enabled: false
 
-# It complains on code that is just fine.
-Style/MultilineOperationIndentation:
-  Enabled: false
-
-# It complains on code that is just fine.
-Style/FirstParameterIndentation:
-  Enabled: false
-
-# It complains on code that is just fine.
-Style/AlignParameters:
-  Enabled: false
-
-# NOTE: This would be nice, but there are too many errors on this for now and
-# it's not urgent.
+# NOTE: (mssola) This would be nice, but there are too many errors on this for
+# now and it's not urgent. I will fix this in the near future.
 Style/Documentation:
   Enabled: false
 

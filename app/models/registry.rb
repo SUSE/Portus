@@ -5,15 +5,15 @@ class Registry < ActiveRecord::Base
 
   def create_global_namespace!
     team = Team.create(
-      name: Namespace.sanitize_name(hostname),
+      name:   Namespace.sanitize_name(hostname),
       owners: User.where(admin: true),
       hidden: true)
     Namespace.create!(
-      name: Namespace.sanitize_name(hostname),
+      name:     Namespace.sanitize_name(hostname),
       registry: self,
-      public: true,
-      global: true,
-      team: team)
+      public:   true,
+      global:   true,
+      team:     team)
   end
 
   def global_namespace
@@ -22,10 +22,10 @@ class Registry < ActiveRecord::Base
 
   # Find the registry for the given push event.
   def self.find_from_event(event)
-    registry = Registry.find_by(hostname: event['request']['host'])
+    registry = Registry.find_by(hostname: event["request"]["host"])
     if registry.nil?
       logger.info("Ignoring event coming from unknown registry
-                  #{event['request']['host']}")
+                  #{event["request"]["host"]}")
     end
     registry
   end
@@ -40,11 +40,11 @@ class Registry < ActiveRecord::Base
   #   - A String containing the name of the repository.
   #   - A String containing the name of the tag.
   def get_namespace_from_event(event)
-    if event['target']['repository'].include?('/')
-      namespace_name, repo_name = event['target']['repository'].split('/', 2)
+    if event["target"]["repository"].include?("/")
+      namespace_name, repo_name = event["target"]["repository"].split("/", 2)
       namespace = namespaces.find_by(name: namespace_name)
     else
-      repo_name = event['target']['repository']
+      repo_name = event["target"]["repository"]
       namespace = global_namespace
     end
 
@@ -53,11 +53,11 @@ class Registry < ActiveRecord::Base
       return
     end
 
-    match = PUSH_EVENT_FIND_TOKEN_REGEXP.match(event['target']['url'])
+    match = PUSH_EVENT_FIND_TOKEN_REGEXP.match(event["target"]["url"])
     if match
-      tag_name = match['tag']
+      tag_name = match["tag"]
     else
-      logger.error("Cannot find tag inside of event url: #{event['target']['url']}")
+      logger.error("Cannot find tag inside of event url: #{event["target"]["url"]}")
       return
     end
 

@@ -8,7 +8,7 @@ class Namespace < ActiveRecord::Base
   validates :public, inclusion: { in: [true] }, if: :global?
 
   def self.sanitize_name(name)
-    name.downcase.gsub(/\s+/, '_').gsub(/[^#{NAME_ALLOWED_CHARS}]/, '')
+    name.downcase.gsub(/\s+/, "_").gsub(/[^#{NAME_ALLOWED_CHARS}]/, "")
   end
 
   # Returns a String containing the cleaned name for this namespace. The

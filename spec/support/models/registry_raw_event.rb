@@ -3,10 +3,10 @@ class RegistryRawEvent
 
   def to_test_hash
     {
-      'action'  => action,
-      'target'  => target,
-      'request' => request,
-      'actor'   => actor
+      "action"  => action,
+      "target"  => target,
+      "request" => request,
+      "actor"   => actor
     }.deep_dup
   end
 end

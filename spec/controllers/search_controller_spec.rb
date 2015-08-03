@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe SearchController, type: :controller do
   let(:registry)    { create(:registry) }
@@ -12,8 +12,8 @@ RSpec.describe SearchController, type: :controller do
     @repository = create(:repository, namespace: namespace)
   end
 
-  describe 'GET #index' do
-    it 'returns http success' do
+  describe "GET #index" do
+    it "returns http success" do
       get :index, search: @repository.name
       expect(response).to have_http_status(:success)
     end

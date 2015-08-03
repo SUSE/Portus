@@ -2,7 +2,7 @@ class TeamPolicy
   attr_reader :user, :team
 
   def initialize(user, team)
-    fail Pundit::NotAuthorizedError, 'must be logged in' unless user
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
     @user = user
     @team = team
   end

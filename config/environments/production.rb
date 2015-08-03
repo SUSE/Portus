@@ -22,7 +22,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.serve_static_files = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
@@ -78,9 +78,9 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Run pending migrations
-  unless ENV['SKIP_MIGRATION']
+  unless ENV["SKIP_MIGRATION"]
     config.after_initialize do
-      ActiveRecord::Migrator.migrate(Rails.root.join('db/migrate'), nil)
+      ActiveRecord::Migrator.migrate(Rails.root.join("db/migrate"), nil)
     end
   end
 

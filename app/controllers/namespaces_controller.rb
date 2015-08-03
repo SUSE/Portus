@@ -10,7 +10,7 @@ class NamespacesController < ApplicationController
   # GET /namespaces.json
   def index
     @special_namespaces = Namespace.where(
-      'global = ? OR namespaces.name = ?', true, current_user.username)
+      "global = ? OR namespaces.name = ?", true, current_user.username)
     @namespaces = policy_scope(Namespace).page(params[:page])
 
     respond_with(@namespaces)
@@ -30,7 +30,7 @@ class NamespacesController < ApplicationController
   def create
     @namespace = Namespace.new(
       team:     @team,
-      name:     params['namespace']['namespace'],
+      name:     params["namespace"]["namespace"],
       registry: Registry.first
     )
     authorize @namespace
@@ -56,7 +56,7 @@ class NamespacesController < ApplicationController
     else
       @namespace.create_activity :private, owner: current_user
     end
-    render template: 'namespaces/toggle_public', locals: { namespace: @namespace }
+    render template: "namespaces/toggle_public", locals: { namespace: @namespace }
   end
 
   private
@@ -64,10 +64,10 @@ class NamespacesController < ApplicationController
   # Check that the given team exists and that is not hidden. This hook is used
   # only as a helper of the `create` method.
   def check_team
-    @team = Team.find_by(name: params['namespace']['team'], hidden: false)
+    @team = Team.find_by(name: params["namespace"]["team"], hidden: false)
     return unless @team.nil?
 
-    @error = 'Selected team does not exist.'
+    @error = "Selected team does not exist."
     respond_to do |format|
       format.js { respond_with nil, status: :not_found }
     end

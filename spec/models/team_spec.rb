@@ -1,19 +1,19 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe Team do
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:owners) }
   it { should have_many(:namespaces) }
 
-  it 'does not check whether the given name is downcased or not' do
+  it "does not check whether the given name is downcased or not" do
     # Does not check name case because:
     # - default namespace is not provided anymore on team creation
     # [ISSUE #234](https://github.com/SUSE/Portus/issues/234)
     # [PR #235](https://github.com/SUSE/Portus/pull/235)
-    expect { FactoryGirl.create(:team, name: 'TeAm') }.not_to raise_error
+    expect { FactoryGirl.create(:team, name: "TeAm") }.not_to raise_error
   end
 
-  it 'Counts all the non special teams' do
+  it "Counts all the non special teams" do
     # The registry does not count.
     # NOTE: the registry factory also creates a user.
     create(:registry)

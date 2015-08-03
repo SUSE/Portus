@@ -2,7 +2,7 @@ class NamespacePolicy
   attr_reader :user, :namespace
 
   def initialize(user, namespace)
-    fail Pundit::NotAuthorizedError, 'must be logged in' unless user
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
     @user = user
     @namespace = namespace
   end
@@ -17,8 +17,8 @@ class NamespacePolicy
   def push?
     # only owners and contributors have WRITE access
     user.admin? ||
-    namespace.team.owners.exists?(user.id) ||
-    namespace.team.contributors.exists?(user.id)
+      namespace.team.owners.exists?(user.id) ||
+      namespace.team.contributors.exists?(user.id)
   end
 
   def show?
@@ -45,8 +45,8 @@ class NamespacePolicy
       scope
         .joins(team: [:team_users])
         .where(
-          '(namespaces.public = :public OR team_users.user_id = :user_id) AND ' \
-          'namespaces.global = :global AND namespaces.name != :username',
+          "(namespaces.public = :public OR team_users.user_id = :user_id) AND " \
+          "namespaces.global = :global AND namespaces.name != :username",
           public: true, user_id: user.id, global: false, username: user.username)
         .distinct
     end
