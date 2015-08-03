@@ -30,6 +30,6 @@ class Admin::RegistriesController < Admin::BaseController
   private
 
   def registries_params
-    params.require(:registry).permit(:name, :hostname)
+    params.require(:registry).permit(:name, :hostname, :use_ssl)
   end
 end

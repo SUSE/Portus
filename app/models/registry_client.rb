@@ -2,6 +2,7 @@ class RegistryClient
   class NoBearerRealmException < RuntimeError; end
   class AuthorizationError < RuntimeError; end
   class ManifestNotFoundError < RuntimeError; end
+  class RepositoryNotFoundError < RuntimeError; end
   class CredentialsMissingError < RuntimeError; end
 
   def initialize(host, use_ssl = true, username = nil, password = nil)
@@ -16,6 +17,17 @@ class RegistryClient
     @username && @password
   end
 
+  def tags(repository)
+    res = get_request("#{repository}/tags/list")
+    if res.code.to_i == 200
+      JSON.parse(res.body)
+    elsif res.code.to_i == 404
+      fail RepositoryNotFoundError, "Cannot find #{repository}"
+    else
+      fail "Something went wrong while fetching tags for #{repository} [#{res.code}] - #{res.body}"
+    end
+  end
+
   def manifest(repository, tag = 'latest')
     res = get_request("#{repository}/manifests/#{tag}")
     if res.code.to_i == 200
@@ -25,6 +37,15 @@ class RegistryClient
     else
       fail "Something went wrong while fetching manifest for #{repository}:#{tag}:" \
         "[#{res.code}] - #{res.body}"
+    end
+  end
+
+  def catalog
+    res = get_request('_catalog')
+    if res.code.to_i == 200
+      JSON.parse(res.body)
+    else
+      fail "Something went wrong while fetching catalog for #{@host} [#{res.code}] - #{res.body}"
     end
   end
 

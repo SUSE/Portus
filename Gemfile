@@ -26,6 +26,9 @@ gem 'search_cop'
 # Pagination
 gem 'kaminari'
 
+# Memoization
+gem 'memoist'
+
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
 # run:

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150722194840) do
+ActiveRecord::Schema.define(version: 20150730202622) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -31,6 +31,13 @@ ActiveRecord::Schema.define(version: 20150722194840) do
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
+  create_table "fs_layers", id: false, force: :cascade do |t|
+    t.string  "blob_sum", limit: 255, null: false
+    t.integer "tag_id",   limit: 4,   null: false
+  end
+
+  add_index "fs_layers", ["tag_id"], name: "index_fs_layers_on_tag_id", using: :btree
+
   create_table "namespaces", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.datetime "created_at",                              null: false
@@ -47,10 +54,11 @@ ActiveRecord::Schema.define(version: 20150722194840) do
   add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id", using: :btree
 
   create_table "registries", force: :cascade do |t|
-    t.string   "name",       limit: 255, null: false
-    t.string   "hostname",   limit: 255, null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",       limit: 255,                 null: false
+    t.string   "hostname",   limit: 255,                 null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.boolean  "use_ssl",    limit: 1,   default: false
   end
 
   add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true, using: :btree
@@ -83,6 +91,7 @@ ActiveRecord::Schema.define(version: 20150722194840) do
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
     t.integer  "user_id",       limit: 4
+    t.string   "architecture",  limit: 255
   end
 
   add_index "tags", ["name", "repository_id"], name: "index_tags_on_name_and_repository_id", unique: true, using: :btree
