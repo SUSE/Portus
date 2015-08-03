@@ -3,6 +3,8 @@ web:
   command: thin start
   ports:
     - "3000:3000"
+  environment:
+    COMPOSE: 1
 registry:
   image: registry:2.0.1
   ports:

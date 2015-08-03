@@ -1,13 +1,14 @@
 default: &default
   adapter: mysql2
   encoding: utf8
-
-development:
-  <<: *default
+<% if ENV['COMPOSE'] %>
   host: db
   username: root
   password: portus
+<% end %>
 
+development:
+  <<: *default
   database: portus_development
 
 # Warning: The database defined as "test" will be erased and
