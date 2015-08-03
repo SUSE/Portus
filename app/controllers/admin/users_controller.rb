@@ -2,7 +2,7 @@ class Admin::UsersController < Admin::BaseController
   respond_to :html, :js
 
   def index
-    @users = User.where(enabled: true).page(params[:page])
+    @users = User.enabled.page(params[:page])
     @admin_count = User.admins.count
   end
 
