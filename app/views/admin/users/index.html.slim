@@ -9,6 +9,8 @@
         col.col-40
         col.col-10
         col.col-10
+        col.col-10
+        col.col-10
         thead
           tr
             th Name
@@ -16,12 +18,13 @@
             th Admin
             th Namespaces
             th Teams
+            th Enabled
         tbody
           - @users.each do |user|
             tr[id="user_#{user.id}"]
               td= user.username
               td= user.email
-              td
+              td.admin-btn
                 - if current_user.id == user.id
                   i.fa.fa-lg[class="fa-toggle-#{user.admin? ? 'on': 'off'}"]
                 - else
@@ -34,4 +37,14 @@
 
               td= user.teams.reduce(0){ |sum, t| sum += t.namespaces.count}
               td= user.teams.count
+              td.enabled-btn
+                - if current_user.id == user.id && @admin_count == 1
+                  i.fa.fa-lg.fa-toggle-on
+                - else
+                  a[class="btn btn-default"
+                    data-remote="true"
+                    data-method="put"
+                    rel="nofollow"
+                    href=url_for(disable_user_path(user))]
+                      i.fa.fa-lg[class="fa-toggle-#{user.enabled? ? 'on': 'off'}"]
   .panel-footer= paginate(@users)

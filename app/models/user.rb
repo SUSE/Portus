@@ -14,6 +14,9 @@ class User < ActiveRecord::Base
   has_many :teams, through: :team_users
   has_many :stars
 
+  scope :enabled, -> { where enabled: true }
+  scope :admins,  -> { where enabled: true, admin: true }
+
   def private_namespace_available
     return unless Namespace.exists?(name: username)
     errors.add(:username, 'cannot be used as name for private namespace')
@@ -50,5 +53,18 @@ class User < ActiveRecord::Base
 
     team = Registry.first.global_namespace.team
     admin ? team.owners << self : team.owners.delete(self)
+  end
+
+  ##
+  # Disabling users.
+
+  # This method is picked up by Devise before signing in a user.
+  def active_for_authentication?
+    super && enabled?
+  end
+
+  # The flashy message to be shown for disabled users that try to login.
+  def inactive_message
+    'Sorry, this account has been disabled.'
   end
 end

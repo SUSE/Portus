@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     root to: 'auth/sessions#new'
+    put 'disable_user/:id', to: 'auth/registrations#disable', as: :disable_user
   end
 
   namespace :v2, module: 'api/v2', defaults: { format: :json } do

@@ -53,6 +53,17 @@ describe User do
 
   end
 
+  describe 'admins' do
+    let!(:admin1) { create(:admin) }
+    let!(:admin2) { create(:admin, enabled: false) }
+
+    it 'computes the right amount of admin users' do
+      admins = User.admins
+      expect(admins.count).to be 1
+      expect(admins.first.id).to be admin1.id
+    end
+  end
+
   describe '#toggle_admin' do
     let!(:registry) { create(:registry) }
     let!(:user) { create(:user) }
@@ -75,6 +86,18 @@ describe User do
       owners = registry.global_namespace.team.owners
       expect(owners.count).to be(1)
       expect(owners.first.id).to be(admin.id)
+    end
+  end
+
+  describe 'disabling' do
+    let!(:admin) { create(:admin) }
+    let!(:user) { create(:user) }
+    let!(:team) { create(:team, owners: [admin], viewers: [user]) }
+
+    it 'interacts with Devise as expected' do
+      expect(user.active_for_authentication?).to be true
+      user.update_attributes(enabled: false)
+      expect(user.active_for_authentication?).to be false
     end
   end
 end
