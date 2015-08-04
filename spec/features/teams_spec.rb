@@ -55,6 +55,9 @@ feature "Teams support" do
       expect(Team.count).to eql teams_count + 1
       expect(current_path).to eql teams_path
       expect(page).to have_content("valid-team")
+
+      wait_for_effect_on("#alert")
+      expect(page).to have_content("The team 'valid-team' was created successfully")
     end
 
     scenario 'The "Create new team" link has a toggle effect', js: true do
@@ -84,9 +87,13 @@ feature "Teams support" do
   end
 
   describe "teams#show" do
-    scenario "A namespace can be created from the team page", js: true do
-      visit team_path(team)
+    let!(:another) { create(:user) }
 
+    before :each do
+      visit team_path(team)
+    end
+
+    scenario "A namespace can be created from the team page", js: true do
       # The form appears after clicking the "Add namespace" link.
       expect(find("#add_namespace_form", visible: false)).to_not be_visible
       find("#add_namespace_btn").click
@@ -104,6 +111,62 @@ feature "Teams support" do
       expect(page).to have_css("#namespace_#{namespace.id}")
       wait_for_effect_on("#add_namespace_form")
       expect(find("#add_namespace_form", visible: false)).to_not be_visible
+    end
+
+    scenario "An user can be added as a team member", js: true do
+      find("#add_team_user_btn").click
+      wait_for_effect_on("#add_team_user_form")
+      find("#team_user_role").select 'Contributor'
+      find("#team_user_user").set another.username
+      find("#add_team_user_form .btn").click
+
+      wait_for_ajax
+      wait_for_effect_on("#alert")
+
+      expect(page).to have_content("New user added to the team")
+      expect(page).to have_content("Contributor")
+    end
+
+    scenario "New team members have to exist on the system", js: true do
+      find("#add_team_user_btn").click
+      wait_for_effect_on("#add_team_user_form")
+      find("#team_user_role").select 'Contributor'
+      find("#team_user_user").set "grumpy"
+      find("#add_team_user_form .btn").click
+
+      wait_for_ajax
+      wait_for_effect_on("#alert")
+
+      expect(page).to have_content("User cannot be found")
+    end
+
+    scenario "A team member can be kicked out from a team", js: true do
+      tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles['viewer' ])
+      visit team_path(team)
+
+      find("#team_user_#{tu.id} a.btn").click
+      # I don't know how to wait for popovers, since they're created entirely
+      # with JS
+      sleep 0.5
+      find(".popover-content .btn-primary").click
+
+      wait_for_ajax
+      wait_for_effect_on("#alert")
+
+      expect(page).to have_content("User removed from the team")
+    end
+
+    scenario "The only member of a team cannot be removed", js: true do
+      find("#team_users a.btn").click
+      # I don't know how to wait for popovers, since they're created entirely
+      # with JS
+      sleep 0.5
+      find(".popover-content .btn-primary").click
+
+      wait_for_ajax
+      wait_for_effect_on("#alert")
+
+      expect(page).to have_content("Cannot remove the only owner of the team")
     end
   end
 end

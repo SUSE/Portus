@@ -3,6 +3,6 @@
   $('#alert').fadeIn();
 <% else %>
   $("#team_user_<%= team_user_id %>").remove();
-  $('#notice p').html("User removed from the team");
-  $('#notice').fadeIn();
+  $('#alert p').html("User removed from the team");
+  $('#alert').fadeIn();
 <% end %>

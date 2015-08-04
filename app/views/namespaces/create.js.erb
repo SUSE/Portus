@@ -5,8 +5,8 @@
   $('#alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
 <% else %>
-  $('#notice p').html("New namespace created");
-  $('#notice').fadeIn();
+  $('#alert p').html("New namespace created");
+  $('#alert').fadeIn();
 
   $('#add_namespace_form').fadeOut();
   $('#add_namespace_btn i').addClass("fa-chevron-down")
