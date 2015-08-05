@@ -3,8 +3,8 @@
   $('#alert').fadeIn();
 <% else %>
   $("<%= escape_javascript(render @team) %>").appendTo("#teams");
-  $('#notice p').html("The team '<%= @team.name %>' was created successfully");
-  $('#notice').fadeIn();
+  $('#alert p').html("The team '<%= @team.name %>' was created successfully");
+  $('#alert').fadeIn();
   $('#add_team_form').fadeOut();
   $('#add_team_btn i').addClass("fa-plus-circle")
   $('#add_team_btn i').removeClass("fa-minus-circle")

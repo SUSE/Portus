@@ -78,6 +78,9 @@ feature "Namespaces support" do
       expect(current_path).to eql namespaces_path
       expect(page).to have_content("valid-namespace")
 
+      wait_for_effect_on("#alert")
+      expect(page).to have_content("New namespace created")
+
       # Check that it created a link to it and that it's accessible.
       click_link "valid-namespace"
       namespace = Namespace.find_by(name: "valid-namespace")
@@ -115,6 +118,9 @@ feature "Namespaces support" do
       expect(page).to have_css("#namespace_#{id} .fa-toggle-on")
       namespace = Namespace.find(id)
       expect(namespace.public?).to be true
+
+      wait_for_effect_on("#alert")
+      expect(page).to have_content("Namespace '#{namespace.name}' is now public")
     end
   end
 end

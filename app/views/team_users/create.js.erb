@@ -3,8 +3,8 @@
   $('#alert').fadeIn();
 <% else %>
   $("<%= escape_javascript(render @team_user) %>").appendTo("#team_users");
-  $('#notice p').html("New user added to the team");
-  $('#notice').fadeIn();
+  $('#alert p').html("New user added to the team");
+  $('#alert').fadeIn();
   $('#add_team_user_form').fadeOut();
   $('#add_team_user_btn i').addClass("fa-chevron-down")
   $('#add_team_user_btn i').removeClass("fa-chevron-up")
