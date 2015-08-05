@@ -116,7 +116,7 @@ feature "Teams support" do
     scenario "An user can be added as a team member", js: true do
       find("#add_team_user_btn").click
       wait_for_effect_on("#add_team_user_form")
-      find("#team_user_role").select 'Contributor'
+      find("#team_user_role").select "Contributor"
       find("#team_user_user").set another.username
       find("#add_team_user_form .btn").click
 
@@ -130,7 +130,7 @@ feature "Teams support" do
     scenario "New team members have to exist on the system", js: true do
       find("#add_team_user_btn").click
       wait_for_effect_on("#add_team_user_form")
-      find("#team_user_role").select 'Contributor'
+      find("#team_user_role").select "Contributor"
       find("#team_user_user").set "grumpy"
       find("#add_team_user_form .btn").click
 
@@ -141,7 +141,7 @@ feature "Teams support" do
     end
 
     scenario "A team member can be kicked out from a team", js: true do
-      tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles['viewer' ])
+      tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles["viewer"])
       visit team_path(team)
 
       find("#team_user_#{tu.id} a.btn").click
