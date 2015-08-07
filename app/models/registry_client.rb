@@ -1,7 +1,21 @@
+# RegistryClient is a a layer between Portus and the Registry. Given a set of
+# credentials, it's able to call to any endpoint in the registry API. Moreover,
+# it also implements some handy methods on top of some of these endpoints (e.g.
+# the `manifest` method for the Manifest API endpoints).
 class RegistryClient
+  # As specified in the token specification of distribution, the client will
+  # get a 401 on the first attempt of logging in, but in there should be the
+  # "WWW-Authenticate" header. This exception will be raised when there's no
+  # authentication token bearer.
   class NoBearerRealmException < RuntimeError; end
+
+  # Raised when the authorization token could not be fetched.
   class AuthorizationError < RuntimeError; end
-  class ManifestNotFoundError < RuntimeError; end
+
+  # Used when a resource was not found for the given endpoint.
+  class NotFoundError < RuntimeError; end
+
+  # Raised if this client does not have the credentials to perform an API call.
   class CredentialsMissingError < RuntimeError; end
 
   def initialize(host, use_ssl = true, username = nil, password = nil)
@@ -12,43 +26,62 @@ class RegistryClient
     @password = password
   end
 
-  def credentials?
-    @username && @password
-  end
-
+  # Retrieves the manifest for the required repository:tag. If everything goes
+  # well, it will return a parsed response from the registry, otherwise it will
+  # raise either ManifestNotFoundError or a RuntimeError.
   def manifest(repository, tag = "latest")
     res = get_request("#{repository}/manifests/#{tag}")
     if res.code.to_i == 200
       JSON.parse(res.body)
     elsif res.code.to_i == 404
-      raise ManifestNotFoundError, "Cannot find manifest for #{repository}:#{tag}"
+      raise NotFoundError, "Cannot find manifest for #{repository}:#{tag}"
     else
-      raise "Something went wrong while fetching manifest for #{repository}:#{tag}:" \
-        "[#{res.code}] - #{res.body}"
+      raise "Something went wrong while fetching manifest for " \
+        "#{repository}:#{tag}:[#{res.code}] - #{res.body}"
     end
   end
 
+  # This is the general method to perform a GET request to an endpoint provided
+  # by the registry. The first parameter is the URI of the endpoint itself. The
+  # `request_auth_token` parameter means that if this method gets a 401 when
+  # calling the given path, it should get an authorization token automatically
+  # and try again.
   def get_request(path, request_auth_token = true)
     uri = URI.join(@base_url, path)
-    Rails.logger.info uri
-    Rails.logger.info "Token -> #{@token} <-"
     req = Net::HTTP::Get.new(uri)
+
+    # This only happens if the auth token has already been set by a previous
+    # call.
     req["Authorization"] = "Bearer #{@token}" if @token
 
     res = get_response_token(uri, req)
     if res.code.to_i == 401
-      # Note that request_auth_token will raise an exception on error.
+      # This can mean that this is the first time that the client is calling
+      # the registry API, and that, therefore, it might need to request the
+      # authorization token first.
       if request_auth_token
+        # Note that request_auth_token will raise an exception on error.
         request_auth_token(res)
+
+        # Recursive call, but this time we make sure that we don't enter here
+        # again. If this call fails, then there's something *really* wrong with
+        # the given credentials.
         return get_request(path, false)
       end
-    else
-      res
     end
+    res
   end
 
   private
 
+  # Returns true if this client has the credentials set.
+  def credentials?
+    @username && @password
+  end
+
+  # This method should be called after getting a 401. In this case, the
+  # registry has sent the proper "WWW-Authenticate" header value that will
+  # allow us the request a new authorization token for this client.
   def request_auth_token(unhauthorized_response)
     bearer_realm, query = parse_unhauthorized_response(unhauthorized_response)
 
@@ -66,6 +99,8 @@ class RegistryClient
     end
   end
 
+  # For the given 401 response, try to extract the token and the parameters
+  # that this client should use in order to request an authorization token.
   def parse_unhauthorized_response(res)
     auth_args = res.to_hash["www-authenticate"].first.split(",").each_with_object({}) do |i, h|
       key, val = i.split("=")
