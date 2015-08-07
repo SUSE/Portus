@@ -78,9 +78,10 @@ systemctl start mysql
 
 cd /vagrant
 bundle config build.nokogiri --use-system-libraries
-bundle install
+bundle install --retry=3
 bundle exec rake db:create
 bundle exec rake db:migrate
+bundle exec rake portus:create
 
 sudo gem install passenger -v 5.0.7
 passenger-install-apache2-module.ruby2.1 -a

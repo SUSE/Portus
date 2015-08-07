@@ -30,6 +30,8 @@ class RegistryClient
 
   def get_request(path, request_auth_token = true)
     uri = URI.join(@base_url, path)
+    Rails.logger.info uri
+    Rails.logger.info "Token -> #{@token} <-"
     req = Net::HTTP::Get.new(uri)
     req["Authorization"] = "Bearer #{@token}" if @token
 

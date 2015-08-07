@@ -7,7 +7,6 @@ describe User do
   it { should validate_uniqueness_of(:email) }
   it { should validate_uniqueness_of(:username) }
   it { should allow_value("test1", "1test").for(:username) }
-  it { should_not allow_value("portus", "foo", "1Test", "another_test").for(:username) }
 
   it "should block user creation when the private namespace is not available" do
     name = "coolname"

@@ -4,9 +4,7 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, uniqueness: true,
                        format: { with:    /\A[a-z0-9]{4,30}\Z/,
-                                 message: 'Accepted format: "\A[a-z0-9]{4,30}\Z"' },
-                       exclusion: { in:      %w(portus),
-                                    message: "%{value} is reserved." }
+                                 message: 'Accepted format: "\A[a-z0-9]{4,30}\Z"' }
 
   validate :private_namespace_available, on: :create
 
