@@ -5,7 +5,7 @@ class Namespace::AuthScope
 
   def initialize(registry, scope_string)
     @scope_string = scope_string
-    @registry = registry
+    @registry     = registry
     parse_scope_string!
   end
 

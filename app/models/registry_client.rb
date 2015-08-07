@@ -41,6 +41,25 @@ class RegistryClient
     end
   end
 
+  # Fetches all the repositories available in the registry, with all their
+  # corresponding tags. If something goes wrong while fetching the repos from
+  # the catalog (e.g. authorization error), it will raise an exception.
+  #
+  # Returns an array of hashes which contain two keys:
+  #   - name: a string containing the name of the repository.
+  #   - tags: an array containing the available tags for the repository.
+  def catalog
+    res = get_request("_catalog")
+    if res.code.to_i == 200
+      catalog = JSON.parse(res.body)
+      add_tags(catalog["repositories"])
+    elsif res.code.to_i == 404
+      raise NotFoundError, "Could not find the catalog endpoint!"
+    else
+      raise "Something went wrong while fetching the catalog"
+    end
+  end
+
   # This is the general method to perform a GET request to an endpoint provided
   # by the registry. The first parameter is the URI of the endpoint itself. The
   # `request_auth_token` parameter means that if this method gets a 401 when
@@ -132,5 +151,21 @@ class RegistryClient
     Net::HTTP.start(uri.hostname, uri.port, use_ssl: https) do |http|
       http.request(req)
     end
+  end
+
+  # Adds the available tags for each of the given repositories. If there is a
+  # problem while fetching a repository's tag, it will return an empty array.
+  # Otherwise it will return an array with the results as specified in the
+  # documentation of the `catalog` method.
+  def add_tags(repositories)
+    return [] if repositories.nil?
+
+    result = []
+    repositories.each do |repo|
+      res = get_request("#{repo}/tags/list")
+      return [] if res.code.to_i != 200
+      result << JSON.parse(res.body)
+    end
+    result
   end
 end

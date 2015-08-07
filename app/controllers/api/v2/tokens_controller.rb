@@ -31,6 +31,7 @@ class Api::V2::TokensController < Api::BaseController
     return unless params[:scope]
 
     auth_scope, scopes = scope_handler(registry, params[:scope])
+
     scopes.each do |scope|
       begin
         authorize auth_scope.resource, "#{scope}?".to_sym
@@ -51,12 +52,14 @@ class Api::V2::TokensController < Api::BaseController
     case type
     when "repository"
       auth_scope = Namespace::AuthScope.new(registry, scope_string)
+      scopes = scope_string.split(":", 3)[2].split(",")
+    when "registry"
+      auth_scope = Registry::AuthScope.new(registry, scope_string)
+      scopes = auth_scope.scopes
     else
       logger.error "Scope not handled: #{type}"
       raise ScopeNotHandled
     end
-
-    scopes = scope_string.split(":", 3)[2].split(",")
 
     [auth_scope, scopes]
   end
