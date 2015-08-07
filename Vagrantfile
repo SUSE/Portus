@@ -78,7 +78,7 @@ systemctl start mysql
 
 cd /vagrant
 bundle config build.nokogiri --use-system-libraries
-bundle install
+bundle install --retry=3
 bundle exec rake db:create
 bundle exec rake db:migrate
 
