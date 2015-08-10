@@ -12,8 +12,9 @@ class User < ActiveRecord::Base
   has_many :teams, through: :team_users
   has_many :stars
 
-  scope :enabled, -> { where enabled: true }
-  scope :admins,  -> { where enabled: true, admin: true }
+  scope :not_portus, -> { where.not username: "portus" }
+  scope :enabled,    -> { not_portus.where enabled: true }
+  scope :admins,     -> { not_portus.where enabled: true, admin: true }
 
   def private_namespace_available
     return unless Namespace.exists?(name: username)
