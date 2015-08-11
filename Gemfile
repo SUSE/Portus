@@ -19,7 +19,6 @@ gem "gravatar_image_tag"
 gem "rails-observers"
 gem "public_activity"
 gem "active_record_union"
-gem "rotp"
 gem "mysql2"
 gem "search_cop"
 

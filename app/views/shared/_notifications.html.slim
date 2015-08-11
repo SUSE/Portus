@@ -1,4 +1,4 @@
-- if current_user && !current_page?(url_for new_admin_registry_path) && Registry.count == 0
+- if current_user && !current_page?(url_for new_admin_registry_path) && !Registry.any?
   .alert.alert-danger.fade.in.text-left.alert-dismissible
     button.close data-dismiss="alert" type="button"
       span aria-hidden="true" &times;

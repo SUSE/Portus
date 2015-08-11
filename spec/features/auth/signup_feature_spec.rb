@@ -24,6 +24,16 @@ feature "Signup feature" do
     expect(page).to have_css("#user_admin")
   end
 
+  scenario "The portus user does not interfere with regular admin creation" do
+    User.delete_all
+    create_portus_user!
+
+    visit new_user_registration_url
+
+    expect(page).to have_content("Create admin")
+    expect(page).to have_css("#user_admin")
+  end
+
   scenario "As a guest I am able to signup" do
     expect(page).to_not have_content("Create admin")
     fill_in "user_username", with: user.username

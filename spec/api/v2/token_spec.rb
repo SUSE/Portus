@@ -52,40 +52,6 @@ describe "/v2/token" do
       end
     end
 
-    context "as the special portus user" do
-
-      it "allows access when the one time password is valid" do
-        totp = ROTP::TOTP.new(Rails.application.config.otp_secret)
-        auth_header = {
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("portus", totp.now)
-        }
-
-        get v2_token_url, {
-          service: registry.hostname,
-          account: "portus",
-          scope:   "repository:foo/me:push" },
-          auth_header
-        expect(response.status).to eq 200
-      end
-
-      it "blocks access when the time based OTP is not valid" do
-        auth_header = {}
-
-        Timecop.travel(30.seconds.ago) do
-          totp = ROTP::TOTP.new(Rails.application.config.otp_secret)
-          auth_header["HTTP_AUTHORIZATION"] = auth_mech.encode_credentials(
-            "portus", totp.now)
-        end
-
-        get v2_token_url, {
-          service: registry.hostname,
-          account: "portus",
-          scope:   "repository:foo/me:push" },
-          auth_header
-        expect(response.status).to eq 401
-      end
-    end
-
     context "as valid user" do
       let(:valid_request) do
         {
@@ -158,10 +124,62 @@ describe "/v2/token" do
         end
       end
 
+      context "registry scope" do
+        let(:valid_request) do
+          {
+            service: registry.hostname,
+            account: "portus",
+            scope:   "registry:catalog:*"
+          }
+        end
+
+        let(:valid_portus_auth_header) do
+          { "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("portus", Rails.application.secrets.portus_password) }
+        end
+
+        before do
+          User.create!(
+            username: "portus",
+            password: Rails.application.secrets.portus_password,
+            email:    "portus@portus.com",
+            admin:    true
+          )
+        end
+
+        it "allows portus to access the Catalog API" do
+          get v2_token_url, valid_request, valid_portus_auth_header
+          expect(response.status).to eq 200
+
+          token = JSON.parse(response.body)["token"]
+          payload = JWT.decode(token, nil, false, leeway: 2)[0]
+          expect(payload["sub"]).to eq "portus"
+          expect(payload["aud"]).to eq registry.hostname
+          expect(payload["access"][0]["type"]).to eq "registry"
+          expect(payload["access"][0]["name"]).to eq "catalog"
+          expect(payload["access"][0]["actions"][0]).to eq "*"
+        end
+
+        it "forbids unhandled methods from the registry type" do
+          wr = valid_request
+          wr[:scope] = "registry:catalog:lala"
+          get v2_token_url, wr, valid_portus_auth_header
+          expect(response.status).to eq 401
+        end
+      end
+
       context "unknown scope" do
         it "denies access" do
           get v2_token_url,
               { service: registry.hostname, account: user.username, scope: "repository:busybox:fork" },
+              valid_auth_header
+          expect(response.status).to eq 401
+        end
+      end
+
+      context "unknown type" do
+        it "denies access" do
+          get v2_token_url,
+              { service: registry.hostname, account: user.username, scope: "lala:busybox:fork" },
               valid_auth_header
           expect(response.status).to eq 401
         end

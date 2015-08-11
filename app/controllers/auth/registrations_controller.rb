@@ -75,12 +75,12 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   end
 
   def check_admin
-    @admin = User.exists?(admin: true)
+    @admin = User.admins.any?
   end
 
   def configure_sign_up_params
     devise_parameter_sanitizer.for(:sign_up) << :email
-    return if User.exists?(admin: true)
+    return if User.admins.any?
     devise_parameter_sanitizer.for(:sign_up) << :admin
   end
 
@@ -99,6 +99,9 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   #   1. A user can disable himself unless it's the last admin on the system.
   #   2. The admin user is the only one that can disable other users.
   def can_disable?(user)
+    # The "portus" user can never be disabled.
+    return false if user.username == "portus"
+
     if current_user == user
       # An admin cannot disable himself if he's the only admin in the system.
       current_user.admin? && User.admins.count == 1
