@@ -8,7 +8,7 @@ setup_database() {
   TIMEOUT=90
   COUNT=0
   printf "Portus: configuring database..."
-  docker-compose run --rm web rake db:create db:migrate portus:create &> /dev/null
+  docker-compose run --rm web rake db:create db:migrate db:seed &> /dev/null
 
   while [ $? -ne 0 ]; do
     printf " [FAIL]\n"
@@ -22,7 +22,7 @@ setup_database() {
     COUNT=$((COUNT+5))
 
     printf "Portus: configuring database..."
-    docker-compose run --rm web rake db:create db:migrate portus:create &> /dev/null
+    docker-compose run --rm web rake db:create db:migrate db:seed &> /dev/null
   done
   printf " [SUCCESS]\n"
   set -e
