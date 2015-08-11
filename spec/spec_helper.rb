@@ -16,6 +16,9 @@ VCR.configure do |c|
 
   # So code coverage reports can be submitted to codeclimate.com
   c.ignore_hosts "codeclimate.com"
+
+  # To debug when a VCR goes wrong.
+  # c.debug_logger = $stdout
 end
 
 RSpec.configure do |config|

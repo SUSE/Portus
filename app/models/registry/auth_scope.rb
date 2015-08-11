@@ -23,8 +23,10 @@ class Registry::AuthScope
   end
 
   # Returns an array containing the scopes available for this registry object.
+  # It returns a ["*"] if it's an invalid scope, because this will not be
+  # implemented as a method.
   def scopes
-    return catalog? ? ["all"] : []
+    catalog? ? ["all"] : ["*"]
   end
 
   private
@@ -40,6 +42,7 @@ class Registry::AuthScope
     parts = @scope_string.split(":", 3)
     @resource_type = parts[0]
     @resource_name = parts[1]
-    @actions       = parts[2].split(",")
+    @actions       = parts[2]
+    @actions       = @actions.split(",") if @actions
   end
 end

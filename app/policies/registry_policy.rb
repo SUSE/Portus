@@ -3,8 +3,7 @@
 class RegistryPolicy
   attr_reader :user
 
-  # Note that the "registry" parameter is not used by this class.
-  def initialize(user, registry)
+  def initialize(user, _)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     @user = user
   end

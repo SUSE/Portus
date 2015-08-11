@@ -11,7 +11,7 @@
           | The Portus user does not exist!
 
 .row
-  .col-md-3.col-xs-6
+  .col-md-3.col-xs-6.registries
     .panel-overview
       .panel-heading
         = link_to 'Registry', admin_registries_path
@@ -22,7 +22,7 @@
           .col-xs-8
             span.fa-3x= Registry.count
 
-  .col-md-3.col-xs-6
+  .col-md-3.col-xs-6.users
     .panel-overview
       .panel-heading
         = link_to 'Users', admin_users_path
@@ -33,7 +33,7 @@
           .col-xs-8
             span.fa-3x= User.enabled.count
 
-  .col-md-3.col-xs-6
+  .col-md-3.col-xs-6.teams
     .panel-overview
       .panel-heading
         = link_to 'Teams', admin_teams_path
@@ -46,7 +46,7 @@
 
   .clearfix.visible-xs-block
 
-  .col-md-3.col-xs-6
+  .col-md-3.col-xs-6.namespaces
     .panel-overview
       .panel-heading
         = link_to 'Namespaces', admin_namespaces_path
