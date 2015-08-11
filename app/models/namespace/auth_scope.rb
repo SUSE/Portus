@@ -1,13 +1,6 @@
-class Namespace::AuthScope
-  class ResourceIsNotFound < StandardError; end
-
+# Namespace::AuthScope parses the scope string for the "namespace" type.
+class Namespace::AuthScope < Portus::AuthScope
   attr_accessor :resource, :actions, :resource_type, :resource_name
-
-  def initialize(registry, scope_string)
-    @scope_string = scope_string
-    @registry     = registry
-    parse_scope_string!
-  end
 
   def resource
     if @namespace_name.blank?
@@ -17,26 +10,18 @@ class Namespace::AuthScope
     end
 
     if found_resource.nil?
-      Rails.logger.warn "Namespace::AuthScope - Cannot find namespace with name #{@namespace_name}"
-      raise ResourceIsNotFound
+      Rails.logger.warn "Cannot find namespace with name #{@namespace_name}"
+      raise ResourceNotFound
     end
     found_resource
   end
 
-  private
+  protected
 
+  # Re-implemented from Portus::AuthScope to deal with the name of the
+  # namespace.
   def parse_scope_string!
-    @resource_type    = @scope_string.split(":")[0]
-    @resource_name    = @scope_string.split(":")[1]
-    @namespace_name   = requested_resource_namespace_name
-    @actions          = requested_actions
-  end
-
-  def requested_resource_namespace_name
-    @resource_name.split("/").first if @resource_name.include?("/")
-  end
-
-  def requested_actions
-    @scope_string.split(":")[2].split(",")
+    super
+    @namespace_name = @resource_name.split("/").first
   end
 end

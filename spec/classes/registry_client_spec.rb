@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe RegistryClient do
+describe RegistryClient, focus: true do
   let(:registry_server) { "registry.test.lan" }
   let(:username) { "flavio" }
   let(:password) { "this is a test" }
@@ -186,7 +186,7 @@ describe RegistryClient do
   end
 
   context "fetching Catalog from registry" do
-    it "returns the available catalog", focus: true do
+    it "returns the available catalog" do
       create(:registry)
       create(:admin, username: "portus")
 

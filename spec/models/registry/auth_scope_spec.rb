@@ -7,7 +7,7 @@ describe Registry::AuthScope, type: :model do
       scope = Registry::AuthScope.new(reg, "scope:string:lala")
       expect do
         scope.resource
-      end.to raise_error(Registry::AuthScope::ResourceIsNotFound)
+      end.to raise_error(Registry::AuthScope::ResourceNotFound)
     end
 
     it "returns the current registry" do
@@ -25,7 +25,7 @@ describe Registry::AuthScope, type: :model do
     it "returns an invalid scope for incomplete scope strings" do
       ["scope", "scope:lala"].each do |sc|
         scope = Registry::AuthScope.new(registry, sc)
-        expect(scope.scopes).to match_array(["*"])
+        expect(scope.scopes).to match_array([])
       end
     end
 
@@ -33,7 +33,7 @@ describe Registry::AuthScope, type: :model do
       # The resource type is guaranteed to equal "registry" by the caller.
       ["registry:cata:aa", "registry:catalog:lala", "registry:lala:*"].each do |sc|
         scope = Registry::AuthScope.new(registry, sc)
-        expect(scope.scopes).to match_array(["*"])
+        expect(scope.scopes).to match_array([])
       end
     end
 

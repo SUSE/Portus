@@ -31,6 +31,7 @@ class Api::V2::TokensController < Api::BaseController
     return unless params[:scope]
 
     auth_scope, scopes = scope_handler(registry, params[:scope])
+    raise Pundit::NotAuthorizedError, "No scopes to handle" if scopes.empty?
 
     scopes.each do |scope|
       begin
@@ -47,20 +48,19 @@ class Api::V2::TokensController < Api::BaseController
   # From the given scope string, try to fetch a scope handler class for it.
   # Scope handlers are defined in "app/models/*/auth_scope.rb" files.
   def scope_handler(registry, scope_string)
-    type = scope_string.split(":", 3)[0]
+    str = scope_string.split(":", 3)
+    raise ScopeNotHandled, "Wrong format for scope string" if str.length != 3
 
-    case type
+    case str[0]
     when "repository"
       auth_scope = Namespace::AuthScope.new(registry, scope_string)
-      scopes = scope_string.split(":", 3)[2].split(",")
     when "registry"
       auth_scope = Registry::AuthScope.new(registry, scope_string)
-      scopes = auth_scope.scopes
     else
       logger.error "Scope not handled: #{type}"
       raise ScopeNotHandled
     end
 
-    [auth_scope, scopes]
+    [auth_scope, auth_scope.scopes]
   end
 end

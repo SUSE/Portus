@@ -1,32 +1,17 @@
 # Registry::AuthScope parses the scope string so it can be used afterwards for
 # the "registry" type.
-class Registry::AuthScope
-  # The given Registry was not found.
-  class ResourceIsNotFound < StandardError; end
-
-  attr_accessor :resource, :actions, :resource_type, :resource_name
-
-  def initialize(registry, scope_string)
-    @scope_string = scope_string
-    @registry     = registry
-    parse_scope_string!
-  end
-
-  # Returns the registry required by this scope.
+class Registry::AuthScope < Portus::AuthScope
   def resource
     reg = Registry.find_by(hostname: @registry.hostname)
     if reg.nil?
       Rails.logger.warn "Could not find registry #{@registry.hostname}"
-      raise ResourceIsNotFound
+      raise ResourceNotFound
     end
     reg
   end
 
-  # Returns an array containing the scopes available for this registry object.
-  # It returns a ["*"] if it's an invalid scope, because this will not be
-  # implemented as a method.
   def scopes
-    catalog? ? ["all"] : ["*"]
+    catalog? ? ["all"] : []
   end
 
   private
@@ -35,14 +20,5 @@ class Registry::AuthScope
   # endpoint.
   def catalog?
     @resource_name == "catalog" && @actions[0] == "*"
-  end
-
-  # Parses the @scope_string variable into the needed attributes.
-  def parse_scope_string!
-    parts = @scope_string.split(":", 3)
-    @resource_type = parts[0]
-    @resource_name = parts[1]
-    @actions       = parts[2]
-    @actions       = @actions.split(",") if @actions
   end
 end
