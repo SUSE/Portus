@@ -186,7 +186,7 @@ describe RegistryClient do
   end
 
   context "fetching Catalog from registry" do
-    it "returns the available catalog" do
+    it "returns the available catalog", focus: true do
       create(:registry)
       create(:admin, username: "portus")
 
@@ -197,7 +197,9 @@ describe RegistryClient do
           "portus",
           Rails.application.secrets.portus_password)
 
-        expect(registry.catalog).to be_empty
+        catalog = registry.catalog
+        expect(catalog.length).to be 1
+        expect(catalog[0]["busybox"]).to match_array(["latest"])
       end
     end
 
