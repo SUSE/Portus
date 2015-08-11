@@ -208,7 +208,6 @@ GEM
     rake (10.4.2)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
-    rotp (2.1.1)
     rspec-core (3.3.0)
       rspec-support (~> 3.3.0)
     rspec-expectations (3.3.0)
@@ -344,7 +343,6 @@ DEPENDENCIES
   rack-mini-profiler
   rails (~> 4.2.2)
   rails-observers
-  rotp
   rspec-rails
   rubocop
   sass-rails (>= 3.2)
@@ -362,3 +360,6 @@ DEPENDENCIES
   webmock
   wirb
   wirble
+
+BUNDLED WITH
+   1.10.5

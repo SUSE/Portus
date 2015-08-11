@@ -56,7 +56,8 @@ class RegistryClient
     elsif res.code.to_i == 404
       raise NotFoundError, "Could not find the catalog endpoint!"
     else
-      raise "Something went wrong while fetching the catalog"
+      raise "Something went wrong while fetching the catalog " \
+        "Response: [#{res.code}] - #{res.body}"
     end
   end
 
