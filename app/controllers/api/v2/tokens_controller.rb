@@ -57,7 +57,7 @@ class Api::V2::TokensController < Api::BaseController
     when "registry"
       auth_scope = Registry::AuthScope.new(registry, scope_string)
     else
-      logger.error "Scope not handled: #{type}"
+      logger.error "Scope not handled: #{str[0]}"
       raise ScopeNotHandled
     end
 

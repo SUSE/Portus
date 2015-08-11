@@ -176,6 +176,15 @@ describe "/v2/token" do
         end
       end
 
+      context "unknown type" do
+        it "denies access" do
+          get v2_token_url,
+              { service: registry.hostname, account: user.username, scope: "lala:busybox:fork" },
+              valid_auth_header
+          expect(response.status).to eq 401
+        end
+      end
+
       context "unkwnow registry" do
         context "no scope requested" do
           it "respond with 401" do

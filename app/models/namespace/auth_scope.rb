@@ -22,6 +22,8 @@ class Namespace::AuthScope < Portus::AuthScope
   # namespace.
   def parse_scope_string!
     super
+
+    return unless @resource_name.include?("/")
     @namespace_name = @resource_name.split("/").first
   end
 end
