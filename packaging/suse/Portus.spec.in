@@ -80,7 +80,7 @@ SKIP_MIGRATION="yes" SECRET_KEY_BASE="assets_precompilation" RAILS_ENV=productio
 APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
 cp $APPLICATION_CSS public/landing.css
 
-bundle install --local --deployment
+bundle install --retry=3 --local --deployment
 rm -rf vendor/cache
 
 if [ -f config/secrets.yml ];then

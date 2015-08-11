@@ -20,4 +20,7 @@ test:
 
 production:
   <<: *default
-  database: portus_production
+  host:     <%= ENV["PRODUCTION_HOST"] %>
+  username: <%= ENV["PRODUCTION_USERNAME"] %>
+  password: <%= ENV["PRODUCTION_PASSWORD"] %>
+  database: <%= ENV["PRODUCTION_DATABASE"] %>
