@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe RegistryClient, focus: true do
+describe RegistryClient do
   let(:registry_server) { "registry.test.lan" }
   let(:username) { "flavio" }
   let(:password) { "this is a test" }

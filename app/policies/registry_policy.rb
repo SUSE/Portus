@@ -9,9 +9,9 @@ class RegistryPolicy
   end
 
   # This method defines the permissions for the following scope string
-  # "registry:catalog:*". Only the "portus" special user is allowed to perform
+  # "registry:catalog:*". Only the admin users are allowed to perform
   # this call.
   def all?
-    user.username == "portus"
+    @user.admin?
   end
 end
