@@ -158,7 +158,7 @@ http_interactions:
       - Mon, 10 Aug 2015 16:06:08 GMT
     body:
       string: |
-        {"busybox":["latest"]}
+        {"name": "busybox", "tags":["latest"]}
     http_version:
   recorded_at: Mon, 10 Aug 2015 16:06:08 GMT
 recorded_with: VCR 2.9.3

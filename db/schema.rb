@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150729153854) do
+ActiveRecord::Schema.define(version: 20150805130722) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -30,6 +30,17 @@ ActiveRecord::Schema.define(version: 20150729153854) do
   add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
+
+  create_table "crono_jobs", force: :cascade do |t|
+    t.string   "job_id",            limit: 255,   null: false
+    t.text     "log",               limit: 65535
+    t.datetime "last_performed_at"
+    t.boolean  "healthy",           limit: 1
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "crono_jobs", ["job_id"], name: "index_crono_jobs_on_job_id", unique: true, using: :btree
 
   create_table "namespaces", force: :cascade do |t|
     t.string   "name",        limit: 255

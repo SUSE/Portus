@@ -21,9 +21,8 @@ gem "public_activity"
 gem "active_record_union"
 gem "mysql2"
 gem "search_cop"
-
-# Pagination
 gem "kaminari"
+gem "crono"
 
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages

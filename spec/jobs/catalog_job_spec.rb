@@ -1,0 +1,107 @@
+# Just opens up protected methods so they can be used in the test suite.
+class CatalogJobMock < CatalogJob
+  def update_registry!(catalog)
+    super
+  end
+end
+
+describe CatalogJob do
+  describe "Empty database" do
+    it "updates the registry" do
+      registry  = create(:registry)
+      namespace = create(:namespace, registry: registry)
+
+      job = CatalogJobMock.new
+      job.update_registry!([
+        { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
+        { "name" => "alpine",                   "tags" => ["latest"]        },
+        { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]        }
+      ])
+
+      # Global repos.
+      ns = Namespace.where(global: true)
+      repos = Repository.where(namespace: ns)
+      expect(repos.map(&:name).sort).to match_array(["alpine", "busybox"])
+      tags = Repository.find_by(name: "busybox").tags
+      expect(tags.map(&:name)).to match_array(["0.1", "latest"])
+      tags = Repository.find_by(name: "alpine", namespace: ns).tags
+      expect(tags.map(&:name)).to match_array(["latest"])
+
+      # Local repos.
+      repos = Repository.where(namespace: namespace)
+      expect(repos.map(&:name).sort).to match_array(["alpine"])
+      tags = repos.first.tags
+      expect(tags.map(&:name)).to match_array(["latest"])
+    end
+
+    it "does nothing if there is no registry" do
+      job = CatalogJobMock.new
+      expect { job.perform }.to_not raise_error
+    end
+
+    it "raises an exception when there has been a problem in /v2/_catalog" do
+      create(:registry, "hostname" => "registry.test.lan")
+
+      VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
+        job = CatalogJobMock.new
+        expect(Rails.logger).to receive(:warn).with("Exception: Could not find the catalog endpoint!")
+        job.perform
+      end
+    end
+
+    it "performs the job as expected" do
+      registry  = create(:registry, "hostname" => "registry.test.lan")
+
+      VCR.use_cassette("registry/get_registry_catalog", record: :none) do
+        job = CatalogJobMock.new
+        job.perform
+      end
+
+      repos = Repository.all
+      expect(repos.count).to be 1
+      repo = repos[0]
+      expect(repo.name).to eq "busybox"
+      expect(repo.namespace.id).to eq registry.namespaces.first.id
+      tags = repo.tags
+      expect(tags.map(&:name)).to match_array(["latest"])
+    end
+  end
+
+  describe "Database already filled with repos" do
+    let!(:registry)    { create(:registry) }
+    let!(:owner)       { create(:user) }
+    let!(:namespace)   { create(:namespace, registry: registry) }
+    let!(:repo1)       { create(:repository, name: "repo1", namespace: namespace) }
+    let!(:repo2)       { create(:repository, name: "repo2", namespace: namespace) }
+    let!(:tag1)        { create(:tag, name: "tag1", repository: repo1) }
+    let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
+    let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
+
+    it "updates the registry" do
+      job = CatalogJobMock.new
+      job.update_registry!([
+        { "name" => "busybox",                  "tags" => ["latest", "0.1"]  },
+        { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"]         },
+        { "name" => "#{namespace.name}/repo2",  "tags" => ["latest", "tag2"] },
+        { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]         }
+      ])
+
+      # Global repos
+      ns = Namespace.where(global: true)
+      repos = Repository.where(namespace: ns)
+      expect(repos.map(&:name).sort).to match_array(["busybox"])
+      tags = repos.first.tags
+      expect(tags.map(&:name).sort).to match_array(["0.1", "latest"])
+
+      # User namespaces.
+      repos = Repository.where(namespace: namespace)
+      expect(repos.map(&:name).sort).to match_array(["alpine", "repo1", "repo2"])
+      tags = Repository.find_by(name: "alpine").tags
+      expect(tags.map(&:name)).to match_array(["latest"])
+      tags = Repository.find_by(name: "repo1").tags
+      expect(tags.map(&:name)).to match_array(["latest"])
+      tags = Repository.find_by(name: "repo2").tags
+      expect(tags.map(&:name)).to match_array(["latest", "tag2"])
+    end
+  end
+end

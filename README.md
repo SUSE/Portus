@@ -22,11 +22,21 @@ described by the new version of the Docker registry. This can be used to have fu
 
 Portus provides quick access to all the images available on your private instance of Docker registry. User's privileges are taken into account to make sure private images (the ones requiring special rights also for `docker pull`) are not shown to unauthorized personnel.
 
-## Current limitations
+### Synchronization between the database and the registry
 
-Portus' knowledge of the images available on the private instance of a Docker registry is built using the [notifications](https://github.com/docker/distribution/blob/master/docs/notifications.md) sent by the Docker registry itself.
+Portus' knowledge of the images available on the private instance of a Docker
+registry is built in two ways:
 
-If Portus is unreachable when a new image is being pushed to the Docker registry, Portus won't be aware of it. This issue is going to be solved by next versions of Portus.
+1. Using the [notifications](https://github.com/docker/distribution/blob/master/docs/notifications.md)
+sent by the Docker registry itself.
+2. Using the [Catalog API endpoint](https://github.com/docker/distribution/blob/master/docs/spec/api.md#listing-repositories).
+
+The two methods complement each other. The first method is used to retrieve
+updates on the registry in real time, and the second one is used to
+double-check the consistency of the database with the registry. To read more on
+this topic, don't hesistate to check the [wiki
+page](https://github.com/SUSE/Portus/wiki/Synchronizing-the-Registry-and-Portus)
+about it.
 
 ## Contributing
 

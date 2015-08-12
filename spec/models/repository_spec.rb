@@ -257,4 +257,37 @@ describe Repository do
     end
   end
 
+  describe "create_or_update" do
+    let!(:registry)    { create(:registry) }
+    let!(:owner)       { create(:user) }
+    let!(:team)        { create(:team, owners: [owner]) }
+    let!(:namespace)   { create(:namespace, team: team) }
+    let!(:repo1)       { create(:repository, name: "repo1", namespace: namespace) }
+    let!(:repo2)       { create(:repository, name: "repo2", namespace: namespace) }
+    let!(:tag1)        { create(:tag, name: "tag1", repository: repo1) }
+    let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
+    let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
+
+    it "adds and deletes tags accordingly" do
+      # Removes the existing tag and adds two.
+      repo = { "name" => "#{namespace.name}/repo1", "tags" => ["latest", "0.1"] }
+      repo = Repository.create_or_update!(repo)
+      expect(repo.id).to eq repo1.id
+      expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
+
+      # Just adds a new tag.
+      repo = { "name" => "#{namespace.name}/repo2",
+               "tags" => ["latest", tag2.name, tag3.name] }
+      repo = Repository.create_or_update!(repo)
+      expect(repo.id).to eq repo2.id
+      ary = [tag2.name, tag3.name, "latest"].sort
+      expect(repo.tags.map(&:name).sort).to match_array(ary)
+
+      # Create repo and tags.
+      repo = { "name" => "busybox", "tags" => ["latest", "0.1"] }
+      repo = Repository.create_or_update!(repo)
+      expect(repo.name).to eq "busybox"
+      expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
+    end
+  end
 end
