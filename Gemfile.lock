@@ -79,6 +79,9 @@ GEM
     columnize (0.9.0)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
+    crono (0.9.0)
+      activerecord (~> 4.0)
+      activesupport (~> 4.0)
     daemons (1.2.2)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
@@ -322,6 +325,7 @@ DEPENDENCIES
   capybara
   codeclimate-test-reporter
   coffee-rails
+  crono
   database_cleaner
   devise
   factory_girl_rails
@@ -360,6 +364,3 @@ DEPENDENCIES
   webmock
   wirb
   wirble
-
-BUNDLED WITH
-   1.10.5

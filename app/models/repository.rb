@@ -4,8 +4,8 @@ class Repository < ActiveRecord::Base
   include SearchCop
 
   belongs_to :namespace
-  has_many :tags
-  has_many :stars
+  has_many :tags, dependent: :delete_all
+  has_many :stars, dependent: :delete_all
 
   search_scope :search do
     attributes :name
@@ -62,5 +62,34 @@ class Repository < ActiveRecord::Base
       .first_or_create(name: tag, author: actor)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
+  end
+
+  # Create or update the given repository in JSON format. The given repository
+  # follows the same JSON format as in the one used by the Catalog API.
+  # Therefore, it's a hash with two keys:
+  #   - name: the name of the repo to be created/updated.
+  #   - tags: an array of strings with the actual tags of the repository.
+  # This method will transparently create/remove the tags that the given
+  # repository is supposed to have.
+  #
+  # Returns the final repository object.
+  def self.create_or_update!(repo)
+    namespace, name = Namespace.get_from_name(repo["name"])
+    repository = Repository.find_or_create_by!(name: name, namespace: namespace)
+
+    # Add the needed tags.
+    tags = repository.tags.pluck(:name)
+    repo["tags"].each do |tag|
+      idx = tags.find_index { |t| t == tag }
+      if idx
+        tags.delete_at(idx)
+      else
+        Tag.create!(name: tag, repository: repository)
+      end
+    end
+
+    # Finally remove the tags that are left and return the repo.
+    Tag.where(name: tags).delete_all
+    repository.reload
   end
 end

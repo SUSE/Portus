@@ -199,7 +199,8 @@ describe RegistryClient do
 
         catalog = registry.catalog
         expect(catalog.length).to be 1
-        expect(catalog[0]["busybox"]).to match_array(["latest"])
+        expect(catalog[0]["name"]).to eq "busybox"
+        expect(catalog[0]["tags"]).to match_array(["latest"])
       end
     end
 
