@@ -8,7 +8,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   # Re-implemented so the template has the auxiliary variables regarding if
   # there are more users on the system or this is the first user to be created.
   def new
-    @have_users = User.any?
+    @have_users = User.not_portus.any?
     super
   end
 
