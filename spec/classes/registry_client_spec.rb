@@ -11,7 +11,7 @@ describe RegistryClient do
         WebMock.disable_net_connect!
         s = stub_request(:get, "https://#{registry_server}/v2/")
         registry = RegistryClient.new(registry_server)
-        registry.get_request("")
+        registry.perform_request("")
         expect(s).to have_been_requested
       end
     ensure
@@ -24,7 +24,7 @@ describe RegistryClient do
     registry = RegistryClient.new(registry_server, false)
     VCR.use_cassette("registry/missing_credentials", record: :none) do
       expect do
-        registry.get_request(path)
+        registry.perform_request(path)
       end.to raise_error(RegistryClient::CredentialsMissingError)
     end
   end
@@ -40,7 +40,7 @@ describe RegistryClient do
         password)
 
       VCR.use_cassette("registry/successful_authentication", record: :none) do
-        res = registry.get_request(path)
+        res = registry.perform_request(path)
         expect(res).to be_a(Net::HTTPOK)
       end
     end
@@ -54,7 +54,7 @@ describe RegistryClient do
 
       VCR.use_cassette("registry/wrong_authentication", record: :none) do
         expect do
-          registry.get_request(path)
+          registry.perform_request(path)
         end.to raise_error(RegistryClient::AuthorizationError)
       end
     end
@@ -76,7 +76,7 @@ describe RegistryClient do
             .to_return(status: 401)
 
           expect do
-            registry.get_request("")
+            registry.perform_request("")
           end.to raise_error(RegistryClient::AuthorizationError)
         end
       ensure
@@ -98,7 +98,7 @@ describe RegistryClient do
             .to_return(headers: { "www-authenticate" => "foo=bar" }, status: 401)
 
           expect do
-            registry.get_request("")
+            registry.perform_request("")
           end.to raise_error(RegistryClient::NoBearerRealmException)
         end
       ensure
@@ -120,7 +120,7 @@ describe RegistryClient do
             .to_return(headers: { "www-authenticate" => "foo=bar" }, status: 401)
 
           expect do
-            registry.get_request("")
+            registry.perform_request("")
           end.to raise_error(RegistryClient::NoBearerRealmException)
         end
       ensure
