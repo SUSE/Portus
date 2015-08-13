@@ -21,7 +21,8 @@ feature "Login feature" do
     fill_in "user_password", with: user.password
     find("button").click
 
-    expect(page).to have_content("Activities")
+    expect(page).to have_content("Recent activities")
+    expect(page).to have_content("Starred repositories")
     expect(page).to_not have_content("Signed in")
   end
 
