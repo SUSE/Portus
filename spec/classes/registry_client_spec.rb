@@ -285,5 +285,20 @@ describe RegistryClient do
         expect(res).to be true
       end
     end
+
+    it "does what we expect on a Bad Request" do
+      VCR.use_cassette("registry/invalid_delete_blob", record: :none) do
+        registry = RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password)
+
+        expect do
+          registry.delete("busybox",
+                          "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
+        end.to raise_error StandardError
+      end
+    end
   end
 end
