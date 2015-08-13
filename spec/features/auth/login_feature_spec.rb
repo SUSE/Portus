@@ -22,7 +22,7 @@ feature "Login feature" do
     find("button").click
 
     expect(page).to have_content("Recent activities")
-    expect(page).to have_content("Starred repositories")
+    expect(page).to have_content("Repositories")
     expect(page).to_not have_content("Signed in")
   end
 

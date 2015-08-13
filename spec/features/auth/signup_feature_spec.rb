@@ -42,7 +42,7 @@ feature "Signup feature" do
     fill_in "user_password_confirmation", with: user.password
     click_button("Create account")
     expect(page).to have_content("Recent activities")
-    expect(page).to have_content("Starred repositories")
+    expect(page).to have_content("Repositories")
     expect(current_url).to eq root_url
   end
 
