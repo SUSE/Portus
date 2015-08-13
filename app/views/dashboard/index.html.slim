@@ -1,4 +1,27 @@
-h1 Recent activities
+h1 Dashboard
 
-- @recent_activities.each do |activity|
-  = render_activity(activity)
+.row
+  .col-md-8.col-xs-6
+    .panel-overview
+      .panel-heading
+        h2 Recent activities
+      .panel-body
+        - @recent_activities.each do |activity|
+          = render_activity(activity)
+  .col-md-4.col-xs-6
+    .panel-overview.starred
+      .panel-heading
+        h2 Starred repositories
+      .panel-body.starred.table-responsive
+        table.table.table-stripped.table-hover
+          colgroup
+            col.col-80
+            col.col-10
+            col.col-10
+          tbody
+            - @stars.each do |star|
+              tr
+                td= link_to star.repository.name, star.repository
+                td= star.repository.stars.count
+                td
+                  i.fa.fa-star
