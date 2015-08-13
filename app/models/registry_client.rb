@@ -21,7 +21,7 @@ class RegistryClient
     if res.code.to_i == 200
       JSON.parse(res.body)
     elsif res.code.to_i == 404
-      raise NotFoundError, "Cannot find manifest for #{repository}:#{tag}"
+      handle_error res, repository: repository, tag: tag
     else
       raise "Something went wrong while fetching manifest for " \
         "#{repository}:#{tag}:[#{res.code}] - #{res.body}"
@@ -41,10 +41,25 @@ class RegistryClient
       catalog = JSON.parse(res.body)
       add_tags(catalog["repositories"])
     elsif res.code.to_i == 404
-      raise NotFoundError, "Could not find the catalog endpoint!"
+      handle_error res
     else
       raise "Something went wrong while fetching the catalog " \
         "Response: [#{res.code}] - #{res.body}"
+    end
+  end
+
+  # Deletes a layer of the specified image. The layer is pointed by the digest
+  # as given by the manifest of the image itself. Returns true if the request
+  # was successful, otherwise it raises an exception.
+  def delete(name, digest)
+    res = perform_request("#{name}/blobs/#{digest}", "delete")
+    if res.code.to_i == 202
+      true
+    elsif res.code.to_i == 404 || res.code.to_i == 405
+      handle_error res, name: name, digest: digest
+    else
+      raise "Something went wrong while deleting blob: " \
+        "[#{res.code}] - #{res.body}"
     end
   end
 

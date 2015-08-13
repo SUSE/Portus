@@ -3,6 +3,8 @@ loglevel: debug
 storage:
   filesystem:
     rootdirectory: /var/lib/docker-registry
+  delete:
+    enabled: true
 http:
   addr: 0.0.0.0:80
 auth:

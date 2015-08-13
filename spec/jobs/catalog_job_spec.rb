@@ -44,7 +44,7 @@ describe CatalogJob do
 
       VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
         job = CatalogJobMock.new
-        expect(Rails.logger).to receive(:warn).with("Exception: Could not find the catalog endpoint!")
+        expect(Rails.logger).to receive(:warn).with(/page not found/)
         job.perform
       end
     end

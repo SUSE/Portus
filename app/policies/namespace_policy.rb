@@ -25,6 +25,10 @@ class NamespacePolicy
     pull?
   end
 
+  def all?
+    push?
+  end
+
   def create?
     push?
   end

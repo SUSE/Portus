@@ -23,4 +23,11 @@ describe Namespace::AuthScope, type: :model do
       scope.resource
     end.to raise_error(Portus::AuthScope::ResourceNotFound)
   end
+
+  it "handles the special action *" do
+    nm = create(:namespace, name: "mssola", registry: registry)
+    scope = Namespace::AuthScope.new(registry, "registry:mssola/busybox:*")
+    expect(scope.resource.id).to eq nm.id
+    expect(scope.scopes).to match_array(["all"])
+  end
 end

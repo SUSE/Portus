@@ -240,4 +240,50 @@ describe RegistryClient do
       end
     end
   end
+
+  context "deleting a blob from an image" do
+    it "deleting a blob that does not exist" do
+      VCR.use_cassette("registry/delete_missing_blob", record: :none) do
+        registry = RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password)
+
+        expect do
+          registry.delete("busybox",
+                          "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
+        end.to raise_error(RegistryClient::NotFoundError, /BLOB_UNKNOWN/)
+      end
+    end
+
+    it "deleting blobs is not enabled on the server" do
+      VCR.use_cassette("registry/delete_disabled", record: :none) do
+        registry = RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password)
+
+        expect do
+          registry.delete("busybox",
+                          "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
+        end.to raise_error(RegistryClient::NotFoundError, /UNSUPPORTED/)
+      end
+    end
+
+    it "allows the deletion of blobs" do
+      VCR.use_cassette("registry/delete_blob", record: :none) do
+        registry = RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password)
+
+        res = registry.delete("busybox",
+                              "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
+        expect(res).to be true
+      end
+    end
+  end
 end

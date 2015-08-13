@@ -34,7 +34,7 @@ http_interactions:
       encoding: UTF-8
       string: |
         {"errors":[{"code":"UNAUTHORIZED","message":"access to the requested resource is not authorized","detail":[{"Type":"repository","Name":"foo/busybox","Action":"pull"}]}]}
-    http_version: 
+    http_version:
   recorded_at: Mon, 20 Apr 2015 10:06:19 GMT
 - request:
     method: get
@@ -90,7 +90,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlBUV1Q6Rk5KRTo3VFc3OlVMSTc6RFpRQTpKSkpJOlJESlE6Mk03NjpIRDZHOlpSU0M6VlBJRjpPNUJVIn0.eyJpc3MiOiJwb3J0dXMudGVzdC5sYW4iLCJzdWIiOiJmbGF2aW8iLCJhdWQiOiJyZWdpc3RyeS50ZXN0LmxhbiIsImV4cCI6MTQyOTUyNDY4MCwibmJmIjoxNDI5NTI0MzgwLCJpYXQiOjE0Mjk1MjQzODAsImp0aSI6ImVEUHVNb0NwYWZNcEpyZUx2UVZ2VHNtUzdqa2N0NmhLZDZqcGhKR2pCdCIsImFjY2VzcyI6W3sidHlwZSI6InJlcG9zaXRvcnkiLCJuYW1lIjoiZm9vL2J1c3lib3giLCJhY3Rpb25zIjpbInB1bGwiXX1dfQ.E_CKjyUSGXYj1qw34OsMAqtUNFNgWkdyrs_SS8OGHp6D3MBgwo9xC8BJW2H8_1FCX8gqasqpzs8cDp67xsbHwCzG1PxOQces917xqiBJm5v41lsyO9HU1UJHhJKMfLSDehx8ltkYO3eGpz0LkDtF8APh3T1R1lhBNlZUQdnHwMsrRklOV7_TNm7QkN1R3zeUQ5rQUgOqgVsJ7YEEdxl_NXRh4q2MokLomUXTOGIrMLxK6W1DYNiTPWrpXiso7EvNa3xLCwK7ZMQCD5i6Eg0pjuRKenaQsWGuLatglyDQQNYyuhWUJU24VGHPgFubuhhm7sKpU13vI-M_-AD3im_M9zy0E6F53op3GXSPvhYYPEMgfuzU_8F2bC0duCAKQwJwbN-IAIyrbOlj_d90OaGDA-Y8JRUVPn2OV_0xo6LFGu6LqXKj8r1CcEfHAdVHMGKB1mEvYUAZP1WIDg1pE3TqFii9N0oWkY4-IikEQ8ykU02yxsGTbzbkQw59L3P7_Fo02ChhhPLyUB_L185OFdhyFPvMUL7AoYQmz5DdUsKe6EQK9WNs5T2dUGiE0drrSHA-kWn2XZmFy6ZLKjGsccJWrtOvvRlc9M6lA3GqxsMYyH8zyEsnzERcGvTV2uNpkyLsSAprHR69RwXBrIgwMvlPVc40W3LoLSNa90Ja4R270jk"}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 20 Apr 2015 10:06:20 GMT
 - request:
     method: get
@@ -333,6 +333,6 @@ http_interactions:
         ICJleUptYjNKdFlYUk1aVzVuZEdnaU9qZzJNREFzSW1admNtMWhkRlJoYVd3
         aU9pSkRiakFpTENKMGFXMWxJam9pTWpBeE5TMHdOQzB4TjFReE16b3pNam93
         TlZvaWZRIgogICAgICB9CiAgIF0KfQ==
-    http_version: 
+    http_version:
   recorded_at: Mon, 20 Apr 2015 10:06:20 GMT
 recorded_with: VCR 2.9.3
