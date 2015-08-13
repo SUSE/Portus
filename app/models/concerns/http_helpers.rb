@@ -51,6 +51,35 @@ module HttpHelpers
     res
   end
 
+  # Handle a known error from Docker distribution. Typically these are
+  # responses that have an HTTP code of 40x. The given response is the raw
+  # response as given by the registry, and the params hash are extra arguments
+  # that will be passed to the exception message.
+  def handle_error(response, params = {})
+    str = "\nCode: #{response.code}\n"
+
+    # Add the errors as given by the registry.
+    begin
+      body = JSON.parse(response.body)
+      if body["errors"]
+        str += "Reported by Registry:\n"
+        body["errors"].each { |err| str += "#{err}\n" }
+        str += "\n"
+      end
+    rescue JSON::ParserError
+      str += "Body:\n#{response.body}\n\n"
+    end
+
+    # Add the defined parameters.
+    unless params.empty?
+      str += "Passed values:\n"
+      params.each { |k, v| str += "#{k}: #{v}\n" }
+      str += "\n"
+    end
+
+    raise NotFoundError, str
+  end
+
   private
 
   # Returns true if this client has the credentials set.
