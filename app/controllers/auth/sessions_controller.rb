@@ -4,7 +4,7 @@ class Auth::SessionsController < Devise::SessionsController
   # Re-implementing. The logic is: if there is already a user that can log in,
   # work as usual. Otherwise, redirect always to the signup page.
   def new
-    if User.any?
+    if User.not_portus.any?
       super
     else
       # For some reason if we get here from the root path, we'll get a flashy

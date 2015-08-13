@@ -57,6 +57,19 @@ feature "Signup feature" do
     expect(page).to have_css("section.first-user")
   end
 
+  scenario "I am readirected to the signup page if only the portus user exists" do
+    User.delete_all
+    create(:admin, username: "portus")
+
+    visit new_user_session_url
+    expect(current_url).to eq new_user_registration_url
+    visit root_url
+    expect(current_url).to eq new_user_registration_url
+
+    expect(page).to have_css("#user_admin")
+    expect(page).to have_css("section.first-user")
+  end
+
   scenario "It does not exist a link to login if there are no users" do
     expect(page).to have_content("Login")
 
