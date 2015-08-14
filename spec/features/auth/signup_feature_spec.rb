@@ -7,6 +7,7 @@ feature "Signup feature" do
     visit new_user_registration_url
   end
 
+  let!(:registry) { create(:registry) }
   let(:user) { build(:user) }
 
   scenario "As a guest I am able to signup from login page" do
@@ -42,7 +43,7 @@ feature "Signup feature" do
     fill_in "user_password_confirmation", with: user.password
     click_button("Create account")
     expect(page).to have_content("Recent activities")
-    expect(page).to have_content("Starred repositories")
+    expect(page).to have_content("Repositories")
     expect(current_url).to eq root_url
   end
 
