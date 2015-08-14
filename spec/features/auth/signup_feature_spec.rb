@@ -7,6 +7,7 @@ feature "Signup feature" do
     visit new_user_registration_url
   end
 
+  let!(:registry) { create(:registry) }
   let(:user) { build(:user) }
 
   scenario "As a guest I am able to signup from login page" do

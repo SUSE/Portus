@@ -1,6 +1,8 @@
 require "rails_helper"
 
 feature "Login feature" do
+
+  let!(:registry) { create(:registry) }
   let!(:user) { create(:user) }
 
   before do

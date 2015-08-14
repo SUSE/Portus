@@ -2,6 +2,7 @@ require "rails_helper"
 
 feature "Gravatar support" do
 
+  let!(:registry) { create(:registry) }
   let!(:user) { create(:user) }
 
   before do
