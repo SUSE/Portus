@@ -18,7 +18,7 @@ registry:
     file: docker/compose-common.yml
     service: registry
   volumes:
-    - docker/registry:/registry
+    - ./docker/registry:/registry
   entrypoint: /registry/entry.sh
   env_file: docker/environment
   links:
