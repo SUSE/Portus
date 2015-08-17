@@ -45,8 +45,6 @@ Requires:       %{rubygem bundler}
 Provides:       Portus = %{version}
 # javascript engine to build assets
 BuildRequires:  nodejs
-# We require nodejs at runtime because Rails4 removed the assets group from the Gemfile.
-Requires:       nodejs
 
 %define rb_build_versions %{rb_default_ruby}
 BuildRequires:  %{rubydevel}
@@ -74,12 +72,18 @@ install -d vendor/cache
 cp %{_libdir}/ruby/gems/%{rb_ver}/cache/*.gem vendor/cache
 export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
 export PACKAGING=yes
+export IGNORE_ASSETS=no
 SKIP_MIGRATION="yes" SECRET_KEY_BASE="assets_precompilation" RAILS_ENV=production bundle exec rake assets:precompile
+export IGNORE_ASSETS=yes
 
 # patch landing_page
 APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
 cp $APPLICATION_CSS public/landing.css
 
+# run bundle list to redo the Gemfile.lock
+bundle list
+
+# deploy gems
 bundle install --retry=3 --local --deployment
 rm -rf vendor/cache
 
