@@ -2,19 +2,14 @@ source "https://rubygems.org"
 
 gem "rails", "~> 4.2.2"
 gem "jquery-rails", "~> 4.0.4"
-gem "turbolinks"
-gem "slim"
-gem "coffee-rails"
-gem "bootstrap-sass", "~> 3.3.4"
 gem "sass-rails", ">= 3.2"
-gem "uglifier"
+gem "slim"
 gem "pundit"
 gem "sprockets", "~> 2.12.3"
 gem "jwt"
 gem "base32"
 gem "active_model_serializers"
 gem "devise"
-gem "jquery-turbolinks"
 gem "gravatar_image_tag"
 gem "rails-observers"
 gem "public_activity"
@@ -23,6 +18,25 @@ gem "mysql2"
 gem "search_cop"
 gem "kaminari"
 gem "crono"
+
+# Assets group.
+#
+# Do not set it or set it to no when precompiling the assets.
+#
+# IGNORE_ASSETS="no" RAILS_ENV=production bundle exec rake assets:precompile
+#
+# Set IGNORE_ASSETS to YES when creating the Gemfile.lock for
+# production after having precompiled the assets
+# run:
+#
+# IGNORE_ASSETS=yes bundle list
+unless ENV["IGNORE_ASSETS"] == "yes"
+  gem "coffee-rails"
+  gem "bootstrap-sass", "~> 3.3.4"
+  gem "uglifier"
+  gem "jquery-turbolinks"
+  gem "turbolinks"
+end
 
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
