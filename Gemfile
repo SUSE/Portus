@@ -31,11 +31,11 @@ gem "crono"
 #
 # IGNORE_ASSETS=yes bundle list
 unless ENV["IGNORE_ASSETS"] && ENV["IGNORE_ASSETS"] == "yes"
-    gem "coffee-rails"
-    gem "bootstrap-sass", "~> 3.3.4"
-    gem "uglifier"
-    gem "jquery-turbolinks"
-    gem "turbolinks"
+  gem "coffee-rails"
+  gem "bootstrap-sass", "~> 3.3.4"
+  gem "uglifier"
+  gem "jquery-turbolinks"
+  gem "turbolinks"
 end
 
 # In order to create the Gemfile.lock required for packaging
