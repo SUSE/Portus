@@ -30,7 +30,7 @@ gem "crono"
 # run:
 #
 # IGNORE_ASSETS=yes bundle list
-unless ENV["IGNORE_ASSETS"] && ENV["IGNORE_ASSETS"] == "yes"
+unless ENV["IGNORE_ASSETS"] == "yes"
   gem "coffee-rails"
   gem "bootstrap-sass", "~> 3.3.4"
   gem "uglifier"
