@@ -84,7 +84,7 @@ bundle list
 bundle install --retry=3 --local --deployment
 
 # install bundler
-gem install --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+gem install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
 
 rm -rf vendor/cache
 
