@@ -40,8 +40,6 @@ BuildRequires:  ruby-macros >= 5
 BuildRequires:  apache2
 Requires:       apache2
 Requires:       rubygem-passenger-apache2
-# We require bundler to start the rails app with passenger
-Requires:       %{rubygem bundler}
 Provides:       Portus = %{version}
 # javascript engine to build assets
 BuildRequires:  nodejs
@@ -84,6 +82,10 @@ bundle list
 
 # deploy gems
 bundle install --retry=3 --local --deployment
+
+# install bundler
+gem install --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+
 rm -rf vendor/cache
 
 if [ -f config/secrets.yml ];then
