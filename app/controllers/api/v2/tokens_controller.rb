@@ -39,6 +39,9 @@ class Api::V2::TokensController < Api::BaseController
       rescue NoMethodError
         logger.warn "Cannot handle scope #{scope}"
         raise ScopeNotHandled, "Cannot handle scope #{scope}"
+      rescue Pundit::NotAuthorizedError
+        logger.debug "scope #{scope} not authorized, removing from actions"
+        auth_scope.actions.delete_if{|a| a == scope}
       end
     end
 
