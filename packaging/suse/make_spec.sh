@@ -51,7 +51,7 @@ pushd build/Portus-$branch/
     gem_version=$(echo $gem | cut -d "(" -f2 | cut -d ")" -f1)
     build_requires="$build_requires\nBuildRequires: %{rubygem $gem_name} = $gem_version"
     build_requires="$build_requires\n$(additional_native_build_requirements $gem_name)"
-    provides="$provides\nProvides: embedded-rubygem-$gem_name = $gem_version"
+    provides="$provides\nProvides: bundled(rubygem-$gem_name) = $gem_version"
   done
 popd
 
