@@ -11,9 +11,6 @@ echo "Generating secrets"
 SECRET=$($bundle exec rake secret)
 sed -e "s/__SECRET_KEY__/$SECRET/g" -i /etc/apache2/vhosts.d/portus.conf
 
-echo "Create database"
-$bundle exec rake db:create
-
 echo "Set pasword"
 PP=$(echo $RANDOM)
 sed -e "s/__PORTUS_PASSWORD__/$PP/g" -i /etc/apache2/vhosts.d/portus.conf
