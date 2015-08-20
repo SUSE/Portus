@@ -45,13 +45,11 @@ pushd build/Portus-$branch/
   echo "get requirements from Gemfile.lock"
   IFS=$'\n' # do not split on spaces
   build_requires=""
-  provides=""
   for gem in $(cat Gemfile.lock | grep "    "  | grep "     " -v | sort | uniq);do
     gem_name=$(echo $gem | cut -d" " -f5)
     gem_version=$(echo $gem | cut -d "(" -f2 | cut -d ")" -f1)
     build_requires="$build_requires\nBuildRequires: %{rubygem $gem_name} = $gem_version"
     build_requires="$build_requires\n$(additional_native_build_requirements $gem_name)"
-    provides="$provides\nProvides: bundled(rubygem-$gem_name) = $gem_version"
   done
 popd
 
@@ -59,7 +57,6 @@ echo "create Portus.spec based on Portus.spec.in"
 cp Portus.spec.in Portus.spec
 sed -e "s/__BRANCH__/$branch/g" -i Portus.spec
 sed -e "s/__RUBYGEMS_BUILD_REQUIRES__/$build_requires/g" -i Portus.spec
-sed -e "s/__RUBYGEMS_PROVIDES__/$provides/g" -i Portus.spec
 sed -e "s/__DATE__/$date/g" -i Portus.spec
 sed -e "s/__COMMIT__/$commit/g" -i Portus.spec
 sed -e "s/__VERSION__/$version/g" -i Portus.spec

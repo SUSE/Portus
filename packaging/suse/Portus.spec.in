@@ -51,8 +51,6 @@ BuildRequires:  %{rubygem bundler} >= 1.3.0
 
 __RUBYGEMS_BUILD_REQUIRES__
 
-__RUBYGEMS_PROVIDES__
-
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
