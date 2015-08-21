@@ -35,10 +35,6 @@ Group:          System/Management
 Requires:       ruby >= 2.1
 BuildRequires:  fdupes
 BuildRequires:  ruby-macros >= 5
-# We expect apache2 and passenger because we are installing the apache
-# configuration
-BuildRequires:  apache2
-Requires:       apache2
 Requires:       rubygem-passenger-apache2
 Provides:       Portus = %{version}
 # javascript engine to build assets
@@ -94,8 +90,6 @@ fi
 install -d %{buildroot}/%{portusdir}
 
 cp -av . %{buildroot}/%{portusdir}
-install -d %{buildroot}/etc/apache2/vhosts.d/
-cp packaging/suse/conf/etc.apache2.vhosts.d.portus.conf %{buildroot}/etc/apache2/vhosts.d/portus.conf
 
 rm -rf %{buildroot}/%{portusdir}/log
 mkdir %{buildroot}/%{portusdir}/log
@@ -112,7 +106,6 @@ mkdir %{buildroot}/%{portusdir}/tmp
 
 %files
 %defattr(-,root,root)
-%config(noreplace)/etc/apache2/vhosts.d/portus.conf
 %{portusdir}
 %exclude %{portusdir}/spec
 %exclude %{portusdir}/vagrant
