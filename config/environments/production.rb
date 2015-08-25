@@ -80,7 +80,11 @@ Rails.application.configure do
   # Run pending migrations
   unless ENV["SKIP_MIGRATION"]
     config.after_initialize do
-      ActiveRecord::Migrator.migrate(Rails.root.join("db/migrate"), nil)
+      begin
+        ActiveRecord::Migrator.migrate(Rails.root.join("db/migrate"), nil)
+      rescue
+        $stderr.puts "Error running migration! Please review database configuration"
+      end
     end
   end
 

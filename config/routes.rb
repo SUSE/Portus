@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-
+  resources :errors, only: [:show]
   resources :teams, only: [:index, :show, :create]
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show] do
@@ -41,5 +41,6 @@ Rails.application.routes.draw do
       put "toggle_admin", on: :member
     end
   end
+  match "(errors)/:status", to: "errors#show", constraints: { status: /\d{3}/ }, via: :all
 
 end
