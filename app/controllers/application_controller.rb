@@ -24,6 +24,9 @@ class ApplicationController < ActionController::Base
   # for production or having setup secrets.
   # If they are not met, render a page with status 500
   def check_requirements
+    # select any model to check database connection
+    # if database is not configured it will raise an exception
+    User.first
     fix_secrets = Rails.application.secrets.secret_key_base == "CHANGE_ME"
     fix_ssl = Rails.env.production? && !request.ssl?
     return unless fix_secrets || fix_ssl
