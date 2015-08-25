@@ -1,0 +1,17 @@
+<% if @fix_database || @fix_ssl || @fix_secrets %>
+  Please review your configuration
+  <ul>
+    <% if @fix_ssl %>
+      <li>ssl</li>
+    <% end %>
+    <% if @fix_secrets %>
+      <li>secrets</li>
+    <% end %>
+    <% if @fix_database %>
+      <li>database</li>
+    <% end %>
+  </ul>
+<% else %>
+  We're sorry, but something went wrong.<br/>
+  If you are the application owner check the logs for more information.
+<% end %>
