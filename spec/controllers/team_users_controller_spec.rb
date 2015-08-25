@@ -18,8 +18,8 @@ describe TeamUsersController do
     describe "DELETE #destroy" do
 
       it "does not allow to remove the only owner of the team" do
-        owner = TeamUser.roles["owner"]
-        delete :destroy, id: team.team_users.find_by(role: owner).id, format: "js"
+        owner_role = TeamUser.roles["owner"]
+        delete :destroy, id: team.team_users.find_by(role: owner_role).id, format: "js"
         expect(team.owners.exists?(owner.id)).to be true
       end
 
@@ -92,9 +92,9 @@ describe TeamUsersController do
       end
 
       it "returns an error if the user has already a role inside of the team" do
-        owner = TeamUser.roles["owner"]
+        owner_role = TeamUser.roles["owner"]
         post :create,
-             team_user: { team: team.name, user: contributor.username, role: owner },
+             team_user: { team: team.name, user: contributor.username, role: owner_role },
              format:    "js"
         expect(assigns(:team_user).errors.full_messages)
           .to match_array(["User has already been taken"])

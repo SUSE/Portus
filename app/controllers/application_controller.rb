@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
   before_action :check_requirements
   before_action :authenticate_user!
   protect_from_forgery with: :exception
@@ -24,15 +22,21 @@ class ApplicationController < ActionController::Base
   # for production or having setup secrets.
   # If they are not met, render a page with status 500
   def check_requirements
-    fix_secrets = true if Rails.application.secrets.secret_key_base == "CHANGE_ME"
-    fix_ssl = true if Rails.env.production? && !request.ssl?
+    fix_secrets, fix_ssl = fixes
     return unless fix_secrets || fix_ssl
+
     text = "Please review the following configurations"
     text += "<ul>"
     text += "<li>ssl</li>" if fix_ssl
     text += "<li>secrets</li>" if fix_secrets
     text += "</ul>"
     render text: text, status: 500
+  end
+
+  def fixes
+    fix_secrets = true if Rails.application.secrets.secret_key_base == "CHANGE_ME"
+    fix_ssl     = true if Rails.env.production? && !request.ssl?
+    [fix_secrets, fix_ssl]
   end
 
   def deny_access
