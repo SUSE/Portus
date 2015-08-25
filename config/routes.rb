@@ -42,5 +42,6 @@ Rails.application.routes.draw do
       put "toggle_admin", on: :member
     end
   end
+  match '(errors)/:status', to: 'errors#show', constraints: {status: /\d{3}/}, via: :all
 
 end
