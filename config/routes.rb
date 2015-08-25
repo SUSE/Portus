@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-
+  resources :errors
   resources :teams, only: [:index, :show, :create]
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show] do

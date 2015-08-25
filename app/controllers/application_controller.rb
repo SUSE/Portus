@@ -24,15 +24,10 @@ class ApplicationController < ActionController::Base
   # for production or having setup secrets.
   # If they are not met, render a page with status 500
   def check_requirements
-    fix_secrets = true if Rails.application.secrets.secret_key_base == "CHANGE_ME"
-    fix_ssl = true if Rails.env.production? && !request.ssl?
+    fix_secrets = Rails.application.secrets.secret_key_base == "CHANGE_ME"
+    fix_ssl = Rails.env.production? && !request.ssl?
     return unless fix_secrets || fix_ssl
-    text = "Please review the following configurations"
-    text += "<ul>"
-    text += "<li>ssl</li>" if fix_ssl
-    text += "<li>secrets</li>" if fix_secrets
-    text += "</ul>"
-    render text: text, status: 500
+    redirect_to "/errors/500?fix_ssl=#{fix_ssl}&fix_secrets=#{fix_secrets}", status: 500
   end
 
   def deny_access
