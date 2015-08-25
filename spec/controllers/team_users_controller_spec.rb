@@ -18,7 +18,8 @@ describe TeamUsersController do
     describe "DELETE #destroy" do
 
       it "does not allow to remove the only owner of the team" do
-        delete :destroy, id: team.team_users.find_by(role: TeamUser.roles["owner"]).id, format: "js"
+        owner = TeamUser.roles["owner"]
+        delete :destroy, id: team.team_users.find_by(role: owner).id, format: "js"
         expect(team.owners.exists?(owner.id)).to be true
       end
 
@@ -26,7 +27,8 @@ describe TeamUsersController do
         user = create(:user)
         team.viewers << user
 
-        delete :destroy, id: team.team_users.find_by(role: TeamUser.roles["viewer"]).id, format: "js"
+        viewer = TeamUser.roles["viewer"]
+        delete :destroy, id: team.team_users.find_by(role: viewer).id, format: "js"
         expect(team.viewers.exists?(user.id)).to be false
       end
 
@@ -46,7 +48,8 @@ describe TeamUsersController do
         put :update, id: team.team_users.find_by(role: TeamUser.roles["owner"]).id,
                      team_user: { role: "viewer" }, format: "js"
         expect(team.owners.exists?(owner.id)).to be true
-        expect(assigns(:team_user).errors.full_messages).to match_array(["Role cannot be changed for the only owner of the team"])
+        expect(assigns(:team_user).errors.full_messages)
+          .to match_array(["Role cannot be changed for the only owner of the team"])
       end
 
       it "changes the roles of a team user" do
@@ -89,10 +92,12 @@ describe TeamUsersController do
       end
 
       it "returns an error if the user has already a role inside of the team" do
+        owner = TeamUser.roles["owner"]
         post :create,
-             team_user: { team: team.name, user: contributor.username, role: TeamUser.roles["owner"] },
+             team_user: { team: team.name, user: contributor.username, role: owner },
              format:    "js"
-        expect(assigns(:team_user).errors.full_messages).to match_array(["User has already been taken"])
+        expect(assigns(:team_user).errors.full_messages)
+          .to match_array(["User has already been taken"])
         expect(response.status).to eq 422
       end
     end
@@ -140,9 +145,8 @@ describe TeamUsersController do
       new_user_role = "owner"
 
       expect do
-        post :create,
-             team_user: { team: team.name, user: new_user.username, role: TeamUser.roles[new_user_role] },
-             format:    "js"
+        tu = { team: team.name, user: new_user.username, role: TeamUser.roles[new_user_role] }
+        post :create, team_user: tu, format: "js"
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.last
@@ -158,7 +162,8 @@ describe TeamUsersController do
       team.viewers << user
 
       expect do
-        delete :destroy, id: team.team_users.find_by(role: TeamUser.roles["viewer"]).id, format: "js"
+        viewer = TeamUser.roles["viewer"]
+        delete :destroy, id: team.team_users.find_by(role: viewer).id, format: "js"
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.last

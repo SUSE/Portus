@@ -31,17 +31,24 @@ describe "/v2/token" do
       end
 
       it "denies access when the password is wrong" do
-        get v2_token_url, { service: registry.hostname, account: "account", scope: "repository:foo/me:push" }, invalid_auth_header
+        get v2_token_url,
+          { service: registry.hostname, account: "account", scope: "repository:foo/me:push" },
+          invalid_auth_header
+
         expect(response.status).to eq 401
       end
 
       it "denies access when the user does not exist" do
-        get v2_token_url, { service: registry.hostname, account: "account", scope: "repository:foo/me:push" }, nonexistent_auth_header
+        get v2_token_url,
+          { service: registry.hostname, account: "account", scope: "repository:foo/me:push" },
+          nonexistent_auth_header
+
         expect(response.status).to eq 401
       end
 
       it "denies access when basic auth credentials are not defined" do
-        get v2_token_url, service: registry.hostname, account: "account", scope: "repository:foo/me:push"
+        get v2_token_url,
+          service: registry.hostname, account: "account", scope: "repository:foo/me:push"
         expect(response.status).to eq 401
       end
 
@@ -102,7 +109,9 @@ describe "/v2/token" do
 
       context "unknown scope requested" do
         before do
-          get v2_token_url, { service: registry.hostname, account: "account", scope: "whale:foo,bar" }, valid_auth_header
+          get v2_token_url,
+            { service: registry.hostname, account: "account", scope: "whale:foo,bar" },
+            valid_auth_header
         end
 
         it "respond with 401" do
@@ -119,7 +128,11 @@ describe "/v2/token" do
             .with(personal_namespace, :pull?)
 
           get v2_token_url,
-            { service: registry.hostname, account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
+            {
+              service: registry.hostname,
+              account: user.username,
+              scope:   "repository:#{user.username}/busybox:push,pull"
+            },
             valid_auth_header
         end
       end
@@ -134,7 +147,10 @@ describe "/v2/token" do
         end
 
         let(:valid_portus_auth_header) do
-          { "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("portus", Rails.application.secrets.portus_password) }
+          {
+            "HTTP_AUTHORIZATION" =>
+              auth_mech.encode_credentials("portus", Rails.application.secrets.portus_password)
+          }
         end
 
         before do
@@ -170,7 +186,11 @@ describe "/v2/token" do
       context "unknown scope" do
         it "denies access" do
           get v2_token_url,
-              { service: registry.hostname, account: user.username, scope: "repository:busybox:fork" },
+              {
+                service: registry.hostname,
+                account: user.username,
+                scope:   "repository:busybox:fork"
+              },
               valid_auth_header
           expect(response.status).to eq 401
         end

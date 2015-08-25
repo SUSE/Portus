@@ -36,7 +36,7 @@ feature "Login feature" do
     expect(page).to have_content("Invalid username or password")
   end
 
-  scenario "When guest is trying to access dashboard - he should be redirected to login page", js: true do
+  scenario "When guest tries to access dashboard - he is redirected to the login page", js: true do
     visit root_path
     expect(page).to have_content("Login")
     expect(current_path).to eq root_path

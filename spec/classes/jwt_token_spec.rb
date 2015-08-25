@@ -63,7 +63,8 @@ describe JwtToken do
   describe "#private_key" do
 
     it "returns private key which location is provided by Rails secrets" do
-      key_contents = File.read(Rails.root.join(Rails.application.secrets.encryption_private_key_path))
+      path = Rails.root.join(Rails.application.secrets.encryption_private_key_path)
+      key_contents = File.read(path)
       expect(subject.private_key.to_s).to eq key_contents
     end
 

@@ -15,7 +15,8 @@ describe User do
     user = build(:user, username: name)
     expect(user.save).to be false
     expect(user.errors.size).to eq(1)
-    expect(user.errors.first).to match_array([:username, "cannot be used as name for private namespace"])
+    expect(user.errors.first)
+      .to match_array([:username, "cannot be used as name for private namespace"])
   end
 
   describe "#create_personal_namespace!" do

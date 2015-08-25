@@ -26,7 +26,9 @@ describe RepositoryPolicy do
       expect(Pundit.policy_scope(user, Repository).to_a).to include(@public_repository)
     end
 
-    it "include repositories that are part of namespace controlled by a team to which the user belongs" do
+    it "include repositories that are part of namespace controlled by a team to which " \
+      "the user belongs" do
+
       expect(Pundit.policy_scope(user, Repository).to_a).to include(@repository)
     end
 

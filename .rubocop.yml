@@ -2,17 +2,6 @@
 inherit_from:
   - ./config/rubocop-suse.yml
 
-# TODO: (mssola) the default for this in SUSE's style guide is 100 columns.
-# This is almost fine for us. In the near future I will fix this.
-Metrics/LineLength:
-  Max: 180
-  # To make it possible to copy or click on URIs in the code, we allow lines
-  # contaning a URI to be longer than Max.
-  AllowURI: true
-  URISchemes:
-    - http
-    - https
-
 # TODO: (mssola) Some methods are offending this cop. In the SUSE's style guide
 # the approach is to use Rubocop's default value. In the near future I will
 # fix this.
@@ -47,3 +36,5 @@ AllCops:
     - vendor/**/*
     - tmp/**/*
     - config/cronotab.rb
+    - config/initializers/*
+    - config/environments/*

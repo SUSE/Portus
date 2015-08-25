@@ -34,7 +34,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   def update
     success =
     if password_update?
-      succ = current_user.update_with_password(params.require(:user).permit(:password, :password_confirmation, :current_password))
+      succ = current_user.update_with_password(user_params)
       sign_in(current_user, bypass: true) if succ
       succ
     else
@@ -92,6 +92,12 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     user = params[:user]
     !user[:current_password].blank? || !user[:password].blank? ||
       !user[:password_confirmation].blank?
+  end
+
+  # Returns the required parameters and the permitted ones for updating a user.
+  def user_params
+    params.require(:user)
+      .permit(:password, :password_confirmation, :current_password)
   end
 
   # Returns whether the given user can be disabled or not. The following rules

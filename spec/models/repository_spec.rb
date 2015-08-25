@@ -1,5 +1,10 @@
 require "rails_helper"
 
+# Auxiliar method to get the URL format used in this spec file.
+def get_url(repo, tag)
+  "http://registry.test.lan/v2/#{repo}/manifests/#{tag}"
+end
+
 describe Repository do
 
   it { should belong_to(:namespace) }
@@ -49,7 +54,8 @@ describe Repository do
       end
 
       it "sends event to logger" do
-        error_msg = "Cannot find tag inside of event url: http://registry.test.lan/v2/busybox/wrong/latest"
+        error_msg =
+          "Cannot find tag inside of event url: http://registry.test.lan/v2/busybox/wrong/latest"
         expect(Rails.logger).to receive(:error).with(error_msg)
         expect do
           Repository.handle_push_event(event)
@@ -62,7 +68,7 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
-        @event["target"]["url"] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
+        @event["target"]["url"] = get_url(repository_name, tag_name)
         @event["request"]["host"] = "unknown-registry.test.lan"
         @event["actor"]["name"] = user.username
       end
@@ -79,7 +85,7 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
-        @event["target"]["url"] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
+        @event["target"]["url"] = get_url(repository_name, tag_name)
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = "a_ghost"
       end
@@ -97,7 +103,7 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
-        @event["target"]["url"] = "http://registry.test.lan/v2/#{repository_name}/manifests/#{tag_name}"
+        @event["target"]["url"] = get_url(repository_name, tag_name)
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = user.username
       end
@@ -187,7 +193,7 @@ describe Repository do
         it "preserves the previous namespace" do
           event = @event
           event["target"]["repository"] = repository_namespaced_name
-          event["target"]["url"] = "http://registry.test.lan/v2/#{repository_namespaced_name}/manifests/#{tag_name}"
+          event["target"]["url"] = get_url(repository_namespaced_name, tag_name)
           Repository.handle_push_event(event)
 
           repos = Repository.all.order("id ASC")
@@ -202,9 +208,11 @@ describe Repository do
       let(:namespace_name) { "suse" }
 
       before :each do
+        name = "#{namespace_name}/#{repository_name}"
+
         @event = build(:raw_push_manifest_event).to_test_hash
-        @event["target"]["repository"] = "#{namespace_name}/#{repository_name}"
-        @event["target"]["url"] = "http://registry.test.lan/v2/#{namespace_name}/#{repository_name}/manifests/#{tag_name}"
+        @event["target"]["repository"] = name
+        @event["target"]["url"] = get_url(name, tag_name)
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = user.username
       end

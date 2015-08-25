@@ -69,11 +69,13 @@ describe RegistryClient do
       begin
         VCR.turned_off do
           WebMock.disable_net_connect!
-          stub_request(:get, "http://#{registry_server}/v2/")
-            .to_return(headers: { "www-authenticate" => "service=foo,Bearer realm=http://bar.test.lan/token" }, status: 401)
+          auth = "service=foo,Bearer realm=http://bar.test.lan/token"
+          url  = "http://flavio:this%20is%20a%20test@bar.test.lan/token?account=flavio&service=foo"
 
-          stub_request(:get, "http://flavio:this%20is%20a%20test@bar.test.lan/token?account=flavio&service=foo")
-            .to_return(status: 401)
+          stub_request(:get, "http://#{registry_server}/v2/")
+            .to_return(headers: { "www-authenticate" => auth }, status: 401)
+
+          stub_request(:get, url).to_return(status: 401)
 
           expect do
             registry.perform_request("")
@@ -280,8 +282,8 @@ describe RegistryClient do
           "portus",
           Rails.application.secrets.portus_password)
 
-        res = registry.delete("busybox",
-                              "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
+        sha = "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+        res = registry.delete("busybox", sha)
         expect(res).to be true
       end
     end

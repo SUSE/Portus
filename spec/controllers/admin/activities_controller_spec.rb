@@ -25,7 +25,10 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     let(:another_user) { create(:user, username: "dean") }
     let(:activity_owner) { create(:user, username: "castiel") }
     let(:registry) { create(:registry, hostname: "registry.test.lan") }
-    let(:global_namespace) { create(:namespace, name: "globalnamespace", registry: registry, global: true, team: global_team, public: true) }
+    let(:global_namespace) do
+      create(:namespace, name: "globalnamespace", registry: registry, global: true,
+             team: global_team, public: true)
+    end
     let(:namespace) { create(:namespace, name: "patched_images", registry: registry, team: team) }
     let(:team) { create(:team, name: "qa", owners: [user]) }
     let(:global_team) { create(:team, name: "globalteam", owners: [user]) }
