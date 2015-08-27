@@ -17,9 +17,23 @@ feature "Admin - Users panel" do
 
       wait_for_effect_on("#user_#{user.id}")
 
-      expect(page).to_not have_css("#user_#{user.id}")
+      expect(page).to have_css("#user_#{user.id} .fa-toggle-off")
       wait_for_effect_on("#alert")
       expect(page).to have_content("User '#{user.username}' has been disabled.")
+    end
+
+    scenario "allows the admin to enable back a user", js: true do
+      user.update_attributes(enabled: false)
+      visit admin_users_path
+
+      expect(page).to have_css("#user_#{user.id}")
+      find("#user_#{user.id} .enabled-btn").click
+
+      wait_for_effect_on("#user_#{user.id}")
+
+      expect(page).to have_css("#user_#{user.id} .fa-toggle-on")
+      wait_for_effect_on("#alert")
+      expect(page).to have_content("User '#{user.username}' has been enabled.")
     end
   end
 
