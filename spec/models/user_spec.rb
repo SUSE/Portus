@@ -110,7 +110,7 @@ describe User do
 
       it "does not allow the only admin to disable itself" do
         # portus is not a "real" admin, so it shouldn't count.
-        portus = create(:admin, username: "portus")
+        create(:admin, username: "portus")
         expect(admin.toggle_enabled!(admin)).to be false
         expect(admin.enabled?).to be true
       end
