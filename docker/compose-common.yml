@@ -4,6 +4,6 @@ web:
   ports:
     - "3000:3000"
 registry:
-  image: registry:2.0.1
+  image: registry:2.1.1
   ports:
     - "5000:5000"
