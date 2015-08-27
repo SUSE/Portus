@@ -41,7 +41,7 @@ class Api::V2::TokensController < Api::BaseController
         raise ScopeNotHandled, "Cannot handle scope #{scope}"
       rescue Pundit::NotAuthorizedError
         logger.debug "scope #{scope} not authorized, removing from actions"
-        auth_scope.actions.delete_if{|a| a == scope}
+        auth_scope.actions.delete_if { |a| a == scope }
       end
     end
 
@@ -64,6 +64,6 @@ class Api::V2::TokensController < Api::BaseController
       raise ScopeNotHandled
     end
 
-    [auth_scope, auth_scope.scopes]
+    [auth_scope, auth_scope.scopes.dup]
   end
 end
