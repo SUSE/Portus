@@ -18,15 +18,14 @@ class Repository < ActiveRecord::Base
     # options :namespace_name, type: :fulltext
   end
 
-  def unstar(user)
+  # Set this repo as starred for the given user if there was no star
+  # associated. Otherwise, remove the star.
+  def toggle_star(user)
     star = stars.find_by(user: user)
-    star.destroy if star
+    star ? star.destroy : stars.create(user: user)
   end
 
-  def star(user)
-    stars.create(user: user)
-  end
-
+  # Check if this repo has been starred by the given user.
   def starred_by?(user)
     stars.exists? user: user
   end

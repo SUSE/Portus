@@ -1,5 +1,5 @@
 class RepositoriesController < ApplicationController
-  before_action :set_repository, only: [:show, :star, :unstar]
+  before_action :set_repository, only: [:show, :toggle_star]
 
   # GET /repositories
   # GET /repositories.json
@@ -15,26 +15,10 @@ class RepositoriesController < ApplicationController
     respond_with(@repository)
   end
 
-  # POST /repositories/1/star
-  # POST /repositories/1/star.json
-  def star
-    @repository.star current_user
-    respond_to do |format|
-      format.html { redirect_to(repository_path(@repository)) }
-      format.json { render json: @repository }
-      format.js   {}
-    end
-  end
-
-  # POST /repositories/1/unstar
-  # POST /repositories/1/unstar.json
-  def unstar
-    @repository.unstar current_user
-    respond_to do |format|
-      format.html { redirect_to(repository_path(@repository)) }
-      format.json { render json: @repository }
-      format.js   {}
-    end
+  # POST /repositories/toggle_star
+  def toggle_star
+    @repository.toggle_star current_user
+    render template: "repositories/star", locals: { user: current_user }
   end
 
   def set_repository

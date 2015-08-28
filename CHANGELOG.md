@@ -19,7 +19,8 @@ pull requests: [#193](https://github.com/SUSE/Portus/pull/193),
 - Some initial steps have been done towards running Portus inside docker. See
 PR [#212](https://github.com/SUSE/Portus/pull/212).
 - Added the appliance tests. See PR [#208](https://github.com/SUSE/Portus/pull/208).
-- Star/Unstar repositories. See PR [#230](https://github.com/SUSE/Portus/pull/230).
+- Star/Unstar repositories. See PR [#230](https://github.com/SUSE/Portus/pull/230)
+and [#294](https://github.com/SUSE/Portus/pull/294).
 - Now users can be disabled. See PR [#240](https://github.com/SUSE/Portus/pull/240).
 - And some minor fixes here and there.
 
