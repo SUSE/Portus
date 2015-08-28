@@ -52,6 +52,26 @@ describe "/v2/token" do
       end
     end
 
+    context "as another user" do
+      let(:another) { create(:user, password: password) }
+
+      it "does not allow to pull a private namespace from another team" do
+        # It works for the regular user
+        get v2_token_url,
+          { service: registry.hostname, account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+
+        expect(response.status).to eq 200
+
+        # But not for another
+        get v2_token_url,
+          { service: registry.hostname, account: another.username, scope: "repository:#{user.username}/busybox:push,pull" },
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+
+        expect(response.status).to eq 401
+      end
+    end
+
     context "as valid user" do
       let(:valid_request) do
         {
@@ -110,7 +130,7 @@ describe "/v2/token" do
         end
       end
 
-      context "reposity scope" do
+      context "repository scope" do
         it "delegates authentication to the Namespace policy" do
           personal_namespace = Namespace.find_by(name: user.username)
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
@@ -121,6 +141,24 @@ describe "/v2/token" do
           get v2_token_url,
             { service: registry.hostname, account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
             valid_auth_header
+        end
+
+        it "allows to pull an image in which this user is just a viewer"  do
+          # Quick way to force a "viewer" policy.
+          allow_any_instance_of(NamespacePolicy).to receive(:push?).and_return(false)
+          allow_any_instance_of(NamespacePolicy).to receive(:pull?).and_return(true)
+
+          get v2_token_url,
+            { service: registry.hostname, account: user.username, scope: "repository:#{user.username}/busybox:push,pull" },
+            valid_auth_header
+
+          expect(response.status).to eq 200
+
+          # And check that the only authorized scope is "pull"
+          token = JSON.parse(response.body)["token"]
+          payload = JWT.decode(token, nil, false, leeway: 2)[0]
+          expect(payload["access"][0]["name"]).to eq "#{user.username}/busybox"
+          expect(payload["access"][0]["actions"]).to match_array ["pull"]
         end
       end
 
