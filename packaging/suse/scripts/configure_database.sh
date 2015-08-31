@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if [[ $(id -u) -ne 0 ]] ; then echo "Please run as root" ; exit 1 ; fi
+
 if [ ! -f /etc/apache2/vhosts.d/portus.conf ];then
   cp /srv/Portus/packaging/suse/conf/etc.apache2.vhosts.d.portus.conf /etc/apache2/vhosts.d/portus.conf
 fi
