@@ -6,7 +6,7 @@ pushd /srv/Portus
 
 export SKIP_MIGRATION=yes
 export RAILS_ENV=production
-cp /srv/Portus/packaging/suse/conf/apache2/vhosts.d/portus.conf.in /etc/apache2/vhosts.d/portus.conf
+cp /srv/Portus/packaging/suse/conf/etc.apache2.vhosts.d.portus.conf /etc/apache2/vhosts.d/portus.conf
 echo "Generating secrets"
 SECRET=$($bundle exec rake secret)
 sed -e "s/__SECRET_KEY__/$SECRET/g" -i /etc/apache2/vhosts.d/portus.conf
