@@ -8,3 +8,5 @@ cd $(dirname $0)
 ./create_db.sh
 ./configure_registry.sh
 
+systemctl reload apache2
+
