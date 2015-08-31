@@ -8,6 +8,15 @@ HOSTNAME=$(cat /etc/HOSTNAME)
 
 if [ ! -f /etc/apache2/ssl.key/$HOSTNAME-server.key ];then
   echo "Generating private key and certificate"
+  echo ""
+  echo "***********************************************************************************************************************************"
+  echo "If you want to use your own private key and certificates, upload them to"
+  echo "  * /etc/apache2/ssl.key/$HOSTNAME-server.key"
+  echo "  * /etc/apache2/ssl.crt/$HOSTNAME-server.crt"
+  echo "  * /etc/apache2/ssl.crt/$HOSTNAME-ca.crt"
+  echo "and then re-run this script"
+  echo "***********************************************************************************************************************************"
+  echo ""
   gensslcert -C "$HOSTNAME" -o "SUSE Linux GmbH" -u "SUSE Portus example" -n "$HOSTNAME" -e kontakt-de@novell.com -c DE -l Nuremberg -s Bayern
 fi
 
