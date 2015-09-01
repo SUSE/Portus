@@ -9,6 +9,8 @@ export RAILS_ENV=production
 
 echo "Create database"
 $bundle exec rake db:create
+$bundle exec rake db:migrate
+$bundle exec rake db:seed
 
 popd
 
