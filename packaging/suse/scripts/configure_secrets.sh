@@ -1,6 +1,9 @@
 #!/bin/bash
 
-if [[ $(id -u) -ne 0 ]] ; then echo "Please run as root" ; exit 1 ; fi
+if [[ $(id -u) -ne 0 ]] ;then
+  echo "Please run as root"
+  exit 1
+fi
 
 bundle="/srv/Portus/vendor/bundle/ruby/2.1.0/bin/bundler.ruby2.1"
 export GEM_PATH=/srv/Portus/vendor/bundle/ruby/2.1.0/
