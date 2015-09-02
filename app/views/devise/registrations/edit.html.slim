@@ -46,7 +46,7 @@
         h5
           ' Disable account
       .panel-body
-        = form_tag(disable_user_path(current_user), method: :put, remote: true, id: 'disable-form') do
+        = form_tag(toggle_enabled_path(current_user), method: :put, remote: true, id: 'disable-form') do
             .form-group
               p
                 | By disabling the account, you won't be able to access Portus with it, and

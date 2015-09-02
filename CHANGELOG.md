@@ -21,7 +21,7 @@ PR [#212](https://github.com/SUSE/Portus/pull/212).
 - Added the appliance tests. See PR [#208](https://github.com/SUSE/Portus/pull/208).
 - Star/Unstar repositories. See PR [#230](https://github.com/SUSE/Portus/pull/230)
 and [#294](https://github.com/SUSE/Portus/pull/294).
-- Now users can be disabled. See PR [#240](https://github.com/SUSE/Portus/pull/240).
+- Now users can be enabled/disabled. See PR [#240](https://github.com/SUSE/Portus/pull/240).
 - Fixed the authentication process for Docker 1.8. See PR
 [#282](https://github.com/SUSE/Portus/pull/282).
 - And some minor fixes here and there.

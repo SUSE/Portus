@@ -45,6 +45,6 @@
                     data-remote="true"
                     data-method="put"
                     rel="nofollow"
-                    href=url_for(disable_user_path(user))]
+                    href=url_for(toggle_enabled_path(user))]
                       i.fa.fa-lg[class="fa-toggle-#{user.enabled? ? 'on': 'off'}"]
   .panel-footer= paginate(@users)

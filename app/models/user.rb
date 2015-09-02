@@ -21,6 +21,11 @@ class User < ActiveRecord::Base
     errors.add(:username, "cannot be used as name for private namespace")
   end
 
+  # Returns true if the current user is the Portus user.
+  def portus?
+    username == "portus"
+  end
+
   def create_personal_namespace!
     # the registry is not configured yet, we cannot create the namespace
     return unless Registry.any?
@@ -55,7 +60,19 @@ class User < ActiveRecord::Base
   end
 
   ##
-  # Disabling users.
+  # Enabling/disabling users.
+
+  # Toggle the enabled attribute for a user. This is an instance method because
+  # it is a user that enables/disables another user.
+  def toggle_enabled!(user)
+    enabled = user.enabled?
+
+    # Return false if the action is not allowed.
+    return false if enabled && !can_disable?(user)
+    return false if !enabled && !admin?
+
+    user.update_attributes(enabled: !enabled)
+  end
 
   # This method is picked up by Devise before signing in a user.
   def active_for_authentication?
@@ -65,5 +82,26 @@ class User < ActiveRecord::Base
   # The flashy message to be shown for disabled users that try to login.
   def inactive_message
     "Sorry, this account has been disabled."
+  end
+
+  protected
+
+  # Returns whether the given user can be disabled or not. The following rules
+  # apply:
+  #   1. A user can disable himself unless it's the last admin on the system.
+  #   2. The admin user is the only one that can disable other users.
+  def can_disable?(user)
+    # The "portus" user can never be disabled.
+    return false if user.portus?
+
+    if self == user
+      # An admin cannot disable himself if he's the only admin in the system.
+      # Otherwise, regular users can disable themselves.
+      return true unless admin?
+      User.admins.count > 1
+    else
+      # Only admin users can disable other users.
+      admin?
+    end
   end
 end

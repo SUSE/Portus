@@ -100,4 +100,59 @@ describe User do
       expect(user.active_for_authentication?).to be false
     end
   end
+
+  describe "#toggle_enabled!" do
+    let!(:admin) { create(:admin) }
+    let!(:user)  { create(:user)  }
+
+    describe "target user is enabled" do
+      let!(:another) { create(:user) }
+
+      it "does not allow the only admin to disable itself" do
+        # portus is not a "real" admin, so it shouldn't count.
+        create(:admin, username: "portus")
+        expect(admin.toggle_enabled!(admin)).to be false
+        expect(admin.enabled?).to be true
+      end
+
+      it "does not allow to disable the portus user" do
+        portus = create(:admin, username: "portus")
+        expect(admin.toggle_enabled!(portus)).to be false
+        expect(portus.enabled?).to be true
+      end
+
+      it "does not allow to disable another user if current is not admin" do
+        expect(user.toggle_enabled!(another)).to be false
+        expect(another.enabled?).to be true
+      end
+
+      it "allows to disable another user if admin" do
+        expect(admin.toggle_enabled!(another)).to be true
+        expect(another.enabled?).to be false
+      end
+
+      it "allows to disable itself if there are more admins" do
+        another_admin = create(:admin)
+        expect(admin.toggle_enabled!(another_admin)).to be true
+        expect(another_admin.enabled?).to be false
+      end
+
+      it "allows to disable itself if it's a regular user" do
+        expect(user.toggle_enabled!(user)).to be true
+        expect(user.enabled?).to be false
+      end
+    end
+
+    describe "target user is disabled" do
+      it "only allows admin users to enable users back" do
+        disabled = create(:user, enabled: false)
+
+        expect(user.toggle_enabled!(disabled)).to be false
+        expect(disabled.enabled?).to be false
+
+        expect(admin.toggle_enabled!(disabled)).to be true
+        expect(disabled.enabled?).to be true
+      end
+    end
+  end
 end

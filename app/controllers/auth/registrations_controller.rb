@@ -50,16 +50,16 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  # Disable a user.
-  def disable
+  # Enable/Disable a user.
+  def toggle_enabled
     user = User.find(params[:id])
 
-    if can_disable?(user)
-      render nothing: true, status: 403
+    if current_user.toggle_enabled!(user)
+      sign_out user if current_user == user && !user.enabled?
+      render template: "auth/registrations/toggle_enabled",
+             locals:   { user: user, path: request.fullpath }
     else
-      user.update_attributes(enabled: false)
-      sign_out user if current_user == user
-      render template: "auth/registrations/disabled", locals: { user: user, path: request.fullpath }
+      render nothing: true, status: 403
     end
   end
 
@@ -98,22 +98,5 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   def user_params
     params.require(:user)
       .permit(:password, :password_confirmation, :current_password)
-  end
-
-  # Returns whether the given user can be disabled or not. The following rules
-  # apply:
-  #   1. A user can disable himself unless it's the last admin on the system.
-  #   2. The admin user is the only one that can disable other users.
-  def can_disable?(user)
-    # The "portus" user can never be disabled.
-    return false if user.username == "portus"
-
-    if current_user == user
-      # An admin cannot disable himself if he's the only admin in the system.
-      current_user.admin? && User.admins.count == 1
-    else
-      # Only admin users can disable other users.
-      !current_user.admin?
-    end
   end
 end
