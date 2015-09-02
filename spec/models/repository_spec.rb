@@ -23,14 +23,14 @@ describe Repository do
     end
 
     it "should be starrable by a user" do
-      repository.star(user)
+      repository.toggle_star(user)
       expect(repository.starred_by?(user)).to be true
       expect(repository.starred_by?(other_user)).to be false
     end
 
     it "should be unstarrable by a user" do
       repository = star.repository
-      repository.unstar(user)
+      repository.toggle_star(user)
       expect(repository.starred_by?(user)).to be false
       expect(repository.starred_by?(other_user)).to be false
     end

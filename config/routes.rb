@@ -7,8 +7,7 @@ Rails.application.routes.draw do
   end
 
   resources :repositories, only: [:index, :show] do
-    post :star, on: :member
-    post :unstar, on: :member
+    post :toggle_star, on: :member
   end
 
   devise_for :users, controllers: { registrations: "auth/registrations", sessions: "auth/sessions" }

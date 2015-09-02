@@ -1,16 +1,23 @@
+
 <% if @repository.errors.any? %>
+
   $('#alert p').html("<%= escape_javascript(@repository.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
+
 <% else %>
-(function () {
-  var link = $('#repo-stars a');
-  var icon = $('#repo-stars a i')
-  var counter = $('#repo-stars #star-counter');
-  link.prop("id", "unstar_repo");
-  link.prop("href", "<%= escape_javascript(unstar_repository_path(@repository)) %>");
-  link.prop("title", "Unstar repository")
-  icon.addClass("fa-star");
-  icon.removeClass("fa-star-o");
-  counter.html("<%= escape_javascript(@repository.stars.count.to_s) %>");
-})();
+
+  var element = $('#toggle_star');
+
+  if (<%= @repository.starred_by?(user) %>) {
+    element.attr('title', 'Unstar repository');
+    element.find('.fa').removeClass('fa-star-o');
+    element.find('.fa').addClass('fa-star');
+  } else {
+    element.attr('title', 'Star repository');
+    element.find('.fa').removeClass('fa-star');
+    element.find('.fa').addClass('fa-star-o');
+  }
+  $('#star-counter').text(<%= @repository.stars.count %>);
+
 <% end %>
+

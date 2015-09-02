@@ -29,24 +29,21 @@ describe RepositoriesController do
 
   end
 
-  describe "POST #star" do
-
-    it "assigns the requested repository as @repository" do
+  describe "POST #toggle_star" do
+    it "Succeeds when calling star" do
       repository = create(:repository)
-      post :star, { id: repository.to_param }, valid_session
+      post :toggle_star, { id: repository.to_param, format: :erb }, valid_session
+
       expect(assigns(:repository)).to eq(repository)
+      expect(response.status).to eq 200
     end
 
-  end
-
-  describe "POST #unstar" do
-
-    it "assigns the requested repository as @repository" do
+    it "Succeeds when calling unstar" do
       repository = create(:repository, :starred)
-      post :unstar, { id: repository.to_param }, valid_session
+      post :toggle_star, { id: repository.to_param, format: :erb }, valid_session
+
       expect(assigns(:repository)).to eq(repository)
+      expect(response.status).to eq 200
     end
-
   end
-
 end

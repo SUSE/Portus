@@ -1,9 +1,10 @@
 # Portus [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus) [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus) [![Test Coverage](https://codeclimate.com/github/SUSE/Portus/badges/coverage.svg)](https://codeclimate.com/github/SUSE/Portus/coverage)
 
 Portus targets [version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
-of the Docker registry API. It aims to act both as
-an authoritzation server and as a user interface for the next generation of the
-Docker registry.
+of the Docker registry API. The minimum required version of Registry is 2.1,
+which is the first version supporting soft deletes of blobs. It aims to act
+both as an authoritzation server and as a user interface for the next
+generation of the Docker registry.
 
 [![preview](https://cloud.githubusercontent.com/assets/22728/9274870/897410de-4299-11e5-9ebf-c6ecc1ae7733.png)](https://www.youtube.com/watch?v=hGqvYVvdf7U)
 
