@@ -21,6 +21,11 @@ class User < ActiveRecord::Base
     errors.add(:username, "cannot be used as name for private namespace")
   end
 
+  # Returns true if the current user is the Portus user.
+  def portus?
+    username == "portus"
+  end
+
   def create_personal_namespace!
     # the registry is not configured yet, we cannot create the namespace
     return unless Registry.any?
@@ -87,7 +92,7 @@ class User < ActiveRecord::Base
   #   2. The admin user is the only one that can disable other users.
   def can_disable?(user)
     # The "portus" user can never be disabled.
-    return false if user.username == "portus"
+    return false if user.portus?
 
     if self == user
       # An admin cannot disable himself if he's the only admin in the system.
