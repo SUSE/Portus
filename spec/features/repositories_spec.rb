@@ -16,32 +16,26 @@ feature "Repositories support" do
   describe "repository#show" do
     scenario "A user can star a repository", js: true do
       visit repository_path(repository)
-
-      # The form appears after clicking the "Add namespace" link.
-      expect(find("#star_repo")).to be_visible
-      find("#star_repo").click
+      expect(find("#toggle_star")).to be_visible
+      find("#toggle_star").click
       wait_for_ajax
       expect(current_path).to eq repository_path(repository)
 
       # See the response.
       repo = Repository.find(repository.id)
-      expect(page).to have_css("#unstar_repo")
       expect(find("#star-counter")).to have_content("1")
       expect(repo.stars.count).to be 1
     end
 
     scenario "A user can unstar a repository", js: true do
       visit repository_path(starred_repo)
-
-      # The form appears after clicking the "Add namespace" link.
-      expect(find("#unstar_repo")).to be_visible
-      find("#unstar_repo").click
+      expect(find("#toggle_star")).to be_visible
+      find("#toggle_star").click
       wait_for_ajax
       expect(current_path).to eq repository_path(starred_repo)
 
       # See the response.
       repo = Repository.find(repository.id)
-      expect(page).to have_css("#star_repo")
       expect(find("#star-counter")).to have_content("0")
       expect(repo.stars.count).to be 0
     end

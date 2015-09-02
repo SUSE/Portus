@@ -6,12 +6,12 @@
       = @repository.name
       #repo-stars.pull-right
         .btn-group
-          - if can_star_repository?(@repository)
-            = link_to star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default', remote: true, id: 'star_repo' do
-              i.fa.fa-star-o
-          - else
-            = link_to unstar_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default', remote: true, id: 'unstar_repo' do
+          - if @repository.starred_by?(current_user)
+            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default', remote: true, id: 'toggle_star' do
               i.fa.fa-star
+          - else
+            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default', remote: true, id: 'toggle_star' do
+              i.fa.fa-star-o
           span#star-counter.btn.btn-primary
            = @repository.stars.count
 
