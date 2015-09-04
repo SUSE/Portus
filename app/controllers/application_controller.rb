@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :check_requirements
+  helper_method :fixes
   before_action :authenticate_user!
   protect_from_forgery with: :exception
 
@@ -16,27 +17,26 @@ class ApplicationController < ActionController::Base
     new_user_session_url
   end
 
+  def fixes
+    secrets = Rails.application.secrets
+    {}.tap do |fix|
+      fix[:ssl]                                = Rails.env.production? && !request.ssl?
+      fix[:secret_key_base]                    = secrets.secret_key_base == "CHANGE_ME"
+      fix[:secret_machine_fqdn]                = secrets.machine_fqdn.nil?
+      fix[:secret_encryption_private_key_path] = secrets.encryption_private_key_path.nil?
+      fix[:secret_portus_password]             = secrets.portus_password.nil?
+      fix
+    end
+  end
+
   protected
 
   # Check whether certain requirements are met, like ssl configuration
   # for production or having setup secrets.
   # If they are not met, render a page with status 500
   def check_requirements
-    fix_secrets, fix_ssl = fixes
-    return unless fix_secrets || fix_ssl
-
-    text = "Please review the following configurations"
-    text += "<ul>"
-    text += "<li>ssl</li>" if fix_ssl
-    text += "<li>secrets</li>" if fix_secrets
-    text += "</ul>"
-    render text: text, status: 500
-  end
-
-  def fixes
-    fix_secrets = true if Rails.application.secrets.secret_key_base == "CHANGE_ME"
-    fix_ssl     = true if Rails.env.production? && !request.ssl?
-    [fix_secrets, fix_ssl]
+    return unless fixes.value?(true)
+    redirect_to "/errors/500"
   end
 
   def deny_access
