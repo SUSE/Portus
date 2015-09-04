@@ -1,5 +1,6 @@
 ## Upcoming Version
 
+- Introduced LDAP support. See PR [#301](https://github.com/SUSE/Portus/pull/301).
 - Users will not be able to create namespaces without a Registry currently
 existing.
 - PhantomJS is now being used in the testing infrastructure. See the following

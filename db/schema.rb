@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150805130722) do
+ActiveRecord::Schema.define(version: 20150831131727) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -136,9 +136,11 @@ ActiveRecord::Schema.define(version: 20150805130722) do
     t.datetime "updated_at"
     t.boolean  "admin",                  limit: 1,   default: false
     t.boolean  "enabled",                limit: 1,   default: true
+    t.string   "ldap_name",              limit: 255
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["ldap_name"], name: "index_users_on_ldap_name", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 

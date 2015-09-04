@@ -2,10 +2,14 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:username]
 
-  validates :username, presence: true, uniqueness: true,
-                       format: { with:    /\A[a-z0-9]{4,30}\Z/,
-                                 message: 'Accepted format: "\A[a-z0-9]{4,30}\Z"' }
+  USERNAME_CHARS  = "a-z0-9"
+  USERNAME_FORMAT = /\A[#{USERNAME_CHARS}]{4,30}\Z/
 
+  validates :username, presence: true, uniqueness: true,
+    format: {
+      with:    USERNAME_FORMAT,
+      message: "Only alphanumeric characters are allowed. Minimum 4 characters, maximum 30."
+    }
   validate :private_namespace_available, on: :create
 
   has_many :team_users
@@ -15,6 +19,12 @@ class User < ActiveRecord::Base
   scope :not_portus, -> { where.not username: "portus" }
   scope :enabled,    -> { not_portus.where enabled: true }
   scope :admins,     -> { not_portus.where enabled: true, admin: true }
+
+  # Special method used by Devise to require an email on signup. This is always
+  # true except for LDAP.
+  def email_required?
+    !(Portus::LDAP.enabled? && !ldap_name.nil?)
+  end
 
   def private_namespace_available
     return unless Namespace.exists?(name: username)

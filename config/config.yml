@@ -2,5 +2,14 @@
 # application. In order to change them, write your own config-local.yml file
 # (it will be ignored by git).
 
-settings:
-  gravatar: true
+gravatar:
+  enabled: true
+
+ldap:
+  enabled: false
+
+  hostname: "ldap_hostname"
+  port: 389
+
+  # The base where users are located (e.g. "ou=users,dc=example,dc=com").
+  base: ""

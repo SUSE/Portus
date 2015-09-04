@@ -14,6 +14,20 @@ feature "Login feature" do
     expect(page).to_not have_content("You need to sign in or sign up before continuing.")
   end
 
+  scenario "It does show a warning for the admin creation in LDAP support", js: true do
+    User.delete_all
+    APP_CONFIG["ldap"] = { "enabled" => true }
+    visit new_user_session_path
+
+    expect(page).to have_content("The first user to be created will have admin permissions !")
+    expect(page).to_not have_content("Create a new account")
+
+    create(:admin)
+
+    visit new_user_session_path
+    expect(page).to_not have_content("The first user to be created will have admin permissions !")
+  end
+
   scenario "Existing user is able using his login and password to login into Portus", js: true do
     expect(page).to_not have_content("Invalid username or password")
 

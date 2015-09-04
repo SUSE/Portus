@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe User do
-
   subject { create(:user) }
 
   it { should validate_uniqueness_of(:email) }
@@ -19,8 +18,17 @@ describe User do
       .to match_array([:username, "cannot be used as name for private namespace"])
   end
 
-  describe "#create_personal_namespace!" do
+  it "#email_required?" do
+    expect(subject.email_required?).to be true
 
+    APP_CONFIG["ldap"] = { "enabled" => true }
+    incomplete = create(:user, email: "", ldap_name: "user")
+
+    expect(subject.email_required?).to be true
+    expect(incomplete.email_required?).to be false
+  end
+
+  describe "#create_personal_namespace!" do
     context "no registry defined yet" do
       before :each do
         expect(Registry.count).to be(0)
@@ -50,7 +58,6 @@ describe User do
         expect(team).to be_hidden
       end
     end
-
   end
 
   describe "admins" do
@@ -91,8 +98,8 @@ describe User do
 
   describe "disabling" do
     let!(:admin) { create(:admin) }
-    let!(:user) { create(:user) }
-    let!(:team) { create(:team, owners: [admin], viewers: [user]) }
+    let!(:user)  { create(:user) }
+    let!(:team)  { create(:team, owners: [admin], viewers: [user]) }
 
     it "interacts with Devise as expected" do
       expect(user.active_for_authentication?).to be true

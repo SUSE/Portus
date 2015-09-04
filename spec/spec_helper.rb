@@ -34,6 +34,9 @@ RSpec.configure do |config|
   # after returning from it.
   config.before :each do
     Timecop.return
+
+    # Clear the global config before each test.
+    APP_CONFIG.clear
   end
 
   config.order = :random
