@@ -7,48 +7,56 @@
         ' Public Profile
     .panel-body
       = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'profile' }) do |f|
-        .form-group
+        - if current_user.email.empty?
+          p
+            | Your profile is not complete. Please, submit an email to be used in this Portus instance.
+        .form-group class=(current_user.email.empty? ? "has-error" : "")
           .field
-            = f.label :email
-            = f.text_field(:email, class: 'form-control', required: true)
+            - if current_user.email.empty?
+              = f.label :email, "Email", class: "control-label", title: "This profile is not complete. You need to provide an email first"
+            - else
+              = f.label :email
+            = f.text_field(:email, class: 'form-control', required: true, autofocus: true)
         .form-group
           .actions
             = f.submit('Update', class: 'btn btn-primary', disabled: true)
 
-  .panel.panel-default
-    .panel-heading
-      h5
-        ' Change Password
-    .panel-body
-      = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'password' }) do |f|
-        - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-          div
-            Currently waiting confirmation for: #{resource.unconfirmed_email}
-        .form-group
-          .field
-            = f.label :current_password, class: 'control-label'
-            = f.password_field :current_password, autocomplete: 'off', class: 'form-control'
-            br
-          .field
-            = f.label :password, class: 'control-label'
-            = f.password_field :password, autocomplete: 'off', class: 'form-control'
-            br
-          .field
-            = f.label :password_confirmation, class: 'control-label'
-            = f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control'
-        .form-group
-          .actions
-            = f.submit('Change', class: 'btn btn-primary', disabled: true)
-
-  - unless current_user.admin? && @admin_count == 1
-    .panel.panel-default
-      .panel-heading
-        h5
-          ' Disable account
-      .panel-body
-        = form_tag(toggle_enabled_path(current_user), method: :put, remote: true, id: 'disable-form') do
+  - unless current_user.email.empty?
+    - if current_user.ldap_name.nil?
+      .panel.panel-default
+        .panel-heading
+          h5
+            ' Change Password
+        .panel-body
+          = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'password' }) do |f|
+            - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+              div
+                Currently waiting confirmation for: #{resource.unconfirmed_email}
             .form-group
-              p
-                | By disabling the account, you won't be able to access Portus with it, and
-                  any affiliations with any team will be lost.
-              = submit_tag('Disable', class: 'btn btn-primary btn-danger')
+              .field
+                = f.label :current_password, class: 'control-label'
+                = f.password_field :current_password, autocomplete: 'off', class: 'form-control'
+                br
+              .field
+                = f.label :password, class: 'control-label'
+                = f.password_field :password, autocomplete: 'off', class: 'form-control'
+                br
+              .field
+                = f.label :password_confirmation, class: 'control-label'
+                = f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control'
+            .form-group
+              .actions
+                = f.submit('Change', class: 'btn btn-primary', disabled: true)
+
+    - unless current_user.admin? && @admin_count == 1
+      .panel.panel-default
+        .panel-heading
+          h5
+            ' Disable account
+        .panel-body
+          = form_tag(toggle_enabled_path(current_user), method: :put, remote: true, id: 'disable-form') do
+              .form-group
+                p
+                  | By disabling the account, you won't be able to access Portus with it, and
+                    any affiliations with any team will be lost.
+                = submit_tag('Disable', class: 'btn btn-primary btn-danger')

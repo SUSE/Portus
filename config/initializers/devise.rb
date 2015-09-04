@@ -243,6 +243,12 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
+  if Portus::LDAP.enabled? && !Rails.env.test?
+    config.warden do |manager|
+      # Let's put LDAP in front of every other strategy.
+      manager.default_strategies(scope: :user).unshift :ldap_authenticatable
+    end
+  end
 
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine

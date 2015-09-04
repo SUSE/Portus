@@ -18,6 +18,7 @@ gem "mysql2"
 gem "search_cop"
 gem "kaminari"
 gem "crono"
+gem "net-ldap"
 
 # Assets group.
 #

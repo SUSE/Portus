@@ -65,16 +65,22 @@ describe "/v2/token" do
       it "does not allow to pull a private namespace from another team" do
         # It works for the regular user
         get v2_token_url,
-          { service: registry.hostname, account: user.username,
-            scope: "repository:#{user.username}/busybox:push,pull" },
+          {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:#{user.username}/busybox:push,pull"
+          },
           "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
 
         expect(response.status).to eq 200
 
         # But not for another
         get v2_token_url,
-          { service: registry.hostname, account: another.username,
-            scope: "repository:#{user.username}/busybox:push,pull" },
+          {
+            service: registry.hostname,
+            account: another.username,
+            scope:   "repository:#{user.username}/busybox:push,pull"
+          },
           "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
 
         expect(response.status).to eq 401
