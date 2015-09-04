@@ -2,9 +2,13 @@
 # application. In order to change them, write your own config-local.yml file
 # (it will be ignored by git).
 
+# If enabled, then the profile picture will be picked from the Gravatar
+# associated with each user. See: https://en.gravatar.com/
 gravatar:
   enabled: true
 
+# LDAP support. If enabled, then only users of the specified LDAP server will
+# be able to use Portus.
 ldap:
   enabled: false
 
