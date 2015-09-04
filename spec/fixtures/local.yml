@@ -1,0 +1,5 @@
+ldap:
+  enabled: true
+  hostname: "ldap.example.com"
+  port: 389
+  base: "ou=users,dc=example,dc=com"

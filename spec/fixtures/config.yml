@@ -1,0 +1,8 @@
+gravatar:
+  enabled: true
+
+ldap:
+  enabled: false
+  hostname: "ldap_hostname"
+  port: 389
+  base: ""
