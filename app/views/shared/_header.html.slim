@@ -14,7 +14,7 @@
   .username-logout
     .hidden-xs
       - if APP_CONFIG.enabled?("gravatar")
-        = gravatar_image_tag(current_user.email)
+        = user_image_tag(current_user.email)
       - else
         i.fa.fa-user.fa-1x
 

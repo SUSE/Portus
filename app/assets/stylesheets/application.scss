@@ -29,3 +29,9 @@
 #profile .panel {
   max-width: 700px;
 }
+
+// Overwriting so we fa-user elements are actually shown in the
+// activities list.
+.panel-overview .fa-user {
+  color: $gray-mid;
+}

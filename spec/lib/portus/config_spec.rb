@@ -5,7 +5,7 @@ def get_config(default, local)
   Portus::Config.new(default, local)
 end
 
-describe Portus::Config, focus: true do
+describe Portus::Config do
   it "returns an empty config if neither the global nor the local were found" do
     cfg = get_config("", "").fetch
 
