@@ -78,4 +78,4 @@ printf "\n"
 echo "To push an image to the private registry:"
 echo "  docker pull busybox"
 echo "  docker tag busybox ${DOCKER_HOST}:5000/<username>busybox"
-echo "  docker push ${DOCKER_HOST}:5000/<username>busybox
+echo "  docker push ${DOCKER_HOST}:5000/<username>busybox"
