@@ -44,8 +44,8 @@ clean() {
 }
 
 
-echo "DOCKER_HOST=${HOST}" > docker/environment
-
+DOCKER_HOST=$(hostname -f)
+echo "DOCKER_HOST=${DOCKER_HOST}" > docker/environment
 
 clean
 docker-compose up -d
@@ -60,22 +60,22 @@ cat <<EOM
 
 EOM
 
-echo "Make sure port 3000 and 5000 are open on host ${HOST}"
+echo "Make sure port 3000 and 5000 are open on host ${DOCKER_HOST}"
 printf "\n"
 
-echo "Open http://${HOST}:3000 with your browser and perform the following steps:"
+echo "Open http://${DOCKER_HOST}:3000 with your browser and perform the following steps:"
 echo "  1 - Create an admin account"
-echo "  2 - Add a new registry: choose a custom name, enter ${HOST}:5000 as hostname"
+echo "  2 - Add a new registry: choose a custom name, enter ${DOCKER_HOST}:5000 as hostname"
 printf "\n"
 
 echo "Perform the following actions on the docker hosts that need to interact with your registry:"
-echo " - Ensure the docker daemon is started with the '--insecure-registry ${HOST}:5000'"
+echo " - Ensure the docker daemon is started with the '--insecure-registry ${DOCKER_HOST}:5000'"
 echo " - Perform the docker login"
 echo "To authenticate against your registry using the docker cli do:"
-echo "  docker login -u <portus username> -p <password> -e <email> ${HOST}:5000"
+echo "  docker login -u <portus username> -p <password> -e <email> ${DOCKER_HOST}:5000"
 printf "\n"
 
 echo "To push an image to the private registry:"
 echo "  docker pull busybox"
-echo "  docker tag busybox ${HOST}:5000/<username>busybox"
-echo "  docker push ${HOST}:5000/<username>busybox"
+echo "  docker tag busybox ${DOCKER_HOST}:5000/<username>busybox"
+echo "  docker push ${DOCKER_HOST}:5000/<username>busybox
