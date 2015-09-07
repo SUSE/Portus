@@ -18,6 +18,16 @@ class LdapFailedBindAdapter < LdapMockAdapter
   end
 end
 
+class LdapSearchAdapter
+  def initialize(opts)
+    @opts = opts
+  end
+
+  def search(_)
+    @opts
+  end
+end
+
 class LdapOriginal < Portus::LDAP
   def adapter
     super
@@ -56,6 +66,11 @@ class LdapMock < Portus::LDAP
 
   def fail!(symbol)
     @last_symbol = symbol
+  end
+
+  def guess_email_test(response)
+    @ldap = LdapSearchAdapter.new(response)
+    guess_email
   end
 
   alias_method :fail, :fail!
@@ -231,6 +246,91 @@ describe Portus::LDAP do
       lm.authenticate!
       expect(lm.last_symbol).to be :ok
       expect(lm.user.username).to eq "name"
+    end
+  end
+
+  describe "#guess_email" do
+    let(:empty_dc) do
+      [
+        {
+          "dn"    => ["ou=users"],
+          "email" => "user@example.com"
+        }
+      ]
+    end
+
+    let(:multiple_dn) do
+      [
+        {
+          "dn"    => ["ou=users,dc=example,dc=com", "ou=accounts,dc=example,dc=com"],
+          "email" => "user@example.com"
+        }
+      ]
+    end
+
+    let(:valid_response) do
+      [
+        {
+          "dn"    => ["ou=users,dc=example,dc=com"],
+          "email" => "user@example.com"
+        }
+      ]
+    end
+
+    it "returns an empty email if disabled" do
+      ge = { "enabled" => false, "attr" => "" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test(valid_response)).to eq ""
+    end
+
+    it "returns an empty email if no records have been found" do
+      ge = { "enabled" => true, "attr" => "" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test([])).to eq ""
+    end
+
+    it "returns an empty email if more than one dn gets returned" do
+      ge = { "enabled" => true, "attr" => "" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test(multiple_dn)).to eq ""
+    end
+
+    it "returns an empty email if the dc hostname could not be guessed" do
+      ge = { "enabled" => true, "attr" => "" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test(empty_dc)).to eq ""
+    end
+
+    it "returns a valid email if the dc can be guessed" do
+      ge = { "enabled" => true, "attr" => "" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test(valid_response)).to eq "name@example.com"
+    end
+
+    it "returns an email if the specified attribute does not exist" do
+      ge = { "enabled" => true, "attr" => "non_existing" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test(valid_response)).to eq ""
+    end
+
+    it "returns a valid email if the given attribute exists" do
+      ge = { "enabled" => true, "attr" => "email" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test(valid_response)).to eq "user@example.com"
     end
   end
 end

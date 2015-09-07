@@ -20,7 +20,7 @@ module Portus
         unless local.is_a?(Hash)
           raise StandardError, "Wrong format for the config-local file!"
         end
-        cfg.merge!(local)
+        cfg = cfg.deep_merge(local)
       end
 
       add_enabled(cfg)
