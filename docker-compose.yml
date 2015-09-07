@@ -19,7 +19,10 @@ registry:
     service: registry
   volumes:
     - ./docker/registry:/registry
+    - /registry_data
   entrypoint: /registry/entry.sh
   env_file: docker/environment
   links:
     - web
+  ports:
+    - 5001:5001 # required to access debug service
