@@ -9,3 +9,4 @@
 /public/assets
 /config/config-local.yml
 docker/environment
+docker/registry/config.yml
