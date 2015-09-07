@@ -17,3 +17,25 @@ ldap:
 
   # The base where users are located (e.g. "ou=users,dc=example,dc=com").
   base: ""
+
+  # Portus needs an email for each user, but there's no standard way to get
+  # that from LDAP servers. You can tell Portus how to get the email from users
+  # registered in the LDAP server with this configurable value. There are three
+  # possibilities:
+  #
+  #   - disabled: this is the default value. It means that Portus won't do a
+  #     thing when registering LDAP users (users will be redirected to their
+  #     profile page until they setup an email account).
+  #   - enabled where "attr" is empty: for this you need "ldap.base" to have
+  #     some value. In this case, the hostname will be guessed from the domain
+  #     component of the provided base string. For example, for the dn:
+  #     "ou=users,dc=example,dc=com", and a user name "user", the resulting
+  #     email is "user@example.com".
+  #   - enabled where "attr" is not empty: with this you specify the attribute
+  #     inside a LDIF record where the email is set.
+  #
+  # If something goes wrong when trying to guess the email, then it just falls
+  # back to the default behavior (empty email).
+  guess_email:
+    enabled: false
+    attr: ""

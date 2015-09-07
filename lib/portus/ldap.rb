@@ -11,9 +11,9 @@ module Portus
   # are some issues while doing this:
   #
   #   1. The 'email' is not provided in a standard way: some LDAP servers may
-  #      provide it, some others won't. Therefore, once an LDAP user logs in
-  #      Portus for the first time, the email will be left blank. This should
-  #      be handled by the controller layer.
+  #      provide it, some others won't. Portus tries to guess the email by
+  #      following the "ldap.guess_email" configurable value. If no email could
+  #      be guessed, the controller layer should handle this.
   #   2. The 'password' is stored in the DB but it's not really used. This is
   #      because the DB requires the password to not be blank, but in order to
   #      authenticate we always want to check with the LDAP server.
@@ -25,15 +25,15 @@ module Portus
     # Re-implemented from Devise::Strategies::Authenticatable to authenticate
     # the user.
     def authenticate!
-      ldap = load_configuration
+      @ldap = load_configuration
 
       # If LDAP is enabled try to authenticate through the LDAP server.
       # Otherwise we fall back to the next strategy.
-      if ldap
+      if @ldap
         # Try to bind to the LDAP server. If there's any failure, the
         # authentication process will fail without going to the any other
         # strategy.
-        if ldap.bind_as(bind_options)
+        if @ldap.bind_as(bind_options)
           user = find_or_create_user!
           user.valid? ? success!(user) : fail!(:invalid_login)
         else
@@ -72,10 +72,15 @@ module Portus
     # Returns the option hash to be used in order to authenticate the user in
     # the LDAP server.
     def bind_options
+      search_options.merge(password: password)
+    end
+
+    # Returns the hash to be used in order to search for a user in the LDAP
+    # server.
+    def search_options
       {}.tap do |opts|
-        opts[:filter]   = "(uid=#{username})"
-        opts[:password] = password
-        opts[:base]     = APP_CONFIG["ldap"]["base"] unless APP_CONFIG["ldap"]["base"].empty?
+        opts[:filter] = "(uid=#{username})"
+        opts[:base]   = APP_CONFIG["ldap"]["base"] unless APP_CONFIG["ldap"]["base"].empty?
       end
     end
 
@@ -104,6 +109,7 @@ module Portus
 
         user = User.create(
           username:  name,
+          email:     guess_email,
           password:  password,
           admin:     !User.not_portus.any?,
           ldap_name: ldap_name
@@ -125,6 +131,39 @@ module Portus
 
       # We have not been able to generate a new name, let's raise an exception.
       fail!(:invalid_login)
+    end
+
+    # If the "ldap.guess_email" option is enabled, try to guess the email for
+    # the user as specified in the configuration. Returns an empty string if
+    # nothing could be guessed.
+    def guess_email
+      cfg = APP_CONFIG["ldap"]["guess_email"]
+      return "" if cfg.nil? || !cfg["enabled"]
+
+      record = @ldap.search(search_options)
+      return "" if record.size != 1
+      record = record.first
+
+      if cfg["attr"].empty?
+        guess_from_dn(record["dn"])
+      else
+        record[cfg["attr"]] || ""
+      end
+    end
+
+    # Guesses the email being fetching "dc" components of the given
+    # distinguished name.
+    def guess_from_dn(dn)
+      return "" if dn.nil? || dn.size != 1
+
+      dc = []
+      dn.first.split(",").each do |value|
+        kv = value.split("=")
+        dc << kv.last if kv.first == "dc"
+      end
+      return "" if dc.empty?
+
+      "#{username}@#{dc.join(".")}"
     end
 
     ##
