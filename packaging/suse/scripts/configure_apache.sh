@@ -1,15 +1,9 @@
 #!/bin/bash
+cd $(dirname $0)
 
-if [[ $(id -u) -ne 0 ]] ;then
-  echo "Please run as root"
-  exit 1
-fi
+. check_reqs.include
 
-echo "Configuring apache"
-
-if [ ! -f /etc/apache2/vhosts.d/portus.conf ];then
-  cp /srv/Portus/packaging/suse/conf/etc.apache2.vhosts.d.portus.conf /etc/apache2/vhosts.d/portus.conf
-fi
+check_reqs
 
 echo "Which port do you want to run Portus on?"
 read port
@@ -19,5 +13,5 @@ if [ "$port" == "" ];then
   exit -1
 fi
 
-sed -e "s/<VirtualHost .*/<VirtualHost \*:$port>/g" -i /etc/apache2/vhosts.d/portus.conf
+sed -e "s/<VirtualHost .*/<VirtualHost \*:$port>/g" -i $APACHE_CONF_PATH/portus.conf
 

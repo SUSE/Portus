@@ -7,6 +7,7 @@ cd $(dirname $0)
 ./configure_database.sh
 ./create_db.sh
 ./configure_registry.sh
+./configure_ldap.sh
 
 systemctl reload apache2
 

@@ -1,0 +1,17 @@
+APACHE_CONF_PATH=/etc/apache2/vhosts.d/
+
+check_reqs() {
+  if [[ $(id -u) -ne 0 ]] ;then
+    echo "Please run as root"
+    exit 1
+  fi
+
+  if [ ! -f $APACHE_CONF_PATH/portus.conf ];then
+    if [ ! -f $APACHE_CONF_PATH/portus.conf.sample ];then
+      echo "Expecting either portus.conf or portus.conf.sample to be in $APACHE_CONF_PATH but none of them are present"
+      exit -1
+    fi
+    cp $APACHE_CONF_PATH/portus.conf.sample $APACHE_CONF_PATH/portus.conf
+  fi
+}
+
