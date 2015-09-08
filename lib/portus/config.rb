@@ -14,19 +14,22 @@ module Portus
       cfg = {}
       cfg = YAML.load_file(@default) if File.file?(@default)
 
+      local = {}
       if File.file?(@local)
         # Check for bad user input in the local config.yml file.
         local = YAML.load_file(@local)
         unless local.is_a?(Hash)
           raise StandardError, "Wrong format for the config-local file!"
         end
-        cfg = cfg.deep_merge(local)
       end
 
-      add_enabled(cfg)
+      hsh = strict_merge_with_env(cfg, local)
+      add_enabled(hsh)
     end
 
     protected
+
+    include ::Portus::HashUtils
 
     # Add the `enabled?` method to the given object. The `enabled?` method is
     # a convenient method that checks whether a specific feature is enabled or
