@@ -9,14 +9,14 @@ PR [#280](https://github.com/SUSE/Portus/pull/280),
 PR [#273](https://github.com/SUSE/Portus/pull/273),
 - Add configure scripts for the RPM and use environment variables for
 production. See:
-PR [#299](https://github.com/SUSE/Portus/pull/299)
-PR [#298](https://github.com/SUSE/Portus/pull/298)
+PR [#299](https://github.com/SUSE/Portus/pull/299),
+PR [#298](https://github.com/SUSE/Portus/pull/298),
 PR [#281](https://github.com/SUSE/Portus/pull/281)
 - Check run time requirements like ssl, secrets. See
-PR [#297](https://github.com/SUSE/Portus/pull/297)
-https://github.com/SUSE/Portus/pull/286
+PR [#297](https://github.com/SUSE/Portus/pull/297),
+PR [#286](https://github.com/SUSE/Portus/pull/286)
 - Update uglifier gem for fixing a security issue (OSVDB-126747)
-https://github.com/SUSE/Portus/pull/292
+PR [#292](https://github.com/SUSE/Portus/pull/292)
 - Introduced LDAP support. See PR [#301](https://github.com/SUSE/Portus/pull/301).
 - Users will not be able to create namespaces without a Registry currently
 existing.
