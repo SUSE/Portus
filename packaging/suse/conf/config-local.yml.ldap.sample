@@ -1,4 +1,5 @@
-# Sample configuration file that overwrites ldap configuration with environment variables
+# LDAP support. If enabled, then only users of the specified LDAP server will
+# be able to use Portus.
 ldap:
   <% if ENV["PORTUS_LDAP_ENABLED"] %>
   enabled: <%= ENV["PORTUS_LDAP_ENABLED"] %>
@@ -15,8 +16,6 @@ ldap:
   <% else %>
   port: 389
   <% end %>
-
-  # The base where users are located (e.g. "ou=users,dc=example,dc=com").
   <% if ENV["PORTUS_LDAP_BASE"] %>
   base: <%= ENV["PORTUS_LDAP_BASE"] %>
   <% else %>

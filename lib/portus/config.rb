@@ -12,12 +12,12 @@ module Portus
     # Returns a hash with the app configuration contained in it.
     def fetch
       cfg = {}
-      cfg = YAML.load_file(@default) if File.file?(@default)
+      cfg = YAML.load(ERB.new(File.read(@default)).result) if File.file?(@default)
 
       local = {}
       if File.file?(@local)
         # Check for bad user input in the local config.yml file.
-        local = YAML.load_file(@local)
+        local = YAML.load(ERB.new(File.read(@local)).result)
         unless local.is_a?(Hash)
           raise StandardError, "Wrong format for the config-local file!"
         end

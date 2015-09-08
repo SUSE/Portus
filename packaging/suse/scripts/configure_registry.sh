@@ -1,4 +1,5 @@
 #!/bin/bash
+cd $(dirname $0)
 
 if [[ $(id -u) -ne 0 ]] ;then
   echo "Please run as root"
