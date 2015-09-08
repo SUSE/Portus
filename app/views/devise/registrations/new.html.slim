@@ -10,12 +10,12 @@ section.sign-up class=(@have_users ? '' : 'first-user')
         = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password (8 characters min.)', required: true
         = f.password_field :password_confirmation, class: 'form-control input-lg last', placeholder: 'Password again', required: true
 
-        - unless @admin
+        - if !@admin && @first_user_admin
           = f.hidden_field :admin, value: true
 
         button.btn.btn-primary.btn-block.btn-lg type="submit"
           i.fa.fa-check
-          - if @admin
+          - if @admin || !@first_user_admin
             | Create account
           - else
             | Create admin

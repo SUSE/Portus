@@ -39,3 +39,12 @@ ldap:
   guess_email:
     enabled: false
     attr: ""
+
+# Set first_user_admin to true if you want that the first user that signs up
+# to be an admin.
+#
+# Set to false otherwise. Then you will need to run
+#   rake portus:set_admin
+# in order to set the admin user
+first_user_admin:
+  enabled: true

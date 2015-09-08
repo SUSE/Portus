@@ -77,6 +77,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
   def check_admin
     @admin = User.admins.any?
+    @first_user_admin = APP_CONFIG.enabled?("first_user_admin")
   end
 
   def configure_sign_up_params
