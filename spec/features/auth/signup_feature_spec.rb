@@ -3,6 +3,7 @@ require "rails_helper"
 feature "Signup feature" do
   before do
     create(:admin)
+    APP_CONFIG["first_user_admin"] = { "enabled" => true }
     visit new_user_registration_url
   end
 
@@ -17,11 +18,19 @@ feature "Signup feature" do
     expect(page).to_not have_css("#user_admin")
   end
 
-  scenario "The first user to be created is the admin" do
+  scenario "The first user to be created is the admin if first_user_admin is enabled" do
     User.delete_all
     visit new_user_registration_url
     expect(page).to have_content("Create admin")
     expect(page).to have_css("#user_admin")
+  end
+
+  scenario "The first user to be created is NOT admin if first_user_admin is disabled" do
+    User.delete_all
+    APP_CONFIG["first_user_admin"] = { "enabled" => false }
+    visit new_user_registration_url
+    expect(page).to_not have_content("Create admin")
+    expect(page).to_not have_css("#user_admin")
   end
 
   scenario "The portus user does not interfere with regular admin creation" do
@@ -54,7 +63,6 @@ feature "Signup feature" do
     visit root_url
     expect(current_url).to eq new_user_registration_url
 
-    expect(page).to have_css("#user_admin")
     expect(page).to have_css("section.first-user")
   end
 
@@ -69,7 +77,7 @@ feature "Signup feature" do
     expect(current_url).to eq new_user_session_url
   end
 
-  scenario "I am readirected to the signup page if only the portus user exists" do
+  scenario "I am redirected to the signup page if only the portus user exists" do
     User.delete_all
     create(:admin, username: "portus")
 
@@ -78,7 +86,6 @@ feature "Signup feature" do
     visit root_url
     expect(current_url).to eq new_user_registration_url
 
-    expect(page).to have_css("#user_admin")
     expect(page).to have_css("section.first-user")
   end
 

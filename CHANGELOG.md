@@ -1,5 +1,7 @@
 ## Upcoming Version
 
+- set admin user from a rake task and disable first-user is admin. See PR [#314]
+  (https://github.com/SUSE/Portus/pull/314)
 - Introduced LDAP support. See PR [#301](https://github.com/SUSE/Portus/pull/301).
 - Users will not be able to create namespaces without a Registry currently
 existing.
