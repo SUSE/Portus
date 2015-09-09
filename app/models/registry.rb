@@ -30,9 +30,6 @@ class Registry < ActiveRecord::Base
     registry
   end
 
-  # Regular expression used to fetch the tag of an image.
-  PUSH_EVENT_FIND_TOKEN_REGEXP = %r{manifests/(?<tag>.*)$}
-
   # Fetch the information regarding a namespace on this registry for the given
   # event. If no namespace was found, then it returns nil. Otherwise, it
   # returns three values:
@@ -40,11 +37,11 @@ class Registry < ActiveRecord::Base
   #   - A String containing the name of the repository.
   #   - A String containing the name of the tag.
   def get_namespace_from_event(event)
-    if event["target"]["repository"].include?("/")
-      namespace_name, repo_name = event["target"]["repository"].split("/", 2)
+    repo = event["target"]["repository"]
+    if repo.include?("/")
+      namespace_name, repo = repo.split("/", 2)
       namespace = namespaces.find_by(name: namespace_name)
     else
-      repo_name = event["target"]["repository"]
       namespace = global_namespace
     end
 
@@ -53,14 +50,27 @@ class Registry < ActiveRecord::Base
       return
     end
 
-    match = PUSH_EVENT_FIND_TOKEN_REGEXP.match(event["target"]["url"])
-    if match
-      tag_name = match["tag"]
-    else
-      logger.error("Cannot find tag inside of event url: #{event["target"]["url"]}")
+    tag_name = get_tag_from_manifest(event["target"])
+    return if tag_name.nil?
+
+    [namespace, repo, tag_name]
+  end
+
+  # Fetch the tag of the image contained in the current event. The Manifest API
+  # is used to fetch it, thus the repo name and the digest are needed (and
+  # they are contained inside the event's target).
+  #
+  # Returns the name of the tag if found, nil otherwise.
+  def get_tag_from_manifest(target)
+    pass = Rails.application.secrets.portus_password
+    client = RegistryClient.new(hostname, false, "portus", pass)
+
+    begin
+      man = client.manifest(target["repository"], target["digest"])
+      man["tag"]
+    rescue
+      logger.error("Could not fetch the tag for target #{target}.")
       return
     end
-
-    [namespace, repo_name, tag_name]
   end
 end
