@@ -44,7 +44,7 @@ clean() {
 }
 
 
-DOCKER_HOST=$(hostname -f)
+DOCKER_HOST=${DOCKER_HOST=$(hostname -f)}
 echo "DOCKER_HOST=${DOCKER_HOST}" > docker/environment
 
 clean
