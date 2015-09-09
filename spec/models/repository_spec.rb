@@ -40,7 +40,7 @@ describe Repository do
 
     let(:tag_name) { "latest" }
     let(:repository_name) { "busybox" }
-    let(:registry) { create(:registry) }
+    let(:registry) { create(:registry, hostname: "registry.test.lan") }
     let(:user) { create(:user) }
 
     context "event does not match regexp of manifest" do
@@ -54,12 +54,13 @@ describe Repository do
       end
 
       it "sends event to logger" do
-        error_msg =
-          "Cannot find tag inside of event url: http://registry.test.lan/v2/busybox/wrong/latest"
-        expect(Rails.logger).to receive(:error).with(error_msg)
-        expect do
-          Repository.handle_push_event(event)
-        end.to change(Repository, :count).by(0)
+        VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
+          error_msg = "Could not fetch the tag for target"
+          expect(Rails.logger).to receive(:error).with(/^#{error_msg}/)
+          expect do
+            Repository.handle_push_event(event)
+          end.to change(Repository, :count).by(0)
+        end
       end
 
     end
@@ -103,7 +104,8 @@ describe Repository do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
-        @event["target"]["url"] = get_url(repository_name, tag_name)
+        @event["target"]["url"] = get_url(repository_name, "digest")
+        @event["target"]["digest"] = "digest"
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = user.username
       end
@@ -111,9 +113,11 @@ describe Repository do
       context "when the repository is not known by Portus" do
         it "should create repository and tag objects" do
           repository = nil
-          expect do
-            repository = Repository.handle_push_event(@event)
-          end.to change(Namespace, :count).by(0)
+          VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
+            expect do
+              repository = Repository.handle_push_event(@event)
+            end.to change(Namespace, :count).by(0)
+          end
 
           expect(repository).not_to be_nil
           expect(Repository.count).to eq 1
@@ -128,9 +132,11 @@ describe Repository do
 
         it "tracks the event" do
           repository = nil
-          expect do
-            repository = Repository.handle_push_event(@event)
-          end.to change(PublicActivity::Activity, :count).by(1)
+          VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
+            expect do
+              repository = Repository.handle_push_event(@event)
+            end.to change(PublicActivity::Activity, :count).by(1)
+          end
 
           activity = PublicActivity::Activity.last
           expect(activity.key).to eq("repository.push")
@@ -150,9 +156,11 @@ describe Repository do
 
         it "should create a new tag" do
           repository = nil
-          expect do
-            repository = Repository.handle_push_event(@event)
-          end.to change(Namespace, :count).by(0)
+          VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
+            expect do
+              repository = Repository.handle_push_event(@event)
+            end.to change(Namespace, :count).by(0)
+          end
 
           expect(repository).not_to be_nil
           expect(Repository.count).to eq 1
@@ -167,9 +175,11 @@ describe Repository do
 
         it "tracks the event" do
           repository = nil
-          expect do
-            repository = Repository.handle_push_event(@event)
-          end.to change(PublicActivity::Activity, :count).by(1)
+          VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
+            expect do
+              repository = Repository.handle_push_event(@event)
+            end.to change(PublicActivity::Activity, :count).by(1)
+          end
 
           activity = PublicActivity::Activity.last
           expect(activity.key).to eq("repository.push")
@@ -194,7 +204,9 @@ describe Repository do
           event = @event
           event["target"]["repository"] = repository_namespaced_name
           event["target"]["url"] = get_url(repository_namespaced_name, tag_name)
-          Repository.handle_push_event(event)
+          VCR.use_cassette("registry/get_image_manifest_another_webhook", record: :none) do
+            Repository.handle_push_event(event)
+          end
 
           repos = Repository.all.order("id ASC")
           expect(repos.count).to be(2)
@@ -213,6 +225,7 @@ describe Repository do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = name
         @event["target"]["url"] = get_url(name, tag_name)
+        @event["target"]["digest"] = "digest"
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = user.username
       end
@@ -230,7 +243,10 @@ describe Repository do
         end
 
         it "should create repository and tag objects when the repository is unknown to portus" do
-          repository = Repository.handle_push_event(@event)
+          repository = nil
+          VCR.use_cassette("registry/get_image_manifest_namespaced_webhook", record: :none) do
+            repository = Repository.handle_push_event(@event)
+          end
 
           expect(repository).not_to be_nil
           expect(Repository.count).to eq 1
@@ -248,7 +264,9 @@ describe Repository do
           repository = create(:repository, name: repository_name, namespace: @namespace)
           repository.tags << Tag.new(name: "1.0.0")
 
-          repository = Repository.handle_push_event(@event)
+          VCR.use_cassette("registry/get_image_manifest_namespaced_webhook", record: :none) do
+            repository = Repository.handle_push_event(@event)
+          end
 
           expect(repository).not_to be_nil
           expect(Repository.count).to eq 1
