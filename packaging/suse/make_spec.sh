@@ -20,10 +20,10 @@ year=$(date +%Y)
 
 additional_native_build_requirements() {
   if [ $1 == "nokogiri" ];then
-    echo "BuildRequires: libxml2-devel libxslt-devel\nRequires: libxml2 libxslt\n"
+    echo "BuildRequires: libxml2-devel libxslt-devel\n"
   fi
   if [ $1 == "mysql2" ];then
-    echo "BuildRequires: libmysqlclient-devel\nRequires: libmysqlclient18\nRecommends: mariadb\n"
+    echo "BuildRequires: libmysqlclient-devel\nRecommends: mariadb\n"
   fi
 }
 
