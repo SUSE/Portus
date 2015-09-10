@@ -24,5 +24,5 @@ fi
 HOSTNAME=$(cat /etc/HOSTNAME)
 echo "Create backup at /etc/registry/config.yml.portus.back"
 cp /etc/registry/config.yml /etc/registry/config.yml.portus.back
-sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/packaging/suse/conf/registry/config.yml.in > /etc/registry/config.yml
+sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/packaging/suse/conf/registry.config.yml.in > /etc/registry/config.yml
 
