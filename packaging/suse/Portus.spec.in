@@ -33,9 +33,13 @@ Group:          System/Management
 %define portusdir /srv/Portus
 
 Requires:       ruby >= 2.1
+%if 0%{?suse_version} >= 1210
+BuildRequires: systemd-rpm-macros
+%endif
 BuildRequires:  fdupes
 BuildRequires:  ruby-macros >= 5
 Requires:       rubygem-passenger-apache2
+%{?systemd_requires}
 Provides:       Portus = %{version}
 # javascript engine to build assets
 BuildRequires:  nodejs
@@ -96,12 +100,25 @@ mkdir %{buildroot}/%{portusdir}/log
 rm -rf %{buildroot}/%{portusdir}/tmp
 mkdir %{buildroot}/%{portusdir}/tmp
 
+install -d %{buildroot}/%{_sbindir}
+cp packaging/suse/scripts/portus_crono %{buildroot}/%{_sbindir}/
+%__install -D -m 444 packaging/suse/conf/portus_crono.service %{buildroot}%{_unitdir}/portus_crono.service
+
+
 %fdupes %{buildroot}/%{portusdir}
 
+%pre
+%service_add_pre portus_crono.service
+
 %post
+%service_add_post portus_crono.service
 %{restart_on_update apache2}
 
+%preun
+%service_del_preun portus_crono.service
+
 %postun
+%service_del_postun portus_crono.service
 %{restart_on_update apache2}
 
 %files
@@ -120,5 +137,7 @@ mkdir %{buildroot}/%{portusdir}/tmp
 %{portusdir}/log/
 %{portusdir}/tmp/
 %{portusdir}/db/
+%{_sbindir}/portus_crono
+%{_unitdir}/portus_crono.service
 
 %changelog
