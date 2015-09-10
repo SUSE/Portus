@@ -10,10 +10,8 @@ class CatalogJob < ActiveJob::Base
     registry = Registry.first
     return if registry.nil?
 
-    pass = Rails.application.secrets.portus_password
-    client = RegistryClient.new(registry.hostname, false, "portus", pass)
-
     begin
+      client = RegistryClient.new(registry.hostname)
       cat = client.catalog
 
       # Update the registry in a transaction, since we don't want to leave the DB

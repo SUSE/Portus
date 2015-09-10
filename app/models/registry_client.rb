@@ -5,12 +5,14 @@
 class RegistryClient
   include HttpHelpers
 
-  def initialize(host, use_ssl = true, username = nil, password = nil)
+  # Initialize the client by setting up a hostname and the user. Note that if
+  # no user was given, the "portus" special user is assumed.
+  def initialize(host, use_ssl = false, username = nil, password = nil)
     @host     = host
     @use_ssl  = use_ssl
     @base_url = "http#{"s" if @use_ssl}://#{@host}/v2/"
-    @username = username
-    @password = password
+    @username = username || "portus"
+    @password = password || Rails.application.secrets.portus_password
   end
 
   # Retrieves the manifest for the required repository:tag. If everything goes

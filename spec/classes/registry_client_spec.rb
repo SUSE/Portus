@@ -1,5 +1,15 @@
 require "rails_helper"
 
+# The RegistryClient defaults to the "portus" user if no credentials were
+# given. This mock class serves to test a class that misses the credentials.
+class RegistryClientMissingCredentials < RegistryClient
+  def initialize(host)
+    super(host)
+    @username = nil
+    @password = nil
+  end
+end
+
 describe RegistryClient do
   let(:registry_server) { "registry.test.lan" }
   let(:username) { "flavio" }
@@ -10,7 +20,7 @@ describe RegistryClient do
       VCR.turned_off do
         WebMock.disable_net_connect!
         s = stub_request(:get, "https://#{registry_server}/v2/")
-        registry = RegistryClient.new(registry_server)
+        registry = RegistryClient.new(registry_server, true)
         registry.perform_request("")
         expect(s).to have_been_requested
       end
@@ -21,7 +31,7 @@ describe RegistryClient do
 
   it "fails if the registry has authentication enabled and no credentials are set" do
     path = ""
-    registry = RegistryClient.new(registry_server, false)
+    registry = RegistryClientMissingCredentials.new(registry_server)
     VCR.use_cassette("registry/missing_credentials", record: :none) do
       expect do
         registry.perform_request(path)
