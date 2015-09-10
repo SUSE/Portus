@@ -8,8 +8,7 @@
 #   - delete <name> <digest>
 #   - manifest <name>[:<tag>]
 
-client = RegistryClient.new("registry.test.lan", false, "portus",
-                            Rails.application.secrets.portus_password)
+client = RegistryClient.new("registry.test.lan")
 
 case ARGV.first
 when "catalog"
