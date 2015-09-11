@@ -6,6 +6,7 @@ class Auth::SessionsController < Devise::SessionsController
   # the signup page.
   def new
     if User.not_portus.any? || Portus::LDAP.enabled?
+      @errors_occurred = flash[:alert] && !flash[:alert].empty?
       super
     else
       # For some reason if we get here from the root path, we'll get a flashy

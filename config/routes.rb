@@ -10,7 +10,9 @@ Rails.application.routes.draw do
     post :toggle_star, on: :member
   end
 
-  devise_for :users, controllers: { registrations: "auth/registrations", sessions: "auth/sessions" }
+  devise_for :users, controllers: { registrations: "auth/registrations",
+                                    sessions:      "auth/sessions",
+                                    passwords:     "passwords" }
   resource :dashboard, only: [:index]
   resources :search, only: [:index]
 
@@ -42,5 +44,4 @@ Rails.application.routes.draw do
     end
   end
   match "(errors)/:status", to: "errors#show", constraints: { status: /\d{3}/ }, via: :all
-
 end

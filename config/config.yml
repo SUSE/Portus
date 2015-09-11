@@ -2,6 +2,17 @@
 # application. In order to change them, write your own config-local.yml file
 # (it will be ignored by git).
 
+# Settings for the Portus mailer.
+email:
+  from: "portus@example.com"
+  name: "Portus"
+  reply_to: "no-reply@example.com"
+
+  # If set to true, then SMTP will be used with the configuration values as
+  # given in config/initializers/smtp.rb. Otherwise 'sendmail' will be used
+  # (defaults to: /usr/sbin/sendmail -i -t).
+  smtp: false
+
 # If enabled, then the profile picture will be picked from the Gravatar
 # associated with each user. See: https://en.gravatar.com/
 gravatar:
