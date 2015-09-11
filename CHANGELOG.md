@@ -1,5 +1,7 @@
 ## Upcoming Version
 
+- Added a mechanism of password recovery in case users forget about their
+password. See PR [#325](https://github.com/SUSE/Portus/pull/325).
 - Set admin user from a rake task and disable first-user is admin. See PR [#314]
   (https://github.com/SUSE/Portus/pull/314)
 - Review requirements and provides in the RPM
