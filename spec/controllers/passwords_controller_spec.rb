@@ -3,6 +3,12 @@ require "rails_helper"
 describe PasswordsController do
   before :each do
     request.env["devise.mapping"] = Devise.mappings[:user]
+    APP_CONFIG["email"] = {
+      "name"     => "Portus",
+      "from"     => "portus@example.com",
+      "reply_to" => "noreply@example.com"
+    }
+
     @user = create(:admin)
     @raw  = @user.send_reset_password_instructions
   end

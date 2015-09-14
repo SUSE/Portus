@@ -9,6 +9,7 @@ feature "Forgotten password support" do
       "name"     => "Portus",
       "reply_to" => "no-reply@example.com"
     }
+    ActionMailer::Base.deliveries.clear
   end
 
   scenario "gives the user a link to reset their password", js: true do
@@ -41,7 +42,6 @@ feature "Forgotten password support" do
 
     # The email has been sent.
     mail = ActionMailer::Base.deliveries.first
-    ActionMailer::Base.deliveries.clear
     expect(mail.to).to match_array [user.email]
   end
 end
