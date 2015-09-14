@@ -56,7 +56,10 @@ module Portus
 
     # Loads the configuration and authenticates the current user.
     def load_configuration
-      return nil if !::Portus::LDAP.enabled? || params[:user].nil?
+      return nil unless ::Portus::LDAP.enabled?
+
+      fill_user_params!
+      return nil if params[:user].nil?
 
       cfg = APP_CONFIG["ldap"]
       adapter.new(host: cfg["hostname"], port: cfg["port"])
@@ -82,6 +85,18 @@ module Portus
         opts[:filter] = "(uid=#{username})"
         opts[:base]   = APP_CONFIG["ldap"]["base"] unless APP_CONFIG["ldap"]["base"].empty?
       end
+    end
+
+    # If the `:user` HTTP parameter is not set, try to fetch it from the HTTP
+    # Basic Authentication header. If successful, it will update the `:user`
+    # HTTP parameter accordingly.
+    def fill_user_params!
+      return if request.env.nil? || !params[:user].nil?
+
+      # Try to get the username and the password through HTTP Basic
+      # Authentication, since the Docker CLI client authenticates this way.
+      user, pass = ActionController::HttpAuthentication::Basic.user_name_and_password(request)
+      params[:user] = { username: user, password: pass }
     end
 
     # Retrieve the given user as an LDAP user. If it doesn't exist, create it

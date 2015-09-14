@@ -87,6 +87,44 @@ describe "/v2/token" do
       end
     end
 
+    context "as LDAP user I can authenticate from Docker CLI" do
+      before :each do
+        APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
+        allow_any_instance_of(Net::LDAP).to receive(:bind_as).and_return(true)
+        allow_any_instance_of(NamespacePolicy).to receive(:push?).and_return(true)
+        allow_any_instance_of(NamespacePolicy).to receive(:pull?).and_return(true)
+      end
+
+      it "authenticates if the HTTP Basic Authentication was given" do
+        get v2_token_url,
+          {
+            service: registry.hostname,
+            account: "ldapuser",
+            scope:   "repository:ldapuser/busybox:push,pull"
+          },
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("ldapuser", "12341234")
+
+        expect(response.status).to eq 200
+
+        # Check that the user has actually been registered.
+        ldapuser = User.find_by(username: "ldapuser")
+        expect(ldapuser.username).to eq "ldapuser"
+        expect(ldapuser.ldap_name).to eq "ldapuser"
+        expect(ldapuser.valid_password?("12341234")).to be true
+      end
+
+      it "does not authenticate the LDAP user if not Basic authentication was given" do
+        get v2_token_url,
+          {
+            service: registry.hostname,
+            account: "ldapuser",
+            scope:   "repository:ldapuser/busybox:push,pull"
+          }, {}
+
+        expect(response.status).to eq 401
+      end
+    end
+
     context "as valid user" do
       let(:valid_request) do
         {
