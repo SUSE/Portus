@@ -243,7 +243,7 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
-  if Portus::LDAP.enabled? && !Rails.env.test?
+  if Portus::LDAP.enabled?
     config.warden do |manager|
       # Let's put LDAP in front of every other strategy.
       manager.default_strategies(scope: :user).unshift :ldap_authenticatable
