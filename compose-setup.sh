@@ -30,22 +30,47 @@ setup_database() {
 
 clean() {
   echo "The setup will destroy the containers used by Portus, removing also their volumes."
-  while true; do
-    read -p "Are you sure to delete all the data? (Y/N)" yn
-    case $yn in
-      [Yy]* )
-        docker-compose kill
-        docker-compose rm -fv
-        break;;
-      [Nn]* ) exit 1;;
-      * ) echo "Please answer yes or no.";;
-    esac
-  done
+  if [ $FORCE -ne 1 ]; then
+    while true; do
+      read -p "Are you sure to delete all the data? (Y/N)" yn
+      case $yn in
+        [Yy]* )
+          break;;
+        [Nn]* ) exit 1;;
+        * ) echo "Please answer yes or no.";;
+      esac
+    done
+  fi
+
+  docker-compose kill
+  docker-compose rm -fv
 }
 
+usage() {
+  echo "Usage: $0 [-f]"
+  echo "  -f force removal of data"
+}
 
 DOCKER_HOST=${DOCKER_HOST=$(hostname -f)}
 echo "DOCKER_HOST=${DOCKER_HOST}" > docker/environment
+
+FORCE=0
+while getopts "fh" opt; do
+  case "${opt}" in
+    f)
+      FORCE=1
+      ;;
+    h)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Invalid option: -$OPTARG" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
 
 clean
 docker-compose up -d
