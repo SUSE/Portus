@@ -29,7 +29,7 @@ if [ "$db_username" != "" ];then
   export PORTUS_PRODUCTION_USERNAME=$db_username
 fi
 
-if [ "$db_password" == "" ];then
+if [ "$db_password" != "" ];then
   # enable option
   sed -e "s/# SetEnv PORTUS_PRODUCTION_PASSWORD/SetEnv PORTUS_PRODUCTION_PASSWORD/g" -i $APACHE_CONF_PATH/portus.conf
   # set option
@@ -37,7 +37,7 @@ if [ "$db_password" == "" ];then
   export PORTUS_PRODUCTION_PASSWORD=$db_password
 fi
 
-if [ "$db_host" == "" ];then
+if [ "$db_host" != "" ];then
   # enable option
   sed -e "s/# SetEnv PORTUS_PRODUCTION_HOST/SetEnv PORTUS_PRODUCTION_HOST/g" -i $APACHE_CONF_PATH/portus.conf
   # set option
