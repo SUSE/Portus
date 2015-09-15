@@ -1,0 +1,55 @@
+print_usage_and_exit() {
+    echo "Usage: $0 [HOSTNAME]"
+    echo "HOSTNAME must be in FQDN as for example portus.suse.example.com"
+    echo "If HOSTNAME is not specified, we will use the one form /etc/HOSTNAME"
+    exit 0
+}
+
+
+if [ $# == 1 ];then
+  if [ $1 == "help" ];then
+    print_usage_and_exit
+  fi
+  if [ $1 == "-h" ];then
+    print_usage_and_exit
+  fi
+  if [ $1 == "--help" ];then
+    print_usage_and_exit
+  fi
+  HOSTNAME=$1
+else
+  HOSTNAME=$(cat /etc/HOSTNAME)
+fi
+echo "Setting hostname to $HOSTNAME"
+sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/packaging/suse/conf/registry.config.yml.in > /etc/registry/config.yml
+sed -e "s/__HOSTNAME__/$HOSTNAME/g" /etc/hosts.in > /etc/hosts
+sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/public/landing.html.in > /srv/www/htdocs/index.html
+cp /srv/Portus/public/landing.css /srv/www/htdocs/
+echo $HOSTNAME > /etc/HOSTNAME
+hostname -F /etc/HOSTNAME
+
+/srv/Portus/packaging/suse/scripts/configure_ssl.sh
+/srv/Portus/packaging/suse/scripts/configure_secrets.sh
+
+echo "Mysql configuration"
+
+if [ -d /var/lib/mysql ];then
+  echo "Starting mysql to initialize it"
+  systemctl start mysql
+fi
+
+/srv/Portus/packaging/suse/scripts/create_db.sh
+
+echo "Enable and start services"
+systemctl enable mysql
+systemctl enable apache2
+systemctl start apache2
+systemctl enable registry
+systemctl start registry
+systemctl enable portus_crono
+systemctl start portus_crono
+
+echo "Disabling firstboot"
+
+mv /portus-firstboot /portus-firstboot.disabled
+
