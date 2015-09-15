@@ -1,7 +1,6 @@
 require "rails_helper"
 
 feature "Login feature" do
-
   let!(:registry) { create(:registry) }
   let!(:user) { create(:user) }
 
@@ -65,5 +64,48 @@ feature "Login feature" do
     expect(page).to have_content(user.inactive_message)
     expect(page).to have_content("Login")
     expect(current_path).to eq new_user_session_path
+  end
+
+  describe "User is lockable" do
+    before :each do
+      @attempts  = Devise.maximum_attempts
+      @unlock_in = Devise.unlock_in
+    end
+
+    after :each do
+      Devise.maximum_attempts = @attempts
+      Devise.unlock_in        = @unlock_in
+    end
+
+    scenario "locks the user when too many attempts have been made", js: true do
+      # Let's be fast and lock on the first attempt.
+      Devise.maximum_attempts = 1
+
+      # Lock the account.
+      fill_in "user_username", with: user.username
+      fill_in "user_password", with: "#{user.password}1"
+      find("#new_user button").click
+
+      expect(page).to have_content("Your account is locked.")
+      user.reload
+      expect(user.access_locked?).to be_truthy
+
+      # The account is locked, regardless that we provide the proper password
+      # now.
+      fill_in "user_username", with: user.username
+      fill_in "user_password", with: user.password
+      find("#new_user button").click
+
+      expect(page).to have_content("Your account is locked.")
+      user.reload
+      expect(user.access_locked?).to be_truthy
+
+      # Unlock the account, the locking time has expired.
+      Devise.unlock_in = 1.second
+      sleep 1
+      fill_in "user_username", with: user.username
+      fill_in "user_password", with: user.password
+      find("#new_user button").click
+    end
   end
 end
