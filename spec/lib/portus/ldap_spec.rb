@@ -92,6 +92,10 @@ describe Portus::LDAP do
     }
   end
 
+  before :each do
+    allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_call_original
+  end
+
   it "sets self.enabled? accordingly" do
     expect(Portus::LDAP.enabled?).to be_falsey
 
