@@ -73,7 +73,7 @@ Rails.application.configure do
 
   # If SMTP is enabled, then pick it up, and the config/initializers/smtp.rb
   # will be loaded. Otherwise, we fallback to sendmail.
-  if APP_CONFIG["email"]["smtp"].enabled?
+  if defined?(APP_CONFIG) && APP_CONFIG["email"]["smtp"].enabled?
     config.action_mailer.delivery_method = :smtp
   else
     config.action_mailer.delivery_method = :sendmail
