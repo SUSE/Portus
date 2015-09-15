@@ -92,8 +92,10 @@ fi
 
 %install
 install -d %{buildroot}/%{portusdir}
+install -d %{buildroot}/etc/apache2/vhosts.d/
 
 cp -av . %{buildroot}/%{portusdir}
+mv %{buildroot}/%{portusdir}/packaging/suse/conf/etc.apache2.vhosts.d.portus.conf %{buildroot}/etc/apache2/vhosts.d/portus.conf.sample
 
 rm -rf %{buildroot}/%{portusdir}/log
 mkdir %{buildroot}/%{portusdir}/log
@@ -136,6 +138,7 @@ cp packaging/suse/scripts/portus_crono %{buildroot}/%{_sbindir}/
 %defattr(-, root, www, 1770)
 %{portusdir}/log/
 %{portusdir}/tmp/
+%config /etc/apache2/vhosts.d/portus.conf.sample
 %{portusdir}/db/
 %{_sbindir}/portus_crono
 %{_unitdir}/portus_crono.service
