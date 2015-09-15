@@ -6,6 +6,7 @@ cd $(dirname $0)
 ./configure_ssl.sh
 ./configure_database.sh
 ./configure_registry.sh
+./configure_ldap.sh
 ./configure_crono.sh
 
 systemctl reload apache2
