@@ -18,9 +18,5 @@ echo "Generating secrets"
 SECRET=$($bundle exec rake secret)
 sed -e "s/SetEnv PORTUS_SECRET_KEY_BASE.*/SetEnv PORTUS_SECRET_KEY_BASE $SECRET/g" -i /etc/apache2/vhosts.d/portus.conf
 
-echo "Set pasword"
-PP=$(echo $RANDOM)
-sed -e "s/SetEnv PORTUS_PASSWORD.*/SetEnv PORTUS_PASSWORD $PP/g" -i /etc/apache2/vhosts.d/portus.conf
-
 popd
 

@@ -5,7 +5,6 @@ cd $(dirname $0)
 ./configure_secrets.sh
 ./configure_ssl.sh
 ./configure_database.sh
-./create_db.sh
 ./configure_registry.sh
 ./configure_crono.sh
 
