@@ -56,7 +56,8 @@ module Portus
 
     # Loads the configuration and authenticates the current user.
     def load_configuration
-      return nil unless ::Portus::LDAP.enabled?
+      # Note that the Portus user needs to authenticate through the DB.
+      return nil if !::Portus::LDAP.enabled? || params[:account] == "portus"
 
       fill_user_params!
       return nil if params[:user].nil?
