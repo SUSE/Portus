@@ -86,10 +86,6 @@ gem install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor
 
 rm -rf vendor/cache
 
-if [ -f config/secrets.yml ];then
-  mv config/secrets.yml config/secrets.yml.example
-fi
-
 %install
 install -d %{buildroot}/%{portusdir}
 install -d %{buildroot}/etc/apache2/vhosts.d/
