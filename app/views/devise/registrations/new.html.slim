@@ -4,7 +4,7 @@ section.sign-up class=(@have_users ? '' : 'first-user')
     .col-md-4.col-sm-8.col-xs-10.text-center
       = render 'shared/notifications'
       = image_tag 'layout/portus-logo-login-page.png', class: 'login-picture'
-      = form_for(resource, as: resource_name, url: { action: 'create' }) do |f|
+      = form_for(resource, as: resource_name, url: { action: 'create' }, :html => {:autocomplete => "off"}) do |f|
         = f.email_field :email, autofocus: true, class: 'form-control input-lg first', placeholder: 'Email', required: true
         = f.text_field :username, class: 'form-control input-lg', placeholder: 'Username', required: true
         = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password (8 characters min.)', required: true
