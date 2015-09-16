@@ -62,8 +62,7 @@ class Registry < ActiveRecord::Base
   #
   # Returns the name of the tag if found, nil otherwise.
   def get_tag_from_manifest(target)
-    pass = Rails.application.secrets.portus_password
-    client = RegistryClient.new(hostname, false, "portus", pass)
+    client = Portus::RegistryClient.new(hostname)
 
     begin
       man = client.manifest(target["repository"], target["digest"])

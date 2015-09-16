@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe JwtToken do
+describe Portus::JwtToken do
 
   let(:fake_kid) do
     FFaker.letterify((["????"] * 12).join(":")).upcase
@@ -36,7 +36,7 @@ describe JwtToken do
 
     # TODO: @eotchi add more keys to test against
     it "returns known by libtrust kid of a given key" do
-      kid = JwtToken.jwt_kid(subject.private_key)
+      kid = Portus::JwtToken.jwt_kid(subject.private_key)
       expect(kid).to eq "PTWT:FNJE:7TW7:ULI7:DZQA:JJJI:RDJQ:2M76:HD6G:ZRSC:VPIF:O5BU"
     end
 

@@ -12,14 +12,14 @@ class Api::V2::TokensController < Api::BaseController
 
     auth_scope = authorize_scopes(registry)
 
-    @token = JwtToken.new(
+    token = Portus::JwtToken.new(
       account: params[:account],
       service: params[:service],
       scope:   auth_scope
     )
 
-    logger.tagged("jwt_token", "claim") { logger.debug @token.claim }
-    respond_with(@token)
+    logger.tagged("jwt_token", "claim") { logger.debug token.claim }
+    render json: { token: token.encoded_token }
   end
 
   private

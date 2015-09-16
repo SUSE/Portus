@@ -8,7 +8,7 @@
 #   - delete <name> <digest>
 #   - manifest <name>[:<tag>]
 
-client = RegistryClient.new("registry.test.lan")
+client = Portus::RegistryClient.new("registry.test.lan")
 
 case ARGV.first
 when "catalog"
