@@ -82,6 +82,18 @@ class LdapMock < Portus::LDAP
   end
 end
 
+class PortusMock < Portus::LDAP
+  attr_reader :params
+
+  def initialize(params)
+    @params = params
+  end
+
+  def load_configuration_test
+    load_configuration
+  end
+end
+
 describe Portus::LDAP do
   let(:ldap_config) do
     {
@@ -125,7 +137,11 @@ describe Portus::LDAP do
     APP_CONFIG["ldap"] = { "enabled" => true }
     expect(lm.load_configuration_test).to be nil
 
+    # The Portus user does not authenticate through LDAP.
     APP_CONFIG["ldap"] = ldap_config
+    lm = PortusMock.new(account: "portus", password: "1234")
+    expect(lm.load_configuration_test).to be nil
+
     lm = LdapMock.new(username: "name", password: "1234")
     cfg = lm.load_configuration_test
 
