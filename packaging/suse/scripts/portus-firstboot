@@ -33,12 +33,9 @@ hostname -F /etc/HOSTNAME
 
 echo "Mysql configuration"
 
-if [ -d /var/lib/mysql ];then
-  echo "Starting mysql to initialize it"
-  systemctl start mysql
-fi
-
-/srv/Portus/packaging/suse/scripts/create_db.sh
+systemctl start mysql
+export PORTUS_PRODUCTION_DATABASE=portus_production
+/srv/Portus/packaging/suse/scripts/create_database.sh
 
 echo "Enable and start services"
 systemctl enable mysql
