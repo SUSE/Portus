@@ -38,6 +38,7 @@ BuildRequires: systemd-rpm-macros
 %endif
 BuildRequires:  fdupes
 BuildRequires:  ruby-macros >= 5
+BuildRequires:  apache2
 Requires:       rubygem-passenger-apache2
 %{?systemd_requires}
 Provides:       Portus = %{version}
