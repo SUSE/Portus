@@ -2,7 +2,6 @@
 /bundle
 /**/*.swp
 /log/*
-!/log/.keep
 /tmp
 /.vagrant
 /coverage
