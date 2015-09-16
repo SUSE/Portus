@@ -35,13 +35,13 @@ module Portus
         # strategy.
         if @ldap.bind_as(bind_options)
           user = find_or_create_user!
-          user.valid? ? success!(user) : fail!(:invalid_login)
+          user.valid? ? success!(user) : fail!(:invalid_username)
         else
-          fail!(:invalid_login)
+          fail!(:ldap_bind_failed)
         end
       else
         # rubocop:disable Style/SignalException
-        fail(:invalid_login)
+        fail(:ldap_failed)
         # rubocop:enable Style/SignalException
       end
     end
@@ -145,7 +145,7 @@ module Portus
       end
 
       # We have not been able to generate a new name, let's raise an exception.
-      fail!(:invalid_login)
+      fail!(:random_generation_failed)
     end
 
     # If the "ldap.guess_email" option is enabled, try to guess the email for

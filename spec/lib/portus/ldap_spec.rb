@@ -218,7 +218,7 @@ describe Portus::LDAP do
 
       lm = LdapMock.new(nil)
       lm.generate_random_name_test("name")
-      expect(lm.last_symbol).to be :invalid_login
+      expect(lm.last_symbol).to be :random_generation_failed
     end
   end
 
@@ -226,7 +226,7 @@ describe Portus::LDAP do
     it "raises an exception if ldap is not supported" do
       lm = LdapMock.new(username: "name", password: "1234")
       lm.authenticate!
-      expect(lm.last_symbol).to be :invalid_login
+      expect(lm.last_symbol).to be :ldap_failed
     end
 
     it "fails if the user couldn't bind" do
@@ -234,14 +234,14 @@ describe Portus::LDAP do
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.bind_result = false
       lm.authenticate!
-      expect(lm.last_symbol).to be :invalid_login
+      expect(lm.last_symbol).to be :ldap_bind_failed
     end
 
     it "raises an exception if the user could not created" do
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
       lm = LdapMock.new(username: "", password: "1234")
       lm.authenticate!
-      expect(lm.last_symbol).to be :invalid_login
+      expect(lm.last_symbol).to be :invalid_username
     end
 
     it "returns a success if it was successful" do
