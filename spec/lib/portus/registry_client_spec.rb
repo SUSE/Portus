@@ -2,7 +2,7 @@ require "rails_helper"
 
 # The RegistryClient defaults to the "portus" user if no credentials were
 # given. This mock class serves to test a class that misses the credentials.
-class RegistryClientMissingCredentials < RegistryClient
+class RegistryClientMissingCredentials < Portus::RegistryClient
   def initialize(host)
     super(host)
     @username = nil
@@ -10,7 +10,7 @@ class RegistryClientMissingCredentials < RegistryClient
   end
 end
 
-describe RegistryClient do
+describe Portus::RegistryClient do
   let(:registry_server) { "registry.test.lan" }
   let(:username) { "flavio" }
   let(:password) { "this is a test" }
@@ -20,7 +20,7 @@ describe RegistryClient do
       VCR.turned_off do
         WebMock.disable_net_connect!
         s = stub_request(:get, "https://#{registry_server}/v2/")
-        registry = RegistryClient.new(registry_server, true)
+        registry = Portus::RegistryClient.new(registry_server, true)
         registry.perform_request("")
         expect(s).to have_been_requested
       end
@@ -35,7 +35,7 @@ describe RegistryClient do
     VCR.use_cassette("registry/missing_credentials", record: :none) do
       expect do
         registry.perform_request(path)
-      end.to raise_error(RegistryClient::CredentialsMissingError)
+      end.to raise_error(Portus::RegistryClient::CredentialsMissingError)
     end
   end
 
@@ -43,7 +43,7 @@ describe RegistryClient do
     let(:path) { "" }
 
     it "can obtain an authentication token" do
-      registry = RegistryClient.new(
+      registry = Portus::RegistryClient.new(
         registry_server,
         false,
         username,
@@ -56,7 +56,7 @@ describe RegistryClient do
     end
 
     it "raise an exception when the user credentials are wrong" do
-      registry = RegistryClient.new(
+      registry = Portus::RegistryClient.new(
         registry_server,
         false,
         username,
@@ -65,12 +65,12 @@ describe RegistryClient do
       VCR.use_cassette("registry/wrong_authentication", record: :none) do
         expect do
           registry.perform_request(path)
-        end.to raise_error(RegistryClient::AuthorizationError)
+        end.to raise_error(Portus::RegistryClient::AuthorizationError)
       end
     end
 
     it "raises an AuthorizationError when the credentials are always wrong" do
-      registry = RegistryClient.new(
+      registry = Portus::RegistryClient.new(
         registry_server,
         false,
         username,
@@ -89,7 +89,7 @@ describe RegistryClient do
 
           expect do
             registry.perform_request("")
-          end.to raise_error(RegistryClient::AuthorizationError)
+          end.to raise_error(Portus::RegistryClient::AuthorizationError)
         end
       ensure
         WebMock.allow_net_connect!
@@ -97,7 +97,7 @@ describe RegistryClient do
     end
 
     it "raises a NoBearerRealmException when the bearer realm is not found" do
-      registry = RegistryClient.new(
+      registry = Portus::RegistryClient.new(
         registry_server,
         false,
         username,
@@ -111,7 +111,7 @@ describe RegistryClient do
 
           expect do
             registry.perform_request("")
-          end.to raise_error(RegistryClient::NoBearerRealmException)
+          end.to raise_error(Portus::RegistryClient::NoBearerRealmException)
         end
       ensure
         WebMock.allow_net_connect!
@@ -119,7 +119,7 @@ describe RegistryClient do
     end
 
     it "raises a NoBearerRealmException when the bearer realm is not found" do
-      registry = RegistryClient.new(
+      registry = Portus::RegistryClient.new(
         registry_server,
         false,
         username,
@@ -133,7 +133,7 @@ describe RegistryClient do
 
           expect do
             registry.perform_request("")
-          end.to raise_error(RegistryClient::NoBearerRealmException)
+          end.to raise_error(Portus::RegistryClient::NoBearerRealmException)
         end
       ensure
         WebMock.allow_net_connect!
@@ -147,7 +147,7 @@ describe RegistryClient do
 
     it "authenticates and fetches the image manifest" do
       VCR.use_cassette("registry/get_image_manifest", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           username,
@@ -161,7 +161,7 @@ describe RegistryClient do
 
     it "fails if the image is not found" do
       VCR.use_cassette("registry/get_missing_image_manifest", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           username,
@@ -169,12 +169,12 @@ describe RegistryClient do
 
         expect do
           registry.manifest(repository, "2.0.0")
-        end.to raise_error(RegistryClient::NotFoundError)
+        end.to raise_error(Portus::RegistryClient::NotFoundError)
       end
     end
 
     it "raises an exception when the return code is different from 200 or 401" do
-      registry = RegistryClient.new(
+      registry = Portus::RegistryClient.new(
         registry_server,
         false,
         username,
@@ -203,7 +203,7 @@ describe RegistryClient do
       create(:admin, username: "portus")
 
       VCR.use_cassette("registry/get_registry_catalog", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           "portus",
@@ -218,7 +218,7 @@ describe RegistryClient do
 
     it "fails if this version of registry does not implement /v2/_catalog" do
       VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           username,
@@ -226,12 +226,12 @@ describe RegistryClient do
 
         expect do
           registry.catalog
-        end.to raise_error(RegistryClient::NotFoundError)
+        end.to raise_error(Portus::RegistryClient::NotFoundError)
       end
     end
 
     it "raises an exception when the return code is different from 200 or 401" do
-      registry = RegistryClient.new(
+      registry = Portus::RegistryClient.new(
         registry_server,
         false,
         username,
@@ -256,7 +256,7 @@ describe RegistryClient do
   context "deleting a blob from an image" do
     it "deleting a blob that does not exist" do
       VCR.use_cassette("registry/delete_missing_blob", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           "portus",
@@ -265,13 +265,13 @@ describe RegistryClient do
         expect do
           registry.delete("busybox",
                           "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
-        end.to raise_error(RegistryClient::NotFoundError, /BLOB_UNKNOWN/)
+        end.to raise_error(Portus::RegistryClient::NotFoundError, /BLOB_UNKNOWN/)
       end
     end
 
     it "deleting blobs is not enabled on the server" do
       VCR.use_cassette("registry/delete_disabled", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           "portus",
@@ -280,13 +280,13 @@ describe RegistryClient do
         expect do
           registry.delete("busybox",
                           "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
-        end.to raise_error(RegistryClient::NotFoundError, /UNSUPPORTED/)
+        end.to raise_error(Portus::RegistryClient::NotFoundError, /UNSUPPORTED/)
       end
     end
 
     it "allows the deletion of blobs" do
       VCR.use_cassette("registry/delete_blob", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           "portus",
@@ -300,7 +300,7 @@ describe RegistryClient do
 
     it "does what we expect on a Bad Request" do
       VCR.use_cassette("registry/invalid_delete_blob", record: :none) do
-        registry = RegistryClient.new(
+        registry = Portus::RegistryClient.new(
           registry_server,
           false,
           "portus",

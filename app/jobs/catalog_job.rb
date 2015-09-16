@@ -11,7 +11,7 @@ class CatalogJob < ActiveJob::Base
     return if registry.nil?
 
     begin
-      client = RegistryClient.new(registry.hostname)
+      client = Portus::RegistryClient.new(registry.hostname)
       cat = client.catalog
 
       # Update the registry in a transaction, since we don't want to leave the DB
