@@ -17,7 +17,10 @@ en:
       unauthenticated: "You need to sign in or sign up before continuing."
       unconfirmed: "You have to confirm your email address before continuing."
       user:
-        invalid_login: "Invalid %{authentication_keys} or password."
+        ldap_failed: "The LDAP-support is not enabled."
+        ldap_bind_failed: "Invalid %{authentication_keys} or password."
+        invalid_username: "User could not be registered. Invalid username."
+        random_generation_failed: "The generation of a random username failed."
     mailer:
       confirmation_instructions:
         subject: "Confirmation instructions"
