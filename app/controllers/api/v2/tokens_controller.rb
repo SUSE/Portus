@@ -7,19 +7,14 @@ class Api::V2::TokensController < Api::BaseController
   # Returns the token that the docker client should use in order to perform
   # operation into the private registry.
   def show
-    registry = Registry.find_by(hostname: params["service"])
+    registry = Registry.find_by(hostname: params[:service])
     raise RegistryNotHandled if registry.nil?
 
     auth_scope = authorize_scopes(registry)
 
-    token = Portus::JwtToken.new(
-      account: params[:account],
-      service: params[:service],
-      scope:   auth_scope
-    )
-
+    token = Portus::JwtToken.new(params[:account], params[:service], auth_scope)
     logger.tagged("jwt_token", "claim") { logger.debug token.claim }
-    render json: { token: token.encoded_token }
+    render json: token.encoded_hash
   end
 
   private
