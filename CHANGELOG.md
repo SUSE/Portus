@@ -1,5 +1,7 @@
 ## Upcoming Version
 
+- Portus will now lock users' accounts that have failed too many times on
+login. See PR [#330](https://github.com/SUSE/Portus/pull/330).
 - Added a mechanism of password recovery in case users forget about their
 password. See PR [#325](https://github.com/SUSE/Portus/pull/325).
 - Set admin user from a rake task and disable first-user is admin. See PR [#314]
