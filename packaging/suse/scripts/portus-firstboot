@@ -37,6 +37,9 @@ systemctl start mysql
 export PORTUS_PRODUCTION_DATABASE=portus_production
 /srv/Portus/packaging/suse/scripts/create_database.sh
 
+echo "Enabling mod_passenger apache2 module"
+/usr/sbin/a2enmod passenger
+
 echo "Enable and start services"
 systemctl enable mysql
 systemctl enable apache2
