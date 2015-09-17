@@ -14,4 +14,5 @@ if [ "$port" == "" ];then
 fi
 
 sed -e "s/<VirtualHost .*/<VirtualHost \*:$port>/g" -i $APACHE_CONF_PATH/portus.conf
+sed -e "s/SetEnv PORTUS_MACHINE_FQDN.*/SetEnv PORTUS_MACHINE_FQDN $HOSTNAME/g" -i $APACHE_CONF_PATH/portus.conf
 
