@@ -33,6 +33,7 @@ Group:          System/Management
 %define portusdir /srv/Portus
 
 Requires:       ruby >= 2.1
+Requires:       timezone
 %if 0%{?suse_version} >= 1210
 BuildRequires: systemd-rpm-macros
 %endif
