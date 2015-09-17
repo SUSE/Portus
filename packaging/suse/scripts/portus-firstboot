@@ -46,7 +46,7 @@ systemctl start registry
 systemctl enable portus_crono
 systemctl start portus_crono
 
-echo "Disabling firstboot"
-
-mv /portus-firstboot /portus-firstboot.disabled
-
+if [ -e /portus-firstboot ]; then
+  echo "Disabling firstboot"
+  mv /portus-firstboot /portus-firstboot.disabled
+fi
