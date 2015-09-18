@@ -17,16 +17,16 @@ if [ $# == 1 ];then
     print_usage_and_exit
   fi
   HOSTNAME=$1
+  echo "Setting hostname to $HOSTNAME"
+  hostnamectl set-hostname $HOSTNAME
 else
-  HOSTNAME=$(cat /etc/HOSTNAME)
+  HOSTNAME=$(hostnamectl --static status)
 fi
-echo "Setting hostname to $HOSTNAME"
+
+# Write hostname to configuration files
 sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/packaging/suse/conf/registry.config.yml.in > /etc/registry/config.yml
-sed -e "s/__HOSTNAME__/$HOSTNAME/g" /etc/hosts.in > /etc/hosts
 sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/public/landing.html.in > /srv/www/htdocs/index.html
 cp /srv/Portus/public/landing.css /srv/www/htdocs/
-echo $HOSTNAME > /etc/HOSTNAME
-hostname -F /etc/HOSTNAME
 
 /srv/Portus/packaging/suse/scripts/configure_ssl.sh
 /srv/Portus/packaging/suse/scripts/configure_secrets.sh
