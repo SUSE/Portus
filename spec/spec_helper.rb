@@ -37,6 +37,9 @@ RSpec.configure do |config|
 
     # Clear the global config before each test.
     APP_CONFIG.clear
+    # this value affects the application controller, we have to make sure
+    # it has the default value we expect
+    APP_CONFIG["check_ssl_usage"] = { "enabled" => true }
   end
 
   config.order = :random

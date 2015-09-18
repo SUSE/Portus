@@ -59,3 +59,7 @@ ldap:
 # in order to set the admin user
 first_user_admin:
   enabled: true
+
+# By default require ssl to be enabled when running on production
+check_ssl_usage:
+  enabled: true
