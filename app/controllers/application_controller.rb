@@ -24,8 +24,12 @@ class ApplicationController < ActionController::Base
 
   def fixes
     secrets = Rails.application.secrets
+    check_ssl = Rails.env.production? && \
+      !request.ssl? && \
+      APP_CONFIG.enabled?("check_ssl_usage")
+
     {}.tap do |fix|
-      fix[:ssl]                                = Rails.env.production? && !request.ssl? && APP_CONFIG.enabled?("check_ssl_usage")
+      fix[:ssl]                                = check_ssl
       fix[:secret_key_base]                    = secrets.secret_key_base == "CHANGE_ME"
       fix[:secret_machine_fqdn]                = secrets.machine_fqdn.nil?
       fix[:secret_encryption_private_key_path] = secrets.encryption_private_key_path.nil?
