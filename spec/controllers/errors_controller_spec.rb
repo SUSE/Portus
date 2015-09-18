@@ -54,15 +54,26 @@ describe ErrorsController do
   end
 
   describe "GET #show in production mode" do
-
     after :all do
       Rails.env = ActiveSupport::StringInquirer.new("test")
     end
 
-    it "sets @fix[:ssl] as true" do
-      Rails.env = ActiveSupport::StringInquirer.new("production")
-      get :show, id: 1
-      expect(assigns(:fix)[:ssl]).to be true
+    context "production environment" do
+      before :each do
+        Rails.env = ActiveSupport::StringInquirer.new("production")
+      end
+
+      it "sets @fix[:ssl] as true when check_ssl_usage is enabled" do
+        APP_CONFIG["check_ssl_usage"] = { "enabled" => true }
+        get :show, id: 1
+        expect(assigns(:fix)[:ssl]).to be true
+      end
+
+      it "sets @fix[:ssl] as false when check_ssl_usage is disabled" do
+        APP_CONFIG["check_ssl_usage"] = { "enabled" => false }
+        get :show, id: 1
+        expect(assigns(:fix)[:ssl]).to be false
+      end
     end
 
   end
