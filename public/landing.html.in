@@ -67,9 +67,9 @@
     <p>If you want to use your certificates, upload them to:</p>
 
     <ul>
-      <li>/etc/apache2/SERVERNAME-server.crt</li>
-      <li>/etc/apache2/SERVERNAME-server.key</li>
-      <li>/etc/apache2/SERVERNAME-ca.crt</li>
+      <li>/etc/apache2/ssl.crt/SERVERNAME-server.crt</li>
+      <li>/etc/apache2/ssl.key/SERVERNAME-server.key</li>
+      <li>/etc/apache2/ssl.crt/SERVERNAME-ca.crt</li>
     </ul>
     <p>and then run:</p>
 
