@@ -33,7 +33,7 @@ cp /srv/Portus/public/landing.css /srv/www/htdocs/
 
 echo "Mysql configuration"
 
-systemctl start mysql
+systemctl restart mysql
 export PORTUS_PRODUCTION_DATABASE=portus_production
 /srv/Portus/packaging/suse/scripts/create_database.sh
 
@@ -43,11 +43,11 @@ echo "Enabling mod_passenger apache2 module"
 echo "Enable and start services"
 systemctl enable mysql
 systemctl enable apache2
-systemctl start apache2
+systemctl restart apache2
 systemctl enable registry
-systemctl start registry
+systemctl restart registry
 systemctl enable portus_crono
-systemctl start portus_crono
+systemctl restart portus_crono
 
 if [ -e /portus-firstboot ]; then
   echo "Disabling firstboot"
