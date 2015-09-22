@@ -26,6 +26,10 @@ ldap:
   hostname: "ldap_hostname"
   port: 389
 
+  # Available options: "plain", "simple_tls" and "starttls". The default is
+  # "plain", the recommended is "starttls".
+  method: "plain"
+
   # The base where users are located (e.g. "ou=users,dc=example,dc=com").
   base: ""
 

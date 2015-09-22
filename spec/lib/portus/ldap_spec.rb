@@ -148,6 +148,14 @@ describe Portus::LDAP do
     expect(cfg).to_not be nil
     expect(cfg.opts[:host]).to eq "hostname"
     expect(cfg.opts[:port]).to eq 389
+    expect(cfg.opts[:encryption]).to be nil
+
+    # Test different encryption methods.
+    [["starttls", :start_tls], ["simple_tls", :simple_tls], ["lala", nil]].each do |e|
+      APP_CONFIG["ldap"]["method"] = e[0]
+      cfg = lm.load_configuration_test
+      expect(cfg.opts[:encryption]).to eq e[1]
+    end
   end
 
   it "fetches the right bind options" do
