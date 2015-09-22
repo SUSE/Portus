@@ -26,6 +26,7 @@ fi
 # Write hostname to configuration files
 sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/packaging/suse/conf/registry.config.yml.in > /etc/registry/config.yml
 sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/public/landing.html.in > /srv/www/htdocs/index.html
+sed -e "s/__HOSTNAME__/$HOSTNAME/g" -i /etc/apache2/vhosts.d/portus.conf
 cp /srv/Portus/public/landing.css /srv/www/htdocs/
 
 /srv/Portus/packaging/suse/scripts/configure_ssl.sh
