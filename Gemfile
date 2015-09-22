@@ -19,6 +19,9 @@ gem "kaminari"
 gem "crono"
 gem "net-ldap"
 
+# This is already a Rails dependency, but we use it to run portusctl
+gem "thor"
+
 # Assets group.
 #
 # Do not set it or set it to no when precompiling the assets.
