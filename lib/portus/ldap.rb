@@ -63,7 +63,18 @@ module Portus
       return nil if params[:user].nil?
 
       cfg = APP_CONFIG["ldap"]
-      adapter.new(host: cfg["hostname"], port: cfg["port"])
+      adapter.new(host: cfg["hostname"], port: cfg["port"], encryption: encryption(cfg))
+    end
+
+    # Returns the encryption method to be used. Invalid encryption methods will
+    # be mapped to "plain".
+    def encryption(config)
+      case config["method"]
+      when "starttls"
+        :start_tls
+      when "simple_tls"
+        :simple_tls
+      end
     end
 
     # Returns the class to be used for LDAP support. Mainly declared this way
