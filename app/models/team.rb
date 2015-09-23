@@ -15,7 +15,7 @@ class Team < ActiveRecord::Base
     through: :team_users, source: :user
 
   # Returns all the teams that are not special. By special team we mean:
-  #   - It's the global namespace (see: Registry#create_global_namespace!).
+  #   - It's the global namespace (see: Registry#create_namespaces!).
   #   - It's a personal namespace (see: User#create_personal_namespace!).
   def self.all_non_special
     # Right now, all the special namespaces are simply marked as hidden.

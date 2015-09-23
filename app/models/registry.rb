@@ -10,20 +10,8 @@ class Registry < ActiveRecord::Base
   validates :hostname, presence: true, uniqueness: true
   validates :use_ssl, inclusion: [true, false]
 
-  # Creates a global namespace owned by this registry. This method is called
-  # whenever a new registry is saved.
-  def create_global_namespace!
-    team = Team.create(
-      name:   Namespace.sanitize_name(hostname),
-      owners: User.where(admin: true),
-      hidden: true)
-    Namespace.create!(
-      name:     Namespace.sanitize_name(hostname),
-      registry: self,
-      public:   true,
-      global:   true,
-      team:     team)
-  end
+  # On create, make sure that all the needed namespaces are in place.
+  after_create :create_namespaces!
 
   # Returns the global namespace owned by this registry.
   def global_namespace
@@ -85,5 +73,24 @@ class Registry < ActiveRecord::Base
 
   rescue
     logger.error("Could not fetch the tag for target #{target}.")
+  end
+
+  # Create the global namespace for this registry and create the personal
+  # namespace for all the existing users.
+  def create_namespaces!
+    # Create the global team/namespace.
+    team = Team.create(
+      name:   Namespace.sanitize_name(hostname),
+      owners: User.where(admin: true),
+      hidden: true)
+    Namespace.create!(
+      name:     Namespace.sanitize_name(hostname),
+      registry: self,
+      public:   true,
+      global:   true,
+      team:     team)
+
+    # TODO: change code once we support multiple registries
+    User.find_each(&:create_personal_namespace!)
   end
 end

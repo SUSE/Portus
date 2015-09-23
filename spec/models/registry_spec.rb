@@ -8,8 +8,19 @@ end
 RSpec.describe Registry, type: :model do
   it { should have_many(:namespaces) }
 
-  describe "#create_global_namespace" do
-    it "adds all existing admins to the global team" do
+  describe "after_create" do
+    it "creates namespaces after_create" do
+      create(:admin)
+      create(:user)
+      expect(Namespace.count).to be(0)
+
+      create(:registry)
+      User.all.each do |user|
+        expect(Namespace.find_by(name: user.username)).not_to be(nil)
+      end
+    end
+
+    it "#create_namespaces!" do
       # NOTE: the :registry factory already creates an admin
       create(:admin)
       registry = create(:registry)
