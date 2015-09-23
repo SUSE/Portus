@@ -19,11 +19,15 @@ RSpec.describe Admin::RegistriesController, type: :controller do
       get :new
       expect(response).to have_http_status(:success)
     end
+
+    it "returns a 404 if there's already a registry in place" do
+      create(:registry)
+      expect { get :new }.to raise_error(ActionController::RoutingError)
+    end
   end
 
   describe "POST #create" do
     context "no registry" do
-
       it "creates a new registry" do
         expect do
           post :create, registry: attributes_for(:registry)
@@ -46,7 +50,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
 
         expect do
           post :create, registry: attributes_for(:registry)
-        end.to change(Registry, :count).by(0)
+        end.to raise_error(ActionController::RoutingError)
       end
     end
 
@@ -56,6 +60,22 @@ RSpec.describe Admin::RegistriesController, type: :controller do
           post :create, registry: { name: "foo" }
         end.to change(Registry, :count).by(0)
       end
+    end
+  end
+
+  describe "PUT #update" do
+    let!(:registry) { create(:registry) }
+
+    it "does nothing if the registry was not found" do
+      expect do
+        put :update, id: registry.id + 1, format: :js
+      end.to raise_error(ActiveRecord::RecordNotFound)
+      expect(Registry.first.use_ssl).to be_falsey
+    end
+
+    it "registry found" do
+      put :update, id: registry.id, format: :js
+      expect(Registry.first.use_ssl).to be_truthy
     end
   end
 end

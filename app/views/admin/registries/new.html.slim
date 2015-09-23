@@ -10,6 +10,10 @@ h1 New Registry
     .col-md-7
       = f.text_field(:hostname, class: 'form-control', placeholder: 'registry.test.lan', required: true)
   .form-group
+    = f.label :use_ssl, "Use SSL", {class: 'control-label col-md-2', title: 'Set this to enable SSL in the communication between Portus and the Registry'}
+    .col-md-7
+      = f.check_box(:use_ssl)
+  .form-group
     .col-md-offset-2.col-md-7
       = f.submit('Create', class: 'btn btn-primary')
 

@@ -1,0 +1,12 @@
+<% if @registry.errors.empty? %>
+  $('#alert p').html("Registry '<%= @registry.name %>' is <%= @registry.use_ssl? ? 'now using SSL' : 'not using SSL anymore' %>.");
+  $('#alert .alert').removeClass('alert-danger')
+
+  $('#registry_<%= @registry.id %> td a i').addClass("fa-toggle-<%= @registry.use_ssl? ? 'on' : 'off' %>");
+  $('#registry_<%= @registry.id %> td a i').removeClass("fa-toggle-<%= @registry.use_ssl? ? 'off' : 'on' %>");
+<% else %>
+  $('#alert p').html("Selected registry does not exist!");
+  $('#alert .alert').addClass('alert-danger')
+<% end %>
+
+$('#alert').fadeIn();
