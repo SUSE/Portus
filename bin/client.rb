@@ -8,17 +8,21 @@
 #   - delete <name> <digest>
 #   - manifest <name>[:<tag>]
 
-client = Portus::RegistryClient.new("registry.test.lan")
+registry = Registry.first
+if registry.nil?
+  puts "No registry has been configured!"
+  exit 1
+end
 
 case ARGV.first
 when "catalog"
-  pp client.catalog
+  pp registry.client.catalog
 when "delete"
   if ARGV.length == 2
     puts "You have to specify first the name, and then the digest"
     exit 1
   end
-  pp client.delete(ARGV[1], ARGV[2])
+  pp registry.client.delete(ARGV[1], ARGV[2])
 when "manifest"
   if ARGV.length == 1
     puts "You have to at least specify the name of the image"
@@ -30,7 +34,7 @@ when "manifest"
   else
     name, tag = ARGV[1], "latest"
   end
-  pp client.manifest(name, tag)
+  pp registry.client.manifest(name, tag)
 else
   puts "Valid commands: catalog, delete, manifest."
   exit 1

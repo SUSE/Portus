@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915130327) do
+ActiveRecord::Schema.define(version: 20150923091830) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 20150915130327) do
     t.string   "hostname",   limit: 255, null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.boolean  "use_ssl",    limit: 1
   end
 
   add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true, using: :btree

@@ -1,4 +1,9 @@
+# Allows the creation of exactly one registry. It also allows updating the
+# "use_ssl" attribute of a given registry. Doing all this is safe because only
+# admin users will be able to reach this controller.
 class Admin::RegistriesController < Admin::BaseController
+  before_action :registry_created, only: [:new, :create]
+
   # GET /admin/registries/
   def index
     @registries = Registry.all
@@ -11,12 +16,6 @@ class Admin::RegistriesController < Admin::BaseController
 
   # POST /admin/registries
   def create
-    if Registry.count > 0
-      redirect_to admin_registries_path,
-        alert: "No more than one registry is currently supported"
-      return
-    end
-
     @registry = Registry.new(registries_params)
 
     if @registry.save
@@ -27,9 +26,27 @@ class Admin::RegistriesController < Admin::BaseController
     end
   end
 
+  # PUT /admin/registries/1
+  #
+  # Right now this just toggles the value of the "use_ssl" attribute for the
+  # given registry. This might change in the future.
+  def update
+    @registry = Registry.find(params[:id])
+
+    @registry.update_attributes(use_ssl: !@registry.use_ssl?)
+    render template: "admin/registries/update", locals: { registry: @registry }
+  end
+
   private
 
+  # Raises a routing error if there is already a registry in place.
+  # NOTE: (mssola) remove this once we support multiple registries.
+  def registry_created
+    raise ActionController::RoutingError, "Not found" if Registry.count > 0
+  end
+
+  # The required/permitted parameters on the create method.
   def registries_params
-    params.require(:registry).permit(:name, :hostname)
+    params.require(:registry).permit(:name, :hostname, :use_ssl)
   end
 end
