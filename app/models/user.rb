@@ -10,7 +10,10 @@ class User < ActiveRecord::Base
       with:    USERNAME_FORMAT,
       message: "Only alphanumeric characters are allowed. Minimum 4 characters, maximum 30."
     }
+
+  # Actions performed before/after create.
   validate :private_namespace_available, on: :create
+  after_create :create_personal_namespace!
 
   has_many :team_users
   has_many :teams, through: :team_users
@@ -36,6 +39,9 @@ class User < ActiveRecord::Base
     username == "portus"
   end
 
+  # This method will be called automatically once a user is created. It will
+  # also be created for each user of the system when a registry is saved in the
+  # system.
   def create_personal_namespace!
     # the registry is not configured yet, we cannot create the namespace
     return unless Registry.any?

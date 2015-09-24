@@ -201,8 +201,6 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
-    rails-observers (0.1.2)
-      activemodel (~> 4.0)
     railties (4.2.2)
       actionpack (= 4.2.2)
       activesupport (= 4.2.2)
@@ -348,7 +346,6 @@ DEPENDENCIES
   quiet_assets
   rack-mini-profiler
   rails (~> 4.2.2)
-  rails-observers
   rspec-rails
   rubocop
   sass-rails (>= 3.2)
@@ -366,3 +363,6 @@ DEPENDENCIES
   webmock
   wirb
   wirble
+
+BUNDLED WITH
+   1.10.5

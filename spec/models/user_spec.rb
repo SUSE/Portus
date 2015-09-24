@@ -28,6 +28,14 @@ describe User do
     expect(incomplete.email_required?).to be false
   end
 
+  it "calls create_personal_team! on a user" do
+    create(:registry)
+    expect(Namespace.find_by(name: "test")).to be nil
+
+    create(:user, username: "test")
+    expect(Namespace.find_by(name: "test")).to_not be nil
+  end
+
   describe "#create_personal_namespace!" do
     context "no registry defined yet" do
       before :each do
