@@ -98,6 +98,17 @@ class Cli < Thor
     configure.services
   end
 
+  desc "make_admin USERNAME", "Give 'admin' role to a user"
+  def make_admin(username)
+    if username.nil? || username.empty?
+      # This will print the list of usernames
+      Runner.bundler_exec("rake", "make_admin", {})
+    else
+      # Rake tasks look weird when they accept parameters
+      Runner.bundler_exec("rake", "make_admin[#{username}]", {})
+    end
+  end
+
   desc "rake ARGS...", "Run a rake task against Portus"
   def rake(*args)
     if args.empty?
