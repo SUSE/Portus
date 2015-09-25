@@ -39,7 +39,6 @@ BuildRequires: systemd-rpm-macros
 %endif
 BuildRequires:  fdupes
 BuildRequires:  ruby-macros >= 5
-BuildRequires:  apache2
 Requires:       rubygem-passenger-apache2
 %{?systemd_requires}
 Provides:       Portus = %{version}
@@ -66,6 +65,7 @@ This package has been built with commit __COMMIT__ from branch __BRANCH__ on dat
 %setup -q -n Portus-%{branch}
 
 %build
+
 install -d vendor/cache
 cp %{_libdir}/ruby/gems/%{rb_ver}/cache/*.gem vendor/cache
 export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
@@ -88,12 +88,14 @@ gem install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor
 
 rm -rf vendor/cache
 
+# Remove these files, they are going to be created by portusctl setup
+rm config/secrets.yml
+rm config/database.yml
+
 %install
 install -d %{buildroot}/%{portusdir}
-install -d %{buildroot}/etc/apache2/vhosts.d/
 
 cp -av . %{buildroot}/%{portusdir}
-mv %{buildroot}/%{portusdir}/packaging/suse/conf/etc.apache2.vhosts.d.portus.conf %{buildroot}/etc/apache2/vhosts.d/portus.conf.sample
 
 rm -rf %{buildroot}/%{portusdir}/log
 mkdir %{buildroot}/%{portusdir}/log
@@ -101,7 +103,8 @@ rm -rf %{buildroot}/%{portusdir}/tmp
 mkdir %{buildroot}/%{portusdir}/tmp
 
 install -d %{buildroot}/%{_sbindir}
-cp packaging/suse/scripts/portus_crono %{buildroot}/%{_sbindir}/
+cp packaging/suse/bin/portus_crono %{buildroot}/%{_sbindir}/
+cp packaging/suse/bin/portusctl %{buildroot}/%{_sbindir}/
 %__install -D -m 444 packaging/suse/conf/portus_crono.service %{buildroot}%{_unitdir}/portus_crono.service
 
 
@@ -113,6 +116,11 @@ cp packaging/suse/scripts/portus_crono %{buildroot}/%{_sbindir}/
 %post
 %service_add_post portus_crono.service
 %{restart_on_update apache2}
+
+if [ \! -e "/srv/Portus/config/config-local.yml" ]; then
+  # First installation of Portus
+  cat %{portusdir}/packaging/suse/README.install
+fi
 
 %preun
 %service_del_preun portus_crono.service
@@ -131,14 +139,13 @@ cp packaging/suse/scripts/portus_crono %{buildroot}/%{_sbindir}/
 %doc %{portusdir}/CONTRIBUTING.md
 %doc %{portusdir}/LICENSE
 %defattr(0640, root, www)
-%config(noreplace) %{portusdir}/config/database.yml
 %config(noreplace) %{portusdir}/config/environment.rb
 %defattr(-, root, www, 1770)
 %{portusdir}/log/
 %{portusdir}/tmp/
-%config /etc/apache2/vhosts.d/portus.conf.sample
 %{portusdir}/db/
 %{_sbindir}/portus_crono
+%{_sbindir}/portusctl
 %{_unitdir}/portus_crono.service
 
 %changelog

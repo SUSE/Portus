@@ -24,31 +24,12 @@ else
 fi
 
 # Write hostname to configuration files
-sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/packaging/suse/conf/registry.config.yml.in > /etc/registry/config.yml
 sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/public/landing.html.in > /srv/www/htdocs/index.html
-sed -e "s/__HOSTNAME__/$HOSTNAME/g" -i /etc/apache2/vhosts.d/portus.conf
 cp /srv/Portus/public/landing.css /srv/www/htdocs/
 
-/srv/Portus/packaging/suse/scripts/configure_ssl.sh
-/srv/Portus/packaging/suse/scripts/configure_secrets.sh
+mysqladmin -u root password "portus"
 
-echo "Mysql configuration"
-
-systemctl restart mysql
-export PORTUS_PRODUCTION_DATABASE=portus_production
-/srv/Portus/packaging/suse/scripts/create_database.sh
-
-echo "Enabling mod_passenger apache2 module"
-/usr/sbin/a2enmod passenger
-
-echo "Enable and start services"
-systemctl enable mysql
-systemctl enable apache2
-systemctl restart apache2
-systemctl enable registry
-systemctl restart registry
-systemctl enable portus_crono
-systemctl restart portus_crono
+portusctl setup --db-username=root --local-registry
 
 if [ -e /portus-firstboot ]; then
   echo "Disabling firstboot"

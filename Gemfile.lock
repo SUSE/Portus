@@ -355,6 +355,7 @@ DEPENDENCIES
   slim
   sprockets (~> 2.12.3)
   thin
+  thor
   timecop
   turbolinks
   uglifier
@@ -363,6 +364,3 @@ DEPENDENCIES
   webmock
   wirb
   wirble
-
-BUNDLED WITH
-   1.10.5
