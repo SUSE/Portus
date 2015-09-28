@@ -9,10 +9,15 @@ email:
   name: "Portus"
   reply_to: "no-reply@example.com"
 
-  # If set to true, then SMTP will be used with the configuration values as
-  # given in config/initializers/smtp.rb. Otherwise 'sendmail' will be used
+  # If enabled, then SMTP will be used. Otherwise 'sendmail' will be used
   # (defaults to: /usr/sbin/sendmail -i -t).
-  smtp: false
+  smtp:
+    enabled: false
+    address: "smtp.example.com"
+    port: 587,
+    user_name: "username@example.com"
+    password: "password"
+    domain: "example.com"
 
 # If enabled, then the profile picture will be picked from the Gravatar
 # associated with each user. See: https://en.gravatar.com/

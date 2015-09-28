@@ -12,6 +12,18 @@ email:
   name: <%= @options["email-name"] %>
   reply_to: <%= @options["email-reply-to"] %>
 
+  # If enabled, then SMTP will be used. Otherwise 'sendmail' will be used
+  # (defaults to: /usr/sbin/sendmail -i -t).
+  smtp:
+    enabled: <%= @options["email-smtp-enable"] %>
+  <% if @options["email-smtp-enable"] %>
+    address: <%= @options["email-smtp-address"] %>
+    port: <%= @options["email-smtp-port"] %>
+    user_name: <%= @options["email-smtp-username"] %>
+    password: <%= @options["email-smtp-password"] %>
+    domain: <%= @options["email-smtp-domain"] %>
+  <% end %>
+
 # If enabled, then the profile picture will be picked from the Gravatar
 # associated with each user. See: https://en.gravatar.com/
 gravatar:
