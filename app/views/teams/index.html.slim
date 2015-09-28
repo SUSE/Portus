@@ -5,6 +5,10 @@
         .col-md-7
           = f.text_field(:name, class: 'form-control', required: true, placeholder: "New team's name")
       .form-group
+        = f.label :description, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_area(:description, class: 'form-control', required: false, placeholder: "A short description of your team")
+      .form-group
         .col-md-offset-2.col-md-7
           = f.submit('Add', class: 'btn btn-primary')
 

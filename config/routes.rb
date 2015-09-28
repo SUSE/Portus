@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   resources :errors, only: [:show]
-  resources :teams, only: [:index, :show, :create]
+  resources :teams, only: [:index, :show, :create, :update]
   resources :team_users, only: [:create, :destroy, :update]
-  resources :namespaces, only: [:create, :index, :show] do
+  resources :namespaces, only: [:create, :index, :show, :update] do
     put "toggle_public", on: :member
   end
 

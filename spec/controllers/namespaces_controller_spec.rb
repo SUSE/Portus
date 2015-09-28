@@ -14,7 +14,13 @@ describe NamespacesController do
            viewers:      [user, viewer],
            contributors: [contributor])
   end
-  let(:namespace) { create(:namespace, team: team, registry: registry) }
+  let(:namespace) do
+    create(
+      :namespace,
+      team:        team,
+      description: "short test description",
+      registry:    registry)
+  end
 
   before :each do
     # trigger creation of registry
@@ -190,6 +196,23 @@ describe NamespacesController do
     end
   end
 
+  describe "PATCH #update" do
+    it "does not allow to change the description by viewers" do
+      team = create(:team)
+      user = create(:user)
+      TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
+      sign_in user
+      patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
+      expect(response.status).to eq(401)
+    end
+
+    it "does allow to change the description by owners" do
+      sign_in owner
+      patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "activity tracking" do
     before :each do
       sign_in owner
@@ -235,6 +258,20 @@ describe NamespacesController do
       expect(activity.key).to eq("namespace.public")
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(namespace)
+    end
+
+    it "editing of a namespace description" do
+      old_description = namespace.description
+      expect do
+        patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      namespace_description_activity = PublicActivity::Activity.find_by(
+        key: "namespace.change_namespace_description")
+      expect(namespace_description_activity.owner).to eq(owner)
+      expect(namespace_description_activity.trackable).to eq(namespace)
+      expect(namespace_description_activity.parameters[:old_description]).to eq(old_description)
+      expect(namespace_description_activity.parameters[:new_description]).to eq("new description")
     end
   end
 end

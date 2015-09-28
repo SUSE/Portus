@@ -14,7 +14,13 @@ describe NamespacePolicy do
            contributors: [contributor],
            viewers:      [viewer])
   end
-  let(:namespace) { create(:namespace, registry: @registry, team: team) }
+  let(:namespace) do
+    create(
+      :namespace,
+      description: "short test description.",
+      registry:    @registry,
+      team:        team)
+  end
 
   before :each do
     @admin = create(:admin)

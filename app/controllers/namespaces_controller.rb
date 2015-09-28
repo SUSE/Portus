@@ -1,6 +1,8 @@
 class NamespacesController < ApplicationController
+  include ChangeDescription
+
   respond_to :html, :js
-  before_action :set_namespace, only: [:toggle_public, :show]
+  before_action :set_namespace, only: [:toggle_public, :show, :update]
   before_action :check_team, only: [:create]
 
   after_action :verify_authorized, except: :index
@@ -44,6 +46,12 @@ class NamespacesController < ApplicationController
         format.js { respond_with @namespace.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # PATCH/PUT /namespace/1
+  # PATCH/PUT /namespace/1.json
+  def update
+    change_description(@namespace, :namespace)
   end
 
   # PATCH/PUT /namespace/1/toggle_public

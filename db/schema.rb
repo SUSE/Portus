@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923091830) do
+ActiveRecord::Schema.define(version: 20150928112551) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -44,12 +44,13 @@ ActiveRecord::Schema.define(version: 20150923091830) do
 
   create_table "namespaces", force: :cascade do |t|
     t.string   "name",        limit: 255
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.integer  "team_id",     limit: 4
-    t.boolean  "public",      limit: 1,   default: false
-    t.integer  "registry_id", limit: 4,                   null: false
-    t.boolean  "global",      limit: 1,   default: false
+    t.boolean  "public",      limit: 1,     default: false
+    t.integer  "registry_id", limit: 4,                     null: false
+    t.boolean  "global",      limit: 1,     default: false
+    t.text     "description", limit: 65535
   end
 
   add_index "namespaces", ["name", "registry_id"], name: "index_namespaces_on_name_and_registry_id", unique: true, using: :btree
@@ -113,10 +114,11 @@ ActiveRecord::Schema.define(version: 20150923091830) do
   add_index "team_users", ["user_id"], name: "index_team_users_on_user_id", using: :btree
 
   create_table "teams", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.boolean  "hidden",     limit: 1,   default: false
+    t.string   "name",        limit: 255
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.boolean  "hidden",      limit: 1,     default: false
+    t.text     "description", limit: 65535
   end
 
   add_index "teams", ["name"], name: "index_teams_on_name", unique: true, using: :btree

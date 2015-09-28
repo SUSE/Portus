@@ -13,7 +13,9 @@ tr id="team_user_#{team_user.id}"
         .errors
   - if can_manage_team?(team_user.team)
     td
-      button.btn.btn-default.btn-edit-role value="#{team_user.id}"
+      button.btn.btn-default.btn-edit-role[
+        value="#{team_user.id}"
+        class="add"]
         i.fa.fa-pencil.fa-lg
     td
       a[class="btn btn-default"

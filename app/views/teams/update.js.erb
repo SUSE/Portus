@@ -1,0 +1,16 @@
+<% if @team.errors.empty? %>
+  var el = $(".button_team_description i.fa");
+  $("#change_description_team_<%= @team.id %>").fadeToggle(function() {
+    $(".description").fadeToggle();
+  });
+  el.removeClass('fa-close');
+  el.addClass('fa-pencil');
+  <% if @team.description.blank? %>
+   $('.description').html("No description has been posted yet");
+  <% else %>
+    $('.description').html("<%= escape_javascript(@team.description) %>");
+  <% end %>
+<% else %>
+  $('#alert p').html("<%= escape_javascript(@team.errors.full_messages.join('<br/>')) %>");
+  $('#alert').fadeIn();
+<% end %>
