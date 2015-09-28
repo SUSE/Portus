@@ -27,6 +27,7 @@ fi
 sed -e "s/__HOSTNAME__/$HOSTNAME/g" /srv/Portus/public/landing.html.in > /srv/www/htdocs/index.html
 cp /srv/Portus/public/landing.css /srv/www/htdocs/
 
+systemctl start mysql
 mysqladmin -u root password "portus"
 
 portusctl setup --db-username=root --local-registry
