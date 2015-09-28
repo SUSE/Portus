@@ -1,6 +1,11 @@
 # Some useful constants used by portus
 
+# Checks whether it's running inside of a Docker container or not
+def dockerized?
+  File.read("/proc/1/cgroup").include?("docker")
+end
+
 # This one is set by the bash wrapper we deliver with our RPM
 # See packaging/suse/bin/portusctl
 BUNDLER_BIN = ENV["BUNDLER_BIN"]
-HOSTNAME    = `hostname -f`.chomp
+HOSTNAME    = (dockerized? ? `hostname -f` : `hostnamectl --static status`).chomp

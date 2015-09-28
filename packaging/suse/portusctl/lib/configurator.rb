@@ -168,13 +168,6 @@ EOM
       Runner.activate_service(service[0], service[1])
     end
   end
-
-  private
-
-  # Checks whether it's running inside of a Docker container or not
-  def dockerized?
-    File.read("/proc/1/cgroup").include?("docker")
-  end
 end
 
 # rubocop:enable Metrics/ClassLength
