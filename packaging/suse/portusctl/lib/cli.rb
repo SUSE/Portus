@@ -107,4 +107,16 @@ class Cli < Thor
 
     Runner.bundler_exec("rake", args, {})
   end
+
+  desc "exec ARGS...", "Run a arbitrary command via bundler exec"
+  def exec(*args)
+    if args.empty?
+      warn "You mush provide at least an argument"
+      exit 1
+    end
+    exec_args = []
+    exec_args = args[1, args.size] if args.size > 1
+
+    Runner.bundler_exec(args[0], exec_args, {})
+  end
 end
