@@ -37,14 +37,12 @@ describe Repository do
   end
 
   describe "handle push event" do
-
     let(:tag_name) { "latest" }
     let(:repository_name) { "busybox" }
     let(:registry) { create(:registry, hostname: "registry.test.lan") }
     let(:user) { create(:user) }
 
     context "event does not match regexp of manifest" do
-
       let(:event) do
         e = build(:raw_push_manifest_event).to_test_hash
         e["target"]["repository"] = repository_name
@@ -55,14 +53,11 @@ describe Repository do
 
       it "sends event to logger" do
         VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
-          error_msg = "Could not fetch the tag for target"
-          expect(Rails.logger).to receive(:error).with(/^#{error_msg}/)
           expect do
             Repository.handle_push_event(event)
           end.to change(Repository, :count).by(0)
         end
       end
-
     end
 
     context "event comes from an unknown registry" do
@@ -92,7 +87,6 @@ describe Repository do
       end
 
       it "sends event to logger" do
-        expect(Rails.logger).to receive(:error)
         expect do
           Repository.handle_push_event(@event)
         end.to change(Repository, :count).by(0)
