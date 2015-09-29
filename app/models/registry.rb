@@ -71,8 +71,10 @@ class Registry < ActiveRecord::Base
     man = client.manifest(target["repository"], target["digest"])
     man["tag"]
 
-  rescue
-    logger.error("Could not fetch the tag for target #{target}.")
+  rescue StandardError => e
+    logger.info("Could not fetch the tag for target #{target}")
+    logger.info("Reason: #{e.message}")
+    nil
   end
 
   # Create the global namespace for this registry and create the personal
