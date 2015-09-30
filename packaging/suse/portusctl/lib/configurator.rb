@@ -88,7 +88,7 @@ EOM
 
   # Creates the database and performs the migrations
   def create_database
-    Runner.activate_service("mysql")
+    Runner.activate_service("mysql") if database_local?
 
     env_variables = {
       "SKIP_MIGRATION"  => "yes",
@@ -162,11 +162,17 @@ EOM
       ["portus_crono", false],
       ["apache2", true]
     ]
-    services << ["mysql", false] if ["localhost", HOSTNAME].include?(@options["db-host"])
+    services << ["mysql", false] if database_local?
     services << ["registry", true] if @options["local-registry"]
     services.each do |service|
       Runner.activate_service(service[0], service[1])
     end
+  end
+
+  private
+
+  def database_local?
+    @options["db-host"] == "localhost" || @options["db-host"] == HOSTNAME
   end
 end
 
