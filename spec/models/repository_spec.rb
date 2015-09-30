@@ -279,6 +279,7 @@ describe Repository do
   describe "create_or_update" do
     let!(:registry)    { create(:registry) }
     let!(:owner)       { create(:user) }
+    let!(:portus)      { create(:user, username: "portus") }
     let!(:team)        { create(:team, owners: [owner]) }
     let!(:namespace)   { create(:namespace, team: team) }
     let!(:repo1)       { create(:repository, name: "repo1", namespace: namespace) }
@@ -293,6 +294,11 @@ describe Repository do
       repo = Repository.create_or_update!(repo)
       expect(repo.id).to eq repo1.id
       expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
+
+      # Make sure that the portus user is set to be the author of the tags.
+      authors = repo.tags.map(&:author).uniq
+      expect(authors.count).to eq 1
+      expect(authors.first).to be_portus
 
       # Just adds a new tag.
       repo = { "name" => "#{namespace.name}/repo2",
