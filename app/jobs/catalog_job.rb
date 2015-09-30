@@ -1,23 +1,20 @@
 # CatalogJob is a job that synchronizes the contents of the database with the
-# contents of the Registry. This is done by using the Catalog API.
+# contents of the registries. This is done by using the Catalog API.
 class CatalogJob < ActiveJob::Base
-  # This method will be called on each tic of the cron. It basically gets the
-  # contents from the registry and calls `update_registry!`. Any error is
-  # logged.
+  # This method will be called on each tic of the cron. It basically goes
+  # through all the registries and calls `update_registry!` for each of them.
+  # Any error will be logged.
   def perform
-    # TODO: (mssola) change this once more than one registry can be configured
-    # at the same time.
-    registry = Registry.first
-    return if registry.nil?
+    Registry.find_each do |registry|
+      begin
+        cat = registry.client.catalog
 
-    begin
-      cat = registry.client.catalog
-
-      # Update the registry in a transaction, since we don't want to leave the DB
-      # in an unknown state because of an update failure.
-      ActiveRecord::Base.transaction { update_registry!(cat) }
-    rescue StandardError => e
-      Rails.logger.warn "Exception: #{e.message}"
+        # Update the registry in a transaction, since we don't want to leave
+        # the DB in an unknown state because of an update failure.
+        ActiveRecord::Base.transaction { update_registry!(cat) }
+      rescue StandardError => e
+        Rails.logger.warn "Exception: #{e.message}"
+      end
     end
   end
 
