@@ -6,7 +6,6 @@ def get_url(repo, tag)
 end
 
 describe Repository do
-
   it { should belong_to(:namespace) }
   it { should have_many(:tags) }
   it { should have_many(:stars) }
@@ -308,6 +307,10 @@ describe Repository do
       repo = Repository.create_or_update!(repo)
       expect(repo.name).to eq "busybox"
       expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
+
+      # Trying to create a repo into an unknown namespace.
+      repo = { "name" => "unknown/repo1", "tags" => ["latest", "0.1"] }
+      expect(Repository.create_or_update!(repo)).to be_nil
     end
   end
 end

@@ -71,9 +71,13 @@ class Repository < ActiveRecord::Base
   # This method will transparently create/remove the tags that the given
   # repository is supposed to have.
   #
+  # Note that if the repo is said to be contained inside of a namespace that
+  # does not really exist, then this method will do nothing.
+  #
   # Returns the final repository object.
   def self.create_or_update!(repo)
     namespace, name = Namespace.get_from_name(repo["name"])
+    return if namespace.nil?
     repository = Repository.find_or_create_by!(name: name, namespace: namespace)
 
     # Add the needed tags.
