@@ -76,18 +76,22 @@ class Repository < ActiveRecord::Base
   #
   # Returns the final repository object.
   def self.create_or_update!(repo)
+    # If the namespace does not exist, get out.
     namespace, name = Namespace.get_from_name(repo["name"])
     return if namespace.nil?
-    repository = Repository.find_or_create_by!(name: name, namespace: namespace)
+
+    # The portus user is the author for the created tags.
+    portus = User.find_by(username: "portus")
 
     # Add the needed tags.
+    repository = Repository.find_or_create_by!(name: name, namespace: namespace)
     tags = repository.tags.pluck(:name)
     repo["tags"].each do |tag|
       idx = tags.find_index { |t| t == tag }
       if idx
         tags.delete_at(idx)
       else
-        Tag.create!(name: tag, repository: repository)
+        Tag.create!(name: tag, repository: repository, author: portus)
       end
     end
 
