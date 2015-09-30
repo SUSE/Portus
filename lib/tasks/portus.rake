@@ -1,8 +1,20 @@
 namespace :portus do
-  task :set_admin, [:username] => [:environment] do |_, args|
+
+  desc "Create the account used by Portus to talk with Registry's API"
+  task create_api_account: :environment do
+    User.create!(
+      username: "portus",
+      password: Rails.application.secrets.portus_password,
+      email:    "portus@portus.com",
+      admin:    true
+    )
+  end
+
+  desc "Give 'admin' role to a user"
+  task :make_admin, [:username] => [:environment] do |_, args|
     unless args[:username]
       puts "Specify a username, as in"
-      puts " rake portus:set_admin[username]"
+      puts " rake portus:make_admin[username]"
       puts "valid usernames are"
       puts "#{User.pluck(:username)}"
       exit(-1)
@@ -21,4 +33,5 @@ namespace :portus do
       exit(-3)
     end
   end
+
 end
