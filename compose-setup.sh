@@ -51,7 +51,7 @@ usage() {
   echo "  -f force removal of data"
 }
 
-DOCKER_HOST=${DOCKER_HOST=$(hostname -f)}
+DOCKER_HOST=${DOCKER_HOST=$(hostname -i)}
 echo "DOCKER_HOST=${DOCKER_HOST}" > docker/environment
 
 FORCE=0
