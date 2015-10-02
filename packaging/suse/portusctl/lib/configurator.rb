@@ -142,12 +142,14 @@ EOM
 
   # Creates the secrets.yml file used by Rails
   def secrets
+    destination = "/srv/Portus/config/secrets.yml"
+    return if File.exists?(destination)
     TemplateWriter.process(
       "secrets.yml.erb",
-      "/srv/Portus/config/secrets.yml",
+      destination,
       binding)
-    FileUtils.chown("root", "www", "/srv/Portus/config/secrets.yml")
-    FileUtils.chmod(0640, "/srv/Portus/config/secrets.yml")
+    FileUtils.chown("root", "www", destination)
+    FileUtils.chmod(0640, destination)
   end
 
   # Ensures all the required services are running
