@@ -50,7 +50,8 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it "uses the fa icon if gravatar support is disabled" do
       APP_CONFIG["gravatar"] = { "enabled" => false }
-      expect(user_image_tag("user@example.com")).to eq "<i class=\"fa fa-user fa-1x\"></i>"
+      expect(user_image_tag("user@example.com")).to eq(
+        '<img class="user-picture" src="/images/user.svg" alt="User" />')
     end
   end
 end
