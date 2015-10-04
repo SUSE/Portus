@@ -13,10 +13,7 @@
           i.fa.fa-search
   .username-logout
     .hidden-xs
-      - if APP_CONFIG.enabled?("gravatar")
-        = user_image_tag(current_user.email)
-      - else
-        i.fa.fa-user.fa-1x
+      = user_image_tag(current_user.email)
 
       = link_to edit_user_registration_url, class: 'nav-a' do
         span.username = current_user.username

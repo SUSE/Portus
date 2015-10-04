@@ -4,11 +4,11 @@ module ApplicationHelper
   end
 
   # Render the user profile picture depending on the gravatar configuration.
-  def user_image_tag(email, size = 1)
+  def user_image_tag(email)
     if APP_CONFIG.enabled?("gravatar")
       gravatar_image_tag(email)
     else
-      render html: "<i class=\"fa fa-user fa-#{size}x\"></i>".html_safe
+      image_tag "user.svg", class: "user-picture"
     end
   end
 end

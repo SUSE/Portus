@@ -18,7 +18,7 @@ feature "Gravatar support" do
   scenario "If gravatar suppor is disabled, there should be an icon" do
     APP_CONFIG["gravatar"] = { "enabled" => false }
     visit root_url
-    expect(page).to have_selector(".user-header .fa-user")
+    expect(page).to have_selector(".user-header .user-picture")
   end
 
 end
