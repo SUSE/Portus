@@ -46,4 +46,38 @@ RSpec.describe TeamsHelper, type: :helper do
       expect(helper.role_within_team(team)).to eq "-"
     end
   end
+
+  describe "team_scope_icon" do
+    it "renders with the proper icon for a team with one member" do
+      personal_team = create(:team, owners: [owner])
+      expect(helper.team_scope_icon(personal_team)).to eq(
+        '<i class="fa fa-user fa-lg" title="Personal"></i>')
+    end
+
+    it "renders with the proper icon for a team with multiple members" do
+      expect(helper.team_scope_icon(team)).to eq(
+        '<i class="fa fa-users fa-lg" title="Team"></i>')
+    end
+  end
+
+  describe "team_user_role_icon" do
+    before(:each) do
+      team
+    end
+
+    it "renders with the proper icon for owner" do
+      expect(helper.team_user_role_icon(owner.team_users.first)).to eq(
+        '<i class="fa fa-key fa-lg" title="Owner"></i>')
+    end
+
+    it "renders with the proper icon for contributor" do
+      expect(helper.team_user_role_icon(contributor.team_users.first)).to eq(
+        '<i class="fa fa-exchange fa-lg" title="Contributor"></i>')
+    end
+
+    it "renders with the proper icon for viewer" do
+      expect(helper.team_user_role_icon(viewer.team_users.first)).to eq(
+        '<i class="fa fa-eye fa-lg" title="Viewer"></i>')
+    end
+  end
 end

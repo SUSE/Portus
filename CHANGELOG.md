@@ -47,6 +47,8 @@ and [#294](https://github.com/SUSE/Portus/pull/294).
 - Now users can be enabled/disabled. See PR [#240](https://github.com/SUSE/Portus/pull/240).
 - Fixed the authentication process for Docker 1.8. See PR
 [#282](https://github.com/SUSE/Portus/pull/282).
+- Added icons to the following tables: teams and members. See PR
+[#388](https://github.com/SUSE/Portus/pull/388).
 - And some minor fixes here and there.
 
 ## 1.0.1

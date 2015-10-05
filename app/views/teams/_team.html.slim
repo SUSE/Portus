@@ -1,4 +1,5 @@
 tr
+  td.table-icon= team_scope_icon(team)
   td= link_to team.name, team
   td= role_within_team(team)
   - if current_page?(url_for admin_teams_path)

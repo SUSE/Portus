@@ -5,13 +5,15 @@
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
-        col.col-50
         col.col-40
+        col.col-30
+        col.col-20
         col.col-10
         thead
           tr
             th Name
             th Repositories
+            th Created At
             th Public
         tbody
           - @special_namespaces.each do |namespace|
@@ -24,13 +26,15 @@
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
-        col.col-50
         col.col-40
+        col.col-30
+        col.col-20
         col.col-10
         thead
           tr
             th Name
             th Repositories
+            th Created At
             th Public
         tbody
           - @namespaces.each do |namespace|

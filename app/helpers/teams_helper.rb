@@ -12,4 +12,31 @@ module TeamsHelper
       "-"
     end
   end
+
+  # Render the namespace scope icon.
+  def team_scope_icon(team)
+    if team.team_users.count > 1
+      icon = "fa-users"
+      title = "Team"
+    else
+      icon = "fa-user"
+      title = "Personal"
+    end
+
+    content_tag :i, "", class: "fa #{icon} fa-lg", title: title
+  end
+
+  # Render the team user role icon.
+  def team_user_role_icon(team_user)
+    icon = case team_user.role
+           when "owner"
+             "fa-key"
+           when "contributor"
+             "fa-exchange"
+           when "viewer"
+             "fa-eye"
+           end
+
+    content_tag :i, "", class: "fa #{icon} fa-lg", title: team_user.role.titleize
+  end
 end
