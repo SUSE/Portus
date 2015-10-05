@@ -36,13 +36,7 @@ header {
         border-bottom: 1px solid $white;
         border-right: 0px solid $white;
         color: $white;
-
-      }
-      ::-webkit-input-placeholder,
-      :-moz-placeholder,
-      ::-moz-placeholder,
-      :-ms-input-placeholder {
-        color: $white;
+        @include input-placeholder($white);
       }
       button[type="submit"] {
         border-radius: 0 4px 4px 0;
