@@ -112,17 +112,21 @@ EOM
 
   # Creates registry's configuration
   def registry
-    # Add the certificated used by Portus to sign the JWT tokens
-    ssldir = "/etc/registry/ssl.crt"
-    FileUtils.mkdir_p(ssldir)
-    FileUtils.ln_sf(
-      "/etc/apache2/ssl.crt/#{HOSTNAME}-server.crt",
-      File.join(ssldir, "portus.crt"))
+    if @options["local-registry"]
+      # Add the certificated used by Portus to sign the JWT tokens
+      ssldir = "/etc/registry/ssl.crt"
+      FileUtils.mkdir_p(ssldir)
+      FileUtils.ln_sf(
+        "/etc/apache2/ssl.crt/#{HOSTNAME}-server.crt",
+        File.join(ssldir, "portus.crt"))
 
-    TemplateWriter.process(
-      "registry.yml.erb",
-      "/etc/registry/config.yml",
-      binding)
+      TemplateWriter.process(
+        "registry.yml.erb",
+        "/etc/registry/config.yml",
+        binding)
+    else
+      TemplateWriter.render("registry.yml.erb", binding)
+    end
   end
 
   # Creates the config-local.yml file used by Portus
