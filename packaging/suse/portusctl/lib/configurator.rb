@@ -147,7 +147,7 @@ EOM
   # Creates the secrets.yml file used by Rails
   def secrets
     destination = "/srv/Portus/config/secrets.yml"
-    return if File.exists?(destination)
+    return if File.exist?(destination)
     TemplateWriter.process(
       "secrets.yml.erb",
       destination,

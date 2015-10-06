@@ -34,15 +34,18 @@
       table.table.table-striped.table-hover
         colgroup
           - if can_manage_team?(@team)
+            col.col-5
             col.col-40
-            col.col-40
+            col.col-35
             col.col-10
             col.col-10
           - else
+            col.col-5
             col.col-50
-            col.col-50
+            col.col-45
         thead
           tr
+            th
             th User
             th Role
             - if can_manage_team?(@team)
