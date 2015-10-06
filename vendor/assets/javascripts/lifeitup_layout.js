@@ -1,5 +1,7 @@
 // to render the layout correctly in every browser/screen
 
+var alreadyResizing = false;
+
 $(window).on("load", function() {
 
   layout_resizer ();
@@ -10,15 +12,15 @@ $(window).on("load", function() {
 
 $(window).on("resize", function() {
 
-  layout_resizer();
+  layout_resizer ();
   resize_view_image_icon ();
 
 });
 
 $(document).bind("DOMSubtreeModified", function() {
-
-  layout_resizer();
-
+  if (!alreadyResizing) {
+    layout_resizer ();
+  }
 });
 
 // triger the function to resize and to get the images size when a panel has been displayed
@@ -29,6 +31,8 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function () {
 
 
 function layout_resizer () {
+  alreadyResizing = true;
+
   var screenHeight   = $(window).height();
   var headerHeight   = $("header").outerHeight();
   var footerHeight   = $("footer").outerHeight();
@@ -55,6 +59,7 @@ function layout_resizer () {
 
   }
 
+  alreadyResizing = false;
 }
 
 // BOOTSTRAP INITS
