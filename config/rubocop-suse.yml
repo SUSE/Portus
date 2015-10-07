@@ -55,3 +55,6 @@ Style/RegexpLiteral:
 
 Style/SignalException:
   EnforcedStyle: only_raise
+
+Style/NumericLiterals:
+  Enabled: false

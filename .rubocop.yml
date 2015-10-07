@@ -12,12 +12,6 @@ Metrics/ClassLength:
 Metrics/MethodLength:
   Max: 252
 
-# Not worth it, since numbers like ports are too weird in this format.
-# NOTE: this is being discussed in the SUSE's coding style repo:
-# https://github.com/SUSE/style-guides/pull/11
-Style/NumericLiterals:
-  Enabled: false
-
 # It's convenient to mix both. This is something that SUSE's style guide does
 # not specify, so we take the approach that we were following already.
 Style/ClassAndModuleChildren:
