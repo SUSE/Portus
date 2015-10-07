@@ -36,7 +36,7 @@ class PublicActivity::ActivityPolicy
                "(team_users.user_id = ? OR namespaces.public = ?)",
                "Repository", user.id, true)
 
-      team_activities.union_all(namespace_activities).union_all(repository_activities)
+      team_activities.union_all(namespace_activities).union_all(repository_activities).distinct
     end
   end
 end
