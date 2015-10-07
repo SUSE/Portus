@@ -1,3 +1,5 @@
+require "net/http"
+
 module Portus
   # Implements all the methods and classes that are needed by the RegistryClient.
   # This separation has been done because this module deals with HTTP helpers and
