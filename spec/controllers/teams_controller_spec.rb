@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe TeamsController, type: :controller do
   let(:valid_attributes) do
-    { name: "qa team" }
+    { name: "qa team", description: "short test description" }
   end
 
   let(:invalid_attributes) do
@@ -10,7 +10,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   let(:owner) { create(:user) }
-  let(:team) { create(:team, owners: [owner]) }
+  let(:team) { create(:team, description: "short test description", owners: [owner]) }
 
   describe "GET #show" do
 
@@ -104,6 +104,25 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
+  describe "PATCH #update" do
+    it "does not allow to change the description by viewers and contributers" do
+      disallowed_roles = ["viewer", "contributer"]
+      disallowed_roles.each do |role|
+        user = create(:user)
+        TeamUser.create(team: team, user: user, role: TeamUser.roles[role])
+        sign_in user
+        patch :update, id: team.id, team: { description: "new description" }, format: "js"
+        expect(response.status).to eq(401)
+      end
+    end
+
+    it "does allow to change the description by owners" do
+      sign_in owner
+      patch :update, id: team.id, team: { description: "new description" }, format: "js"
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "activity tracking" do
     before :each do
       sign_in owner
@@ -118,6 +137,20 @@ RSpec.describe TeamsController, type: :controller do
       team_creation_activity = PublicActivity::Activity.find_by(key: "team.create")
       expect(team_creation_activity.owner).to eq(owner)
       expect(team_creation_activity.trackable).to eq(team)
+    end
+
+    it "editing of a team description" do
+      old_description = team.description
+      expect do
+        patch :update, id: team.id, team: { description: "new description" }, format: "js"
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      team_description_activity = PublicActivity::Activity.find_by(
+        key: "team.change_team_description")
+      expect(team_description_activity.owner).to eq(owner)
+      expect(team_description_activity.trackable).to eq(team)
+      expect(team_description_activity.parameters[:old_description]).to eq(old_description)
+      expect(team_description_activity.parameters[:new_description]).to eq("new description")
     end
   end
 

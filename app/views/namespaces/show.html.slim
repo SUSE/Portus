@@ -1,5 +1,43 @@
 .panel.panel-default
   .panel-heading
+    - if can_manage_namespace?(@namespace)
+      .pull-right
+        button.btn.btn-default.btn-edit-role[
+          value="#{@namespace.id}",
+          class="button_namespace_description"]
+          i.fa.fa-pencil.fa-lg
+    h5
+      strong
+        '#{@namespace.name}
+      ' namespace
+      small
+        a[data-placement="right"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="<p>Information about the namespace.</p>"
+          data-original-title="What's this?"
+          tabindex="0" data-html="true"]
+            i.fa.fa-info-circle
+  .panel-body
+    .description
+      - if @namespace.description.blank?
+        p
+          'No description has been posted yet.
+      - else
+        '#{@namespace.description}
+    .collapse id="change_description_namespace_#{@namespace.id}"
+      = form_for @namespace, remote: true, html: {role: 'form'} do |f|
+        = f.text_area(:description, class: 'form-control', placeholder: "#{@namespace.description}")
+        br
+          = button_tag(type: 'submit', class: 'btn btn-primary pull-right') do
+            i.fa.fa-check
+            | Save
+
+        .errors
+  .panel-footer
+
+.panel.panel-default
+  .panel-heading
     h5
       'Namespace:
       strong

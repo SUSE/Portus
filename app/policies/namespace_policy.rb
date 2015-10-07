@@ -33,6 +33,10 @@ class NamespacePolicy
     push?
   end
 
+  def update?
+    push?
+  end
+
   def toggle_public?
     !namespace.global? && (user.admin? || namespace.team.owners.exists?(user.id))
   end

@@ -11,6 +11,11 @@ class TeamPolicy
     user.admin? || @team.users.exists?(user.id)
   end
 
+  def owner?
+    user.admin? || @team.owners.exists?(user.id)
+  end
+
+  alias_method :update?, :owner?
   alias_method :show?, :member?
 
   class Scope

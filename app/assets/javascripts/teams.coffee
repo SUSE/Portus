@@ -19,9 +19,15 @@ $(document).on "page:change", ->
     else
       el.removeClass('fa-close')
       el.addClass('fa-pencil')
-
-    $('#team_user_' + event.currentTarget.value + ' td .role').toggle()
-    $('#change_role_team_user_' + event.currentTarget.value).toggle()
+    if $(this).hasClass('add')
+      $('#team_user_' + event.currentTarget.value + ' td .role').toggle()
+      $('#change_role_team_user_' + event.currentTarget.value).toggle()
+    else if $(this).hasClass('button_team_description')
+      $('.description').toggle()
+      $('#change_description_team_' + event.currentTarget.value).toggle()
+    else if $(this).hasClass('button_namespace_description')
+      $('.description').toggle()
+      $('#change_description_namespace_' + event.currentTarget.value).toggle()
   )
 
   $('#add_namespace_btn').on 'click', (event) ->

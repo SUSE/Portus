@@ -1,5 +1,7 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: [:show]
+  include ChangeDescription
+
+  before_action :set_team, only: [:show, :update]
   after_action :verify_policy_scoped, only: :index
   respond_to :js, :html
 
@@ -31,6 +33,12 @@ class TeamsController < ApplicationController
     end
   end
 
+  # PATCH/PUT /teams/1
+  # PATCH/PUT /teams/1.json
+  def update
+    change_description(@team, :team)
+  end
+
   private
 
   def set_team
@@ -38,6 +46,6 @@ class TeamsController < ApplicationController
   end
 
   def team_params
-    params.require(:team).permit(:name)
+    params.require(:team).permit(:name, :description)
   end
 end
