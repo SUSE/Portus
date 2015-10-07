@@ -51,14 +51,16 @@ class Repository < ActiveRecord::Base
     actor = User.find_from_event(event)
     return if actor.nil?
 
-    # Get or create the repository as "namespace/repo"
+    # Get or create the repository as "namespace/repo". If both the repo and
+    # the given tag already exists, return early.
     repository = Repository.find_by(namespace: namespace, name: repo)
     if repository.nil?
       repository = Repository.create(namespace: namespace, name: repo)
+    elsif repository.tags.exists?(name: tag)
+      return
     end
 
-    tag = repository.tags.where(name: tag)
-      .first_or_create(name: tag, author: actor)
+    tag = repository.tags.create(name: tag, author: actor)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
   end

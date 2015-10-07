@@ -41,6 +41,22 @@ describe Repository do
     let(:registry) { create(:registry, hostname: "registry.test.lan") }
     let(:user) { create(:user) }
 
+    context "adding an existing repo/tag" do
+      it "does not add a new activity when an already existing repo/tag already existed" do
+        event = { "actor" => { "name" => user.username } }
+
+        # First we create it, and make sure that it creates the activity.
+        expect do
+          Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        end.to change(PublicActivity::Activity, :count).by(1)
+
+        # And now it shouldn't create more activities.
+        expect do
+          Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        end.to change(PublicActivity::Activity, :count).by(0)
+      end
+    end
+
     context "event does not match regexp of manifest" do
       let(:event) do
         e = build(:raw_push_manifest_event).to_test_hash

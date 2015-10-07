@@ -13,6 +13,7 @@ class RepositoryPolicy
         .where("namespaces.public = :namespace_public OR " \
                "users.id = :user_id",
                namespace_public: true, user_id: @user.id)
+        .distinct
     end
   end
 end
