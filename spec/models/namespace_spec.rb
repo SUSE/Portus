@@ -1,12 +1,47 @@
 require "rails_helper"
 
 describe Namespace do
-
   it { should have_many(:repositories) }
   it { should belong_to(:team) }
   it { should validate_presence_of(:name) }
   it { should allow_value("test1", "1test", "another-test").for(:name) }
   it { should_not allow_value("TesT1", "1Test", "another_test!").for(:name) }
+
+  context "validator" do
+    let(:registry)    { create(:registry) }
+    let(:owner)       { create(:user) }
+    let(:team)        { create(:team, owners: [owner]) }
+    let(:namespace)   { create(:namespace, team: team) }
+
+    it "checks for the uniqueness of the namespace inside of the registry" do
+      Namespace.create!(team: team, registry: registry, name: "lala")
+      expect do
+        Namespace.create!(team: team, name: "lala", registry: registry)
+      end.to raise_error(ActiveRecord::RecordInvalid, /Name has already been taken/)
+    end
+
+    it "checks tat the namespace name follows the proper format" do
+      ["-a", "&a", "_invalid", "R2D2", "also_invalid_"].each do |name|
+        n = Namespace.new(team: team, registry: registry, name: name)
+        expect(n).to_not be_valid
+      end
+
+      ["a", "1", "1.0", "r2d2", "thingie", "is_valid"].each do |name|
+        n = Namespace.new(team: team, registry: registry, name: name)
+        expect(n).to be_valid
+      end
+    end
+
+    it "checks the length of the name" do
+      name = (0...100).map { ("a".."z").to_a[rand(26)] }.join
+      n = Namespace.new(team: team, registry: registry, name: name)
+      expect(n).to be_valid
+
+      name = (0...270).map { ("a".."z").to_a[rand(26)] }.join
+      n = Namespace.new(team: team, registry: registry, name: name)
+      expect(n).to_not be_valid
+    end
+  end
 
   context "sanitize name" do
     it "replaces white spaces with underscores" do
