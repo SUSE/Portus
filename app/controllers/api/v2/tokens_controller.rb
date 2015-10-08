@@ -8,7 +8,7 @@ class Api::V2::TokensController < Api::BaseController
   # operation into the private registry.
   def show
     registry = Registry.find_by(hostname: params[:service])
-    raise RegistryNotHandled if registry.nil?
+    raise RegistryNotHandled, "Cannot find registry #{params[:service]}" if registry.nil?
 
     auth_scope = authorize_scopes(registry)
 
@@ -43,7 +43,6 @@ class Api::V2::TokensController < Api::BaseController
       begin
         authorize auth_scope.resource, "#{scope}?".to_sym
       rescue NoMethodError
-        logger.warn "Cannot handle scope #{scope}"
         raise ScopeNotHandled, "Cannot handle scope #{scope}"
       rescue Pundit::NotAuthorizedError
         logger.debug "scope #{scope} not authorized, removing from actions"
@@ -70,8 +69,7 @@ class Api::V2::TokensController < Api::BaseController
     when "registry"
       auth_scope = Registry::AuthScope.new(registry, scope_string)
     else
-      logger.error "Scope not handled: #{str[0]}"
-      raise ScopeNotHandled
+      raise ScopeNotHandled, "Scope not handled: #{str[0]}"
     end
 
     [auth_scope, auth_scope.scopes.dup]

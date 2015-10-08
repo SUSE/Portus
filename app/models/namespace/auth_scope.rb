@@ -9,10 +9,8 @@ class Namespace::AuthScope < Portus::AuthScope
       found_resource = @registry.namespaces.find_by(name: @namespace_name)
     end
 
-    if found_resource.nil?
-      Rails.logger.warn "Cannot find namespace with name #{@namespace_name}"
-      raise ResourceNotFound
-    end
+    raise ResourceNotFound, "Cannot find namespace #{@namespace_name}" if found_resource.nil?
+
     found_resource
   end
 
