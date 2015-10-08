@@ -63,13 +63,13 @@ module Portus
 
       # Add the errors as given by the registry.
       begin
-        body = JSON.parse(response.body)
+        body = ::JSON.parse(response.body)
         if body["errors"]
           str += "Reported by Registry:\n"
           body["errors"].each { |err| str += "#{err}\n" }
           str += "\n"
         end
-      rescue JSON::ParserError
+      rescue ::JSON::ParserError
         str += "Body:\n#{response.body}\n\n"
       end
 
@@ -102,7 +102,8 @@ module Portus
 
       res = get_response_token(uri, req)
       if res.code.to_i == 200
-        @token = JSON.parse(res.body)["token"]
+        # This JSON call is guaranteed to be safe.
+        @token = ::JSON.parse(res.body)["token"]
       else
         @token = nil
         raise AuthorizationError, "Cannot obtain authorization token: #{res}"

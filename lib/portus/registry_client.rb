@@ -22,7 +22,7 @@ module Portus
     def manifest(repository, tag = "latest")
       res = perform_request("#{repository}/manifests/#{tag}")
       if res.code.to_i == 200
-        JSON.parse(res.body)
+        ::Portus::JSON.parse(res)
       elsif res.code.to_i == 404
         handle_error res, repository: repository, tag: tag
       else
@@ -41,8 +41,8 @@ module Portus
     def catalog
       res = perform_request("_catalog")
       if res.code.to_i == 200
-        catalog = JSON.parse(res.body)
-        add_tags(catalog["repositories"])
+        catalog = ::Portus::JSON.parse(res)
+        add_tags(catalog["repositories"]) unless catalog.nil?
       elsif res.code.to_i == 404
         handle_error res
       else
@@ -79,7 +79,8 @@ module Portus
       repositories.each do |repo|
         res = perform_request("#{repo}/tags/list")
         return [] if res.code.to_i != 200
-        result << JSON.parse(res.body)
+        res = ::Portus::JSON.parse(res)
+        result << res unless res.nil?
       end
       result
     end
