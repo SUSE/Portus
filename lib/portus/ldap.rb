@@ -94,7 +94,8 @@ module Portus
     # server.
     def search_options
       {}.tap do |opts|
-        opts[:filter] = "(uid=#{username})"
+        uid = APP_CONFIG["ldap"]["uid"]
+        opts[:filter] = "(#{uid}=#{username})"
         opts[:base]   = APP_CONFIG["ldap"]["base"] unless APP_CONFIG["ldap"]["base"].empty?
       end
     end

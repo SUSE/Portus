@@ -100,7 +100,8 @@ describe Portus::LDAP do
       "enabled"  => true,
       "hostname" => "hostname",
       "port"     => 389,
-      "base"     => "ou=users,dc=example,dc=com"
+      "base"     => "ou=users,dc=example,dc=com",
+      "uid"      => "uid"
     }
   end
 
@@ -159,7 +160,7 @@ describe Portus::LDAP do
   end
 
   it "fetches the right bind options" do
-    APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
+    APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "uid" }
     lm = LdapMock.new(username: "name", password: "1234")
     opts = lm.bind_options_test
     expect(opts.size).to eq 2
@@ -172,6 +173,11 @@ describe Portus::LDAP do
     expect(opts[:filter]).to eq "(uid=name)"
     expect(opts[:password]).to eq "1234"
     expect(opts[:base]).to eq "ou=users,dc=example,dc=com"
+
+    APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "foo" }
+    lm = LdapMock.new(username: "name", password: "12341234")
+    opts = lm.bind_options_test
+    expect(opts[:filter]).to eq "(foo=name)"
   end
 
   describe "#find_or_create_user!" do
