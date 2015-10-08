@@ -3,10 +3,7 @@
 class Registry::AuthScope < Portus::AuthScope
   def resource
     reg = Registry.find_by(hostname: @registry.hostname)
-    if reg.nil?
-      Rails.logger.warn "Could not find registry #{@registry.hostname}"
-      raise ResourceNotFound
-    end
+    raise ResourceNotFound, "Could not find registry #{@registry.hostname}" if reg.nil?
     reg
   end
 
