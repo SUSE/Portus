@@ -4,6 +4,10 @@ describe RepositoriesController do
 
   let(:valid_session) { {} }
   let(:user) { create(:user) }
+  let(:public_namespace) { create(:namespace, public: 1, team: create(:team)) }
+  let(:visible_repository) { create(:repository, namespace: public_namespace) }
+  let(:private_namespace) { create(:namespace, public: 0, team: create(:team)) }
+  let(:invisible_repository) { create(:repository, namespace: private_namespace) }
 
   before :each do
     sign_in user
@@ -12,9 +16,8 @@ describe RepositoriesController do
   describe "GET #index" do
 
     it "assigns all repositories as @repositories" do
-      repository = create(:repository)
       get :index, {}, valid_session
-      expect(assigns(:repositories)).to eq([repository])
+      expect(assigns(:repositories)).to eq([visible_repository])
     end
 
   end
@@ -22,9 +25,8 @@ describe RepositoriesController do
   describe "GET #show" do
 
     it "assigns the requested repository as @repository" do
-      repository = create(:repository)
-      get :show, { id: repository.to_param }, valid_session
-      expect(assigns(:repository)).to eq(repository)
+      get :show, { id: visible_repository.to_param }, valid_session
+      expect(assigns(:repository)).to eq(visible_repository)
     end
 
   end

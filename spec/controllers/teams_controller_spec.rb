@@ -153,5 +153,4 @@ RSpec.describe TeamsController, type: :controller do
       expect(team_description_activity.parameters[:new_description]).to eq("new description")
     end
   end
-
 end
