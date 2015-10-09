@@ -7,23 +7,30 @@ feature "Admin - Registries panel" do
     login_as admin
   end
 
-  describe "toggling `use_ssl` from a registry" do
+  describe "update" do
     let!(:registry) { create(:registry) }
 
     before :each do
-      visit admin_registries_path
+      visit edit_admin_registry_path(registry.id)
     end
 
-    it "toggles the `use_ssl` properly", js: true do
-      expect(page).to have_css("#registry_#{registry.id} .fa-toggle-off")
-      expect(page).to_not have_css("#registry_#{registry.id} .fa-toggle-on")
-      find("#registry_#{registry.id} td a i").click
+    it "does not show the hostname if there are repositories", js: true do
+      expect(page).to have_css("#registry_hostname")
 
-      wait_for_ajax
-      wait_for_effect_on("#alert")
+      create(:repository)
+      visit edit_admin_registry_path(registry.id)
 
-      expect(page).to_not have_css("#registry_#{registry.id} .fa-toggle-off")
-      expect(page).to have_css("#registry_#{registry.id} .fa-toggle-on")
+      expect(page).to_not have_css("#registry_hostname")
+    end
+
+    it "updates as expected", js: true do
+      fill_in "registry_hostname", with: "lala"
+      click_button "Update"
+
+      expect(page).to have_content("Registry updated successfully!")
+      expect(current_path).to eq admin_registries_path
+      registry.reload
+      expect(registry.hostname).to eq "lala"
     end
   end
 end
