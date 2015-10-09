@@ -1,7 +1,7 @@
 <VirtualHost *:<%= @options["secure"] ? '443' : '80' %>>
 <% if @options["secure"] %>
    SSLEngine on
-   SSLCertificateFile /etc/apache2/ssl.crt/<%= HOSTNAME %>-server.crt
+   SSLCertificateFile /etc/apache2/ssl.crt/<%= HOSTNAME %>-ca.crt
    SSLCertificateKeyFile /srv/Portus/config/server.key
 <% end %>
 
