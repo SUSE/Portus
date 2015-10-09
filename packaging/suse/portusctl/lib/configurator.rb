@@ -31,13 +31,13 @@ class Configurator
   #   * create the ssl certificates
   #   * copy the cerificates to the right locations
   def ssl
-    unless File.exist?("/etc/apache2/ssl.key/#{HOSTNAME}-server.key")
+    unless File.exist?("/etc/apache2/ssl.key/#{HOSTNAME}-ca.key")
       puts <<EOM
 Generating private key and certificate"
 ************************************************************************
 If you want to use your own private key and certificates, upload them to
-  * /etc/apache2/ssl.key/#{HOSTNAME}-server.key"
-  * /etc/apache2/ssl.crt/#{HOSTNAME}-server.crt"
+  * /etc/apache2/ssl.key/#{HOSTNAME}-ca.key"
+  * /etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
   * /etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
 and then re-run this script"
 ************************************************************************
@@ -58,12 +58,12 @@ EOM
     FileUtils.chown("wwwrun", "www", "/etc/apache2/ssl.key")
     FileUtils.chmod(0750, "/etc/apache2/ssl.key")
 
-    FileUtils.chown("wwwrun", "www", "/etc/apache2/ssl.key/#{HOSTNAME}-server.key")
-    FileUtils.chmod(0440, "/etc/apache2/ssl.key/#{HOSTNAME}-server.key")
+    FileUtils.chown("wwwrun", "www", "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key")
+    FileUtils.chmod(0440, "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key")
 
     # Create key used by Portus to sign the JWT tokens
     FileUtils.ln_sf(
-      "/etc/apache2/ssl.key/#{HOSTNAME}-server.key",
+      "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key",
       File.join("/srv/Portus/config", "server.key"))
 
     FileUtils.cp(
@@ -117,7 +117,7 @@ EOM
       ssldir = "/etc/registry/ssl.crt"
       FileUtils.mkdir_p(ssldir)
       FileUtils.ln_sf(
-        "/etc/apache2/ssl.crt/#{HOSTNAME}-server.crt",
+        "/etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt",
         File.join(ssldir, "portus.crt"))
 
       TemplateWriter.process(
