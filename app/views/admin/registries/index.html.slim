@@ -21,19 +21,16 @@
               th Name
               th Hostname
               th SSL
+              th
           tbody
             - @registries.each do |registry|
               tr id="registry_#{registry.id}"
                 td= registry.name
                 td= registry.hostname
                 td
-                  a.btn.btn-default[data-remote="true"
-                      data-method="put"
-                      rel="nofollow"
-                      href=url_for(admin_registry_path(registry))
-                      title="Enable/disable SSL in the communication between Portus and this registry"
-                      ]
-                      i.fa.fa-lg class="fa-toggle-#{registry.use_ssl? ? 'on': 'off'}"
+                  i.fa.fa-lg class="fa-toggle-#{registry.use_ssl? ? 'on': 'off'}" title="SSL in the comunication between Portus and this registry is #{registry.use_ssl? ? "enabled" : "disabled"}"
+                td
+                  a href="#{edit_admin_registry_path(registry.id)}" Edit
 
   p
     strong Note well:

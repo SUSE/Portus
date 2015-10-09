@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :activities, only: [:index]
     resources :dashboard, only: [:index]
-    resources :registries, only: [:index, :create, :new, :update]
+    resources :registries, except: [:show, :destroy]
     resources :namespaces, only: [:index]
     resources :teams, only: [:index]
     resources :users, only: [:index] do

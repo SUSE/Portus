@@ -63,19 +63,43 @@ RSpec.describe Admin::RegistriesController, type: :controller do
     end
   end
 
+  describe "GET #edit" do
+    let!(:registry) { create(:registry) }
+
+    it "returns 200 on success" do
+      get :edit, id: registry.id
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns 404 if the registry does not exist" do
+      expect do
+        get :edit, id: registry.id + 1
+      end.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
   describe "PUT #update" do
     let!(:registry) { create(:registry) }
 
     it "does nothing if the registry was not found" do
       expect do
-        put :update, id: registry.id + 1, format: :js
+        put :update, id: registry.id + 1, registry: { use_ssl: true }
       end.to raise_error(ActiveRecord::RecordNotFound)
       expect(Registry.first.use_ssl).to be_falsey
     end
 
-    it "registry found" do
-      put :update, id: registry.id, format: :js
-      expect(Registry.first.use_ssl).to be_truthy
+    it "does not allow to update if there are repos" do
+      old = registry.hostname
+      create(:repository)
+      put :update, id: registry.id, registry: { hostname: "lala" }
+      expect(Registry.first.hostname).to eq old
+    end
+
+    it "updates the registry" do
+      put :update, id: registry.id, registry: { use_ssl: true, hostname: "lala" }
+      reg = Registry.first
+      expect(reg.use_ssl).to be_truthy
+      expect(reg.hostname).to eq reg.hostname
     end
   end
 end
