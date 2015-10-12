@@ -7,6 +7,14 @@ web:
   links:
     - db
 
+crono:
+  image: portus_web
+  command: /usr/bin/supervisord
+  volumes:
+    - .:/portus
+  links:
+    - db
+
 db:
   image: mariadb
   environment:
