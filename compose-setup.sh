@@ -53,7 +53,7 @@ usage() {
 
 # Get the docker host by picking the IP from the docker0 interface. This is the
 # safest way to reference the Docker host (see issues #417 and #382).
-DOCKER_HOST=${DOCKER_HOST=$(ifconfig docker0 | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | head -1)}
+DOCKER_HOST=${DOCKER_HOST=$(/sbin/ifconfig docker0 | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | head -1)}
 echo "DOCKER_HOST=${DOCKER_HOST}" > docker/environment
 
 FORCE=0
