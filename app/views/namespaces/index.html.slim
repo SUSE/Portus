@@ -1,13 +1,14 @@
-h1
-  ' Namespaces
-  small
-    a[data-placement="right" data-toggle="popover" data-container="h1" data-content="A namespace groups a series of repositories." data-original-title="What's this?" tabindex="0"]
-      i.fa.fa-info-circle
-  - if Registry.any?
-    .pull-right
-      a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
-        | Create new namespace
-        i.fa.fa-plus-circle
+
+a[data-placement="right" data-toggle="popover" data-container="a" data-content="A namespace groups a series of repositories." data-original-title="What's this?" tabindex="0"]
+  i.fa.fa-info-circle
+  | What's this?
+
+- if Registry.any?
+  .text-right
+    a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
+      i.fa.fa-plus-circle
+      | Create new namespace
+
 
 - if Registry.any?
   #add_namespace_form.collapse

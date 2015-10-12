@@ -1,16 +1,15 @@
-h1 Dashboard
 .row
   .col-md-8.col-xs-6
     .panel-overview
       .panel-heading
-        h2 Recent activities
+        h5 Recent activities
       .panel-body
         - @recent_activities.each do |activity|
           = render_activity(activity)
   .col-md-4.col-xs-6
     #repositories_sidebar.panel-overview
       .panel-heading
-        h2 Repositories
+        h5 Repositories
 
         ul.nav.nav-tabs{role="tablist"}
           li.active{role="presentation"}
