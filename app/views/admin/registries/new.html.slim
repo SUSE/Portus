@@ -1,5 +1,21 @@
 h1 New Registry
 
+p
+  | Portus needs the information from the form below in order to fetch
+    information from your registry and keep everything up to date
+    (e.g. so tags are added after users push to the registry). Make sure that:
+
+ul
+  li
+    | If you check the SSL checkbox, SSL is properly configured on both sides.
+      If you have any doubts about this, just check our
+    a href="https://github.com/SUSE/Portus/wiki"  wiki
+    | .
+
+  li You include the port to the hostname (e.g. "registry.test.lan:5000").
+
+br
+
 = form_for @registry, url: admin_registries_path, html: {class: 'form-horizontal', role: 'form'} do |f|
   .form-group
     = f.label :name, {class: 'control-label col-md-2'}
@@ -8,14 +24,13 @@ h1 New Registry
   .form-group
     = f.label :hostname, {class: 'control-label col-md-2'}
     .col-md-7
-      = f.text_field(:hostname, class: 'form-control', placeholder: 'registry.test.lan', required: true)
+      = f.text_field(:hostname, class: 'form-control', placeholder: 'registry.test.lan:5000', required: true)
   .form-group
     = f.label :use_ssl, "Use SSL", {class: 'control-label col-md-2', title: 'Set this to enable SSL in the communication between Portus and the Registry'}
     .col-md-7
       = f.check_box(:use_ssl)
   .form-group
     .col-md-offset-2.col-md-7
-      = f.submit('Create', class: 'btn btn-primary')
-
-
-= link_to 'Back', admin_registries_path
+      .btn-toolbar
+        = f.submit('Create', class: 'btn btn-primary')
+        = link_to "Back", admin_registries_path, class: 'btn btn-danger'
