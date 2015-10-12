@@ -59,7 +59,7 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
   group :development, :test do
     gem "byebug"
     gem "web-console", "~> 2.1.3"
-    gem "thin"
+    gem "puma"
     gem "awesome_print"
     gem "hirb"
     gem "wirb"

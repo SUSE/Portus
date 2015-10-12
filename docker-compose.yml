@@ -6,7 +6,6 @@ web:
     - .:/portus
   links:
     - db
-  command: thin start
 
 db:
   image: mariadb

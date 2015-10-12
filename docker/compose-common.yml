@@ -1,6 +1,6 @@
 web:
   build: ..
-  command: thin start
+  command: puma -b tcp://0.0.0.0:3000 -w 3
   ports:
     - "3000:3000"
 registry:
