@@ -164,6 +164,11 @@ EOM
       return
     end
 
+    # portusctl runs as root and creates this file for the 1st time, so
+    # we must fix its permissions
+    FileUtils.chown_R("root", "www", "/srv/Portus/log/production.log")
+    FileUtils.chmod_R(0664, "/srv/Portus/log/production.log")
+
     services = [
       ["portus_crono", false],
       ["apache2", true]
