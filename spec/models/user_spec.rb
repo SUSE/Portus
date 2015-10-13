@@ -36,6 +36,26 @@ describe User do
     expect(Namespace.find_by(name: "test")).to_not be nil
   end
 
+  describe ".find_from_event" do
+    let!(:user)   { create(:user, username: "username001", ldap_name: "user@domain.com") }
+
+    context "LDAP is enabled" do
+      it "find user by ldap_name" do
+        APP_CONFIG["ldap"] = { "enabled" => true }
+        event = { "actor" => { "name" => "user@domain.com" } }
+        expect(User.find_from_event(event)).not_to be_nil
+      end
+    end
+
+    context "LDAP is disabled" do
+      it "find user by username" do
+        APP_CONFIG["ldap"] = { "enabled" => false }
+        event = { "actor" => { "name" => "username001" } }
+        expect(User.find_from_event(event)).not_to be_nil
+      end
+    end
+  end
+
   describe "#create_personal_namespace!" do
     context "no registry defined yet" do
       before :each do
