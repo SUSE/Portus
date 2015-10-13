@@ -23,17 +23,14 @@ section.sign-up {
   input[type="text"], input[type="password"], input[type="email"] {
     border-radius: 4px 4px 0 0;
     background: rgba(0,0,0,0.1);
-    &::-webkit-input-placeholder { color: #243b4d; }
-    &::-moz-placeholder { color: #243b4d; }
-    &:-ms-input-placeholder { color: #243b4d; }
-    &:-moz-placeholder { color: #243b4d; }
+    @include input-placeholder(lighten($second-colour,20%));
     font-size: 15px;
-    color: #e7e0d9;
+    color: $logo-text-colour;
   }
   button[type="submit"] {
     margin-bottom: 1em;
   }
   .btn-link {
-    color: #fff
+    color: $white
   }
 }
