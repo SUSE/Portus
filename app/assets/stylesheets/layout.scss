@@ -66,12 +66,22 @@ header {
 }
 
 body.login {
-  background: image-url("layout/bg-login.png") no-repeat;
+  /**background: image-url("layout/bg-login.png") no-repeat;
   background-size: cover;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-position: top center;
+  **/
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#205683+0,68b0ab+100 */
+  background: #205683; /* Old browsers */
+  background: -moz-linear-gradient(-45deg,  #205683 0%, #68b0ab 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#205683), color-stop(100%,#68b0ab)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(-45deg,  #205683 0%,#68b0ab 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(-45deg,  #205683 0%,#68b0ab 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(-45deg,  #205683 0%,#68b0ab 100%); /* IE10+ */
+  background: linear-gradient(135deg,  #205683 0%,#68b0ab 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#205683', endColorstr='#68b0ab',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
   .alert {
     .fa-3x {
       font-size: 1.5em
@@ -85,9 +95,6 @@ body.login {
   }
 }
 
-.center-panel {
-  margin-top: 2em
-}
 @media (max-width: $screen-sm-max) {
   .center-panel {
     margin-top: 2em

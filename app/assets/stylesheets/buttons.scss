@@ -2,19 +2,6 @@ header .btn-default {
   @include button-variant($white, transparent, $white);
 }
 
-.login {
-  input[type="text"] {
-    border-radius: 4px 4px 0 0;
-  }
-  input[type="password"] {
-    border-radius: 0 0 4px 4px;
-  }
-  button[type="submit"] {
-    margin-bottom: 1em;
-  }
-
-}
-
 header #logout.btn.btn-default {
   background: rgba(255,255,255,0.2);
   border: 1px solid transparent;

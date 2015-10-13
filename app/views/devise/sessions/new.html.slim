@@ -18,7 +18,7 @@ section.row-0
             p
               | <b>NOTE</b>: The first user to be created will have admin permissions !
         - else
-          .text-center = link_to 'or, Create a new account', new_user_registration_url
+          .text-center = link_to 'or, Create a new account', new_user_registration_url, class: 'btn btn-link'
 
         - if @errors_occurred
-          .text-center = link_to "Did you forget your password?", new_user_password_path
+          .text-center = link_to "Did you forget your password?", new_user_password_path, class: 'btn btn-link'
