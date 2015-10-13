@@ -7,6 +7,13 @@ feature "Admin - Registries panel" do
     login_as admin
   end
 
+  describe "#force_registry_config!" do
+    it "redirects to new_admin_registry_path if no registry has been configured", js: true do
+      visit authenticated_root_path
+      expect(current_path).to eq new_admin_registry_path
+    end
+  end
+
   describe "update" do
     let!(:registry) { create(:registry) }
 

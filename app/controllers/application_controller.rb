@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   helper_method :fixes
   before_action :authenticate_user!
   before_action :force_update_profile!
+  before_action :force_registry_config!
   protect_from_forgery with: :exception
 
   include Pundit
@@ -52,10 +53,31 @@ class ApplicationController < ActionController::Base
   # account (this happens when signing up through LDAP suppor).
   def force_update_profile!
     return unless current_user && current_user.email.empty?
+    return if protected_controllers?
 
-    controller = params[:controller]
-    return if controller == "auth/registrations" || controller == "auth/sessions"
     redirect_to edit_user_registration_url
+  end
+
+  # Redirect admin users to the registries#new page if no registry has been
+  # setup yet.
+  def force_registry_config!
+    return unless current_user && current_user.admin?
+    return if Registry.any?
+    return if protected_controllers?("admin/registries")
+
+    redirect_to new_admin_registry_path
+  end
+
+  # Returns true if the current controller is a "protected" controller. A
+  # protected controller is either the auth/registrations, auth/sessions or
+  # either of the supplied controllers.
+  #
+  # Use this method to avoid infinite redirect loops in before_action filters.
+  def protected_controllers?(*controllers)
+    controller = params[:controller]
+    return true if controller == "auth/registrations" || controller == "auth/sessions"
+    controllers.each { |c| return true if c == controller }
+    false
   end
 
   def deny_access

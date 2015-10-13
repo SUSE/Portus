@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Admin::DashboardController, type: :controller do
-
   let(:admin) { create(:admin) }
   let(:user) { create(:user) }
 
@@ -11,7 +10,13 @@ RSpec.describe Admin::DashboardController, type: :controller do
     end
 
     describe "GET #index" do
+      it "redirects to the creation of the registry" do
+        get :index
+        expect(response).to redirect_to(new_admin_registry_path)
+      end
+
       it "returns http success" do
+        create(:registry)
         get :index
         expect(response).to have_http_status(:success)
       end
@@ -39,5 +44,4 @@ RSpec.describe Admin::DashboardController, type: :controller do
       end
     end
   end
-
 end

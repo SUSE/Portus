@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Admin::NamespacesController, type: :controller do
-
   let(:admin) { create(:admin) }
   let(:user) { create(:user) }
 
   context "as admin user" do
     before :each do
+      create(:registry)
       sign_in admin
     end
 
@@ -44,5 +44,4 @@ RSpec.describe Admin::NamespacesController, type: :controller do
       end
     end
   end
-
 end

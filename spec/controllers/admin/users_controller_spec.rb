@@ -7,6 +7,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   context "as admin user" do
     before :each do
+      create(:registry)
       sign_in admin
     end
 
@@ -47,6 +48,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   context "PUT toggle admin" do
     before :each do
+      create(:registry)
       sign_in admin
     end
 
@@ -65,7 +67,5 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(admin).to be_admin
       expect(response.status).to eq(403)
     end
-
   end
-
 end
