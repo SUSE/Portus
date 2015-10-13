@@ -43,20 +43,6 @@ describe Namespace do
     end
   end
 
-  context "sanitize name" do
-    it "replaces white spaces with underscores" do
-      expect(Namespace.sanitize_name("the qa team")).to eq("the_qa_team")
-    end
-
-    it "downcase all letters" do
-      expect(Namespace.sanitize_name("QA")).to eq("qa")
-    end
-
-    it "remove unsupported chars" do
-      expect(Namespace.sanitize_name("qa, developers & others")).to eq("qa_developers__others")
-    end
-  end
-
   context "global namespace" do
     it "must be public" do
       namespace = create(:namespace, global: true, public: true)
