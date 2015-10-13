@@ -7,9 +7,11 @@ $(document).on "page:change", ->
         $('#add_team_user_btn i').addClass("fa-minus-circle")
         $('#add_team_user_btn i').removeClass("fa-plus-circle")
         $('#team_user_user').focus()
+        layout_resizer()
       else
         $('#add_team_user_btn i').removeClass("fa-minus-circle")
         $('#add_team_user_btn i').addClass("fa-plus-circle")
+        layout_resizer()
 
   $('body').on('click', '.btn-edit-role', (event) ->
     el = $(this).find('i.fa')
@@ -42,9 +44,11 @@ $(document).on "page:change", ->
         $('#add_namespace_btn i').addClass("fa-minus-circle")
         $('#add_namespace_btn i').removeClass("fa-plus-circle")
         $('#namespace_namespace').focus()
+        layout_resizer()
       else
         $('#add_namespace_btn i').removeClass("fa-minus-circle")
         $('#add_namespace_btn i').addClass("fa-plus-circle")
+        layout_resizer()
 
   $('#add_team_btn').on 'click', (event) ->
     $('#team_name').val('')
@@ -53,8 +57,10 @@ $(document).on "page:change", ->
         $('#add_team_btn i').addClass("fa-minus-circle")
         $('#add_team_btn i').removeClass("fa-plus-circle")
         $('#team_name').focus()
+        layout_resizer()
       else
         $('#add_team_btn i').removeClass("fa-minus-circle")
         $('#add_team_btn i').addClass("fa-plus-circle")
+        layout_resizer()
 
   openSearchForm()
