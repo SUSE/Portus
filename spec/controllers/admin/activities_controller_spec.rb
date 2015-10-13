@@ -8,10 +8,15 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
   end
 
   describe "GET #index" do
+    before :each do
+      create(:registry)
+    end
+
     it "paginates activities" do
       get :index
       expect(assigns(:activities)).to respond_to(:total_pages)
     end
+
     it "returns http success" do
       get :index
       expect(response).to have_http_status(:success)
