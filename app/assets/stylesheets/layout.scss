@@ -123,6 +123,14 @@ body.login {
   }
 }
 
+footer {
+  font-size: 1em;
+  font-family: Raleway;
+  i.fa {
+    color: $primary-colour
+  }
+}
+
 i.fa {
   padding: 0 0.3em;
 }
