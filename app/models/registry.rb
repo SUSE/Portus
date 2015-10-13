@@ -80,13 +80,15 @@ class Registry < ActiveRecord::Base
   # Create the global namespace for this registry and create the personal
   # namespace for all the existing users.
   def create_namespaces!
+    count = Registry.count
+
     # Create the global team/namespace.
     team = Team.create(
-      name:   Namespace.sanitize_name(hostname),
+      name:   "portus_global_team_#{count}",
       owners: User.where(admin: true),
       hidden: true)
     Namespace.create!(
-      name:     Namespace.sanitize_name(hostname),
+      name:     "portus_global_namespace_#{count}",
       registry: self,
       public:   true,
       global:   true,
