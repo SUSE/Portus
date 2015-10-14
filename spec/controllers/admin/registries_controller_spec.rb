@@ -27,17 +27,26 @@ RSpec.describe Admin::RegistriesController, type: :controller do
   end
 
   describe "POST #create" do
+    context "not using the Force" do
+      it "redirects when there's something wrong with the reachability of the registry" do
+        expect do
+          post :create, registry: attributes_for(:registry)
+        end.to change(Registry, :count).by(0)
+        expect(response).to have_http_status(:redirect)
+      end
+    end
+
     context "no registry" do
       it "creates a new registry" do
         expect do
-          post :create, registry: attributes_for(:registry)
+          post :create, registry: attributes_for(:registry), force: true
         end.to change(Registry, :count).by(1)
       end
 
       it "assigns the freshly created registry to all the existing namespaces" do
         3.times { create(:team) }
 
-        post :create, registry: attributes_for(:registry)
+        post :create, registry: attributes_for(:registry), force: true
         registry = Registry.last
 
         Namespace.all.each { |n| expect(n.registry).to eq(registry) }
@@ -49,7 +58,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
         create(:registry)
 
         expect do
-          post :create, registry: attributes_for(:registry)
+          post :create, registry: attributes_for(:registry), force: true
         end.to raise_error(ActionController::RoutingError)
       end
     end
@@ -57,7 +66,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
     context "wrong params" do
       it "redirects to the new page" do
         expect do
-          post :create, registry: { name: "foo" }
+          post :create, registry: { name: "foo" }, force: true
         end.to change(Registry, :count).by(0)
       end
     end

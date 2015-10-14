@@ -16,6 +16,18 @@ module Portus
       @password = password || Rails.application.secrets.portus_password
     end
 
+    # Returns whether the registry is reachable with the given credentials or
+    # not.
+    def reachable?
+      res = perform_request("", "get", false)
+
+      # If a 401 was retrieved, it means that at least the registry has been
+      # contacted. In order to get a 200, this registry should be created and
+      # an authorization requested. The former can be inconvenient, because we
+      # might want to test whether the registry is reachable.
+      !res.nil? && res.code.to_i == 401
+    end
+
     # Retrieves the manifest for the required repository:tag. If everything goes
     # well, it will return a parsed response from the registry, otherwise it will
     # raise either ManifestNotFoundError or a RuntimeError.
