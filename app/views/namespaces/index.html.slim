@@ -3,11 +3,7 @@ a[data-placement="right" data-toggle="popover" data-container="a" data-content="
   i.fa.fa-info-circle
   | What's this?
 
-- if Registry.any?
-  .text-right
-    a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
-      i.fa.fa-plus-circle
-      | Create new namespace
+
 
 
 - if Registry.any?
@@ -34,6 +30,11 @@ a[data-placement="right" data-toggle="popover" data-container="a" data-content="
   .panel-heading
     h5
       ' Special namespaces
+      - if Registry.any?
+        .pull-right
+          a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
+            i.fa.fa-plus-circle
+            | Create new namespace
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover

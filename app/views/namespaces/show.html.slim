@@ -1,15 +1,17 @@
 .panel.panel-default
   .panel-heading
-    - if can_manage_namespace?(@namespace)
-      .pull-right
-        button.btn.btn-default.btn-edit-role[
-          value="#{@namespace.id}",
-          class="button_namespace_description"]
-          i.fa.fa-pencil.fa-lg
+
     h5
       strong
         '#{@namespace.name}
       ' namespace
+      - if can_manage_namespace?(@namespace)
+        .pull-right
+          button.btn.btn-link.btn-xs.btn-edit-role[
+            value="#{@namespace.id}",
+            class="button_namespace_description"]
+            i.fa.fa-pencil.fa-lg
+            | Edit namespace
       small
         a[data-placement="right"
           data-toggle="popover"

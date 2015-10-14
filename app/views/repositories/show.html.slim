@@ -1,18 +1,18 @@
 .panel.panel-default
   .panel-heading
-    h1
+    h5
       = link_to @repository.namespace.clean_name, @repository.namespace
       | /
       = @repository.name
       #repo-stars.pull-right
         .btn-group
           - if @repository.starred_by?(current_user)
-            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default', remote: true, id: 'toggle_star' do
+            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
               i.fa.fa-star
           - else
-            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default', remote: true, id: 'toggle_star' do
+            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
               i.fa.fa-star-o
-          span#star-counter.btn.btn-primary
+          span#star-counter.btn.btn-primary.btn-xs
            = @repository.stars.count
 
   .panel-body
