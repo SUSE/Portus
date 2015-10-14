@@ -12,6 +12,7 @@
 
 //custom style overriding lifeitup
 @import 'layout';
+@import 'activities';
 @import 'buttons';
 @import 'images';
 @import 'dashboard';
@@ -19,13 +20,3 @@
 @import 'tables';
 @import 'forms';
 @import 'types';
-
-#profile .panel {
-  max-width: 700px;
-}
-
-// Overwriting so we fa-user elements are actually shown in the
-// activities list.
-.activity .fa-user {
-  color: $gray-mid;
-}

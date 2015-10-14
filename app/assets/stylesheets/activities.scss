@@ -1,0 +1,13 @@
+// Overwriting so we fa-user elements are actually shown in the
+// activities list.
+.activity .fa-user {
+  color: $gray-mid;
+}
+
+.activity {
+  img {
+    border-radius: 100px;
+    border: 4px solid #005648;
+    width: 40px;
+  }
+}
