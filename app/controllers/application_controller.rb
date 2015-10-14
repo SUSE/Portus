@@ -80,7 +80,8 @@ class ApplicationController < ActionController::Base
     false
   end
 
+  # Render the 401 page.
   def deny_access
-    render text: "Access Denied", status: :unauthorized
+    render file: "public/401.html", status: :unauthorized, layout: false
   end
 end
