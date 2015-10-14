@@ -32,6 +32,38 @@ class RegistryMock < Registry
   end
 end
 
+# The mock client used by the RegistryReachable class.
+class RegistryReachableClient < Registry
+  def initialize(constant, result)
+    @constant = constant
+    @result   = result
+  end
+
+  def reachable?
+    if @constant.nil?
+      @result
+    else
+      raise @constant
+    end
+  end
+end
+
+# A Mock class for the Registry that provides a `client` method that returns an
+# object that handles the `reachable?` method.
+class RegistryReachable < Registry
+  attr_reader :use_ssl
+
+  def initialize(constant, result, ssl)
+    @constant = constant
+    @result   = result
+    @use_ssl  = ssl
+  end
+
+  def client
+    RegistryReachableClient.new(@constant, @result)
+  end
+end
+
 RSpec.describe Registry, type: :model do
   it { should have_many(:namespaces) }
 
@@ -71,6 +103,24 @@ RSpec.describe Registry, type: :model do
       expect(client.base_url).to eq "https://#{registry.hostname}/v2/"
       expect(client.username).to eq "portus"
       expect(client.password).to eq Rails.application.secrets.portus_password
+    end
+  end
+
+  describe "#reachable" do
+    it "returns the proper message for each scenario" do
+      [
+        [nil, true, true, /^$/],
+        [nil, false, true, /registry does not implement v2/],
+        [SocketError, true, true, /The given registry is not available/],
+        [Net::HTTPBadResponse, true, true, /wrong with your SSL configuration/],
+        [Net::HTTPBadResponse, true, false, /Error: not using SSL/],
+        [OpenSSL::SSL::SSLError, true, true, /Error: using SSL/],
+        [OpenSSL::SSL::SSLError, true, false, /wrong with your SSL configuration/],
+        [StandardError, true, true, /something went wrong/]
+      ].each do |cs|
+        rr = RegistryReachable.new(cs.first, cs[1], cs[2])
+        expect(rr.reachable?).to match(cs.last)
+      end
     end
   end
 

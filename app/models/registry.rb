@@ -60,6 +60,41 @@ class Registry < ActiveRecord::Base
     [namespace, repo, tag_name]
   end
 
+  # Checks whether this registry is reachable. If it is, then an empty string
+  # is returned. Otherwise a string will be returned containing the reasoning
+  # of the reachability failure.
+  def reachable?
+    msg = ""
+
+    begin
+      r = client.reachable?
+
+      # At this point, !r is only possible if the returned code is 404, which
+      # according to the documentation we have to assume that the registry is
+      # not implementing the v2 of the API.
+      return "Error: registry does not implement v2 of the API." unless r
+    rescue Errno::ECONNREFUSED, SocketError
+      msg = "Error: connection refused. The given registry is not available!"
+    rescue Net::HTTPBadResponse
+      if use_ssl
+        msg = "Error: there's something wrong with your SSL configuration."
+      else
+        msg = "Error: not using SSL, but the given registry does use SSL."
+      end
+    rescue OpenSSL::SSL::SSLError
+      if use_ssl
+        msg = "Error: using SSL, but the given registry is not using SSL."
+      else
+        msg = "Error: there's something wrong with your SSL configuration."
+      end
+    rescue StandardError => e
+      # We don't know what went wrong :/
+      logger.info "Registry not reachable: #{e.message}"
+      msg = "Error: something went wrong. Check your configuration."
+    end
+    msg
+  end
+
   protected
 
   # Fetch the tag of the image contained in the current event. The Manifest API
