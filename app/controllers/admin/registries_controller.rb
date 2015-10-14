@@ -22,7 +22,7 @@ class Admin::RegistriesController < Admin::BaseController
       Namespace.update_all(registry_id: @registry.id)
       redirect_to admin_registries_path, notice: "Registry was successfully created."
     else
-      render :new
+      redirect_to new_admin_registry_path, alert: @registry.errors.full_messages
     end
   end
 
@@ -42,7 +42,7 @@ class Admin::RegistriesController < Admin::BaseController
   def update
     @registry = Registry.find(params[:id])
     @registry.update_attributes(update_params)
-    redirect_to admin_registries_path, flash: { notice: "Registry updated successfully!" }
+    redirect_to admin_registries_path, notice: "Registry updated successfully!"
   end
 
   private
