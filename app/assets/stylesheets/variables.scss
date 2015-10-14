@@ -41,7 +41,7 @@ $primary-colour: $first-colour;
 $header-text-colour:   $gray-mid;
 $header-user-bg:       $second-colour;
 
-$aside:                $third-colour;
+
 
 $body-bg:              image-url('layout/bg.png') $gray-lighter;
 
@@ -56,8 +56,28 @@ $overview-icon-teams-bg:                #3F826D;
 $overview-icon-namespaces-bg:           #9AC4F8;
 
 
+// Buttons
+
+$btn-primary-bg:     $primary-colour;
+$btn-primary-border: $primary-colour;
+
+$btn-default-color:  $primary-colour;
+$btn-default-border: $primary-colour;
+
+
 // Type
 
 $font-size-h1: floor(($font-size-base * 2.1));
 $font-size-h2: floor(($font-size-base * 1.95));
 
+
+// Activities
+
+$activity-change-description:            $light-blue;
+$activity-create-namespace:              $blue;
+$activity-change-namespace-visibility:   $dark-green;
+$activity-add-member-team:               $green;
+$activity-remove-member-team:            $yellow;
+$activity-change-role:                   $orange;
+$activity-team-created:                  $pink;
+$activity-repo-pushed:                   $purple;

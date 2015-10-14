@@ -1,13 +1,15 @@
-.alert.alert-info.activity
-  .row
-    .col-xs-1
-      = user_image_tag(activity.owner.email)
-    .col-xs-11
-      .pull-right
-        = time_ago_in_words(activity.created_at)
-      .clearfix
-        .details
-          = "#{activity.owner.username} pushed "
-          = link_to activity.trackable.namespace.clean_name, activity.trackable.namespace
-          | /
-          = link_to "#{activity.trackable.name}:#{activity.recipient.name}", activity.trackable
+li
+  .activity-type.repo-pushed
+    i.fa.fa-forward.fa-fw
+  .user-image
+    = user_image_tag(activity.owner.email)
+  .description
+    h6
+      strong
+        = "#{activity.owner.username} pushed "
+      = link_to activity.trackable.namespace.clean_name, activity.trackable.namespace
+      | /
+      = link_to "#{activity.trackable.name}:#{activity.recipient.name}", activity.trackable
+    small
+      i.fa.fa-clock-o
+      = time_ago_in_words(activity.created_at)
