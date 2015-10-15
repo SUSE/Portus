@@ -73,7 +73,7 @@ class Registry < ActiveRecord::Base
       # according to the documentation we have to assume that the registry is
       # not implementing the v2 of the API.
       return "Error: registry does not implement v2 of the API." unless r
-    rescue Errno::ECONNREFUSED, SocketError
+    rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED, SocketError
       msg = "Error: connection refused. The given registry is not available!"
     rescue Net::HTTPBadResponse
       if use_ssl
@@ -89,7 +89,7 @@ class Registry < ActiveRecord::Base
       end
     rescue StandardError => e
       # We don't know what went wrong :/
-      logger.info "Registry not reachable: #{e.message}"
+      logger.info "Registry not reachable: #{e.inspect}"
       msg = "Error: something went wrong. Check your configuration."
     end
     msg
