@@ -32,12 +32,13 @@ $(document).on "page:change", ->
       $('#change_description_namespace_' + event.currentTarget.value).toggle()
   )
 
-  $('#add_namespace_btn').on 'click', (event) ->
+  $('#add_namespace_btn').unbind('click').on 'click', (event) ->
     $('#namespace_namespace').val('')
 
     # When we are creating this on the namespaces page.
     if $('#namespace_team') && $('#namespace_team').is(':visible')
       $('#namespace_team').val('')
+      $('#namespace_description').val('')
 
     $('#add_namespace_form').toggle 400, "swing", ->
       if $('#add_namespace_form').is(':visible')
