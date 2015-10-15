@@ -44,6 +44,9 @@
       'Namespace:
       strong
         = @namespace.clean_name
+    h6.label.label-info
+      | Belongs to:
+      = @namespace.team.name
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
