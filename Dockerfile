@@ -1,4 +1,4 @@
-FROM rails:4.2.2
+FROM library/rails:4.2.2
 MAINTAINER Flavio Castelli <fcastelli@suse.com>
 
 RUN mkdir /portus
