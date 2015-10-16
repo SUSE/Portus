@@ -16,7 +16,7 @@ crono:
     - db
 
 db:
-  image: mariadb
+  image: library/mariadb
   environment:
     MYSQL_ROOT_PASSWORD: portus
 
