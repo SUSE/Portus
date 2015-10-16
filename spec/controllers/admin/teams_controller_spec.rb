@@ -7,6 +7,7 @@ RSpec.describe Admin::TeamsController, type: :controller do
 
   context "as admin user" do
     before :each do
+      create(:registry)
       sign_in admin
     end
 

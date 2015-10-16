@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe NamespacesController do
-
   let(:valid_session) { {} }
   let(:registry) { create(:registry) }
   let(:user) { create(:user) }
@@ -29,7 +28,6 @@ describe NamespacesController do
   end
 
   describe "GET #index" do
-
     it "assigns all namespaces as @namespaces" do
       get :index, {}, valid_session
       expect(assigns(:special_namespaces)).to match_array(
@@ -41,7 +39,6 @@ describe NamespacesController do
       get :index, {}, valid_session
       expect(assigns(:namespaces)).to respond_to(:total_pages)
     end
-
   end
 
   describe "GET #show" do

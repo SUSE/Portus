@@ -37,3 +37,36 @@
             = link_to "Back", admin_registries_path, class: 'btn btn-default'
             = f.submit('Create', class: 'btn btn-primary')
 
+
+= form_for @registry, url: admin_registries_path, html: {class: 'form-horizontal', role: 'form'} do |f|
+  .form-group
+    = f.label :name, {class: 'control-label col-md-2'}
+    .col-md-7
+      - if params[:name]
+        = f.text_field(:name, class: 'form-control', value: params[:name], required: true, autofocus: true)
+      - else
+        = f.text_field(:name, class: 'form-control', required: true, autofocus: true)
+  .form-group
+    = f.label :hostname, {class: 'control-label col-md-2'}
+    .col-md-7
+      - if params[:hostname]
+        = f.text_field(:hostname, class: 'form-control', value: params[:hostname], placeholder: 'registry.test.lan:5000', required: true)
+      - else
+        = f.text_field(:hostname, class: 'form-control', placeholder: 'registry.test.lan:5000', required: true)
+  .form-group
+    = f.label :use_ssl, "Use SSL", {class: 'control-label col-md-2', title: 'Set this to enable SSL in the communication between Portus and the Registry'}
+    .col-md-7
+      - if params[:use_ssl] == "true"
+        = f.check_box(:use_ssl, checked: true)
+      - else
+        = f.check_box(:use_ssl)
+  - unless flash[:alert].nil? || flash[:alert].empty?
+    .form-group.has-error
+      = label_tag :force, "Skip remote checks", {class: 'control-label col-md-2', title: "Force the creation of the registry, even if it's not reachable."}
+      .col-md-7
+        = check_box_tag(:force)
+  .form-group
+    .col-md-offset-2.col-md-7
+      .btn-toolbar
+        = f.submit('Create', class: 'btn btn-primary')
+        = link_to "Back", admin_registries_path, class: 'btn btn-danger'

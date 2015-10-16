@@ -1,15 +1,16 @@
 class Namespace < ActiveRecord::Base
-  include NameValidator
   include PublicActivity::Common
 
   has_many :repositories
   belongs_to :registry
   belongs_to :team
-  validates :public, inclusion: { in: [true] }, if: :global?
 
-  def self.sanitize_name(name)
-    name.downcase.gsub(/\s+/, "_").gsub(/[^#{NAME_ALLOWED_CHARS}]/, "")
-  end
+  validates :public, inclusion: { in: [true] }, if: :global?
+  validates :name,
+            presence:   true,
+            uniqueness: { scope: "registry_id" },
+            length:     { maximum: 255 },
+            namespace:  true
 
   # From the given repository name that can be prefix by the name of the
   # namespace, returns two values:

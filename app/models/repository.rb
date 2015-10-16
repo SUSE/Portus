@@ -1,11 +1,14 @@
 class Repository < ActiveRecord::Base
-  include NameValidator
   include PublicActivity::Common
   include SearchCop
 
   belongs_to :namespace
   has_many :tags, dependent: :delete_all
   has_many :stars, dependent: :delete_all
+
+  # We don't validate the format because we get that from the registry, and
+  # it's guaranteed to be well-formatted there.
+  validates :name, presence: true, uniqueness: { scope: "namespace_id" }
 
   search_scope :search do
     attributes :name

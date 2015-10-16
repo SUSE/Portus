@@ -10,6 +10,33 @@ class RegistryClientMissingCredentials < Portus::RegistryClient
   end
 end
 
+# This class mocks a response object by providing the `code` method. This
+# method will return whatever has been passed in the initializer.
+class RegistryMockedStatusResponse
+  def initialize(status)
+    @status = status
+  end
+
+  def code
+    @status
+  end
+end
+
+# This class mocks the `perform_request` by returning whatever has been request
+# in the initializer.
+class RegistryPerformRequest < Portus::RegistryClient
+  def initialize(status)
+    @status = status
+  end
+
+  def perform_request(_endpoint, _verb, _authentication)
+    # We don't care about the given parameters.
+
+    return nil if @status.nil?
+    RegistryMockedStatusResponse.new(@status)
+  end
+end
+
 describe Portus::RegistryClient do
   let(:registry_server) { "registry.test.lan" }
   let(:username) { "flavio" }
@@ -137,6 +164,15 @@ describe Portus::RegistryClient do
         end
       ensure
         WebMock.allow_net_connect!
+      end
+    end
+  end
+
+  context "is reachable or not" do
+    it "returns the proper thing in all the scenarios" do
+      [[nil, false], [200, false], [401, true]].each do |cs|
+        r = RegistryPerformRequest.new(cs.first)
+        expect(r.reachable?).to be cs.last
       end
     end
   end

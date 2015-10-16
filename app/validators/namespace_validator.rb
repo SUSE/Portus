@@ -1,0 +1,11 @@
+# Validates the name of the namespace as specified by Docker Distribution.
+class NamespaceValidator < ActiveModel::EachValidator
+  NAME_REGEXP = /\A[a-z0-9]+(?:[._\\-][a-z0-9]+)*\Z/
+
+  # Validator for the name.
+  def validate_each(record, attribute, value)
+    # Already validated by the presence validator.
+    return if value.nil?
+    record.errors[attribute] << "Namespace name must match #{NAME_REGEXP}" if value !~ NAME_REGEXP
+  end
+end
