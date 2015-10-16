@@ -1,13 +1,15 @@
-.alert.alert-info.activity
-  .row
-    .col-xs-1
-      = user_image_tag(activity.owner.email)
-    .col-xs-11
-      .pull-right
-        = time_ago_in_words(activity.created_at)
-      .clearfix
-        .details
-          = "#{activity.owner.username} changed role of user #{activity.recipient.username} "
-          = "from #{activity.parameters[:old_role]} to #{activity.parameters[:new_role]} "
-          = "whithin the team "
-          = link_to activity.trackable.name, activity.trackable
+li
+  .activity-type.change-role
+    i.fa.fa-user
+  .user-image
+    = user_image_tag(activity.owner.email)
+  .description
+    h6
+      strong
+        = "#{activity.owner.username} changed role of user #{activity.recipient.username} "
+      = "from #{activity.parameters[:old_role]} to #{activity.parameters[:new_role]} "
+      = "whithin the team "
+      = link_to activity.trackable.name, activity.trackable
+    small
+      i.fa.fa-clock-o
+      = time_ago_in_words(activity.created_at)

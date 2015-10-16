@@ -1,12 +1,10 @@
-h1 Search results
-
-- if @repositories.empty?
-  p No match found.
-- else
-  .panel.panel-default
-    .panel-heading
-      h2.panel-title Repositories
-    .panel-body
+.panel.panel-default
+  .panel-heading
+    h5 Search results
+  .panel-body
+    - if @repositories.empty?
+      p No match found.
+    - else
       .table-responsive
         table.table.table-striped.table-hover
           thead

@@ -1,14 +1,17 @@
-.alert.alert-info.activity
-  .row
-    .col-xs-1
-      = user_image_tag(activity.owner.email)
-    .col-xs-11
-      .pull-right
-        = time_ago_in_words(activity.created_at)
-      .clearfix
-        .details
-          - if activity.parameters[:new_description].blank?
-            ="#{activity.owner.username} deleted the description of the team "
-          - else
-            = "#{activity.owner.username} edited the description of the team "
-          =  link_to activity.trackable.name, activity.trackable
+li
+  .activity-type.change-description
+    i.fa.fa-list-alt
+  .user-image
+    = user_image_tag(activity.owner.email)
+  .description
+    h6
+      - if activity.parameters[:new_description].blank?
+        strong
+          ="#{activity.owner.username} deleted the description of the team "
+      - else
+        strong
+          = "#{activity.owner.username} edited the description of the team "
+      =  link_to activity.trackable.name, activity.trackable
+    small
+      i.fa.fa-clock-o
+      = time_ago_in_words(activity.created_at)

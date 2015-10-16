@@ -12,3 +12,28 @@ section.sign-up {
     border: 0px;
   }
 }
+
+.login {
+  input[type="text"] {
+    border-radius: 4px 4px 0 0;
+  }
+  input[type="password"] {
+    border-radius: 0 0 4px 4px;
+  }
+  input[type="text"], input[type="password"], input[type="email"] {
+    background: rgba(0,0,0,0.1);
+    @include input-placeholder(lighten($second-colour,20%));
+    font-size: 15px;
+    color: $logo-text-colour;
+  }
+  button[type="submit"] {
+    margin-bottom: 1em;
+  }
+  input[type="email"]:last-of-type {
+    border-radius: 4px;
+    border: 0px;
+  }
+  .btn-link {
+    color: $white
+  }
+}

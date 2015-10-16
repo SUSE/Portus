@@ -1,5 +1,7 @@
 body, html {
   height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -107,7 +109,7 @@ body:not([class*="login"]) {
           list-style: none;
           .fa {
             margin-right: 10px;
-            font-size: 2em;
+            font-size: 1.4em;
           }
           position: relative;
           .list-selected {

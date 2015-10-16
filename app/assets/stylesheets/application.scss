@@ -1,5 +1,6 @@
 @import url(//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
 @import url(//fonts.googleapis.com/css?family=Raleway:400,300,700,900);
+@import url(https://fonts.googleapis.com/css?family=Pacifico);
 
 @import "bootstrap-sprockets";
 @import 'bootstrap/variables';
@@ -10,7 +11,9 @@
 @import 'lifeitup/lifeitup';
 
 //custom style overriding lifeitup
+@import 'labels';
 @import 'layout';
+@import 'activities';
 @import 'buttons';
 @import 'images';
 @import 'dashboard';
@@ -18,13 +21,3 @@
 @import 'tables';
 @import 'forms';
 @import 'types';
-
-#profile .panel {
-  max-width: 700px;
-}
-
-// Overwriting so we fa-user elements are actually shown in the
-// activities list.
-.activity .fa-user {
-  color: $gray-mid;
-}
