@@ -1,0 +1,36 @@
+# This file contains the default values for the configuration of this
+# application. In order to change them, write your own config-local.yml file
+# (it will be ignored by git).
+
+ldap:
+  enabled: false
+
+  hostname: 172.17.0.65
+  port: 389
+  method: "plain"
+  base: "dc=example,dc=org"
+  uid: "uid"
+
+  guess_email:
+    enabled: true
+    attr: "mail"
+
+  authentication:
+    enabled: true
+    bind_dn: "cn=admin,dc=example,dc=org"
+    password: "admin"
+
+
+#ldap:
+#enabled: true
+
+#hostname: "172.17.0.18"
+#base: "cn=users,dc=example,dc=org"
+#uid: "cn"
+
+  #hostname: "ldap.suse.de"
+  #port: 636
+  #method: "starttls"
+
+  # The base where users are located (e.g. "ou=users,dc=example,dc=com").
+  #base: "ou=accounts,dc=suse,dc=de"
