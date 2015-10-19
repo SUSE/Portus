@@ -14,16 +14,7 @@ feature "Forgotten password support" do
 
   scenario "gives the user a link to reset their password", js: true do
     visit new_user_session_path
-    expect(page).to_not have_content("Did you forget your password?")
-
-    fill_in "Username", with: "random"
-    fill_in "Password", with: "12341234"
-    click_button "Login"
-
-    expect(current_path).to eq new_user_session_path
-    expect(page).to have_content("Did you forget your password?")
-    click_link("Did you forget your password?")
-    expect(current_path).to eq new_user_password_path
+    expect(page).to have_content("I forgot my password")
   end
 
   scenario "sends the reset email when appropiate", js: true do
