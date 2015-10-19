@@ -60,7 +60,11 @@ class User < ActiveRecord::Base
 
   # Find the user that can be guessed from the given push event.
   def self.find_from_event(event)
-    actor = User.find_by(username: event["actor"]["name"])
+    if Portus::LDAP.enabled?
+      actor = User.find_by(ldap_name: event["actor"]["name"])
+    else
+      actor = User.find_by(username: event["actor"]["name"])
+    end
     logger.error "Cannot find user #{event["actor"]["name"]}" if actor.nil?
     actor
   end
