@@ -18,13 +18,13 @@ feature "custom error handler page" do
 
     scenario "when no permissions routes to custom error page" do
       visit "/teams/show?id=1234"
-      expect(page).to have_content("Ops... something went wrong...")
+      expect(page).to have_content(/Oh no! something's wrong/)
     end
 
     scenario "when no database routes to custom error page" do
       ActiveRecord::Base.connection.disconnect!
       visit "/"
-      expect(page).to have_content("Ops... something went wrong...")
+      expect(page).to have_content(/Oh no! something's wrong/)
     end
 
   end
