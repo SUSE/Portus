@@ -75,7 +75,8 @@ class User < ActiveRecord::Base
     admin = !admin?
     return unless update_attributes(admin: admin) && Registry.any?
 
-    team = Registry.first.global_namespace.team
+    # TODO: fix once we handle more registries
+    team = Registry.last.global_namespace.team
     admin ? team.owners << self : team.owners.delete(self)
   end
 
