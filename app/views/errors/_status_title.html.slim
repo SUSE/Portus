@@ -1,0 +1,9 @@
+- case @status
+  - when 401
+    | Unauthorized!
+  - when 404
+    | Page not found!
+  - when 422
+    | Unprocessable Entity
+  - else
+    | Something's wrong with our lighthouse.

@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    title Portus
+    = stylesheet_link_tag "application", media: "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  body.login
+    .container-fluid
+      .row-0
+        .center-panel
+          .col-md-4.col-sm-2.col-xs-1
+          .col-md-4.col-sm-8.col-xs-10
+            .oops
+              = image_tag "layout/portus-error.png", class: "broken-lighthouse"
+              h1
+                strong
+                  | Oh no!
+              - if @status
+                h3
+                  = render "errors/status_title", locals: { status: @status }
+              - else
+                h3
+                  | Something's wrong with our lighthouse.
+          .clearfix
+        .row-0
+          .col-sm-8.col-sm-offset-2.error-fixes
+            - if !@fix || !@fix.value?(true)
+              i.fa.fa-exclamation-circle
+            = yield
