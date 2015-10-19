@@ -20,7 +20,7 @@ class Cli < Thor
     default: "DE" # gensslcert -c
   option "ssl-city",
     desc:    "SSL certificate: city",
-    default: "Nuremberg" # gensslcert -l
+    default: "Nueremberg" # gensslcert -l
   option "ssl-state",
     desc:    "SSL certificate: state",
     default: "Bayern" # gensslcert -s
