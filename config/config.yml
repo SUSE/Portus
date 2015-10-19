@@ -42,6 +42,12 @@ ldap:
   # The LDAP attribute where to search for username. The default is 'uid'.
   uid: "uid"
 
+  # LDAP credentials used to search for a user.
+  authentication:
+    enabled: false
+    bind_dn: ""
+    password: ""
+
   # Portus needs an email for each user, but there's no standard way to get
   # that from LDAP servers. You can tell Portus how to get the email from users
   # registered in the LDAP server with this configurable value. There are three

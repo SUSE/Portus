@@ -54,6 +54,35 @@ module Portus
 
     protected
 
+    # Returns auth options according to configuration.
+    def auth_options
+      cfg = APP_CONFIG["ldap"]
+      {
+        auth: {
+          username: cfg["authentication"]["bind_dn"],
+          password: cfg["authentication"]["password"],
+          method:   :simple
+        }
+      }
+    end
+
+    # Returns true if authentication has been enabled in configuration, false
+    # otherwise.
+    def authentication?
+      APP_CONFIG["ldap"]["authentication"] && APP_CONFIG["ldap"]["authentication"]["enabled"]
+    end
+
+    def adapter_options
+      cfg = APP_CONFIG["ldap"]
+      {
+        host:       cfg["hostname"],
+        port:       cfg["port"],
+        encryption: encryption(cfg)
+      }.tap do |options|
+        options.merge!(auth_options) if authentication?
+      end
+    end
+
     # Loads the configuration and authenticates the current user.
     def load_configuration
       # Note that the Portus user needs to authenticate through the DB.
@@ -62,8 +91,7 @@ module Portus
       fill_user_params!
       return nil if params[:user].nil?
 
-      cfg = APP_CONFIG["ldap"]
-      adapter.new(host: cfg["hostname"], port: cfg["port"], encryption: encryption(cfg))
+      adapter.new(adapter_options)
     end
 
     # Returns the encryption method to be used. Invalid encryption methods will

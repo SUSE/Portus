@@ -150,6 +150,7 @@ describe Portus::LDAP do
     expect(cfg.opts[:host]).to eq "hostname"
     expect(cfg.opts[:port]).to eq 389
     expect(cfg.opts[:encryption]).to be nil
+    expect(cfg.opts).not_to have_key(:auth)
 
     # Test different encryption methods.
     [["starttls", :start_tls], ["simple_tls", :simple_tls], ["lala", nil]].each do |e|
@@ -157,6 +158,26 @@ describe Portus::LDAP do
       cfg = lm.load_configuration_test
       expect(cfg.opts[:encryption]).to eq e[1]
     end
+  end
+
+  it "loads the auth configuration properly" do
+    # auth configuration disabled
+    auth = { "enabled" => false }
+    APP_CONFIG["ldap"] = { "enabled" => true, "authentication" => auth }
+
+    lm = LdapMock.new(username: "name", password: "1234")
+    cfg = lm.load_configuration_test
+    expect(cfg.opts).not_to have_key(:auth)
+
+    # auth configuration enabled
+    auth = { "enabled" => true, "bind_dn" => "foo", "password" => "pass" }
+    APP_CONFIG["ldap"] = { "enabled" => true, "authentication" => auth }
+
+    lm = LdapMock.new(username: "name", password: "1234")
+    cfg = lm.load_configuration_test
+    expect(cfg.opts[:auth][:username]).to eq "foo"
+    expect(cfg.opts[:auth][:password]).to eq "pass"
+    expect(cfg.opts[:auth][:method]).to eq :simple
   end
 
   it "fetches the right bind options" do
