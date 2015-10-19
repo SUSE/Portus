@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# The base directory of the project.
+base="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+# Export environment variables if needed.
+if [ -z "$PORTUS_KEY_PATH" ]; then
+    export PORTUS_KEY_PATH="/etc/nginx/ssl/registry.mssola.cat.key"
+fi
+if [ -z "$PORTUS_MACHINE_FQDN" ]; then
+    export PORTUS_MACHINE_FQDN="registry.mssola.cat"
+fi
+
+# Check which command to use.
+cmd="restart"
+if [ "$1" != "" ]; then
+    cmd="$1"
+fi
+
+sudo systemctl $cmd mysql nginx registry
+
+# In Puma a restart can be troublesome. Since this script is used for
+# development purposes only, a restart will mean to force the stop and then
+# start.
+if [ "$cmd" = "restart" ]; then
+    if [ -f "$base/tmp/pids/puma.pid" ]; then
+        bundle exec pumactl -F $base/../puma.rb stop
+    fi
+    cmd="start"
+fi
+bundle exec pumactl -F $base/../puma.rb $cmd
