@@ -203,7 +203,11 @@ module Portus
       if cfg["attr"].empty?
         guess_from_dn(record["dn"])
       else
-        record[cfg["attr"]] || ""
+        email = record[cfg["attr"]] || ""
+
+        # Handle a LDAP record that has more than one entry.
+        email.is_a?(Array) ? email.first : email
+
       end
     end
 
