@@ -1,0 +1,69 @@
+{
+  "name": "caw",
+  "version": "1.1.0",
+  "description": "Construct HTTP/HTTPS agents for tunneling proxies",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevva/caw.git"
+  },
+  "author": {
+    "name": "Kevin Mårtensson",
+    "email": "kevinmartensson@gmail.com",
+    "url": "github.com/kevva"
+  },
+  "scripts": {
+    "test": "xo && tap test/test.js -t2"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "http",
+    "https",
+    "proxy",
+    "tunnel"
+  ],
+  "dependencies": {
+    "get-proxy": "^1.0.1",
+    "is-obj": "^1.0.0",
+    "object-assign": "^3.0.0",
+    "tunnel-agent": "^0.4.0"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.6.0",
+    "sinon": "^1.15.4",
+    "tap": "^1.3.1",
+    "xo": "*"
+  },
+  "gitHead": "e9209ecff97784d3834ff3ff8880a5d33a1eca83",
+  "bugs": {
+    "url": "https://github.com/kevva/caw/issues"
+  },
+  "homepage": "https://github.com/kevva/caw#readme",
+  "_id": "caw@1.1.0",
+  "_shasum": "8e0c4d014ce87e1c2aea5d0cd10403ccc18c302f",
+  "_from": "caw@>=1.0.1 <2.0.0",
+  "_npmVersion": "3.1.2",
+  "_nodeVersion": "2.5.0",
+  "_npmUser": {
+    "name": "kevva",
+    "email": "kevinmartensson@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "kevva",
+      "email": "kevinmartensson@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "8e0c4d014ce87e1c2aea5d0cd10403ccc18c302f",
+    "tarball": "http://registry.npmjs.org/caw/-/caw-1.1.0.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/caw/-/caw-1.1.0.tgz",
+  "readme": "ERROR: No README data found!"
+}

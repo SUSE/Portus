@@ -1,0 +1,75 @@
+{
+  "name": "imagemin-gifsicle",
+  "version": "4.2.0",
+  "description": "gifsicle imagemin plugin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imagemin/imagemin-gifsicle.git"
+  },
+  "author": {
+    "name": "Kevin Mårtensson",
+    "email": "kevinmartensson@gmail.com",
+    "url": "https://github.com/kevva"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "compress",
+    "gif",
+    "gifsicle",
+    "gulpplugin",
+    "image",
+    "imageminplugin",
+    "img",
+    "minify",
+    "optimize"
+  ],
+  "dependencies": {
+    "gifsicle": "^3.0.0",
+    "is-gif": "^1.0.0",
+    "through2": "^0.6.1"
+  },
+  "devDependencies": {
+    "ava": "^0.0.4",
+    "vinyl-file": "^1.1.0"
+  },
+  "gitHead": "d13ba5fea54e97ffc7441d21f6e44d83743581c3",
+  "bugs": {
+    "url": "https://github.com/imagemin/imagemin-gifsicle/issues"
+  },
+  "homepage": "https://github.com/imagemin/imagemin-gifsicle#readme",
+  "_id": "imagemin-gifsicle@4.2.0",
+  "_shasum": "0fef9bbad3476e6b76885736cc5b0b87a08757ca",
+  "_from": "imagemin-gifsicle@>=4.0.0 <5.0.0",
+  "_npmVersion": "2.11.1",
+  "_nodeVersion": "2.2.1",
+  "_npmUser": {
+    "name": "kevva",
+    "email": "kevinmartensson@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "kevva",
+      "email": "kevinmartensson@gmail.com"
+    },
+    {
+      "name": "sindresorhus",
+      "email": "sindresorhus@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "0fef9bbad3476e6b76885736cc5b0b87a08757ca",
+    "tarball": "http://registry.npmjs.org/imagemin-gifsicle/-/imagemin-gifsicle-4.2.0.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/imagemin-gifsicle/-/imagemin-gifsicle-4.2.0.tgz",
+  "readme": "ERROR: No README data found!"
+}

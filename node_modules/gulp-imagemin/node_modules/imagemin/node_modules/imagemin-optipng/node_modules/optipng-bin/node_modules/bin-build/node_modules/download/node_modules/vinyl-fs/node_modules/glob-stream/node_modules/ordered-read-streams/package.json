@@ -1,0 +1,54 @@
+{
+  "name": "ordered-read-streams",
+  "version": "0.2.0",
+  "description": "Combines array of streams into one read stream in strict order",
+  "main": "index.js",
+  "scripts": {
+    "test": "jshint *.js test/*.js && mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/armed/ordered-read-streams.git"
+  },
+  "author": {
+    "name": "Artem Medeusheyev",
+    "email": "artem.medeusheyev@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "should": "~3.0.1",
+    "mocha": "~1.17.0",
+    "through2": "~0.4.0",
+    "jshint": "~2.4.1",
+    "pre-commit": "0.0.4"
+  },
+  "dependencies": {
+    "isstream": "^0.1.1",
+    "readable-stream": "^1.0.33"
+  },
+  "gitHead": "16f445d33c370996d6a4cf0ddbe066bed6143875",
+  "bugs": {
+    "url": "https://github.com/armed/ordered-read-streams/issues"
+  },
+  "homepage": "https://github.com/armed/ordered-read-streams",
+  "_id": "ordered-read-streams@0.2.0",
+  "_shasum": "4469ca77baef3500075f62c0d43e4775e6d61192",
+  "_from": "ordered-read-streams@>=0.2.0 <0.3.0",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "armed",
+    "email": "artem.medeusheyev@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "armed",
+      "email": "artem.medeusheyev@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "4469ca77baef3500075f62c0d43e4775e6d61192",
+    "tarball": "http://registry.npmjs.org/ordered-read-streams/-/ordered-read-streams-0.2.0.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/ordered-read-streams/-/ordered-read-streams-0.2.0.tgz"
+}

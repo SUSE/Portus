@@ -1,0 +1,78 @@
+{
+  "name": "glob-stream",
+  "description": "File system globs as a stream",
+  "version": "5.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wearefractal/glob-stream"
+  },
+  "author": {
+    "name": "Fractal",
+    "email": "contact@wearefractal.com",
+    "url": "http://wearefractal.com/"
+  },
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "glob": "^5.0.3",
+    "minimatch": "^2.0.1",
+    "ordered-read-streams": "^0.2.0",
+    "glob2base": "^0.0.12",
+    "unique-stream": "^2.0.2",
+    "through2": "^0.6.1"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.0",
+    "istanbul-coveralls": "^1.0.1",
+    "jshint": "^2.5.10",
+    "mocha": "^2.0.0",
+    "mocha-lcov-reporter": "0.0.2",
+    "rimraf": "^2.2.5",
+    "should": "^5.2.0"
+  },
+  "scripts": {
+    "test": "jshint && mocha",
+    "coveralls": "istanbul cover _mocha --report lcovonly && istanbul-coveralls"
+  },
+  "engines": {
+    "node": ">= 0.9"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/wearefractal/glob-stream/raw/master/LICENSE"
+    }
+  ],
+  "gitHead": "3fe3b8a762a5176292d4bec6e7e84dafd02e9385",
+  "bugs": {
+    "url": "https://github.com/wearefractal/glob-stream/issues"
+  },
+  "homepage": "https://github.com/wearefractal/glob-stream",
+  "_id": "glob-stream@5.0.0",
+  "_shasum": "d55374a3b3c98c0d08dff74fb84f282e40c5e5c5",
+  "_from": "glob-stream@>=5.0.0 <6.0.0",
+  "_npmVersion": "2.7.0",
+  "_nodeVersion": "1.5.1",
+  "_npmUser": {
+    "name": "fractal",
+    "email": "contact@wearefractal.com"
+  },
+  "maintainers": [
+    {
+      "name": "fractal",
+      "email": "contact@wearefractal.com"
+    },
+    {
+      "name": "phated",
+      "email": "blaine@iceddev.com"
+    }
+  ],
+  "dist": {
+    "shasum": "d55374a3b3c98c0d08dff74fb84f282e40c5e5c5",
+    "tarball": "http://registry.npmjs.org/glob-stream/-/glob-stream-5.0.0.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/glob-stream/-/glob-stream-5.0.0.tgz"
+}

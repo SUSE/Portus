@@ -1,0 +1,86 @@
+{
+  "name": "jpegtran-bin",
+  "version": "3.0.5",
+  "description": "jpegtran (part of libjpeg-turbo) bin-wrapper that makes it seamlessly available as a local dependency",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imagemin/jpegtran-bin.git"
+  },
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com"
+  },
+  "maintainers": [
+    {
+      "name": "sindresorhus",
+      "email": "sindresorhus@gmail.com"
+    },
+    {
+      "name": "kevva",
+      "email": "kevinmartensson@gmail.com"
+    },
+    {
+      "name": "shinnn",
+      "email": "snnskwtnb@gmail.com"
+    }
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "bin": {
+    "jpegtran": "cli.js"
+  },
+  "scripts": {
+    "postinstall": "node lib/install.js",
+    "test": "mocha --timeout 100000"
+  },
+  "files": [
+    "index.js",
+    "cli.js",
+    "lib",
+    "test"
+  ],
+  "keywords": [
+    "compress",
+    "image",
+    "img",
+    "jpeg",
+    "jpg",
+    "minify",
+    "optimize"
+  ],
+  "dependencies": {
+    "bin-build": "^2.0.0",
+    "bin-wrapper": "^3.0.0",
+    "logalot": "^2.0.0"
+  },
+  "devDependencies": {
+    "bin-check": "^3.0.0",
+    "compare-size": "^1.0.1",
+    "mkdirp": "^0.5.0",
+    "mocha": "^2.2.4",
+    "rimraf": "^2.3.2"
+  },
+  "gitHead": "66d9bd6e54ad8a9a78f8059f35ecdebf6b41a345",
+  "bugs": {
+    "url": "https://github.com/imagemin/jpegtran-bin/issues"
+  },
+  "homepage": "https://github.com/imagemin/jpegtran-bin#readme",
+  "_id": "jpegtran-bin@3.0.5",
+  "_shasum": "f1c6572df049e3b0bd3c6e77b090ed48fa956f7a",
+  "_from": "jpegtran-bin@>=3.0.0 <4.0.0",
+  "_npmVersion": "3.3.5",
+  "_nodeVersion": "4.1.2",
+  "_npmUser": {
+    "name": "shinnn",
+    "email": "snnskwtnb@gmail.com"
+  },
+  "dist": {
+    "shasum": "f1c6572df049e3b0bd3c6e77b090ed48fa956f7a",
+    "tarball": "http://registry.npmjs.org/jpegtran-bin/-/jpegtran-bin-3.0.5.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/jpegtran-bin/-/jpegtran-bin-3.0.5.tgz"
+}

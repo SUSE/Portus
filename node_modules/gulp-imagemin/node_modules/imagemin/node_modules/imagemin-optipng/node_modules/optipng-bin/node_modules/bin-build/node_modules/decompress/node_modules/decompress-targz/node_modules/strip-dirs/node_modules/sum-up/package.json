@@ -1,0 +1,73 @@
+{
+  "name": "sum-up",
+  "version": "1.0.2",
+  "description": "Summarize package information",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shinnn/sum-up.git"
+  },
+  "homepage": "https://github.com/shinnn/sum-up",
+  "author": {
+    "name": "Shinnosuke Watanabe",
+    "url": "https://github.com/shinnn"
+  },
+  "scripts": {
+    "pretest": "eslint --config node_modules/@shinnn/eslintrc-node/rc.json index.js test.js",
+    "test": "node test.js --color && node test.js --no-color",
+    "coverage": "istanbul cover test.js -- --color",
+    "coveralls": "${npm_package_scripts_coverage} && istanbul-coveralls"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "summerize",
+    "summary",
+    "brief",
+    "outline",
+    "info",
+    "information",
+    "description",
+    "data",
+    "package",
+    "color",
+    "cli-friendly"
+  ],
+  "dependencies": {
+    "chalk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@shinnn/eslintrc-node": "^1.0.2",
+    "eslint": "^0.22.1",
+    "istanbul": "^0.3.15",
+    "istanbul-coveralls": "^1.0.3",
+    "tape": "^4.0.0"
+  },
+  "gitHead": "75c74abb8c3628679715d2af046fc17d900ff78f",
+  "bugs": {
+    "url": "https://github.com/shinnn/sum-up/issues"
+  },
+  "_id": "sum-up@1.0.2",
+  "_shasum": "e05e5f788cb4d0c570759013ad49442c7b849c88",
+  "_from": "sum-up@>=1.0.1 <2.0.0",
+  "_npmVersion": "2.11.0",
+  "_nodeVersion": "2.2.1",
+  "_npmUser": {
+    "name": "shinnn",
+    "email": "snnskwtnb@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "shinnn",
+      "email": "snnskwtnb@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "e05e5f788cb4d0c570759013ad49442c7b849c88",
+    "tarball": "http://registry.npmjs.org/sum-up/-/sum-up-1.0.2.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/sum-up/-/sum-up-1.0.2.tgz",
+  "readme": "ERROR: No README data found!"
+}

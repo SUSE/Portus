@@ -1,0 +1,94 @@
+{
+  "name": "svgo",
+  "version": "0.5.6",
+  "description": "Nodejs-based tool for optimizing SVG vector graphics files",
+  "keywords": [
+    "svgo",
+    "svg",
+    "optimize",
+    "minify"
+  ],
+  "homepage": "https://github.com/svg/svgo",
+  "bugs": {
+    "url": "https://github.com/svg/svgo/issues",
+    "email": "kir@soulshine.in"
+  },
+  "author": {
+    "name": "Kir Belevich",
+    "email": "kir@soulshine.in",
+    "url": "https://github.com/deepsweet"
+  },
+  "contributors": [
+    {
+      "name": "Sergey Belov",
+      "email": "peimei@ya.ru",
+      "url": "http://github.com/arikon"
+    },
+    {
+      "name": "Lev Solntsev",
+      "email": "lev.sun@ya.ru",
+      "url": "http://github.com/GreLI"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/svg/svgo.git"
+  },
+  "main": "./lib/svgo.js",
+  "bin": {
+    "svgo": "./bin/svgo"
+  },
+  "directories": {
+    "bin": "./bin",
+    "lib": "./lib",
+    "example": "./examples"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "dependencies": {
+    "sax": "~1.1.1",
+    "coa": "~1.0.1",
+    "js-yaml": "~3.3.1",
+    "colors": "~1.1.2",
+    "whet.extend": "~0.9.9",
+    "mkdirp": "~0.5.1"
+  },
+  "devDependencies": {
+    "mocha": "~2.2.5",
+    "should": "7.0.3",
+    "istanbul": "~0.3.17",
+    "mocha-istanbul": "~0.2.0",
+    "coveralls": "~2.11.4"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "license": "MIT",
+  "gitHead": "e80121beb2a5c2e9565cf7204c23e99541d5929c",
+  "_id": "svgo@0.5.6",
+  "_shasum": "9501c533cf84f74a79be1bb3f3494d912bbed119",
+  "_from": "svgo@>=0.5.0 <0.6.0",
+  "_npmVersion": "2.5.1",
+  "_nodeVersion": "0.12.0",
+  "_npmUser": {
+    "name": "greli",
+    "email": "grelimail@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "deepsweet",
+      "email": "kir@soulshine.in"
+    },
+    {
+      "name": "greli",
+      "email": "grelimail@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "9501c533cf84f74a79be1bb3f3494d912bbed119",
+    "tarball": "http://registry.npmjs.org/svgo/-/svgo-0.5.6.tgz"
+  },
+  "_resolved": "https://registry.npmjs.org/svgo/-/svgo-0.5.6.tgz",
+  "readme": "ERROR: No README data found!"
+}

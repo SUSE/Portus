@@ -1,0 +1,73 @@
+{
+  "name": "duplexer2",
+  "version": "0.1.2",
+  "description": "Like duplexer but using streams3",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "pretest": "eslint --config @shinnn/node-legacy --rule 'quotes: [2, double]' example.js --rule 'no-underscore-dangle: 0' index.js test.js",
+    "test": "node --strong_mode --harmony_destructuring --harmony_rest_parameters --harmony_spreadcalls --throw-deprecation --trace-sync-io --track-heap-objects test.js | tap-spec",
+    "coverage": "node --strong_mode --harmony_destructuring --harmony_rest_parameters --harmony_spreadcalls node_modules/.bin/istanbul cover test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deoxxa/duplexer2.git"
+  },
+  "keywords": [
+    "duplex",
+    "duplexer",
+    "stream",
+    "stream3",
+    "join",
+    "combine"
+  ],
+  "author": {
+    "name": "Conrad Pankoff",
+    "email": "deoxxa@fknsrs.biz",
+    "url": "http://www.fknsrs.biz/"
+  },
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "readable-stream": "^2.0.2"
+  },
+  "devDependencies": {
+    "@shinnn/eslint-config-node-legacy": "^1.0.0",
+    "eslint": "^1.7.1",
+    "istanbul": "^0.3.22",
+    "object-assign": "^4.0.1",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.1",
+    "through": "^2.3.8"
+  },
+  "gitHead": "a6830be86ae760bcc586e458dbf1fbdacf2e76a2",
+  "bugs": {
+    "url": "https://github.com/deoxxa/duplexer2/issues"
+  },
+  "homepage": "https://github.com/deoxxa/duplexer2#readme",
+  "_id": "duplexer2@0.1.2",
+  "_shasum": "9d5743625528d33dc22010e1c03777e19f3c44dc",
+  "_from": "duplexer2@>=0.1.0 <0.2.0",
+  "_npmVersion": "3.3.8",
+  "_nodeVersion": "4.2.1",
+  "_npmUser": {
+    "name": "shinnn",
+    "email": "snnskwtnb@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "deoxxa",
+      "email": "deoxxa@fknsrs.biz"
+    },
+    {
+      "name": "shinnn",
+      "email": "snnskwtnb@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "9d5743625528d33dc22010e1c03777e19f3c44dc",
+    "tarball": "http://registry.npmjs.org/duplexer2/-/duplexer2-0.1.2.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/duplexer2/-/duplexer2-0.1.2.tgz"
+}

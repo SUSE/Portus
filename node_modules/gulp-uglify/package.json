@@ -1,0 +1,68 @@
+{
+  "name": "gulp-uglify",
+  "description": "Minify files with UglifyJS.",
+  "version": "1.4.2",
+  "author": {
+    "name": "Terin Stock",
+    "email": "terinjokes@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/terinjokes/gulp-uglify/issues"
+  },
+  "dependencies": {
+    "deap": "^1.0.0",
+    "fancy-log": "^1.0.0",
+    "gulp-util": "^3.0.0",
+    "isobject": "^2.0.0",
+    "through2": "^2.0.0",
+    "uglify-js": "2.5.0",
+    "uglify-save-license": "^0.4.1",
+    "vinyl-sourcemaps-apply": "^0.2.0"
+  },
+  "devDependencies": {
+    "argg": "0.0.1",
+    "cmem": "^1.0.0",
+    "coveralls": "^2.11.4",
+    "gulp-concat": "^2.0.0",
+    "gulp-sourcemaps": "^1.0.0",
+    "istanbul": "^0.3.0",
+    "tape": "^4.0.0",
+    "vinyl": "^1.0.0"
+  },
+  "homepage": "https://github.com/terinjokes/gulp-uglify/",
+  "keywords": [
+    "gulpplugin"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terinjokes/gulp-uglify.git"
+  },
+  "scripts": {
+    "test": "istanbul cover node_modules/argg test/*.js",
+    "coverage": "npm test && cat ./coverage/lcov.info | coveralls"
+  },
+  "gitHead": "4f1c636e41d9a3de1fe32dc79b3a34a14692ed06",
+  "_id": "gulp-uglify@1.4.2",
+  "_shasum": "2807ea1016e4962c37766c02feeb5501818857c3",
+  "_from": "gulp-uglify@*",
+  "_npmVersion": "2.14.3",
+  "_nodeVersion": "4.1.0",
+  "_npmUser": {
+    "name": "terinjokes",
+    "email": "terinjokes@gmail.com"
+  },
+  "dist": {
+    "shasum": "2807ea1016e4962c37766c02feeb5501818857c3",
+    "tarball": "http://registry.npmjs.org/gulp-uglify/-/gulp-uglify-1.4.2.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "terinjokes",
+      "email": "terinjokes@gmail.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/gulp-uglify/-/gulp-uglify-1.4.2.tgz"
+}
