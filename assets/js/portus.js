@@ -10,20 +10,3 @@ wow = new WOW(
   }
 )
 wow.init();
-
-$(window).bind('scroll',function(e) {
-  dockerIntoPortu()
-})
-
-var dockerIntoPortu = function () {
-
-  var element = $(".fixit-container");
-  var scrolledTop = element.offset().top - $(window).scrollTop();
-
-  //when the container reaches the top of the window, start the animations
-  if (scrolledTop < 0 ) {
-
-    $(".fixit-element").addClass('animated zoomOutDown')
-
-  }
-}
