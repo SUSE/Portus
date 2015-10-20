@@ -17,6 +17,24 @@
     overflow: hidden;
     max-width: 100%;
   }
+  #secure {
+    .col-sm-6:first-of-type {
+      height: 200px;
+      padding-bottom: 0em;
+    }
+    .col-sm-6:last-of-type {
+      height: 400px;
+      padding-top: 2em;
+    }
+  }
+}
+
+@media (max-width: @screen-desktop) {
+  #secure {
+    .col-sm-6 {
+      height: 350px;
+    }
+  }
 }
 
 
@@ -40,5 +58,17 @@
   }
   section {
     padding: 1em;
+  }
+  #secure {
+    .col-sm-6 {
+      padding: 2em;
+    }
+    .col-sm-6:first-of-type {
+      height: 200px;
+    }
+    .col-sm-6:last-of-type {
+      height: 260px;
+      padding-top: 2em;
+    }
   }
 }

@@ -3071,8 +3071,8 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-primary {
   color: #f8f8f8;
-  background-color: rgba(246, 130, 140, 0.8);
-  border-color: #F6828C;
+  background-color: #68B0AB;
+  border-color: #68B0AB;
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -3081,8 +3081,8 @@ fieldset[disabled] .btn-default.active {
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #f8f8f8;
-  background-color: rgba(243, 82, 96, 0.8);
-  border-color: #f24957;
+  background-color: #4f9691;
+  border-color: #4b908b;
 }
 .btn-primary:active,
 .btn-primary.active,
@@ -3107,11 +3107,11 @@ fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active,
 .btn-primary[disabled].active,
 fieldset[disabled] .btn-primary.active {
-  background-color: rgba(246, 130, 140, 0.8);
-  border-color: #F6828C;
+  background-color: #68B0AB;
+  border-color: #68B0AB;
 }
 .btn-primary .badge {
-  color: rgba(246, 130, 140, 0.8);
+  color: #68B0AB;
   background-color: #f8f8f8;
 }
 .btn-success {
@@ -6551,12 +6551,16 @@ button.close {
 header {
   height: 50px;
   width: 100%;
-  background: #F6828C;
   position: fixed;
   top: 0;
   left: 0;
   padding: .5em 1em;
   z-index: 9999;
+  background-image: -webkit-linear-gradient(left, #205683 0%, #68B0AB 100%);
+  background-image: -o-linear-gradient(left, #205683 0%, #68B0AB 100%);
+  background-image: linear-gradient(to right, #205683 0%, #68B0AB 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff205683', endColorstr='#ff68b0ab', GradientType=1);
 }
 footer {
   padding: 2em 0;
@@ -6573,11 +6577,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 ::selection {
-  background: #F6828C;
+  background: #68B0AB;
   color: #fff;
 }
 ::-moz-selection {
-  background: #F6828C;
+  background: #68B0AB;
   color: #fff;
 }
 h1,
@@ -6589,10 +6593,10 @@ h4 {
   color: #555555;
 }
 .main-colour {
-  color: #143855;
+  color: #205683;
 }
 .secondary-colour {
-  color: #F6828C;
+  color: #68B0AB;
 }
 #welcome h1 {
   display: inline-block;
@@ -6654,7 +6658,7 @@ h4 {
   padding-right: 1.7em;
 }
 #why-use-portus {
-  background: #129490;
+  background: #401F3E;
 }
 #secure {
   padding: 0;
@@ -6662,16 +6666,9 @@ h4 {
 #secure .col-sm-6 {
   margin: 0;
   padding: 4em;
-  height: 280px;
-}
-#secure .col-sm-6:first-of-type {
+  height: 420px;
+  box-sizing: border-box;
   background: #eeeeee;
-}
-#secure .col-sm-6:last-of-type {
-  background: #eeeeee;
-}
-#secure .col-sm-6:last-of-type img {
-  margin-top: 2em;
 }
 #manage-users h2 {
   font-weight: 900;
@@ -6684,7 +6681,7 @@ h4 {
   margin-right: auto;
   margin-left: auto;
   background: transparent;
-  border: 5px solid #143855;
+  border: 5px solid #205683;
   width: 160px;
   height: 160px;
   -webkit-transition: -webkit-transform 0.5s, color 0.5s;
@@ -6693,8 +6690,8 @@ h4 {
   transform: rotate3d(0, 1, 0, 0deg);
 }
 #manage-users .portus-users:hover {
-  background: #129490;
-  border: 5px solid #129490;
+  background: #68B0AB;
+  border: 5px solid #68B0AB;
   -webkit-transform: rotate3d(0, 1, 0, 180deg);
   transform: rotate3d(0, 1, 0, 180deg);
 }
@@ -6702,14 +6699,14 @@ h4 {
   color: #f8f8f8;
 }
 #manage-users .portus-users i {
-  color: #143855;
+  color: #205683;
   padding-top: 0.5em;
 }
 #search {
   border-top: 1px solid #eeeeee;
 }
 #search h2 {
-  background: #129490;
+  background: #E56399;
   color: #f8f8f8;
   font-weight: 400;
   display: inline-block;
@@ -6719,7 +6716,7 @@ h4 {
   border-top: 1px solid #eeeeee;
 }
 #audit h2 {
-  background: #F6828C;
+  background: #401F3E;
   color: #f8f8f8;
   font-weight: 400;
   display: inline-block;
@@ -6736,10 +6733,10 @@ h4 {
 #try-portus a,
 #try-portus a:visited,
 #try-portus a:active {
-  color: #86DEB7;
+  color: #68B0AB;
 }
 #try-portus a:hover {
-  color: #5ed39f;
+  color: #4f9691;
 }
 #try-portus .snippet {
   padding-top: 2em;
@@ -6780,6 +6777,19 @@ h4 {
     overflow: hidden;
     max-width: 100%;
   }
+  #secure .col-sm-6:first-of-type {
+    height: 200px;
+    padding-bottom: 0em;
+  }
+  #secure .col-sm-6:last-of-type {
+    height: 400px;
+    padding-top: 2em;
+  }
+}
+@media (max-width: 992px) {
+  #secure .col-sm-6 {
+    height: 350px;
+  }
 }
 @media (max-width: 480px) {
   #what-is-portus .portus-computer {
@@ -6799,5 +6809,15 @@ h4 {
   }
   section {
     padding: 1em;
+  }
+  #secure .col-sm-6 {
+    padding: 2em;
+  }
+  #secure .col-sm-6:first-of-type {
+    height: 200px;
+  }
+  #secure .col-sm-6:last-of-type {
+    height: 260px;
+    padding-top: 2em;
   }
 }
