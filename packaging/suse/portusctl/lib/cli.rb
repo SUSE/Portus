@@ -1,5 +1,3 @@
-# rubocop:disable Metrics/ClassLength
-
 # Class implementing the cli interface of portusctl
 class Cli < Thor
   desc "setup", "Configure Portus"
@@ -149,5 +147,3 @@ class Cli < Thor
     exit 1
   end
 end
-
-# rubocop:enable Metrics/ClassLength
