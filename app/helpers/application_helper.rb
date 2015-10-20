@@ -7,4 +7,9 @@ module ApplicationHelper
       image_tag "user.svg", class: "user-picture"
     end
   end
+
+  # Render the image tag that is suitable for activities.
+  def activity_time_tag(ct)
+    time_tag ct, time_ago_in_words(ct), title: ct
+  end
 end
