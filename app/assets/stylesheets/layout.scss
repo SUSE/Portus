@@ -31,36 +31,29 @@ header {
       input[type="search"] {
         border-radius: 4px 0 0 4px;
         background: transparent;
-        border-left: 1px solid $white;
-        border-top: 1px solid $white;
-        border-bottom: 1px solid $white;
-        border-right: 0px solid $white;
+        border-left: 1px solid $placeholder-colour;
+        border-top: 1px solid $placeholder-colour;
+        border-bottom: 1px solid $placeholder-colour;
+        border-right: 0px solid $placeholder-colour;
         color: $white;
-        @include input-placeholder($white);
+        @include input-placeholder($placeholder-colour);
       }
-      button[type="submit"] {
+      button[type="submit"], button[type="submit"]:disabled {
         border-radius: 0 4px 4px 0;
         color: $white;
-        border-left: 0px solid $white;
-        border-top: 1px solid $white;
-        border-bottom: 1px solid $white;
-        border-right: 1px solid $white;
-        display: none;
+        border-left: 0px solid $placeholder-colour;
+        border-top: 1px solid $placeholder-colour;
+        border-bottom: 1px solid $placeholder-colour;
+        border-right: 1px solid $placeholder-colour;
+        -webkit-opacity: 1;
+        opacity: 1;
       }
-    }
-    .header-open-search {
-      border: 1px solid transparent;
-      color: $white;
-      cursor: pointer;
-      position: absolute;
-      top: 0;
-      right: 0;
-      &:hover {
-        border: 1px solid transparent;
+      button[type="submit"]:disabled {
+        .fa {
+          -webkit-opacity: 0.6;
+          opacity: 0.6;
+        }
       }
-    }
-    .header-search-form .search-field {
-      display: none;
     }
   }
 }

@@ -5,11 +5,9 @@
 
 .text-right.user-header
   .search-header.hidden-xs
-    .btn.btn-default.header-open-search
-      i.fa.fa-search
     .header-search-form
       = form_tag search_index_path, method: 'get', class: 'navbar-form' do
-        = search_field_tag 'search', params[:search], autofocus: 'autofocus', class: 'form-control search-field', placeholder: 'Search'
+        = search_field_tag 'search', params[:search], class: 'form-control search-field', placeholder: 'Search repo'
         button[type="submit" class="btn btn-default" disabled]
           i.fa.fa-search
   .username-logout
