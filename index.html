@@ -6,20 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- bootstrap + Portus theme -->
-    <link href="assets/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <link href="build/css/portus.min.css" type="text/css" rel="stylesheet" />
     <!--external libraries CSS -->
-    <link href="assets/stylesheets/animate/animate.css"              type="text/css" rel="stylesheet" />
-    <link href="assets/stylesheets/fontawesome/font-awesome.min.css" type="text/css" rel="stylesheet" />
-    <!--external libraries JS -->
-    <script src="assets/js/jquery.min.js"      type="text/javascript"></script>
-    <script src="assets/js/bootstrap.min.js"   type="text/javascript"></script>
-    <script src="assets/js/wow.js"             type="text/javascript"></script>
-    <script src="assets/js/smoothscroll.js"    type="text/javascript"></script>
-    <script src="assets/js/jquery-cookie.js"   type="text/javascript" charset="utf-8"></script>
-    <script src="assets/js/jquery-lang.js"     type="text/javascript" charset="utf-8"></script>
-    <!--portus js-->
-    <script src="assets/js/portus-language.js" type="text/javascript"></script>
-    <script src="assets/js/portus.js" type="text/javascript"></script>
+    <link href="build/css/vendor.min.css" type="text/css" rel="stylesheet" />
+    <!--external libraries JS + portus JS -->
+    <script src="build/js/main.min.js"    type="text/javascript" charset="utf-8"></script>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -29,13 +21,13 @@
   <body>
     <header>
       <div class="container-fluid">
-        <img class="img-responsive" src="assets/images/logo-header.png">
+        <img class="img-responsive" src="build/images/logo-header.png">
       </div>
     </header>
     <section id="welcome" class="text-center">
       <div class="container-fluid">
-        <h2 class="text-uppercase wow fadeInUp" lang="en">Claim control of your</h2>
-        <h1 class="text-uppercase wow fadeInUp" lang="en">Docker images</h1>
+        <h2 class="text-uppercase wow fadeInUp" data-wow-delay="100ms" lang="en">Claim control of your</h2>
+        <h1 class="text-uppercase wow fadeInUp" data-wow-delay="100ms" lang="en">Docker images</h1>
         <hr class="wow zoomIn img-responsive" data-wow-delay="500ms">
         <a href="https://github.com/SUSE/Portus" class="btn btn-primary wow fadeInUp" data-wow-delay="700ms" lang="en">View on GitHub</a>
         <a href="#" data-linkto="try-portus" class="smoothScroll btn btn-primary wow fadeInUp" data-wow-delay="900ms" lang="en">Try out Portus</a>
@@ -45,8 +37,11 @@
       <div class="container-fluid">
         <h2 class="wow fadeInUp" lang="en">What is Portus</h2>
         <p class="wow fadeInUp" lang="en">Portus is an open source authorization service and user interface for the next generation Docker Registry.</p>
-        <img class="img-responsive docker-logo fixit-element" src="assets/images/docker-logo.png" />
-        <img class="img-responsive portus-computer wow fadeIn" src="assets/images/portus-computer.jpg" />
+        <div class="portus-computer wow fadeIn" src="build/images/portus-computer.jpg">
+          <div class="embed-container">
+            <iframe src="https://www.youtube.com/embed/hGqvYVvdf7U" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
       </div>
     </section>
     <section id="why-use-portus" class="text-center">
@@ -67,7 +62,7 @@
             <p class="wow fadeInUp" lang="en">Portus implements the new authorization scheme defined by the latest version of the Docker registry. It allows for fine grained control over all of your images. You decide which users and teams are allowed to push or pull images.</p>
           </div>
           <div class="col-sm-6 text-center wow fadeInRight">
-            <img class="img-responsive" src="assets/images/secure.png" />
+            <img class="img-responsive" src="build/images/members.png" />
           </div>
         </div>
       </div>
@@ -87,7 +82,7 @@
           </div>
           <div class="col-sm-4 wow bounceIn" data-wow-delay="500ms">
             <div class="portus-users">
-              <i class="fa fa-users fa-5x"></i>
+              <i class="fa fa-exchange fa-5x"></i>
             </div>
             <h3 lang="en">Contributors</h3>
             <p lang="en">Can push and pull images.</p>
@@ -111,7 +106,7 @@
             <p class="wow fadeInUp" lang="en">User privileges are constantly taken into account, even when browsing the contents of the repository or when performing searches.</p>
           </div>
           <div class="col-sm-6 text-center wow fadeInRight">
-            <img class="img-responsive" src="assets/images/search.jpg" />
+            <img class="img-responsive" src="build/images/search.jpg" />
           </div>
         </div>
       </div>
@@ -120,7 +115,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6 text-center wow fadeInLeft">
-            <img class="img-responsive" src="assets/images/audit.jpg" />
+            <img class="img-responsive" src="build/images/audit.jpg" />
           </div>
           <div class="col-sm-6 wow fadeInRight text-right">
             <h2 class="wow fadeInUp" lang="en">Audit</h2>
@@ -133,20 +128,16 @@
     <section id="try-portus" class="text-center">
       <div class="container-fluid">
         <h2 class="wow fadeInUp" lang="en">Try Portus</h2>
-        <div class="row snippet">
-          <div class="col-sm-6 text-left">
-            <p class="wow fadeInUp"><span lang="en">Try Portus with </span> <a href='http://docs.docker.com/compose/'>docker-compose</a>:</p>
-            <pre>
-$ git clone https://github.com/SUSE/Portus.git
-$ cd Portus
-$ ./compose-setup.sh
-            </pre>
-          </div>
-          <div class="col-sm-6 text-left">
-            <p class="wow fadeInUp"><span lang="en">We provide also a ready to go</span> <a href='https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance' lang="en"> appliance</a> <span lang="en">based on openSUSE.</span></p>
-            <p class="wow fadeInUp" lang="en">All Portus documentation, including the installation guide is available in our</span> <a href='https://github.com/SUSE/Portus/wiki'> wiki</a>.
-            </p>
-          </div>
+        <div class="row">
+          <p class="wow fadeInUp"><span lang="en">Try Portus with </span> <a href='https://github.com/SUSE/Portus/wiki/The-development-environment#docker' lang="en"> docker-compose</a>:</p>
+          <script type="text/javascript" src="https://asciinema.org/a/24174.js" id="asciicast-24174" async data-theme="tango"></script>
+          <p class="wow fadeInUp"><span lang="en">We provide also a ready to go</span> <a href='https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance' lang="en"> appliance</a> <span lang="en">based on openSUSE.</span></p>
+          <p class="wow fadeInUp" lang="en">All Portus documentation, including the
+          <a href='https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance' lang="en">installation</a>
+          and the
+          <a href='https://github.com/SUSE/Portus/wiki/The-development-environment#docker' lang="en"> docker-compose</a>
+          guides are available in our</span> <a href='https://github.com/SUSE/Portus/wiki'> wiki</a>.
+          </p>
         </div>
 
 
@@ -162,13 +153,13 @@ $ ./compose-setup.sh
       <div class="row row-0">
         <div class="col-sm-2">
           <div class="dropup">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="selected-language">English</span>
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <ul class="dropdown-menu" aria-labelledby="dropdownLanguage">
               <li><a href="#" class="change-language" data-language-value="en">English</a></li>
-              <li><a href="#" class="change-language" data-language-value="es">Spanish</a></li>
+              <li><a href="#" class="change-language" data-language-value="es">Español</a></li>
             </ul>
           </div>
         </div>

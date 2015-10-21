@@ -1,0 +1,81 @@
+{
+  "name": "imagemin-jpegtran",
+  "version": "4.3.1",
+  "description": "jpegtran imagemin plugin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imagemin/imagemin-jpegtran.git"
+  },
+  "author": {
+    "name": "Kevin Mårtensson",
+    "email": "kevinmartensson@gmail.com",
+    "url": "https://github.com/kevva"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "compress",
+    "gulpplugin",
+    "image",
+    "imageminplugin",
+    "img",
+    "jpeg",
+    "jpegtran",
+    "jpg",
+    "minify",
+    "optimize"
+  ],
+  "dependencies": {
+    "is-jpg": "^1.0.0",
+    "jpegtran-bin": "^3.0.0",
+    "through2": "^2.0.0"
+  },
+  "devDependencies": {
+    "ava": "^0.0.4",
+    "buffer-equal": "^0.0.1",
+    "vinyl-file": "^1.1.0",
+    "vinyl-smallest-jpeg": "^1.0.0"
+  },
+  "gitHead": "36fe8ca3a5873512257a8ddcf205a217e7229455",
+  "bugs": {
+    "url": "https://github.com/imagemin/imagemin-jpegtran/issues"
+  },
+  "homepage": "https://github.com/imagemin/imagemin-jpegtran#readme",
+  "_id": "imagemin-jpegtran@4.3.1",
+  "_shasum": "f3c0721e10b91e68e75bf32a7d9ef773c51556ab",
+  "_from": "imagemin-jpegtran@>=4.0.0 <5.0.0",
+  "_npmVersion": "3.3.5",
+  "_nodeVersion": "4.1.2",
+  "_npmUser": {
+    "name": "shinnn",
+    "email": "snnskwtnb@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "kevva",
+      "email": "kevinmartensson@gmail.com"
+    },
+    {
+      "name": "sindresorhus",
+      "email": "sindresorhus@gmail.com"
+    },
+    {
+      "name": "shinnn",
+      "email": "snnskwtnb@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "f3c0721e10b91e68e75bf32a7d9ef773c51556ab",
+    "tarball": "http://registry.npmjs.org/imagemin-jpegtran/-/imagemin-jpegtran-4.3.1.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/imagemin-jpegtran/-/imagemin-jpegtran-4.3.1.tgz"
+}
