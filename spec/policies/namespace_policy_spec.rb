@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe NamespacePolicy do
-
   subject { described_class }
 
   let(:user)        { create(:user) }
@@ -28,7 +27,6 @@ describe NamespacePolicy do
   end
 
   permissions :pull? do
-
     it "allows access to user with viewer role" do
       expect(subject).to permit(viewer, namespace)
     end
@@ -58,10 +56,19 @@ describe NamespacePolicy do
       expect(subject).to permit(create(:user), @registry.global_namespace)
     end
 
+    it "disallows access to a non-logged user if the namespace is private" do
+      expect do
+        subject.new(nil, namespace).pull?
+      end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+    end
+
+    it "allows access to a non-logged user if the namespace is public" do
+      namespace.public = true
+      expect(subject).to permit(nil, namespace)
+    end
   end
 
   permissions :push? do
-
     it "disallow access to user with viewer role" do
       expect(subject).to_not permit(viewer, namespace)
     end
@@ -78,6 +85,12 @@ describe NamespacePolicy do
       expect(subject).to_not permit(user, namespace)
     end
 
+    it "disallows access to user who is not logged in" do
+      expect do
+        subject.new(nil, namespace).push?
+      end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+    end
+
     context "global namespace" do
       it "allows access to administrators" do
         expect(subject).to permit(@admin, @registry.global_namespace)
@@ -87,7 +100,6 @@ describe NamespacePolicy do
         expect(subject).not_to permit(user, @registry.global_namespace)
       end
     end
-
   end
 
   permissions :all? do
@@ -119,7 +131,6 @@ describe NamespacePolicy do
   end
 
   permissions :toggle_public? do
-
     it "allows admin to change it" do
       expect(subject).to permit(@admin, namespace)
     end
@@ -136,6 +147,12 @@ describe NamespacePolicy do
       expect(subject).to_not permit(contributor, namespace)
     end
 
+    it "disallows access to user who is not logged in" do
+      expect do
+        subject.new(nil, namespace).toggle_public?
+      end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+    end
+
     context "global namespace" do
       let(:namespace) { create(:namespace, global: true, public: true) }
 
@@ -143,7 +160,6 @@ describe NamespacePolicy do
         expect(subject).to_not permit(@admin, namespace)
       end
     end
-
   end
 
   describe "scope" do
@@ -178,7 +194,5 @@ describe NamespacePolicy do
       expected.first.update_attributes(public: true)
       expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
     end
-
   end
-
 end

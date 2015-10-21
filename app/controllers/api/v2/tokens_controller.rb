@@ -2,8 +2,6 @@
 # use in order to perform operation into the registry. This is the last step in
 # the authentication process for Portus' point of view.
 class Api::V2::TokensController < Api::BaseController
-  before_action :authenticate_user!
-
   # Returns the token that the docker client should use in order to perform
   # operation into the private registry.
   def show
@@ -11,6 +9,7 @@ class Api::V2::TokensController < Api::BaseController
     raise RegistryNotHandled, "Cannot find registry #{params[:service]}" if registry.nil?
 
     auth_scope = authorize_scopes(registry)
+    authenticate_user! if auth_scope.nil?
 
     token = Portus::JwtToken.new(params[:account], params[:service], auth_scope)
     logger.tagged("jwt_token", "claim") { logger.debug token.claim }
@@ -22,6 +21,8 @@ class Api::V2::TokensController < Api::BaseController
   # If there was a scope specified in the request parameters, try to authorize
   # the given scopes. That is, it "filters" the scopes that can be requested
   # depending of the issuer of the request and its permissions.
+  #
+  # If no scope was specified, this is a login request and it just returns nil.
   def authorize_scopes(registry)
     return unless params[:scope]
 
@@ -42,10 +43,8 @@ class Api::V2::TokensController < Api::BaseController
       #     scope gets removed from `auth_scope.actions`.
       begin
         authorize auth_scope.resource, "#{scope}?".to_sym
-      rescue NoMethodError
-        raise ScopeNotHandled, "Cannot handle scope #{scope}"
-      rescue Pundit::NotAuthorizedError
-        logger.debug "scope #{scope} not authorized, removing from actions"
+      rescue NoMethodError, Pundit::NotAuthorizedError
+        logger.debug "scope #{scope} not handled/authorized, removing from actions"
         auth_scope.actions.delete_if { |a| a == scope }
       end
     end

@@ -7,6 +7,7 @@
 #   - catalog
 #   - delete <name> <digest>
 #   - manifest <name>[:<tag>]
+#   - ping <hostname:port> [use_ssl]
 
 registry = Registry.get
 if registry.nil? && ARGV.first != "ping"
@@ -58,6 +59,6 @@ when "ping"
     puts "Error: cannot reach the registry"
   end
 else
-  puts "Valid commands: catalog, delete, manifest."
+  puts "Valid commands: catalog, delete, manifest and ping."
   exit 1
 end
