@@ -33,7 +33,7 @@ class NamespacesController < ApplicationController
     @namespace = Namespace.new(
       team:     @team,
       name:     params["namespace"]["namespace"],
-      registry: Registry.first
+      registry: Registry.get
     )
     authorize @namespace
 

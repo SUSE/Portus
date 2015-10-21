@@ -4,7 +4,7 @@ class ChangeRegistryIdFromNamespace < ActiveRecord::Migration
     # the existing registry. Otherwise just fail and tell the user to create a
     # registry.
     if Namespace.any?
-      registry = Registry.first
+      registry = Registry.get
       if registry
         Namespace.where(registry_id: nil).update_all(registry_id: registry.id)
         PublicActivity::Activity.

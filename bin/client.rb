@@ -8,7 +8,7 @@
 #   - delete <name> <digest>
 #   - manifest <name>[:<tag>]
 
-registry = Registry.first
+registry = Registry.get
 if registry.nil? && ARGV.first != "ping"
   puts "No registry has been configured!"
   exit 1
