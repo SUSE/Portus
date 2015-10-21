@@ -9,6 +9,11 @@ tr id="namespace_#{namespace.id}"
           rel="nofollow"
           href=url_for(toggle_public_namespace_path(namespace))
           ]
-          i.fa.fa-lg class="fa-toggle-#{namespace.public? ? 'on': 'off'}"
+          - if namespace.public?
+            i.fa.fa-lg class="fa-toggle-on"
+          - else
+            i.fa.fa-lg class="fa-toggle-off" title="Click so anyone can pull from this namespace"
+    - elsif namespace.public?
+      i.fa.fa-lg class="fa-toggle-on" title="Anyone can pull images from this namespace"
     - else
-      i.fa.fa-lg class="fa-toggle-#{namespace.public? ? 'on': 'off'}"
+      i.fa.fa-lg class="fa-toggle-off"

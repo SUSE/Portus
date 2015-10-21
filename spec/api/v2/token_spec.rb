@@ -92,16 +92,13 @@ describe "/v2/token" do
         APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
         allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_call_original
         allow_any_instance_of(Net::LDAP).to receive(:bind_as).and_return(true)
-        allow_any_instance_of(NamespacePolicy).to receive(:push?).and_return(true)
-        allow_any_instance_of(NamespacePolicy).to receive(:pull?).and_return(true)
       end
 
       it "authenticates if the HTTP Basic Authentication was given" do
         get v2_token_url,
           {
             service: registry.hostname,
-            account: "ldapuser",
-            scope:   "repository:ldapuser/busybox:push,pull"
+            account: "ldapuser"
           },
           "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("ldapuser", "12341234")
 
@@ -118,8 +115,7 @@ describe "/v2/token" do
         get v2_token_url,
           {
             service: registry.hostname,
-            account: "ldapuser",
-            scope:   "repository:ldapuser/busybox:push,pull"
+            account: "ldapuser"
           }, {}
 
         expect(response.status).to eq 401
