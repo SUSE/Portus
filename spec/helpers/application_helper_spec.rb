@@ -18,4 +18,15 @@ RSpec.describe ApplicationHelper, type: :helper do
         '<img class="user-picture" src="/images/user.svg" alt="User" />')
     end
   end
+
+  describe "#activity_time_tag" do
+    def time_tag(first, second, _args)
+      "#{first}-#{second}"
+    end
+
+    it "uses the time_tag" do
+      t = Time.now
+      expect(activity_time_tag(t)).to eq "#{t}-less than a minute"
+    end
+  end
 end
