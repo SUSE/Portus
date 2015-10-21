@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
     Namespace.find_or_create_by!(
       team:     team,
       name:     username,
-      registry: Registry.last # TODO: fix once we handle more registries
+      registry: Registry.get # TODO: fix once we handle more registries
     )
   end
 
@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
     return unless update_attributes(admin: admin) && Registry.any?
 
     # TODO: fix once we handle more registries
-    team = Registry.last.global_namespace.team
+    team = Registry.get.global_namespace.team
     admin ? team.owners << self : team.owners.delete(self)
   end
 

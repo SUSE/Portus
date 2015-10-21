@@ -25,7 +25,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
 
     it "uses the time_tag" do
-      t = Time.now
+      t = Time.zone.now
       expect(activity_time_tag(t)).to eq "#{t}-less than a minute"
     end
   end
