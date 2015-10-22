@@ -200,15 +200,14 @@ module Portus
       return "" if record.size != 1
       record = record.first
 
-      if cfg["attr"].empty?
-        guess_from_dn(record["dn"])
-      else
-        email = record[cfg["attr"]] || ""
+      cfg["attr"].empty? ? guess_from_dn(record["dn"]) : guess_from_attr(record, attr)
+    end
 
-        # Handle a LDAP record that has more than one entry.
-        email.is_a?(Array) ? email.first : email
-
-      end
+    # Guess the email from the given attribute. Note that if multiple records
+    # are fetched, then only the first one will be returned.
+    def guess_from_attr(record, attr)
+      email = record[attr] || ""
+      email.is_a?(Array) ? email.first : email
     end
 
     # Guesses the email being fetching "dc" components of the given
