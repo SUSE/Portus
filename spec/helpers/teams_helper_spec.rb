@@ -67,7 +67,7 @@ RSpec.describe TeamsHelper, type: :helper do
 
     it "renders with the proper icon for owner" do
       expect(helper.team_user_role_icon(owner.team_users.first)).to eq(
-        '<i class="fa fa-key fa-lg" title="Owner"></i>')
+        '<i class="fa fa-male fa-lg" title="Owner"></i>')
     end
 
     it "renders with the proper icon for contributor" do
