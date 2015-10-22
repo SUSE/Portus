@@ -8,8 +8,14 @@
       right: 0
     }
   }
+  .alert-message {
+    margin-right: 2em;
+    min-height: 2.5em;
+  }
+  .alert-icon {
+    margin-right: 1em;
+  }
 }
-
 .alert-info {
   .alert-icon {
     color: $alert-info-border;

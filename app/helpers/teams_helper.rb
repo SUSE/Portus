@@ -30,7 +30,7 @@ module TeamsHelper
   def team_user_role_icon(team_user)
     icon = case team_user.role
            when "owner"
-             "fa-key"
+             "fa-male"
            when "contributor"
              "fa-exchange"
            when "viewer"

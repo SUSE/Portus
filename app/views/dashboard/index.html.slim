@@ -1,5 +1,5 @@
 .row
-  .col-xs-8
+  .col-md-8
     .panel.panel-default
       .panel-heading
         h5 Recent activities
@@ -7,7 +7,7 @@
         ul.activity
           - @recent_activities.each do |activity|
             = render_activity(activity)
-  .col-xs-4
+  .col-md-4
     #repositories_sidebar.panel.panel-default
       .panel-heading
         h5 Repositories
