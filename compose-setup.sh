@@ -54,6 +54,19 @@ usage() {
   echo "  -f force removal of data"
 }
 
+# Force the current directory to be named "portus". It's known that other
+# setups will make docker-compose fail.
+#
+# See: https://github.com/docker/compose/issues/2092
+if [ "${PWD##*/}" != "portus" ] && [ "${PWD##*/}" != "Portus" ]; then
+    cat <<HERE
+ERROR: docker-compose is not able to tag built images. Since our compose setup
+expects the built image be named "portus_web", the current directory has to be
+named "portus" in order to work.
+HERE
+    exit 1
+fi
+
 # Get the docker host by picking the IP from the docker0 interface. This is the
 # safest way to reference the Docker host (see issues #417 and #382).
 DOCKER_HOST=${DOCKER_HOST=$(/sbin/ifconfig docker0 | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | head -1)}
