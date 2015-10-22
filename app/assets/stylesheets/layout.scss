@@ -67,6 +67,12 @@ body.login {
   background: -ms-linear-gradient(-45deg,  $first-colour 0%,$second-colour 100%); /* IE10+ */
   background: linear-gradient(135deg,  $first-colour 0%,$second-colour 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#205683', endColorstr='#68b0ab',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-attachment: fixed;
   .alert {
     .fa-3x {
       font-size: 1.5em
@@ -77,6 +83,12 @@ body.login {
     .col-sm-11 {
       width: 75%;
     }
+  }
+  .create-new-account {
+    text-align: left;
+  }
+  .forgot-password {
+    text-align: right;
   }
 }
 
