@@ -332,6 +332,15 @@ describe Portus::LDAP do
       ]
     end
 
+    let(:multiple_emails) do
+      [
+        {
+          "dn"    => ["ou=users,dc=example,dc=com"],
+          "email" => ["user1@example.com", "user2@example.com"]
+        }
+      ]
+    end
+
     it "returns an empty email if disabled" do
       ge = { "enabled" => false, "attr" => "" }
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
@@ -386,6 +395,14 @@ describe Portus::LDAP do
 
       lm = LdapMock.new(username: "name", password: "12341234")
       expect(lm.guess_email_test(valid_response)).to eq "user@example.com"
+    end
+
+    it "returns a the first vaild email if the given attr has a list" do
+      ge = { "enabled" => true, "attr" => "email" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      expect(lm.guess_email_test(multiple_emails)).to eq "user1@example.com"
     end
   end
 end
