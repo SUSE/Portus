@@ -7,22 +7,25 @@ setup_database() {
 
   TIMEOUT=90
   COUNT=0
-  printf "Portus: configuring database..."
-  docker-compose run --rm web rake db:create db:migrate db:seed &> /dev/null
+  RETRY=1
 
-  while [ $? -ne 0 ]; do
-    printf " [FAIL]\n"
-    echo "Waiting for mariadb to be ready"
+  while [ $RETRY -ne 0 ]; do
     if [ "$COUNT" -ge "$TIMEOUT" ]; then
       printf " [FAIL]\n"
       echo "Timeout reached, exiting with error"
       exit 1
     fi
+    echo "Waiting for mariadb to be ready in 5 seconds"
     sleep 5
     COUNT=$((COUNT+5))
 
     printf "Portus: configuring database..."
     docker-compose run --rm web rake db:create db:migrate db:seed &> /dev/null
+
+    RETRY=$?
+    if [ $RETRY -ne 0 ]; then
+        printf " failed, will retry\n"
+    fi
   done
   printf " [SUCCESS]\n"
   set -e
