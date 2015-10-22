@@ -10,7 +10,7 @@ class Runner
 
   # Run an external command using the bundler binary shipped with Portus' RPM
   def self.bundler_exec(cmd, args, extra_env_variables)
-    Dir.chdir("/srv/Portus") do
+    Dir.chdir(PORTUS_ROOT) do
       extra_env_variables.each do |key, value|
         ENV[key] = value
       end
@@ -29,5 +29,28 @@ class Runner
         restart ? "restart" : "start",
         service
       ])
+  end
+
+  # Creates a new file called "versions.log" with information about the version
+  # of the different components.
+  def self.produce_versions_file!
+    File.open(File.join(PORTUS_ROOT, "log/versions.log"), "w+") do |file|
+      %w( docker docker-distribution-registry Portus ).each do |package|
+        rpm = `rpm -qi #{package}`
+        file.puts("#{rpm}\n")
+      end
+    end
+  end
+
+  # Tar and compress the given files into the /tmp directory. It's assumed that
+  # these files are located inside of PORTUS_ROOT.
+  def self.tar_files(*files)
+    Dir.chdir(PORTUS_ROOT) do
+      FileUtils.touch files
+      Runner.exec("tar", ["czf", "portus_logs.tar.gz", *files])
+      FileUtils.mv "portus_logs.tar.gz", "/tmp"
+    end
+
+    puts "You can find your logs here: /tmp/portus_logs.tar.gz"
   end
 end
