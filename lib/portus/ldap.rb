@@ -200,7 +200,7 @@ module Portus
       return "" if record.size != 1
       record = record.first
 
-      cfg["attr"].empty? ? guess_from_dn(record["dn"]) : guess_from_attr(record, attr)
+      cfg["attr"].empty? ? guess_from_dn(record["dn"]) : guess_from_attr(record, cfg["attr"])
     end
 
     # Guess the email from the given attribute. Note that if multiple records
