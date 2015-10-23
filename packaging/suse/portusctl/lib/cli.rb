@@ -130,6 +130,15 @@ class Cli < Thor
     Runner.bundler_exec(args[0], exec_args, {})
   end
 
+  desc "logs", "Collect all the logs used for debugging purposes"
+  def logs(*args)
+    warn "Extra arguments ignored..." unless args.empty?
+    ensure_root
+
+    Runner.produce_versions_file!
+    Runner.tar_files("log/production.log", "log/crono.log", "log/versions.log")
+  end
+
   private
 
   def ensure_root
