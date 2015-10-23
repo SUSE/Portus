@@ -33,7 +33,8 @@ describe PublicActivity::ActivityPolicy do
       namespace2 = create(:namespace,
                           registry: registry,
                           team:     create(:team,
-                                       owners: [another_user]))
+                                       owners: [another_user]),
+                          public:   true)
 
       activities = [
         create(:activity_namespace_create,

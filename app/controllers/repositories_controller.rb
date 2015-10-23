@@ -4,14 +4,14 @@ class RepositoriesController < ApplicationController
   # GET /repositories
   # GET /repositories.json
   def index
-    @repositories = Repository.all
-
+    @repositories = policy_scope(Repository).all
     respond_with(@repositories)
   end
 
   # GET /repositories/1
   # GET /repositories/1.json
   def show
+    authorize @repository
     respond_with(@repository)
   end
 

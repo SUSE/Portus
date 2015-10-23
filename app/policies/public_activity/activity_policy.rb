@@ -22,8 +22,9 @@ class PublicActivity::ActivityPolicy
                "INNER JOIN teams ON teams.id = namespaces.team_id " \
                "INNER JOIN team_users ON teams.id = team_users.team_id")
         .where("activities.trackable_type = ? AND " \
-               "(team_users.user_id = ? OR activities.key = ? OR activities.key = ?)",
-               "Namespace", user.id, "namespace.public", "namespace.private")
+               "(team_users.user_id = ? OR " \
+               "((activities.key = ? OR activities.key = ?) AND namespaces.public = ?))",
+               "Namespace", user.id, "namespace.public", "namespace.private", true)
 
       # Show tag events for repositories inside of namespaces controller by
       # a team the user is part of, or tags part of public namespaces.
