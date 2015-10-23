@@ -4,10 +4,10 @@ describe RepositoriesController do
 
   let(:valid_session) { {} }
   let(:user) { create(:user) }
-  let(:public_namespace) { create(:namespace, public: 1, team: create(:team)) }
-  let(:visible_repository) { create(:repository, namespace: public_namespace) }
-  let(:private_namespace) { create(:namespace, public: 0, team: create(:team)) }
-  let(:invisible_repository) { create(:repository, namespace: private_namespace) }
+  let!(:public_namespace) { create(:namespace, public: 1, team: create(:team)) }
+  let!(:visible_repository) { create(:repository, namespace: public_namespace) }
+  let!(:private_namespace) { create(:namespace, public: 0, team: create(:team)) }
+  let!(:invisible_repository) { create(:repository, namespace: private_namespace) }
 
   before :each do
     sign_in user
