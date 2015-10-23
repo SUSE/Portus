@@ -1,14 +1,9 @@
 require "rails_helper"
 
 describe TeamUsersController do
-
-  let(:owner) { create(:user) }
+  let(:owner)       { create(:user) }
   let(:contributor) { create(:user) }
-  let(:team) do
-    create(:team,
-           owners:       [owner],
-           contributors: [contributor])
-  end
+  let(:team)        { create(:team, owners: [owner], contributors: [contributor]) }
 
   describe "as an owner of the team" do
     before :each do
@@ -16,7 +11,6 @@ describe TeamUsersController do
     end
 
     describe "DELETE #destroy" do
-
       it "does not allow to remove the only owner of the team" do
         owner_role = TeamUser.roles["owner"]
         delete :destroy, id: team.team_users.find_by(role: owner_role).id, format: "js"
@@ -43,13 +37,12 @@ describe TeamUsersController do
     end
 
     describe "PUT #update" do
-
       it "does not allow to change the role of the only owner of the team" do
         put :update, id: team.team_users.find_by(role: TeamUser.roles["owner"]).id,
                      team_user: { role: "viewer" }, format: "js"
         expect(team.owners.exists?(owner.id)).to be true
         expect(assigns(:team_user).errors.full_messages)
-          .to match_array(["Role cannot be changed for the only owner of the team"])
+          .to match_array(["Cannot remove the only owner of the team"])
       end
 
       it "changes the roles of a team user" do
@@ -190,7 +183,5 @@ describe TeamUsersController do
       expect(activity.recipient).to eq(user)
       expect(activity.parameters).to eq(old_role: "viewer", new_role: "contributor")
     end
-
   end
-
 end

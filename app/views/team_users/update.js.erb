@@ -1,14 +1,14 @@
-<% if team_user.errors.empty? %>
-  $("#team_user_<%= team_user.id %> td div.role").html("<%= team_user.role.capitalize %>");
-  $("#team_user_<%= team_user.id %> td .btn-edit-role i").removeClass('fa-close');
-  $("#team_user_<%= team_user.id %> td .btn-edit-role i").addClass('fa-pencil');
-  $("#change_role_team_user_<%= team_user.id %>").fadeToggle(function() {
-    $("#team_user_<%= team_user.id %> td div.role").fadeToggle();
+<% if @team_user.errors.any? %>
+  $('#alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
+  $('#alert').fadeIn();
+<% else %>
+  $("#team_user_<%= @team_user.id %> td div.role").html("<%= @team_user.role.capitalize %>");
+  $("#team_user_<%= @team_user.id %> td .btn-edit-role i").removeClass('fa-close');
+  $("#team_user_<%= @team_user.id %> td .btn-edit-role i").addClass('fa-pencil');
+  $("#change_role_team_user_<%= @team_user.id %>").fadeToggle(function() {
+    $("#team_user_<%= @team_user.id %> td div.role").fadeToggle();
   });
-  var el = $("#team_user_<%= team_user.id %> td .btn-edit-role i.fa");
+  var el = $("#team_user_<%= @team_user.id %> td .btn-edit-role i.fa");
   el.removeClass('fa-close');
   el.addClass('fa-pencil');
-<% else %>
-  $('#alert p').html("<%= escape_javascript(team_user.errors.full_messages.join('<br/>')) %>");
-  $('#alert').fadeIn();
 <% end %>
