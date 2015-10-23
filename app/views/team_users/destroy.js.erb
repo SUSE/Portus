@@ -1,8 +1,8 @@
-<% if error %>
-  $('#alert p').html("<%= escape_javascript(error) %>");
+<% if @team_user.errors.any? %>
+  $('#alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
 <% else %>
-  $("#team_user_<%= team_user_id %>").remove();
+  $("#team_user_<%= @team_user.id %>").remove();
   $('#alert p').html("User removed from the team");
   $('#alert').fadeIn();
 <% end %>
