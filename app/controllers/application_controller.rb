@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   # If they are not met, render a page with status 500
   def check_requirements
     return unless fixes.value?(true)
-    redirect_to "/500", fixes: true
+    redirect_to "/500?fixes=true"
   end
 
   # Redirect users to their profile page if they haven't set up their email
