@@ -1,5 +1,15 @@
 ## Upcoming Version
 
+- Portus will now check whether a Registry is reachable or not.
+See PR [#437](https://github.com/SUSE/Portus/pull/437).
+- Namespaces and teams have a description field. See PR
+[#383](https://github.com/SUSE/Portus/pull/383).
+- Second UI iteration. See pull requests:
+[#445](https://github.com/SUSE/Portus/pull/445),
+[#447](https://github.com/SUSE/Portus/pull/477) and
+[#462](https://github.com/SUSE/Portus/pull/462).
+- Repositories contained in *public* namespaces are now pullable even for
+non-logged in users: PR [#468](https://github.com/SUSE/Portus/pull/468).
 - SUSE RPM: provide `portusctl` tool to simplify the initial setup of Portus
 - Portus will now lock users' accounts that have failed too many times on
 login. See PR [#330](https://github.com/SUSE/Portus/pull/330).
@@ -22,7 +32,9 @@ PR [#297](https://github.com/SUSE/Portus/pull/297),
 PR [#286](https://github.com/SUSE/Portus/pull/286)
 - Update uglifier gem for fixing a security issue (OSVDB-126747)
 PR [#292](https://github.com/SUSE/Portus/pull/292)
-- Introduced LDAP support. See PR [#301](https://github.com/SUSE/Portus/pull/301).
+- Introduced LDAP support. See the initial PR [#301](https://github.com/SUSE/Portus/pull/301).
+Multiple PRs followed to bring LDAP support to a proper state (see
+[this](https://github.com/SUSE/Portus/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+LDAP+created%3A%3C%3D2015-10-26+)).
 - Users will not be able to create namespaces without a Registry currently
 existing.
 - PhantomJS is now being used in the testing infrastructure. See the following
@@ -49,7 +61,7 @@ and [#294](https://github.com/SUSE/Portus/pull/294).
 [#282](https://github.com/SUSE/Portus/pull/282).
 - Added icons to the following tables: teams and members. See PR
 [#388](https://github.com/SUSE/Portus/pull/388).
-- And some minor fixes here and there.
+- And some fixes here and there.
 
 ## 1.0.1
 
