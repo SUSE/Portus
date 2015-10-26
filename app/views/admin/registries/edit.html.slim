@@ -1,6 +1,9 @@
 .panel.panel-default
   .panel-heading
-    Edit #{@registry.name}
+    h5
+      'Registry:
+      strong
+        = @registry.name
   .panel-body
     = form_for @registry, url: admin_registry_path(@registry.id), html: {class: 'form-horizontal', role: 'form'} do |f|
       .form-group
