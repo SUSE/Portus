@@ -44,14 +44,10 @@
     <meta content="#205683" name="theme-color" />
   </head>
   <body>
+    {% include header.html %}
     <div class="container-fluid" id="documentation">
       <div class="row">
         <aside class="col-xs-3">
-          <header>
-            <a href="/">
-              <img class="img-responsive" src="/build/images/logo-header.png">
-            </a>
-          </header>
           <h4>Documentation</h4>
           <ul>
             {% for post in site.posts %}

@@ -44,17 +44,7 @@
     <meta content="#205683" name="theme-color" />
   </head>
   <body>
-    <header>
-      <div class="container-fluid">
-        <a href="/">
-          <img class="pull-left img-responsive" src="build/images/logo-header.png">
-        </a>
-        <div class="pull-right">
-          <a class="btn btn-link" href="/documentation.html">Documentation</a>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    </header>
+    {% include header.html %}
 
     {{ content }}
 
