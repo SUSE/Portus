@@ -1,0 +1,4 @@
+# Site settings
+title: Portus
+description: Claim control of your Docker images
+exclude: [assets, Gemfile, Gemfile.lock, gulpfile.js, node_modules]

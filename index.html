@@ -1,194 +1,127 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Portus by SUSE</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- bootstrap + Portus theme -->
-    <link href="build/css/portus.min.css" type="text/css" rel="stylesheet" />
-    <!--external libraries CSS -->
-    <link href="build/css/vendor.min.css" type="text/css" rel="stylesheet" />
-    <!--external libraries JS + portus JS -->
-    <script src="build/js/main.min.js"    type="text/javascript" charset="utf-8"></script>
+---
+layout: default
+---
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <!-- Favicon for all different devices -->
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <link href="assets/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
-    <link href="assets/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
-    <link href="assets/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
-    <link href="assets/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
-    <link href="assets/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
-    <link href="assets/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
-    <link href="assets/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
-    <link href="assets/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
-    <link href="assets/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
-    <link href="assets/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
-    <link href="assets/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
-    <link href="assets/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
-    <link href="assets/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-    <link href="assets/images/favicon/manifest.json" rel="manifest" />
-    <link color="#205683" href="/favicon/safari-pinned-tab.svg" rel="mask-icon" />
-    <link href="assets/images/favicon/favicon.ico" rel="shortcut icon" />
-    <meta content="Portus" name="apple-mobile-web-app-title" />
-    <meta content="Portus" name="application-name" />
-    <meta content="#da532c" name="msapplication-TileColor" />
-    <meta content="assets/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
-    <meta content="assets/images/favicon/browserconfig.xml" name="msapplication-config" />
-    <meta content="#205683" name="theme-color" />
-  </head>
-  <body>
-    <header>
-      <div class="container-fluid">
-        <img class="img-responsive" src="build/images/logo-header.png">
+<section id="welcome" class="text-center">
+  <div class="container-fluid">
+    <h2 class="text-uppercase wow fadeInUp" data-wow-delay="100ms" lang="en">Claim control of your</h2>
+    <h1 class="text-uppercase wow fadeInUp" data-wow-delay="100ms" lang="en">Docker images</h1>
+    <hr class="wow zoomIn img-responsive" data-wow-delay="500ms">
+    <a href="https://github.com/SUSE/Portus" class="btn btn-primary wow fadeInUp" data-wow-delay="700ms" lang="en">View on GitHub</a>
+    <a href="#" data-linkto="try-portus" class="smoothScroll btn btn-primary wow fadeInUp" data-wow-delay="900ms" lang="en">Try out Portus</a>
+  </div>
+</section>
+<section id="what-is-portus" class="text-center fixit-container">
+  <div class="container-fluid">
+    <h2 class="wow fadeInUp" lang="en">What is Portus</h2>
+    <p class="wow fadeInUp" lang="en">Portus is an open source authorization service and user interface for the next generation Docker Registry.</p>
+    <div class="portus-computer wow fadeIn" src="build/images/portus-computer.jpg">
+      <div class="embed-container">
+        <iframe src="https://www.youtube.com/embed/hGqvYVvdf7U" frameborder="0" allowfullscreen></iframe>
       </div>
-    </header>
-    <section id="welcome" class="text-center">
-      <div class="container-fluid">
-        <h2 class="text-uppercase wow fadeInUp" data-wow-delay="100ms" lang="en">Claim control of your</h2>
-        <h1 class="text-uppercase wow fadeInUp" data-wow-delay="100ms" lang="en">Docker images</h1>
-        <hr class="wow zoomIn img-responsive" data-wow-delay="500ms">
-        <a href="https://github.com/SUSE/Portus" class="btn btn-primary wow fadeInUp" data-wow-delay="700ms" lang="en">View on GitHub</a>
-        <a href="#" data-linkto="try-portus" class="smoothScroll btn btn-primary wow fadeInUp" data-wow-delay="900ms" lang="en">Try out Portus</a>
+    </div>
+  </div>
+</section>
+<section id="why-use-portus" class="text-center">
+  <div class="container-fluid">
+    <h2 class="wow fadeInUp text-uppercase" lang="en">Why use Portus</h2>
+    <p class="wow fadeInUp" lang="en">The Docker Hub is a wonderful place, but what if you cannot, or do not wish to push your images to a third party registry? You may setup a private instance of the Docker registry, but then everyone in your organization has push and pull privileges over all of your images.
+    </p>
+    <p class="wow fadeInUp" lang="en">How do you keep track of all of the images in your private registry?</p>
+    <h4 class="wow lightSpeedIn" lang="en">Portus to the rescue!</h4>
+    <i class="fa fa-life-ring fa-5x wow bounceIn"></i>
+  </div>
+</section>
+<section id="secure">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 wow fadeInLeft">
+        <h2 class="wow fadeInUp" lang="en">Secure</h2>
+        <p class="wow fadeInUp" lang="en">Portus implements the new authorization scheme defined by the latest version of the Docker registry. It allows for fine grained control over all of your images. You decide which users and teams are allowed to push or pull images.</p>
       </div>
-    </section>
-    <section id="what-is-portus" class="text-center fixit-container">
-      <div class="container-fluid">
-        <h2 class="wow fadeInUp" lang="en">What is Portus</h2>
-        <p class="wow fadeInUp" lang="en">Portus is an open source authorization service and user interface for the next generation Docker Registry.</p>
-        <div class="portus-computer wow fadeIn" src="build/images/portus-computer.jpg">
-          <div class="embed-container">
-            <iframe src="https://www.youtube.com/embed/hGqvYVvdf7U" frameborder="0" allowfullscreen></iframe>
-          </div>
+      <div class="col-sm-6 text-center wow fadeInRight">
+        <img class="img-responsive" src="build/images/members.png" />
+      </div>
+    </div>
+  </div>
+</section>
+<section id="manage-users" class="text-center">
+  <div class="container-fluid">
+    <h2 class="wow fadeInUp" lang="en">Easily manage users with teams</h2>
+    <p class="wow fadeInUp" lang="en">Map your company organization inside of Portus, define as many teams as you want and add and remove users from them.</p>
+    <p class="wow fadeInUp" lang="en">Teams have three different types of users to allow full granularity:</p>
+    <div class="row users-container">
+      <div class="col-sm-4 wow bounceIn" data-wow-delay="200ms">
+        <div class="portus-users">
+          <i class="fa fa-eye fa-5x"></i>
         </div>
+        <h3 lang="en">Viewers</h3>
+        <p lang="en">Can only pull images.</p>
       </div>
-    </section>
-    <section id="why-use-portus" class="text-center">
-      <div class="container-fluid">
-        <h2 class="wow fadeInUp text-uppercase" lang="en">Why use Portus</h2>
-        <p class="wow fadeInUp" lang="en">The Docker Hub is a wonderful place, but what if you cannot, or do not wish to push your images to a third party registry? You may setup a private instance of the Docker registry, but then everyone in your organization has push and pull privileges over all of your images.
-        </p>
-        <p class="wow fadeInUp" lang="en">How do you keep track of all of the images in your private registry?</p>
-        <h4 class="wow lightSpeedIn" lang="en">Portus to the rescue!</h4>
-        <i class="fa fa-life-ring fa-5x wow bounceIn"></i>
-      </div>
-    </section>
-    <section id="secure">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-6 wow fadeInLeft">
-            <h2 class="wow fadeInUp" lang="en">Secure</h2>
-            <p class="wow fadeInUp" lang="en">Portus implements the new authorization scheme defined by the latest version of the Docker registry. It allows for fine grained control over all of your images. You decide which users and teams are allowed to push or pull images.</p>
-          </div>
-          <div class="col-sm-6 text-center wow fadeInRight">
-            <img class="img-responsive" src="build/images/members.png" />
-          </div>
+      <div class="col-sm-4 wow bounceIn" data-wow-delay="500ms">
+        <div class="portus-users">
+          <i class="fa fa-exchange fa-5x"></i>
         </div>
+        <h3 lang="en">Contributors</h3>
+        <p lang="en">Can push and pull images.</p>
       </div>
-    </section>
-    <section id="manage-users" class="text-center">
-      <div class="container-fluid">
-        <h2 class="wow fadeInUp" lang="en">Easily manage users with teams</h2>
-        <p class="wow fadeInUp" lang="en">Map your company organization inside of Portus, define as many teams as you want and add and remove users from them.</p>
-        <p class="wow fadeInUp" lang="en">Teams have three different types of users to allow full granularity:</p>
-        <div class="row users-container">
-          <div class="col-sm-4 wow bounceIn" data-wow-delay="200ms">
-            <div class="portus-users">
-              <i class="fa fa-eye fa-5x"></i>
-            </div>
-            <h3 lang="en">Viewers</h3>
-            <p lang="en">Can only pull images.</p>
-          </div>
-          <div class="col-sm-4 wow bounceIn" data-wow-delay="500ms">
-            <div class="portus-users">
-              <i class="fa fa-exchange fa-5x"></i>
-            </div>
-            <h3 lang="en">Contributors</h3>
-            <p lang="en">Can push and pull images.</p>
-          </div>
-          <div class="col-sm-4 wow bounceIn" data-wow-delay="800ms">
-            <div class="portus-users">
-              <i class="fa fa-male fa-5x"></i>
-            </div>
-            <h3 lang="en">Owners</h3>
-            <p lang="en">Like contributors, but can also add and remove users from the team.</p>
-          </div>
+      <div class="col-sm-4 wow bounceIn" data-wow-delay="800ms">
+        <div class="portus-users">
+          <i class="fa fa-male fa-5x"></i>
         </div>
+        <h3 lang="en">Owners</h3>
+        <p lang="en">Like contributors, but can also add and remove users from the team.</p>
       </div>
-    </section>
-    <section id="search">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-6 wow fadeInLeft">
-            <h2 class="wow fadeInUp" lang="en">Search</h2>
-            <p class="wow fadeInUp" lang="en">Portus provides an intuitive overview of the contents of your private registry. It also features a search capability to find images even faster.</p>
-            <p class="wow fadeInUp" lang="en">User privileges are constantly taken into account, even when browsing the contents of the repository or when performing searches.</p>
-          </div>
-          <div class="col-sm-6 text-center wow fadeInRight">
-            <img class="img-responsive" src="build/images/search.jpg" />
-          </div>
-        </div>
+    </div>
+  </div>
+</section>
+<section id="search">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 wow fadeInLeft">
+        <h2 class="wow fadeInUp" lang="en">Search</h2>
+        <p class="wow fadeInUp" lang="en">Portus provides an intuitive overview of the contents of your private registry. It also features a search capability to find images even faster.</p>
+        <p class="wow fadeInUp" lang="en">User privileges are constantly taken into account, even when browsing the contents of the repository or when performing searches.</p>
       </div>
-    </section>
-    <section id="audit">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-6 text-center wow fadeInLeft">
-            <img class="img-responsive" src="build/images/audit.jpg" />
-          </div>
-          <div class="col-sm-6 wow fadeInRight text-right">
-            <h2 class="wow fadeInUp" lang="en">Audit</h2>
-            <p class="wow fadeInUp" lang="en">Keep everything under control. All the relevant events are automatically logged by Portus and are available for analysis by admin users.</p>
-            <p class="wow fadeInUp" lang="en">Non-admin users can also use this feature to keep up with relevant changes.</p>
-          </div>
-        </div>
+      <div class="col-sm-6 text-center wow fadeInRight">
+        <img class="img-responsive" src="build/images/search.jpg" />
       </div>
-    </section>
-    <section id="try-portus" class="text-center">
-      <div class="container-fluid">
-        <h2 class="wow fadeInUp" lang="en">Try Portus</h2>
-        <div class="row">
-          <p class="wow fadeInUp"><span lang="en">Try Portus with </span> <a href='https://github.com/SUSE/Portus/wiki/The-development-environment#docker' lang="en"> docker-compose</a>:</p>
-          <script type="text/javascript" src="https://asciinema.org/a/24174.js" id="asciicast-24174" async data-theme="tango"></script>
-          <p class="wow fadeInUp"><span lang="en">We provide also a ready to go</span> <a href='https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance' lang="en"> appliance</a> <span lang="en">based on openSUSE.</span></p>
-          <p class="wow fadeInUp" lang="en">All Portus documentation, including the
-          <a href='https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance' lang="en">installation</a>
-          and the
-          <a href='https://github.com/SUSE/Portus/wiki/The-development-environment#docker' lang="en"> docker-compose</a>
-          guides are available in our</span> <a href='https://github.com/SUSE/Portus/wiki'> wiki</a>.
-          </p>
-        </div>
-
-
+    </div>
+  </div>
+</section>
+<section id="audit">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 text-center wow fadeInLeft">
+        <img class="img-responsive" src="build/images/audit.jpg" />
       </div>
-    </section>
-    <section id="feedback" class="text-center">
-      <div class="container-flui">
-        <h3 class="wow fadeInUp" lang="en">Feedback, comments, contributions?</h3>
-        <p class="wow fadeInUp"><span lang="en">Open an</span> <a href='https://github.com/SUSE/Portus/issues' lang="en"> issue</a> <span lang="en">or subscribe to the</span> <a href='http://lists.suse.com/mailman/listinfo/containers'>containers@lists.suse.com</a> <span lang="en">mailing list.</span></p>
+      <div class="col-sm-6 wow fadeInRight text-right">
+        <h2 class="wow fadeInUp" lang="en">Audit</h2>
+        <p class="wow fadeInUp" lang="en">Keep everything under control. All the relevant events are automatically logged by Portus and are available for analysis by admin users.</p>
+        <p class="wow fadeInUp" lang="en">Non-admin users can also use this feature to keep up with relevant changes.</p>
       </div>
-    </section>
-    <footer>
-      <div class="row row-0">
-        <div class="col-sm-2">
-          <div class="dropup">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="selected-language">English</span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownLanguage">
-              <li><a href="#" class="change-language" data-language-value="en">English</a></li>
-              <li><a href="#" class="change-language" data-language-value="es">Español</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-sm-8 text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
-      </div>
-    </footer>
-  </body>
-</html>
+    </div>
+  </div>
+</section>
+<section id="try-portus" class="text-center">
+  <div class="container-fluid">
+    <h2 class="wow fadeInUp" lang="en">Try Portus</h2>
+    <div class="row">
+      <p class="wow fadeInUp"><span lang="en">Try Portus with </span> <a href='https://github.com/SUSE/Portus/wiki/The-development-environment#docker' lang="en"> docker-compose</a>:</p>
+      <script type="text/javascript" src="https://asciinema.org/a/24174.js" id="asciicast-24174" async data-theme="tango"></script>
+      <p class="wow fadeInUp"><span lang="en">We provide also a ready to go</span> <a href='https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance' lang="en"> appliance</a> <span lang="en">based on openSUSE.</span></p>
+      <p class="wow fadeInUp" lang="en">All Portus documentation, including the
+      <a href='https://github.com/SUSE/Portus/wiki/Installing-Portus#the-appliance' lang="en">installation</a>
+      and the
+      <a href='https://github.com/SUSE/Portus/wiki/The-development-environment#docker' lang="en"> docker-compose</a>
+      guides are available in our</span> <a href='https://github.com/SUSE/Portus/wiki'> wiki</a>.
+      </p>
+    </div>
+  </div>
+</section>
+<section id="feedback" class="text-center">
+  <div class="container-flui">
+    <h3 class="wow fadeInUp" lang="en">Feedback, comments, contributions?</h3>
+    <p class="wow fadeInUp"><span lang="en">Open an</span> <a href='https://github.com/SUSE/Portus/issues' lang="en"> issue</a> <span lang="en">or subscribe to the</span> <a href='http://lists.suse.com/mailman/listinfo/containers'>containers@lists.suse.com</a> <span lang="en">mailing list.</span></p>
+  </div>
+</section>
