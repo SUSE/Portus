@@ -6,8 +6,11 @@ li
   .description
     h6
       strong
-        = "#{activity.owner.username} removed user #{activity.recipient.username} "
-      = "with role #{activity.parameters[:role]} from the "
+        - if activity.owner == activity.recipient
+          = "#{activity.owner.username} removed itself "
+        - else
+          = "#{activity.owner.username} removed user #{activity.recipient.username} "
+      = "from the "
       = link_to activity.trackable.name, activity.trackable
       |  team
     small

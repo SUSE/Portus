@@ -6,9 +6,12 @@ li
   .description
     h6
       strong
-        = "#{activity.owner.username} changed role of user #{activity.recipient.username} "
+        - if activity.owner == activity.recipient
+          = "#{activity.owner.username} changed its role "
+        - else
+          = "#{activity.owner.username} changed role of user #{activity.recipient.username} "
       = "from #{activity.parameters[:old_role]} to #{activity.parameters[:new_role]} "
-      = "whithin the team "
+      = "within the team "
       = link_to activity.trackable.name, activity.trackable
     small
       i.fa.fa-clock-o
