@@ -1,7 +1,8 @@
 class Auth::RegistrationsController < Devise::RegistrationsController
   layout "authentication", except: :edit
 
-  before_action :check_ldap, only: [:new, :create]
+  include CheckLDAP
+
   before_action :check_admin, only: [:new, :create]
   before_action :configure_sign_up_params, only: [:create]
   before_action :authenticate_user!, only: [:disable]
@@ -87,11 +88,6 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   end
 
   protected
-
-  # Redirect to the login page if LDAP is enabled.
-  def check_ldap
-    redirect_to new_user_session_path if Portus::LDAP.enabled?
-  end
 
   # Returns true if the contents of the `params` hash contains the needed keys
   # to update the password of the user.

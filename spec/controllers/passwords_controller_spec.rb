@@ -36,4 +36,20 @@ describe PasswordsController do
     @user.reload
     expect(@user.valid_password?("12341234")).to be false
   end
+
+  describe "LDAP support is enabled" do
+    before :each do
+      APP_CONFIG["ldap"] = { "enabled" => true }
+    end
+
+    it "redirects the user when trying to reach :new" do
+      get :new
+      expect(response).to redirect_to new_user_session_path
+    end
+
+    it "redirects the user when trying to :create" do
+      post :create, "user" => { "email" => @user.email }
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
 end

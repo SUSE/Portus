@@ -3,6 +3,8 @@
 class PasswordsController < Devise::PasswordsController
   layout "authentication"
 
+  include CheckLDAP
+
   # Re-implemented from Devise to respond with a proper message on error.
   def create
     self.resource = resource_class.send_reset_password_instructions(resource_params)
