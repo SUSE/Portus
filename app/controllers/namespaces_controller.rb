@@ -30,11 +30,7 @@ class NamespacesController < ApplicationController
   # POST /namespace
   # POST /namespace.json
   def create
-    @namespace = Namespace.new(
-      team:     @team,
-      name:     params["namespace"]["namespace"],
-      registry: Registry.get
-    )
+    @namespace = fetch_namespace
     authorize @namespace
 
     respond_to do |format|
@@ -68,6 +64,20 @@ class NamespacesController < ApplicationController
   end
 
   private
+
+  # Fetch the namespace to be created from the given parameters. Note that this
+  # method assumes that the @team instance object has already been set.
+  def fetch_namespace
+    ns = params.require(:namespace).permit(:namespace, :description)
+
+    @namespace = Namespace.new(
+      team:     @team,
+      name:     ns["namespace"],
+      registry: Registry.get
+    )
+    @namespace.description = ns["description"] if ns["description"]
+    @namespace
+  end
 
   # Check that the given team exists and that is not hidden. This hook is used
   # only as a helper of the `create` method.
