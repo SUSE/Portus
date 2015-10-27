@@ -63,5 +63,3 @@ $(document).on "page:change", ->
         $('#add_team_btn i').removeClass("fa-minus-circle")
         $('#add_team_btn i').addClass("fa-plus-circle")
         layout_resizer()
-
-  openSearchForm()
