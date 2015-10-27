@@ -15,8 +15,9 @@ section.row-0
 
         - if Portus::LDAP.enabled?
           - unless User.not_portus.any?
-            p
-              | <b>NOTE</b>: The first user to be created will have admin permissions !
+            .alert.alert-info
+              strong Note:
+              |  The first user to be created will have admin permissions !
         - else
           .row
             .col-sm-6.create-new-account
