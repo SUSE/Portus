@@ -5,5 +5,5 @@ tr
   - if current_page?(url_for admin_teams_path)
     td
       i.fa.fa-lg class="fa-toggle-#{team.hidden? ? 'on': 'off'}"
-  td= team.users.count
+  td= team.users.enabled.count
   td= team.namespaces.count

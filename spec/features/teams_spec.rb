@@ -84,6 +84,22 @@ feature "Teams support" do
       find("#teams a").click
       expect(current_path).to eq team_path(team)
     end
+
+    scenario "Disabled users do not count", js: true do
+      user = create(:user)
+      team.viewers = [user]
+      team.save!
+      visit teams_path
+
+      expect(page).to have_css("td:nth-child(4)", text: "2")
+
+      user.enabled = false
+      user.save!
+      visit teams_path
+
+      expect(page).to have_css("td:nth-child(4)", text: "1")
+      expect(page).to_not have_css("td:nth-child(4)", text: "2")
+    end
   end
 
   describe "teams#show" do
