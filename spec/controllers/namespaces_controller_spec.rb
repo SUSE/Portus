@@ -106,7 +106,6 @@ describe NamespacesController do
     end
 
     context "as a contributor of the team that is going to control the namespace" do
-
       it "is not possible to create a namespace inside of a hidden team" do
         sign_in contributor
         post_params = { namespace: hidden_attributes, format: :js }
@@ -125,11 +124,9 @@ describe NamespacesController do
           post :create, post_params
         end.to change(Namespace, :count).by(1)
       end
-
     end
 
     context "as a viewer of the team that is going to control the namespace" do
-
       it "blocks access" do
         sign_in viewer
         post_params = { namespace: valid_attributes, format: :js }
@@ -139,11 +136,9 @@ describe NamespacesController do
         end.not_to change(Namespace, :count)
         expect(response.status).to eq(401)
       end
-
     end
 
     context "as a generic user not part of the team that is going to control the namespace" do
-
       it "blocks access" do
         sign_in create(:user)
         post_params = { namespace: valid_attributes, format: :js }
@@ -153,7 +148,6 @@ describe NamespacesController do
         end.not_to change(Namespace, :count)
         expect(response.status).to eq(401)
       end
-
     end
 
     context "with valid params" do
@@ -170,6 +164,8 @@ describe NamespacesController do
           post :create, @post_params
         end.to change(Namespace, :count).by(1)
         expect(assigns(:namespace).team).to eq(team)
+        expect(assigns(:namespace).name).to eq(valid_attributes[:namespace])
+        expect(assigns(:namespace).description).to be_nil
       end
 
       it "assigns a newly created namespace as @namespace" do
@@ -178,6 +174,15 @@ describe NamespacesController do
         expect(assigns(:namespace)).to be_persisted
       end
 
+      it "creates a new Namespace with the given description" do
+        @post_params[:namespace]["description"] = "desc"
+        expect do
+          post :create, @post_params
+        end.to change(Namespace, :count).by(1)
+        expect(assigns(:namespace).team).to eq(team)
+        expect(assigns(:namespace).name).to eq(valid_attributes[:namespace])
+        expect(assigns(:namespace).description).to eq("desc")
+      end
     end
 
     context "with invalid params" do
