@@ -97,11 +97,12 @@ class Repository < ActiveRecord::Base
         tags.delete_at(idx)
       else
         Tag.create!(name: tag, repository: repository, author: portus)
+        logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
       end
     end
 
     # Finally remove the tags that are left and return the repo.
-    Tag.where(name: tags).delete_all
+    Tag.where(name: tags).find_each(&:delete_and_update!)
     repository.reload
   end
 end
