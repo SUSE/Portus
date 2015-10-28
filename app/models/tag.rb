@@ -8,4 +8,11 @@ class Tag < ActiveRecord::Base
   # We don't validate the tag, because we will fetch that from the registry,
   # and that's guaranteed to have a good format.
   validates :name, uniqueness: { scope: "repository_id" }
+
+  # Delete this tag and update its activity.
+  def delete_and_update!
+    logger.tagged("catalog") { logger.info "Removed the tag '#{name}'." }
+    PublicActivity::Activity.where(recipient: self).update_all(parameters: { tag_name: name })
+    destroy
+  end
 end
