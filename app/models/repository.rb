@@ -101,7 +101,9 @@ class Repository < ActiveRecord::Base
     end
 
     # Finally remove the tags that are left and return the repo.
-    Tag.where(name: tags).delete_all
+    tag_objects = Tag.where(name: tags)
+    PublicActivity::Activity.where(recipient: tag_objects).delete_all
+    tag_objects.delete_all
     repository.reload
   end
 end

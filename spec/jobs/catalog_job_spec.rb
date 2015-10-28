@@ -104,4 +104,21 @@ describe CatalogJob do
       expect(tags.map(&:name)).to match_array(["latest", "tag2"])
     end
   end
+
+  describe "Activities are removed accordingly" do
+    let!(:registry)   { create(:registry) }
+    let!(:owner)      { create(:user) }
+    let!(:repo)       { create(:repository, name: "repo", namespace: registry.global_namespace) }
+    let!(:tag)        { create(:tag, name: "latest", author: owner, repository: repo) }
+
+    it "removes activities from dangling tags" do
+      repo.create_activity(:push, owner: owner, recipient: tag)
+      expect(PublicActivity::Activity.count).to eq 1
+
+      job = CatalogJobMock.new
+      job.update_registry!([{ "name" => "repo", "tags" => ["0.1"] }])
+
+      expect(PublicActivity::Activity.count).to eq 0
+    end
+  end
 end
