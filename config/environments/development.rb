@@ -38,8 +38,6 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-
   # Set this to true when debugging a mailer.
   config.action_mailer.raise_delivery_errors = false
 end
