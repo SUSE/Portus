@@ -28,15 +28,19 @@ module TeamsHelper
 
   # Render the team user role icon.
   def team_user_role_icon(team_user)
-    icon = case team_user.role
-           when "owner"
-             "fa-male"
-           when "contributor"
-             "fa-exchange"
-           when "viewer"
-             "fa-eye"
-           end
+    icon = role_icon_class team_user.role
 
     content_tag :i, "", class: "fa #{icon} fa-lg", title: team_user.role.titleize
+  end
+
+  def role_icon_class(role)
+    case role
+    when "owner"
+      "fa-male"
+    when "contributor"
+      "fa-exchange"
+    when "viewer"
+      "fa-eye"
+    end
   end
 end

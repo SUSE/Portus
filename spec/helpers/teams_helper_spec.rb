@@ -80,4 +80,25 @@ RSpec.describe TeamsHelper, type: :helper do
         '<i class="fa fa-eye fa-lg" title="Viewer"></i>')
     end
   end
+
+  describe "role_icon_class" do
+    before(:each) do
+      team
+    end
+
+    it "returns the proper icon class for owner" do
+      expect(helper.role_icon_class(owner.team_users.first.role)).to eq(
+        "fa-male")
+    end
+
+    it "returns the proper icon class for contributor" do
+      expect(helper.role_icon_class(contributor.team_users.first.role)).to eq(
+        "fa-exchange")
+    end
+
+    it "returns the proper icon class for viewer" do
+      expect(helper.role_icon_class(viewer.team_users.first.role)).to eq(
+        "fa-eye")
+    end
+  end
 end
