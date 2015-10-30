@@ -243,6 +243,18 @@ describe Portus::LDAP do
       expect(created.username.start_with?("name")).to be_truthy
       expect(created.admin?).to be_falsey
     end
+
+    it "allows multiple users to have no email setup" do
+      APP_CONFIG["ldap"]["guess_email"] = { "enabled" => false }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      lm.find_or_create_user_test!
+
+      lm = LdapMock.new(username: "another", password: "12341234")
+      lm.find_or_create_user_test!
+
+      expect(User.count).to eq 2
+    end
   end
 
   describe "#generate_random_name" do
@@ -341,36 +353,36 @@ describe Portus::LDAP do
       ]
     end
 
-    it "returns an empty email if disabled" do
+    it "returns a nil email if disabled" do
       ge = { "enabled" => false, "attr" => "" }
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
 
       lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(valid_response)).to eq ""
+      expect(lm.guess_email_test(valid_response)).to be_nil
     end
 
-    it "returns an empty email if no records have been found" do
+    it "returns a nil email if no records have been found" do
       ge = { "enabled" => true, "attr" => "" }
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
 
       lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test([])).to eq ""
+      expect(lm.guess_email_test([])).to be_nil
     end
 
-    it "returns an empty email if more than one dn gets returned" do
+    it "returns a nil email if more than one dn gets returned" do
       ge = { "enabled" => true, "attr" => "" }
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
 
       lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(multiple_dn)).to eq ""
+      expect(lm.guess_email_test(multiple_dn)).to be_nil
     end
 
-    it "returns an empty email if the dc hostname could not be guessed" do
+    it "returns a nil email if the dc hostname could not be guessed" do
       ge = { "enabled" => true, "attr" => "" }
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
 
       lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(empty_dc)).to eq ""
+      expect(lm.guess_email_test(empty_dc)).to be_nil
     end
 
     it "returns a valid email if the dc can be guessed" do
@@ -381,12 +393,12 @@ describe Portus::LDAP do
       expect(lm.guess_email_test(valid_response)).to eq "name@example.com"
     end
 
-    it "returns an email if the specified attribute does not exist" do
+    it "returns a nil email if the specified attribute does not exist" do
       ge = { "enabled" => true, "attr" => "non_existing" }
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
 
       lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(valid_response)).to eq ""
+      expect(lm.guess_email_test(valid_response)).to be_nil
     end
 
     it "returns a valid email if the given attribute exists" do

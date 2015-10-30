@@ -190,37 +190,39 @@ module Portus
     end
 
     # If the "ldap.guess_email" option is enabled, try to guess the email for
-    # the user as specified in the configuration. Returns an empty string if
-    # nothing could be guessed.
+    # the user as specified in the configuration. Returns an nil if nothing
+    # could be guessed.
     def guess_email
       cfg = APP_CONFIG["ldap"]["guess_email"]
-      return "" if cfg.nil? || !cfg["enabled"]
+      return nil if cfg.nil? || !cfg["enabled"]
 
       record = @ldap.search(search_options)
-      return "" if record.size != 1
+      return nil if record.size != 1
       record = record.first
 
       cfg["attr"].empty? ? guess_from_dn(record["dn"]) : guess_from_attr(record, cfg["attr"])
     end
 
     # Guess the email from the given attribute. Note that if multiple records
-    # are fetched, then only the first one will be returned.
+    # are fetched, then only the first one will be returned. It might return
+    # nil if no email could be guessed.
     def guess_from_attr(record, attr)
-      email = record[attr] || ""
+      email = record[attr]
       email.is_a?(Array) ? email.first : email
     end
 
     # Guesses the email being fetching "dc" components of the given
-    # distinguished name.
+    # distinguished name. If the email could not be guessed, then it returns
+    # nil.
     def guess_from_dn(dn)
-      return "" if dn.nil? || dn.size != 1
+      return nil if dn.nil? || dn.size != 1
 
       dc = []
       dn.first.split(",").each do |value|
         kv = value.split("=")
         dc << kv.last if kv.first == "dc"
       end
-      return "" if dc.empty?
+      return nil if dc.empty?
 
       "#{username}@#{dc.join(".")}"
     end
