@@ -74,6 +74,15 @@ describe Portus::JwtToken do
 
       describe ":exp" do
         it "is set to #expires_at" do
+          APP_CONFIG["jwt_expiration_time"] = { "value" => "6.minutes" }
+
+          now = Time.zone.now
+          expected = now + 6.minutes
+          allow(subject).to receive(:issued_at).and_return(now)
+          expect(subject.claim[:exp]).to eq expected
+        end
+
+        it "uses the default expiration time if nothing is specified" do
           now = Time.zone.now
           expected = now + 5.minutes
           allow(subject).to receive(:issued_at).and_return(now)

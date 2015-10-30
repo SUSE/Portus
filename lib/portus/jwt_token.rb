@@ -30,7 +30,7 @@ module Portus
         hash[:aud]    = @service
         hash[:iat]    = issued_at
         hash[:nbf]    = issued_at - 5.seconds
-        hash[:exp]    = issued_at + 5.minutes
+        hash[:exp]    = issued_at + expiration_time
         hash[:jti]    = jwt_id
         hash[:access] = authorized_access if @scope
       end
@@ -46,6 +46,13 @@ module Portus
     end
 
     protected
+
+    # The expiration time to be added to the current token.
+    def expiration_time
+      # rubocop:disable Lint/Eval
+      eval(APP_CONFIG["jwt_expiration_time"]["value"])
+      # rubocop:enable Lint/Eval
+    end
 
     # Returns an array with the authorized actions hash.
     def authorized_access
