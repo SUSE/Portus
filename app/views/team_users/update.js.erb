@@ -2,6 +2,11 @@
   $('#alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
 <% else %>
+  <% old_role = @team_user.previous_changes['role'].try(:first) %>
+  <% unless @team_user.role == old_role %>
+    $("#team_user_<%= @team_user.id %> td.table-icon i").removeClass("<%= role_icon_class(old_role) %>");
+    $("#team_user_<%= @team_user.id %> td.table-icon i").addClass("<%= role_icon_class(@team_user.role) %>");
+  <% end %>
   $("#team_user_<%= @team_user.id %> td div.role").html("<%= @team_user.role.capitalize %>");
   $("#team_user_<%= @team_user.id %> td .btn-edit-role i").removeClass('fa-close');
   $("#team_user_<%= @team_user.id %> td .btn-edit-role i").addClass('fa-pencil');
