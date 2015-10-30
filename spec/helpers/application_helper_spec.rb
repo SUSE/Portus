@@ -17,6 +17,14 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(user_image_tag("user@example.com")).to eq(
         '<img class="user-picture" src="/images/user.svg" alt="User" />')
     end
+
+    it "uses the fa icon if the user had no email set" do
+      APP_CONFIG["gravatar"] = { "enabled" => false }
+      expect(user_image_tag("")).to eq(
+        '<img class="user-picture" src="/images/user.svg" alt="User" />')
+      expect(user_image_tag(nil)).to eq(
+        '<img class="user-picture" src="/images/user.svg" alt="User" />')
+    end
   end
 
   describe "#activity_time_tag" do

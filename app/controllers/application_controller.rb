@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   #      this case, the user will be asked to submit an email.
   #   2. Everything is fine, go to the root url.
   def after_sign_in_path_for(_resource)
-    current_user.email.empty? ? edit_user_registration_url : root_url
+    current_user.email? ? root_url : edit_user_registration_url
   end
 
   def after_sign_out_path_for(_resource)
@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
   # Redirect users to their profile page if they haven't set up their email
   # account (this happens when signing up through LDAP suppor).
   def force_update_profile!
-    return unless current_user && current_user.email.empty?
+    return unless current_user && !current_user.email?
     return if protected_controllers?
 
     redirect_to edit_user_registration_url
