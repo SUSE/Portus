@@ -40,6 +40,10 @@ RSpec.configure do |config|
     # this value affects the application controller, we have to make sure
     # it has the default value we expect
     APP_CONFIG["check_ssl_usage"] = { "enabled" => true }
+
+    # This value is expected to be always available. The default value will be
+    # set
+    APP_CONFIG["jwt_expiration_time"] = { "value" => "5.minutes" }
   end
 
   config.order = :random
