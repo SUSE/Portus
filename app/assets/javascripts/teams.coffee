@@ -26,10 +26,12 @@ $(document).on "page:change", ->
       $('#change_role_team_user_' + event.currentTarget.value).toggle()
     else if $(this).hasClass('button_team_description')
       $('.description').toggle()
-      $('#change_description_team_' + event.currentTarget.value).toggle()
+      $('#change_description_team_' + event.currentTarget.value).toggle().trigger('focus')
+      $('#team_description').focus()
     else if $(this).hasClass('button_namespace_description')
       $('.description').toggle()
       $('#change_description_namespace_' + event.currentTarget.value).toggle()
+      $('#namespace_description').focus()
   )
 
   $('#add_namespace_btn').unbind('click').on 'click', (event) ->
