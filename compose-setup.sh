@@ -20,7 +20,7 @@ setup_database() {
     COUNT=$((COUNT+5))
 
     printf "Portus: configuring database..."
-    docker-compose run --rm web rake db:create db:migrate db:seed &> /dev/null
+    docker-compose run --rm web rake db:setup &> /dev/null
 
     RETRY=$?
     if [ $RETRY -ne 0 ]; then
