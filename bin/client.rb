@@ -9,6 +9,8 @@
 #   - manifest <name>[:<tag>]
 #   - ping <hostname:port> [use_ssl]
 
+require "pp"
+
 registry = Registry.get
 if registry.nil? && ARGV.first != "ping"
   puts "No registry has been configured!"
