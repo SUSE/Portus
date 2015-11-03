@@ -52,7 +52,8 @@ class Api::V2::TokensController < Api::BaseController
     # If auth_scope.actions is empty, it means that the previous loop
     # unauthorized all the requested scopes for the current user. Therefore
     # respond with a 401. Otherwise, return the resulting auth_scope.
-    raise Pundit::NotAuthorizedError if auth_scope.actions.empty?
+    msg = "None of the given scopes were authorized for the current user"
+    raise Pundit::NotAuthorizedError, msg if auth_scope.actions.empty?
     auth_scope
   end
 
