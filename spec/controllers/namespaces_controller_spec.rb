@@ -85,6 +85,7 @@ describe NamespacesController do
   end
 
   describe "POST #create" do
+    render_views
     let(:valid_attributes) do
       {
         team:      team.name,
@@ -135,6 +136,13 @@ describe NamespacesController do
           post :create, post_params
         end.not_to change(Namespace, :count)
         expect(response.status).to eq(401)
+      end
+
+      it "shows an error message" do
+        sign_in viewer
+        post_params = { namespace: valid_attributes }
+        xhr :post, :create, post_params
+        expect(response.body).to include("You are not allowed to create a namespace for the team")
       end
     end
 

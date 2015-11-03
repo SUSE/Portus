@@ -4,6 +4,7 @@ class NamespacesController < ApplicationController
   respond_to :html, :js
   before_action :set_namespace, only: [:toggle_public, :show, :update]
   before_action :check_team, only: [:create]
+  before_action :check_role, only: [:create]
 
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
@@ -88,6 +89,17 @@ class NamespacesController < ApplicationController
     @error = "Selected team does not exist."
     respond_to do |format|
       format.js { respond_with nil, status: :not_found }
+    end
+  end
+
+  def check_role
+    return false if current_user.admin? ||
+        @team.owners.exists?(current_user.id) ||
+        @team.contributors.exists?(current_user.id)
+
+    @error = "You are not allowed to create a namespace for the team #{@team.name}."
+    respond_to do |format|
+      format.js { respond_with nil, status: :unauthorized }
     end
   end
 
