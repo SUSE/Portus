@@ -51,10 +51,12 @@ class User < ActiveRecord::Base
       team = Team.create!(name: username, owners: [self], hidden: true)
     end
 
+    default_description = "This personal namespace belongs to #{username}."
     Namespace.find_or_create_by!(
-      team:     team,
-      name:     username,
-      registry: Registry.get # TODO: fix once we handle more registries
+      team:        team,
+      name:        username,
+      description: default_description,
+      registry:    Registry.get # TODO: fix once we handle more registries
     )
   end
 

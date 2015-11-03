@@ -37,3 +37,18 @@ section.sign-up {
     color: $white
   }
 }
+
+.edit_team, .edit_namespace {
+  textarea {
+    max-height: 600px;
+    min-height: initial;
+    max-width: 100%;
+  }
+}
+
+#new-namespace-form, #new-team-form {
+  textarea {
+    max-height: 600px;
+    min-height: initial;
+  }
+}

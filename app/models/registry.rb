@@ -131,11 +131,12 @@ class Registry < ActiveRecord::Base
       owners: User.where(admin: true),
       hidden: true)
     Namespace.create!(
-      name:     "portus_global_namespace_#{count}",
-      registry: self,
-      public:   true,
-      global:   true,
-      team:     team)
+      name:        "portus_global_namespace_#{count}",
+      registry:    self,
+      public:      true,
+      global:      true,
+      description: "The global namespace for the registry #{Registry.name}.",
+      team:        team)
 
     # TODO: change code once we support multiple registries
     User.find_each(&:create_personal_namespace!)
