@@ -37,4 +37,31 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(activity_time_tag(t)).to eq "#{t}-less than a minute"
     end
   end
+
+  describe "#team_description_markdown" do
+    it "renders markdown to html" do
+      headline1 = "# testing"
+      expect(markdown(headline1)).to eq "<h1>testing</h1>\n"
+    end
+
+    it "does not allow pictures" do
+      picture = "![Alternativer Text](/pfad/zum/bild.jpg)"
+      expect(markdown(picture)).to eq "<p>![Alternativer Text](/pfad/zum/bild.jpg)</p>\n"
+    end
+
+    it "does not allow styles" do
+      style = "Hello <style> foo { bar: baz; } </style> !"
+      expect(markdown(style)).not_to match(/<style>/i)
+    end
+
+    it "allows only safe links" do
+      link = "[IRC](irc://chat.freenode.org/#freenode)"
+      expect(markdown(link)).to eq "<p>[IRC](irc://chat.freenode.org/#freenode)</p>\n"
+    end
+
+    it "filters html" do
+      html_tag = "<script>alert('foo');</script>"
+      expect(markdown(html_tag)).to eq "<p>alert(&#39;foo&#39;);</p>\n"
+    end
+  end
 end
