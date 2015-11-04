@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  include ChangeDescription
+  include ChangeNameDescription
 
   before_action :set_team, only: [:show, :update]
   after_action :verify_policy_scoped, only: :index
@@ -36,7 +36,7 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1
   # PATCH/PUT /teams/1.json
   def update
-    change_description(@team, :team)
+    change_name_description(@team, :team)
   end
 
   private

@@ -5,7 +5,7 @@ li
     = user_image_tag(activity.owner.email)
   .description
     h6
-      - if activity.parameters[:new_description].blank?
+      - if activity.parameters[:new].blank?
         strong
           ="#{activity.owner.username} deleted the description of the team "
       - else

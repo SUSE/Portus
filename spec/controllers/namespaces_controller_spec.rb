@@ -280,8 +280,8 @@ describe NamespacesController do
         key: "namespace.change_namespace_description")
       expect(namespace_description_activity.owner).to eq(owner)
       expect(namespace_description_activity.trackable).to eq(namespace)
-      expect(namespace_description_activity.parameters[:old_description]).to eq(old_description)
-      expect(namespace_description_activity.parameters[:new_description]).to eq("new description")
+      expect(namespace_description_activity.parameters[:old]).to eq(old_description)
+      expect(namespace_description_activity.parameters[:new]).to eq("new description")
     end
   end
 end
