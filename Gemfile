@@ -18,6 +18,7 @@ gem "search_cop"
 gem "kaminari"
 gem "crono"
 gem "net-ldap"
+gem "redcarpet"
 
 # This is already a Rails dependency, but we use it to run portusctl
 gem "thor"

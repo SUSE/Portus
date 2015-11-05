@@ -208,6 +208,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
     rake (10.4.2)
+    redcarpet (3.3.3)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rspec-core (3.3.0)
@@ -344,6 +345,7 @@ DEPENDENCIES
   quiet_assets
   rack-mini-profiler
   rails (~> 4.2.2)
+  redcarpet
   rspec-rails
   rubocop
   sass-rails (>= 3.2)

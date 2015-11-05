@@ -12,4 +12,24 @@ module ApplicationHelper
   def activity_time_tag(ct)
     time_tag ct, time_ago_in_words(ct), title: ct
   end
+
+  # Render markdown to safe HTML.
+  # Images, unsafe link protocols and styles are not allowed to render.
+  # HTML-Tags will be filtered.
+  def markdown(text)
+    extensions = {
+      superscript:                  true,
+      disable_indented_code_blocks: true
+    }
+    render_options = {
+      filter_html:         true,
+      no_images:           true,
+      no_styles:           true,
+      safe_links_only:     true,
+      space_after_headers: true
+    }
+    renderer = Redcarpet::Render::HTML.new(render_options)
+    m = Redcarpet::Markdown.new(renderer, extensions)
+    m.render(text).html_safe
+  end
 end

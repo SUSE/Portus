@@ -8,7 +8,7 @@
   <% if @team.description.blank? %>
    $('.description').html("No description has been posted yet");
   <% else %>
-    $('.description').html("<%= escape_javascript(@team.description) %>");
+    $('.description').html("<%= escape_javascript(markdown(@team.description)) %>");
   <% end %>
 <% else %>
   $('#alert p').html("<%= escape_javascript(@team.errors.full_messages.join('<br/>')) %>");
