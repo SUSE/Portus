@@ -17,6 +17,8 @@ login. See PR [#330](https://github.com/SUSE/Portus/pull/330).
 password. See PR [#325](https://github.com/SUSE/Portus/pull/325).
 - Set admin user from a rake task and disable first-user is admin. See PR [#314]
   (https://github.com/SUSE/Portus/pull/314)
+- Added a configuration option to specify the expiration time for JWT tokens
+issued by Portus. See PR [518](https://github.com/SUSE/Portus/pull/518).
 - Review requirements and provides in the RPM
 PR [#277](https://github.com/SUSE/Portus/pull/277),
 PR [#278](https://github.com/SUSE/Portus/pull/278),
