@@ -91,18 +91,17 @@ class Repository < ActiveRecord::Base
     # Add the needed tags.
     repository = Repository.find_or_create_by!(name: name, namespace: namespace)
     tags = repository.tags.pluck(:name)
-    repo["tags"].each do |tag|
-      idx = tags.find_index { |t| t == tag }
-      if idx
-        tags.delete_at(idx)
-      else
-        Tag.create!(name: tag, repository: repository, author: portus)
-        logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
-      end
+
+    to_be_created_tags = repo["tags"] - tags
+    to_be_deleted_tags = tags - repo["tags"]
+
+    to_be_created_tags.each do |tag|
+      Tag.create!(name: tag, repository: repository, author: portus)
+      logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
 
     # Finally remove the tags that are left and return the repo.
-    Tag.where(name: tags).find_each(&:delete_and_update!)
+    Tag.where(name: to_be_deleted_tags).find_each(&:delete_and_update!)
     repository.reload
   end
 end
