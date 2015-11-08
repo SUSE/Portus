@@ -68,4 +68,45 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(response.status).to eq(403)
     end
   end
+
+  describe "GET #new" do
+    before :each do
+      create(:registry)
+      sign_in admin
+    end
+
+    it "returns with success" do
+      get :new
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "POST #create" do
+    before :each do
+      create(:registry)
+      sign_in admin
+    end
+
+    it "creates new user" do
+      expect do
+        post :create, user: {
+          username:              "solomon",
+          email:                 "soloman@example.org",
+          password:              "password",
+          password_confirmation: "password"
+        }
+      end.to change(User, :count).by(1)
+    end
+
+    it "failes to create new user without matching password" do
+      expect do
+        post :create, user: {
+          username:              "solomon",
+          email:                 "soloman@example.org",
+          password:              "password",
+          password_confirmation: "drowssap"
+        }
+      end.not_to change(User, :count)
+    end
+  end
 end
