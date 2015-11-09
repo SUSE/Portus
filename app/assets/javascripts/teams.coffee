@@ -34,6 +34,22 @@ $(document).on "page:change", ->
       $('#namespace_description').focus()
   )
 
+  searchSelektor = $('.remote .typeahead')
+  teamID = $('.remote').attr('id')
+  bloodhound = new Bloodhound(
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('username'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote:
+      cache: false,
+      url: teamID  +  '/typeahead/%QUERY',
+      wildcard: '%QUERY'
+  )
+  bloodhound.initialize()
+
+  $('.remote .typeahead').typeahead null,
+    displayKey: 'username',
+    source: bloodhound.ttAdapter()
+
   $('#add_namespace_btn').unbind('click').on 'click', (event) ->
     $('#namespace_namespace').val('')
 

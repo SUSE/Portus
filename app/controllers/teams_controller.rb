@@ -1,7 +1,7 @@
 class TeamsController < ApplicationController
   include ChangeDescription
 
-  before_action :set_team, only: [:show, :update]
+  before_action :set_team, only: [:show, :update, :typeahead]
   after_action :verify_policy_scoped, only: :index
   respond_to :js, :html
 
@@ -37,6 +37,17 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1.json
   def update
     change_description(@team, :team)
+  end
+
+  # GET /teams/1/typeahead/%QUERY
+  def typeahead
+    authorize @team
+    @query = params[:query]
+    matches = User.search_from_query(@team.member_ids, "#{@query}%").pluck(:username)
+    matches = matches.map { |user| { username: user } }
+    respond_to do |format|
+      format.json { render json: matches.to_json }
+    end
   end
 
   private

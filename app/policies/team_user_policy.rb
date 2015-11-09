@@ -15,7 +15,7 @@ class TeamUserPolicy
     user.admin? || @team_user.team.owners.exists?(user.id)
   end
 
-  alias_method :destroy?, :owner?
-  alias_method :update?, :owner?
-  alias_method :create?, :owner?
+  alias_method :destroy?,   :owner?
+  alias_method :update?,    :owner?
+  alias_method :create?,    :owner?
 end

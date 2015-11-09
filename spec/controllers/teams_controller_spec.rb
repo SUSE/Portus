@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe TeamsController, type: :controller do
+  render_views
+
   let(:valid_attributes) do
     { name: "qa team", description: "short test description" }
   end
@@ -120,6 +122,32 @@ RSpec.describe TeamsController, type: :controller do
       sign_in owner
       patch :update, id: team.id, team: { description: "new description" }, format: "js"
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "typeahead" do
+    it "does allow to search for valid users by owners" do
+      sign_in owner
+      get :typeahead, id: team.id, query: "user", format: "json"
+      expect(response.status).to eq(200)
+      user1 = create(:user)
+      create(:user, username: "user2")
+      TeamUser.create(team: team, user: user1, role: TeamUser.roles["viewer"])
+      get :typeahead, id: team.id, query: "user", format: "json"
+      usernames = JSON.parse(response.body)
+      expect(usernames.length).to eq(1)
+      expect(usernames[0]["username"]).to eq("user2")
+    end
+
+    it "does not allow to search by contributers or viewers" do
+      disallowed_roles = ["viewer", "contributer"]
+      disallowed_roles.each do |role|
+        user = create(:user)
+        TeamUser.create(team: team, user: user, role: TeamUser.roles[role])
+        sign_in user
+        get :typeahead, id: team.id, query: "user", format: "js"
+        expect(response.status).to eq(401)
+      end
     end
   end
 

@@ -15,8 +15,9 @@ class TeamPolicy
     user.admin? || @team.owners.exists?(user.id)
   end
 
-  alias_method :update?, :owner?
-  alias_method :show?, :member?
+  alias_method :update?,    :owner?
+  alias_method :show?,      :member?
+  alias_method :typeahead?, :owner?
 
   class Scope
     attr_reader :user, :scope

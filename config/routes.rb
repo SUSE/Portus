@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :errors, only: [:show]
-  resources :teams, only: [:index, :show, :create, :update]
+  resources :teams, only: [:index, :show, :create, :update] do
+    member do
+      get "typeahead/:query" => "teams#typeahead", :defaults => { format: "json" }
+    end
+  end
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show, :update] do
     put "toggle_public", on: :member
