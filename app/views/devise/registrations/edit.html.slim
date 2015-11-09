@@ -9,7 +9,7 @@
           - unless current_user.email?
             p
               | Your profile is not complete. Please, submit an email to be used in this Portus instance.
-          .form-group class=(current_user.email.empty? ? "has-error" : "")
+          .form-group class=(current_user.email? ? "" : "has-error")
             .field
               - if current_user.email?
                 = f.label :email
