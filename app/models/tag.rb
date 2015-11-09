@@ -12,7 +12,14 @@ class Tag < ActiveRecord::Base
   # Delete this tag and update its activity.
   def delete_and_update!
     logger.tagged("catalog") { logger.info "Removed the tag '#{name}'." }
-    PublicActivity::Activity.where(recipient: self).update_all(parameters: { tag_name: name })
+    PublicActivity::Activity.where(recipient: self).update_all(
+      parameters: {
+        namespace_id:   repository.namespace.id,
+        namespace_name: repository.namespace.clean_name,
+        repo_name:      repository.name,
+        tag_name:       name
+      }
+    )
     destroy
   end
 end
