@@ -103,6 +103,8 @@ GEM
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     ffaker (2.0.0)
+    font-awesome-rails (4.4.0.0)
+      railties (>= 3.2, < 5.0)
     git-review (2.0.0)
       gli (~> 2.8.0)
       hashie
@@ -327,6 +329,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   ffaker
+  font-awesome-rails
   git-review
   gravatar_image_tag
   hirb
@@ -363,3 +366,6 @@ DEPENDENCIES
   webmock
   wirb
   wirble
+
+BUNDLED WITH
+   1.10.5

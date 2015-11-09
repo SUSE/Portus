@@ -19,6 +19,7 @@ gem "kaminari"
 gem "crono"
 gem "net-ldap"
 gem "redcarpet"
+gem "font-awesome-rails"
 
 # This is already a Rails dependency, but we use it to run portusctl
 gem "thor"

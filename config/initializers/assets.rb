@@ -1,2 +1,2 @@
 Rails.application.config.assets.version = "1.0"
-Rails.application.config.assets.precompile += %w( auth/cover.js )
+Rails.application.config.assets.precompile += %w( auth/cover.js *.woff2 )
