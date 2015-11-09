@@ -1,13 +1,16 @@
 ---
 layout: post
-title:  "Synchonizing the Registry and Portus"
-date:   2015-09-17 17:27:10
-categories: documentation
+title: Synchonizing the Registry and Portus
+longtitle: Synchronization with your private registry in order to fetch which images and tags are available
 ---
 
-### Webhooks
+## Webhooks
 
-The most basic way in which Portus synchronizes the contents of the Registry with its database is by listening the [notifications](https://github.com/docker/distribution/blob/master/docs/notifications.md) sent by the Registry itself. That is, on each push Portus will get a notification from the Docker registry with all the information about the event.
+The most basic way in which Portus synchronizes the contents of the Registry
+with its database is by listening the
+[notifications](https://github.com/docker/distribution/blob/master/docs/notifications.md)
+sent by the Registry itself. That is, on each push Portus will get a
+notification from the Docker registry with all the information about the event.
 
 This is convenient because this way the database can be updated on real time, when images and tags are actually pushed to the registry. One downside of this approach is that the database might become inconsistent over time. This can happen for example in this situation:
 
@@ -17,7 +20,7 @@ This is convenient because this way the database can be updated on real time, wh
 
 To fix this situation and others, we make use of the Catalog API that is provided by the registry itself, since the version 2.1.0 of the Docker registry. This is explained in the following section.
 
-### The Catalog API
+## The Catalog API
 
 The Docker distribution project exposes a [Catalog API](https://github.com/docker/distribution/blob/master/docs/spec/api.md#listing-repositories) since version 2.1.0. By exposing this API, it's possible for Portus to check the consistency of the database with the registry. This is done in a job that periodically performs a synchronization operation.
 
@@ -31,7 +34,7 @@ Also note that this can come in handy if you are migrating an already existing r
 
 Note though, that you should only do this if you are installing Portus manually. If you are using either the Vagrant/Docker setups or the appliance, you will not have to deal this. A [systemd service](https://github.com/SUSE/Portus/blob/master/packaging/suse/conf/portus_crono.service) file has been provided for this.
 
-### Synchronizing clocks between the Registry and Portus
+## Synchronizing clocks between the Registry and Portus
 
 As pointed out by the issue [#9](https://github.com/SUSE/Portus/issues/9), if clocks are not synced between the private registry and Portus, problems may arise. This is because the token being generated in the authentication process has some attributes dealing with time (see the fields "nbf", "iat" and "exp" in the [specification](https://github.com/docker/distribution/blob/master/docs/spec/auth/token.md#requesting-a-token) for more info).
 

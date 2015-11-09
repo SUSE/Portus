@@ -1,14 +1,21 @@
 ---
+title: Configuring Portus
 layout: post
-title:  "Configuring Portus"
-date:   2015-10-05 17:27:10
-categories: documentation
 ---
 
 ## The config.yml file
 
-Before starting this application, you may want to configure some values that are evaluated during the initialization process of Portus. All these values are specified in the `config/config.yml` file. This file contains the default values for each setting. In order to change these settings, you should create the `config/config-local.yml` file and write your own values there. Note that if you have your own `config-local.yml` file, then the definitive values will be the result of a merge of both config files, where the settings of `config-local.yml` take precedence. For example, imagine the following situation:
-```yml
+Before starting this application, you may want to configure some values that
+are evaluated during the initialization process of Portus. All these values are
+specified in the `config/config.yml` file. This file contains the default
+values for each setting. In order to change these settings, you should create
+the `config/config-local.yml` file and write your own values there. Note that
+if you have your own `config-local.yml` file, then the definitive values will
+be the result of a merge of both config files, where the settings of
+`config-local.yml` take precedence. For example, imagine the following
+situation:
+
+{% highlight yaml %}
 # In config.yml
 settings:
   a: true
@@ -17,18 +24,21 @@ settings:
 # In config-local.yml
 settings:
   a: false
-```
+{% endhighlight %}
+
 The result of the previous example is that both `a` and `b` are false.
 
 ## Override specific configuration options
 
-Besides the `config-local.yml` file, specific configuration options can be tweaked through environment variables. These environment variables follow a naming convention. Let's imagine the following configuration:
+Besides the `config-local.yml` file, specific configuration options can be
+tweaked through environment variables. These environment variables follow a
+naming convention. Let's imagine the following configuration:
 
-```yaml
+{% highlight yaml %}
 feature:
   enabled: true
   value: "val"
-```
+{% endhighlight %}
 
 In this case, the environment variables that can be used are `PORTUS_FEATURE_ENABLED` and `PORTUS_FEATURE_VALUE`. Therefore, the name of the environment variables always start with `PORTUS` and then they follow the name of the keys.
 
@@ -44,14 +54,14 @@ Note that environment variables override even values from the `config-local.yml`
 
 If enabled, then the profile picture will be picked from the [Gravatar](https://en.gravatar.com/) associated with each user. Otherwise, a default icon will be shown.
 
-```yaml
+{% highlight yaml %}
 gravatar:
   enabled: true
-```
+{% endhighlight %}
 
 ### Email configuration
 
-```yaml
+{% highlight yaml %}
 email:
   from: "portus@example.com"
   name: "Portus"
@@ -64,7 +74,7 @@ email:
     user_name: "username@example.com"
     password: "password"
     domain: "example.com"
-```
+{% endhighlight %}
 
 Note that if **smtp** is disabled, then `sendmail` is used instead (the specific command being: `/usr/sbin/sendmail -i -t`).
 
@@ -72,7 +82,7 @@ Note that if **smtp** is disabled, then `sendmail` is used instead (the specific
 
 If enabled, then only users of the specified LDAP server will be able to use Portus.
 
-```yaml
+{% highlight yaml %}
 ldap:
   enabled: false
   hostname: "ldap_hostname"
@@ -80,10 +90,16 @@ ldap:
   method: "plain"
   base: ""
   uid: "uid"
+
   guess_email:
     enabled: false
     attr: ""
-```
+
+  authentication:
+    enabled: false
+    bind_dn: ""
+    password: ""
+{% endhighlight %}
 
 Some notes:
 
@@ -91,6 +107,7 @@ Some notes:
 - **method**: The method of encryption between Portus and the LDAP server. It defaults to "plain", which means that the communication won't be encrypted. You can also use "simple_tls", to setup LDAP over SSL/TLS. However, the recommended value is "starttls", which sets StartTLS as the encryption method.
 - **guess_email**: Portus needs an email for each user, but there's no standard way to get that from LDAP servers. You can tell Portus how to get the email from users registered in the LDAP server with this configurable value.
 - **uid**: The attribute where Portus will look for the user ID when authenticating.
+- **authentication**: Some LDAP servers require a binding user in order to authenticate. You can specify this user by enabling this option. Then you should provide the DN of this user in the `bind_dn` value.
 
 There are three possibilities for the **guess_email** option:
 
@@ -102,41 +119,52 @@ If something goes wrong when trying to guess the email, then it just falls back 
 
 ### Creating the first admin user
 
-As explained [here](https://github.com/SUSE/Portus/wiki/Teams,-Namespaces-and-users#adding-more-admin-users), an admin user can upgrade users to be administrators. But, how do we create the very first admin user? There are two ways in which this can be done:
+As explained [here](/features/3_teams_namespaces_and_users.html), an admin user
+can upgrade users to be administrators. But, how do we create the very first
+admin user? There are two ways in which this can be done:
 
-```yaml
+{% highlight yaml %}
 first_user_admin:
   enabled: true
-```
+{% endhighlight %}
 
-By default the first user to be created will be granted admin permissions. In this case, when you go to the "Sign up" page, you will find the following situation:
+By default the first user to be created will be granted admin permissions. In
+this case, when you go to the "Sign up" page, you will find the following
+situation:
 
-![Creating the Admin](https://github.com/SUSE/Portus/blob/master/doc/creating-admin.png)
+![Creating the Admin](https://raw.githubusercontent.com/SUSE/Portus/master/doc/creating-admin.png)
 
-That is, the "Sign up" form is telling you that the user to be created will be an admin. Therefore, in order to create the first admin user, you just have to proceed as usual and fill the "Sign up" form for this user. After doing this, the "Sign up" form will not be able to create administrators, but only regular users.
+That is, the "Sign up" form is telling you that the user to be created will be
+an admin. Therefore, in order to create the first admin user, you just have to
+proceed as usual and fill the "Sign up" form for this user. After doing this,
+the "Sign up" form will not be able to create administrators, but only regular
+users.
 
-However, note if LDAP support is enabled, the first user that logs in with LDAP credentials will be automatically an admin. This is shown in the following screenshot:
+However, note if LDAP support is enabled, the first user that logs in with LDAP
+credentials will be automatically an admin. This is shown in the following
+screenshot:
 
-![Creating the Admin in LDAP](https://github.com/SUSE/Portus/blob/master/doc/ldap-admin.png)
+![Creating the Admin in LDAP](https://raw.githubusercontent.com/SUSE/Portus/master/doc/ldap-admin.png)
 
-The other way to do this is to disable the `first_user_admin` configurable value. In this case, the first admin cannot be created from the Web UI, rather you have to use the `portus:make_admin` rake task. Therefore, you should access into the Portus application and run:
+The other way to do this is to disable the `first_user_admin` configurable
+value. In this case, the first admin cannot be created from the Web UI, rather
+you have to use the `portus:make_admin` rake task. Therefore, you should
+access into the Portus application and run:
 
-```
-$ rake portus:make_admin[<username>]
-```
+    $ rake portus:make_admin[<username>]
 
-When Portus has been installed from RPM, this operation can be performed via `portusctl`:
+When Portus has been installed via RPM, this operation can be performed via
+`portusctl`:
 
-```
-portusctl make_admin <username>
-```
+    $ portusctl make_admin <username>
 
 ### Enforce SSL usage on production
 
-By default Portus will enforce usage of SSL when ran with the "production" environment. This is required for security reasons.
+By default Portus will enforce usage of SSL when ran with the "production"
+environment. This is required for security reasons. The behaviour is controller
+by this configuration setting:
 
-The behaviour is controller by this configuration setting:
-```yml
+{% highlight yaml %}
 check_ssl_usage:
   enabled: true
-```
+{% endhighlight %}

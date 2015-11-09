@@ -1,15 +1,16 @@
+@left-max: 330px;
+
 html, body {
   height: 100%
 }
 
 #documentation {
-  h1, h2, h3, h4 {
+  h1, h2, h3, h4, h5 {
     color: @aside-titles;
   }
+
   aside {
     background: @aside-background;
-  }
-  aside {
     padding-top: 60px;
     color: @white;
     height: 100%;
@@ -26,23 +27,75 @@ html, body {
         }
       }
     }
-    h4 {
-    }
   }
+
   section:first-of-type {
     height: 100%;
   }
+
   section {
     padding-left: 30px;
     padding-right: 30px;
   }
 
+  .post-wrapper {
+    left: 330px;
+  }
+
+  .post {
+    font-size: 16px;
+    line-height: 1.6;
+    word-wrap: break-word;
+  }
+
+  .aside-max {
+    max-width: 330px;
+  }
+
+  img {
+    max-width: 100%;
+    box-sizing: content-box;
+    background-color: #FFF;
+    text-align: center;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    word-break: keep-all;
+    margin-bottom: 10px;
+
+    tr {
+      background-color: #FFF;
+      border-top: 1px solid #CCC;
+    }
+
+    th, td {
+      padding: 5px 10px;
+      border: 1px solid #DDD;
+    }
+
+    th {
+      background-color: #F8F8F8;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
 }
-footer.footer-documentation{
-  position: fixed;
-  bottom: 0px;
-  height: 50px;
-  color: @white;
-  padding: 15px;
-  border-top: 1px solid lighten(#333, 20%);
+
+footer {
+  &.footer-documentation {
+    position: fixed;
+    bottom: 0px;
+    height: 50px;
+    color: @white;
+    padding: 15px;
+    border-top: 1px solid lighten(#333, 20%);
+  }
+
+  &.aside-max {
+    max-width: 330px;
+  }
 }
+

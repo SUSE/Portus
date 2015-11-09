@@ -19,6 +19,7 @@ gulp.task('customeScripts', function() {
                    assets + 'js/jquery-cookie.js',
                    assets + 'js/jquery-lang.js',
                    assets + 'js/smoothscroll.js',
+                   assets + 'js/anchors.js',
                    assets + 'js/portus-language.js'
                    ])
     .pipe(concat('main.js'))
@@ -45,6 +46,8 @@ gulp.task('less', function () {
 
 gulp.task('vendorCSS', ['less'], function() {
   return gulp.src([assets + 'stylesheets/animate/animate.css',
+                   assets + 'stylesheets/anchors.css',
+                   assets + 'stylesheets/solarized-light.css',
                    assets + 'stylesheets/fontawesome/font-awesome.min.css'])
          .pipe(concat('vendor.css'))
          .pipe(rename({suffix: '.min'}))
@@ -76,7 +79,7 @@ gulp.task('watch', function() {
   gulp.watch(assets + 'stylesheets/*.less', ['less']);
   // Watch image files
   gulp.watch(assets + 'images/*', ['images']);
- });
+});
 
 
 // Default Task

@@ -47,24 +47,42 @@
     {% include header.html %}
     <div class="container-fluid" id="documentation">
       <div class="row">
-        <aside class="col-xs-3">
+        <aside class="col-xs-3 aside-max">
           <h4>Documentation</h4>
           <ul>
-            {% for post in site.posts %}
+            {% for d in site.docs %}
               <li>
-                <a href="{{ post.url | prepend: site.baseurl }}">
-                  {{ post.title }}
+                <a href="{{ d.url | prepend: site.baseurl }}">
+                  {{ d.title }}
                 </a>
               </li>
             {% endfor %}
           </ul>
+          <h4>Setups</h4>
+          <ul>
+            {% for s in site.setups %}
+              <li>
+                <a href="{{ s.url | prepend: site.baseurl }}">
+                  {{ s.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          <h4>Features</h4>
+            <ul>
+            {% for f in site.features %}
+              <li>
+                <a href="{{ f.url | prepend: site.baseurl }}">
+                  {{ f.title }}
+                </a>
+              </li>
+            {% endfor %}
+            </ul>
         </aside>
-        <div class="col-xs-9 col-xs-offset-3">
+        <div class="col-md-8 col-sm-11 col-xs-11 post-wrapper">
           <section>
-            <div class="post">
-              <h1 class="post-title">{{ page.title }}</h1>
-              <p class="post-meta">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
-              <article class="post-content">
+            <div class="row post">
+              <article class="post-content col-md-10">
                 {{ content }}
               </article>
             </div>
@@ -72,9 +90,8 @@
 
         </div>
       </div>
-
     </div>
-  <footer class="col-xs-3 footer-documentation">
+  <footer class="col-xs-3 footer-documentation aside-max">
     <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
   </footer>
   </body>
