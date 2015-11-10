@@ -7,7 +7,10 @@
 class TeamUser < ActiveRecord::Base
   enum role: [:viewer, :contributor, :owner]
 
-  scope :enabled, -> { joins(:user).where("users.enabled" => true).distinct }
+  scope :enabled, -> { joins(:user).merge(User.enabled).distinct }
+  scope :owner, -> { where(role: roles[:owner]) }
+  scope :contributor, -> { where(role: roles[:contributor]) }
+  scope :viewer, -> { where(role: roles[:viewer]) }
 
   validates :team, presence: true
   validates :user, presence: true, uniqueness: { scope: :team }
