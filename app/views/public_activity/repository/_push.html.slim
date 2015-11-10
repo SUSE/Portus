@@ -5,17 +5,7 @@ li
     = user_image_tag(activity.owner.email)
   .description
     h6
-      strong
-        = "#{activity.owner.username} pushed "
-      = link_to activity.trackable.namespace.clean_name, activity.trackable.namespace
-      | /
-      - if activity.recipient.nil?
-        - if activity.parameters[:tag_name].nil?
-          = link_to "#{activity.trackable.name}", activity.trackable
-        - else
-          = link_to "#{activity.trackable.name}:#{activity.parameters[:tag_name]}", activity.trackable
-      - else
-        = link_to "#{activity.trackable.name}:#{activity.recipient.name}", activity.trackable
+      = render_push_activity(activity)
     small
       i.fa.fa-clock-o
       = activity_time_tag activity.created_at

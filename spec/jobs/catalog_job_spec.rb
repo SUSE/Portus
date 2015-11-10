@@ -105,7 +105,7 @@ describe CatalogJob do
     end
   end
 
-  describe "Activities are removed accordingly" do
+  describe "Activities are updated accordingly" do
     let!(:registry)   { create(:registry) }
     let!(:owner)      { create(:user) }
     let!(:repo)       { create(:repository, name: "repo", namespace: registry.global_namespace) }
