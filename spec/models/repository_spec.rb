@@ -334,5 +334,20 @@ describe Repository do
       repo = { "name" => "unknown/repo1", "tags" => ["latest", "0.1"] }
       expect(Repository.create_or_update!(repo)).to be_nil
     end
+
+    it "dosnt remove tags of same name for different repo" do
+      # create "latest" for repo1 and repo2
+      event_one = { "name" => "#{namespace.name}/repo1", "tags" => ["latest"] }
+      Repository.create_or_update!(event_one)
+      event_two = { "name" => "#{namespace.name}/repo2", "tags" => ["latest"] }
+      Repository.create_or_update!(event_two)
+
+      # remove "latest" for repo2
+      event_three = { "name" => "#{namespace.name}/repo2", "tags" => ["other"] }
+      Repository.create_or_update!(event_three)
+
+      expect(repo1.tags.pluck(:name)).to include("latest")
+      expect(repo2.tags.pluck(:name)).not_to include("latest")
+    end
   end
 end

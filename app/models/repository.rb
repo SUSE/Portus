@@ -101,7 +101,7 @@ class Repository < ActiveRecord::Base
     end
 
     # Finally remove the tags that are left and return the repo.
-    Tag.where(name: to_be_deleted_tags).find_each(&:delete_and_update!)
+    repository.tags.where(name: to_be_deleted_tags).find_each(&:delete_and_update!)
     repository.reload
   end
 end
