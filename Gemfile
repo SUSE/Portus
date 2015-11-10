@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 4.2.2"
-gem "jquery-rails", "~> 4.0.4"
+gem "jquery-rails"
 gem "sass-rails", ">= 3.2"
 gem "slim"
 gem "pundit"
