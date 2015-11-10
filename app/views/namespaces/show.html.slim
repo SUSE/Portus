@@ -26,10 +26,10 @@
         p
           'No description has been posted yet.
       - else
-        '#{@namespace.description}
+        = markdown(@namespace.description)
     .collapse id="change_description_namespace_#{@namespace.id}"
       = form_for @namespace, remote: true, html: {role: 'form'} do |f|
-        = f.text_area(:description, class: 'form-control', placeholder: "#{@namespace.description}")
+        = f.text_area(:description, class: 'form-control', placeholder: html_escape(@namespace.description))
         br
           = button_tag(type: 'submit', class: 'btn btn-primary pull-right') do
             i.fa.fa-check
