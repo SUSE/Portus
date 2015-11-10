@@ -1,6 +1,7 @@
-@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
-@import url(//fonts.googleapis.com/css?family=Raleway:400,300,700,900);
-@import url(https://fonts.googleapis.com/css?family=Pacifico);
+// Vendored fonts and styles.
+@import "font-awesome";
+@import "pacifico";
+@import "raleway";
 
 @import "bootstrap-sprockets";
 @import 'bootstrap/variables';
