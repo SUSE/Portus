@@ -14,12 +14,11 @@
           tabindex="0" data-html="true"]
             i.fa.fa-info-circle
       - if can_manage_team?(@team)
-      .pull-right
-        button.btn.btn-link.btn-xs.btn-edit-role[
-          value="#{@team.id}",
-          class="button_team_description"]
-          i.fa.fa-pencil
-          | Edit team
+        .pull-right
+          button.btn.btn-link.btn-xs.btn-edit-role[
+            value="#{@team.id}" class="button_team_description"]
+            i.fa.fa-pencil
+            | Edit team
   .panel-body
     .description
       - if @team.description.blank?
