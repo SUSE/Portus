@@ -1,0 +1,8 @@
+= CSV.generate_line(['team',
+                     activity.trackable.name,
+                     'change the name of the team',
+                     activity.recipient.name,
+                     activity.owner.username,
+                     activity.created_at,
+                     "from #{activity.parameters[:old_name]} to \
+                     #{activity.parameters[:new_name]}"])

@@ -1,5 +1,5 @@
 class NamespacesController < ApplicationController
-  include ChangeDescription
+  include ChangeNameDescription
 
   respond_to :html, :js
   before_action :set_namespace, only: [:toggle_public, :show, :update]
@@ -48,7 +48,7 @@ class NamespacesController < ApplicationController
   # PATCH/PUT /namespace/1
   # PATCH/PUT /namespace/1.json
   def update
-    change_description(@namespace, :namespace)
+    change_name_description(@namespace, :namespace)
   end
 
   # PATCH/PUT /namespace/1/toggle_public

@@ -13,22 +13,26 @@ $(document).on "page:change", ->
         $('#add_team_user_btn i').addClass("fa-plus-circle")
         layout_resizer()
 
+  open_close_icon = (icon) ->
+    if icon.hasClass('fa-close')
+      icon.removeClass('fa-close')
+      icon.addClass('fa-pencil')
+    else
+      icon.removeClass('fa-pencil')
+      icon.addClass('fa-close')
+
   $('body').on('click', '.btn-edit-role', (event) ->
     el = $(this).find('i.fa')
-    if el.hasClass('fa-pencil')
-      el.removeClass('fa-pencil')
-      el.addClass('fa-close')
-    else
-      el.removeClass('fa-close')
-      el.addClass('fa-pencil')
     if $(this).hasClass('add')
+      open_close_icon(el)
       $('#team_user_' + event.currentTarget.value + ' td .role').toggle()
       $('#change_role_team_user_' + event.currentTarget.value).toggle()
-    else if $(this).hasClass('button_team_description')
-      $('.description').toggle()
-      $('#change_description_team_' + event.currentTarget.value).toggle().trigger('focus')
-      $('#team_description').focus()
+    else if $(this).hasClass('button_edit_team')
+      $('.team_information').toggle()
+      $('#update_team_' + event.currentTarget.value).toggle()
+      $('#team_name').focus()
     else if $(this).hasClass('button_namespace_description')
+      open_close_icon(el)
       $('.description').toggle()
       $('#change_description_namespace_' + event.currentTarget.value).toggle()
       $('#namespace_description').focus()
