@@ -11,8 +11,11 @@ clicking on the search element that can be found in the top bar. After doing
 this, you can write what you're looking for and click enter. Something like
 this:
 
-![Search](https://raw.githubusercontent.com/SUSE/Portus/master/doc/search.gif)
+![Search](/build/images/docs/search.png)
 
 The found repositories abide to the permissions of the current user. Therefore,
 it's not possible for a user to accidentally find a repository that is out of
 his scope.
+
+**Pro tip**: you can access the search widget without using the mouse. There's
+a shortcut for it: \<Ctrl\>\<Space\>.

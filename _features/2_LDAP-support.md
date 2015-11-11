@@ -35,7 +35,7 @@ approach taken by Portus is to not do anything at all. In this case, no email
 will be set when login for the first time, and the user will always be
 redirected to a page asking for an email. This page looks like this:
 
-![Profile page](https://raw.githubusercontent.com/SUSE/Portus/master/doc/empty_email.png)
+![Profile page](/build/images/docs/email-guessing-fail.png)
 
 Otherwise, you can tell Portus to be more clever and guess the email account
 of each user. This can be done through the *guess_email* configurable value.

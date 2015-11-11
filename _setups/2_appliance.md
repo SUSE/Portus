@@ -1,6 +1,6 @@
 ---
 layout: post
-title: SUSE Appliance
+title: openSUSE Appliance
 ---
 
 ## Import/Download
@@ -31,9 +31,9 @@ Until you have finished the first boot configuration, no network will be
 available, thus you won't be able to ssh into your appliance. Make sure that
 the hostname you choose is resolvable (if it is a test hostname, add it to your /etc/hosts).
 
-![hostname configuration](https://raw.githubusercontent.com/SUSE/Portus/master/doc/portus1stboot.png)
+![hostname configuration](/build/images/docs/portus1stboot.png)
 
-![root password setup](https://raw.githubusercontent.com/SUSE/Portus/master/doc/portus1stboot_2.png)
+![root password setup](/build/images/docs/portus1stboot_2.png)
 
 ## Connect
 

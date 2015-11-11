@@ -22,7 +22,13 @@ on in either the "Activities" tab or the "Admin" one. The "Activities" tab
 is the one selected when you first enter in Portus and it shows all the
 activities that are relevant to the current user. An example:
 
-![Current user activities](https://raw.githubusercontent.com/SUSE/Portus/master/doc/activities.png)
+![Current user activities](/build/images/docs/activities-admin.png)
+
+As a comparison, imagine that we have a user that has not been added to the
+"Machinery" team (as you can see in the previous picture, this was the case for
+that user). In this case, this is what the user would see:
+
+![Current user activities](/build/images/docs/activities-user.png)
 
 The "Admin" page shows some statistics about the application, and in the bottom
 you can see a list of activities. This list differs from the one that you can
@@ -33,9 +39,10 @@ However, this page is limited to 20 activities. If you want to view all the
 activities, you'll have to click at the link saying "View all activities". If
 you click this, you'll find the following:
 
-![Admin activities](https://raw.githubusercontent.com/SUSE/Portus/master/doc/admin-activities.png)
+![Admin activities](/build/images/docs/activities-csv.png)
 
 As you can see, this is the same list as the one shown in the admin page, but
 this one is not limited to 20 activities. Moreover, as you can see, in the
 top right corner there is a button for downloading a CSV file with all the
-activities.
+activities. The downloaded data is suitable to be used with spreadsheet
+applications.

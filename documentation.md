@@ -27,7 +27,7 @@ multiple ways, our favorites being:
 
 - Installing Portus through the provided
 [RPM](/docs/setups/1_rpm_packages.html).
-- Using the ready to use [SUSE appliance](/docs/setups/2_appliance.html).
+- Using the ready to use [openSUSE appliance](/docs/setups/2_appliance.html).
 
 There are other alternative ways to install Portus, just check the `Setups`
 section in the sidebar on the left for more information about them.
