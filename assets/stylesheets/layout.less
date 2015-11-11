@@ -6,8 +6,21 @@ header {
   left: 0;
   padding: .5em 1em;
   z-index: 9999;
+
   #gradient > .horizontal(@mainColour, @secondColour, 0%, 100%);
+
+  .btn-link {
+    color: @white;
+    font-weight: 400;
+    font-size: 14px;
+    margin-left: 18px;
+
+    &:hover {
+      color: @white;
+    }
+  }
 }
+
 footer {
   padding: 2em 0;
   border-top: 1px solid @gray-lighter

@@ -1,0 +1,22 @@
+title: Portus
+description: Claim control of your Docker images
+exclude: [assets, Gemfile, Gemfile.lock, gulpfile.js, node_modules]
+
+collections:
+  docs:
+    output: true
+    permalink: /docs/:path.html
+  setups:
+    output: true
+    permalink: /docs/setups/:path.html
+  features:
+    output: true
+    permalink: /features/:path.html
+
+# By default, assume the post layout.
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: post

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    <!-- bootstrap + Portus theme -->
+    <link href="build/css/portus.min.css" type="text/css" rel="stylesheet" />
+    <!--external libraries CSS -->
+    <link href="build/css/vendor.min.css" type="text/css" rel="stylesheet" />
+    <!--external libraries JS + portus JS -->
+    <script src="build/js/main.min.js"    type="text/javascript" charset="utf-8"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Favicon for all different devices -->
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="build/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+    <link href="build/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+    <link href="build/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+    <link href="build/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+    <link href="build/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+    <link href="build/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+    <link href="build/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+    <link href="build/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+    <link href="build/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+    <link href="build/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+    <link href="build/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+    <link href="build/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+    <link href="build/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+    <link href="build/images/favicon/manifest.json" rel="manifest" />
+    <link color="#205683" href="build/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+    <link href="build/images/favicon/favicon.ico" rel="shortcut icon" />
+    <meta content="Portus" name="apple-mobile-web-app-title" />
+    <meta content="Portus" name="application-name" />
+    <meta content="#da532c" name="msapplication-TileColor" />
+    <meta content="build/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+    <meta content="build/images/favicon/browserconfig.xml" name="msapplication-config" />
+    <meta content="#205683" name="theme-color" />
+  </head>
+  <body>
+    {% include header.html %}
+
+    {{ content }}
+
+    <footer>
+      <div class="row row-0">
+        <div class="col-sm-2">
+          <div class="dropup">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="selected-language">English</span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownLanguage">
+              <li><a href="#" class="change-language" data-language-value="en">English</a></li>
+              <li><a href="#" class="change-language" data-language-value="es">Español</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-8 text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </footer>
+  </body>
+</html>
