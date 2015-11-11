@@ -28,8 +28,12 @@ class CatalogJob < ActiveJob::Base
     # In this loop we will create/update all the repos from the catalog.
     # Created/updated repos will be removed from the "repos" array.
     catalog.each do |r|
-      repository = Repository.create_or_update!(r)
-      dangling_repos.delete repository.id
+      if r["tags"].blank?
+        Rails.logger.debug "skip upload not finished repo #{r["name"]}"
+      else
+        repository = Repository.create_or_update!(r)
+        dangling_repos.delete repository.id
+      end
     end
 
     # At this point, the remaining items in the "repos" array are repos that

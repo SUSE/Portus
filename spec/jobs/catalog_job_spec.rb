@@ -107,6 +107,18 @@ describe CatalogJob do
     end
   end
 
+  describe "uploading repository whose tags is nil" do
+    it "skip this repository" do
+      job = CatalogJobMock.new
+      job.update_registry!([{ "name" => "busybox", "tags" => nil }])
+
+      # Global repos
+      ns = Namespace.where(global: true)
+      repos = Repository.where(namespace: ns)
+      expect(repos.length).to eq 0
+    end
+  end
+
   describe "Activities are updated accordingly" do
     let!(:registry)   { create(:registry) }
     let!(:owner)      { create(:user) }
