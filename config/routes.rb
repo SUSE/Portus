@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     resources :registries, except: [:show, :destroy]
     resources :namespaces, only: [:index]
     resources :teams, only: [:index]
-    resources :users, only: [:index] do
+    resources :users, only: [:index, :create, :new] do
       put "toggle_admin", on: :member
     end
   end

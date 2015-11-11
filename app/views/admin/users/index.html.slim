@@ -2,6 +2,10 @@
   .panel-heading
     h5
       ' Registered users
+      .pull-right
+        = link_to new_admin_user_path, class: 'btn btn-xs btn-link', role: 'button'
+          i.fa.fa-plus-circle
+          | Create new user
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
