@@ -1,6 +1,7 @@
 ---
 layout: post
-title: "Portus Releases"
+title: Portus Releases
+longtitle: How we release Portus
 ---
 
 ## Brief explanation

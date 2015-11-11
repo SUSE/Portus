@@ -1,6 +1,7 @@
 ---
 title: Configuring Portus
 layout: post
+longtitle: How to configure Portus
 ---
 
 ## The config.yml file

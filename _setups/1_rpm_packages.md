@@ -24,7 +24,7 @@ the *"1-click install"* button.
 This will add the right repository to your machine and, at the same time,
 install the `Portus` RPM on your system.
 
-## Portus's dependencies
+## Portus' dependencies
 
 Portus requires a [MariaDB](https://mariadb.com/) instance running and,
 obviously, also a [Docker registry v2](https://github.com/docker/distribution)

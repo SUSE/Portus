@@ -1,6 +1,7 @@
 ---
 title: Configuring your private registry
 layout: post
+longtitle: Letting Portus know about your private registry
 ---
 
 ## Configuring your private registry for the first time
