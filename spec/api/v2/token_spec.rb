@@ -199,7 +199,7 @@ describe "/v2/token" do
             valid_auth_header
         end
 
-        it "allows to pull an image in which this user is just a viewer"  do
+        it "allows to pull an image in which this user is just a viewer" do
           # Quick way to force a "viewer" policy.
           allow_any_instance_of(NamespacePolicy).to receive(:push?).and_return(false)
           allow_any_instance_of(NamespacePolicy).to receive(:pull?).and_return(true)

@@ -28,7 +28,6 @@ describe RepositoriesController do
       get :show, { id: visible_repository.to_param }, valid_session
       expect(assigns(:repository)).to eq(visible_repository)
     end
-
   end
 
   describe "POST #toggle_star" do
