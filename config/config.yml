@@ -1,7 +1,7 @@
 # This file contains the default values for the configuration of this
 # application. In order to change them, write your own config-local.yml file
 # (it will be ignored by git). For more info, you can read the dedicated page
-# on the wiki: https://github.com/SUSE/Portus/wiki/Configuring-Portus.
+# here: http://port.us.org/docs/Configuring-Portus.html.
 
 # Settings for the Portus mailer.
 email:
