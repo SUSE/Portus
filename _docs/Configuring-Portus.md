@@ -169,3 +169,23 @@ by this configuration setting:
 check_ssl_usage:
   enabled: true
 {% endhighlight %}
+
+### JWT expiration time
+
+The JWT token is one of the main keys in the authentication process between
+Portus and the registry. This token has as one of its values the expiration
+time of itself. The problem is that the registry does not request another token
+when it expires. This means that for large images, the upload might fail
+because it takes longer than the expiration time. You can read more about this
+in the issue [SUSE/Portus#510](https://github.com/SUSE/Portus/issues/510).
+
+To workaround this, we allow the admin of Portus to raise the expiration time
+as required through the `jwt_expiration_time` configurable value. This value
+follows a human readable format as: "integer" . "seconds | minutes | hours".
+Therefore, as an example, if you wanted to set the expiration time of the JWT
+token to 2 hours, one would write:
+
+{% highlight yaml %}
+jwt_expiration_time:
+  value: "2.hours"
+{% endhighlight %}
