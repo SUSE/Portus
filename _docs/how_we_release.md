@@ -17,7 +17,7 @@ will release the next version whenever we feel that Portus is ready (while
 
 First of all, we follow this steps on the Github repository:
 
-1. Create a new branch name `release/vX.Y`, being X.Y the new version.
+1. Create a new branch name `vX.Y`, being X.Y the new version.
 2. For a small period of time, this branch will receive last-time
    updates/fixes, like for example reviewing the gems in the Gemfile.lock.
 3. Update the `VERSION` file (in that branch).
