@@ -28,8 +28,8 @@ class CatalogJob < ActiveJob::Base
     # In this loop we will create/update all the repos from the catalog.
     # Created/updated repos will be removed from the "repos" array.
     catalog.each do |r|
-      cou   = Repository.create_or_update!(r)
-      dangling_repos = dangling_repos.delete_if { |re| re == cou.id }
+      repository = Repository.create_or_update!(r)
+      dangling_repos.delete repository.id
     end
 
     # At this point, the remaining items in the "repos" array are repos that
