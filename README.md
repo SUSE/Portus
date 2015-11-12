@@ -12,38 +12,42 @@ generation of the Docker registry.
 
 ### Fine-grained control of permissions
 
-Portus supports the concept of users and teams. Each user has its personal Docker namespace where she has read (aka `docker pull`) and write (aka `docker push`) access.
-
-A team is a group of users that have read and write access to a certain namespace.
+Portus supports the concept of users and teams. Users have their own personal
+Docker namespace where they have both read (aka `docker pull`) and write (aka
+`docker push`) access. A team is a group of users that have read and write
+access to a certain namespace. You can read more about this in our
+[documentation page about it](http://port.us.org/features/3_teams_namespaces_and_users.html).
 
 Portus implements the [token based authentication system](https://github.com/docker/distribution/blob/master/docs/spec/auth/token.md)
-described by the new version of the Docker registry. This can be used to have full control over the images served by an instance of the Docker registry.
+described by the new version of the Docker registry. This can be used to have
+full control over the images served by an instance of the Docker registry.
 
 ### Web interface for Docker registry
 
-Portus provides quick access to all the images available on your private instance of Docker registry. User's privileges are taken into account to make sure private images (the ones requiring special rights also for `docker pull`) are not shown to unauthorized personnel.
+Portus provides quick access to all the images available on your private
+instance of Docker registry. User's privileges are taken into account to
+make sure private images (the ones requiring special rights also for
+`docker pull`) are not shown to unauthorized personnel.
 
-### Synchronization between the database and the registry
+### And more!
 
-Portus' knowledge of the images available on the private instance of a Docker
-registry is built in two ways:
+Some highlights:
 
-1. Using the [notifications](https://github.com/docker/distribution/blob/master/docs/notifications.md)
-sent by the Docker registry itself.
-2. Using the [Catalog API endpoint](https://github.com/docker/distribution/blob/master/docs/spec/api.md#listing-repositories).
+- [Synchronization with your private registry in order to fetch which images and tags are available](http://port.us.org/features/1_Synchronizing-the-Registry-and-Portus.html).
+- [LDAP user authentication](http://port.us.org/features/2_LDAP-support.html).
+- [Monitoring of all the activities performed onto your private registry and Portus itself](http://port.us.org/features/4_audit.html).
+- [Search for repositories and tags inside of your private registry](http://port.us.org/features/5_search.html).
+- [Star your favorite repositories](http://port.us.org/features/6_starring.htmls).
+- [Disable users temporarily](http://port.us.org/features/7_disabling_users.html).
 
-The two methods complement each other. The first method is used to retrieve
-updates on the registry in real time, and the second one is used to
-double-check the consistency of the database with the registry. To read more on
-this topic, don't hesistate to check the [wiki
-page](https://github.com/SUSE/Portus/wiki/Synchronizing-the-Registry-and-Portus)
-about it.
+Take a tour by our [documentation](http://port.us.org/features.html) site to
+read more about this.
 
 ## Contributing
 
 First of all, make sure that you have a working development environment. You
 can easily do this with either Docker or Vagrant, as it's explained on the
-[wiki](https://github.com/SUSE/Portus/wiki/The-development-environment).
+[wiki](https://github.com/SUSE/Portus/wiki#developmentplayground-environments).
 
 Also, make sure to understand our contribution guidelines, as explained in
 [this](https://github.com/SUSE/Portus/blob/master/CONTRIBUTING.md) document.
