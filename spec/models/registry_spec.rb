@@ -112,6 +112,8 @@ RSpec.describe Registry, type: :model do
         [nil, true, true, /^$/],
         [nil, false, true, /registry does not implement v2/],
         [SocketError, true, true, /The given registry is not available/],
+        [Errno::ETIMEDOUT, true, true, /connection timed out/],
+        [Net::OpenTimeout, true, true, /connection timed out/],
         [Net::HTTPBadResponse, true, true, /wrong with your SSL configuration/],
         [Net::HTTPBadResponse, true, false, /Error: not using SSL/],
         [OpenSSL::SSL::SSLError, true, true, /Error: using SSL/],
