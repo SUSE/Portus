@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   include Pundit
   rescue_from Pundit::NotAuthorizedError, with: :deny_access
 
-  respond_to :html
+  respond_to :html, :json
 
   # Two things can happen when signing in.
   #   1. The current user has no email: this happens on LDAP registration. In
@@ -83,6 +83,9 @@ class ApplicationController < ActionController::Base
   # Render the 401 page.
   def deny_access
     @status = 401
-    render template: "errors/401", status: 401, layout: "errors"
+    respond_to do |format|
+      format.html { render template: "errors/401", status: @status, layout: "errors" }
+      format.all { render nothing: true, status: @status }
+    end
   end
 end

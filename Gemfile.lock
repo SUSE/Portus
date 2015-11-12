@@ -56,6 +56,8 @@ GEM
     bootstrap-sass (3.3.5)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
+    bootstrap-typeahead-rails (0.10.5.1)
+      railties (>= 3.0)
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
@@ -319,6 +321,7 @@ DEPENDENCIES
   awesome_print
   base32
   bootstrap-sass (~> 3.3.4)
+  bootstrap-typeahead-rails
   byebug
   capybara
   codeclimate-test-reporter

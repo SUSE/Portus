@@ -5,3 +5,4 @@
 #= require bootstrap-sprockets
 #= require lifeitup_layout
 #= require_tree .
+#= require bootstrap-typeahead-rails

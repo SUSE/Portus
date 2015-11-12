@@ -70,7 +70,8 @@
       .form-group
         = f.label :user, {class: 'control-label col-md-2'}
         .col-md-7
-          = f.text_field(:user, class: 'form-control', placeholder: 'Name', required: true)
+          .remote id="#{@team.id}"
+            = f.text_field(:user, class: 'form-control typeahead', placeholder: 'Name', required: true)
       .form-group
         .col-md-offset-2.col-md-7
           = f.submit('Add', class: 'btn btn-primary')

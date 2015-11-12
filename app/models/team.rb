@@ -21,4 +21,9 @@ class Team < ActiveRecord::Base
     # Right now, all the special namespaces are simply marked as hidden.
     Team.where(hidden: false)
   end
+
+  # Returns all the member-IDs
+  def member_ids
+    team_users.pluck(:user_id)
+  end
 end

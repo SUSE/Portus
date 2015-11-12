@@ -107,6 +107,11 @@ class User < ActiveRecord::Base
     "Sorry, this account has been disabled."
   end
 
+  # Returns all users who match the query.
+  def self.search_from_query(members, query)
+    enabled.where.not(id: members).where(arel_table[:username].matches(query))
+  end
+
   protected
 
   # Returns whether the given user can be disabled or not. The following rules
