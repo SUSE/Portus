@@ -63,7 +63,8 @@ class Repository < ActiveRecord::Base
       return
     end
 
-    tag = repository.tags.create(name: tag, author: actor)
+    digest = event.try(:[], "target").try(:[], "digest")
+    tag = repository.tags.create(name: tag, author: actor, digest: digest)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
   end

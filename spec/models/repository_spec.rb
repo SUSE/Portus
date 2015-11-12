@@ -227,6 +227,7 @@ describe Repository do
 
     context "not global repository" do
       let(:namespace_name) { "suse" }
+      let(:digest) { "digest" }
 
       before :each do
         name = "#{namespace_name}/#{repository_name}"
@@ -234,7 +235,7 @@ describe Repository do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = name
         @event["target"]["url"] = get_url(name, tag_name)
-        @event["target"]["digest"] = "digest"
+        @event["target"]["digest"] = digest
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = user.username
       end
@@ -266,6 +267,7 @@ describe Repository do
           expect(repository.name).to eq(repository_name)
           expect(repository.tags.count).to eq 1
           expect(repository.tags.first.name).to eq tag_name
+          expect(repository.tags.first.digest).to eq digest
           expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
 
