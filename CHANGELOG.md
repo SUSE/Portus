@@ -1,5 +1,20 @@
 ## Upcoming Version
 
+- Users will be offered in an autocompletion widget when adding a new team
+  member. See PR [#547](https://github.com/SUSE/Portus/pull/547).
+- Portus now also tracks the digest of pushed images.
+  See PR [#556](https://github.com/SUSE/Portus/pull/556). This is a first step
+  into fixing the issue #512.
+- Teams can be renamed. See PR [#536](https://github.com/SUSE/Portus/pull/536).
+- Users can be created from the admin page.
+  See PR [543](https://github.com/SUSE/Portus/pull/543). This is a first step
+  into fixing the issues #283 and #179.
+- Team and namespace descriptions can be written using Markdown. See pull
+  requests: [#546](https://github.com/SUSE/Portus/pull/546) and
+  [#531](https://github.com/SUSE/Portus/pull/531).
+
+## 2.0.0
+
 - Portus will now check whether a Registry is reachable or not.
 See PR [#437](https://github.com/SUSE/Portus/pull/437).
 - Namespaces and teams have a description field. See PR
