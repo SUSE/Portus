@@ -4,6 +4,7 @@ feature "Signup feature" do
   before do
     create(:admin)
     APP_CONFIG["first_user_admin"] = { "enabled" => true }
+    APP_CONFIG["signup"]           = { "enabled" => true }
     visit new_user_registration_url
   end
 
@@ -127,5 +128,16 @@ feature "Signup feature" do
     expect(current_path).to eql(new_user_session_path)
     click_link("Create a new account")
     expect(current_path).to eql(new_user_registration_path)
+  end
+
+  describe "signup disabled" do
+    before do
+      APP_CONFIG["signup"] = { "enabled" => false }
+    end
+
+    scenario "does not allow the user to access the signup page if disabled" do
+      visit new_user_registration_path
+      expect(current_path).to eq new_user_session_path
+    end
   end
 end

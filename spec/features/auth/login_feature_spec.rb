@@ -15,11 +15,17 @@ feature "Login feature" do
 
   scenario "It does show a warning for the admin creation in LDAP support", js: true do
     User.delete_all
+    APP_CONFIG["first_user_admin"] = { "enabled" => false }
     APP_CONFIG["ldap"] = { "enabled" => true }
     visit new_user_session_path
 
-    expect(page).to have_content("The first user to be created will have admin permissions !")
+    expect(page).to_not have_content("The first user to be created will have admin permissions !")
     expect(page).to_not have_content("Create a new account")
+
+    APP_CONFIG["first_user_admin"] = { "enabled" => true }
+    visit new_user_session_path
+
+    expect(page).to have_content("The first user to be created will have admin permissions !")
 
     create(:admin)
 

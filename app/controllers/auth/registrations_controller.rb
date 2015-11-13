@@ -3,6 +3,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
   include CheckLDAP
 
+  before_action :check_signup, only: [:new, :create]
   before_action :check_admin, only: [:new, :create]
   before_action :configure_sign_up_params, only: [:create]
   before_action :authenticate_user!, only: [:disable]
@@ -79,6 +80,11 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   def check_admin
     @admin = User.admins.any?
     @first_user_admin = APP_CONFIG.enabled?("first_user_admin")
+  end
+
+  # Redirect to the login page if users cannot access the signup page.
+  def check_signup
+    redirect_to new_user_session_path unless APP_CONFIG.enabled?("signup")
   end
 
   def configure_sign_up_params
