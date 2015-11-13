@@ -10,6 +10,23 @@ namespace :portus do
     )
   end
 
+  desc "Create a user"
+  task :create_user, [:username, :email, :password, :admin] => :environment do |_, args|
+    args.each do |k, v|
+      if v.empty?
+        puts "You have to provide a value for `#{k}'"
+        exit(-1)
+      end
+    end
+
+    User.create!(
+      username: args["username"],
+      password: args["password"],
+      email:    args["email"],
+      admin:    args["admin"]
+    )
+  end
+
   desc "Give 'admin' role to a user"
   task :make_admin, [:username] => [:environment] do |_, args|
     unless args[:username]
@@ -33,5 +50,4 @@ namespace :portus do
       exit(-3)
     end
   end
-
 end
