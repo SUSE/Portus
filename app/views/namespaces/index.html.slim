@@ -13,7 +13,8 @@ span
         .form-group
           = f.label :team, {class: 'control-label col-md-2'}
           .col-md-7
-            = f.text_field(:team, class: 'form-control', required: true, placeholder: "Name of the team")
+            .remote
+              = f.text_field(:team, class: 'form-control typeahead', required: true, placeholder: "Name of the team")
         .form-group
           = f.label :description, {class: 'control-label col-md-2'}
           .col-md-7

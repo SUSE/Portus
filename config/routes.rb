@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :namespaces, only: [:create, :index, :show, :update] do
     put "toggle_public", on: :member
   end
+  get "namespaces/typeahead/:query" => "namespaces#typeahead", :defaults => { format: "json" }
 
   resources :repositories, only: [:index, :show] do
     post :toggle_star, on: :member

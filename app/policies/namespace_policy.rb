@@ -30,9 +30,9 @@ class NamespacePolicy
       namespace.team.contributors.exists?(user.id)
   end
 
-  alias_method :all?,    :push?
-  alias_method :create?, :push?
-  alias_method :update?, :push?
+  alias_method :all?,       :push?
+  alias_method :create?,    :push?
+  alias_method :update?,    :push?
 
   def toggle_public?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user

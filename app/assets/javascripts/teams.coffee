@@ -1,4 +1,19 @@
 $(document).on "page:change", ->
+
+  set_typeahead = (url) ->
+    bloodhound = new Bloodhound(
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote:
+          cache: false,
+          url: url,
+          wildcard: '%QUERY'
+      )
+    bloodhound.initialize()
+    $('.remote .typeahead').typeahead null,
+      displayKey: 'name',
+      source: bloodhound.ttAdapter()
+
   $('#add_team_user_btn').on 'click', (event) ->
     $('#team_user_user').val('')
     $('#team_user_role').val('viewer')
@@ -12,6 +27,8 @@ $(document).on "page:change", ->
         $('#add_team_user_btn i').removeClass("fa-minus-circle")
         $('#add_team_user_btn i').addClass("fa-plus-circle")
         layout_resizer()
+    team_id = $('.remote').attr('id')
+    set_typeahead(team_id  +  '/typeahead/%QUERY')
 
   open_close_icon = (icon) ->
     if icon.hasClass('fa-close')
@@ -38,22 +55,6 @@ $(document).on "page:change", ->
       $('#namespace_description').focus()
   )
 
-  searchSelektor = $('.remote .typeahead')
-  teamID = $('.remote').attr('id')
-  bloodhound = new Bloodhound(
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('username'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote:
-      cache: false,
-      url: teamID  +  '/typeahead/%QUERY',
-      wildcard: '%QUERY'
-  )
-  bloodhound.initialize()
-
-  $('.remote .typeahead').typeahead null,
-    displayKey: 'username',
-    source: bloodhound.ttAdapter()
-
   $('#add_namespace_btn').unbind('click').on 'click', (event) ->
     $('#namespace_namespace').val('')
 
@@ -72,6 +73,7 @@ $(document).on "page:change", ->
         $('#add_namespace_btn i').removeClass("fa-minus-circle")
         $('#add_namespace_btn i').addClass("fa-plus-circle")
         layout_resizer()
+    set_typeahead('/namespaces/typeahead/%QUERY')
 
   $('#add_team_btn').on 'click', (event) ->
     $('#team_name').val('')

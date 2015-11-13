@@ -6,7 +6,7 @@ class NamespacesController < ApplicationController
   before_action :check_team, only: [:create]
   before_action :check_role, only: [:create]
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: [:index, :typeahead]
   after_action :verify_policy_scoped, only: :index
 
   # GET /namespaces
@@ -49,6 +49,17 @@ class NamespacesController < ApplicationController
   # PATCH/PUT /namespace/1.json
   def update
     change_name_description(@namespace, :namespace)
+  end
+
+  # GET /namespace/typeahead/%QUERY
+  def typeahead
+    @query = params[:query]
+    valid_teams = TeamUser.get_valid_team_ids(current_user.id)
+    matches = Team.search_from_query(valid_teams, "#{@query}%").pluck(:name)
+    matches = matches.map { |team| { name: team } }
+    respond_to do |format|
+      format.json { render json: matches.to_json }
+    end
   end
 
   # PATCH/PUT /namespace/1/toggle_public
