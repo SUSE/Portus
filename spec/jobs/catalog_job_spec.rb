@@ -1,3 +1,5 @@
+require "rails_helper"
+
 # Just opens up protected methods so they can be used in the test suite.
 class CatalogJobMock < CatalogJob
   def update_registry!(catalog)
