@@ -25,6 +25,11 @@ class TeamUser < ActiveRecord::Base
     team.create_activity type, owner: owner, recipient: user, parameters: params
   end
 
+  # Returns all team IDs which are manageable by one user
+  def self.get_valid_team_ids(id)
+    owner.where(user_id: id).pluck(:team_id)
+  end
+
   # Returns true if the member of this team is the only owner of it.
   def only_owner?
     team.owners.exists?(user.id) && team.owners.count == 1

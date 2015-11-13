@@ -223,6 +223,28 @@ describe NamespacesController do
     end
   end
 
+  describe "typeahead" do
+    render_views
+    it "does allow to search for valid teams by owner" do
+      testing_team = create(:team, name: "testing", owners: [owner])
+      sign_in owner
+      get :typeahead, query: "test", format: "json"
+      expect(response.status).to eq(200)
+      teamnames = JSON.parse(response.body)
+      expect(teamnames.length).to eq(1)
+      expect(teamnames[0]["name"]).to eq(testing_team.name)
+    end
+
+    it "does not allow to search by viewers" do
+      create(:team, name: "testing", owners: [owner], viewers: [viewer])
+      sign_in viewer
+      get :typeahead, query: "test", format: "json"
+      expect(response.status).to eq(200)
+      teamnames = JSON.parse(response.body)
+      expect(teamnames.length).to eq(0)
+    end
+  end
+
   describe "activity tracking" do
     before :each do
       sign_in owner

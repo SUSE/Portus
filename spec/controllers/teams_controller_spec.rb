@@ -138,7 +138,7 @@ RSpec.describe TeamsController, type: :controller do
       get :typeahead, id: team.id, query: "user", format: "json"
       usernames = JSON.parse(response.body)
       expect(usernames.length).to eq(1)
-      expect(usernames[0]["username"]).to eq("user2")
+      expect(usernames[0]["name"]).to eq("user2")
     end
 
     it "does not allow to search by contributers or viewers" do

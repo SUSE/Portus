@@ -44,7 +44,7 @@ class TeamsController < ApplicationController
     authorize @team
     @query = params[:query]
     matches = User.search_from_query(@team.member_ids, "#{@query}%").pluck(:username)
-    matches = matches.map { |user| { username: user } }
+    matches = matches.map { |user| { name: user } }
     respond_to do |format|
       format.json { render json: matches.to_json }
     end
