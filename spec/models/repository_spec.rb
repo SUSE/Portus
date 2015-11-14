@@ -42,7 +42,7 @@ describe Repository do
     let(:user) { create(:user) }
 
     context "adding an existing repo/tag" do
-      it "does not add a new activity when an already existing repo/tag already existed" do
+      it "does add a new activity when an already existing repo/tag already existed" do
         event = { "actor" => { "name" => user.username } }
 
         # First we create it, and make sure that it creates the activity.
@@ -50,10 +50,10 @@ describe Repository do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
         end.to change(PublicActivity::Activity, :count).by(1)
 
-        # And now it shouldn't create more activities.
+        # And now it should create another activity for the recreated tag.
         expect do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        end.to change(PublicActivity::Activity, :count).by(0)
+        end.to change(PublicActivity::Activity, :count).by(1)
       end
     end
 

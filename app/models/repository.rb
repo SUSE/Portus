@@ -50,7 +50,7 @@ class Repository < ActiveRecord::Base
 
   # Add the repository with the given `repo` name and the given `tag`. The
   # actor is guessed from the given `event`.
-  def self.add_repo(event, namespace, repo, tag)
+  def self.add_repo(event, namespace, repo, tag_name)
     actor = User.find_from_event(event)
     return if actor.nil?
 
@@ -59,12 +59,13 @@ class Repository < ActiveRecord::Base
     repository = Repository.find_by(namespace: namespace, name: repo)
     if repository.nil?
       repository = Repository.create(namespace: namespace, name: repo)
-    elsif repository.tags.exists?(name: tag)
-      return
     end
 
+    # When the tag already exists, delete the old one
+    repository.tags.find_by(name: tag_name).try(:delete_and_update!)
+
     digest = event.try(:[], "target").try(:[], "digest")
-    tag = repository.tags.create(name: tag, author: actor, digest: digest)
+    tag = repository.tags.create(name: tag_name, author: actor, digest: digest)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
   end
