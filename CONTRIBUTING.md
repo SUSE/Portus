@@ -9,7 +9,7 @@ the information you need for your specific problem.
 Moreover, check whether it has already been reported
 [here](https://github.com/SUSE/Portus/issues). If this is the case, please:
 
-- Read all the comment to confirm that it's the same issue you're having.
+- Read all the comments to confirm that it's the same issue you're having.
 - Refrain from adding "same thing here" or "+1" comments. Just hit the
   "subscribe" button to get notifications for this issue.
 - Add a comment only if you can provide helpful information that has not been
