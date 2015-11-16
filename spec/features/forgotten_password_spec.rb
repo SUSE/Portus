@@ -4,7 +4,8 @@ feature "Forgotten password support" do
   let!(:user) { create(:admin) }
 
   before :each do
-    APP_CONFIG["email"] = {
+    APP_CONFIG["signup"] = { "enabled" => true }
+    APP_CONFIG["email"]  = {
       "from"     => "test@example.com",
       "name"     => "Portus",
       "reply_to" => "no-reply@example.com"

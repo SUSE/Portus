@@ -13,6 +13,16 @@ module ApplicationHelper
     time_tag ct, time_ago_in_words(ct), title: ct
   end
 
+  # Returns true of signup is enabled.
+  def signup_enabled?
+    !Portus::LDAP.enabled? && APP_CONFIG.enabled?("signup")
+  end
+
+  # Returns true if the login form should show the "first user admin" alert.
+  def show_first_user_alert?
+    !User.not_portus.any? && APP_CONFIG.enabled?("first_user_admin") && Portus::LDAP.enabled?
+  end
+
   # Render markdown to safe HTML.
   # Images, unsafe link protocols and styles are not allowed to render.
   # HTML-Tags will be filtered.

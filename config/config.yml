@@ -79,6 +79,14 @@ ldap:
 first_user_admin:
   enabled: true
 
+# If enabled, then users can signup with the signup form. If enabled is set to
+# true and verify is set to true, then users who sign up have to go through a
+# verification process. Otherwise, if verify is set to false and signup is
+# enabled, then users can signup directly. This is ignored if LDAP is enabled.
+signup:
+  enabled: true
+  verify: false # TODO: (mssola) this is ignored for now.
+
 # By default require ssl to be enabled when running on production
 check_ssl_usage:
   enabled: true

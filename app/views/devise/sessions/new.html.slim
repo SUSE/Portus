@@ -13,14 +13,13 @@ section.row-0
           - else
             i.fa.fa-check Login
 
-        - if Portus::LDAP.enabled?
-          - unless User.not_portus.any?
-            .alert.alert-info
-              strong Note:
-              |  The first user to be created will have admin permissions !
-        - else
+        - if signup_enabled?
           .row
             .col-sm-6.create-new-account
               = link_to 'Create a new account', new_user_registration_url, class: 'btn btn-link'
             .col-sm-6.forgot-password
               = link_to "I forgot my password", new_user_password_path, class: 'btn btn-link'
+        - if show_first_user_alert?
+          .alert.alert-info
+            strong Note:
+            |  The first user to be created will have admin permissions !

@@ -5,7 +5,9 @@ class Auth::SessionsController < Devise::SessionsController
   # or LDAP support is enabled, work as usual. Otherwise, redirect always to
   # the signup page.
   def new
-    if User.not_portus.any? || Portus::LDAP.enabled?
+    signup_allowed = !Portus::LDAP.enabled? && APP_CONFIG.enabled?("signup")
+
+    if User.not_portus.any? || !signup_allowed
       @errors_occurred = flash[:alert] && !flash[:alert].empty?
       super
     else

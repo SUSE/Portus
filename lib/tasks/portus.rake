@@ -1,5 +1,4 @@
 namespace :portus do
-
   desc "Create the account used by Portus to talk with Registry's API"
   task create_api_account: :environment do
     User.create!(

@@ -64,4 +64,43 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(markdown(html_tag)).to eq "<p>alert(&#39;foo&#39;);</p>\n"
     end
   end
+
+  describe "#signup_enabled?" do
+    it "tells when signup is enabled and when it's not" do
+      APP_CONFIG["signup"] = { "enabled" => true }
+      APP_CONFIG["ldap"]   = { "enabled" => false }
+      expect(signup_enabled?).to be_truthy
+
+      APP_CONFIG["ldap"] = { "enabled" => true }
+      expect(signup_enabled?).to be_falsey
+
+      APP_CONFIG["signup"] = { "enabled" => false }
+      expect(signup_enabled?).to be_falsey
+
+      APP_CONFIG["ldap"] = { "enabled" => false }
+      expect(signup_enabled?).to be_falsey
+    end
+  end
+
+  describe "#show_first_user_alert?" do
+    it "shows the first_user alert when needed" do
+      APP_CONFIG["ldap"]             = { "enabled" => true }
+      APP_CONFIG["first_user_admin"] = { "enabled" => true }
+      expect(show_first_user_alert?).to be_truthy
+
+      APP_CONFIG["first_user_admin"] = { "enabled" => false }
+      expect(show_first_user_alert?).to be_falsey
+
+      APP_CONFIG["ldap"] = { "enabled" => false }
+      expect(show_first_user_alert?).to be_falsey
+
+      APP_CONFIG["first_user_admin"] = { "enabled" => true }
+      expect(show_first_user_alert?).to be_falsey
+
+      create(:admin)
+      APP_CONFIG["ldap"]             = { "enabled" => true }
+      APP_CONFIG["first_user_admin"] = { "enabled" => true }
+      expect(show_first_user_alert?).to be_falsey
+    end
+  end
 end

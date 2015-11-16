@@ -5,9 +5,9 @@ describe Auth::RegistrationsController do
   let(:valid_session) { {} }
 
   describe "POST #create" do
-
     before :each do
       request.env["devise.mapping"] = Devise.mappings[:user]
+      APP_CONFIG["signup"] = { "enabled" => true }
     end
 
     it "defaults admin to false when omitted" do
@@ -42,7 +42,6 @@ describe Auth::RegistrationsController do
       }
       expect(User.find_by!(username: "wonnabeadministrator")).not_to be_admin
     end
-
   end
 
   describe "PUT #update" do
