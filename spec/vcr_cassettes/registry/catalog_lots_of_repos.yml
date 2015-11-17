@@ -123,12 +123,12 @@ http_interactions:
       - Mon, 10 Aug 2015 16:06:08 GMT
     body:
       string: |
-        {"repositories":["busybox"]}
+        {"repositories":["busybox", "busybox1", "busybox2", "busybox3", "busybox4", "busybox5", "busybox6", "busybox7", "busybox8", "busybox9", "busybox10", "busybox11", "busybox12", "busybox13", "busybox14", "busybox15", "busybox16", "busybox17", "busybox18", "busybox19", "busybox20", "busybox21", "busybox22", "busybox23", "busybox24", "busybox25", "busybox26", "busybox27", "busybox28", "busybox29", "busybox30", "busybox31", "busybox32", "busybox33", "busybox34", "busybox35", "busybox36", "busybox37", "busybox38", "busybox39", "busybox40", "busybox41", "busybox42", "busybox43", "busybox44", "busybox45", "busybox46", "busybox47", "busybox48", "busybox49", "busybox50", "busybox51", "busybox52", "busybox53", "busybox54", "busybox55", "busybox56", "busybox57", "busybox58", "busybox59", "busybox60", "busybox61", "busybox62", "busybox63", "busybox64", "busybox65", "busybox66", "busybox67", "busybox68", "busybox69", "busybox70", "busybox71", "busybox72", "busybox73", "busybox74", "busybox75", "busybox76", "busybox77", "busybox78", "busybox79", "busybox80", "busybox81", "busybox82", "busybox83", "busybox84", "busybox85", "busybox86", "busybox87", "busybox88", "busybox89", "busybox90", "busybox91", "busybox92", "busybox93", "busybox94", "busybox95", "busybox96", "busybox97", "busybox98", "busybox99"]}
     http_version:
   recorded_at: Mon, 10 Aug 2015 16:06:08 GMT
 - request:
     method: get
-    uri: http://registry.test.lan/v2/busybox/tags/list
+    uri: http://registry.test.lan/v2/_catalog?last=busybox99&n=100
     body:
       encoding: US-ASCII
       string: ''
@@ -149,7 +149,7 @@ http_interactions:
       message: OK
     headers:
       Content-Length:
-      - '23'
+      - '20'
       Content-Type:
       - application/json; charset=utf-8
       Docker-Distribution-Api-Version:
@@ -158,7 +158,7 @@ http_interactions:
       - Mon, 10 Aug 2015 16:06:08 GMT
     body:
       string: |
-        {"name": "busybox", "tags":["latest"]}
+        {"repositories":["busybox100", "busybox101"]}
     http_version:
   recorded_at: Mon, 10 Aug 2015 16:06:08 GMT
 recorded_with: VCR 2.9.3

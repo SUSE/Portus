@@ -252,6 +252,30 @@ describe Portus::RegistryClient do
       end
     end
 
+    it "returns the available catalog even if it has more than 100 repos" do
+      create(:registry)
+      create(:admin, username: "portus")
+
+      VCR.use_cassette("registry/catalog_lots_of_repos", record: :none) do
+        WebMock.disable_net_connect!
+        stub_request(:get, "http://#{registry_server}/v2/busybox/tags/list")
+          .to_return(body: "{\"name\": \"busybox\", \"tags\":[\"latest\"]} ", status: 200)
+        (1..101).each do |i|
+          stub_request(:get, "http://#{registry_server}/v2/busybox#{i}/tags/list")
+            .to_return(body: "{\"name\": \"busybox#{i}\", \"tags\":[\"latest\"]} ", status: 200)
+        end
+
+        registry = Portus::RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password)
+
+        catalog = registry.catalog
+        expect(catalog.length).to be 102
+      end
+    end
+
     it "fails if this version of registry does not implement /v2/_catalog" do
       VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
         registry = Portus::RegistryClient.new(
@@ -276,7 +300,7 @@ describe Portus::RegistryClient do
       begin
         VCR.turned_off do
           WebMock.disable_net_connect!
-          stub_request(:get, "http://#{registry_server}/v2/_catalog")
+          stub_request(:get, "http://#{registry_server}/v2/_catalog?last=&n=100")
             .to_return(body: "BOOM", status: 500)
 
           expect do
