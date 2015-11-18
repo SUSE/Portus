@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://registry.test.lan/v2/_catalog
+    uri: http://registry.test.lan/v2/_catalog?last=&n=100
     body:
       encoding: US-ASCII
       string: ''

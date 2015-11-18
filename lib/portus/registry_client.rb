@@ -51,16 +51,19 @@ module Portus
     #   - name: a string containing the name of the repository.
     #   - tags: an array containing the available tags for the repository.
     def catalog
-      res = perform_request("_catalog")
-      if res.code.to_i == 200
-        catalog = JSON.parse(res.body)
-        add_tags(catalog["repositories"])
-      elsif res.code.to_i == 404
-        handle_error res
-      else
-        raise "Something went wrong while fetching the catalog " \
-          "Response: [#{res.code}] - #{res.body}"
+      last = ""
+      res = []
+
+      # We fetch repositories in pages of 100 because of a bug in the registry.
+      # See: https://github.com/docker/distribution/issues/1190.
+      loop do
+        cat = catalog_page(last)
+        res += cat["repositories"]
+        break if cat["repositories"].size < 100
+        last = cat["repositories"].last
       end
+
+      add_tags(res)
     end
 
     # Deletes a layer of the specified image. The layer is pointed by the digest
@@ -79,6 +82,19 @@ module Portus
     end
 
     private
+
+    # Fetches a page of a 100 repositories from the given last index.
+    def catalog_page(last)
+      res = perform_request("_catalog?n=100&last=#{last}")
+      if res.code.to_i == 200
+        JSON.parse(res.body)
+      elsif res.code.to_i == 404
+        handle_error res
+      else
+        raise "Something went wrong while fetching the catalog " \
+          "Response: [#{res.code}] - #{res.body}"
+      end
+    end
 
     # Adds the available tags for each of the given repositories. If there is a
     # problem while fetching a repository's tag, it will return an empty array.

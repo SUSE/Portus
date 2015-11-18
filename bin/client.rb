@@ -19,7 +19,9 @@ end
 
 case ARGV.first
 when "catalog"
-  pp registry.client.catalog
+  catalog = registry.client.catalog
+  pp catalog
+  pp "Size: #{catalog.size}"
 when "delete"
   if ARGV.length == 2
     puts "You have to specify first the name, and then the digest"
