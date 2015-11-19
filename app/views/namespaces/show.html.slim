@@ -44,8 +44,8 @@
       strong
         = @namespace.clean_name
     h6.label.label-info
-      | Belongs to:
-      = " #{@namespace.team.name}"
+      | <span>Belongs to: </span>
+      = link_to "#{@namespace.team.name}", @namespace.team
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
