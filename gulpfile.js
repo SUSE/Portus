@@ -16,11 +16,8 @@ gulp.task('customeScripts', function() {
                    assets + 'js/bootstrap.min.js',
                    assets + 'js/wow.js',
                    assets + 'js/portus.js',
-                   assets + 'js/jquery-cookie.js',
-                   assets + 'js/jquery-lang.js',
                    assets + 'js/smoothscroll.js',
-                   assets + 'js/anchors.js',
-                   assets + 'js/portus-language.js'
+                   assets + 'js/anchors.js'
                    ])
     .pipe(concat('main.js'))
     .pipe(rename({suffix: '.min'}))
