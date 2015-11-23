@@ -1,0 +1,208 @@
+#!/bin/bash
+# Peter Poeml <apache@suse.de>
+#
+# Script to generate ssl keys for mod_ssl, without requiring user input
+# most of it is copied from mkcert.sh of the mod_ssl distribution
+#
+# XXX This is just a hack, it won't be able to do anything you want!
+#
+
+function usage
+{
+	cat <<-EOF
+	`basename $0` will generate a test certificate "the quick way", i.e. without interaction.
+	You can change some defaults however.
+	It will overwrite /root/.mkcert.cfg
+
+	These options are recognized:		Default:
+
+	-C 	Common name 			"$name"
+	-N	comment				"$comment"
+	-c	country (two letters, e.g. DE)	$C
+	-s	state				$ST
+	-l 	city				$L
+	-o 	organisation			"$O"
+	-u 	organisational unit		"$U"
+	-n	fully qualified domain name	$CN (\$FQHOSTNAME)
+	-e 	email address of webmaster	webmaster@$CN
+	-y      days server cert is valid for   $srvdays
+	-Y      days CA cert is valid for       $CAdays
+    -x  default message digest  "$mDigest"
+	-d	run in debug mode
+	-h      show usage
+	EOF
+}
+
+
+test -t && { BRIGHT='[01m'; RED='[31m'; NORMAL='[00m'; }
+function myecho { echo $BRIGHT$@$NORMAL; }
+function error { echo $RED$@$NORMAL; }
+function myexit { error something ugly seems to have happened in line $1...; exit $2; }
+
+r=$ROOT
+. $r/etc/sysconfig/network/config
+FQHOSTNAME=`cat /etc/HOSTNAME`
+
+# defaults
+  comment="mod_ssl server certificate"
+     name=
+        C=XY
+       ST=unknown
+        L=unknown
+        U="web server"
+	O="SUSE Linux Web Server"
+       CN=$FQHOSTNAME
+    email=webmaster@$FQHOSTNAME
+   CAdays=$((365 * 6))
+  srvdays=$((365 * 2))
+  mDigest="sha256"
+
+while getopts C:N:c:s:l:o:u:n:e:y:Y:x::dh OPT; do
+    case $OPT in
+        C) name=$OPTARG-;;
+        N) comment=$OPTARG;;
+        c) C=$OPTARG;;
+        s) ST=$OPTARG;;
+        l) L=$OPTARG;;
+        u) U=$OPTARG;;
+        o) O=$OPTARG;;
+        n) CN=$OPTARG;;
+        e) email=$OPTARG;;
+	y) srvdays=$OPTARG;;
+	Y) CAdays=$OPTARG;;
+    x) mDigest=$OPTARG;;
+        d) set -x;;
+	h) usage; exit 2;;
+        *) echo unrecognized option: $OPT; usage; exit 2;;
+    esac
+done
+
+availableDigests="md2 md5 mdc2 rmd160 sha sha1 sha224 sha256 sha384 sha512"
+[[ $availableDigests =~ $mDigest ]] || { echo "You can not use this digest. The script will use sha256."; mDigest="sha256"; }
+GO_LEFT="\033[80D"
+GO_MIDDLE="$GO_LEFT\033[15C"
+for i in comment name C ST L U O CN email srvdays CAdays; do
+	eval "echo -e $i\"$GO_MIDDLE\" \$$i;"
+done
+
+
+openssl=$r/usr/bin/openssl
+sslcrtdir=$r/etc/apache2/ssl.crt
+sslcsrdir=$r/etc/apache2/ssl.csr
+sslkeydir=$r/etc/apache2/ssl.key
+sslprmdir=$r/etc/apache2/ssl.prm
+
+#
+# CA
+#
+echo;myecho creating CA key ...
+(umask 0377 ; $openssl genrsa -rand $r/var/log/y2log:$r/var/log/messages -out $sslkeydir/${name}ca.key 2048 || myexit $LINENO $?)
+
+cat >$r/root/.mkcert.cfg <<EOT
+[ req ]
+default_md             = $mDigest
+default_bits           = 2048
+default_keyfile        = keyfile.pem
+distinguished_name     = req_distinguished_name
+attributes             = req_attributes
+prompt                 = no
+output_password        = mypass
+
+[ req_distinguished_name ]
+C                      = $C
+ST                     = $ST
+L                      = $L
+O                      = $O
+OU                     = CA
+CN                     = $CN
+emailAddress           = $email
+
+[ req_attributes ]
+challengePassword              = $RANDOM$RANDOMA challenge password
+EOT
+
+echo;myecho creating CA request/certificate ...
+(umask 0377 ; $openssl req -config $r/root/.mkcert.cfg -new -x509 -days $CAdays -key $sslkeydir/${name}ca.key -out $sslcrtdir/${name}ca.crt || myexit $LINENO $?)
+
+cp -pv $sslcrtdir/${name}ca.crt $r/srv/www/htdocs/$(echo $name | tr 'a-z' 'A-Z')CA.crt
+
+#
+# Server CERT
+#
+echo;myecho creating server key ...
+(umask 0377 ; $openssl genrsa -rand $r/etc/rc.config:$r/var/log/messages -out $sslkeydir/${name}server.key 2048 || myexit $LINENO $?)
+
+cat >$r/root/.mkcert.cfg <<EOT
+[ req ]
+default_md             = $mDigest
+default_bits           = 2048
+default_keyfile        = keyfile.pem
+distinguished_name     = req_distinguished_name
+attributes             = req_attributes
+prompt                 = no
+output_password        = mypass
+
+[ req_distinguished_name ]
+C                      = $C
+ST                     = $ST
+L                      = $L
+O                      = $O
+OU                     = $U
+CN                     = $CN
+emailAddress           = $email
+
+[ req_attributes ]
+challengePassword              = $RANDOM$RANDOMA challenge password
+EOT
+
+echo;myecho creating server request ...
+(umask 0377 ; $openssl req -config $r/root/.mkcert.cfg -new -key $sslkeydir/${name}server.key -out $sslcsrdir/${name}server.csr || myexit $LINENO $?)
+
+
+cat >$r/root/.mkcert.cfg <<EOT
+extensions = x509v3
+[ x509v3 ]
+subjectAltName   = email:copy
+nsComment        = $comment
+nsCertType       = server
+EOT
+
+
+test -f $r/root/.mkcert.serial || echo 01 >$r/root/.mkcert.serial
+myecho "creating server certificate ..."
+(umask 0377 ; $openssl x509 					\
+	-extfile $r/root/.mkcert.cfg 			\
+	-days $srvdays 				\
+	-CAserial $r/root/.mkcert.serial 		\
+	-CA $sslcrtdir/${name}ca.crt       	\
+	-CAkey $sslkeydir/${name}ca.key   	\
+	-in $sslcsrdir/${name}server.csr -req 	\
+        -out $sslcrtdir/${name}server.crt || myexit $LINENO $?)
+
+rm -f $r/root/.mkcert.cfg
+
+
+
+
+echo;myecho "Verify: matching certificate & key modulus"
+modcrt=`$openssl x509 -noout -modulus -in $sslcrtdir/${name}server.crt | sed -e 's;.*Modulus=;;' || myexit $LINENO $?`
+modkey=`$openssl rsa -noout -modulus -in $sslkeydir/${name}server.key | sed -e 's;.*Modulus=;;' || myexit $LINENO $?`
+
+if [ ".$modcrt" != ".$modkey" ]; then
+    error "mkcert.sh:Error: Failed to verify modulus on resulting X.509 certificate" 1>&2
+    myexit $LINENO $?
+fi
+
+echo;myecho Verify: matching certificate signature
+    $openssl verify -CAfile $sslcrtdir/${name}ca.crt $sslcrtdir/${name}server.crt || myexit $LINENO $?
+if [ $? -ne 0 ]; then
+    error "mkcert.sh:Error: Failed to verify signature on resulting X.509 certificate" 1>&2
+    myexit $LINENO $?
+fi
+
+echo;myecho generating dhparams and appending it to the server certificate file...
+openssl dhparam 2048  >> $sslcrtdir/${name}server.crt
+
+
+exit 0
+
