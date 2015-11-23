@@ -304,7 +304,8 @@ describe Portus::LDAP do
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
       lm = LdapMock.new(username: "", password: "1234")
       lm.authenticate!
-      expect(lm.last_symbol).to be :invalid_username
+      expect(lm.last_symbol).to eq "Password is too short (minimum is 8 characters),"\
+        "Username Only alphanumeric characters are allowed. Minimum 4 characters, maximum 30."
     end
 
     it "returns a success if it was successful" do
