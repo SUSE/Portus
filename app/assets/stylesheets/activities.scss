@@ -71,6 +71,12 @@
       &.change-description {
         background: $activity-change-description;
       }
+      &.application-token-created {
+        background: $activity-application-token-created;
+      }
+      &.application-token-destroyed {
+        background: $activity-application-token-destroyed;
+      }
     }
   }
 }

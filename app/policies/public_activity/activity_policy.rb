@@ -37,7 +37,16 @@ class PublicActivity::ActivityPolicy
                "(team_users.user_id = ? OR namespaces.public = ?)",
                "Repository", user.id, true)
 
-      team_activities.union_all(namespace_activities).union_all(repository_activities).distinct
+      # Show application tokens activities related only to the current user
+      application_token_activities = @scope
+        .where("activities.trackable_type = ? AND activities.owner_id = ?",
+               "ApplicationToken", user.id)
+
+      team_activities
+        .union_all(namespace_activities)
+        .union_all(repository_activities)
+        .union_all(application_token_activities)
+        .distinct
     end
   end
 end

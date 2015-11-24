@@ -320,6 +320,7 @@ DEPENDENCIES
   active_record_union
   awesome_print
   base32
+  bcrypt
   bootstrap-sass (~> 3.3.4)
   bootstrap-typeahead-rails
   byebug
