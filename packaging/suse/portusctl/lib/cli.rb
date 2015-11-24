@@ -22,6 +22,9 @@ class Cli < Thor
   option "ssl-state",
     desc:    "SSL certificate: state",
     default: "Bayern" # gensslcert -s
+  option "ssl-digest",
+    desc:    "default_md: sha256",
+    default: "sha256" # gensslcert -dm
   # DB options
   option "db-host", desc: "Database: host", default: "localhost"
   option "db-username", desc: "Database: username", default: "portus"

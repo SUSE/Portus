@@ -50,9 +50,10 @@ EOM
         "-e", @options["ssl-email"],
         "-c", @options["ssl-country"],
         "-l", @options["ssl-city"],
-        "-s", @options["ssl-state"]
+        "-s", @options["ssl-state"],
+        "-x", @options["digest"]
       ]
-      Runner.exec("gensslcert", args)
+      Runner.exec("/srv/Portus/packaging/suse/portusctl/bin/gensslcert", args)
     end
 
     FileUtils.chown("wwwrun", "www", "/etc/apache2/ssl.key")
