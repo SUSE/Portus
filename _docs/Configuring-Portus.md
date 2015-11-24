@@ -159,6 +159,22 @@ When Portus has been installed via RPM, this operation can be performed via
 
     $ portusctl make_admin <username>
 
+### Disabling the sign up form
+
+By default Portus will have the sign up form available for any person that comes
+across your Portus instance. You can change that by disabling the `signup`
+configuration value:
+
+{% highlight yaml %}
+signup:
+  enabled: false
+{% endhighlight %}
+
+This way, only the admins of this Portus instance will be able to create users
+in the system. This setting is completely ignored when LDAP support is enabled.
+This option is explained with more detail
+[here](/features/disabling_signup.html).
+
 ### Enforce SSL usage on production
 
 By default Portus will enforce usage of SSL when ran with the "production"
