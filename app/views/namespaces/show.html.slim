@@ -48,7 +48,7 @@
       = link_to "#{@namespace.team.name}", @namespace.team
   .panel-body
     .table-responsive
-      table.table.table-stripped.table-hover
+      table.table.table-stripped.table-hover.customized-datatable id="repositories-table"
         col.col-60
         col.col-40
         thead
@@ -60,4 +60,5 @@
             tr
               td= link_to repository.name, repository
               td= repository.tags.count
-  .panel-footer= paginate(@repositories)
+  .panel-footer
+    .paging_repositories-table

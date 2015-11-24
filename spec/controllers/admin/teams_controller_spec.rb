@@ -12,11 +12,6 @@ RSpec.describe Admin::TeamsController, type: :controller do
     end
 
     describe "GET #index" do
-      it "paginates teams" do
-        get :index
-        expect(assigns(:teams)).to respond_to(:total_pages)
-      end
-
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)

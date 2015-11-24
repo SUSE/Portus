@@ -11,3 +11,14 @@
 .table > tbody > tr > td.table-icon {
   text-align: center;
 }
+
+.customized-datatable {
+  border-bottom: 0px !important;
+
+  /* Remove the bordor on top of the first row to match with the existing
+   * layout.
+   */
+  tr:first-child td {
+    border-top: 0px;
+  }
+}

@@ -7,7 +7,7 @@ class TeamsController < ApplicationController
 
   # GET /teams
   def index
-    @teams = policy_scope(Team).page(params[:page])
+    @teams = policy_scope(Team)
     respond_with(@teams)
   end
 
@@ -15,8 +15,8 @@ class TeamsController < ApplicationController
   # GET /teams/1.json
   def show
     authorize @team
-    @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
-    @team_namespaces = @team.namespaces.page(params[:namespaces_page]).per(15)
+    @team_users = @team.team_users.enabled
+    @team_namespaces = @team.namespaces
   end
 
   # POST /teams
