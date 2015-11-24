@@ -84,6 +84,9 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     it "generates a csv file" do
       get :index, format: :csv
       expect(response.headers).to match(
+        "X-Frame-Options"=>"SAMEORIGIN",
+        "X-XSS-Protection"=>"1; mode=block",
+        "X-Content-Type-Options"=>"nosniff",
         "Content-Disposition" => 'attachment; filename="activities.csv"',
         "Content-Type"        => "text/csv"
       )

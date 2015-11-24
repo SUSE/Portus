@@ -6,3 +6,4 @@
 #= require lifeitup_layout
 #= require_tree .
 #= require bootstrap-typeahead-rails
+#= require dataTables/jquery.dataTables

@@ -21,6 +21,7 @@ gem "net-ldap"
 gem "redcarpet"
 gem "font-awesome-rails"
 gem "bootstrap-typeahead-rails"
+gem "jquery-datatables-rails", "~> 3.3.0"
 
 # This is already a Rails dependency, but we use it to run portusctl
 gem "thor"
