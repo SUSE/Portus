@@ -51,16 +51,14 @@ module Portus
     #   - name: a string containing the name of the repository.
     #   - tags: an array containing the available tags for the repository.
     def catalog
-      last = ""
+      link = "_catalog?n=100"
       res = []
 
       # We fetch repositories in pages of 100 because of a bug in the registry.
       # See: https://github.com/docker/distribution/issues/1190.
-      loop do
-        cat = catalog_page(last)
+      until link.empty?
+        cat, link = catalog_page(link)
         res += cat["repositories"]
-        break if cat["repositories"].size < 100
-        last = cat["repositories"].last
       end
 
       add_tags(res)
@@ -81,19 +79,30 @@ module Portus
       end
     end
 
-    private
+    protected
 
-    # Fetches a page of a 100 repositories from the given last index.
-    def catalog_page(last)
-      res = perform_request("_catalog?n=100&last=#{last}")
+    # Fetches the next page in the catalog from the provided link. On success,
+    # it will return an array of the items:
+    #   - The parsed response body.
+    #   - The link to the next page.
+    # On error it will raise the proper exception.
+    def catalog_page(link)
+      res = perform_request(link)
       if res.code.to_i == 200
-        JSON.parse(res.body)
+        [JSON.parse(res.body), fetch_link(res["link"])]
       elsif res.code.to_i == 404
         handle_error res
       else
         raise "Something went wrong while fetching the catalog " \
           "Response: [#{res.code}] - #{res.body}"
       end
+    end
+
+    # Fetch the link to the next catalog page from the given response.
+    def fetch_link(header)
+      return "" if header.blank?
+      link = header.split(";")[0]
+      link.strip[1, link.size - 2]
     end
 
     # Adds the available tags for each of the given repositories. If there is a
