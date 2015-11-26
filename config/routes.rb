@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   resources :repositories, only: [:index, :show] do
     post :toggle_star, on: :member
+    resources :comments, only: [:create, :destroy]
   end
 
   devise_for :users, controllers: { registrations: "auth/registrations",

@@ -5,6 +5,7 @@ class Repository < ActiveRecord::Base
   belongs_to :namespace
   has_many :tags, dependent: :delete_all
   has_many :stars, dependent: :delete_all
+  has_many :comments, dependent: :delete_all
 
   # We don't validate the format because we get that from the registry, and
   # it's guaranteed to be well-formatted there.

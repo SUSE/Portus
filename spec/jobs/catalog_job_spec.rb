@@ -52,7 +52,7 @@ describe CatalogJob do
     end
 
     it "performs the job as expected" do
-      registry  = create(:registry, "hostname" => "registry.test.lan")
+      registry = create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_registry_catalog", record: :none) do
         job = CatalogJobMock.new
