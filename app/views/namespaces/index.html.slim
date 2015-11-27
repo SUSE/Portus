@@ -18,7 +18,7 @@ span
         .form-group
           = f.label :description, {class: 'control-label col-md-2'}
           .col-md-7
-            = f.text_area(:description, class: 'form-control', required: false, placeholder: "A short description of your namespace")
+            = f.text_area(:description, class: 'form-control fixed-size', required: false, placeholder: "A short description of your namespace")
         .form-group
           .col-md-offset-2.col-md-7
             = f.submit('Create', class: 'btn btn-primary')
