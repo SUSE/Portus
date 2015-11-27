@@ -61,11 +61,9 @@ describe Portus::Config do
         "string"  => ""
       }
     }
-    local = {
-      "ldap"     => {
-        "enabled" => true,
-        "count"   => 1
-      }
+    local = { "ldap" => {
+      "enabled" => true,
+      "count"   => 1 }
     }
     ENV["PORTUS_LDAP_COUNT"] = "2"
     ENV["PORTUS_ANOTHER_ENABLED"] = "false"
