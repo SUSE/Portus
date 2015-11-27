@@ -38,19 +38,10 @@ section.sign-up {
   }
 }
 
-.edit_team, .edit_namespace {
-  textarea {
-    max-height: 600px;
-    min-height: initial;
-    max-width: 100%;
-  }
-}
-
-#new-namespace-form, #new-team-form {
-  textarea {
-    max-height: 600px;
-    min-height: initial;
-  }
+textarea.fixed-size {
+  max-height: 300px;
+  min-height: 150px;
+  resize: vertical;
 }
 
 .twitter-typeahead, .tt-dropdown-menu {
