@@ -47,7 +47,7 @@ describe Portus::Config do
   end
 
   it "raises an error when the local file is badly formatted" do
-    bad   = get_config("config.yml", "bad.yml")
+    bad = get_config("config.yml", "bad.yml")
     expect { bad.fetch }.to raise_error(StandardError, "Wrong format for the config-local file!")
   end
 

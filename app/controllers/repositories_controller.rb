@@ -12,6 +12,8 @@ class RepositoriesController < ApplicationController
   # GET /repositories/1.json
   def show
     authorize @repository
+    @tags = @repository.tags.order("created_at DESC")
+    @repository_comments = @repository.comments.all
     respond_with(@repository)
   end
 

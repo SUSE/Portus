@@ -37,6 +37,16 @@ class RegistryPerformRequest < Portus::RegistryClient
   end
 end
 
+# This class is used to access directly to the "fetch_link" protected method.
+class RegistryClientFetchLink < Portus::RegistryClient
+  def initialize
+  end
+
+  def fetch_link_test(header)
+    fetch_link(header)
+  end
+end
+
 describe Portus::RegistryClient do
   let(:registry_server) { "registry.test.lan" }
   let(:username) { "flavio" }
@@ -300,7 +310,7 @@ describe Portus::RegistryClient do
       begin
         VCR.turned_off do
           WebMock.disable_net_connect!
-          stub_request(:get, "http://#{registry_server}/v2/_catalog?last=&n=100")
+          stub_request(:get, "http://#{registry_server}/v2/_catalog?n=100")
             .to_return(body: "BOOM", status: 500)
 
           expect do
@@ -310,6 +320,13 @@ describe Portus::RegistryClient do
       ensure
         WebMock.allow_net_connect!
       end
+    end
+
+    it "fetches the link from the registry properly" do
+      registry = RegistryClientFetchLink.new
+      expect(registry.fetch_link_test([])).to be_empty
+      link = "<v2/_catalog?last=mssola%2Fbusybox89&n=100>; rel=\"next\""
+      expect(registry.fetch_link_test(link)).to eq "v2/_catalog?last=mssola%2Fbusybox89&n=100"
     end
   end
 

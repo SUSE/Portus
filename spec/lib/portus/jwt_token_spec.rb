@@ -4,7 +4,7 @@ require "rails_helper"
 Portus::JwtToken.class_eval { attr_reader :account, :service }
 
 describe Portus::JwtToken do
-  let(:mock)     { Portus::JwtToken.new("", "", nil)  }
+  let(:mock)     { Portus::JwtToken.new("", "", nil) }
   let(:registry) { create(:registry) }
   let(:scope)    { Namespace::AuthScope.new(registry, "repository:samalba/my-app:push") }
 

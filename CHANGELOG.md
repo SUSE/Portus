@@ -1,5 +1,10 @@
 ## Upcoming Version
 
+- The signup form can be disabled via a configuration option. See PR
+[#569](https://github.com/SUSE/Portus/pull/569),
+[#594](https://github.com/SUSE/Portus/pull/594),
+[#543](https://github.com/SUSE/Portus/pull/543) and
+[#568](https://github.com/SUSE/Portus/pull/568).
 - Users will be offered in an autocompletion widget when adding a new team
   member. See PR [#547](https://github.com/SUSE/Portus/pull/547).
 - Portus now also tracks the digest of pushed images.
@@ -12,6 +17,7 @@
 - Team and namespace descriptions can be written using Markdown. See pull
   requests: [#546](https://github.com/SUSE/Portus/pull/546) and
   [#531](https://github.com/SUSE/Portus/pull/531).
+- Team members can comment on repositories. See pull request: [#538](https://github.com/SUSE/Portus/pull/583)
 
 ## 2.0.0
 

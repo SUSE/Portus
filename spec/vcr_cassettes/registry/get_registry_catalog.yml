@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://portus.test.lan/v2/_catalog?last=&n=100
+    uri: http://portus.test.lan/v2/_catalog?n=100
     body:
       encoding: US-ASCII
       string: ''
@@ -93,7 +93,7 @@ http_interactions:
   recorded_at: Mon, 10 Aug 2015 16:06:08 GMT
 - request:
     method: get
-    uri: http://registry.test.lan/v2/_catalog?last=&n=100
+    uri: http://registry.test.lan/v2/_catalog?n=100
     body:
       encoding: US-ASCII
       string: ''

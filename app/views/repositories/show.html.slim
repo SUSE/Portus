@@ -13,7 +13,7 @@
             = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
               i.fa.fa-star-o
           span#star-counter.btn.btn-primary.btn-xs
-           = @repository.stars.count
+            = @repository.stars.count
 
   .panel-body
     .table-responsive
@@ -27,10 +27,42 @@
             th Author
             th Pushed at
         tbody
-          - @repository.tags.each do |tag|
+          - @tags.each do |tag|
             tr
               td
                 .label.label-success
                   = tag.name
               td= tag.author.username
               td= tag.created_at
+
+#write_comment_form.collapse
+  = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|
+    .form-group
+      = f.label :comment, {class: 'control-label col-md-2'}
+      .col-md-7
+        = f.text_area(:body, class: 'form-control fixed-size', required: false, placeholder: "Please write a comment.")
+    .form-group
+      .col-md-offset-2.col-md-7
+        = f.submit('Add', class: 'btn btn-primary')
+
+.panel.panel-default
+  .panel-heading.clearfix
+    h5
+      .pull-right
+        a#write_comment_repository_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
+          i.fa.fa-comment
+          | Write a comment
+      span class="number_of_comments"
+        = @repository.comments.count
+      span class="comment_string"
+        - if @repository.comments.count == 1
+          |  Comment
+        - else
+          |  Comments
+  #comments.panel-body
+    .container-full
+      - if @repository_comments.empty?
+        ' Nobody has left a comment yet.
+      - else
+        - @repository_comments.each do |comment|
+          = render(comment)

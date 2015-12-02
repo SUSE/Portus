@@ -72,6 +72,21 @@ feature "Login feature" do
     expect(current_path).to eq new_user_session_path
   end
 
+  scenario "Sign up is disabled", js: true do
+    APP_CONFIG["signup"] = { "enabled" => true }
+
+    visit root_path
+    expect(current_path).to eq root_path
+    expect(page).to have_content("Create a new account")
+
+    APP_CONFIG["signup"] = { "enabled" => false }
+
+    visit root_path
+    expect(current_path).to eq root_path
+    expect(page).to have_content("I forgot my password")
+    expect(page).to_not have_content("Create a new account")
+  end
+
   describe "User is lockable" do
     before :each do
       @attempts  = Devise.maximum_attempts

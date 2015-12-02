@@ -35,7 +35,7 @@ module Portus
         # strategy.
         if @ldap.bind_as(bind_options)
           user = find_or_create_user!
-          user.valid? ? success!(user) : fail!(:invalid_username)
+          user.valid? ? success!(user) : fail!(user.errors.full_messages.join(","))
         else
           fail!(:ldap_bind_failed)
         end
