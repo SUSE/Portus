@@ -40,7 +40,7 @@
                       i.fa.fa-lg[class="fa-toggle-#{user.admin? ? 'on': 'off'}"]
 
               td= user.teams.reduce(0){ |sum, t| sum += t.namespaces.count}
-              td= user.teams.count
+              td= user.teams.all_non_special.count
               td.enabled-btn
                 - if current_user.id == user.id && @admin_count == 1
                   i.fa.fa-lg.fa-toggle-on
