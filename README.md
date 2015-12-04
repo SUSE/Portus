@@ -43,7 +43,7 @@ If you are modifiying Less, JS or images in the `/assets` folder, you need to
 run Gulp in your console in order to preprocess CSS, minify JS and compress
 the images. All you need to do is type the following:
 
-    $ gulp
+    $ ./node_modules/gulp/bin/gulp.js
 
 After that, you will have the site available at `localhost:4000`.
 
