@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Starring repositories
+order: 6
 longtitle: Star your favorite repositories
 ---
 

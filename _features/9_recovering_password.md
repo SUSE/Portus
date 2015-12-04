@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Recovering the password
+order: 9
 longtitle: Users can recover their password if they forgot it
 ---
 

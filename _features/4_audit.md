@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Audit
+order: 4
 longtitle: Monitoring of all the activities performed onto your private registry and Portus itself
 ---
 

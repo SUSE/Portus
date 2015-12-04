@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Disabling users
+order: 7
 longtitle: Disable users temporarily
 ---
 

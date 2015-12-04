@@ -1,6 +1,7 @@
 ---
 layout: post
 title: LDAP support
+order: 2
 longtitle: LDAP user authentication
 ---
 

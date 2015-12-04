@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Locking accounts for safety reasons
+order: 8
 longtitle: Users that fail at logging in too many times will have their account locked
 ---
 

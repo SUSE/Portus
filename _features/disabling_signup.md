@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Disabling the sign up form
+order: 10
 longtitle: Disable the possibility of users signing up on their own
 ---
 

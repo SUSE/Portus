@@ -1,6 +1,7 @@
 ---
 title: Configuring Portus
 layout: post
+order: 1
 longtitle: How to configure Portus
 ---
 

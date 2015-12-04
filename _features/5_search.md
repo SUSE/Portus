@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Search
+order: 5
 longtitle: Search for repositories and tags inside of your private registry
 ---
 

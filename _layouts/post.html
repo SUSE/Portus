@@ -50,7 +50,8 @@
         <aside class="col-xs-3 aside-max">
           <h4>Documentation</h4>
           <ul>
-            {% for d in site.docs %}
+            {% assign docs = (site.docs | sort: 'order') %}
+            {% for d in docs %}
               <li>
                 <a href="{{ d.url | prepend: site.baseurl }}">
                   {{ d.title }}
@@ -60,7 +61,8 @@
           </ul>
           <h4>Setups</h4>
           <ul>
-            {% for s in site.setups %}
+            {% assign setups = (site.setups | sort: 'order') %}
+            {% for s in setups %}
               <li>
                 <a href="{{ s.url | prepend: site.baseurl }}">
                   {{ s.title }}
@@ -70,7 +72,8 @@
           </ul>
           <h4>Features</h4>
             <ul>
-            {% for f in site.features %}
+            {% assign features = (site.features | sort: 'order') %}
+            {% for f in features %}
               <li>
                 <a href="{{ f.url | prepend: site.baseurl }}">
                   {{ f.title }}
