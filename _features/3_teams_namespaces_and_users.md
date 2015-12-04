@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Teams, namespaces and users
+order: 3
 longtitle: Fine-grained control of permissions
 ---
 

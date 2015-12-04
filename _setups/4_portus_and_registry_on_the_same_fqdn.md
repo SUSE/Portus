@@ -1,5 +1,6 @@
 ---
 layout: post
+order: 4
 title: Portus and the registry on the same FQDN using sub URI
 ---
 

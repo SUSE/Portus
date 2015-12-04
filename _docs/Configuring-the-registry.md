@@ -1,10 +1,11 @@
 ---
-title: Configuring your private registry
+title: Portus and your private registry
 layout: post
+order: 3
 longtitle: Letting Portus know about your private registry
 ---
 
-## Configuring your private registry for the first time
+## Registering your private registry into Portus
 
 Once you have deployed Portus successfully and you have logged in as an admin
 user, now it's time to tell Portus about the existence of your private
