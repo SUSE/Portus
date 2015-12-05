@@ -28,7 +28,6 @@ registry:
     - ./docker/registry:/registry
     - /registry_data
   entrypoint: /registry/entry.sh
-  env_file: docker/environment
   links:
     - web
   ports:
