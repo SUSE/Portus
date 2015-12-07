@@ -99,3 +99,11 @@ check_ssl_usage:
 # See: https://github.com/SUSE/Portus/issues/510
 jwt_expiration_time:
   value: "5.minutes"
+
+# The "Navalia" service allows Portus to have automated buid images from
+# known Dockerfiles.
+# The service is disabled by default. It's recommended to change this setting
+# either via environment variable or by config-local.yml
+navalia:
+  enabled: false
+  address: navalia.test.lan
