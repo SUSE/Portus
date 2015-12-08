@@ -17,6 +17,49 @@ class RepositoriesController < ApplicationController
     respond_with(@repository)
   end
 
+  # GET /repositories/new
+  def new
+    @repository = Repository.new
+    @repository.namespace = Namespace.find(params[:namespace_id]) if params[:namespace_id]
+    authorize(@repository) if @repository.namespace
+
+    scope = NamespacePolicy::Scope.new(current_user, Namespace)
+    scope.include_personal_namespace = true
+    @namespaces = scope.resolve
+    logger.debug(@namespaces.count)
+  end
+
+  # POST /repositories
+  # POST /repositories.json
+  def create
+    @repository = Repository.new(create_params)
+    authorize @repository
+
+    if @repository.save
+      flash[:notice] = "Automated repository created successfully!"
+      redirect_to @repository
+    else
+      flash[:alert] = @repository.errors.full_messages
+      render "new"
+    end
+  end
+
+  # GET /repositories/:id/edit
+  def edit
+    @repository = Repository.find(params[:id])
+
+    authorize @repository
+  end
+
+  # PUT /repositories/1
+  def update
+    @repository = Repository.find(params[:id])
+    authorize @repository
+
+    @repository.update_attributes(update_params)
+    redirect_to @repository, notice: "Repository updated successfully!"
+  end
+
   # POST /repositories/toggle_star
   def toggle_star
     @repository.toggle_star current_user
@@ -25,5 +68,17 @@ class RepositoriesController < ApplicationController
 
   def set_repository
     @repository = Repository.find(params[:id])
+  end
+
+  private
+
+  def create_params
+    permitted = [:name, :namespace_id, :source_url]
+    params.require(:repository).permit(permitted)
+  end
+
+  def update_params
+    permitted = [:source_url]
+    params.require(:repository).permit(permitted)
   end
 end

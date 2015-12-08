@@ -12,6 +12,17 @@ module RepositoriesHelper
     owner + namespace + render_repository(activity)
   end
 
+  # Returns true if the current user can trigger an automated
+  # build for a given repository
+  def can_trigger_build?(repository)
+    return false unless APP_CONFIG.enabled?("navalia")
+    return false if repository.source_url.blank?
+
+    current_user.admin? || \
+      repository.namespace.team.owners.exists?(current_user.id) || \
+      repository.namespace.team.contributors.exists?(current_user.id)
+  end
+
   protected
 
   # Fetches the owner of the activity in a safe way.

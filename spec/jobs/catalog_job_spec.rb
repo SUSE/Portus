@@ -137,4 +137,18 @@ describe CatalogJob do
       expect(PublicActivity::Activity.first.parameters[:tag_name]).to eq "latest"
     end
   end
+
+  describe "Automated repositories" do
+    let!(:registry)   { create(:registry) }
+    let!(:owner)      { create(:user) }
+    let!(:repo)       { create(:repository, name: "repo", namespace: registry.global_namespace, source_url: "foo") }
+    it "never removes them" do
+      automated_repo_id = repo.id
+
+      job = CatalogJobMock.new
+      job.update_registry!([{ "name" => "busybox", "tags" => nil }])
+
+      expect(Repository.find_by(id: automated_repo_id)).not_to be_nil
+    end
+  end
 end

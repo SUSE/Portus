@@ -1,39 +1,66 @@
-.panel.panel-default
-  .panel-heading
-    h5
-      = link_to @repository.namespace.clean_name, @repository.namespace
-      | /
-      = @repository.name
-      #repo-stars.pull-right
-        .btn-group
-          - if @repository.starred_by?(current_user)
-            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
-              i.fa.fa-star
-          - else
-            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
-              i.fa.fa-star-o
-          span#star-counter.btn.btn-primary.btn-xs
-            = @repository.stars.count
+.row
+  .col-md-8
+    .panel.panel-default
+      .panel-heading
+        h5
+          = link_to @repository.namespace.clean_name, @repository.namespace
+          | /
+          = @repository.name
+          #repo-stars.pull-right
+            .btn-group
+              - if @repository.starred_by?(current_user)
+                = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
+                  i.fa.fa-star
+              - else
+                = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
+                  i.fa.fa-star-o
+              span#star-counter.btn.btn-primary.btn-xs
+                = @repository.stars.count
 
-  .panel-body
-    .table-responsive
-      table.table.table-stripped.table-hover
-        col.col-40
-        col.col-40
-        col.col-20
-        thead
-          tr
-            th Tag
-            th Author
-            th Pushed at
-        tbody
-          - @tags.each do |tag|
-            tr
-              td
-                .label.label-success
-                  = tag.name
-              td= tag.author.username
-              td= tag.created_at
+      .panel-body
+        .table-responsive
+          table.table.table-stripped.table-hover
+            col.col-40
+            col.col-40
+            col.col-20
+            thead
+              tr
+                th Tag
+                th Author
+                th Pushed at
+            tbody
+              - @tags.each do |tag|
+                tr
+                  td
+                    .label.label-success
+                      = tag.name
+                  td= tag.author.username
+                  td= tag.created_at
+  .col-md-4
+    .panel.panel-default
+      .panel-heading
+        h5
+          | Automated build
+          .pull-right
+            a.btn.btn-link.btn-xs[role="button" href="#{url_for(edit_repository_path(@repository))}" title="Edit automated repository"]
+              i.fa.fa-pencil.fa-lg
+              | Edit
+      .panel-body
+        .row
+          - if @repository.source_url.blank?
+            .col-xs-12
+              p Not an automated build
+          - else
+            .col-xs-2
+              p Source
+            .col-xs-10
+              code= @repository.source_url
+        .row
+          .text-center
+            a[class="btn btn-primary #{'disabled' unless can_trigger_build?(@repository)}"
+              role="button"
+              ]
+              | Build
 
 #write_comment_form.collapse
   = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|

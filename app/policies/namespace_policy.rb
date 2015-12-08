@@ -41,18 +41,27 @@ class NamespacePolicy
 
   class Scope
     attr_reader :user, :scope
+    attr_accessor :include_personal_namespace
 
     def initialize(user, scope)
       @user = user
       @scope = scope
+      @include_personal_namespace = false
     end
 
     def resolve
+      query = "(namespaces.public = :public OR team_users.user_id = :user_id) AND " \
+        "namespaces.global = :global"
+      if @include_personal_namespace
+        query += " OR namespaces.name = "
+      else
+        query += " AND namespaces.name != "
+      end
+      query += " :username"
       scope
         .joins(team: [:team_users])
         .where(
-          "(namespaces.public = :public OR team_users.user_id = :user_id) AND " \
-          "namespaces.global = :global AND namespaces.name != :username",
+          query,
           public: true, user_id: user.id, global: false, username: user.username)
         .distinct
     end
