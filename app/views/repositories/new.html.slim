@@ -1,0 +1,22 @@
+.panel.panel-default
+  .panel-heading
+    h5 New automated repository
+  .panel-body
+    = form_for @repository, html: {class: 'form-horizontal', role: 'form'} do |f|
+      .form-group
+        = f.label :name , {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_field(:name, class: 'form-control', required: true, autofocus: true)
+      .form-group
+        = f.label :namespace_id, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.collection_select(:namespace_id, @namespaces, :id, :name, {prompt: "Select namespace"}, {class: 'form-control', required: true})
+      .form-group
+        = f.label :source_url, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_field(:source_url, class: 'form-control', required: true)
+
+      .form-group
+        .col-md-offset-2.col-md-7
+          = f.submit('Create', class: 'btn btn-primary')
+

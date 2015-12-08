@@ -12,6 +12,16 @@ class RepositoryPolicy
       @repository.namespace.team.users.exists?(user.id)
   end
 
+  def create?
+    @user.admin? ||
+      @repository.namespace.team.owners.exists?(user.id) ||
+      @repository.namespace.team.contributors.exists?(user.id)
+  end
+
+  alias_method :new?, :create?
+  alias_method :edit?, :create?
+  alias_method :update?, :create?
+
   class Scope
     attr_reader :user, :scope
 

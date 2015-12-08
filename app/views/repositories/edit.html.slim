@@ -1,0 +1,15 @@
+.panel.panel-default
+  .panel-heading
+    h5
+      'Repository:
+      strong
+        = @repository.name
+  .panel-body
+    = form_for @repository, url: repository_path(@repository.id), html: {class: 'form-horizontal', role: 'form'} do |f|
+      .form-group
+        = f.label :source_url, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_field(:source_url, class: 'form-control', value: @repository.source_url)
+      .form-group
+        .col-md-offset-2.col-md-7
+          = f.submit('Update', class: 'btn btn-primary')

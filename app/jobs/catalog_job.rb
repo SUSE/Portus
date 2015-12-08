@@ -38,7 +38,8 @@ class CatalogJob < ActiveJob::Base
 
     # At this point, the remaining items in the "repos" array are repos that
     # exist in the DB but not in the catalog. Remove all of them.
+    # Automated repositories are never removed.
     Tag.where(repository_id: dangling_repos).find_each(&:delete_and_update!)
-    Repository.where(id: dangling_repos).destroy_all
+    Repository.where(id: dangling_repos, source_url: "").destroy_all
   end
 end

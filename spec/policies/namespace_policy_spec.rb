@@ -168,31 +168,47 @@ describe NamespacePolicy do
       namespace
     end
 
-    it "shows namespaces controlled by teams the user is member of" do
-      expected = team.namespaces
-      expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
+    context "exclude personal namespace" do
+      it "shows namespaces controlled by teams the user is member of" do
+        expected = team.namespaces
+        expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
 
-      expect(Pundit.policy_scope(create(:user), Namespace).to_a).to be_empty
+        expect(Pundit.policy_scope(create(:user), Namespace).to_a).to be_empty
+      end
+
+      it "always shows public namespaces" do
+        n = create(:namespace, public: true)
+        create(:team, namespaces: [n], owners: [owner])
+        expect(Pundit.policy_scope(create(:user), Namespace).to_a).to match_array([n])
+      end
+
+      it "never shows public or personal namespaces" do
+        user = create(:user)
+        expect(Namespace.find_by(name: user.username)).not_to be_nil
+        create(:namespace, global: true, public: true)
+        expect(Pundit.policy_scope(create(:user), Namespace).to_a).to be_empty
+      end
+
+      it "does not show duplicates" do
+        # Namespaces controlled by the team that are also public are listed twice
+        expected = team.namespaces
+        expected.first.update_attributes(public: true)
+        expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
+      end
     end
 
-    it "always shows public namespaces" do
-      n = create(:namespace, public: true)
-      create(:team, namespaces: [n], owners: [owner])
-      expect(Pundit.policy_scope(create(:user), Namespace).to_a).to match_array([n])
-    end
+    context "include personal namespace" do
+      it "never shows global namespace but it always includes the personal one" do
+        u = create(:user)
+        personal_namespace = Namespace.find_by!(name: u.username)
+        scope = NamespacePolicy::Scope.new(u, Namespace)
+        scope.include_personal_namespace = true
+        namespaces = scope.resolve
 
-    it "never shows public or personal namespaces" do
-      user = create(:user)
-      expect(Namespace.find_by(name: user.username)).not_to be_nil
-      create(:namespace, global: true, public: true)
-      expect(Pundit.policy_scope(create(:user), Namespace).to_a).to be_empty
-    end
-
-    it "does not show duplicates" do
-      # Namespaces controlled by the team that are also public are listed twice
-      expected = team.namespaces
-      expected.first.update_attributes(public: true)
-      expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
+        expect(personal_namespace).not_to be_nil
+        create(:namespace, global: true, public: true)
+        expect(namespaces.to_a).to match_array([personal_namespace])
+      end
     end
   end
 end

@@ -43,6 +43,11 @@
       'Namespace:
       strong
         = @namespace.clean_name
+      - if Registry.any? && can_manage_namespace?(@namespace)
+        .pull-right
+          a.btn.btn-link.btn-xs[role="button" href="#{url_for(new_repository_path(namespace_id: @namespace.id))}" title="Add automated repository"]
+            i.fa.fa-plus-circle.fa-lg
+            | Add automated repository
     h6.label.label-info
       | <span>Belongs to: </span>
       = link_to "#{@namespace.team.name}", @namespace.team

@@ -7,6 +7,82 @@ class CatalogJobMock < CatalogJob
 end
 
 RSpec.describe RepositoriesHelper, type: :helper do
+  describe "#can_trigger_build?" do
+    let(:registry) { create(:registry) }
+    let(:owner) { create(:user) }
+    let(:contributor) { create(:user) }
+    let(:viewer) { create(:user) }
+    let(:external) { create(:user) }
+    let(:team) { create(:team, owners: [owner], contributors: [contributor], viewers: [viewer]) }
+    let(:namespace) { create(:namespace, team: team) }
+    let(:repo) { create(:repository, namespace: namespace, source_url: "git.example.com/foo.git") }
+
+    context "navalia disabled" do
+      before :each do
+        APP_CONFIG["navalia"] = { "enabled" => false }
+      end
+
+      it "returns false" do
+        admin = create(:user, admin: true)
+        sign_in admin
+
+        expect(helper.can_trigger_build?(repo)).not_to be true
+      end
+    end
+
+    context "not automated repository" do
+      before :each do
+        APP_CONFIG["navalia"] = { "enabled" => true }
+      end
+
+      it "returns false" do
+        repo = create(:repository, namespace: namespace, source_url: "")
+        admin = create(:user, admin: true)
+        sign_in admin
+
+        expect(helper.can_trigger_build?(repo)).not_to be true
+      end
+    end
+
+    context "navalia enabled" do
+      before :each do
+        APP_CONFIG["navalia"] = { "enabled" => true }
+      end
+
+      it "returns true if the user is an admin" do
+        admin = create(:user, admin: true)
+        sign_in admin
+
+        expect(helper.can_trigger_build?(repo)).to be true
+      end
+
+      it "returns true if the user is an owner" do
+        sign_in owner
+
+        expect(helper.can_trigger_build?(repo)).to be true
+      end
+
+      it "returns true if the user is a contributor" do
+        sign_in contributor
+
+        expect(helper.can_trigger_build?(repo)).to be true
+      end
+
+      it "returns false if the user is a viewer" do
+        sign_in viewer
+
+        expect(helper.can_trigger_build?(repo)).not_to be true
+      end
+
+      it "returns false if the user has not relation with the repository" do
+        sign_in external
+
+        expect(helper.can_trigger_build?(repo)).not_to be true
+      end
+    end
+
+  end
+
   describe "#render_push_activity" do
     let!(:registry)   { create(:registry, hostname: "registry:5000") }
     let!(:namespace)  { create(:namespace, name: "namespace", registry: registry) }
