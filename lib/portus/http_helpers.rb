@@ -28,9 +28,11 @@ module Portus
     # The `request_auth_token` parameter means that if this method gets a 401
     # when calling the given path, it should get an authorization token
     # automatically and try again.
-    def perform_request(path, method = "get", request_auth_token = true)
+    def perform_request(path, method = "get", request_auth_token = true, headers = nil, body = nil)
       uri = URI.join(@base_url, path)
       req = Net::HTTP.const_get(method.capitalize).new(uri)
+      req.body = body unless body.nil?
+      headers.each { |k, v| req[k] = v } unless headers.nil?
 
       # This only happens if the auth token has already been set by a previous
       # call.
