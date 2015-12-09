@@ -3,6 +3,27 @@ span
     i.fa.fa-info-circle
     | What's this?
 
+.panel.panel-default
+  .panel-heading
+    h5
+      ' Special namespaces
+  .panel-body
+    .table-responsive
+      table.table.table-stripped.table-hover
+        col.col-40
+        col.col-30
+        col.col-20
+        col.col-10
+        thead
+          tr
+            th Name
+            th Repositories
+            th Created
+            th Public
+        tbody
+          - @special_namespaces.each do |namespace|
+            = render partial: 'namespaces/namespace', locals: {namespace: namespace}
+
 - if Registry.any?
   #add_namespace_form.collapse
     = form_for :namespace, url: namespaces_path, remote: true, html: {id: 'new-namespace-form', class: 'form-horizontal', role: 'form'} do |f|
@@ -23,37 +44,15 @@ span
           .col-md-offset-2.col-md-7
             = f.submit('Create', class: 'btn btn-primary')
 
-
 .panel.panel-default
   .panel-heading
     h5
-      ' Special namespaces
+      ' Namespaces you have access to
       - if Registry.any?
         .pull-right
           a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
             i.fa.fa-plus-circle
             | Create new namespace
-  .panel-body
-    .table-responsive
-      table.table.table-stripped.table-hover
-        col.col-40
-        col.col-30
-        col.col-20
-        col.col-10
-        thead
-          tr
-            th Name
-            th Repositories
-            th Created
-            th Public
-        tbody
-          - @special_namespaces.each do |namespace|
-            = render partial: 'namespaces/namespace', locals: {namespace: namespace}
-
-.panel.panel-default
-  .panel-heading
-    h5
-      ' Namespaces you have access to
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
