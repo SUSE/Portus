@@ -141,7 +141,13 @@ describe CatalogJob do
   describe "Automated repositories" do
     let!(:registry)   { create(:registry) }
     let!(:owner)      { create(:user) }
-    let!(:repo)       { create(:repository, name: "repo", namespace: registry.global_namespace, source_url: "foo") }
+    let!(:repo)       do
+      create(:repository,
+              name:       "repo",
+              namespace:  registry.global_namespace,
+              source_url: "foo")
+    end
+
     it "never removes them" do
       automated_repo_id = repo.id
 
