@@ -16,34 +16,37 @@ puts "Using hostname #{hostname}"
 
 case ARGV.first
 when "status"
-  if ARGV.size != 2
-    puts "Usage: bundle exec rails runner bin/navalia status <id>"
+  if ARGV.size != 3
+    puts "Usage: bundle exec rails runner bin/navalia status <id> <token>"
     exit 1
   end
   ids = [ARGV[1]]
-  n = Portus::NavaliaClient.new(hostname)
+  token = ARGV[2]
+  n = Portus::NavaliaClient.new(hostname, token)
   puts "Calling status on #{ids}"
   s = n.status(ids)
   puts "Status #{s.body}"
 when "delete"
-  if ARGV.size != 2
-    puts "Usage: bundle exec rails runner bin/navalia delete <id>"
+  if ARGV.size != 3
+    puts "Usage: bundle exec rails runner bin/navalia delete <id> <token>"
     exit 1
   end
   ids = [ARGV[1]]
-  n = Portus::NavaliaClient.new(hostname)
+  token = ARGV[2]
+  n = Portus::NavaliaClient.new(hostname, token)
   puts "Calling delete on #{ids}"
   n.delete(ids)
 when "build"
-  if ARGV.size != 4
-    puts "Usage: bundle exec rails runner bin/navalia build <url> <registry_hostname> <image_id>"
+  if ARGV.size != 5
+    puts "Usage: bundle exec rails runner bin/navalia build <url> <registry_hostname> <image_id> <token>"
     exit 1
   end
   url = ARGV[1]
   registry_hostname = ARGV[2]
   image_id = ARGV[3]
+  token = ARGV[4]
   puts "Triggering build on url #{url}, registry #{registry_hostname} for image #{image_id}"
-  n = Portus::NavaliaClient.new(hostname)
+  n = Portus::NavaliaClient.new(hostname, token)
   resp = n.build(url, registry_hostname, image_id)
   puts "ID: #{resp.body}"
 when "ping"

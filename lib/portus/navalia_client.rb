@@ -3,8 +3,9 @@ module Portus
   class NavaliaClient
     include HttpHelpers
 
-    def initialize(host)
+    def initialize(host, authorization_token)
       @host = host
+      @authorization_token = authorization_token
       @base_url = "http://#{@host}"
     end
 
@@ -49,7 +50,7 @@ module Portus
       {
         "API-Version"   => "1",
         "Content-Type"  => "application/json",
-        "Authorization" => "XXXX"
+        "Authorization" => "#{@authorization_token}"
       }
     end
   end

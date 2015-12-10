@@ -23,7 +23,7 @@ class NavaliaPerformRequest < Portus::NavaliaClient
   # This class performes the request
   def initialize(status = 200)
     # call new on parent
-    super("host")
+    super("host", "token")
     @status = status
     @delete_response_body = nil
     response = [
