@@ -37,6 +37,10 @@ class RepositoriesController < ApplicationController
 
     if @repository.save
       flash[:notice] = "Automated repository created successfully!"
+      @repository.create_activity(
+        :create,
+        owner:      current_user,
+        parameters: { source_url: @repository.source_url })
       redirect_to @repository
     else
       flash[:alert] = @repository.errors.full_messages
@@ -56,7 +60,18 @@ class RepositoriesController < ApplicationController
     @repository = Repository.find(params[:id])
     authorize @repository
 
+    old_source = @repository.source_url
+
     @repository.update_attributes(update_params)
+
+    @repository.create_activity(
+      :edit,
+      owner:      current_user,
+      parameters: {
+        new_source: @repository.source_url,
+        old_source: old_source
+      }
+    )
     redirect_to @repository, notice: "Repository updated successfully!"
   end
 

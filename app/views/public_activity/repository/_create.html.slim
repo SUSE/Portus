@@ -1,0 +1,11 @@
+li
+  .activity-type.repo-automated-created
+    i.fa.fa-code
+  .user-image
+    = user_image_tag(activity.owner.email)
+  .description
+    h6
+      = render_create_activity(activity)
+    small
+      i.fa.fa-clock-o
+      = activity_time_tag activity.created_at

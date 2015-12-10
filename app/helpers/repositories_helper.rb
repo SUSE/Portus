@@ -2,6 +2,49 @@
 # them, dangling repositories that used to contain them. Because of this, this
 # helper renders the proper HTML for push activities, while being safe at it.
 module RepositoriesHelper
+  # Renders a create activity, that is, an automated repository has just been created
+  def render_create_activity(activity)
+    owner = content_tag(:strong, "#{fetch_owner(activity)} created ")
+
+    namespace = render_namespace(activity)
+    namespace += " / " unless namespace.empty?
+
+    source_url = content_tag(:code, activity.parameters[:source_url])
+
+    owner + namespace + render_repository(activity) + " with source URL set to " + source_url
+  end
+
+  # Renders a edit activity, that is, a repository has just been edited
+  def render_edit_activity(activity)
+    owner = content_tag(:strong, "#{fetch_owner(activity)} edited ")
+
+    namespace = render_namespace(activity)
+    namespace += " / " unless namespace.empty?
+
+    old_source = activity.parameters[:old_source]
+    new_source = activity.parameters[:new_source]
+
+    message = ActiveSupport::SafeBuffer.new("")
+
+    if old_source.blank?
+      unless new_source.blank?
+        message << " set source URL to "
+        message << content_tag(:code, new_source)
+      end
+    else
+      if new_source.blank?
+        message = " making it a non-automated repository"
+      else
+        message << " changing source URL from "
+        message << content_tag(:code, old_source)
+        message << " to "
+        message << content_tag(:code, new_source)
+      end
+    end
+
+    owner + namespace + render_repository(activity) + message
+  end
+
   # Renders a push activity, that is, a repository has been pushed.
   def render_push_activity(activity)
     owner = content_tag(:strong, "#{fetch_owner(activity)} pushed ")

@@ -85,6 +85,8 @@ describe RepositoriesController do
   end
 
   describe "POST #create" do
+    let(:source_url) { "https://git.example.com/user/repo.git" }
+
     before :each do
       create(:registry)
       sign_in user
@@ -95,9 +97,15 @@ describe RepositoriesController do
         post :create, repository: {
           name:         "automated",
           namespace_id: personal_namespace.id,
-          source_url:   "https://git.example.com/user/repo.git"
+          source_url:   source_url
         }
       end.to change(Repository, :count).by(1)
+
+      expect(PublicActivity::Activity.count).to eq 1
+
+      activity = PublicActivity::Activity.last
+      expect(activity.trackable).to eq(Repository.last)
+      expect(activity.parameters[:source_url]).to eq(source_url)
     end
 
     it "fails to create new repository when the user has no push rights for the target namespace" do
@@ -159,8 +167,17 @@ describe RepositoriesController do
     it "allows to update a controller repository" do
       new_source_url = "new url"
 
-      put :update, id:         controlled_repository.id,
-                   repository: { source_url: new_source_url }
+      expect do
+        put :update,
+          id:         controlled_repository.id,
+          repository: { source_url: new_source_url }
+
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.trackable).to eq(controlled_repository)
+      expect(activity.parameters[:old_source]).to eq("")
+      expect(activity.parameters[:new_source]).to eq(new_source_url)
 
       controlled_repository.reload
       expect(controlled_repository.source_url).to eq(new_source_url)

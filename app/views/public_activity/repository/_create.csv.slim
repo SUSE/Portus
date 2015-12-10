@@ -1,0 +1,5 @@
+- unless activity.trackable.nil?
+  - if activity.recipient.nil?
+    = CSV.generate_line(['repository', "#{activity.trackable.namespace.global? ? activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}", 'create', '-', activity.owner.username, activity.created_at, "source url #{activity.parameters[:source_url]}"])
+  - else
+    = CSV.generate_line(['repository', "#{activity.trackable.namespace.global? ? activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}:#{activity.recipient.name}", 'create', '-', activity.owner.username, activity.created_at, "source url #{activity.parameters[:source_url]}"])

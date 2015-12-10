@@ -148,5 +148,110 @@ RSpec.describe RepositoriesHelper, type: :helper do
         idx += 1
       end
     end
+
+    describe "render edit activity" do
+      let!(:registry)   { create(:registry, hostname: "registry:5000") }
+      let!(:namespace)  { create(:namespace, name: "namespace", registry: registry) }
+      let!(:owner)      { create(:user) }
+      let!(:repo)       { create(:repository, name: "repo", namespace: namespace) }
+
+      it "works when the new source is empty" do
+        repo.create_activity(
+          :edit,
+          owner:      owner,
+          parameters: { old_source: "old", new_source: "" })
+
+        html = render_edit_activity(PublicActivity::Activity.last)
+        expect(html).to eq(
+          "<strong>#{owner.username} edited </strong>" \
+          "<a href=\"/namespaces/#{namespace.id}\">#{namespace.name}</a>" \
+          " / <a href=\"/repositories/#{repo.id}\">repo</a>" \
+          " making it a non-automated repository"
+        )
+      end
+
+      it "works when all the sources are not empty" do
+        repo.create_activity(
+          :edit,
+          owner:      owner,
+          parameters: { old_source: "old", new_source: "new" })
+
+        html = render_edit_activity(PublicActivity::Activity.last)
+        expect(html).to eq(
+          "<strong>#{owner.username} edited </strong>" \
+          "<a href=\"/namespaces/#{namespace.id}\">#{namespace.name}</a>" \
+          " / <a href=\"/repositories/#{repo.id}\">repo</a>" \
+          " changing source URL from <code>old</code> to <code>new</code>"
+        )
+      end
+
+      it "works when the old source is empty" do
+        repo.create_activity(
+          :edit,
+          owner:      owner,
+          parameters: { old_source: "", new_source: "new" })
+
+        html = render_edit_activity(PublicActivity::Activity.last)
+        expect(html).to eq(
+          "<strong>#{owner.username} edited </strong>" \
+          "<a href=\"/namespaces/#{namespace.id}\">#{namespace.name}</a>" \
+          " / <a href=\"/repositories/#{repo.id}\">repo</a>" \
+          " set source URL to <code>new</code>"
+        )
+      end
+
+      it "works when the new source is empty" do
+        repo.create_activity(
+          :edit,
+          owner:      owner,
+          parameters: { old_source: "old", new_source: "" })
+
+        html = render_edit_activity(PublicActivity::Activity.last)
+        expect(html).to eq(
+          "<strong>#{owner.username} edited </strong>" \
+          "<a href=\"/namespaces/#{namespace.id}\">#{namespace.name}</a>" \
+          " / <a href=\"/repositories/#{repo.id}\">repo</a>" \
+          " making it a non-automated repository"
+        )
+      end
+
+      it "works when all the sources are not empty" do
+        repo.create_activity(
+          :edit,
+          owner:      owner,
+          parameters: { old_source: "old", new_source: "new" })
+
+        html = render_edit_activity(PublicActivity::Activity.last)
+        expect(html).to eq(
+          "<strong>#{owner.username} edited </strong>" \
+          "<a href=\"/namespaces/#{namespace.id}\">#{namespace.name}</a>" \
+          " / <a href=\"/repositories/#{repo.id}\">repo</a>" \
+          " changing source URL from <code>old</code> to <code>new</code>"
+        )
+      end
+    end
+
+    describe "render create activity" do
+      let!(:registry)   { create(:registry, hostname: "registry:5000") }
+      let!(:namespace)  { create(:namespace, name: "namespace", registry: registry) }
+      let!(:owner)      { create(:user) }
+      let!(:repo)       { create(:repository, name: "repo", namespace: namespace) }
+
+      it "works as expected" do
+        repo.create_activity(
+          :create,
+          owner:      owner,
+          parameters: { source_url: "git" })
+
+        html = render_create_activity(PublicActivity::Activity.last)
+        expect(html).to eq(
+          "<strong>#{owner.username} created </strong>" \
+          "<a href=\"/namespaces/#{namespace.id}\">#{namespace.name}</a>" \
+          " / <a href=\"/repositories/#{repo.id}\">repo</a>" \
+          " with source URL set to <code>git</code>"
+        )
+      end
+    end
+
   end
 end

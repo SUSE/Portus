@@ -50,6 +50,12 @@
       &.repo-pushed {
         background: $activity-repo-pushed;
       }
+      &.repo-automated-created{
+        background: $activity-repo-automated-created;
+      }
+      &.repo-edit{
+        background: $activity-repo-edit;
+      }
       &.team-created {
         background: $activity-team-created;
       }
