@@ -2,6 +2,21 @@
 # use in order to perform operation into the registry. This is the last step in
 # the authentication process for Portus' point of view.
 class Api::V2::TokensController < Api::BaseController
+  before_action :attempt_authentication_against_application_tokens
+
+  # Try to perform authentication using the application tokens. The password
+  # provided via HTTP basic auth is going to be checked against the application
+  # tokens a user might have created.
+  # If the user has a valid application token then the other forms of
+  # authentication (Portus' database, LDAP) are going to be skipped.
+  def attempt_authentication_against_application_tokens
+    user = authenticate_with_http_basic do |username, password|
+      user = User.find_by(username: username)
+      user if user && user.application_token_valid?(password)
+    end
+    sign_in(user, store: true) if user
+  end
+
   # Returns the token that the docker client should use in order to perform
   # operation into the private registry.
   def show

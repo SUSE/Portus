@@ -1,0 +1,13 @@
+<% if @application_token.errors.any? %>
+  $('#alert p').html("<%= escape_javascript(@application_token.errors.full_messages.join('<br/>')) %>");
+  $('#alert').fadeIn();
+<% else %>
+  $("<%= escape_javascript(render @application_token) %>").appendTo("#application_tokens");
+  $('#alert p').html("New token created: <code><%= @plain_token %></code>");
+  $('#alert').fadeIn();
+  $('#add_application_token_form').fadeOut();
+  <% if current_user.application_tokens.count >= User::APPLICATION_TOKENS_MAX %>
+    $('#add_application_token_btn').attr("disabled", "disabled");
+  <% end %>
+<% end %>
+

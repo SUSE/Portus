@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   USERNAME_CHARS  = "a-z0-9"
   USERNAME_FORMAT = /\A[#{USERNAME_CHARS}]{4,30}\Z/
 
+  APPLICATION_TOKENS_MAX = 5
+
   validates :username, presence: true, uniqueness: true,
     format: {
       with:    USERNAME_FORMAT,
@@ -18,6 +20,7 @@ class User < ActiveRecord::Base
   has_many :team_users
   has_many :teams, through: :team_users
   has_many :stars
+  has_many :application_tokens
 
   scope :not_portus, -> { where.not username: "portus" }
   scope :enabled,    -> { not_portus.where enabled: true }
@@ -110,6 +113,19 @@ class User < ActiveRecord::Base
   # Returns all users who match the query.
   def self.search_from_query(members, query)
     enabled.where.not(id: members).where(arel_table[:username].matches(query))
+  end
+
+  # Looks for an application token that matches with the plain one provided
+  # as parameter.
+  # Return true if there's an application token matching it, false otherwise
+  def application_token_valid?(plain_token)
+    application_tokens.each do |t|
+      if t.token_hash == BCrypt::Engine.hash_secret(plain_token, t.token_salt)
+        return true
+      end
+    end
+
+    false
   end
 
   protected

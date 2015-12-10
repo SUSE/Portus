@@ -57,6 +57,42 @@ describe "/v2/token" do
         get v2_token_url, valid_request, valid_auth_header
         expect(response.status).to eq 401
       end
+
+      it "allows access when the specified password is a valid application token" do
+        token_plain = "plain token"
+        create(
+          :application_token,
+          application: token_plain, # this factory uses application as plain token
+          user:        user)
+
+        get v2_token_url,
+          {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:#{user.username}/busybox:push,pull"
+          },
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, token_plain)
+
+        expect(response.status).to eq 200
+      end
+
+      it "denies access when cannot find valid application token or password" do
+        token_plain = "plain token"
+        create(
+          :application_token,
+          application: token_plain, # this factory uses application as plain token
+          user:        user)
+
+        get v2_token_url,
+          {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:#{user.username}/busybox:push,pull"
+          },
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, "wrong")
+
+        expect(response.status).to eq 401
+      end
     end
 
     context "as another user" do

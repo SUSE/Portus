@@ -52,4 +52,18 @@ FactoryGirl.define do
     recipient_type "Tag"
   end
 
+  factory :activity_application_token_created, class: PublicActivity::Activity do
+    trackable_type "ApplicationToken"
+    owner_type "User"
+    key "application_token.created"
+    parameters Hash.new(application: "test application")
+  end
+
+  factory :activity_application_token_destroyed, class: PublicActivity::Activity do
+    trackable_type "ApplicationToken"
+    owner_type "User"
+    key "application_token.destroyed"
+    parameters Hash.new(application: "test application")
+  end
+
 end

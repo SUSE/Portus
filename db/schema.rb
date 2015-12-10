@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151124150353) do
+ActiveRecord::Schema.define(version: 20151207153613) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -30,6 +30,15 @@ ActiveRecord::Schema.define(version: 20151124150353) do
   add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
+
+  create_table "application_tokens", force: :cascade do |t|
+    t.string  "application", limit: 255, null: false
+    t.string  "token_hash",  limit: 255, null: false
+    t.string  "token_salt",  limit: 255, null: false
+    t.integer "user_id",     limit: 4,   null: false
+  end
+
+  add_index "application_tokens", ["user_id"], name: "index_application_tokens_on_user_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
     t.text     "body",          limit: 65535
@@ -85,6 +94,7 @@ ActiveRecord::Schema.define(version: 20151124150353) do
     t.integer  "namespace_id", limit: 4
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.string   "source_url",   limit: 255, default: "", null: false
   end
 
   add_index "repositories", ["name", "namespace_id"], name: "index_repositories_on_name_and_namespace_id", unique: true, using: :btree
