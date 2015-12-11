@@ -66,28 +66,47 @@ describe Portus::NavaliaClient do
 
   context "calling build" do
     it "calls POST build and returns an id" do
-      n = NavaliaPerformRequest.new(200)
-      response = n.build("url", "registry", "image_id")
-      result = JSON.parse(response.body)["id"]
-      expected = "post_test_id"
-      expect(result).to eq(expected)
+      n = NavaliaPerformRequest.new(201)
+      result_id = n.build("url", "registry", "image_id")
+      expected_id = "post_test_id"
+      expect(result_id).to eq(expected_id)
     end
   end
 
   context "calling delete" do
-    it "calls DELETE build and returns no body" do
+    it "calls DELETE build and returns nil on success" do
       n = NavaliaPerformRequest.new(200)
-      response = n.delete(["test_id"])
-      expect(response.body).to be_nil
+      result = n.delete(["test_id"])
+      expect(result).to be_nil
     end
   end
 
   context "calling status" do
     it "calls GET build and returns a list" do
       n = NavaliaPerformRequest.new(200)
-      response = n.status(["test_id"])
-      result = JSON.parse(response.body).first["id"]
-      expect(result).to eq("get_test_id")
+      result_id = n.status(["test_id"]).first["id"]
+      expect(result_id).to eq("get_test_id")
+    end
+  end
+
+  context "getting an error when calling build" do
+    it "raises an exception" do
+      n = NavaliaPerformRequest.new(404)
+      expect { n.build("url", "registry", "image_id") }.to raise_error
+    end
+  end
+
+  context "getting an error when calling status" do
+    it "raises an exception" do
+      n = NavaliaPerformRequest.new(404)
+      expect { n.status(["test_id"]) }.to raise_error
+    end
+  end
+
+  context "getting an error when calling delete" do
+    it "raises an exception" do
+      n = NavaliaPerformRequest.new(404)
+      expect { n.delete(["test_id"]) }.to raise_error
     end
   end
 end
