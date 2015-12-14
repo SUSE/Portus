@@ -22,7 +22,7 @@ describe CommentsController, type: :controller do
     { foo: "not valid" }
   end
 
-  describe "PUT #create" do
+  describe "POST #create" do
     context "with valid params" do
       it "creates a new comment" do
         sign_in owner

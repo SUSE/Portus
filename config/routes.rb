@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     resources :comments, only: [:create, :destroy]
   end
 
+  resources :application_tokens, only: [:create, :destroy]
+
   devise_for :users, controllers: { registrations: "auth/registrations",
                                     sessions:      "auth/sessions",
                                     passwords:     "passwords" }

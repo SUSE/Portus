@@ -18,6 +18,7 @@
   requests: [#546](https://github.com/SUSE/Portus/pull/546) and
   [#531](https://github.com/SUSE/Portus/pull/531).
 - Team members can comment on repositories. See pull request: [#538](https://github.com/SUSE/Portus/pull/583)
+- Users can create security tokens to use instead of their credentials. See pull request: [625](https://github.com/SUSE/Portus/pull/625)
 
 ## 2.0.0
 

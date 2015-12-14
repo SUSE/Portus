@@ -190,4 +190,25 @@ describe User do
       end
     end
   end
+
+  describe "#application_token_valid?" do
+    let(:user) { create(:user) }
+
+    it "returns false when there are no tokens" do
+      expect(user.application_token_valid?("foo")).to be false
+    end
+
+    it "returns true when there's a token matching" do
+      # the factory uses appication's name as plain token
+      create(:application_token, application: "good", user: user)
+      create(:application_token, application: "bad", user: user)
+      expect(user.application_token_valid?("good")).to be true
+    end
+
+    it "returns false when there's no token matching" do
+      # the factory uses appication's name as plain token
+      create(:application_token, application: "bad", user: user)
+      expect(user.application_token_valid?("good")).to be false
+    end
+  end
 end

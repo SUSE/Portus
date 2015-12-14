@@ -107,7 +107,19 @@ describe PublicActivity::ActivityPolicy do
         create(:activity_repository_push,
                trackable_id: tag.repository.id,
                recipient_id: tag.id,
-               owner_id:     activity_owner.id)
+               owner_id:     activity_owner.id),
+        create_activity_application_token_created(user)
+      ]
+
+      expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
+    end
+
+    it "returns pertinent application token activities" do
+      # application token owned by another user
+      create_activity_application_token_created(create(:user))
+
+      activities = [
+        create_activity_application_token_created(user)
       ]
 
       expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
@@ -144,6 +156,13 @@ describe PublicActivity::ActivityPolicy do
            owner_id:     event_owner.id,
            recipient_id: member.id,
            parameters:   { old_role: old_role, new_role: new_role })
+  end
+
+  def create_activity_application_token_created(owner)
+    token = create(:application_token, user: owner)
+    create(:activity_application_token_created,
+           trackable_id: token.id,
+           owner_id:     owner.id)
   end
 
 end

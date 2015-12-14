@@ -1,12 +1,10 @@
 # Portus [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus) [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus) [![Test Coverage](https://codeclimate.com/github/SUSE/Portus/badges/coverage.svg)](https://codeclimate.com/github/SUSE/Portus/coverage)
 
-Portus targets [version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
-of the Docker registry API. The minimum required version of Registry is 2.1,
-which is the first version supporting soft deletes of blobs. It aims to act
-both as an authoritzation server and as a user interface for the next
-generation of the Docker registry.
-
-[![preview](https://cloud.githubusercontent.com/assets/22728/9274870/897410de-4299-11e5-9ebf-c6ecc1ae7733.png)](https://www.youtube.com/watch?v=hGqvYVvdf7U)
+Portus is an authoritzation server and a user interface for the next generation
+of the Docker registry. Portus targets
+[version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
+of the Docker Registry API. The minimum required version of Registry is 2.1,
+which is the first version supporting soft deletes of blobs.
 
 ## Features
 
@@ -29,6 +27,14 @@ instance of Docker registry. User's privileges are taken into account to
 make sure private images (the ones requiring special rights also for
 `docker pull`) are not shown to unauthorized personnel.
 
+### Self-hosted
+
+Portus allows you to host everything on your servers, on your own
+infrastructure. You don't have to trust a third-party service, just own
+everything yourself. Take a look at our
+[documentation](http://port.us.org/documentation.html) to read the different
+setups in which you can deploy Portus.
+
 ### And more!
 
 Some highlights:
@@ -42,6 +48,13 @@ Some highlights:
 
 Take a tour by our [documentation](http://port.us.org/features.html) site to
 read more about this.
+
+## Overview
+
+In this video you can get an overview of some of the features and capabilities
+of Portus.
+
+[![preview](https://cloud.githubusercontent.com/assets/22728/9274870/897410de-4299-11e5-9ebf-c6ecc1ae7733.png)](https://www.youtube.com/watch?v=hGqvYVvdf7U)
 
 ## Contributing
 

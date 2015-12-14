@@ -22,6 +22,10 @@ gem "redcarpet"
 gem "font-awesome-rails"
 gem "bootstrap-typeahead-rails"
 
+# Used to store application tokens. This is already a Rails depedency. However
+# better safe than sorry...
+gem "bcrypt"
+
 # This is already a Rails dependency, but we use it to run portusctl
 gem "thor"
 
