@@ -97,6 +97,10 @@ docker-compose up -d
 
 setup_database
 
+# At this point, the DB is up and running. Therefore, at this point the crono
+# container will certainly work.
+docker-compose restart crono
+
 # The cleaned up host. We do this because when the $DOCKER_HOST variable was
 # already set, then it might come with the port included.
 final_host=$(echo $DOCKER_HOST | grep -E -o '([0-9]{1,3}[\.]){3}[0-9]{1,3}' | head -1)
