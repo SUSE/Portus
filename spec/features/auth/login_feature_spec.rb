@@ -18,6 +18,12 @@ feature "Login feature" do
     APP_CONFIG["ldap"] = { "enabled" => true }
     visit new_user_session_path
 
+    expect(page).to_not have_content("Create a new account")
+    expect(page).to_not have_content("I forgot my password")
+
+    APP_CONFIG["first_user_admin"] = { "enabled" => true }
+    visit new_user_session_path
+
     expect(page).to have_content("The first user to be created will have admin permissions !")
     expect(page).to_not have_content("Create a new account")
 

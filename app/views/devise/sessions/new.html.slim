@@ -22,5 +22,6 @@ section.row-0
           .row
             .col-sm-6.create-new-account
               = link_to 'Create a new account', new_user_registration_url, class: 'btn btn-link'
-            .col-sm-6.forgot-password
-              = link_to "I forgot my password", new_user_password_path, class: 'btn btn-link'
+            - if !Portus::LDAP.enabled?
+              .forgot-password
+                = link_to "I forgot my password", new_user_password_path, class: 'btn btn-link'
