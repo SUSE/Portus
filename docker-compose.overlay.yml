@@ -1,0 +1,32 @@
+web:
+  extends:
+    file: docker/compose-common.yml
+    service: web
+  env_file: docker/environment
+  volumes:
+    - .:/portus
+
+crono:
+  image: portus_web
+  command: /usr/bin/supervisord
+  env_file: docker/environment
+  volumes:
+    - .:/portus
+
+db:
+  image: library/mariadb
+  environment:
+    MYSQL_ROOT_PASSWORD: portus
+  env_file: docker/environment
+
+registry:
+  extends:
+    file: docker/compose-common.yml
+    service: registry
+  volumes:
+    - ./docker/registry:/registry
+    - /registry_data
+  entrypoint: /registry/entry.sh
+  env_file: docker/environment
+  ports:
+    - 5001:5001 # required to access debug service
