@@ -91,3 +91,12 @@ that command returns `linux.site`, then you will have to enter:
 `linux.site:5000`.
 * **Use SSL**: as explained above, the default installation *does* use
 encryption. Therefore, you have to check this.
+
+### Common pitfalls
+
+- The `portusctl` utility uses the hostname of the current machine to generate
+  certificates. This will of course fail if there is no hostname set.
+- The ruby version must be 2.1. This can be a problem for example in openSUSE
+  Tumbleweed that has both ruby 2.1 and 2.2. This can also be a problem if you
+  are using RVM, rbenv or something similar. Therefore, you have to make sure
+  that you use the system ruby and that this is ruby 2.1.
