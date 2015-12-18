@@ -143,6 +143,15 @@ describe Portus::LDAP do
     lm = PortusMock.new(account: "portus", password: "1234")
     expect(lm.load_configuration_test).to be nil
 
+    # Empty password always returns an empty configuration
+    lm = LdapMock.new(username: "name", password: "")
+    expect(lm.load_configuration_test).to be nil
+
+    # Empty name always returns an empty configuration
+    lm = LdapMock.new(username: "", password: "1234")
+    expect(lm.load_configuration_test).to be nil
+
+    # Now we are good to go
     lm = LdapMock.new(username: "name", password: "1234")
     cfg = lm.load_configuration_test
 
@@ -302,10 +311,9 @@ describe Portus::LDAP do
 
     it "raises an exception if the user could not created" do
       APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
-      lm = LdapMock.new(username: "", password: "1234")
+      lm = LdapMock.new(username: "name", password: "1234")
       lm.authenticate!
-      expect(lm.last_symbol).to eq "Password is too short (minimum is 8 characters),"\
-        "Username Only alphanumeric characters are allowed. Minimum 4 characters, maximum 30."
+      expect(lm.last_symbol).to eq "Password is too short (minimum is 8 characters)"
     end
 
     it "returns a success if it was successful" do

@@ -90,6 +90,7 @@ module Portus
 
       fill_user_params!
       return nil if params[:user].nil?
+      return nil if params[:user][:username].blank? || params[:user][:password].blank?
 
       adapter.new(adapter_options)
     end
