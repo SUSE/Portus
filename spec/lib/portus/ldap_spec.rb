@@ -185,20 +185,25 @@ describe Portus::LDAP do
     lm = LdapMock.new(username: "name", password: "1234")
     opts = lm.bind_options_test
     expect(opts.size).to eq 2
-    expect(opts[:filter]).to eq "(uid=name)"
+    expect(opts[:filter].to_s).to eq "(uid=name)"
     expect(opts[:password]).to eq "1234"
 
     APP_CONFIG["ldap"] = ldap_config
     opts = lm.bind_options_test
     expect(opts.size).to eq 3
-    expect(opts[:filter]).to eq "(uid=name)"
+    expect(opts[:filter].to_s).to eq "(uid=name)"
     expect(opts[:password]).to eq "1234"
     expect(opts[:base]).to eq "ou=users,dc=example,dc=com"
 
     APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "foo" }
     lm = LdapMock.new(username: "name", password: "12341234")
     opts = lm.bind_options_test
-    expect(opts[:filter]).to eq "(foo=name)"
+    expect(opts[:filter].to_s).to eq "(foo=name)"
+
+    APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "foo", "filter" => "mail=g*" }
+    lm = LdapMock.new(username: "name", password: "12341234")
+    opts = lm.bind_options_test
+    expect(opts[:filter].to_s).to eq "(&(foo=name)(mail=g*))"
   end
 
   describe "#find_or_create_user!" do

@@ -39,6 +39,9 @@ ldap:
   # The base where users are located (e.g. "ou=users,dc=example,dc=com").
   base: ""
 
+  # User filter (e.g. "mail=george*").
+  filter: ""
+
   # The LDAP attribute where to search for username. The default is 'uid'.
   uid: "uid"
 
