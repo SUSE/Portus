@@ -122,9 +122,17 @@ module Portus
     # Returns the hash to be used in order to search for a user in the LDAP
     # server.
     def search_options
+      # First provide the filters: uid + the user-defined filter.
+      uid = APP_CONFIG["ldap"]["uid"]
+      filter = Net::LDAP::Filter.equals(uid, username)
+      provided = APP_CONFIG["ldap"]["filter"]
+      unless provided.blank?
+        provided_filter = Net::LDAP::Filter.construct(provided)
+        filter = Net::LDAP::Filter.join(filter, provided_filter)
+      end
+
       {}.tap do |opts|
-        uid = APP_CONFIG["ldap"]["uid"]
-        opts[:filter] = "(#{uid}=#{username})"
+        opts[:filter] = filter
         opts[:base]   = APP_CONFIG["ldap"]["base"] unless APP_CONFIG["ldap"]["base"].empty?
       end
     end

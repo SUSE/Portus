@@ -1,5 +1,3 @@
-# rubocop:disable Metrics/ClassLength
-
 # Class taking care of configuring the system according to
 # what the user specified on the command line
 class Configurator
@@ -186,5 +184,3 @@ EOM
     @options["db-host"] == "localhost" || @options["db-host"] == HOSTNAME
   end
 end
-
-# rubocop:enable Metrics/ClassLength
