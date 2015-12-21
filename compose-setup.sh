@@ -2,8 +2,16 @@
 
 set -e
 
+compose() {
+  if [ "$OVERLAY" -eq 1 ]; then
+    docker-compose --x-networking --x-network-driver overlay -f ./docker-compose.overlay.yml $@
+  else
+    docker-compose $@
+  fi
+}
+
 check_version() {
-	VER=$(docker-compose version --short)
+	VER=$(compose version --short)
 	if [ "$VER" = "1.5.1" ]; then
 		# Known to have bugs when generating configs.
 cat >&2 <<EOF
@@ -41,7 +49,7 @@ setup_database() {
     COUNT=$((COUNT+5))
 
     printf "Portus: configuring database..."
-    docker-compose run --rm web rake db:setup &> /dev/null
+    compose run --rm web rake db:setup &> /dev/null
 
     RETRY=$?
     if [ $RETRY -ne 0 ]; then
@@ -66,13 +74,14 @@ clean() {
     done
   fi
 
-  docker-compose kill
-  docker-compose rm -fv
+  compose kill
+  compose rm -fv
 }
 
 usage() {
-  echo "Usage: $0 [-f]"
+  echo "Usage: $0 [-f] [-o]"
   echo "  -f force removal of data"
+  echo "  -o use overlay networking (requires Docker >=1.9)"
 }
 
 # Force the current directory to be named "portus". It's known that other
@@ -96,7 +105,8 @@ fi
 echo "DOCKER_HOST=${DOCKER_HOST}" > docker/environment
 
 FORCE=0
-while getopts "fh" opt; do
+OVERLAY=0
+while getopts "fho" opt; do
   case "${opt}" in
     f)
       FORCE=1
@@ -104,6 +114,9 @@ while getopts "fh" opt; do
     h)
       usage
       exit 0
+      ;;
+    o)
+      OVERLAY=1
       ;;
     *)
       echo "Invalid option: -$OPTARG" >&2
@@ -113,9 +126,21 @@ while getopts "fh" opt; do
   esac
 done
 
+# When using overlay networking, the hostnames change.
+if [ "$OVERLAY" -eq 1 ]; then
+  PORTUS_DB_HOST="portus_db_1"
+  PORTUS_WEB_HOST="portus_web_1"
+else
+  PORTUS_DB_HOST="db"
+  PORTUS_WEB_HOST="web"
+fi
+
+echo "PORTUS_DB_HOST=${PORTUS_DB_HOST}" >> docker/environment
+echo "PORTUS_WEB_HOST=${PORTUS_WEB_HOST}" >> docker/environment
+
 check_version
 clean
-docker-compose up -d
+compose up -d
 
 setup_database
 

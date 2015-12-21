@@ -18,7 +18,7 @@ auth:
 notifications:
   endpoints:
     - name: portus
-      url: http://web:3000/v2/webhooks/events
+      url: http://PORTUS_WEB_HOST:3000/v2/webhooks/events
       timeout: 500ms
       threshold: 5
       backoff: 1s
