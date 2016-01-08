@@ -9,7 +9,7 @@ web:
 
 crono:
   image: portus_web
-  command: /usr/bin/supervisord
+  entrypoint: bundle exec crono
   volumes:
     - .:/portus
   links:
