@@ -41,6 +41,9 @@ RSpec.configure do |config|
     # it has the default value we expect
     APP_CONFIG["check_ssl_usage"] = { "enabled" => true }
 
+    # Expected to be always available.
+    APP_CONFIG["machine_fqdn"] = { "value" => "portus.test.lan" }
+
     # This value is expected to be always available. The default value will be
     # set
     APP_CONFIG["jwt_expiration_time"] = { "value" => "5.minutes" }
