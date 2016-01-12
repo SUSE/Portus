@@ -33,7 +33,7 @@ Also note that this can come in handy if you are migrating an already existing r
 
     $ RAILS_ENV=production CATALOG_CRON="2.minutes" bundle exec crono
 
-Note though, that you should only do this if you are installing Portus manually. If you are using either the Vagrant/Docker setups or the appliance, you will not have to deal this. A [systemd service](https://github.com/SUSE/Portus/blob/master/packaging/suse/conf/portus_crono.service) file has been provided for this.
+Note though, that you should only do this if you are installing Portus manually. If you are using either the Vagrant or the Docker setups, you will not have to deal this. A [systemd service](https://github.com/SUSE/Portus/blob/master/packaging/suse/conf/portus_crono.service) file has been provided for this.
 
 ## Synchronizing clocks between the Registry and Portus
 
