@@ -115,8 +115,9 @@ module Portus
       result = []
       repositories.each do |repo|
         res = perform_request("#{repo}/tags/list")
-        return [] if res.code.to_i != 200
-        result << JSON.parse(res.body)
+        if res.code.to_i == 200
+          result << JSON.parse(res.body)
+        end
       end
       result
     end
