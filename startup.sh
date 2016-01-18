@@ -1,20 +1,19 @@
 #!/bin/sh
 # Start portus
 
-cd /conf
 if [ "$PORTUS_KEY_PATH" != "" ]; then
    NAME=`basename $PORTUS_KEY_PATH .key`
 else
    NAME="registry"
 fi
-if [ "$PORTUS_PORT" == "" ]; then
+if [ "$PORTUS_PORT" = "" ]; then
     PORTUS_PORT=443
 fi
-if [ "$PORTUS_MACHINE_FQDN" == "" ]; then
+if [ "$PORTUS_MACHINE_FQDN" = "" ]; then
     PORTUS_MACHINE_FQDN=`hostname`
 fi
-
-cat >/conf/nginx.conf <<_END_
+mkdir -p /etc/nginx/conf.d
+cat >/etc/nginx/conf.d/portus.conf <<_END_
       server {
         listen 443 ssl;
         ssl_certificate     certs/$NAME.crt;
@@ -36,7 +35,7 @@ cd /portus
 if [ "$PORTUS_KEY_PATH" != "" -a "$PORTUS_MACHINE_FQDN" != "" -a ! -f "$PORTUS_KEY_PATH" ];then
     # create self-signed certificates
     echo Creating Certificate
-    PORTUS_CRT_PATH=`echo $PORTUS_KEY_PATH|sed 's/(\.key)$/.crt'`
+    PORTUS_CRT_PATH=`echo $PORTUS_KEY_PATH|sed 's/\.key$/.crt/'`
     openssl req -x509 -newkey rsa:2048 -keyout "$PORTUS_KEY_PATH" -out "$PORTUS_CRT_PATH" -days 365 -nodes -subj "/CN=$PORTUS_MACHINE_FQDN"
 fi
 

@@ -3,19 +3,19 @@ MAINTAINER Steve Shipway <s.shipway@auckland.ac.nz>
 
 ENV RAILS_ENV=production
 ENV COMPOSE=1
+ENV CATALOG_CRON="5.minutes"
+
+WORKDIR /portus
+
 EXPOSE 3000
 
 RUN apt-get update && apt-get install -y telnet ldap-utils
-
-WORKDIR /portus
 COPY Gemfile* ./
 RUN bundle install --retry=3
-
 ADD . .
 
-VOLUME /conf /certs
-
-ENV CATALOG_CRON="5.minutes"
+RUN mkdir -p /etc/nginx/conf.d
+VOLUME /etc/nginx/conf.d
 
 # Run this command to start it up
 ENTRYPOINT ["/bin/sh","/portus/startup.sh"]
