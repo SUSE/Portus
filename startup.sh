@@ -1,6 +1,36 @@
 #!/bin/sh
 # Start portus
 
+cd /conf
+if [ "$PORTUS_KEY_PATH" != "" ]; then
+   NAME=`basename $PORTUS_KEY_PATH .key`
+else
+   NAME="registry"
+fi
+if [ "$PORTUS_PORT" == "" ]; then
+    PORTUS_PORT=443
+fi
+if [ "$PORTUS_MACHINE_FQDN" == "" ]; then
+    PORTUS_MACHINE_FQDN=`hostname`
+fi
+
+cat >/conf/nginx.conf <<_END_
+      server {
+        listen 443 ssl;
+        ssl_certificate     certs/$NAME.crt;
+        ssl_certificate_key certs/$NAME.key;
+        location / {
+          proxy_set_header Host $PORTUS_MACHINE_FQDN;
+          proxy_set_header X-Forwarded-Proto https;
+          proxy_set_header X-Forwarded-Host $PORTUS_MACHINE_FQDN:$PORTUS_PORT;
+          proxy_pass http://portus:3000/;
+          proxy_http_version 1.1;
+          proxy_set_header Connection "upgrade";
+          proxy_read_timeout 900s;
+        }
+      }
+_END_
+
 cd /portus
 
 if [ "$PORTUS_KEY_PATH" != "" -a "$PORTUS_MACHINE_FQDN" != "" -a ! -f "$PORTUS_KEY_PATH" ];then

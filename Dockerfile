@@ -13,6 +13,8 @@ RUN bundle install --retry=3
 
 ADD . .
 
+VOLUME /conf /certs
+
 ENV CATALOG_CRON="5.minutes"
 
 # Run this command to start it up
