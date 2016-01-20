@@ -71,11 +71,6 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # By default it picks sendmail as the delivery method. Note that the
-  # `config/initializers/smtp.rb` file will change that in case SMTP was set by
-  # the config file.
-  config.action_mailer.delivery_method = :sendmail
-
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
