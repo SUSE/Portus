@@ -24,11 +24,8 @@ Portus and getting to know it. Read more about this
 
 This guide will assume that you want to deploy Portus on production. In order
 to do this, you have to first install it on your system. You can do this in
-multiple ways, our favorites being:
-
-- Installing Portus through the provided
+multiple ways, our favorite being installing Portus through the provided
 [RPM](/docs/setups/1_rpm_packages.html).
-- Using the ready to use [openSUSE appliance](/docs/setups/2_appliance.html).
 
 There are other alternative ways to install Portus, just check the `Setups`
 section in the sidebar on the left for more information about them.

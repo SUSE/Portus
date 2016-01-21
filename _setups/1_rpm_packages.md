@@ -100,3 +100,13 @@ encryption. Therefore, you have to check this.
   Tumbleweed that has both ruby 2.1 and 2.2. This can also be a problem if you
   are using RVM, rbenv or something similar. Therefore, you have to make sure
   that you use the system ruby and that this is ruby 2.1.
+
+## Further configuration of the Portus instance
+
+Before you start using Portus, you might want to configure it. This is
+thoroughly explained [here](/docs/Configuring-Portus.html). In the
+configuration, make sure to check:
+
+- The configuration for LDAP support. (Read more [here](/docs/Configuring-Portus.html#ldap-support))
+- How to create the first admin user. (Read more [here](/docs/Configuring-Portus.html#creating-the-first-admin-user))
+- Enforce SSL on production. (Read more [here](/docs/Configuring-Portus.html#enforce-ssl-usage-on-production))
