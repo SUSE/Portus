@@ -76,3 +76,16 @@ first_user_admin:
 # By default require ssl to be enabled when running on production
 check_ssl_usage:
   enabled: <%= @options["secure"] %>
+
+# Set the expiration time for the JWT Token that Portus uses to authenticate
+# with the registry. Note that this is just a work-around on the fact that the
+# registry does not try to get a new token again after the current one has
+# expired. Once a solution is issued upstream, we can deprecate this option.
+#
+# See: https://github.com/SUSE/Portus/issues/510
+jwt_expiration_time:
+  value: "5.minutes"
+
+# The FQDN of the machine where Portus is being deployed.
+machine_fqdn:
+  value: <%= HOSTNAME %>

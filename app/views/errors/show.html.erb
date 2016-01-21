@@ -42,12 +42,7 @@
               <% end %>
               <% if @fix[:secret_machine_fqdn] %>
                 <h2>Fix secret machine fqdn value</h2>
-                You need to set the machine fdqn value for Portus to work.
-                <% if Rails.env.production? %>
-                  Set <i>PORTUS_MACHINE_FQDN</i> environment variable.
-                <% else %>
-                  Set <i>machine_fqdn</i> in <i>config/secrets.yml</i>.
-                <% end %>
+                You need to set the machine fdqn value for Portus to work. In order to do this, you have to set the <i>machine_fqdn</i> value in <i>config/config-local.yml</i>.
               <% end %>
               <% if @fix[:secret_encryption_private_key_path] %>
                 <h2>Fix secret encryption private key path value</h2>

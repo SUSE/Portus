@@ -6,7 +6,7 @@ describe ErrorsController do
       before :all do
         secrets = Rails.application.secrets
         @secret_key_base = secrets.secret_key_base
-        @secret_machine_fqdn = secrets.machine_fqdn
+        @secret_machine_fqdn = APP_CONFIG["machine_fqdn"]["value"]
         @secret_encryption_private_key_path = secrets.encryption_private_key_path
         @secret_portus_password = secrets.portus_password
       end
@@ -34,7 +34,7 @@ describe ErrorsController do
       end
 
       it "sets @fix[:secret_machine_fqdn] as true" do
-        Rails.application.secrets.machine_fqdn = nil
+        APP_CONFIG["machine_fqdn"] = { "value" => "" }
         get :show, id: 1, fixes: true
         expect(assigns(:fix)[:secret_machine_fqdn]).to be true
       end
