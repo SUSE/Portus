@@ -276,6 +276,24 @@ describe Portus::RegistryClient do
       end
     end
 
+    it "does not remove all repos just because one of them is failing" do
+      create(:registry)
+      create(:admin, username: "portus")
+
+      VCR.use_cassette("registry/get_registry_one_fails", record: :none) do
+        registry = Portus::RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password)
+
+        catalog = registry.catalog
+        expect(catalog.length).to be 1
+        expect(catalog[0]["name"]).to eq "busybox"
+        expect(catalog[0]["tags"]).to match_array(["latest"])
+      end
+    end
+
     it "fails if this version of registry does not implement /v2/_catalog" do
       VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
         registry = Portus::RegistryClient.new(
