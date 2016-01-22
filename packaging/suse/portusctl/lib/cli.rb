@@ -136,6 +136,7 @@ class Cli < Thor
     ensure_root
 
     Runner.produce_versions_file!
+    Runner.produce_crono_log_file!
     Runner.tar_files("log/production.log", "log/crono.log", "log/versions.log")
   end
 
