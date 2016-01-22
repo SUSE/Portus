@@ -204,6 +204,7 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails_stdout_logging (0.0.4)
     railties (4.2.2)
       actionpack (= 4.2.2)
       activesupport (= 4.2.2)
@@ -351,6 +352,7 @@ DEPENDENCIES
   quiet_assets
   rack-mini-profiler
   rails (~> 4.2.2)
+  rails_stdout_logging
   redcarpet
   rspec-rails
   rubocop
