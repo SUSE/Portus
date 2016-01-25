@@ -20,4 +20,4 @@ section.sign-up class=(@have_users ? '' : 'first-user')
           - else
             | Create admin
         - if @have_users
-          .text-center = link_to 'I already have an account. Login.', new_user_session_url, class: 'btn btn-link'
+          .text-center = link_to 'I already have an account. Login.', new_user_session_path, class: 'btn btn-link'
