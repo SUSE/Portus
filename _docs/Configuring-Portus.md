@@ -80,6 +80,17 @@ email:
 
 Note that if **smtp** is disabled, then `sendmail` is used instead (the specific command being: `/usr/sbin/sendmail -i -t`).
 
+### FQDN of your machine
+
+On the next release of Portus, the FQDN of the machine is no longer a secret
+and it's now considered a configurable value. The fact the it was a secret
+before is because of legacy code. However, you now can configure it like this:
+
+{% highlight yaml %}
+machine_fqdn:
+  value: "portus.test.lan"
+{ endhighlight %}
+
 ### LDAP Support
 
 If enabled, then only users of the specified LDAP server will be able to use Portus.
@@ -91,6 +102,7 @@ ldap:
   port: 389
   method: "plain"
   base: ""
+  filter: ""
   uid: "uid"
 
   guess_email:
@@ -106,6 +118,7 @@ ldap:
 Some notes:
 
 - **base**: The base where users are located (e.g. "ou=users,dc=example,dc=com").
+- **filter**: This option comes in handy when you want to filter even further the results that might be hanging from the *base*.
 - **method**: The method of encryption between Portus and the LDAP server. It defaults to "plain", which means that the communication won't be encrypted. You can also use "simple_tls", to setup LDAP over SSL/TLS. However, the recommended value is "starttls", which sets StartTLS as the encryption method.
 - **guess_email**: Portus needs an email for each user, but there's no standard way to get that from LDAP servers. You can tell Portus how to get the email from users registered in the LDAP server with this configurable value.
 - **uid**: The attribute where Portus will look for the user ID when authenticating.
