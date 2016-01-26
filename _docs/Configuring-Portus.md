@@ -89,7 +89,7 @@ before is because of legacy code. However, you now can configure it like this:
 {% highlight yaml %}
 machine_fqdn:
   value: "portus.test.lan"
-{ endhighlight %}
+{% endhighlight %}
 
 ### LDAP Support
 
