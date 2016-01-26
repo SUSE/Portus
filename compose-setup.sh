@@ -2,16 +2,8 @@
 
 set -e
 
-compose() {
-  if [ "$OVERLAY" -eq 1 ]; then
-    docker-compose --x-networking --x-network-driver overlay $@
-  else
-    docker-compose $@
-  fi
-}
-
 check_version() {
-	VER=$(compose version --short)
+	VER=$(docker-compose version --short)
 	if [ "$VER" = "1.5.1" ]; then
 		# Known to have bugs when generating configs.
 cat >&2 <<EOF
@@ -43,12 +35,8 @@ create_configuration_files() {
   # registry config
   sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" compose/registry/config.yml.template > compose/registry/config.yml
 
-  if [ "$OVERLAY" -eq 1 ]; then
-    sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" docker-compose.overlay.yml.template > docker-compose.yml
-  else
-    sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" docker-compose.overlay.yml.template > docker-compose.overlay.yml
-    cp docker-compose.link.yml docker-compose.yml
-  fi
+  # compose setup
+  sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" compose/docker-compose.yml.template > docker-compose.yml
 }
 
 setup_database() {
@@ -69,7 +57,8 @@ setup_database() {
     COUNT=$((COUNT+5))
 
     printf "Portus: configuring database..."
-    compose run --rm web rake db:setup &> /dev/null
+    docker-compose run --rm web rake db:migrate:reset > /dev/null
+    docker-compose run --rm web rake db:seed > /dev/null
 
     RETRY=$?
     if [ $RETRY -ne 0 ]; then
@@ -94,14 +83,13 @@ clean() {
     done
   fi
 
-  compose kill
-  compose rm -fv
+  docker-compose kill
+  docker-compose rm -fv
 }
 
 usage() {
   echo "Usage: $0 [-fo] -e EXTERNAL_IP"
   echo "  -f force removal of data"
-  echo "  -o use overlay networking (requires Docker >=1.9)"
   echo "  -e EXTERNAL_IP - the IP or FQDN used to publish Portus and the Docker registry"
 }
 
@@ -119,7 +107,6 @@ HERE
 fi
 
 FORCE=0
-OVERLAY=0
 while getopts "foe:h" opt; do
   case "${opt}" in
     f)
@@ -132,9 +119,6 @@ while getopts "foe:h" opt; do
       usage
       exit 0
       ;;
-    o)
-      OVERLAY=1
-      ;;
     *)
       echo "Invalid option: -$OPTARG" >&2
       usage
@@ -143,17 +127,29 @@ while getopts "foe:h" opt; do
   esac
 done
 
+cat <<EOM
+
+###########
+# WARNING #
+###########
+
+This deployment method is intended for testing/development purposes.
+To deploy Portus on production please take a look at: http://port.us.org/documentation.html
+
+EOM
+sleep 2
+
 check_mandatory_flags
 check_version
 create_configuration_files
 clean
-compose up -d
+docker-compose up -d
 
 setup_database
 
 # At this point, the DB is up and running. Therefore, at this point the crono
 # container will certainly work.
-compose restart crono
+docker-compose restart crono
 
 cat <<EOM
 

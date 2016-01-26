@@ -8,6 +8,8 @@ web:
     - .:/portus
   ports:
     - 3000:3000
+  links:
+    - db
 
 crono:
   image: portus_web
@@ -17,9 +19,11 @@ crono:
     - PORTUS_DB_HOST=portus_db_1
   volumes:
     - .:/portus
+  links:
+    - db
 
 db:
-  image: library/mariadb
+  image: library/mariadb:10.0.23
   environment:
     MYSQL_ROOT_PASSWORD: portus
 
@@ -33,3 +37,5 @@ registry:
   ports:
     - 5000:5000
     - 5001:5001 # required to access debug service
+  links:
+    - web
