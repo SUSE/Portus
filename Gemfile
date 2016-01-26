@@ -21,6 +21,7 @@ gem "net-ldap"
 gem "redcarpet"
 gem "font-awesome-rails"
 gem "bootstrap-typeahead-rails"
+gem "rails_stdout_logging", group: [:development, :staging, :production]
 
 # Used to store application tokens. This is already a Rails depedency. However
 # better safe than sorry...

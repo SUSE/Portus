@@ -136,6 +136,8 @@ class Cli < Thor
     ensure_root
 
     Runner.produce_versions_file!
+    Runner.produce_crono_log_file!
+    Runner.exec("cp", ["/var/log/apache2/error_log", File.join(PORTUS_ROOT, "log/production.log")])
     Runner.tar_files("log/production.log", "log/crono.log", "log/versions.log")
   end
 
