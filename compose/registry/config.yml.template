@@ -1,5 +1,4 @@
 version: 0.1
-loglevel: debug
 storage:
   filesystem:
     rootdirectory: /registry_data
@@ -11,14 +10,14 @@ http:
     addr: 0.0.0.0:5001
 auth:
   token:
-    realm: http://DOCKER_HOST:3000/v2/token
-    service: DOCKER_HOST:5000
-    issuer: portus.test.lan
-    rootcertbundle: /registry/portus.crt
+    realm: http://EXTERNAL_IP:3000/v2/token
+    service: EXTERNAL_IP:5000
+    issuer: EXTERNAL_IP
+    rootcertbundle: /etc/docker/registry/portus.crt
 notifications:
   endpoints:
     - name: portus
-      url: http://web:3000/v2/webhooks/events
+      url: http://EXTERNAL_IP:3000/v2/webhooks/events
       timeout: 500ms
       threshold: 5
       backoff: 1s

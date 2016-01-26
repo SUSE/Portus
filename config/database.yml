@@ -2,7 +2,7 @@ default: &default
   adapter: mysql2
   encoding: utf8
 <% if ENV['COMPOSE'] %>
-  host: db
+  host: <%= ENV['PORTUS_DB_HOST'] %>
   username: root
   password: portus
 <% end %>

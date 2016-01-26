@@ -7,6 +7,7 @@
 /coverage
 /public/assets
 /config/config-local.yml
-docker/environment
-docker/registry/config.yml
+/compose/registry/config.yml
 /bin/portus
+/docker-compose.yml
+/docker-compose.overlay.yml
