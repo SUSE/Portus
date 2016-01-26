@@ -91,12 +91,10 @@ class Registry < ActiveRecord::Base
       else
         msg = "Error: not using SSL, but the given registry does use SSL."
       end
-    rescue OpenSSL::SSL::SSLError
-      if use_ssl
-        msg = "Error: using SSL, but the given registry is not using SSL."
-      else
-        msg = "Error: there's something wrong with your SSL configuration."
-      end
+    rescue OpenSSL::SSL::SSLError => e
+      msg = "SSL error while communicating with the registry, check the server " \
+        "logs for more details."
+      logger.error(e)
     rescue StandardError => e
       # We don't know what went wrong :/
       logger.info "Registry not reachable: #{e.inspect}"
