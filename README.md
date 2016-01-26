@@ -43,8 +43,9 @@ Some highlights:
 - [LDAP user authentication](http://port.us.org/features/2_LDAP-support.html).
 - [Monitoring of all the activities performed onto your private registry and Portus itself](http://port.us.org/features/4_audit.html).
 - [Search for repositories and tags inside of your private registry](http://port.us.org/features/5_search.html).
-- [Star your favorite repositories](http://port.us.org/features/6_starring.htmls).
+- [Star your favorite repositories](http://port.us.org/features/6_starring.html).
 - [Disable users temporarily](http://port.us.org/features/7_disabling_users.html).
+- [Optionally use Application Tokens for better security](http://port.us.org/features/application_tokens.html).
 
 Take a tour by our [documentation](http://port.us.org/features.html) site to
 read more about this.
