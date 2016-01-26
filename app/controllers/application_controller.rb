@@ -16,11 +16,11 @@ class ApplicationController < ActionController::Base
   #      this case, the user will be asked to submit an email.
   #   2. Everything is fine, go to the root url.
   def after_sign_in_path_for(_resource)
-    current_user.email? ? root_url : edit_user_registration_url
+    current_user.email? ? root_path : edit_user_registration_path
   end
 
   def after_sign_out_path_for(_resource)
-    new_user_session_url
+    new_user_session_path
   end
 
   def fixes
@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
     return unless current_user && !current_user.email?
     return if protected_controllers?
 
-    redirect_to edit_user_registration_url
+    redirect_to edit_user_registration_path
   end
 
   # Redirect admin users to the registries#new page if no registry has been
