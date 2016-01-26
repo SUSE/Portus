@@ -106,6 +106,7 @@ RSpec.describe Registry, type: :model do
     end
   end
 
+  # rubocop: disable Metrics/LineLength
   describe "#reachable" do
     it "returns the proper message for each scenario" do
       [
@@ -116,8 +117,8 @@ RSpec.describe Registry, type: :model do
         [Net::OpenTimeout, true, true, /connection timed out/],
         [Net::HTTPBadResponse, true, true, /wrong with your SSL configuration/],
         [Net::HTTPBadResponse, true, false, /Error: not using SSL/],
-        [OpenSSL::SSL::SSLError, true, true, /Error: using SSL/],
-        [OpenSSL::SSL::SSLError, true, false, /wrong with your SSL configuration/],
+        [OpenSSL::SSL::SSLError, true, true, /SSL error while communicating with the registry, check the server logs for more details./],
+        [OpenSSL::SSL::SSLError, true, false, /SSL error while communicating with the registry, check the server logs for more details./],
         [StandardError, true, true, /something went wrong/]
       ].each do |cs|
         rr = RegistryReachable.new(cs.first, cs[1], cs[2])
@@ -125,6 +126,7 @@ RSpec.describe Registry, type: :model do
       end
     end
   end
+  # rubocop: enable Metrics/LineLength
 
   describe "#get_tag_from_manifest" do
     it "returns a tag on success" do
