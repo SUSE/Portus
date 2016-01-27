@@ -147,10 +147,6 @@ docker-compose up -d
 
 setup_database
 
-# At this point, the DB is up and running. Therefore, at this point the crono
-# container will certainly work.
-docker-compose restart crono
-
 cat <<EOM
 
 ###################
