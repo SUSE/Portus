@@ -13,7 +13,7 @@ web:
 
 crono:
   image: portus_web
-  entrypoint: bundle exec crono
+  entrypoint: bin/crono
   environment:
     - PORTUS_MACHINE_FQDN=EXTERNAL_IP
     - PORTUS_DB_HOST=portus_db_1
