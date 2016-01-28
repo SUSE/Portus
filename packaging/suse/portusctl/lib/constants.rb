@@ -8,5 +8,5 @@ end
 # This one is set by the bash wrapper we deliver with our RPM
 # See packaging/suse/bin/portusctl
 BUNDLER_BIN = ENV["BUNDLER_BIN"]
-HOSTNAME    = (dockerized? ? `hostname -f` : `hostnamectl --static status`).chomp
+HOSTNAME    = (dockerized? || ENV["TRAVIS"] ? `hostname -f` : `hostnamectl --static status`).chomp
 PORTUS_ROOT = "/srv/Portus"
