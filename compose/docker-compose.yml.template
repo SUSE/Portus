@@ -29,7 +29,6 @@ db:
 
 registry:
   image: library/registry:2.1.1
-  ports:
   volumes:
     - /registry_data
     - ./compose/registry/portus.crt:/etc/docker/registry/portus.crt:ro
