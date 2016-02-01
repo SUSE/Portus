@@ -2,7 +2,7 @@ web:
   build: .
   command: puma -b tcp://0.0.0.0:3000 -w 3
   environment:
-    - PORTUS_MACHINE_FQDN=EXTERNAL_IP
+    - PORTUS_MACHINE_FQDN_VALUE=EXTERNAL_IP
     - PORTUS_DB_HOST=portus_db_1
   volumes:
     - .:/portus
