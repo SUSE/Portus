@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'github-pages'
-gem 'therubyracer'
+gem "github-pages", "~> 44"
+gem "therubyracer"
