@@ -20,6 +20,10 @@
 - Team members can comment on repositories. See pull request: [#538](https://github.com/SUSE/Portus/pull/583)
 - Users can create security tokens to use instead of their credentials. See pull request: [625](https://github.com/SUSE/Portus/pull/625)
 
+## 2.0.2
+
+- Fixed notification events for distribution v2.3. See [commit](https://github.com/SUSE/Portus/commit/3817d09108907fa26ddaf5ce23291a326b8b8195).
+
 ## 2.0.1
 
 - Paginate through the catalog properly. See [commit](https://github.com/SUSE/Portus/commit/6e31712c6669df569f24daba4020f5d6607ad7db).
