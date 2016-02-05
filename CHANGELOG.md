@@ -1,3 +1,7 @@
+## 2.0.2
+
+- Fixed notification events for distribution v2.3. See [commit](https://github.com/SUSE/Portus/commit/3817d09108907fa26ddaf5ce23291a326b8b8195).
+
 ## 2.0.1
 
 - Paginate through the catalog properly. See [commit](https://github.com/SUSE/Portus/commit/6e31712c6669df569f24daba4020f5d6607ad7db).
