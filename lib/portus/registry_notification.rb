@@ -18,7 +18,7 @@ module Portus
     def self.relevant?(event)
       return false unless event["action"] == "push"
       return false unless event["target"].is_a?(Hash)
-      event["target"]["mediaType"] == "application/vnd.docker.distribution.manifest.v1+json"
+      event["target"]["mediaType"].start_with? "application/vnd.docker.distribution.manifest"
     end
   end
 end
