@@ -67,6 +67,24 @@ describe CatalogJob do
       tags = repo.tags
       expect(tags.map(&:name)).to match_array(["latest"])
     end
+
+    it "handles registries even if there some namespaces missing" do
+      registry = create(:registry, "hostname" => "registry.test.lan")
+
+      VCR.use_cassette("registry/get_registry_catalog_namespace_missing", record: :none) do
+        job = CatalogJobMock.new
+        job.perform
+      end
+
+      repos = Repository.all
+      expect(repos.count).to be 1
+      repo = repos[0]
+      expect(repo.name).to eq "busybox"
+      expect(repo.namespace.id).to eq registry.namespaces.first.id
+      tags = repo.tags
+      expect(tags.map(&:name)).to match_array(["latest"])
+    end
+
   end
 
   describe "Database already filled with repos" do

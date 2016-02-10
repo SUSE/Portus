@@ -32,7 +32,7 @@ class CatalogJob < ActiveJob::Base
         Rails.logger.debug "skip upload not finished repo #{r["name"]}"
       else
         repository = Repository.create_or_update!(r)
-        dangling_repos.delete repository.id
+        dangling_repos.delete repository.id unless repository.nil?
       end
     end
 
