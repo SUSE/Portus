@@ -9,6 +9,7 @@ module Portus
     def self.process!(data, handler)
       data["events"].each do |event|
         next unless relevant?(event)
+        Rails.logger.info "Handling Push event:\n#{JSON.pretty_generate(event)}"
         handler.handle_push_event(event)
       end
     end
