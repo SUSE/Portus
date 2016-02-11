@@ -268,10 +268,10 @@ describe Portus::RegistryClient do
 
       VCR.use_cassette("registry/catalog_lots_of_repos", record: :none) do
         WebMock.disable_net_connect!
-        stub_request(:get, "http://#{registry_server}/v2/busybox/tags/list")
+        stub_request(:get, "http://#{registry_server}/v2/busybox/tags/list?n=100")
           .to_return(body: "{\"name\": \"busybox\", \"tags\":[\"latest\"]} ", status: 200)
         (1..101).each do |i|
-          stub_request(:get, "http://#{registry_server}/v2/busybox#{i}/tags/list")
+          stub_request(:get, "http://#{registry_server}/v2/busybox#{i}/tags/list?n=100")
             .to_return(body: "{\"name\": \"busybox#{i}\", \"tags\":[\"latest\"]} ", status: 200)
         end
 
@@ -345,6 +345,24 @@ describe Portus::RegistryClient do
       expect(registry.fetch_link_test([])).to be_empty
       link = "<v2/_catalog?last=mssola%2Fbusybox89&n=100>; rel=\"next\""
       expect(registry.fetch_link_test(link)).to eq "v2/_catalog?last=mssola%2Fbusybox89&n=100"
+    end
+  end
+
+  context "fetching lists from the catalog" do
+    it "returns the available tags even if there are more than 100 of them" do
+      create(:registry)
+      create(:admin, username: "portus")
+
+      VCR.use_cassette("registry/catalog_lots_of_tags", record: :none) do
+        registry = Portus::RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password)
+
+        tags = registry.tags("busybox")
+        (1..102).each_with_index { |v, idx| expect(tags[idx]).to eq v.to_s }
+      end
     end
   end
 
