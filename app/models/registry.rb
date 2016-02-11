@@ -62,7 +62,7 @@ class Registry < ActiveRecord::Base
       return
     end
 
-    tag_name = get_tag_from_manifest(event["target"])
+    tag_name = get_tag_from_target(event["target"])
     return if tag_name.nil?
 
     [namespace, repo, tag_name]
@@ -105,19 +105,50 @@ class Registry < ActiveRecord::Base
 
   protected
 
+  # Fetch the tag being pushed through the given target object.
+  def get_tag_from_target(target)
+    case target["mediaType"]
+    when "application/vnd.docker.distribution.manifest.v1+json",
+      "application/vnd.docker.distribution.manifest.v1+prettyjws"
+      get_tag_from_manifest(target)
+    when "application/vnd.docker.distribution.manifest.v2+json",
+      "application/vnd.docker.distribution.manifest.list.v2+json"
+      get_tag_from_list(target["repository"])
+    else
+      raise "unsupported media type \"#{target["mediaType"]}\""
+    end
+
+  rescue StandardError => e
+    logger.info("Could not fetch the tag for target #{target}")
+    logger.info("Reason: #{e.message}")
+    nil
+  end
+
+  # Fetch the tag by making the difference of what we've go on the DB, and
+  # what's available on the registry. Returns a string with the tag on success,
+  # otherwise it returns nil.
+  def get_tag_from_list(repository)
+    tags = client.tags(repository)
+    return if tags.nil?
+
+    available = Repository.find_by(name: repository).tags.pluck(:name)
+    resulting = tags - available
+
+    # Note that it might happen that there are multiple tags not yet in sync
+    # with Portus' DB. This means that the registry might have been
+    # unresponsive for a long time. In this case, it's not such a problem to
+    # pick up the first label, and wait for the CatalogJob to update the
+    # rest.
+    resulting.first
+  end
+
   # Fetch the tag of the image contained in the current event. The Manifest API
   # is used to fetch it, thus the repo name and the digest are needed (and
   # they are contained inside the event's target).
   #
   # Returns the name of the tag if found, nil otherwise.
   def get_tag_from_manifest(target)
-    man = client.manifest(target["repository"], target["digest"])
-    man["tag"]
-
-  rescue StandardError => e
-    logger.info("Could not fetch the tag for target #{target}")
-    logger.info("Reason: #{e.message}")
-    nil
+    client.manifest(target["repository"], target["digest"])["tag"]
   end
 
   # Create the global namespace for this registry and create the personal

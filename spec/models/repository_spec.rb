@@ -80,6 +80,7 @@ describe Repository do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, tag_name)
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
         @event["request"]["host"] = "unknown-registry.test.lan"
         @event["actor"]["name"] = user.username
       end
@@ -97,6 +98,7 @@ describe Repository do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, tag_name)
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = "a_ghost"
       end
@@ -114,6 +116,7 @@ describe Repository do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, "digest")
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
         @event["target"]["digest"] = "digest"
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = user.username
@@ -235,6 +238,7 @@ describe Repository do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = name
         @event["target"]["url"] = get_url(name, tag_name)
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
         @event["target"]["digest"] = digest
         @event["request"]["host"] = registry.hostname
         @event["actor"]["name"] = user.username
