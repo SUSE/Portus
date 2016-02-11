@@ -230,6 +230,7 @@ describe Repository do
 
     context "not global repository" do
       let(:namespace_name) { "suse" }
+      let(:digest) { "digest" }
 
       before :each do
         name = "#{namespace_name}/#{repository_name}"
