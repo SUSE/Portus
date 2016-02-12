@@ -142,6 +142,27 @@ describe Repository do
           expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
 
+        it "creates the repo also for version 2 schema 2" do
+          repository = nil
+          @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
+
+          VCR.use_cassette("registry/get_tags_list_webhook", record: :none) do
+            expect do
+              repository = Repository.handle_push_event(@event)
+            end.to change(Namespace, :count).by(0)
+          end
+
+          expect(repository).not_to be_nil
+          expect(Repository.count).to eq 1
+          expect(Tag.count).to eq 1
+
+          expect(repository.namespace).to eq(registry.global_namespace)
+          expect(repository.name).to eq(repository_name)
+          expect(repository.tags.count).to eq 1
+          expect(repository.tags.first.name).to eq tag_name
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
+        end
+
         it "tracks the event" do
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
@@ -279,6 +300,50 @@ describe Repository do
           repository.tags << Tag.new(name: "1.0.0")
 
           VCR.use_cassette("registry/get_image_manifest_namespaced_webhook", record: :none) do
+            repository = Repository.handle_push_event(@event)
+          end
+
+          expect(repository).not_to be_nil
+          expect(Repository.count).to eq 1
+          expect(Repository.count).to eq 1
+          expect(Tag.count).to eq 2
+
+          expect(repository.namespace.name).to eq(namespace_name)
+          expect(repository.name).to eq(repository_name)
+          expect(repository.tags.count).to eq 2
+          expect(repository.tags.map(&:name)).to include("1.0.0", tag_name)
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
+        end
+
+        it "repo is unknown - manifest version 2, schema 2" do
+          @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
+
+          repository = nil
+          VCR.use_cassette("registry/get_image_manifest_namespaced_webhook_v2", record: :none) do
+            expect do
+              repository = Repository.handle_push_event(@event)
+            end.to change(Repository, :count).by(1)
+          end
+
+          expect(repository).not_to be_nil
+          expect(Repository.count).to eq 1
+          expect(Repository.count).to eq 1
+          expect(Tag.count).to eq 1
+
+          expect(repository.namespace.name).to eq(namespace_name)
+          expect(repository.name).to eq(repository_name)
+          expect(repository.tags.count).to eq 1
+          expect(repository.tags.first.name).to eq tag_name
+          expect(repository.tags.first.digest).to eq digest
+          expect(repository.tags.find_by(name: tag_name).author).to eq(user)
+        end
+
+        it "repo exists - manifest version 2, schema 2" do
+          @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
+          repository = create(:repository, name: repository_name, namespace: @namespace)
+          repository.tags << Tag.new(name: "1.0.0")
+
+          VCR.use_cassette("registry/get_image_manifest_namespaced_webhook_v2", record: :none) do
             repository = Repository.handle_push_event(@event)
           end
 
