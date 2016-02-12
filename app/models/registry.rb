@@ -62,7 +62,7 @@ class Registry < ActiveRecord::Base
       return
     end
 
-    tag_name = get_tag_from_target(event["target"])
+    tag_name = get_tag_from_target(namespace, repo, event["target"])
     return if tag_name.nil?
 
     [namespace, repo, tag_name]
@@ -106,14 +106,14 @@ class Registry < ActiveRecord::Base
   protected
 
   # Fetch the tag being pushed through the given target object.
-  def get_tag_from_target(target)
+  def get_tag_from_target(namespace, repo, target)
     case target["mediaType"]
     when "application/vnd.docker.distribution.manifest.v1+json",
       "application/vnd.docker.distribution.manifest.v1+prettyjws"
       get_tag_from_manifest(target)
     when "application/vnd.docker.distribution.manifest.v2+json",
       "application/vnd.docker.distribution.manifest.list.v2+json"
-      get_tag_from_list(target["repository"])
+      get_tag_from_list(namespace, repo)
     else
       raise "unsupported media type \"#{target["mediaType"]}\""
     end
@@ -127,12 +127,14 @@ class Registry < ActiveRecord::Base
   # Fetch the tag by making the difference of what we've go on the DB, and
   # what's available on the registry. Returns a string with the tag on success,
   # otherwise it returns nil.
-  def get_tag_from_list(repository)
-    tags = client.tags(repository)
+  def get_tag_from_list(namespace, repository)
+    full_repo_name = namespace.global? ? repository : "#{namespace.name}/#{repository}"
+    tags = client.tags(full_repo_name)
     return if tags.nil?
 
-    available = Repository.find_by(name: repository).tags.pluck(:name)
-    resulting = tags - available
+    repo = Repository.find_by(name: repository, namespace: namespace)
+    return tags.first if repo.nil?
+    resulting = tags - repo.tags.pluck(:name)
 
     # Note that it might happen that there are multiple tags not yet in sync
     # with Portus' DB. This means that the registry might have been
