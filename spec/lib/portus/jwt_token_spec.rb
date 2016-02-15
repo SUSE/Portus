@@ -21,7 +21,7 @@ describe Portus::JwtToken do
   end
 
   describe "#encoded_token" do
-    subject { described_class.new("jlhawn", "registry.docker.com", scope) }
+    subject { described_class.new("jlhawn", "registry.docker.com", [scope]) }
 
     it "calls JWT#encode with claim with stringified_keys" do
       expect(JWT).to receive(:encode).with(
@@ -51,7 +51,7 @@ describe Portus::JwtToken do
   end
 
   describe "#claim" do
-    subject { described_class.new("jlhawn", "registry.docker.com", scope) }
+    subject { described_class.new("jlhawn", "registry.docker.com", [scope]) }
 
     describe "basic fields" do
       describe ":iss" do
