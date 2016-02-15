@@ -6,12 +6,12 @@ module Portus
   #
   class JwtToken
     # The constructor takes the query parameters as specified in the
-    # specification. The given scope is assumed to have already been processed
+    # specification. The given scopes are assumed to have already been processed
     # by the caller with the authorized scopes.
-    def initialize(account, service, scope)
+    def initialize(account, service, scopes)
       @account = account
       @service = service
-      @scope   = scope
+      @scopes   = scopes
     end
 
     # Returns a hash containing the encoded token, ready to be sent as a JSON
@@ -32,7 +32,7 @@ module Portus
         hash[:nbf]    = issued_at - 5.seconds
         hash[:exp]    = issued_at + expiration_time
         hash[:jti]    = jwt_id
-        hash[:access] = authorized_access if @scope
+        hash[:access] = authorized_access if @scopes
       end
     end
 
@@ -56,11 +56,13 @@ module Portus
 
     # Returns an array with the authorized actions hash.
     def authorized_access
-      [{
-        type:    @scope.resource_type,
-        name:    @scope.resource_name,
-        actions: @scope.actions
-      }]
+      @scopes.map do |scope|
+        {
+          type:    scope.resource_type,
+          name:    scope.resource_name,
+          actions: scope.actions
+        }
+      end
     end
 
     # Returns a (hopefully) unique id for the JWT token.
