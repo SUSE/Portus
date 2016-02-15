@@ -34,9 +34,9 @@ class RegistryMock < Registry
     o
   end
 
-  def get_tag_from_target_test(repo, mtype, digest)
+  def get_tag_from_target_test(namespace, repo, mtype, digest)
     target = { "mediaType" => mtype, "repository" => repo, "digest" => digest }
-    get_tag_from_target(target)
+    get_tag_from_target(namespace, repo, target)
   end
 end
 
@@ -70,6 +70,12 @@ class RegistryReachable < Registry
   def client
     RegistryReachableClient.new(@constant, @result)
   end
+end
+
+def create_empty_namespace
+  owner = create(:user)
+  team = create(:team, owners: [owner])
+  create(:namespace, team: team)
 end
 
 describe Registry, type: :model do
@@ -140,7 +146,7 @@ describe Registry, type: :model do
     it "returns a tag on success" do
       mock = RegistryMock.new(false)
 
-      ret = mock.get_tag_from_target_test("busybox",
+      ret = mock.get_tag_from_target_test(nil, "busybox",
                                           "application/vnd.docker.distribution.manifest.v1+json",
                                           "sha:1234")
       expect(ret).to eq "latest"
@@ -154,10 +160,27 @@ describe Registry, type: :model do
       create(:tag, name: "latest", repository: repo)
 
       mock = RegistryMock.new(false)
-      ret  = mock.get_tag_from_target_test("busybox",
+      ret  = mock.get_tag_from_target_test(namespace, "busybox",
                                            "application/vnd.docker.distribution.manifest.v2+json",
                                            "sha:1234")
       expect(ret).to eq "0.1"
+
+      # Differentiate between global & local namespace
+
+      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+                                           "busybox",
+                                           "application/vnd.docker.distribution.manifest.v2+json",
+                                           "sha:1234")
+      expect(ret).to eq "latest"
+    end
+
+    it "returns the tags on an unknown repository" do
+      mock = RegistryMock.new(false)
+      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+                                           "busybox",
+                                           "application/vnd.docker.distribution.manifest.v2+json",
+                                           "sha:1234")
+      expect(ret).to eq "latest"
     end
 
     it "handles errors properly" do
@@ -166,7 +189,7 @@ describe Registry, type: :model do
       expect(Rails.logger).to receive(:info).with(/Could not fetch the tag/)
       expect(Rails.logger).to receive(:info).with(/Reason: Some message/)
 
-      ret = m.get_tag_from_target_test("busybox",
+      ret = m.get_tag_from_target_test(nil, "busybox",
                                        "application/vnd.docker.distribution.manifest.v1+prettyjws",
                                        "sha:1234")
       expect(ret).to be_nil
@@ -178,7 +201,8 @@ describe Registry, type: :model do
       expect(Rails.logger).to receive(:info).with(/Could not fetch the tag/)
       expect(Rails.logger).to receive(:info).with(/Reason: Some message/)
 
-      ret  = mock.get_tag_from_target_test("busybox",
+      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+                                           "busybox",
                                            "application/vnd.docker.distribution.manifest.v2+json",
                                            "sha:1234")
       expect(ret).to be_nil
@@ -190,7 +214,7 @@ describe Registry, type: :model do
       expect(Rails.logger).to receive(:info).with(/Could not fetch the tag/)
       expect(Rails.logger).to receive(:info).with(/Reason: unsupported media type "a"/)
 
-      mock.get_tag_from_target_test("busybox", "a", "sha:1234")
+      mock.get_tag_from_target_test(nil, "busybox", "a", "sha:1234")
     end
   end
 end
