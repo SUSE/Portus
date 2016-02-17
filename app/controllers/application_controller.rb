@@ -16,11 +16,11 @@ class ApplicationController < ActionController::Base
   #      this case, the user will be asked to submit an email.
   #   2. Everything is fine, go to the root url.
   def after_sign_in_path_for(_resource)
-    current_user.email? ? root_url : edit_user_registration_url
+    current_user.email? ? root_path : edit_user_registration_path
   end
 
   def after_sign_out_path_for(_resource)
-    new_user_session_url
+    new_user_session_path
   end
 
   def fixes
@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
     {}.tap do |fix|
       fix[:ssl]                                = check_ssl
       fix[:secret_key_base]                    = secrets.secret_key_base == "CHANGE_ME"
-      fix[:secret_machine_fqdn]                = secrets.machine_fqdn.nil?
+      fix[:secret_machine_fqdn]                = APP_CONFIG["machine_fqdn"]["value"].blank?
       fix[:secret_encryption_private_key_path] = secrets.encryption_private_key_path.nil?
       fix[:secret_portus_password]             = secrets.portus_password.nil?
       fix
@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
     return unless current_user && !current_user.email?
     return if protected_controllers?
 
-    redirect_to edit_user_registration_url
+    redirect_to edit_user_registration_path
   end
 
   # Redirect admin users to the registries#new page if no registry has been

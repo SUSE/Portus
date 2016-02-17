@@ -1,9 +1,0 @@
-web:
-  build: ..
-  command: puma -b tcp://0.0.0.0:3000 -w 3
-  ports:
-    - "3000:3000"
-registry:
-  image: library/registry:2.1.1
-  ports:
-    - "5000:5000"

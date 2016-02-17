@@ -89,8 +89,7 @@ module Portus
       return nil if !::Portus::LDAP.enabled? || params[:account] == "portus"
 
       fill_user_params!
-      return nil if params[:user].nil?
-      return nil if params[:user][:username].blank? || params[:user][:password].blank?
+      return nil unless user_params_set?
 
       adapter.new(adapter_options)
     end
@@ -245,6 +244,12 @@ module Portus
 
     def password
       params[:user][:password]
+    end
+
+    # Returns true if the params[:user] has been properly filled.
+    def user_params_set?
+      return false if params[:user].nil?
+      !params[:user][:username].blank? && !params[:user][:password].blank?
     end
   end
 end

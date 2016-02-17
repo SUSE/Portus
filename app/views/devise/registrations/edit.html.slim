@@ -25,7 +25,7 @@
           .form-group
             = f.label :application, {class: 'control-label col-md-2'}
             .col-md-7
-              = f.text_field(:application, class: 'form-control', required: true, placeholder: "Application's name")
+              = f.text_field(:application, class: 'form-control', required: true, placeholder: "Name")
           .form-group
             .col-md-offset-2.col-md-7
               = f.submit('Create', class: 'btn btn-primary')
@@ -35,12 +35,14 @@
         h5
           ' Application tokens
           .pull-right
-            a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[
-              disabled="#{current_user.application_tokens.count >= User::APPLICATION_TOKENS_MAX ? 'disabled' : ''}"
-              role="button"
-              ]
-              i.fa.fa-plus-circle
-              | Create new token
+            - if current_user.application_tokens.count >= User::APPLICATION_TOKENS_MAX
+              a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[disabled="disabled" role="button"]
+                i.fa.fa-plus-circle
+                | Create new token
+            - else
+              a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
+                i.fa.fa-plus-circle
+                | Create new token
       .panel-body
         .table-responsive
           table.table.table-striped.table-hover
