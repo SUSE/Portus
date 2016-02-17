@@ -14,9 +14,11 @@ class ApplicationController < ActionController::Base
   # Two things can happen when signing in.
   #   1. The current user has no email: this happens on LDAP registration. In
   #      this case, the user will be asked to submit an email.
-  #   2. Everything is fine, go to the root url.
-  def after_sign_in_path_for(_resource)
-    current_user.email? ? root_path : edit_user_registration_path
+  #   2. If the sign-in action was triggered trying to access a specific page
+  #      go back to it
+  #   3. Or go to the root url.
+  def after_sign_in_path_for(resource)
+    current_user.email? ? super : edit_user_registration_path
   end
 
   def after_sign_out_path_for(_resource)

@@ -108,4 +108,9 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     params.require(:user)
       .permit(:password, :password_confirmation, :current_password)
   end
+
+  # Prevents redirect loops
+  def after_sign_up_path_for(resource)
+    signed_in_root_path(resource)
+  end
 end

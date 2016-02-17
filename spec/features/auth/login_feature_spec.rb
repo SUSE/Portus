@@ -62,6 +62,16 @@ feature "Login feature" do
     expect(current_path).to eq root_path
   end
 
+  scenario "Successful login when trying to access a page redirects back the guest", js: true do
+    visit namespaces_path
+    expect(page).to have_content("You need to sign in or sign up before continuing.")
+    fill_in "user_username", with: user.username
+    fill_in "user_password", with: user.password
+    find("button.classbutton").click
+    expect(current_path).to eq namespaces_path
+    expect(page).to have_content("Namespaces you have access to")
+  end
+
   scenario "A disabled user cannot login", js: true do
     user.update_attributes(enabled: false)
     fill_in "user_username", with: user.username
