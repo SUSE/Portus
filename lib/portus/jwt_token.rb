@@ -18,7 +18,11 @@ module Portus
     # response.
     def encoded_hash
       headers = { "kid" => JwtToken.kid(private_key) }
-      { token: JWT.encode(claim.deep_stringify_keys, private_key, "RS256", headers) }.freeze
+      {
+        token:      JWT.encode(claim.deep_stringify_keys, private_key, "RS256", headers),
+        expires_in: expiration_time,
+        issued_at:  Time.zone.at(issued_at).to_datetime.rfc3339
+      }.freeze
     end
 
     # Returns a hash containing the "Claim" set as described in the
