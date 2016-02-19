@@ -34,6 +34,7 @@ Group:          System/Management
 
 Requires:       ruby >= 2.1
 Requires:       timezone
+Requires:       net-tools
 %if 0%{?suse_version} >= 1210
 BuildRequires: systemd-rpm-macros
 %endif
