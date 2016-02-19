@@ -20,7 +20,7 @@ describe PasswordsController do
       "password_confirmation" => "12341234"
     }
 
-    expect(response.status).to eq 302
+    expect(response).to redirect_to root_url
     @user.reload
     expect(@user.valid_password?("12341234")).to be true
   end
