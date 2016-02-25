@@ -20,6 +20,16 @@
 - Team members can comment on repositories. See pull request: [#538](https://github.com/SUSE/Portus/pull/583)
 - Users can create security tokens to use instead of their credentials. See pull request: [625](https://github.com/SUSE/Portus/pull/625)
 
+## 2.0.3
+
+- Fixed crono job when a repository could not be found. See [commit](https://github.com/SUSE/Portus/commit/120301caf665f7b637cd7ced7282461436dc1eb7).
+- Fixed more issues on docker 1.10 and distribution 2.3. See
+[this](https://github.com/SUSE/Portus/commit/841dbd274ed5e7efcb68105f0de13ac2954234dc)
+and [this](https://github.com/SUSE/Portus/commit/75d61c6d692ebe6086ce1a16b0899fbcd8916a6e)
+commits.
+- Handle multiple scopes in token requests. See [commit](https://github.com/SUSE/Portus/commit/87623975690e693c8df1901ce7b255d41b530e5e).
+- Add optional fields to token response. See [commit](https://github.com/SUSE/Portus/commit/f6e6e841217e9e543fcaa7af196ce5e5009ab28d).
+
 ## 2.0.2
 
 - Fixed notification events for distribution v2.3. See [commit](https://github.com/SUSE/Portus/commit/3817d09108907fa26ddaf5ce23291a326b8b8195).
