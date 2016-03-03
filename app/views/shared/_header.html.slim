@@ -10,11 +10,12 @@
         = search_field_tag 'search', params[:search], class: 'form-control search-field', placeholder: 'Search repository'
         button[type="submit" class="btn btn-default"]
           i.fa.fa-search
-  .username-logout
-    .hidden-xs
-      = user_image_tag(current_user.email)
+  .button-container
+    .username-logout
+      .hidden-xs
+        = user_image_tag(current_user.email)
 
-      = link_to edit_user_registration_path, class: 'nav-a' do
-        span.username = current_user.username
-    = link_to destroy_user_session_path, method: :delete, class: 'btn btn-default', id: 'logout' do
-      i.fa.fa-sign-out
+        = link_to edit_user_registration_path, class: 'nav-a' do
+          span.username = current_user.username
+      = link_to destroy_user_session_path, method: :delete, class: 'topbar btn btn-default', id: 'logout' do
+        i.fa.fa-sign-out
