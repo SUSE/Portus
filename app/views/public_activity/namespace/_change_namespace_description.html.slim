@@ -1,17 +1,18 @@
 li
-  .activity-type.change-description
-    i.fa.fa-list-alt
-  .user-image
-    = user_image_tag(activity.owner.email)
-  .description
-    h6
-      - if activity.parameters[:new].blank?
-        strong
-          = "#{activity.owner.username} deleted the description of the namespace "
-      - else
-        strong
-          = "#{activity.owner.username} edited the description of the namespace "
-      = link_to activity.trackable.name, activity.trackable
-    small
-      i.fa.fa-clock-o
-      = activity_time_tag activity.created_at
+  .activitie-container
+    .activity-type.change-description
+      i.fa.fa-list-alt
+    .user-image
+      = user_image_tag(activity.owner.email)
+    .description
+      h6
+        - if activity.parameters[:new].blank?
+          strong
+            = "#{activity.owner.username} deleted the description of the namespace "
+        - else
+          strong
+            = "#{activity.owner.username} edited the description of the namespace "
+        = link_to activity.trackable.name, activity.trackable
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at

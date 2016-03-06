@@ -1,18 +1,19 @@
 li
-  .activity-type.remove-member-team
-    i.fa.fa-user-times
-  .user-image
-    = user_image_tag(activity.owner.email)
-  .description
-    h6
-      strong
-        - if activity.owner == activity.recipient
-          = "#{activity.owner.username} removed itself "
-        - else
-          = "#{activity.owner.username} removed user #{activity.recipient.username} "
-      = "from the "
-      = link_to activity.trackable.name, activity.trackable
-      |  team
-    small
-      i.fa.fa-clock-o
-      = activity_time_tag activity.created_at
+  .activitie-container
+    .activity-type.remove-member-team
+      i.fa.fa-user-times
+    .user-image
+      = user_image_tag(activity.owner.email)
+    .description
+      h6
+        strong
+          - if activity.owner == activity.recipient
+            = "#{activity.owner.username} removed itself "
+          - else
+            = "#{activity.owner.username} removed user #{activity.recipient.username} "
+        = "from the "
+        = link_to activity.trackable.name, activity.trackable
+        |  team
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at
