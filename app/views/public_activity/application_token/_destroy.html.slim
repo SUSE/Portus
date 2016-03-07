@@ -1,15 +1,16 @@
 li
-  .activity-type.application-token-destroyed
-    i.fa.fa-key
-  .user-image
-    = user_image_tag(activity.owner.email)
-  .description
-    h6
-      strong
-        = activity.owner.username
-        |  removed the token of "
-        em= activity.parameters[:application]
-        | " application
-    small
-      i.fa.fa-clock-o
-      = activity_time_tag activity.created_at
+  .activitie-container
+    .activity-type.application-token-destroyed
+      i.fa.fa-key
+    .user-image
+      = user_image_tag(activity.owner.email)
+    .description
+      h6
+        strong
+          = activity.owner.username
+          |  removed the token of "
+          em= activity.parameters[:application]
+          | " application
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at
