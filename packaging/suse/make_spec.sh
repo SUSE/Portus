@@ -1,4 +1,9 @@
 #!/bin/bash
+bundle version 2>/dev/null
+if [ $? != 0 ];then
+  echo "bundler is not installed. Please install it."
+  exit -1
+fi
 cd $(dirname $0)
 
 if [ $TRAVIS_BRANCH ];then
