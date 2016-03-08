@@ -37,7 +37,4 @@ do the following on Open Build Service:
 3. Edit the `Portus.spec` file and set Version to X.Y.Z and branch to X.Y.Z.
 4. In the Portus package, change \_service to download source code with tag X.Y.Z.
 5. Edit changes file with the contents of CHANGELOG.
-6. In the Portus Appliance package, fix the repos to point to this
-release.
-7. Wait for the packages to finish.
-8. Submit to Factory.
+6. Wait for the packages to finish.
