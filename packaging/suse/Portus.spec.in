@@ -15,7 +15,7 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-Name:           Portus
+Name:           portus
 
 # When you release a new version, set Version and branch accordingly.
 # For example:
@@ -43,6 +43,10 @@ BuildRequires:  ruby-macros >= 5
 Requires:       rubygem-passenger-apache2
 %{?systemd_requires}
 Provides:       Portus = %{version}
+Obsoletes:      Portus < %{version}
+# Portus-20151120162040 was accidentaly released when it should have been Portus-2.0
+# This is the reason why we are obsoleting it
+Obsoletes:      Portus = 20151120162040
 # javascript engine to build assets
 BuildRequires:  nodejs
 
