@@ -4,7 +4,7 @@
       ' Special namespaces
   .panel-body
     .table-responsive
-      table.table.table-stripped.table-hover
+      table.table.table-stripped.table-hover.customized-datatable id="snamespaces-table"
         col.col-40
         col.col-30
         col.col-20
@@ -25,7 +25,7 @@
       ' Other namespaces
   .panel-body
     .table-responsive
-      table.table.table-stripped.table-hover
+      table.table.table-stripped.table-hover.customized-datatable id="namespaces-table"
         col.col-40
         col.col-30
         col.col-20
@@ -39,4 +39,5 @@
         tbody
           - @namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
-  .panel-footer= paginate(@namespaces)
+  .panel-footer
+    .paging_namespaces-table

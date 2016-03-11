@@ -8,7 +8,7 @@
           | Create new user
   .panel-body
     .table-responsive
-      table.table.table-stripped.table-hover
+      table.table.table-stripped.table-hover.customized-datatable id="admin-users-table"
         col.col-30
         col.col-30
         col.col-10
@@ -51,4 +51,5 @@
                     rel="nofollow"
                     href=url_for(toggle_enabled_path(user))]
                       i.fa.fa-lg[class="fa-toggle-#{user.enabled? ? 'on': 'off'}"]
-  .panel-footer= paginate(@users)
+  .panel-footer
+    .paging_admin-users-table

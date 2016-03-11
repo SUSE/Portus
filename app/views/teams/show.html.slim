@@ -94,10 +94,9 @@
             i.fa.fa-user-plus
             | Add members
 
-
   .panel-body
     .table-responsive
-      table.table.table-striped.table-hover
+      table.table.table-striped.table-hover.customized-datatable id="members-table"
         colgroup
           - if can_manage_team?(@team)
             col.col-5
@@ -120,7 +119,8 @@
         tbody#team_users
           - @team_users.each do |tu|
             = render(tu)
-  .panel-footer= paginate(@team_users, param_name: 'users_page')
+  .panel-footer
+    .paging_members-table
 
 - if can_manage_team?(@team)
   #add_namespace_form.collapse
@@ -153,7 +153,7 @@
 
   .panel-body
     .table-responsive
-      table.table.table-striped.table-hover
+      table.table.table-striped.table-hover.customized-datatable id="namespaces-table"
         colgroup
           col.col-50
           col.col-30
@@ -168,4 +168,5 @@
         tbody#namespaces
           - @team_namespaces.each do |namespace|
             = render(namespace)
-  .panel-footer= paginate(@team_namespaces, param_name: 'namespaces_page')
+  .panel-footer
+    .paging_namespaces-table

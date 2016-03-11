@@ -34,21 +34,9 @@ describe NamespacesController do
         [Namespace.find_by(name: user.username), Namespace.find_by(global: true)])
       expect(assigns(:namespaces).ids).to be_empty
     end
-
-    it "paginates namespaces" do
-      get :index, {}, valid_session
-      expect(assigns(:namespaces)).to respond_to(:total_pages)
-    end
   end
 
   describe "GET #show" do
-    it "should paginate repositories" do
-      sign_in owner
-      get :show, id: namespace.id
-
-      expect(assigns(:repositories)).to respond_to(:total_pages)
-    end
-
     it "allows team members to view the page" do
       sign_in owner
       get :show, id: namespace.id

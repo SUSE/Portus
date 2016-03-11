@@ -9,7 +9,7 @@ span
       ' Special namespaces
   .panel-body
     .table-responsive
-      table.table.table-stripped.table-hover
+      table.table.table-stripped.table-hover.customized-datatable id="snamespaces-table"
         col.col-40
         col.col-30
         col.col-20
@@ -55,7 +55,7 @@ span
             | Create new namespace
   .panel-body
     .table-responsive
-      table.table.table-stripped.table-hover
+      table.table.table-stripped.table-hover.customized-datatable id="namespaces-table"
         col.col-40
         col.col-30
         col.col-20
@@ -69,4 +69,5 @@ span
         tbody#accessible-namespaces
           - @namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
-  .panel-footer= paginate(@namespaces)
+  .panel-footer
+    .paging_namespaces-table

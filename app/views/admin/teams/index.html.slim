@@ -4,7 +4,7 @@
       ' Teams
   .panel-body
     .table-responsive
-      table.table.table-striped.table-hover
+      table.table.table-striped.table-hover.customized-datatable id="admin-teams-table"
         colgroup
           col.col-5
           col.col-20
@@ -23,4 +23,5 @@
         tbody#teams
           - @teams.each do |team|
             = render partial: 'teams/team', locals: { team: team }
-  .panel-footer= paginate(@teams)
+  .panel-footer
+    .paging_admin-teams-table
