@@ -1,5 +1,8 @@
 # Portus
 
+- Website: http://port.us.org/
+- Mailing list: [Google Groups](https://groups.google.com/forum/#!forum/portus-dev)
+
 Portus is an authoritzation server and a user interface for the next generation
 of the Docker registry. Portus targets
 [version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
