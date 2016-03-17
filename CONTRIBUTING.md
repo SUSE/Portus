@@ -3,7 +3,8 @@
 ## Reporting issues
 
 Before reporting an issue, please check the
-[documentation](http://port.us.org/documentation.html). It might contain all
+[documentation](http://port.us.org/documentation.html) and our [mailing
+list](https://groups.google.com/forum/#!forum/portus-dev). It might contain all
 the information you need for your specific problem.
 
 Moreover, check whether it has already been reported
