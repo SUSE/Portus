@@ -49,4 +49,8 @@ documentation. If you want to contribute directly to this documentation page,
 you might want to open up a new pull request against the
 [gh-pages](https://github.com/SUSE/Portus/tree/gh-pages) branch.
 
+For any other doubt that you may have regarding our documentation or anything
+about Portus in general, feel free to say something in our [mailing
+list](https://groups.google.com/forum/#!forum/portus-dev).
+
 ##### Thanks for your support!
