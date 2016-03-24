@@ -107,6 +107,13 @@ class Registry < ActiveRecord::Base
 
   # Fetch the tag being pushed through the given target object.
   def get_tag_from_target(namespace, repo, target)
+    # Since Docker Distribution 2.4 the registry finally sends the tag, so we
+    # don't have to perform requests afterwards.
+    return target["tag"] unless target["tag"].blank?
+
+    # Tough luck, we should now perform requests to fetch the tag. Note that
+    # depending on the Manifest version we have to do one thing or another
+    # because they expose different information.
     case target["mediaType"]
     when "application/vnd.docker.distribution.manifest.v1+json",
       "application/vnd.docker.distribution.manifest.v1+prettyjws"
