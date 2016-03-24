@@ -34,8 +34,9 @@ class RegistryMock < Registry
     o
   end
 
-  def get_tag_from_target_test(namespace, repo, mtype, digest)
+  def get_tag_from_target_test(namespace, repo, mtype, digest, tag = nil)
     target = { "mediaType" => mtype, "repository" => repo, "digest" => digest }
+    target["tag"] = tag unless tag.nil?
     get_tag_from_target(namespace, repo, target)
   end
 end
@@ -215,6 +216,15 @@ describe Registry, type: :model do
       expect(Rails.logger).to receive(:info).with(/Reason: unsupported media type "a"/)
 
       mock.get_tag_from_target_test(nil, "busybox", "a", "sha:1234")
+    end
+
+    it "fetches the tag from the target if it exists", focus: true do
+      mock = RegistryMock.new(false)
+
+      # We leave everything empty to show that if the tag is provided, we pick
+      # it, regardless of any other information.
+      ret  = mock.get_tag_from_target_test(nil, "", "", "", "0.1")
+      expect(ret).to eq "0.1"
     end
   end
 end
