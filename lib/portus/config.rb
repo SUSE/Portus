@@ -27,6 +27,11 @@ module Portus
       add_enabled(hsh)
     end
 
+    # Returns a string representation of the evaluated configuration.
+    def to_s
+      hide_password(fetch.dup).to_yaml
+    end
+
     protected
 
     include ::Portus::HashUtils
