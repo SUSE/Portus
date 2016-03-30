@@ -20,6 +20,7 @@
 - Team members can comment on repositories. See pull request: [#538](https://github.com/SUSE/Portus/pull/583)
 - Users can create security tokens to use instead of their credentials. See pull request: [#625](https://github.com/SUSE/Portus/pull/625)
 - Added the `portus:info` rake task. See PR [#799](https://github.com/SUSE/Portus/pull/799).
+- Allow admins to provide extra filter options for LDAP. See PR[#639](https://github.com/SUSE/Portus/pull/639).
 
 ## 2.0.3
 
