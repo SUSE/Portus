@@ -218,7 +218,7 @@ describe Registry, type: :model do
       mock.get_tag_from_target_test(nil, "busybox", "a", "sha:1234")
     end
 
-    it "fetches the tag from the target if it exists", focus: true do
+    it "fetches the tag from the target if it exists" do
       mock = RegistryMock.new(false)
 
       # We leave everything empty to show that if the tag is provided, we pick

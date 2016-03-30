@@ -12,13 +12,14 @@
   into fixing the issue #512.
 - Teams can be renamed. See PR [#536](https://github.com/SUSE/Portus/pull/536).
 - Users can be created from the admin page.
-  See PR [543](https://github.com/SUSE/Portus/pull/543). This is a first step
+  See PR [#543](https://github.com/SUSE/Portus/pull/543). This is a first step
   into fixing the issues #283 and #179.
 - Team and namespace descriptions can be written using Markdown. See pull
   requests: [#546](https://github.com/SUSE/Portus/pull/546) and
   [#531](https://github.com/SUSE/Portus/pull/531).
 - Team members can comment on repositories. See pull request: [#538](https://github.com/SUSE/Portus/pull/583)
-- Users can create security tokens to use instead of their credentials. See pull request: [625](https://github.com/SUSE/Portus/pull/625)
+- Users can create security tokens to use instead of their credentials. See pull request: [#625](https://github.com/SUSE/Portus/pull/625)
+- Added the `portus:info` rake task. See PR [#799](https://github.com/SUSE/Portus/pull/799).
 
 ## 2.0.3
 
