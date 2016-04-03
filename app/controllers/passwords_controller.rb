@@ -42,4 +42,9 @@ class PasswordsController < Devise::PasswordsController
 
     respond_with resource, location: after_resetting_password_path_for(resource)
   end
+
+  # Prevents redirect loops
+  def after_resetting_password_path_for(resource)
+    signed_in_root_path(resource)
+  end
 end

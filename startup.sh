@@ -39,6 +39,11 @@ if [ "$PORTUS_KEY_PATH" != "" -a "$PORTUS_MACHINE_FQDN" != "" -a ! -f "$PORTUS_K
     openssl req -x509 -newkey rsa:2048 -keyout "$PORTUS_KEY_PATH" -out "$PORTUS_CRT_PATH" -days 365 -nodes -subj "/CN=$PORTUS_MACHINE_FQDN"
 fi
 
+if [ "$PORTUS_MACHINE_FQDN" != "" ];then
+    echo config FQDN into rails
+    sed -i"" -e "s/portus.test.lan/$PORTUS_MACHINE_FQDN/" config/config.yml
+fi
+
 echo Making sure database is ready
 rake db:create && rake db:migrate && rake db:seed
 

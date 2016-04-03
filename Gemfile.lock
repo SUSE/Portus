@@ -127,7 +127,7 @@ GEM
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
-    json (1.8.1)
+    json (1.8.3)
     json-schema (2.5.1)
       addressable (~> 2.3.7)
     jwt (1.5.0)
@@ -204,6 +204,7 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails_stdout_logging (0.0.4)
     railties (4.2.2)
       actionpack (= 4.2.2)
       activesupport (= 4.2.2)
@@ -351,6 +352,7 @@ DEPENDENCIES
   quiet_assets
   rack-mini-profiler
   rails (~> 4.2.2)
+  rails_stdout_logging
   redcarpet
   rspec-rails
   rubocop
@@ -369,3 +371,6 @@ DEPENDENCIES
   webmock
   wirb
   wirble
+
+BUNDLED WITH
+   1.11.2

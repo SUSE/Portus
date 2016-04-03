@@ -51,17 +51,14 @@ module Portus
     #   - name: a string containing the name of the repository.
     #   - tags: an array containing the available tags for the repository.
     def catalog
-      link = "_catalog?n=100"
-      res = []
-
-      # We fetch repositories in pages of 100 because of a bug in the registry.
-      # See: https://github.com/docker/distribution/issues/1190.
-      until link.empty?
-        cat, link = catalog_page(link)
-        res += cat["repositories"]
-      end
-
+      res = paged_response("_catalog", "repositories")
       add_tags(res)
+    end
+
+    # Returns an array containing the list of tags. If something goes wrong,
+    # then it raises an exception.
+    def tags(repository)
+      paged_response("#{repository}/tags/list", "tags")
     end
 
     # Deletes a layer of the specified image. The layer is pointed by the digest
@@ -81,12 +78,26 @@ module Portus
 
     protected
 
-    # Fetches the next page in the catalog from the provided link. On success,
-    # it will return an array of the items:
+    # Returns all the items that could be extracted from the given link that
+    # are indexed by the given field in a successful response. If anything goes
+    # wrong, it raises an exception.
+    def paged_response(link, field)
+      res = []
+      link += "?n=100"
+
+      until link.empty?
+        page, link = get_page(link)
+        res += page[field]
+      end
+      res
+    end
+
+    # Fetches the next page from the provided link. On success, it will return
+    # an array of the items:
     #   - The parsed response body.
     #   - The link to the next page.
     # On error it will raise the proper exception.
-    def catalog_page(link)
+    def get_page(link)
       res = perform_request(link)
       if res.code.to_i == 200
         [JSON.parse(res.body), fetch_link(res["link"])]

@@ -93,7 +93,6 @@ ActiveRecord::Schema.define(version: 20151215152138) do
     t.integer  "namespace_id", limit: 4
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.string   "source_url",   limit: 255, default: "", null: false
   end
 
   add_index "repositories", ["name", "namespace_id"], name: "index_repositories_on_name_and_namespace_id", unique: true, using: :btree

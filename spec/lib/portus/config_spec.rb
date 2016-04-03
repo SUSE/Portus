@@ -78,4 +78,14 @@ describe Portus::Config do
     expect(cfg["ldap"]["count"]).to eq 2          # env
     expect(cfg["ldap"]["string"]).to eq "string"  # env
   end
+
+  it "returns the proper config while hiding passwords" do
+    cfg     = get_config("config.yml", "local.yml")
+    fetched = cfg.fetch
+    evaled  = YAML.load(cfg.to_s)
+
+    expect(fetched).to_not eq(evaled)
+    fetched["ldap"]["authentication"]["password"] = "****"
+    expect(fetched).to eq(evaled)
+  end
 end

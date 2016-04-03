@@ -3,6 +3,7 @@ header {
   height: 60px;
   .logo-header {
     height: 60px;
+    width: auto;
   }
   .user-header {
     padding: 10px 15px;
@@ -14,9 +15,12 @@ header {
       color: $white;
     }
   }
-  .username-logout {
+  .button-container {
     display: inline-block;
     vertical-align: top;
+  }
+  .username-logout {
+    @extend .button-container;
   }
   .search-header {
     position: relative;
@@ -127,4 +131,26 @@ footer {
 
 i.fa {
   padding: 0 0.3em;
+}
+
+.shared-search {
+  margin-bottom: 1rem;
+  width: 100%;
+  input {
+    border-radius: 4px 0 0 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-left: 1px solid $primary-colour;
+    border-top: 1px solid $primary-colour;
+    border-bottom: 1px solid $primary-colour;
+    border-right: 0px solid $primary-colour;
+    color: $primary-colour;
+  }
+  button.btn.btn-default {
+    border-radius: 0 4px 4px 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-left: 0px solid $primary-colour;
+    border-top: 1px solid $primary-colour;
+    border-bottom: 1px solid $primary-colour;
+    border-right: 1px solid $primary-colour;
+  }
 }
