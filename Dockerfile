@@ -9,9 +9,6 @@ WORKDIR /portus
 
 EXPOSE 3000
 
-RUN apt-get update && apt-get install -y telnet ldap-utils
-COPY Gemfile* ./
-RUN bundle install --retry=3
 
 # Install phantomjs, this is required for testing and development purposes
 # There are no official deb packages for it, hence we built it inside of the
@@ -25,6 +22,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 ADD . .
+
+RUN apt-get update && apt-get install -y telnet ldap-utils
+COPY Gemfile* ./
+RUN bundle install --retry=3
 
 RUN mkdir -p /etc/nginx/conf.d
 VOLUME /etc/nginx/conf.d
