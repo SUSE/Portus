@@ -36,7 +36,6 @@ Generating private key and certificate"
 If you want to use your own private key and certificates, upload them to
   * /etc/apache2/ssl.key/#{HOSTNAME}-ca.key"
   * /etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
-  * /etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
 and then re-run this script"
 ************************************************************************
 EOM

@@ -35,6 +35,7 @@ html
     .container-fluid
       = render 'shared/aside'
       section
+        = render 'shared/search'
         = render 'shared/notifications'
         = yield
   footer
@@ -44,3 +45,6 @@ html
         'Created with
         i.fa.fa-heart
         'by the SUSE team
+      - if current_user.admin? && Version.value
+          p
+            'Version: #{Version.value}

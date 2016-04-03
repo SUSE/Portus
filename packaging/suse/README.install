@@ -5,5 +5,5 @@ You can configure Portus by running:
 
 This tool will setup all the components required to run Portus.
 
-A list of parameters to used during the setup phase can be obtained running:
+A list of parameters to be used during the setup phase can be obtained running:
   portusctl help setup

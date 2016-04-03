@@ -1,8 +1,8 @@
 # Class implementing the cli interface of portusctl
 class Cli < Thor
   desc "setup", "Configure Portus"
-  option :secure, type: :boolean, default: true,
-    desc: "Toggle SSL usage for Portus"
+  option "secure", desc: "Toggle SSL usage for Portus", type: :boolean, default: true
+
   # SSL certificate options
   option "ssl-organization",
     desc:    "SSL certificate: organization",
@@ -22,27 +22,40 @@ class Cli < Thor
   option "ssl-state",
     desc:    "SSL certificate: state",
     default: "Bayern" # gensslcert -s
+
   # DB options
   option "db-host", desc: "Database: host", default: "localhost"
   option "db-username", desc: "Database: username", default: "portus"
   option "db-password", desc: "Database: password", default: "portus"
   option "db-name", desc: "Database: name", default: "portus_production"
+
   # Registry
   option "local-registry", desc: "Configure Docker registry running locally",
     type: :boolean, default: false
+
   # LDAP
   option "ldap-enable", desc: "LDAP: enable", type: :boolean, default: false
   option "ldap-hostname", desc: "LDAP: server hostname"
   option "ldap-port", desc: "LDAP: server port", default: "389"
-  option "ldap-base",
-    desc:    "LDAP: base",
-    default: "ou=users, dc=example, dc=com"
-  option "ldap-guess-email",
+  option "ldap-method",
+    desc:    "LDAP: encryption method (recommended: starttls)",
+    default: "plain"
+  option "ldap-base", desc: "LDAP: base", default: "ou=users, dc=example, dc=com"
+  option "ldap-filter", desc: "LDAP: filter users"
+  option "ldap-uid", desc: "LDAP: uid", default: "uid"
+  option "ldap-authentication-enable",
+    desc:    "LDAP: enable LDAP credentials for user lookup",
+    type:    :boolean,
+    default: false
+  option "ldap-authentication-bind-dn", desc: "LDAP: bind DN for authentication"
+  option "ldap-authentication-password", desc: "LDAP: password for authentication"
+  option "ldap-guess-email-enable",
     desc:    "LDAP: guess email address",
     type:    :boolean,
     default: false
   option "ldap-guess-email-attr",
     desc: "LDAP: attribute to use when guessing email address"
+
   # MAILER
   option "email-from",
     desc:    "MAIL: sender address",
@@ -68,10 +81,26 @@ class Cli < Thor
   option "email-smtp-domain",
     desc:    "MAIL: the domain of the SMTP server",
     default: "example.com"
+
+  # SIGNUP
+  option "signup-enable",
+    desc:    "Enable user signup",
+    type:    :boolean,
+    default: true
+
   # GRAVATAR
-  option "gravatar", desc: "Enable Gravatar usage", type: :boolean, default: true
+  option "gravatar-enable",
+    desc:    "Enable Gravatar usage",
+    type:    :boolean,
+    default: true
+
+  # JWT EXPIRATION TIME
+  option "jwt-expiration-time",
+    desc:    "Expiration time for the JWT token used by Portus",
+    default: "5.minutes"
+
   # FIRST USER
-  option "first-user-admin",
+  option "first-user-admin-enable",
     desc:    "Make the first registered user an admin",
     type:    :boolean,
     default: true
@@ -136,6 +165,8 @@ class Cli < Thor
     ensure_root
 
     Runner.produce_versions_file!
+    Runner.produce_crono_log_file!
+    Runner.exec("cp", ["/var/log/apache2/error_log", File.join(PORTUS_ROOT, "log/production.log")])
     Runner.tar_files("log/production.log", "log/crono.log", "log/versions.log")
   end
 

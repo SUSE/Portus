@@ -2,9 +2,10 @@ header .btn-default {
   @include button-variant($white, transparent, $white);
 }
 
-header #logout.btn.btn-default {
+header .topbar.btn.btn-default {
   background: rgba(255,255,255,0.2);
   border: 1px solid transparent;
+  padding-top: 1rem;
   &:hover {
     color: $second-colour;
     background: rgba(255,255,255,0.7);

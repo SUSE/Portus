@@ -4,6 +4,11 @@ describe "/v2/token" do
 
   describe "get token" do
 
+    def parse_token(body)
+      token = JSON.parse(body)["token"]
+      JWT.decode(token, nil, false, leeway: 2)[0]
+    end
+
     let(:auth_mech) { ActionController::HttpAuthentication::Basic }
     let(:password) { "this is a test" }
     let(:user) { create(:user, password: password) }
@@ -29,10 +34,13 @@ describe "/v2/token" do
           scope:   "repository:foo_namespace/me:push"
         }
       end
+      before do
+        create(:namespace, name: "foo_namespace", registry: registry)
+      end
 
       it "denies access when the password is wrong" do
         get v2_token_url,
-          { service: registry.hostname, account: "account", scope: "repository:foo/me:push" },
+          valid_request,
           invalid_auth_header
 
         expect(response.status).to eq 401
@@ -40,16 +48,17 @@ describe "/v2/token" do
 
       it "denies access when the user does not exist" do
         get v2_token_url,
-          { service: registry.hostname, account: "account", scope: "repository:foo/me:push" },
+          valid_request,
           nonexistent_auth_header
 
         expect(response.status).to eq 401
       end
 
       it "denies access when basic auth credentials are not defined" do
-        get v2_token_url,
-          service: registry.hostname, account: "account", scope: "repository:foo/me:push"
-        expect(response.status).to eq 401
+        get v2_token_url, valid_request
+
+        payload = parse_token response.body
+        expect(payload["access"]).to be_empty
       end
 
       it "denies access to a disabled user" do
@@ -109,6 +118,8 @@ describe "/v2/token" do
           "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
 
         expect(response.status).to eq 200
+        payload = parse_token response.body
+        expect(payload["access"]).not_to be_empty
 
         # But not for another
         get v2_token_url,
@@ -119,7 +130,9 @@ describe "/v2/token" do
           },
           "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
 
-        expect(response.status).to eq 401
+        expect(response.status).to eq 200
+        payload = parse_token response.body
+        expect(payload["access"]).to be_empty
       end
     end
 
@@ -147,15 +160,6 @@ describe "/v2/token" do
         expect(ldapuser.valid_password?("12341234")).to be true
       end
 
-      it "does not authenticate the LDAP user if not Basic authentication was given" do
-        get v2_token_url,
-          {
-            service: registry.hostname,
-            account: "ldapuser"
-          }, {}
-
-        expect(response.status).to eq 401
-      end
     end
 
     context "as valid user" do
@@ -180,8 +184,7 @@ describe "/v2/token" do
 
       it "decoded payload should conform with params sent" do
         get v2_token_url, valid_request, valid_auth_header
-        token = JSON.parse(response.body)["token"]
-        payload = JWT.decode(token, nil, false, leeway: 2)[0]
+        payload = parse_token response.body
         expect(payload["sub"]).to eq "account"
         expect(payload["aud"]).to eq registry.hostname
         expect(payload["access"][0]["type"]).to eq "repository"
@@ -199,8 +202,7 @@ describe "/v2/token" do
         end
 
         it "decoded payload should not contain access key" do
-          token = JSON.parse(response.body)["token"]
-          payload = JWT.decode(token, nil, false, leeway: 2)[0]
+          payload = parse_token response.body
           expect(payload).to_not have_key("access")
         end
 
@@ -248,8 +250,7 @@ describe "/v2/token" do
           expect(response.status).to eq 200
 
           # And check that the only authorized scope is "pull"
-          token = JSON.parse(response.body)["token"]
-          payload = JWT.decode(token, nil, false, leeway: 2)[0]
+          payload = parse_token response.body
           expect(payload["access"][0]["name"]).to eq "#{user.username}/busybox"
           expect(payload["access"][0]["actions"]).to match_array ["pull"]
         end
@@ -283,21 +284,12 @@ describe "/v2/token" do
         it "allows portus to access the Catalog API" do
           get v2_token_url, valid_request, valid_portus_auth_header
           expect(response.status).to eq 200
-
-          token = JSON.parse(response.body)["token"]
-          payload = JWT.decode(token, nil, false, leeway: 2)[0]
+          payload = parse_token response.body
           expect(payload["sub"]).to eq "portus"
           expect(payload["aud"]).to eq registry.hostname
           expect(payload["access"][0]["type"]).to eq "registry"
           expect(payload["access"][0]["name"]).to eq "catalog"
           expect(payload["access"][0]["actions"][0]).to eq "*"
-        end
-
-        it "forbids unhandled methods from the registry type" do
-          wr = valid_request
-          wr[:scope] = "registry:catalog:lala"
-          get v2_token_url, wr, valid_portus_auth_header
-          expect(response.status).to eq 401
         end
       end
 
@@ -310,7 +302,25 @@ describe "/v2/token" do
                 scope:   "repository:busybox:fork"
               },
               valid_auth_header
-          expect(response.status).to eq 401
+          payload = parse_token response.body
+          expect(payload["access"]).to be_empty
+        end
+      end
+
+      context "multiple scopes" do
+        it "allows access" do
+          query_string = "service=#{registry.hostname}&" \
+                         "account=user.username&" \
+                         "scope=repository%3Abusybox%3Apush&" \
+                         "scope=repository%3Abusybox%3Apull"
+          allow_any_instance_of(ActionDispatch::Request).to receive(:query_string)
+            .and_return(query_string)
+          get v2_token_url, query_string, valid_auth_header
+          expect(response.status).to eq 200
+          payload = parse_token response.body
+          expect(payload["access"].size).to eq(1)
+          expect(payload["access"][0]["actions"]).to eq(["push", "pull"])
+
         end
       end
 
@@ -323,16 +333,18 @@ describe "/v2/token" do
         end
       end
 
-      context "unkwnow registry" do
+      context "unknown registry" do
         context "no scope requested" do
-          it "respond with 401" do
+          it "respond with 200 and no access" do
             get v2_token_url, { service: "does not exist", account: "account" }, valid_auth_header
-            expect(response.status).to eq 401
+            expect(response.status).to eq 200
+            payload = parse_token response.body
+            expect(payload["access"]).to be_empty
           end
         end
 
         context "reposity scope" do
-          it "it responde with 401" do
+          it "it responds with 200 and no access" do
             # force creation of the namespace
             namespace = create(:namespace,
                                team:     Team.find_by(name: user.username),
@@ -348,7 +360,9 @@ describe "/v2/token" do
               },
               valid_auth_header
             )
-            expect(response.status).to eq(401)
+            expect(response.status).to eq(200)
+            payload = parse_token response.body
+            expect(payload["access"]).to be_empty
           end
         end
       end

@@ -3,7 +3,8 @@
 ## Reporting issues
 
 Before reporting an issue, please check the
-[documentation](http://port.us.org/documentation.html). It might contain all
+[documentation](http://port.us.org/documentation.html) and our [mailing
+list](https://groups.google.com/forum/#!forum/portus-dev). It might contain all
 the information you need for your specific problem.
 
 Moreover, check whether it has already been reported
@@ -25,6 +26,8 @@ points if your issue is about Portus behaving in an unexpected manner:
   That being said, if you are using a custom setup explain to us how all the
   pieces are glued together (you don't have to be too verbose, just specify the
   most important stuff like configurations, etc.).
+- Paste the output of `rake portus:info` (or `portusctl rake portus:info` if
+  you are using the RPM).
 - If relevant, provide the related logs. If you are using the provided RPM,
   this is as simple as just calling `portusctl logs`. Otherwise, provide the
   contents of your `log/$environment.log` file, and the contents of the logs of

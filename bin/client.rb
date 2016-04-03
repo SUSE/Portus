@@ -20,8 +20,8 @@ end
 case ARGV.first
 when "catalog"
   catalog = registry.client.catalog
-  pp catalog
-  pp "Size: #{catalog.size}"
+  puts catalog.inspect
+  puts "Size: #{catalog.size}"
 when "delete"
   if ARGV.length == 2
     puts "You have to specify first the name, and then the digest"
@@ -39,7 +39,7 @@ when "manifest"
   else
     name, tag = ARGV[1], "latest"
   end
-  pp registry.client.manifest(name, tag)
+  puts JSON.pretty_generate(registry.client.manifest(name, tag))
 when "ping"
   # No registry was found, trying to ping another one.
   if registry.nil?

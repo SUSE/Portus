@@ -9,6 +9,7 @@ module Portus
     def self.process!(data, handler)
       data["events"].each do |event|
         next unless relevant?(event)
+        Rails.logger.info "Handling Push event:\n#{JSON.pretty_generate(event)}"
         handler.handle_push_event(event)
       end
     end
@@ -18,7 +19,7 @@ module Portus
     def self.relevant?(event)
       return false unless event["action"] == "push"
       return false unless event["target"].is_a?(Hash)
-      event["target"]["mediaType"] == "application/vnd.docker.distribution.manifest.v1+json"
+      event["target"]["mediaType"].start_with? "application/vnd.docker.distribution.manifest"
     end
   end
 end

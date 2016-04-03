@@ -62,7 +62,7 @@ class Registry < ActiveRecord::Base
       return
     end
 
-    tag_name = get_tag_from_manifest(event["target"])
+    tag_name = get_tag_from_target(namespace, repo, event["target"])
     return if tag_name.nil?
 
     [namespace, repo, tag_name]
@@ -91,12 +91,10 @@ class Registry < ActiveRecord::Base
       else
         msg = "Error: not using SSL, but the given registry does use SSL."
       end
-    rescue OpenSSL::SSL::SSLError
-      if use_ssl
-        msg = "Error: using SSL, but the given registry is not using SSL."
-      else
-        msg = "Error: there's something wrong with your SSL configuration."
-      end
+    rescue OpenSSL::SSL::SSLError => e
+      msg = "SSL error while communicating with the registry, check the server " \
+        "logs for more details."
+      logger.error(e)
     rescue StandardError => e
       # We don't know what went wrong :/
       logger.info "Registry not reachable: #{e.inspect}"
@@ -107,19 +105,59 @@ class Registry < ActiveRecord::Base
 
   protected
 
+  # Fetch the tag being pushed through the given target object.
+  def get_tag_from_target(namespace, repo, target)
+    # Since Docker Distribution 2.4 the registry finally sends the tag, so we
+    # don't have to perform requests afterwards.
+    return target["tag"] unless target["tag"].blank?
+
+    # Tough luck, we should now perform requests to fetch the tag. Note that
+    # depending on the Manifest version we have to do one thing or another
+    # because they expose different information.
+    case target["mediaType"]
+    when "application/vnd.docker.distribution.manifest.v1+json",
+      "application/vnd.docker.distribution.manifest.v1+prettyjws"
+      get_tag_from_manifest(target)
+    when "application/vnd.docker.distribution.manifest.v2+json",
+      "application/vnd.docker.distribution.manifest.list.v2+json"
+      get_tag_from_list(namespace, repo)
+    else
+      raise "unsupported media type \"#{target["mediaType"]}\""
+    end
+
+  rescue StandardError => e
+    logger.info("Could not fetch the tag for target #{target}")
+    logger.info("Reason: #{e.message}")
+    nil
+  end
+
+  # Fetch the tag by making the difference of what we've go on the DB, and
+  # what's available on the registry. Returns a string with the tag on success,
+  # otherwise it returns nil.
+  def get_tag_from_list(namespace, repository)
+    full_repo_name = namespace.global? ? repository : "#{namespace.name}/#{repository}"
+    tags = client.tags(full_repo_name)
+    return if tags.nil?
+
+    repo = Repository.find_by(name: repository, namespace: namespace)
+    return tags.first if repo.nil?
+    resulting = tags - repo.tags.pluck(:name)
+
+    # Note that it might happen that there are multiple tags not yet in sync
+    # with Portus' DB. This means that the registry might have been
+    # unresponsive for a long time. In this case, it's not such a problem to
+    # pick up the first label, and wait for the CatalogJob to update the
+    # rest.
+    resulting.first
+  end
+
   # Fetch the tag of the image contained in the current event. The Manifest API
   # is used to fetch it, thus the repo name and the digest are needed (and
   # they are contained inside the event's target).
   #
   # Returns the name of the tag if found, nil otherwise.
   def get_tag_from_manifest(target)
-    man = client.manifest(target["repository"], target["digest"])
-    man["tag"]
-
-  rescue StandardError => e
-    logger.info("Could not fetch the tag for target #{target}")
-    logger.info("Reason: #{e.message}")
-    nil
+    client.manifest(target["repository"], target["digest"])["tag"]
   end
 
   # Create the global namespace for this registry and create the personal

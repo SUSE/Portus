@@ -1,15 +1,16 @@
 li
-  .activity-type.add-member-team
-    i.fa.fa-user-plus
-  .user-image
-    = user_image_tag(activity.owner.email)
-  .description
-    h6
-      strong
-        = "#{activity.owner.username} added user #{activity.recipient.username} "
-      = "with role #{activity.parameters[:role]} to the "
-      = link_to activity.trackable.name, activity.trackable
-      |  team
-    small
-      i.fa.fa-clock-o
-      = activity_time_tag activity.created_at
+  .activitie-container
+    .activity-type.add-member-team
+      i.fa.fa-user-plus
+    .user-image
+      = user_image_tag(activity.owner.email)
+    .description
+      h6
+        strong
+          = "#{activity.owner.username} added user #{activity.recipient.username} "
+        = "with role #{activity.parameters[:role]} to the "
+        = link_to activity.trackable.name, activity.trackable
+        |  team
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at

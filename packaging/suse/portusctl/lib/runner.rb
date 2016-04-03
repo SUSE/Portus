@@ -2,10 +2,15 @@
 class Runner
   # Run a simple external command
   def self.exec(cmd, args = [])
-    final_cmd = cmd + " " + args.map { |a| Shellwords.escape(a) }.join(" ")
+    final_cmd = Runner.escape_command(cmd, args)
     unless system(final_cmd)
       raise "Something went wrong while invoking: #{final_cmd}"
     end
+  end
+
+  # Returns a string containing the command with its arguments all escaped.
+  def self.escape_command(cmd, args = [])
+    cmd + " " + args.map { |a| Shellwords.escape(a) }.join(" ")
   end
 
   # Run an external command using the bundler binary shipped with Portus' RPM
@@ -39,6 +44,15 @@ class Runner
         rpm = `rpm -qi #{package}`
         file.puts("#{rpm}\n")
       end
+    end
+  end
+
+  # Creates a new file called "crono.log" with the logs stored by systemd about
+  # crono.
+  def self.produce_crono_log_file!
+    File.open(File.join(PORTUS_ROOT, "log/crono.log"), "w+") do |file|
+      cmd = Runner.escape_command("journalctl", ["--no-pager", "-u", "portus_crono"])
+      file.puts(`#{cmd}`)
     end
   end
 

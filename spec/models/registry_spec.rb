@@ -18,17 +18,26 @@ class RegistryMock < Registry
       def o.manifest(*_)
         raise StandardError, "Some message"
       end
+
+      def o.tags(*_)
+        raise StandardError, "Some message"
+      end
     else
       def o.manifest(*_)
         { "tag" => "latest" }
+      end
+
+      def o.tags(*_)
+        ["latest", "0.1"]
       end
     end
     o
   end
 
-  def get_tag_from_manifest_test(repo, digest)
-    target = { repository: repo, digest: digest }
-    get_tag_from_manifest(target)
+  def get_tag_from_target_test(namespace, repo, mtype, digest, tag = nil)
+    target = { "mediaType" => mtype, "repository" => repo, "digest" => digest }
+    target["tag"] = tag unless tag.nil?
+    get_tag_from_target(namespace, repo, target)
   end
 end
 
@@ -64,7 +73,13 @@ class RegistryReachable < Registry
   end
 end
 
-RSpec.describe Registry, type: :model do
+def create_empty_namespace
+  owner = create(:user)
+  team = create(:team, owners: [owner])
+  create(:namespace, team: team)
+end
+
+describe Registry, type: :model do
   it { should have_many(:namespaces) }
 
   describe "after_create" do
@@ -106,6 +121,7 @@ RSpec.describe Registry, type: :model do
     end
   end
 
+  # rubocop: disable Metrics/LineLength
   describe "#reachable" do
     it "returns the proper message for each scenario" do
       [
@@ -116,8 +132,8 @@ RSpec.describe Registry, type: :model do
         [Net::OpenTimeout, true, true, /connection timed out/],
         [Net::HTTPBadResponse, true, true, /wrong with your SSL configuration/],
         [Net::HTTPBadResponse, true, false, /Error: not using SSL/],
-        [OpenSSL::SSL::SSLError, true, true, /Error: using SSL/],
-        [OpenSSL::SSL::SSLError, true, false, /wrong with your SSL configuration/],
+        [OpenSSL::SSL::SSLError, true, true, /SSL error while communicating with the registry, check the server logs for more details./],
+        [OpenSSL::SSL::SSLError, true, false, /SSL error while communicating with the registry, check the server logs for more details./],
         [StandardError, true, true, /something went wrong/]
       ].each do |cs|
         rr = RegistryReachable.new(cs.first, cs[1], cs[2])
@@ -125,23 +141,90 @@ RSpec.describe Registry, type: :model do
       end
     end
   end
+  # rubocop: enable Metrics/LineLength
 
   describe "#get_tag_from_manifest" do
     it "returns a tag on success" do
       mock = RegistryMock.new(false)
 
-      ret = mock.get_tag_from_manifest_test("busybox", "sha:1234")
+      ret = mock.get_tag_from_target_test(nil, "busybox",
+                                          "application/vnd.docker.distribution.manifest.v1+json",
+                                          "sha:1234")
+      expect(ret).to eq "latest"
+    end
+
+    it "returns a tag on v2 manifests" do
+      owner     = create(:user)
+      team      = create(:team, owners: [owner])
+      namespace = create(:namespace, team: team)
+      repo      = create(:repository, name: "busybox", namespace: namespace)
+      create(:tag, name: "latest", repository: repo)
+
+      mock = RegistryMock.new(false)
+      ret  = mock.get_tag_from_target_test(namespace, "busybox",
+                                           "application/vnd.docker.distribution.manifest.v2+json",
+                                           "sha:1234")
+      expect(ret).to eq "0.1"
+
+      # Differentiate between global & local namespace
+
+      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+                                           "busybox",
+                                           "application/vnd.docker.distribution.manifest.v2+json",
+                                           "sha:1234")
+      expect(ret).to eq "latest"
+    end
+
+    it "returns the tags on an unknown repository" do
+      mock = RegistryMock.new(false)
+      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+                                           "busybox",
+                                           "application/vnd.docker.distribution.manifest.v2+json",
+                                           "sha:1234")
       expect(ret).to eq "latest"
     end
 
     it "handles errors properly" do
+      m = RegistryMock.new(true)
+
+      expect(Rails.logger).to receive(:info).with(/Could not fetch the tag/)
+      expect(Rails.logger).to receive(:info).with(/Reason: Some message/)
+
+      ret = m.get_tag_from_target_test(nil, "busybox",
+                                       "application/vnd.docker.distribution.manifest.v1+prettyjws",
+                                       "sha:1234")
+      expect(ret).to be_nil
+    end
+
+    it "handles errors on v2" do
       mock = RegistryMock.new(true)
 
       expect(Rails.logger).to receive(:info).with(/Could not fetch the tag/)
       expect(Rails.logger).to receive(:info).with(/Reason: Some message/)
 
-      ret = mock.get_tag_from_manifest_test("busybox", "sha:1234")
+      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+                                           "busybox",
+                                           "application/vnd.docker.distribution.manifest.v2+json",
+                                           "sha:1234")
       expect(ret).to be_nil
+    end
+
+    it "raises an error when the mediaType is unknown" do
+      mock = RegistryMock.new(true)
+
+      expect(Rails.logger).to receive(:info).with(/Could not fetch the tag/)
+      expect(Rails.logger).to receive(:info).with(/Reason: unsupported media type "a"/)
+
+      mock.get_tag_from_target_test(nil, "busybox", "a", "sha:1234")
+    end
+
+    it "fetches the tag from the target if it exists" do
+      mock = RegistryMock.new(false)
+
+      # We leave everything empty to show that if the tag is provided, we pick
+      # it, regardless of any other information.
+      ret  = mock.get_tag_from_target_test(nil, "", "", "", "0.1")
+      expect(ret).to eq "0.1"
     end
   end
 end

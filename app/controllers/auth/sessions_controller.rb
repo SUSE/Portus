@@ -14,7 +14,7 @@ class Auth::SessionsController < Devise::SessionsController
       # For some reason if we get here from the root path, we'll get a flashy
       # alert message.
       flash[:alert] = nil
-      redirect_to new_user_registration_url
+      redirect_to new_user_registration_path
     end
   end
 

@@ -1,18 +1,19 @@
 li
-  .activity-type.change-role
-    i.fa.fa-user
-  .user-image
-    = user_image_tag(activity.owner.email)
-  .description
-    h6
-      strong
-        - if activity.owner == activity.recipient
-          = "#{activity.owner.username} changed its role "
-        - else
-          = "#{activity.owner.username} changed role of user #{activity.recipient.username} "
-      = "from #{activity.parameters[:old_role]} to #{activity.parameters[:new_role]} "
-      = "within the team "
-      = link_to activity.trackable.name, activity.trackable
-    small
-      i.fa.fa-clock-o
-      = activity_time_tag activity.created_at
+  .activitie-container
+    .activity-type.change-role
+      i.fa.fa-user
+    .user-image
+      = user_image_tag(activity.owner.email)
+    .description
+      h6
+        strong
+          - if activity.owner == activity.recipient
+            = "#{activity.owner.username} changed its role "
+          - else
+            = "#{activity.owner.username} changed role of user #{activity.recipient.username} "
+        = "from #{activity.parameters[:old_role]} to #{activity.parameters[:new_role]} "
+        = "within the team "
+        = link_to activity.trackable.name, activity.trackable
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at

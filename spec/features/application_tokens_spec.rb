@@ -13,8 +13,10 @@ feature "Application tokens" do
 
       visit edit_user_registration_path
       find("#add_application_token_btn").click
-      fill_in "Application", with: "awesome-application"
       wait_for_effect_on("#add_application_token_form")
+
+      expect(focused_element_id).to eq "application_token_application"
+      fill_in "Application", with: "awesome-application"
 
       click_button "Create"
       wait_for_ajax
@@ -33,8 +35,10 @@ feature "Application tokens" do
 
       visit edit_user_registration_path
       find("#add_application_token_btn").click
-      fill_in "Application", with: "awesome-application"
       wait_for_effect_on("#add_application_token_form")
+
+      expect(focused_element_id).to eq "application_token_application"
+      fill_in "Application", with: "awesome-application"
 
       click_button "Create"
       wait_for_ajax
@@ -54,8 +58,10 @@ feature "Application tokens" do
 
       visit edit_user_registration_path
       find("#add_application_token_btn").click
-      fill_in "Application", with: "awesome-application"
       wait_for_effect_on("#add_application_token_form")
+
+      expect(focused_element_id).to eq "application_token_application"
+      fill_in "Application", with: "awesome-application"
 
       click_button "Create"
       wait_for_ajax
@@ -95,6 +101,20 @@ feature "Application tokens" do
       wait_for_effect_on("#alert")
 
       expect(page).to have_content("token has been removed")
+    end
+  end
+
+  describe "Toggle effect on form" do
+    scenario "The toggle effect works on the Create new token link", js: true do
+      visit edit_user_registration_path
+
+      expect(page).to have_css("#add_application_token_btn i.fa-plus-circle")
+      find("#add_application_token_btn").click
+      wait_for_effect_on("#add_application_token_form")
+      expect(page).to have_css("#add_application_token_btn i.fa-minus-circle")
+      find("#add_application_token_btn").click
+      wait_for_effect_on("#add_application_token_form")
+      expect(page).to have_css("#add_application_token_btn i.fa-plus-circle")
     end
   end
 end

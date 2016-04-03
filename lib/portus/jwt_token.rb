@@ -6,33 +6,37 @@ module Portus
   #
   class JwtToken
     # The constructor takes the query parameters as specified in the
-    # specification. The given scope is assumed to have already been processed
+    # specification. The given scopes are assumed to have already been processed
     # by the caller with the authorized scopes.
-    def initialize(account, service, scope)
+    def initialize(account, service, scopes)
       @account = account
       @service = service
-      @scope   = scope
+      @scopes   = scopes
     end
 
     # Returns a hash containing the encoded token, ready to be sent as a JSON
     # response.
     def encoded_hash
       headers = { "kid" => JwtToken.kid(private_key) }
-      { token: JWT.encode(claim.deep_stringify_keys, private_key, "RS256", headers) }.freeze
+      {
+        token:      JWT.encode(claim.deep_stringify_keys, private_key, "RS256", headers),
+        expires_in: expiration_time,
+        issued_at:  Time.zone.at(issued_at).to_datetime.rfc3339
+      }.freeze
     end
 
     # Returns a hash containing the "Claim" set as described in the
     # specification.
     def claim
       @claim ||= {}.tap do |hash|
-        hash[:iss]    = Rails.application.secrets.machine_fqdn
+        hash[:iss]    = APP_CONFIG["machine_fqdn"]["value"]
         hash[:sub]    = @account
         hash[:aud]    = @service
         hash[:iat]    = issued_at
         hash[:nbf]    = issued_at - 5.seconds
         hash[:exp]    = issued_at + expiration_time
         hash[:jti]    = jwt_id
-        hash[:access] = authorized_access if @scope
+        hash[:access] = authorized_access if @scopes
       end
     end
 
@@ -56,11 +60,13 @@ module Portus
 
     # Returns an array with the authorized actions hash.
     def authorized_access
-      [{
-        type:    @scope.resource_type,
-        name:    @scope.resource_name,
-        actions: @scope.actions
-      }]
+      @scopes.map do |scope|
+        {
+          type:    scope.resource_type,
+          name:    scope.resource_name,
+          actions: scope.actions
+        }
+      end
     end
 
     # Returns a (hopefully) unique id for the JWT token.

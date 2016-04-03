@@ -12,13 +12,47 @@
   into fixing the issue #512.
 - Teams can be renamed. See PR [#536](https://github.com/SUSE/Portus/pull/536).
 - Users can be created from the admin page.
-  See PR [543](https://github.com/SUSE/Portus/pull/543). This is a first step
+  See PR [#543](https://github.com/SUSE/Portus/pull/543). This is a first step
   into fixing the issues #283 and #179.
 - Team and namespace descriptions can be written using Markdown. See pull
   requests: [#546](https://github.com/SUSE/Portus/pull/546) and
   [#531](https://github.com/SUSE/Portus/pull/531).
 - Team members can comment on repositories. See pull request: [#538](https://github.com/SUSE/Portus/pull/583)
-- Users can create security tokens to use instead of their credentials. See pull request: [625](https://github.com/SUSE/Portus/pull/625)
+- Users can create security tokens to use instead of their credentials. See pull request: [#625](https://github.com/SUSE/Portus/pull/625)
+- Added the `portus:info` rake task. See PR [#799](https://github.com/SUSE/Portus/pull/799).
+- Allow admins to provide extra filter options for LDAP. See PR[#639](https://github.com/SUSE/Portus/pull/639).
+
+## 2.0.3
+
+- Fixed crono job when a repository could not be found. See [commit](https://github.com/SUSE/Portus/commit/120301caf665f7b637cd7ced7282461436dc1eb7).
+- Fixed more issues on docker 1.10 and distribution 2.3. See
+[this](https://github.com/SUSE/Portus/commit/841dbd274ed5e7efcb68105f0de13ac2954234dc)
+and [this](https://github.com/SUSE/Portus/commit/75d61c6d692ebe6086ce1a16b0899fbcd8916a6e)
+commits.
+- Handle multiple scopes in token requests. See [commit](https://github.com/SUSE/Portus/commit/87623975690e693c8df1901ce7b255d41b530e5e).
+- Add optional fields to token response. See [commit](https://github.com/SUSE/Portus/commit/f6e6e841217e9e543fcaa7af196ce5e5009ab28d).
+
+## 2.0.2
+
+- Fixed notification events for distribution v2.3. See [commit](https://github.com/SUSE/Portus/commit/3817d09108907fa26ddaf5ce23291a326b8b8195).
+
+## 2.0.1
+
+- Paginate through the catalog properly. See [commit](https://github.com/SUSE/Portus/commit/6e31712c6669df569f24daba4020f5d6607ad7db).
+- Do not remove all the repos if fetching one fails. See [commit](https://github.com/SUSE/Portus/commit/5626ad9802c663718a3a31675c8383e94e9a10c3).
+- Fixed SMTP setup. See [commit](https://github.com/SUSE/Portus/commit/296dabe3dd1c236409aaa31f19fb6e4a2e003c25).
+- Don't let crono overflow the `log` column on the DB. See [commit](https://github.com/SUSE/Portus/commit/a0ed6d68c328fe6a9cd5e57506ba1773a96189da).
+- Show the actual LDAP error on invalid login. See [commit](https://github.com/SUSE/Portus/commit/260eace6ea7a360a040e230cb9c1c72afcb1abab).
+- Fixed the location of crono logs. See [commit](https://github.com/SUSE/Portus/commit/1bd45d8796def0256a1dd84a74a5b3fb4e9b702a).
+- Always use relative paths. See [commit](https://github.com/SUSE/Portus/commit/93259fc7affd38f833685f565c0af1bb4d46c876).
+- Set RUBYLIB when using portusctl. See [commit](https://github.com/SUSE/Portus/commit/3fdce03646386074a0982d3d642155526dea7753).
+- Don't count hidden teams on the admin panel. See [commit](https://github.com/SUSE/Portus/commit/8f57252bb9118016d1098c0936fb69a708dc4d54).
+- Warn developers on unsupported docker-compose versions. See [commit](https://github.com/SUSE/Portus/commit/02605b3c3eef72a4a78d8db7fda05df2eae2e7db).
+- Directly invalidate LDAP logins without name and password. See [commit](https://github.com/SUSE/Portus/commit/0c0c5a1be243bd42873cb852ebb7b189df16b6fa).
+- Don't show the "I forgot my password" link on LDAP. See [commit](https://github.com/SUSE/Portus/commit/1daaf1117e8d83b425373cfae45892e519fd20fa).
+- Small random fixes:
+  - [9f25126bd4409acf197a24b220cabc23efd7fb80](https://github.com/SUSE/Portus/commit/9f25126bd4409acf197a24b220cabc23efd7fb80)
+  - [0b5c50244d02440008bd8c0cdd9094af66d9d1d9](https://github.com/SUSE/Portus/commit/0b5c50244d02440008bd8c0cdd9094af66d9d1d9)
 
 ## 2.0.0
 

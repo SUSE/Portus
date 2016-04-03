@@ -38,6 +38,18 @@ module Portus
       hsh
     end
 
+    # Hide any sensitive value, replacing it with "*" characters.
+    def hide_password(hsh)
+      hsh.each do |k, v|
+        if v.is_a?(Hash)
+          hsh[k] = hide_password(v)
+        elsif k == "password"
+          hsh[k] = "****"
+        end
+      end
+      hsh
+    end
+
     private
 
     # Get the typed value of the specified environment variable. If it doesn't
