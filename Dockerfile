@@ -31,7 +31,7 @@ RUN mkdir -p /etc/nginx/conf.d
 VOLUME /etc/nginx/conf.d
 
 # Run this command to start it up
-ENTRYPOINT ["/bin/sh","/portus/startup.sh"]
+ENTRYPOINT ["/bin/bash","/portus/startup.sh"]
 # Default arguments to pass to puma
 CMD ["-b","tcp://0.0.0.0:3000","-w","3"]
 
