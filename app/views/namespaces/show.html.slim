@@ -43,9 +43,10 @@
       'Namespace:
       strong
         = @namespace.clean_name
-    h6.label.label-info
-      | Belongs to:
-      = " #{@namespace.team.name}"
+    - unless @namespace.global?
+      h6.label.label-info
+        | <span>Belongs to: </span>
+        = link_to "#{@namespace.team.name}", @namespace.team
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
