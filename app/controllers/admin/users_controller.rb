@@ -16,9 +16,11 @@ class Admin::UsersController < Admin::BaseController
 
     if @user.persisted?
       flash[:notice] = "User created successfully!"
+      flash[:float] = true
       redirect_to admin_users_path
     else
       flash[:alert] = @user.errors.full_messages
+      flash[:float] = true
       render "new"
     end
   end
@@ -34,9 +36,9 @@ class Admin::UsersController < Admin::BaseController
     attr = params.require(:user).permit([:email])
 
     if @user.update_attributes(attr)
-      redirect_to admin_users_path, notice: "User updated successfully"
+      redirect_to admin_users_path, notice: "User updated successfully", float: true
     else
-      redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages
+      redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages, float: true
     end
   end
 

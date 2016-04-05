@@ -25,7 +25,7 @@ feature "Application tokens" do
       expect(user.application_tokens.count).to be(1)
       expect(current_path).to eql edit_user_registration_path
 
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(page).to have_content("New token created")
       expect(page).to have_content("awesome-application")
     end
@@ -47,7 +47,7 @@ feature "Application tokens" do
       expect(user.application_tokens.count).to be(1)
       expect(current_path).to eql edit_user_registration_path
 
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(page).to have_content("Application has already been taken")
     end
 
@@ -69,7 +69,7 @@ feature "Application tokens" do
 
       expect(current_path).to eql edit_user_registration_path
 
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(page).to have_content("New token created")
       expect(page).to have_content("awesome-application")
       expect(disabled?("#add_application_token_btn")).to be true
@@ -98,7 +98,7 @@ feature "Application tokens" do
       find(".popover-content .btn-primary").click
 
       wait_for_ajax
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content("token has been removed")
     end

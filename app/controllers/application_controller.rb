@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :force_registry_config!
   protect_from_forgery with: :exception
 
+  add_flash_types :float
+
   include Pundit
   rescue_from Pundit::NotAuthorizedError, with: :deny_access
 

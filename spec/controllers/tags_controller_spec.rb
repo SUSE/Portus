@@ -19,6 +19,7 @@ describe TagsController, type: :controller do
       allow_any_instance_of(Tag).to receive(:delete_by_digest!).and_return(true)
       delete :destroy, { id: tag.id }, valid_session
       expect(flash[:notice]).to eq "Tag removed successfully"
+      expect(flash[:float]).to eq true
       expect(response.status).to eq 302
     end
 
@@ -29,6 +30,7 @@ describe TagsController, type: :controller do
 
       delete :destroy, { id: tag.id }, valid_session
       expect(flash[:notice]).to eq "Image removed with all its tags"
+      expect(flash[:float]).to eq true
       expect(response.status).to eq 302
     end
 
@@ -37,6 +39,7 @@ describe TagsController, type: :controller do
 
       delete :destroy, { id: tag.id }, valid_session
       expect(flash[:alert]).to eq "Tag could not be removed"
+      expect(flash[:float]).to eq true
       expect(response.status).to eq 302
     end
 
