@@ -58,6 +58,7 @@ end
 unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
 
   group :development do
+    gem "annotate"
     gem "rails-erd"
     gem "quiet_assets"
     gem "pry-rails"

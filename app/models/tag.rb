@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: tags
+#
+#  id            :integer          not null, primary key
+#  name          :string(255)      default("latest"), not null
+#  repository_id :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  user_id       :integer
+#  digest        :string(255)
+#
+
 # A tag as defined by Docker. It belongs to a repository and an author. The
 # name follows the format as defined in registry/api/v2/names.go from Docker's
 # Distribution project. The default name for a tag is "latest".

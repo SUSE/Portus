@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: registries
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  hostname   :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  use_ssl    :boolean
+#
+
 require "rails_helper"
 
 # Open up Portus::RegistryClient to inspect some attributes.

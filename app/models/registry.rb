@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: registries
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  hostname   :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  use_ssl    :boolean
+#
+
 # Registry holds data regarding the registries registered in the Portus
 # application.
 #

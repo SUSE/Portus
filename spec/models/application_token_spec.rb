@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: application_tokens
+#
+#  id          :integer          not null, primary key
+#  application :string(255)      not null
+#  token_hash  :string(255)      not null
+#  token_salt  :string(255)      not null
+#  user_id     :integer          not null
+#
+
 require "rails_helper"
 
 describe ApplicationToken do
