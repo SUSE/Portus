@@ -51,6 +51,7 @@ class Repository < ActiveRecord::Base
 
   # Add the repository with the given `repo` name and the given `tag`. The
   # actor is guessed from the given `event`.
+  # nil is returned when actor can't be found otherwise repository is returned
   def self.add_repo(event, namespace, repo, tag)
     actor = User.find_from_event(event)
     return if actor.nil?
@@ -60,13 +61,18 @@ class Repository < ActiveRecord::Base
     repository = Repository.find_by(namespace: namespace, name: repo)
     if repository.nil?
       repository = Repository.create(namespace: namespace, name: repo)
-    elsif repository.tags.exists?(name: tag)
-      return
     end
 
-    digest = event.try(:[], "target").try(:[], "digest")
-    tag = repository.tags.create(name: tag, author: actor, digest: digest)
-    repository.create_activity(:push, owner: actor, recipient: tag)
+    if repository.tags.exists?(name: tag)
+      tag = repository.tags.find_by(name: tag)
+      tag.touch
+      repository.create_activity(:override, owner: actor, recipient: tag)
+    else
+      digest = event.try(:[], "target").try(:[], "digest")
+      tag = repository.tags.create(name: tag, author: actor, digest: digest)
+      repository.create_activity(:push, owner: actor, recipient: tag)
+    end
+
     repository
   end
 

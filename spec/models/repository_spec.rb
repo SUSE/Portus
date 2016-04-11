@@ -42,7 +42,8 @@ describe Repository do
     let(:user) { create(:user) }
 
     context "adding an existing repo/tag" do
-      it "does not add a new activity when an already existing repo/tag already existed" do
+      it "touch the tag and add a new activity with repository.push key"\
+            " when an already existing repo/tag already existed" do
         event = { "actor" => { "name" => user.username } }
 
         # First we create it, and make sure that it creates the activity.
@@ -50,10 +51,21 @@ describe Repository do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
         end.to change(PublicActivity::Activity, :count).by(1)
 
-        # And now it shouldn't create more activities.
+        repository = Repository.find_by(name: repository_name, namespace: registry.global_namespace)
+        tag_update_time = repository.tags.find_by(name: tag_name).updated_at
+
+        # sleep 1s so that the change of updated_at field is guaranteed
+        sleep 1
+        # And now it still create one more activities.
         expect do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        end.to change(PublicActivity::Activity, :count).by(0)
+        end.to change(PublicActivity::Activity, :count).by(1)
+
+        expect(repository.activities.last.key).to eq("repository.override")
+
+        repository.reload
+        # tag should be touched
+        expect(repository.tags.find_by(name: tag_name).updated_at == tag_update_time).to be false
       end
     end
 

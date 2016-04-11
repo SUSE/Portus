@@ -12,6 +12,15 @@ module RepositoriesHelper
     owner + namespace + render_repository(activity)
   end
 
+  def render_override_activity(activity)
+    owner = content_tag(:strong, "#{fetch_owner(activity)} overrided")
+
+    namespace = render_namespace(activity)
+    namespace += " / " unless namespace.empty?
+
+    owner + namespace + render_repository(activity)
+  end
+
   protected
 
   # Fetches the owner of the activity in a safe way.
