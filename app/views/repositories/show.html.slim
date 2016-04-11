@@ -16,7 +16,7 @@
             = @repository.stars.count
 
   .panel-body
-    .table-responsive
+    .table-responsive.tags
       table.table.table-stripped.table-hover
         col.col-40
         col.col-40
@@ -30,10 +30,11 @@
           - @tags.each do |tag|
             tr
               td
-                .label.label-success
-                  = tag.name
-              td= tag.author.username
-              td= tag.created_at
+                - tag.each do |t|
+                  .label.label-success
+                    = t.name
+              td= tag.first.author.username
+              td= tag.first.created_at
 
 #write_comment_form.collapse
   = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|

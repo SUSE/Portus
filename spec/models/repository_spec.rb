@@ -421,4 +421,23 @@ describe Repository do
       expect(repo2.tags.pluck(:name)).not_to include("latest")
     end
   end
+
+  describe "Groupped tags" do
+    let!(:registry)   { create(:registry) }
+    let!(:owner)      { create(:user) }
+    let!(:portus)     { create(:user, username: "portus") }
+    let!(:team)       { create(:team, owners: [owner]) }
+    let!(:namespace)  { create(:namespace, team: team) }
+    let!(:repo)        { create(:repository, namespace: namespace) }
+    let!(:tag1)        { create(:tag, repository: repo, digest: "1234") }
+    let!(:tag2)        { create(:tag, repository: repo, digest: tag1.digest) }
+    let!(:tag3)        { create(:tag, repository: repo, digest: "5678", created_at: 2.hours.ago) }
+
+    it "groups tags as expected" do
+      tags = repo.groupped_tags
+      expect(tags.size).to eq 2
+      expect(tags.flatten.map(&:name).uniq).to eq [tag1.name, tag2.name, tag3.name]
+      expect(tags.flatten.map(&:digest).uniq).to eq ["1234", "5678"]
+    end
+  end
 end
