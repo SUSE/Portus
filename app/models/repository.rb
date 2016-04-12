@@ -45,6 +45,14 @@ class Repository < ActiveRecord::Base
     stars.exists? user: user
   end
 
+  # Returns an array of all the tags from this repository grouped by the
+  # digest.
+  def groupped_tags
+    tags.group_by(&:digest).values.sort do |x, y|
+      y.first.created_at <=> x.first.created_at
+    end
+  end
+
   # Handle a push event from the registry.
   def self.handle_push_event(event)
     registry = Registry.find_from_event(event)
