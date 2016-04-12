@@ -12,6 +12,13 @@
 #  global      :boolean          default("0")
 #  description :text(65535)
 #
+# Indexes
+#
+#  fulltext_index_namespaces_on_name         (name)
+#  index_namespaces_on_name_and_registry_id  (name,registry_id) UNIQUE
+#  index_namespaces_on_registry_id           (registry_id)
+#  index_namespaces_on_team_id               (team_id)
+#
 
 require "rails_helper"
 

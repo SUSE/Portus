@@ -10,6 +10,12 @@
 #  user_id       :integer
 #  digest        :string(255)
 #
+# Indexes
+#
+#  index_tags_on_name_and_repository_id  (name,repository_id) UNIQUE
+#  index_tags_on_repository_id           (repository_id)
+#  index_tags_on_user_id                 (user_id)
+#
 
 # A tag as defined by Docker. It belongs to a repository and an author. The
 # name follows the format as defined in registry/api/v2/names.go from Docker's

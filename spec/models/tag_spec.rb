@@ -10,6 +10,12 @@
 #  user_id       :integer
 #  digest        :string(255)
 #
+# Indexes
+#
+#  index_tags_on_name_and_repository_id  (name,repository_id) UNIQUE
+#  index_tags_on_repository_id           (repository_id)
+#  index_tags_on_user_id                 (user_id)
+#
 
 require "rails_helper"
 

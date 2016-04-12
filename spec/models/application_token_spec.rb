@@ -8,6 +8,10 @@
 #  token_salt  :string(255)      not null
 #  user_id     :integer          not null
 #
+# Indexes
+#
+#  index_application_tokens_on_user_id  (user_id)
+#
 
 require "rails_helper"
 

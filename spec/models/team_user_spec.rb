@@ -9,6 +9,11 @@
 #  updated_at :datetime         not null
 #  role       :integer          default("0")
 #
+# Indexes
+#
+#  index_team_users_on_team_id  (team_id)
+#  index_team_users_on_user_id  (user_id)
+#
 
 require "rails_helper"
 

@@ -9,6 +9,10 @@
 #  hidden      :boolean          default("0")
 #  description :text(65535)
 #
+# Indexes
+#
+#  index_teams_on_name  (name) UNIQUE
+#
 
 require "rails_helper"
 
