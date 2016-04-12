@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: teams
+#
+#  id          :integer          not null, primary key
+#  name        :string(255)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  hidden      :boolean          default("0")
+#  description :text(65535)
+#
+
 class Team < ActiveRecord::Base
   include PublicActivity::Common
 
