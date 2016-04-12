@@ -94,6 +94,12 @@
       &.application-token-destroyed {
         background: $activity-application-token-destroyed;
       }
+      &.change-webhook-visibility {
+        background: $activity-change-webhook-visibility;
+      }
+      &.create-webhook {
+        background: $activity-create-webhook;
+      }
     }
   }
 }

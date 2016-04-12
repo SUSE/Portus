@@ -172,7 +172,50 @@ ActiveRecord::Schema.define(version: 20160502140301) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
+  create_table "webhook_deliveries", force: :cascade do |t|
+    t.integer  "webhook_id",      limit: 4
+    t.string   "uuid",            limit: 255
+    t.string   "status",          limit: 255
+    t.text     "request_header",  limit: 65535
+    t.text     "request_body",    limit: 65535
+    t.text     "response_header", limit: 65535
+    t.text     "response_body",   limit: 65535
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "webhook_deliveries", ["webhook_id", "uuid"], name: "index_webhook_deliveries_on_webhook_id_and_uuid", unique: true, using: :btree
+  add_index "webhook_deliveries", ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id", using: :btree
+
+  create_table "webhook_headers", force: :cascade do |t|
+    t.integer  "webhook_id", limit: 4
+    t.string   "name",       limit: 255
+    t.string   "value",      limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "webhook_headers", ["webhook_id", "name"], name: "index_webhook_headers_on_webhook_id_and_name", unique: true, using: :btree
+  add_index "webhook_headers", ["webhook_id"], name: "index_webhook_headers_on_webhook_id", using: :btree
+
+  create_table "webhooks", force: :cascade do |t|
+    t.integer  "namespace_id",   limit: 4
+    t.string   "url",            limit: 255
+    t.string   "username",       limit: 255
+    t.string   "password",       limit: 255
+    t.integer  "request_method", limit: 4
+    t.integer  "content_type",   limit: 4
+    t.boolean  "enabled",        limit: 1
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "webhooks", ["namespace_id"], name: "index_webhooks_on_namespace_id", using: :btree
+
   add_foreign_key "comments", "repositories"
   add_foreign_key "stars", "repositories"
   add_foreign_key "stars", "users"
+  add_foreign_key "webhook_deliveries", "webhooks"
+  add_foreign_key "webhook_headers", "webhooks"
+  add_foreign_key "webhooks", "namespaces"
 end

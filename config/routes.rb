@@ -10,6 +10,12 @@ Rails.application.routes.draw do
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show, :update] do
     put "toggle_public", on: :member
+    resources :webhooks do
+      resources :headers, only: [:create, :destroy], controller: :webhook_headers
+      member do
+        put "toggle_enabled"
+      end
+    end
   end
   get "namespaces/typeahead/:query" => "namespaces#typeahead", :defaults => { format: "json" }
 

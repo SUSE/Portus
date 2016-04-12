@@ -77,6 +77,46 @@ $(document).on "page:change", ->
         layout_resizer()
     set_typeahead('/namespaces/typeahead/%QUERY')
 
+  $('#add_webhook_btn').unbind('click').on 'click', (event) ->
+    $('#webhook_url').val('')
+    $('#webhook_username').val('')
+    $('#webhook_password').val('')
+
+    $('#add_webhook_form').toggle 400, "swing", ->
+      if $('#add_webhook_form').is(':visible')
+        $('#add_webhook_btn i').addClass("fa-minus-circle")
+        $('#add_webhook_btn i').removeClass("fa-plus-circle")
+        $('#webhook_url').focus()
+        layout_resizer()
+      else
+        $('#add_webhook_btn i').removeClass("fa-minus-circle")
+        $('#add_webhook_btn i').addClass("fa-plus-circle")
+        layout_resizer()
+
+  $('body').on('click', '.btn-edit-webhook', (event) ->
+    el = $(this).find('i.fa')
+    if $(this).hasClass('button_edit_webhook')
+      $('.webhook_information').toggle()
+      $('#update_webhook_' + event.currentTarget.value).toggle()
+      $('#webhook_url').focus()
+      layout_resizer()
+  )
+
+  $('#add_webhook_header_btn').unbind('click').on 'click', (event) ->
+    $('#webhook_header_name').val('')
+    $('#webhook_header_value').val('')
+
+    $('#add_webhook_header_form').toggle 400, "swing", ->
+      if $('#add_webhook_header_form').is(':visible')
+        $('#add_webhook_header_btn i').addClass("fa-minus-circle")
+        $('#add_webhook_header_btn i').removeClass("fa-plus-circle")
+        $('#webhook_header_name').focus()
+        layout_resizer()
+      else
+        $('#add_webhook_header_btn i').removeClass("fa-minus-circle")
+        $('#add_webhook_header_btn i').addClass("fa-plus-circle")
+        layout_resizer()
+
   $('#add_team_btn').on 'click', (event) ->
     $('#team_name').val('')
     $('#add_team_form').toggle 400, "swing", ->
