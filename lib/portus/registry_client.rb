@@ -28,13 +28,17 @@ module Portus
       !res.nil? && res.code.to_i == 401
     end
 
-    # Retrieves the manifest for the required repository:tag. If everything goes
-    # well, it will return a parsed response from the registry, otherwise it will
-    # raise either ManifestNotFoundError or a RuntimeError.
-    def manifest(repository, tag = "latest")
-      res = perform_request("#{repository}/manifests/#{tag}")
+    # Calls the `/:repository/manifests/:tag` endpoint from the registry. With
+    # the `digest` parameter you can tell this method whether you want the full
+    # manifest for this tag, or just the digest. It defaults to false, meaning
+    # that the caller wants the full manifest. It will raise either a
+    # ManifestNotFoundError or a RuntimeError if something goes wrong.
+    def manifest(repository, tag = "latest", digest = false)
+      method = digest ? "head" : "get"
+      res = perform_request("#{repository}/manifests/#{tag}", method)
+
       if res.code.to_i == 200
-        JSON.parse(res.body)
+        digest ? res["Docker-Content-Digest"] : JSON.parse(res.body)
       elsif res.code.to_i == 404
         handle_error res, repository: repository, tag: tag
       else
@@ -61,11 +65,10 @@ module Portus
       paged_response("#{repository}/tags/list", "tags")
     end
 
-    # Deletes a layer of the specified image. The layer is pointed by the digest
-    # as given by the manifest of the image itself. Returns true if the request
-    # was successful, otherwise it raises an exception.
-    def delete(name, digest)
-      res = perform_request("#{name}/blobs/#{digest}", "delete")
+    # Deletes a blob/manifest of the specified image. Returns true if the
+    # request was successful, otherwise it raises an exception.
+    def delete(name, digest, object = "blobs")
+      res = perform_request("#{name}/#{object}/#{digest}", "delete")
       if res.code.to_i == 202
         true
       elsif res.code.to_i == 404 || res.code.to_i == 405
