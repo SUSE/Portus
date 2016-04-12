@@ -61,6 +61,16 @@ GEM
       sass (>= 3.2.19)
     bootstrap-typeahead-rails (0.10.5.1)
       railties (>= 3.0)
+    brakeman (3.2.1)
+      erubis (~> 2.6)
+      haml (>= 3.0, < 5.0)
+      highline (>= 1.6.20, < 2.0)
+      ruby2ruby (~> 2.3.0)
+      ruby_parser (~> 3.8.1)
+      safe_yaml (>= 1.0)
+      sass (~> 3.0)
+      slim (>= 1.3.6, < 4.0)
+      terminal-table (~> 1.4)
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
@@ -109,8 +119,10 @@ GEM
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     ffaker (2.0.0)
+    ffi (1.9.10)
     font-awesome-rails (4.4.0.0)
       railties (>= 3.2, < 5.0)
+    formatador (0.2.5)
     git-review (2.0.0)
       gli (~> 2.8.0)
       hashie
@@ -121,7 +133,27 @@ GEM
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     gravatar_image_tag (1.2.0)
+    guard (2.13.0)
+      formatador (>= 0.2.4)
+      listen (>= 2.7, <= 4.0)
+      lumberjack (~> 1.0)
+      nenv (~> 0.1)
+      notiffany (~> 0.0)
+      pry (>= 0.9.12)
+      shellany (~> 0.0)
+      thor (>= 0.18.1)
+    guard-compat (1.2.1)
+    guard-rspec (4.6.5)
+      guard (~> 2.1)
+      guard-compat (~> 1.1)
+      rspec (>= 2.99.0, < 4.0)
+    guard-rubocop (1.2.0)
+      guard (~> 2.0)
+      rubocop (~> 0.20)
+    haml (4.0.7)
+      tilt
     hashie (3.4.2)
+    highline (1.7.8)
     hike (1.2.3)
     hirb (0.7.3)
     i18n (0.7.0)
@@ -140,8 +172,12 @@ GEM
       activesupport (>= 3.0.0)
     launchy (2.4.3)
       addressable (~> 2.3)
+    listen (3.0.6)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9.7)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
+    lumberjack (1.0.10)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -152,9 +188,13 @@ GEM
     multi_json (1.8.2)
     multipart-post (2.0.0)
     mysql2 (0.3.18)
+    nenv (0.3.0)
     net-ldap (0.11)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
+    notiffany (0.0.8)
+      nenv (~> 0.1)
+      shellany (~> 0.0)
     octokit (2.0.0)
       sawyer (~> 0.3.0)
     orm_adapter (0.5.0)
@@ -221,9 +261,16 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
     rake (10.3.2)
+    rb-fsevent (0.9.7)
+    rb-inotify (0.9.7)
+      ffi (>= 0.5.0)
     redcarpet (3.3.3)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    rspec (3.3.0)
+      rspec-core (~> 3.3.0)
+      rspec-expectations (~> 3.3.0)
+      rspec-mocks (~> 3.3.0)
     rspec-core (3.3.0)
       rspec-support (~> 3.3.0)
     rspec-expectations (3.3.0)
@@ -249,6 +296,11 @@ GEM
       ruby-progressbar (~> 1.4)
     ruby-graphviz (1.2.2)
     ruby-progressbar (1.7.5)
+    ruby2ruby (2.3.0)
+      ruby_parser (~> 3.1)
+      sexp_processor (~> 4.0)
+    ruby_parser (3.8.1)
+      sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
     sass (3.4.13)
     sass-rails (5.0.3)
@@ -262,6 +314,8 @@ GEM
       uri_template (~> 0.5.0)
     search_cop (1.0.6)
       treetop
+    sexp_processor (4.7.0)
+    shellany (0.0.1)
     shoulda (3.5.0)
       shoulda-context (~> 1.0, >= 1.0.1)
       shoulda-matchers (>= 1.4.1, < 3.0)
@@ -287,6 +341,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
     temple (0.6.7)
+    terminal-table (1.5.2)
     thor (0.18.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
@@ -335,6 +390,7 @@ DEPENDENCIES
   bcrypt
   bootstrap-sass (~> 3.3.4)
   bootstrap-typeahead-rails
+  brakeman
   byebug
   capybara
   codeclimate-test-reporter
@@ -347,6 +403,9 @@ DEPENDENCIES
   font-awesome-rails
   git-review
   gravatar_image_tag
+  guard
+  guard-rspec
+  guard-rubocop
   hirb
   jquery-rails
   jquery-turbolinks
