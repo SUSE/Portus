@@ -64,6 +64,10 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "pry-rails"
     gem "git-review", require: false
     gem "rack-mini-profiler", require: false
+    gem "brakeman", require: false
+    gem "guard", require: false
+    gem "guard-rubocop", require: false
+    gem "guard-rspec", require: false
   end
 
   group :development, :test do
