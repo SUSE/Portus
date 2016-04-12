@@ -9,6 +9,11 @@
 #  updated_at :datetime         not null
 #  use_ssl    :boolean
 #
+# Indexes
+#
+#  index_registries_on_hostname  (hostname) UNIQUE
+#  index_registries_on_name      (name) UNIQUE
+#
 
 # Registry holds data regarding the registries registered in the Portus
 # application.

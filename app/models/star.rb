@@ -8,6 +8,11 @@
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
+# Indexes
+#
+#  index_stars_on_repository_id  (repository_id)
+#  index_stars_on_user_id        (user_id)
+#
 
 class Star < ActiveRecord::Base
   belongs_to :repository
