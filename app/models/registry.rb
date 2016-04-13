@@ -64,8 +64,9 @@ class Registry < ActiveRecord::Base
   # returns three values:
   #   - A Namespace object.
   #   - A String containing the name of the repository.
-  #   - A String containing the name of the tag.
-  def get_namespace_from_event(event)
+  #   - A String containing the name of the tag or nil if the `fetch_tag`
+  #     parameter has been set to false.
+  def get_namespace_from_event(event, fetch_tag = true)
     repo = event["target"]["repository"]
     if repo.include?("/")
       namespace_name, repo = repo.split("/", 2)
@@ -79,8 +80,12 @@ class Registry < ActiveRecord::Base
       return
     end
 
-    tag_name = get_tag_from_target(namespace, repo, event["target"])
-    return if tag_name.nil?
+    if fetch_tag
+      tag_name = get_tag_from_target(namespace, repo, event["target"])
+      return if tag_name.nil?
+    else
+      tag_name = nil
+    end
 
     [namespace, repo, tag_name]
   end

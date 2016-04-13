@@ -74,6 +74,21 @@ class Repository < ActiveRecord::Base
     repository
   end
 
+  # Handle a delete event.
+  def self.handle_delete_event(event)
+    registry = Registry.find_from_event(event)
+    return if registry.nil?
+
+    # Fetch the repo.
+    ns, repo_name, = registry.get_namespace_from_event(event, false)
+    repo = ns.repositories.find_by(name: repo_name)
+    return if repo.nil?
+
+    # Destroy tags and the repository if it's empty now.
+    repo.tags.where(digest: event["target"]["digest"]).map(&:delete_and_update!)
+    repo.destroy if !repo.nil? && repo.tags.empty?
+  end
+
   # Add the repository with the given `repo` name and the given `tag`. The
   # actor is guessed from the given `event`.
   def self.add_repo(event, namespace, repo, tag)
