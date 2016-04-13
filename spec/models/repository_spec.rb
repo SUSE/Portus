@@ -423,7 +423,7 @@ describe Repository do
       expect(Repository.create_or_update!(repo)).to be_nil
     end
 
-    it "dosnt remove tags of same name for different repo" do
+    it "doesn't remove tags of same name for different repo" do
       # create "latest" for repo1 and repo2
       event_one = { "name" => "#{namespace.name}/repo1", "tags" => ["latest"] }
       Repository.create_or_update!(event_one)
@@ -455,6 +455,76 @@ describe Repository do
       expect(tags.size).to eq 2
       expect(tags.flatten.map(&:name).uniq).to eq [tag1.name, tag2.name, tag3.name]
       expect(tags.flatten.map(&:digest).uniq).to eq ["1234", "5678"]
+    end
+  end
+
+  describe "handle delete event" do
+    let!(:registry)   { create(:registry) }
+    let!(:owner)      { create(:user) }
+    let!(:portus)     { create(:user, username: "portus") }
+    let!(:team)       { create(:team, owners: [owner]) }
+    let!(:namespace)  { create(:namespace, team: team, registry: registry) }
+    let!(:repo)       { create(:repository, namespace: namespace) }
+    let!(:tag1)       { create(:tag, repository: repo, digest: "1234") }
+    let!(:tag2)       { create(:tag, repository: repo, digest: tag1.digest) }
+    let!(:tag3)       { create(:tag, repository: repo, digest: "5678") }
+
+    let!(:event) do
+      {
+        "id"        => "6d673710-06b5-48b5-a7d9-94cbaacf776b",
+        "timestamp" => "2016-04-13T15:03:39.595901492+02:00",
+        "action"    => "delete",
+        "target"    => {
+          "digest"     => "sha256:03d564cd8008f956c844cd3e52affb49bc0b65e451087a1ac9013c0140c595df",
+          "repository" => namespace.name + "/" + repo.name
+        },
+        "request"   => {
+          "id"        => "fae66612-ef48-4157-8994-bd146fbdd951",
+          "addr"      => "127.0.0.1:55452",
+          "host"      => registry.hostname,
+          "method"    => "DELETE",
+          "useragent" => "Ruby"
+        },
+        "actor"     => {
+          "name" => "portus"
+        },
+        "source"    => {
+          "addr"       => "bucket:5000",
+          "instanceID" => "741bc03b-6ebe-4ffc-b6b1-4b33d5fc2090"
+        }
+      }
+    end
+
+    it "doesn't do anything for a non-existing tag" do
+      Repository.handle_delete_event(event)
+      expect(Repository.count).to eq 1
+      expect(Tag.count).to eq 3
+    end
+
+    it "does not allow to delete a tag from a non-existing repository" do
+      # Digest exists but not the repo.
+      another = event.dup
+      another["target"]["digest"] = tag1.digest
+      another["target"]["repository"] = "unknown"
+
+      Repository.handle_delete_event(another)
+      expect(Repository.count).to eq 1
+      expect(Tag.count).to eq 3
+    end
+
+    it "deletes an existing tags, and the image when empty" do
+      another = event.dup
+      another["target"]["digest"] = tag1.digest
+
+      Repository.handle_delete_event(another)
+      expect(Repository.count).to eq 1
+      expect(Tag.count).to eq 1 # 2 were deleted because there was a re-tag
+
+      another["target"]["digest"] = tag3.digest
+
+      Repository.handle_delete_event(another)
+      expect(Repository.count).to eq 0
+      expect(Tag.count).to eq 0
     end
   end
 end
