@@ -1,0 +1,17 @@
+li
+  .activitie-container
+    .activity-type.create-webhook
+      i.fa.fa-server
+    .user-image
+      = user_image_tag(activity.owner.email)
+    .description
+      h6
+        strong
+          = "#{activity.owner.username} created the "
+        = link_to activity.trackable.url, [activity.trackable.namespace, activity.trackable]
+        = " webhook under the "
+        = link_to activity.trackable.namespace.name, activity.trackable.namespace
+        = " namespace"
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at

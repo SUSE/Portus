@@ -23,6 +23,7 @@
 class Namespace < ActiveRecord::Base
   include PublicActivity::Common
 
+  has_many :webhooks
   has_many :repositories
   belongs_to :registry
   belongs_to :team

@@ -1,0 +1,15 @@
+li
+  .activitie-container
+    .activity-type.change-webhook-visibility
+      i.fa.fa-unlock
+    .user-image
+      = user_image_tag(activity.owner.email)
+    .description
+      h6
+        strong
+          = "#{activity.owner.username} set the "
+        = link_to activity.trackable.url, [activity.trackable.namespace, activity.trackable]
+        = " webhook as enabled"
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at
