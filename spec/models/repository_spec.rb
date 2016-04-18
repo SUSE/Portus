@@ -392,6 +392,10 @@ describe Repository do
     let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
+    before :each do
+      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return("digest")
+    end
+
     it "adds and deletes tags accordingly" do
       # Removes the existing tag and adds two.
       repo = { "name" => "#{namespace.name}/repo1", "tags" => ["latest", "0.1"] }
@@ -417,6 +421,7 @@ describe Repository do
       repo = Repository.create_or_update!(repo)
       expect(repo.name).to eq "busybox"
       expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
+      expect(repo.tags.map(&:digest).uniq).to match_array(["digest"])
 
       # Trying to create a repo into an unknown namespace.
       repo = { "name" => "unknown/repo1", "tags" => ["latest", "0.1"] }
