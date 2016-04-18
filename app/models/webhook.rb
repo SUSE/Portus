@@ -19,6 +19,8 @@
 #
 
 class Webhook < ActiveRecord::Base
+  include PublicActivity::Common
+
   enum request_method: ["GET", "POST"]
   enum content_type: ["application/json", "application/x-www-form-urlencoded"]
 
@@ -28,4 +30,18 @@ class Webhook < ActiveRecord::Base
   has_many :headers, class_name: "WebhookHeader"
 
   validates :url, presence: true
+
+  before_destroy :update_activities!
+
+  private
+
+  def update_activities!
+    PublicActivity::Activity.where(trackable: self).update_all(
+      parameters: {
+        namespace_id:   namespace.id,
+        namespace_name: namespace.clean_name,
+        webhook_url:    url
+      }
+    )
+  end
 end

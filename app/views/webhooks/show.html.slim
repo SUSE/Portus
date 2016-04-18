@@ -1,0 +1,119 @@
+.panel-group
+  .collapse id="update_webhook_#{@webhook.id}"
+    = form_for [@namespace, @webhook], remote: true, html: {class: 'form-horizontal', role: 'form'} do |f|
+      .panel.panel-default
+        .panel-heading
+          .input-group
+            = f.text_field(:url, class: 'form-control', required: true, placeholder: html_escape(@webhook.url), input_html: { tabindex: 1 })
+            .input-group-btn
+              button.btn.btn-link.btn-xs.btn-edit-webhook[
+                value="#{@webhook.id}"
+                type="button"
+                class="button_edit_webhook"]
+                i.fa.fa-close
+                | Edit webhook
+        .panel-body
+          .form-group
+            = f.label :request_method, {class: 'control-label col-md-2'}
+            .col-md-7
+              = f.select(:request_method, Webhook.request_methods.keys, {}, {class: 'form-control'})
+          .form-group
+            = f.label :content_type, {class: 'control-label col-md-2'}
+            .col-md-7
+              = f.select(:content_type, Webhook.content_types.keys, {}, {class: 'form-control'})
+          .form-group
+            = f.label :username, {class: 'control-label col-md-2'}
+            .col-md-7
+              = f.text_field(:username, class: 'form-control', required: false, placeholder: "Username for authentication")
+          .form-group
+            = f.label :password, {class: 'control-label col-md-2'}
+            .col-md-7
+              = f.text_field(:password, class: 'form-control', required: false, placeholder: "Password for authentication")
+          .form-group
+            .col-md-offset-2.col-md-7
+              = f.submit('Save', class: 'btn btn-primary')
+          .errors
+
+  .panel.panel-default.webhook_information
+    .panel-heading
+      h5
+        strong
+          '#{@webhook.url}
+        ' webhook
+        .pull-right
+          button.btn.btn-link.btn-xs.btn-edit-webhook[
+            value="#{@webhook.id}"
+            class="button_edit_webhook"]
+            i.fa.fa-pencil
+            | Edit webhook
+    .panel-body
+      = render partial: "detail", locals: {webhook: @webhook}
+
+#add_webhook_header_form.collapse
+  = form_for :webhook_header, url: namespace_webhook_headers_path(@namespace, @webhook), remote: true, html: {id: 'new-header-form', class: 'form-horizontal', role: 'form'} do |f|
+    .form-group
+      = f.label :name, {class: 'control-label col-md-2'}
+      .col-md-7
+        = f.text_field(:name, class: 'form-control', required: true, placeholder: "Name")
+    .form-group
+      = f.label :value, {class: 'control-label col-md-2'}
+      .col-md-7
+        = f.text_field(:value, class: 'form-control', required: true, placeholder: "Value")
+    .form-group
+      .col-md-offset-2.col-md-7
+        = f.submit('Create', class: 'btn btn-primary')
+    .errors
+
+.panel.panel-default
+  .panel-heading
+    h5
+      ' Headers
+      .pull-right
+        a#add_webhook_header_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
+          i.fa.fa-plus-circle
+          | Create new header
+  .panel-body
+    .table-responsive
+      table.table.table-stripped.table-hover
+        colgroup
+            col.col-20
+            col.col-70
+            col.col-10
+        thead
+          tr
+            th Name
+            th Value
+            th Remove
+        tbody#webhook_headers
+          - @webhook.headers.each do |header|
+            = render partial: 'webhook_headers/webhook_header', locals: {namespace: @namespace, webhook: @webhook, webhook_header: header}
+
+.panel.panel-default
+  .panel-heading
+    h5
+      ' Deliveries
+  .panel-body
+    .table-responsive
+      table.table.table-stripped.table-hover
+        colgroup
+            col.col-90
+            col.col-10
+        thead
+          tr
+            th UUID
+            th Retrigger
+        tbody#webhook_deliveries
+          - @deliveries.each do |delivery|
+            tr
+              td
+                - if delivery.success?
+                  i.fa.fa-check.fa-lg.text-success
+                - else
+                  i.fa.fa-close.fa-lg.text-danger
+                = delivery.uuid
+              td
+                button.btn.btn-default.btn-retrigger-webhook[
+                  value="#{delivery.uuid}"
+                  class="details"]
+                  i.fa.fa-refresh.fa-lg
+  .panel-footer= paginate(@deliveries)

@@ -23,4 +23,8 @@ class WebhookDelivery < ActiveRecord::Base
   belongs_to :webhook
 
   validates :uuid, uniqueness: { scope: :webhook_id }
+
+  def success?
+    status == 200
+  end
 end
