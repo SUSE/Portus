@@ -137,8 +137,16 @@ class Repository < ActiveRecord::Base
     to_be_created_tags = repo["tags"] - tags
     to_be_deleted_tags = tags - repo["tags"]
 
+    client = Registry.get.client
     to_be_created_tags.each do |tag|
-      Tag.create!(name: tag, repository: repository, author: portus)
+      # Try to fetch the manifest digest of the tag.
+      begin
+        digest = client.manifest(name, tag, true)
+      rescue
+        digest = ""
+      end
+
+      Tag.create!(name: tag, repository: repository, author: portus, digest: digest)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
 
