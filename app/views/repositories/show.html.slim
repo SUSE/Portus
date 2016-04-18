@@ -28,13 +28,22 @@
             th Pushed at
         tbody
           - @tags.each do |tag|
-            tr
-              td
-                - tag.each do |t|
-                  .label.label-success
-                    = t.name
-              td= tag.first.author.username
-              td= tag.first.created_at
+            - if tag.first.digest.empty?
+              - tag.each do |t|
+                tr
+                  td
+                    .label.label-success
+                      = t.name
+                  td= tag.first.author.username
+                  td= tag.first.created_at
+            - else
+              tr
+                td
+                  - tag.each do |t|
+                    .label.label-success
+                      = t.name
+                td= tag.first.author.username
+                td= tag.first.created_at
 
 #write_comment_form.collapse
   = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|

@@ -39,5 +39,21 @@ feature "Repositories support" do
       expect(find("#star-counter")).to have_content("0")
       expect(repo.stars.count).to be 0
     end
+
+    scenario "Groupped tags are handled properly", js: true do
+      ["", "", "same", "same", "another", "yet-another"].each_with_index do |digest, idx|
+        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest)
+      end
+
+      expect = [["tag0"], ["tag1"], ["tag2", "tag3"], ["tag4"], ["tag5"]]
+
+      visit repository_path(repository)
+      page.all(".tags tr").each_with_index do |row, idx|
+        # Skip the header.
+        next if idx == 0
+
+        expect[idx - 1].each { |tag| expect(row.text.include?(tag)).to be_truthy }
+      end
+    end
   end
 end
