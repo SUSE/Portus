@@ -49,4 +49,44 @@ namespace :portus do
       exit(-3)
     end
   end
+
+  desc "Update the manifest digest of tags"
+  task :update_tags, [:update] => [:environment] do |_, args|
+    # Warning
+    puts <<HERE
+This rake task may take a while depending on how many images have been stored
+in your private registry. If you are running this in production it's
+recommended that the registry is running in "readonly" mode, so there are no
+race conditions with concurrent accesses.
+
+HERE
+
+    unless ENV["PORTUS_FORCE_DIGEST_UPDATE"]
+      print "Are you sure that you want to proceed with this ? (y/N) "
+      opt = $stdin.gets.strip
+      exit 0 if opt != "y" && opt != "Y" && opt != "yes"
+    end
+
+    # Fetch the tags to be updated.
+    update = args[:update] == "true" || args[:update] == "t"
+    tags = update ? Tag.all : Tag.where(digest: "")
+
+    # Some information on the amount of tags to be updated.
+    if tags.empty?
+      puts "There are no tags to be updated."
+      exit 0
+    else
+      puts "Updating a total of #{tags.size} tags..."
+    end
+
+    # And for each tag fetch its digest and update the DB.
+    client = Registry.get.client
+    tags.each_with_index do |t, index|
+      repo_name = t.repository.name
+      puts "[#{index + 1}/#{tags.size}] Updating #{repo_name}/#{t.name}"
+      digest = client.manifest(t.repository.name, t.name, true)
+      t.update_attributes(digest: digest)
+    end
+    puts
+  end
 end
