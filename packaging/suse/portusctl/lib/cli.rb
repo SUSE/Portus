@@ -130,10 +130,10 @@ class Cli < Thor
   def make_admin(username)
     if username.nil? || username.empty?
       # This will print the list of usernames
-      Runner.bundler_exec("rake", "make_admin", {})
+      Runner.bundler_exec("rake", "portus:make_admin", {})
     else
       # Rake tasks look weird when they accept parameters
-      Runner.bundler_exec("rake", "make_admin[#{username}]", {})
+      Runner.bundler_exec("rake", "portus:make_admin[#{username}]", {})
     end
   end
 
