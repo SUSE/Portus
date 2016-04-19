@@ -28,7 +28,7 @@
             th Pushed at
         tbody
           - @tags.each do |tag|
-            - if tag.first.digest.empty?
+            - if tag.first.digest.blank?
               - tag.each do |t|
                 tr
                   td
