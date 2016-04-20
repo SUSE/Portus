@@ -37,7 +37,7 @@ if [ "$PORTUS_KEY_PATH" != "" -a "$PORTUS_MACHINE_FQDN" != "" -a ! -f "$PORTUS_K
     echo Creating Certificate
     PORTUS_CRT_PATH=`echo $PORTUS_KEY_PATH|sed 's/\.key$/.crt/'`
     export ALTNAME=`hostname`
-    export IPADDR=`ip addr list eth0 |grep "inet " |cut -d' ' -f6|cut -d/ -f1`
+    export IPADDR=`ip addr list eth0 |grep "inet " |cut -d' ' -f6|cut -d/ -f1|tail -1`
     openssl req -x509 -newkey rsa:2048 -keyout "$PORTUS_KEY_PATH" -out "$PORTUS_CRT_PATH" -days 3650 -nodes -subj "/CN=$PORTUS_MACHINE_FQDN" -extensions SAN -config <(cat /etc/ssl/openssl.cnf <(printf "[SAN]\nsubjectAltName=DNS:registry,DNS:$PORTUS_MACHINE_FQDN,DNS:$ALTNAME,IP:$IPADDR,DNS:portus"))
 
 fi
