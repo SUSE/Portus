@@ -85,6 +85,12 @@ EOM
 
   # Creates the database and performs the migrations
   def create_database
+    if dockerized?
+      puts "Running inside of a docker container"
+      puts "No systemd support, skipping mysql configuration"
+      return
+    end
+
     Runner.activate_service("mysql") if database_local?
 
     env_variables = {
