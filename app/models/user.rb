@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
     }
 
   # Actions performed before/after create.
-  validate :private_namespace_available, on: :create
+  validate :private_namespace_and_team_available, on: :create
   after_create :create_personal_namespace!
 
   has_many :team_users
@@ -64,9 +64,11 @@ class User < ActiveRecord::Base
     !(Portus::LDAP.enabled? && !ldap_name.nil?)
   end
 
-  def private_namespace_available
-    return unless Namespace.exists?(name: username)
-    errors.add(:username, "cannot be used as name for private namespace")
+  # It adds an error if the username clashes with either a namespace or a team.
+  def private_namespace_and_team_available
+    return unless Namespace.exists?(name: username) || Team.exists?(name: username)
+    errors.add(:username, "'#{username}' cannot be used: there's either a "\
+      "namespace or a team named like this.")
   end
 
   # Returns true if the current user is the Portus user.
@@ -81,10 +83,13 @@ class User < ActiveRecord::Base
     # the registry is not configured yet, we cannot create the namespace
     return unless Registry.any?
 
-    team = Team.find_by(name: username)
-    if team.nil?
-      team = Team.create!(name: username, owners: [self], hidden: true)
-    end
+    # Leave early if the namespace already exists.
+    ns = Namespace.find_by(name: username)
+    return ns if ns
+
+    # Note that this shouldn't be a problem since the User controller will make
+    # sure that we don't create a user that clashes with this team.
+    team = Team.create!(name: username, owners: [self], hidden: true)
 
     default_description = "This personal namespace belongs to #{username}."
     Namespace.find_or_create_by!(
