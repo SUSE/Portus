@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 4.2.2"
+gem "rails", "~> 4.2.6"
 gem "jquery-rails"
 gem "sass-rails", ">= 3.2"
 gem "slim"
@@ -56,7 +56,6 @@ end
 # PACKAGING=yes bundle list
 
 unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
-
   group :development do
     gem "annotate"
     gem "rails-erd"
@@ -64,7 +63,6 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "pry-rails"
     gem "git-review", require: false
     gem "rack-mini-profiler", require: false
-    gem "brakeman", require: false
     gem "guard", require: false
     gem "guard-rubocop", require: false
     gem "guard-rspec", require: false
@@ -81,6 +79,7 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "factory_girl_rails"
     gem "ffaker"
     gem "rubocop", require: false
+    gem "brakeman", require: false
   end
 
   group :test do
@@ -96,5 +95,4 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "timecop"
     gem "codeclimate-test-reporter", group: :test, require: nil
   end
-
 end
