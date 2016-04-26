@@ -47,7 +47,8 @@ describe User do
     expect(user.save).to be false
     expect(user.errors.size).to eq(1)
     expect(user.errors.first)
-      .to match_array([:username, "cannot be used as name for private namespace"])
+      .to match_array([:username, "'coolname' cannot be used: there's either a namespace or " \
+        "a team named like this."])
   end
 
   it "#email_required?" do
