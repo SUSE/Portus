@@ -69,7 +69,7 @@ each Portus version:
 | master | 1.6+ | 2.0+ |
 | 2.0.0 & 2.0.1 | 1.6 to 1.9 | 2.0 to 2.2 |
 | 2.0.2 | 1.6 to 1.9 | 2.0+ |
-| 2.0.3 | 1.6+ | 2.0+ |
+| 2.0.3+ | 1.6+ | 2.0+ |
 
 Let's detail some of the version being specified:
 
