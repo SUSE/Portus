@@ -11,6 +11,11 @@ RSpec.describe TeamsController, type: :controller do
 
   let(:owner) { create(:user) }
   let(:team) { create(:team, description: "short test description", owners: [owner]) }
+  let(:hidden_team) do
+    create(:team, name: "portus_global_team_1",
+           description: "short test description", owners: [owner],
+           hidden: true)
+  end
 
   describe "GET #show" do
 
@@ -38,6 +43,12 @@ RSpec.describe TeamsController, type: :controller do
       get :show, id: team.id
 
       expect(response.status).to eq 401
+    end
+
+    it "drops requests to a hidden global team" do
+      sign_in owner
+
+      expect { get :show, id: hidden_team.id }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "does not display disabled users" do

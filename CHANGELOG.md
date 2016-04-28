@@ -1,3 +1,25 @@
+## 2.0.4
+
+### RPM
+
+- Automate Portus release. See [commit](https://github.com/SUSE/Portus/commit/63ce12464f54a1d2ffeb427850e20595b26bc52f).
+- Rename Portus to portus on the RPM. See [commit](https://github.com/SUSE/Portus/commit/648d96c39ec6c10926b652579cf3a4c9ade69781).
+- Refactored RPM. See [commit](https://github.com/SUSE/Portus/commit/378c66e0119a34a03adbc60cc489a19f9e77f4dd).
+- Wrap crono with the exec command in the RPM. See [commit](https://github.com/SUSE/Portus/commit/78f8f949c46e6cf41f058237683e2d8f5795e53e).
+- Require net-tools on the RPM. See [commit](https://github.com/SUSE/Portus/commit/919452db850709932bbf9e7f06a8dcdc83def931).
+
+### portusctl
+
+- Use the proper `make_admin` task. See [commit](https://github.com/SUSE/Portus/commit/aa4997ab48a4a15e9182ce6c48e9521501b81c97).
+- Don't configure mysql in Docker. See [commit](https://github.com/SUSE/Portus/commit/2025da82f3e5550672b09e249c3cfd9a924aa64d).
+- Added the portus:info task. See [commit](https://github.com/SUSE/Portus/commit/152ce27725f7896cad2dc024d29f9b33ab0fc83a).
+
+### Other fixes
+
+- Logout button and search repository are now appearing in small devices. See [commit](https://github.com/SUSE/Portus/commit/9dd5149a2561d62266124f36ab2404817aa826d5).
+- Don't allow access to the hidden global team. See [commit](https://github.com/SUSE/Portus/commit/a540fd545d59bf72ef3a073d28617c87d978d44d).
+- Update ruby versions on travis. See [commit1](https://github.com/SUSE/Portus/commit/f1f34056863186d649a8412916ce33de0ac6dd78) and [commit2](https://github.com/SUSE/Portus/commit/0b34c0c56dd3458cc4cce6afba354f9659efd2ee).
+
 ## 2.0.3
 
 - Fixed crono job when a repository could not be found. See [commit](https://github.com/SUSE/Portus/commit/120301caf665f7b637cd7ced7282461436dc1eb7).
