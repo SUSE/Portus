@@ -94,5 +94,6 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "json-schema"
     gem "timecop"
     gem "codeclimate-test-reporter", group: :test, require: nil
+    gem "docker-api", "~> 1.28.0"
   end
 end
