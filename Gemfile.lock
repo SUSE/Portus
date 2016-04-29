@@ -254,7 +254,7 @@ GEM
       ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
-    rails_stdout_logging (0.0.4)
+    rails_stdout_logging (0.0.5)
     railties (4.2.6)
       actionpack (= 4.2.6)
       activesupport (= 4.2.6)
@@ -423,7 +423,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (~> 4.2.6)
   rails-erd
-  rails_stdout_logging
+  rails_stdout_logging (~> 0.0.5)
   redcarpet
   rspec-rails
   rubocop
