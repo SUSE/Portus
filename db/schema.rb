@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20151215152138) do
   create_table "crono_jobs", force: :cascade do |t|
     t.string   "job_id",            limit: 255, null: false
     t.datetime "last_performed_at"
-    t.boolean  "healthy",           limit: 1
+    t.boolean  "healthy"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end
@@ -66,9 +66,9 @@ ActiveRecord::Schema.define(version: 20151215152138) do
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
     t.integer  "team_id",     limit: 4
-    t.boolean  "public",      limit: 1,     default: false
+    t.boolean  "public",                    default: false
     t.integer  "registry_id", limit: 4,                     null: false
-    t.boolean  "global",      limit: 1,     default: false
+    t.boolean  "global",                    default: false
     t.text     "description", limit: 65535
   end
 
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 20151215152138) do
     t.string   "hostname",   limit: 255, null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.boolean  "use_ssl",    limit: 1
+    t.boolean  "use_ssl"
   end
 
   add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true, using: :btree
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 20151215152138) do
     t.string   "name",        limit: 255
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
-    t.boolean  "hidden",      limit: 1,     default: false
+    t.boolean  "hidden",                    default: false
     t.text     "description", limit: 65535
   end
 
@@ -157,8 +157,8 @@ ActiveRecord::Schema.define(version: 20151215152138) do
     t.string   "last_sign_in_ip",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "admin",                  limit: 1,   default: false
-    t.boolean  "enabled",                limit: 1,   default: true
+    t.boolean  "admin",                              default: false
+    t.boolean  "enabled",                            default: true
     t.string   "ldap_name",              limit: 255
     t.integer  "failed_attempts",        limit: 4,   default: 0
     t.datetime "locked_at"

@@ -16,19 +16,23 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ruby-head
+
 before_install:
   - |
     bash -c " # Install MariaDB
     sudo bash .travis_mariadb.sh
     "
+
 before_script:
   - mysql -e 'create database portus_test;'
+
 script:
   - bundle exec rspec spec
   - bundle exec rspec packaging/suse/portusctl/spec
   - bundle exec rubocop -V
   - bundle exec rubocop -F
   - bundle exec brakeman -z -A -x CheckUnscopedFind,CheckRender
+
 env:
   global:
   # OSC_CREDENTIALS are kept secret
