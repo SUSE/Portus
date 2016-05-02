@@ -179,7 +179,8 @@ class Registry < ActiveRecord::Base
   #
   # Returns the name of the tag if found, nil otherwise.
   def get_tag_from_manifest(target)
-    client.manifest(target["repository"], target["digest"])["tag"]
+    _, _, manifest = client.manifest(target["repository"], target["digest"])
+    manifest["tag"]
   end
 
   # Create the global namespace for this registry and create the personal

@@ -69,7 +69,11 @@ HERE
 
     # Fetch the tags to be updated.
     update = args[:update] == "true" || args[:update] == "t"
-    tags = update ? Tag.all : Tag.where(digest: "")
+    if update
+      tags = Tag.all
+    else
+      tags = Tag.where("tags.digest='' OR tags.image_id=''")
+    end
 
     # Some information on the amount of tags to be updated.
     if tags.empty?
@@ -84,8 +88,13 @@ HERE
     tags.each_with_index do |t, index|
       repo_name = t.repository.name
       puts "[#{index + 1}/#{tags.size}] Updating #{repo_name}/#{t.name}"
-      digest = client.manifest(t.repository.name, t.name, true)
-      t.update_attributes(digest: digest)
+
+      begin
+        id, digest, = client.manifest(t.repository.name, t.name)
+        t.update_attributes(digest: digest, image_id: id)
+      rescue StandardError => e
+        puts "Could not get the manifest for #{repo_name}: #{e.message}"
+      end
     end
     puts
   end

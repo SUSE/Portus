@@ -19,12 +19,14 @@
     .table-responsive.tags
       table.table.table-stripped.table-hover
         col.col-40
-        col.col-40
+        col.col-20
+        col.col-20
         col.col-20
         thead
           tr
             th Tag
             th Author
+            th Image
             th Pushed at
         tbody
           - @tags.each do |tag|
@@ -35,6 +37,12 @@
                     .label.label-success
                       = t.name
                   td= tag.first.author.username
+                  td
+                    - if tag.first.image_id.empty?
+                      = "-"
+                    - else
+                      span[title="sha256:#{tag.first.image_id}"]
+                        = tag.first.image_id[0, 12]
                   td= tag.first.created_at
             - else
               tr
@@ -43,6 +51,12 @@
                     .label.label-success
                       = t.name
                 td= tag.first.author.username
+                td
+                  - if tag.first.image_id.empty?
+                    = "-"
+                  - else
+                    span[title="sha256:#{tag.first.image_id}"]
+                      = tag.first.image_id[0, 12]
                 td= tag.first.created_at
 
 #write_comment_form.collapse
