@@ -9,6 +9,7 @@
 #  updated_at    :datetime         not null
 #  user_id       :integer
 #  digest        :string(255)
+#  image_id      :string(255)      default("")
 #
 # Indexes
 #

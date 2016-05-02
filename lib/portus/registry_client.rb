@@ -28,17 +28,25 @@ module Portus
       !res.nil? && res.code.to_i == 401
     end
 
-    # Calls the `/:repository/manifests/:tag` endpoint from the registry. With
-    # the `digest` parameter you can tell this method whether you want the full
-    # manifest for this tag, or just the digest. It defaults to false, meaning
-    # that the caller wants the full manifest. It will raise either a
-    # ManifestNotFoundError or a RuntimeError if something goes wrong.
-    def manifest(repository, tag = "latest", digest = false)
-      method = digest ? "head" : "get"
-      res = perform_request("#{repository}/manifests/#{tag}", method)
+    # Calls the `/:repository/manifests/:tag` endpoint from the registry. It
+    # returns a three-sized array:
+    #
+    #   - The image ID (without the "sha256:" prefix): only available for v2
+    #     manifests (nil if v1).
+    #   - The manifest digest.
+    #   - The manifest itself as a ruby hash.
+    #
+    # It will raise either a ManifestNotFoundError or a RuntimeError if
+    # something goes wrong.
+    def manifest(repository, tag = "latest")
+      res = perform_request("#{repository}/manifests/#{tag}", "get")
 
       if res.code.to_i == 200
-        digest ? res["Docker-Content-Digest"] : JSON.parse(res.body)
+        mf = JSON.parse(res.body)
+        id = mf.try(:[], "config").try(:[], "digest")
+        id = id.split(":").last if id.is_a? String
+        digest = res["Docker-Content-Digest"]
+        [id, digest, mf]
       elsif res.code.to_i == 404
         handle_error res, repository: repository, tag: tag
       else

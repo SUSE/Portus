@@ -41,7 +41,7 @@ class RegistryMock < Registry
       end
     else
       def o.manifest(*_)
-        { "tag" => "latest" }
+        ["id", "digest", { "tag" => "latest" }]
       end
 
       def o.tags(*_)

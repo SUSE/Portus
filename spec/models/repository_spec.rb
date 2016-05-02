@@ -393,7 +393,9 @@ describe Repository do
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
     before :each do
-      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return("digest")
+      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return(
+        ["id", "digest", ""])
+      allow(Repository).to receive(:id_and_digest_from_event).and_return(["id", "digest"])
     end
 
     it "adds and deletes tags accordingly" do

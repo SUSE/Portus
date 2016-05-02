@@ -46,8 +46,10 @@ when "manifest"
     name, tag = ARGV[1], "latest"
   end
 
-  puts JSON.pretty_generate(registry.client.manifest(name, tag))
-  puts "Manifest digest: #{registry.client.manifest(name, tag, true)}"
+  id, digest, manifest = registry.client.manifest(name, tag)
+  puts "Image ID: #{id} (truncated as in Docker: #{id[0, 12]})"
+  puts "Manifest digest: #{digest}"
+  puts JSON.pretty_generate(manifest)
 when "ping"
   # No registry was found, trying to ping another one.
   if registry.nil?

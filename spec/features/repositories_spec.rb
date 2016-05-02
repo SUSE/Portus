@@ -42,17 +42,20 @@ feature "Repositories support" do
 
     scenario "Groupped tags are handled properly", js: true do
       ["", "", "same", "same", "another", "yet-another"].each_with_index do |digest, idx|
-        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest)
+        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
+               image_id: "Image")
       end
 
-      expect = [["tag0"], ["tag1"], ["tag2", "tag3"], ["tag4"], ["tag5"]]
+      expectations = [["tag0"], ["tag1"], ["tag2", "tag3"], ["tag4"], ["tag5"]]
 
       visit repository_path(repository)
       page.all(".tags tr").each_with_index do |row, idx|
+        expect(row.text.include?("Image")).to be_truthy
+
         # Skip the header.
         next if idx == 0
 
-        expect[idx - 1].each { |tag| expect(row.text.include?(tag)).to be_truthy }
+        expectations[idx - 1].each { |tag| expect(row.text.include?(tag)).to be_truthy }
       end
     end
   end

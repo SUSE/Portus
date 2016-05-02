@@ -104,10 +104,27 @@ class Repository < ActiveRecord::Base
       return
     end
 
-    digest = event.try(:[], "target").try(:[], "digest")
-    tag = repository.tags.create(name: tag, author: actor, digest: digest)
+    # And store the tag and its activity.
+    id, digest = Repository.id_and_digest_from_event(event, repo)
+    tag = repository.tags.create(name: tag, author: actor, digest: digest, image_id: id)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
+  end
+
+  # Fetch the image ID and the manifest digest from the given event.
+  def self.id_and_digest_from_event(event, repo)
+    digest = event.try(:[], "target").try(:[], "digest")
+    id = ""
+
+    unless digest.blank?
+      begin
+        id, = Registry.get.client.manifest(repo, digest)
+      rescue StandardError => e
+        logger.warn "Could not fetch manifest for '#{repo}' with digest '#{digest}': " + e.message
+      end
+    end
+
+    [id, digest]
   end
 
   # Create or update the given repository in JSON format. The given repository
@@ -141,12 +158,13 @@ class Repository < ActiveRecord::Base
     to_be_created_tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
-        digest = client.manifest(name, tag, true)
+        id, digest, = client.manifest(name, tag)
       rescue
+        id = ""
         digest = ""
       end
 
-      Tag.create!(name: tag, repository: repository, author: portus, digest: digest)
+      Tag.create!(name: tag, repository: repository, author: portus, digest: digest, image_id: id)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
 
