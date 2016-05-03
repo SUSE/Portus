@@ -7,6 +7,7 @@
 #  namespace_id :integer
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  marked       :boolean          default("0")
 #
 # Indexes
 #
@@ -532,6 +533,56 @@ describe Repository do
       Repository.handle_delete_event(another)
       expect(Repository.count).to eq 0
       expect(Tag.count).to eq 0
+    end
+  end
+
+  describe "#delete_and_update!" do
+    let(:registry)        { create(:registry, hostname: "registry.test.lan") }
+    let(:user)            { create(:user) }
+    let(:repository_name) { "busybox" }
+    let(:tag_name)        { "latest" }
+
+    it "deletes the repository and updates activities accordingly" do
+      event = { "actor" => { "name" => user.username } }
+
+      # First we create it, and make sure that it creates the activity.
+      repo = nil
+      expect do
+        repo = Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.first
+      expect(activity.trackable_type).to eq "Repository"
+      expect(activity.trackable_id).to eq Repository.first.id
+      expect(activity.key).to eq "repository.push"
+      expect(activity.owner_id).to eq user.id
+      expect(activity.parameters).to be_empty
+
+      # And now delete and see what happens.
+      expect do
+        repo.delete_and_update!(user)
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      # The original push activity has changed, so it's still trackable.
+      activity = PublicActivity::Activity.first
+      expect(activity.trackable_type).to eq "Namespace"
+      expect(activity.trackable_id).to eq registry.global_namespace.id
+      expect(activity.key).to eq "repository.push"
+      expect(activity.owner_id).to eq user.id
+      expect(activity.parameters).to be_empty
+
+      # There's now a delete activity.
+      activity = PublicActivity::Activity.last
+      expect(activity.trackable_type).to eq "Namespace"
+      expect(activity.trackable_id).to eq registry.global_namespace.id
+      expect(activity.key).to eq "namespace.delete"
+      expect(activity.owner_id).to eq user.id
+      expect(activity.parameters).to eq(repository_name: repository_name,
+                                        namespace_id:    registry.global_namespace.id,
+                                        namespace_name:  registry.global_namespace.clean_name)
+
+      # Of course, the repo should be removed
+      expect(Repository.count).to eq 0
     end
   end
 end

@@ -8,9 +8,8 @@
 #  updated_at  :datetime         not null
 #  team_id     :integer
 #  public      :boolean          default("0")
-#  registry_id :integer          not null
+#  registry_id :integer
 #  global      :boolean          default("0")
-#  description :text(65535)
 #
 # Indexes
 #
