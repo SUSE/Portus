@@ -1,7 +1,7 @@
 class TagsController < ApplicationController
   include DeleteEnabled
 
-  # Removes all tags the match the digest of the tag with the given ID.
+  # Removes all tags that match the digest of the tag with the given ID.
   # Moreover, it will also remove the image if it's left empty after removing
   # the tags.
   def destroy
