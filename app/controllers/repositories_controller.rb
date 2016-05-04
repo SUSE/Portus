@@ -1,5 +1,5 @@
 class RepositoriesController < ApplicationController
-  include DeleteEnabled
+  include Deletable
 
   before_action :set_repository, only: [:show, :destroy, :toggle_star]
 

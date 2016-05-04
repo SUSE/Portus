@@ -1,6 +1,6 @@
-# DeleteEnabled redirects the user back if delete support is not enabled. A
+# Deletable redirects the user back if delete support is not enabled. A
 # `before_action` will be created for the :destroy method.
-module DeleteEnabled
+module Deletable
   extend ActiveSupport::Concern
 
   included do
