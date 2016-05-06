@@ -4,6 +4,18 @@ class Cli < Thor
   option "secure", desc: "Toggle SSL usage for Portus", type: :boolean, default: true
 
   # SSL certificate options
+  option "ssl-gen-self-signed-certs",
+    desc:    "Generate self-signed certificates",
+    type:    :boolean,
+    default: false
+  option "ssl-certs-dir",
+    desc:      "Location of own certificates",
+    default:   "",
+    long_desc: <<-LONGDESC
+Looks for the following required certificate files in the specified folder:
+   * `<custom dir>/<hostname>-ca.key`: the certificate key
+   * `<custom dir>/<hostname>-ca.crt`: the certificate file
+  LONGDESC
   option "ssl-organization",
     desc:    "SSL certificate: organization",
     default: "SUSE Linux GmbH" # gensslcert -o
@@ -107,7 +119,7 @@ class Cli < Thor
 
   def setup
     ensure_root
-    check_setup_flags
+    check_setup_flags options
 
     configure = Configurator.new(options)
     configure.apache
@@ -168,22 +180,5 @@ class Cli < Thor
     Runner.produce_crono_log_file!
     Runner.exec("cp", ["/var/log/apache2/error_log", File.join(PORTUS_ROOT, "log/production.log")])
     Runner.tar_files("log/production.log", "log/crono.log", "log/versions.log")
-  end
-
-  private
-
-  def ensure_root
-    return if Process.uid == 0
-
-    warn "Must run as root user"
-    exit 1
-  end
-
-  def check_setup_flags
-    return unless options["ldap-enable"] && \
-        (options["ldap-hostname"].nil? || options["ldap-hostname"].empty?)
-
-    warn "LDAP support is enabled but you didn't specify a value for ldap-hostname"
-    exit 1
   end
 end
