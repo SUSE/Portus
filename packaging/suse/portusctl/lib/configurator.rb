@@ -28,20 +28,12 @@ class Configurator
   end
 
   # Performs the following operations:
-  #   * create the ssl certificates
-  #   * copy the cerificates to the right locations
+  #   * create the ssl certificates if specified
+  #   * check the presence of the required files
+  #   * copy the certificates to the right locations
   def ssl
-    unless File.exist?("/etc/apache2/ssl.key/#{HOSTNAME}-ca.key")
-      puts <<EOM
-Generating private key and certificate"
-************************************************************************
-If you want to use your own private key and certificates, upload them to
-  * /etc/apache2/ssl.key/#{HOSTNAME}-ca.key"
-  * /etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
-  * /etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
-and then re-run this script"
-************************************************************************
-EOM
+    if @options["ssl-gen-self-signed-certs"]
+      puts "Generating private key and certificate"
       args = [
         "-C", HOSTNAME,
         "-n", HOSTNAME,
@@ -55,23 +47,32 @@ EOM
       Runner.exec("gensslcert", args)
     end
 
+    handle_own_certs @options["ssl-certs-dir"].chomp \
+      unless @options["ssl-certs-dir"].chomp.empty?
+
+    key_file = "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key"
+    crt_file = "/etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
+
+    missing_file(key_file) unless File.exist?(key_file)
+    missing_file(crt_file) unless File.exist?(crt_file)
+
     FileUtils.chown("wwwrun", "www", "/etc/apache2/ssl.key")
     FileUtils.chmod(0750, "/etc/apache2/ssl.key")
 
-    FileUtils.chown("wwwrun", "www", "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key")
-    FileUtils.chmod(0440, "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key")
+    FileUtils.chown("wwwrun", "www", key_file)
+    FileUtils.chmod(0440, key_file)
 
     # Create key used by Portus to sign the JWT tokens
     FileUtils.ln_sf(
-      "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key",
+      key_file,
       File.join("/srv/Portus/config", "server.key"))
 
     FileUtils.cp(
-      "/etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt",
+      crt_file,
       "/srv/www/htdocs")
     FileUtils.chmod(0755, "/srv/www/htdocs/#{HOSTNAME}-ca.crt")
     FileUtils.cp(
-      "/etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt",
+      crt_file,
       "/etc/pki/trust/anchors")
     Runner.exec("update-ca-certificates")
   end
