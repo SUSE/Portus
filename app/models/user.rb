@@ -8,7 +8,8 @@ class User < ActiveRecord::Base
   validates :username, presence: true, uniqueness: true,
     format: {
       with:    USERNAME_FORMAT,
-      message: "only lower case alphanumeric characters are allowed. Minimum 4 characters, maximum 30."
+      message: "only lower case alphanumeric characters are allowed. "\
+        "Minimum 4 characters, maximum 30."
     }
 
   # Actions performed before/after create.
