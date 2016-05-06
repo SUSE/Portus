@@ -1,4 +1,4 @@
-<project name="Virtualization:containers:Portus:Release:__RELEASE__">
+<project name="Virtualization:containers:Portus:__VERSION__">
   <title>__RELEASE__ Release</title>
   <description></description>
   <person userid="flavio_castelli" role="maintainer"/>
