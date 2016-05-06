@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Admin::UsersController, type: :controller do
-
   let(:admin) { create(:admin) }
   let(:user) { create(:user) }
 
@@ -107,6 +106,53 @@ RSpec.describe Admin::UsersController, type: :controller do
           password_confirmation: "drowssap"
         }
       end.not_to change(User, :count)
+    end
+  end
+
+  describe "GET #edit" do
+    before :each do
+      create(:registry)
+      sign_in admin
+    end
+
+    it "returns with a failure if the current user tries to edit himself" do
+      get :edit, id: admin.id
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns success when editing another user" do
+      get :edit, id: user.id
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "PUT/PATCH #update" do
+    before :each do
+      create(:registry)
+      sign_in admin
+    end
+
+    it "returns with a failure if the current user tries to update himself" do
+      put :update, id: admin.id
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns with a failure if users pass a bad parameter" do
+      original = user.username
+
+      put :update, id: user.id, user: { email: admin.email }
+      expect(response).to have_http_status(302)
+
+      expect(user.reload.username).to eq(original)
+    end
+
+    it "succeeds if everything was ok" do
+      original = user.email
+
+      put :update, id: user.id, user: { email: user.email + "o" }
+      expect(response).to have_http_status(302)
+
+      expect(user.reload.email).to eq(original + "o")
     end
   end
 end
