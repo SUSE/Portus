@@ -26,7 +26,11 @@
         tbody
           - @users.each do |user|
             tr[id="user_#{user.id}"]
-              td= user.username
+              - if user == current_user
+                td= user.username
+              - else
+                td
+                  = link_to user.username, edit_admin_user_path(user), { title: "Edit user '#{user.username}'" }
               td= user.email
               td.admin-btn
                 - if current_user.id == user.id

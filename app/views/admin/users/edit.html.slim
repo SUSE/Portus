@@ -1,0 +1,14 @@
+.panel.panel-default
+  .panel-heading
+    h5 Edit User
+  .panel-body
+    = form_for [:admin, @user], html: {class: 'form-horizontal', role: 'form'} do |f|
+      .form-group
+        = f.label :email, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.email_field(:email, class: 'form-control', required: true, autofocus: true)
+
+      .form-group
+        .col-md-offset-2.col-md-7
+          = f.submit('Update', class: 'btn btn-primary')
+
