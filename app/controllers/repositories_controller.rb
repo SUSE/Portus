@@ -37,6 +37,8 @@ class RepositoriesController < ApplicationController
 
     # Delete this repository if all tags were successfully deleted.
     if @repository.reload.tags.any?
+      ts = @repository.tags.pluck(:name).join(", ")
+      logger.error "The following tags could not be removed: #{ts}."
       redirect_to repository_path(@repository), alert: "Could not remove all the tags"
     else
       @repository.delete_and_update!(current_user)
