@@ -7,6 +7,7 @@
 #  namespace_id :integer
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  marked       :boolean          default("0")
 #
 # Indexes
 #
@@ -59,6 +60,33 @@ class Repository < ActiveRecord::Base
     end
   end
 
+  # Updates the activities related to this repository and adds a new activity
+  # regarding the removal of this.
+  def delete_and_update!(actor)
+    logger.tagged("catalog") { logger.info "Removed the image '#{name}'." }
+
+    # Take care of current activities.
+    PublicActivity::Activity.where(trackable: self).update_all(
+      trackable_type: Namespace,
+      trackable_id:   namespace.id,
+      recipient_type: nil
+    )
+
+    # Add a "delete" activity"
+    namespace.create_activity(
+      :delete,
+      owner:      actor,
+      recipient:  self,
+      parameters: {
+        repository_name: name,
+        namespace_id:    namespace.id,
+        namespace_name:  namespace.clean_name
+      }
+    )
+
+    destroy
+  end
+
   # Handle a push event from the registry.
   def self.handle_push_event(event)
     registry = Registry.find_from_event(event)
@@ -82,11 +110,15 @@ class Repository < ActiveRecord::Base
     # Fetch the repo.
     ns, repo_name, = registry.get_namespace_from_event(event, false)
     repo = ns.repositories.find_by(name: repo_name)
-    return if repo.nil?
+    return if repo.nil? || repo.marked?
 
     # Destroy tags and the repository if it's empty now.
-    repo.tags.where(digest: event["target"]["digest"]).map(&:delete_and_update!)
-    repo.destroy if !repo.nil? && repo.tags.empty?
+    user = User.find_from_event(event)
+    repo.tags.where(digest: event["target"]["digest"], marked: false).map do |t|
+      t.delete_and_update!(user)
+    end
+    repo = repo.reload
+    repo.delete_and_update!(user) if !repo.nil? && repo.tags.empty?
   end
 
   # Add the repository with the given `repo` name and the given `tag`. The
@@ -169,7 +201,7 @@ class Repository < ActiveRecord::Base
     end
 
     # Finally remove the tags that are left and return the repo.
-    repository.tags.where(name: to_be_deleted_tags).find_each(&:delete_and_update!)
+    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_and_update!(portus) }
     repository.reload
   end
 end

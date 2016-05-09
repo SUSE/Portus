@@ -11,10 +11,12 @@ Rails.application.routes.draw do
   end
   get "namespaces/typeahead/:query" => "namespaces#typeahead", :defaults => { format: "json" }
 
-  resources :repositories, only: [:index, :show] do
+  resources :repositories, only: [:index, :show, :destroy] do
     post :toggle_star, on: :member
     resources :comments, only: [:create, :destroy]
   end
+
+  resources :tags, only: [:destroy]
 
   resources :application_tokens, only: [:create, :destroy]
 

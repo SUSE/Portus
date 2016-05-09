@@ -105,6 +105,11 @@ class Cli < Thor
     type:    :boolean,
     default: true
 
+  option "delete-enable",
+    desc:    "Enable delete support. Only do this if your registry is 2.4 or higher",
+    type:    :boolean,
+    default: false
+
   def setup
     ensure_root
     check_setup_flags

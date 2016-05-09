@@ -38,7 +38,8 @@ class CatalogJob < ActiveJob::Base
 
     # At this point, the remaining items in the "repos" array are repos that
     # exist in the DB but not in the catalog. Remove all of them.
-    Tag.where(repository_id: dangling_repos).find_each(&:delete_and_update!)
-    Repository.where(id: dangling_repos).destroy_all
+    portus = User.find_by(username: "portus")
+    Tag.where(repository_id: dangling_repos).find_each { |t| t.delete_and_update!(portus) }
+    Repository.where(id: dangling_repos).find_each { |r| r.delete_and_update!(portus) }
   end
 end

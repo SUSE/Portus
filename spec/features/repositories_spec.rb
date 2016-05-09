@@ -49,6 +49,7 @@ feature "Repositories support" do
       expectations = [["tag0"], ["tag1"], ["tag2", "tag3"], ["tag4"], ["tag5"]]
 
       visit repository_path(repository)
+
       page.all(".tags tr").each_with_index do |row, idx|
         expect(row.text.include?("Image")).to be_truthy
 

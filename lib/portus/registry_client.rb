@@ -98,6 +98,7 @@ module Portus
 
       until link.empty?
         page, link = get_page(link)
+        next unless page[field]
         res += page[field]
       end
       res
@@ -138,7 +139,7 @@ module Portus
       repositories.each do |repo|
         begin
           ts = tags(repo)
-          result << { "name" => repo, "tags" => ts } unless ts.nil?
+          result << { "name" => repo, "tags" => ts } unless ts.blank?
         rescue StandardError => e
           Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
         end

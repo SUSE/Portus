@@ -2,17 +2,27 @@
 # them, dangling repositories that used to contain them. Because of this, this
 # helper renders the proper HTML for push activities, while being safe at it.
 module RepositoriesHelper
-  # Renders a push activity, that is, a repository has been pushed.
+  # Renders a push activity, that is, a repository/tag has been pushed.
   def render_push_activity(activity)
-    owner = content_tag(:strong, "#{fetch_owner(activity)} pushed ")
+    render_repo_activity(activity, "pushed")
+  end
+
+  # Renders a delete activity, that is, a repository/tag has been deleted.
+  def render_delete_activity(activity)
+    render_repo_activity(activity, "deleted")
+  end
+
+  protected
+
+  # General method for rendering an activity regarding repositories.
+  def render_repo_activity(activity, action)
+    owner = content_tag(:strong, "#{fetch_owner(activity)} #{action} ")
 
     namespace = render_namespace(activity)
     namespace += " / " unless namespace.empty?
 
     owner + namespace + render_repository(activity)
   end
-
-  protected
 
   # Fetches the owner of the activity in a safe way.
   def fetch_owner(activity)
@@ -27,20 +37,22 @@ module RepositoriesHelper
   def render_namespace(activity)
     tr = activity.trackable
 
-    if tr.nil?
+    if tr.nil? || tr.is_a?(Namespace)
       if activity.parameters[:namespace_name].nil?
         ""
       else
         namespace = Namespace.find_by(id: activity.parameters[:namespace_id])
-        if namespace.nil?
-          content_tag(:span, activity.parameters[:namespace_name])
-        else
-          link_to activity.parameters[:namespace_name], namespace
-        end
+        tag_or_link(namespace, activity.parameters[:namespace_name])
       end
     else
       link_to tr.namespace.clean_name, tr.namespace
     end
+  end
+
+  # Returns a link if the namespace is not nil, otherwise just a tag with the
+  # given name.
+  def tag_or_link(namespace, name)
+    namespace.nil? ? content_tag(:span, name) : link_to(name, namespace)
   end
 
   # Renders the repository part of the activity in a safe manner.
@@ -59,16 +71,17 @@ module RepositoriesHelper
     tr = activity.trackable
 
     if tr.nil?
-      if activity.parameters[:repo_name].nil?
+      if repo_name(activity).nil?
         ["a repository", nil, ""]
       else
-        repo = activity.parameters[:repo_name]
+        repo = repo_name(activity)
         ns   = Namespace.find_by(id: activity.parameters[:namespace_id])
         link = ns.nil? ? nil : namespace_path(ns.id)
         [repo, link, tag_part(activity)]
       end
     else
-      [tr.name, tr, tag_part(activity)]
+      name, l = name_and_link(tr, activity)
+      [name, l, tag_part(activity)]
     end
   end
 
@@ -85,5 +98,16 @@ module RepositoriesHelper
     else
       ":#{activity.recipient.name}"
     end
+  end
+
+  # Fetch the name of the repo from the given activity.
+  def repo_name(activity)
+    activity.parameters[:repo_name] || activity.parameters[:repository_name]
+  end
+
+  # Returns the name and the link to the given tr depending on whether it's a
+  # Namespace or not.
+  def name_and_link(tr, activity)
+    tr.is_a?(Namespace) ? [repo_name(activity), nil] : [tr.name, tr]
   end
 end
