@@ -80,6 +80,7 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "ffaker"
     gem "rubocop", require: false
     gem "brakeman", require: false
+    gem "database_cleaner"
   end
 
   group :test do
@@ -90,7 +91,6 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "simplecov", require: false
     gem "capybara"
     gem "poltergeist", require: false
-    gem "database_cleaner"
     gem "json-schema"
     gem "timecop"
     gem "codeclimate-test-reporter", group: :test, require: nil
