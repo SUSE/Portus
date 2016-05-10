@@ -84,7 +84,7 @@ update_package() {
   #       2.0.3 version and subsequent 2.0.* versions
   #       Once we use the Portus.spec.in from master, this will be useless
   sed -e "s/Name:           Portus/Name:           portus/g" -i portus.spec
-  sed -e "s/Provides:       Portus = %{version}/Provides:       Portus = %{version}\nObsoletes: Portus = %{version}\nObsoletes: Portus < %{version}\nObsoletes: Portus = 20151120162040 /g" -i portus.spec
+  sed -e "s/Provides:       Portus = %{version}/Provides:       Portus = %{version}\nObsoletes: Portus < %{version}\nObsoletes: Portus = 20151120162040 /g" -i portus.spec
   popd
 }
 
