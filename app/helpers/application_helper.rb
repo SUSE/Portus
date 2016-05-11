@@ -29,7 +29,8 @@ module ApplicationHelper
   def markdown(text)
     extensions = {
       superscript:                  true,
-      disable_indented_code_blocks: true
+      disable_indented_code_blocks: true,
+      fenced_code_blocks:           true
     }
     render_options = {
       filter_html:         true,
