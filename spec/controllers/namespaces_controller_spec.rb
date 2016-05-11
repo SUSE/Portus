@@ -81,7 +81,6 @@ describe NamespacesController do
 
       expect(response.status).to eq 401
     end
-
   end
 
   describe "POST #create" do
@@ -220,6 +219,36 @@ describe NamespacesController do
       sign_in owner
       patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
       expect(response.status).to eq(200)
+    end
+
+    it "does not allow to change the team to viewers" do
+      sign_out user
+
+      sign_in viewer
+      patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: "js"
+      expect(response.status).to eq(401)
+    end
+
+    it "does not allow to change the team to contributors" do
+      sign_out user
+      sign_in contributor
+      patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: "js"
+      expect(response.status).to eq(401)
+    end
+
+    it "changes the team if needed" do
+      team2 = create(:team)
+      sign_in owner
+      patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+      expect(response.status).to eq(200)
+      expect(namespace.reload.team.id).to eq team2.id
+    end
+
+    it "does nothing if you try to change to a non-existing team" do
+      sign_in owner
+      patch :update, id: namespace.id, namespace: { team: "unknown" }, format: "js"
+      expect(response.status).to eq(200)
+      expect(namespace.reload.team.id).to eq team.id
     end
   end
 

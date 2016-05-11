@@ -5,6 +5,8 @@ Rails.application.routes.draw do
       get "typeahead/:query" => "teams#typeahead", :defaults => { format: "json" }
     end
   end
+  get "/teams/typeahead/:query" => "teams#all_with_query", :defaults => { format: "json" }
+
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show, :update] do
     put "toggle_public", on: :member

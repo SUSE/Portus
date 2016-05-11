@@ -39,6 +39,12 @@ class NamespacePolicy
     !namespace.global? && (user.admin? || namespace.team.owners.exists?(user.id))
   end
 
+  # Only owners and admins can change the team ownership.
+  def change_team?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    user.admin? || namespace.team.owners.exists?(user.id)
+  end
+
   class Scope
     attr_reader :user, :scope
 
