@@ -48,7 +48,19 @@ class NamespacesController < ApplicationController
   # PATCH/PUT /namespace/1
   # PATCH/PUT /namespace/1.json
   def update
-    change_name_description(@namespace, :namespace)
+    p = params.require(:namespace).permit(:name, :description, :team)
+    change_name_description(@namespace, :namespace, p)
+
+    # Update the team if needed/authorized.
+    return if p[:team] == @namespace.team.name
+    authorize @namespace, :change_team?
+
+    @team = Team.find_by(name: p[:team])
+    if @team.nil?
+      @namespace.errors[:team_id] << "'#{p[:team]}' unknown."
+    else
+      @namespace.update_attributes(team: @team)
+    end
   end
 
   # GET /namespace/typeahead/%QUERY

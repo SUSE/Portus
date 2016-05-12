@@ -11,16 +11,18 @@ RSpec.describe TeamsController, type: :controller do
     { admin: "not valid" }
   end
 
-  let(:owner) { create(:user) }
+  # TODO: (mssola) re-factor this so the team is always created. I've had to
+  # modify some tests that are not obvious because of the lazyness of `let` vs
+  # `let!`.
+  let!(:owner) { create(:user) }
   let(:team) { create(:team, description: "short test description", owners: [owner]) }
-  let(:hidden_team) do
+  let!(:hidden_team) do
     create(:team, name: "portus_global_team_1",
            description: "short test description", owners: [owner],
            hidden: true)
   end
 
   describe "GET #show" do
-
     it "paginates team users" do
       sign_in owner
       get :show, id: team.id
@@ -61,7 +63,7 @@ RSpec.describe TeamsController, type: :controller do
       get :show, id: team.id
 
       expect(response.status).to eq 200
-      expect(TeamUser.count).to be 2
+      expect(TeamUser.count).to be 3
       expect(assigns(:team_users).count).to be 1
     end
   end
@@ -152,7 +154,7 @@ RSpec.describe TeamsController, type: :controller do
       expect(usernames[0]["name"]).to eq("user2")
     end
 
-    it "does not allow to search by contributers or viewers" do
+    it "does not allow to search by contributors or viewers" do
       disallowed_roles = ["viewer", "contributer"]
       disallowed_roles.each do |role|
         user = create(:user)
@@ -161,6 +163,31 @@ RSpec.describe TeamsController, type: :controller do
         get :typeahead, id: team.id, query: "user", format: "js"
         expect(response.status).to eq(401)
       end
+    end
+  end
+
+  describe "#all_with_query" do
+    it "fetches all the teams available" do
+      sign_in owner
+
+      # At this point the `team` variable has not been instantiated on the DB
+      # yet, so the result will be empty (the global team is rightfully not
+      # picked).
+      get :all_with_query, query: "team", format: "json"
+      teams = JSON.parse(response.body)
+      expect(teams).to be_empty
+
+      # Thus forcing the creation of the team too.
+      TeamUser.create(
+        team: team,
+        user: create(:user),
+        role: TeamUser.roles["viewer"]
+      )
+
+      get :all_with_query, query: "team", format: "json"
+      teams = JSON.parse(response.body)
+      expect(teams.size).to eq(1)
+      expect(teams.first["name"]).to eq(team.name)
     end
   end
 
