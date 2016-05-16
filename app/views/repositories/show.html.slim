@@ -15,25 +15,82 @@
           span#star-counter.btn.btn-primary.btn-xs
             = @repository.stars.count
 
+      - if APP_CONFIG.enabled?("delete")
+        #remove-repo.pull-right
+          button.remove-repo.fa.fa-lg.fa-trash-o.btn-x.btn-edit-role.btn.btn-link[
+            data-placement="left"
+            data-toggle="popover"
+            data-title="Please confirm"
+            data-content='<p>Are you sure you want to remove this \
+            image?</p><a class="btn btn-default">No</a> <a class="btn \
+            btn-primary" data-method="delete" \
+            href="#{url_for(@repository)}">Yes</a>'
+            data-html="true"
+            role="button"
+            title="Delete image"]
+
   .panel-body
-    .table-responsive
+    .table-responsive.tags
       table.table.table-stripped.table-hover
         col.col-40
-        col.col-40
         col.col-20
+        col.col-15
+        col.col-20
+        - if APP_CONFIG.enabled?("delete")
+          col.col-5
         thead
           tr
             th Tag
             th Author
+            th Image
             th Pushed at
+            - if APP_CONFIG.enabled?("delete")
+              th
         tbody
           - @tags.each do |tag|
-            tr
-              td
-                .label.label-success
-                  = tag.name
-              td= tag.author.username
-              td= tag.created_at
+            - if tag.first.digest.blank?
+              - tag.each do |t|
+                tr
+                  td
+                    .label.label-success
+                      = t.name
+                  td= tag.first.author.username
+                  td
+                    - if tag.first.image_id.empty?
+                      = "-"
+                    - else
+                      span[title="sha256:#{tag.first.image_id}"]
+                        = tag.first.image_id[0, 12]
+                  td= tag.first.created_at
+            - else
+              tr
+                td
+                  - tag.each do |t|
+                    .label.label-success
+                      = t.name
+                td= tag.first.author.username
+                td
+                  - if tag.first.image_id.empty?
+                    = "-"
+                  - else
+                    span[title="sha256:#{tag.first.image_id}"]
+                      = tag.first.image_id[0, 12]
+                td= tag.first.created_at
+
+                - if APP_CONFIG.enabled?("delete")
+                  td
+                    button.remove-tag.fa.fa-lg.fa-trash-o.btn-x.btn-edit-role.btn.btn-link[
+                      data-placement="left"
+                      data-toggle="popover"
+                      data-title="Please confirm"
+                      data-content='<p>Are you sure you want to remove this \
+                      tag?</p><a class="btn btn-default">No</a> <a class="btn \
+                      btn-primary" data-method="delete" \
+                      href="#{url_for(tag.first)}">Yes</a>'
+                      data-html="true"
+                      role="button"
+                      title="Delete tag"]
+
 
 #write_comment_form.collapse
   = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|

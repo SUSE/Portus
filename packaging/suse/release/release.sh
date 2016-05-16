@@ -22,17 +22,23 @@ if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]];then
 fi 
 
 RELEASE=$1
-MAJOR_VERSION=$(echo $RELEASE | rev | cut -d. -f1 --complement | rev)
-BRANCH="v$MAJOR_VERSION"
+VERSION_2D=$(echo $RELEASE | rev | cut -d. -f1 --complement | rev)
+BRANCH="v$VERSION_2D"
 ORIG_PROJECT=Virtualization:containers:Portus
-DEST_PROJECT=$ORIG_PROJECT:Release:$RELEASE
+DEST_PROJECT=$ORIG_PROJECT:$VERSION_2D
 API=https://api.opensuse.org
 OSC="osc -A $API"
 PKG_DIR=/tmp/$0/$RANDOM
 
 create_subproject() {
-  echo "Setting release $RELEASE in project config template"
-  sed -e "s/__RELEASE__/$RELEASE/g" project.xml.template > project.xml
+  $OSC ls $DEST_PROJECT > /dev/null 2>&1
+  if [ "$?" == "0" ];then
+    echo "Project $DEST_PROJECT already exists."
+    return
+  fi
+
+  echo "Setting version $VERSION_2D in project config template"
+  sed -e "s/__VERSION__/$VERSION_2D/g" project.xml.template > project.xml
 
   echo "Creating new subproject $DEST_PROJECT"
   $OSC meta prj $DEST_PROJECT --file=project.xml
@@ -78,7 +84,7 @@ update_package() {
   #       2.0.3 version and subsequent 2.0.* versions
   #       Once we use the Portus.spec.in from master, this will be useless
   sed -e "s/Name:           Portus/Name:           portus/g" -i portus.spec
-  sed -e "s/Provides:       Portus = %{version}/Provides:       Portus = %{version}\nObsoletes: Portus = %{version}\nObsoletes: Portus < %{version}\nObsoletes: Portus = 20151120162040 /g" -i portus.spec
+  sed -e "s/Provides:       Portus = %{version}/Provides:       Portus = %{version}\nObsoletes: Portus < %{version}\nObsoletes: Portus = 20151120162040 /g" -i portus.spec
   popd
 }
 
@@ -96,7 +102,7 @@ clean() {
 }
 
 mkdir -p $PKG_DIR
-# create_subproject
+create_subproject
 update_package
 commit_all
 clean

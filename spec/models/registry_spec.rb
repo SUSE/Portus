@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: registries
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  hostname   :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  use_ssl    :boolean
+#
+# Indexes
+#
+#  index_registries_on_hostname  (hostname) UNIQUE
+#  index_registries_on_name      (name) UNIQUE
+#
+
 require "rails_helper"
 
 # Open up Portus::RegistryClient to inspect some attributes.
@@ -24,7 +41,7 @@ class RegistryMock < Registry
       end
     else
       def o.manifest(*_)
-        { "tag" => "latest" }
+        ["id", "digest", { "tag" => "latest" }]
       end
 
       def o.tags(*_)
@@ -218,7 +235,7 @@ describe Registry, type: :model do
       mock.get_tag_from_target_test(nil, "busybox", "a", "sha:1234")
     end
 
-    it "fetches the tag from the target if it exists", focus: true do
+    it "fetches the tag from the target if it exists" do
       mock = RegistryMock.new(false)
 
       # We leave everything empty to show that if the tag is provided, we pick

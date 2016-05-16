@@ -1,3 +1,35 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :integer          not null, primary key
+#  username               :string(255)      default(""), not null
+#  email                  :string(255)      default("")
+#  encrypted_password     :string(255)      default(""), not null
+#  reset_password_token   :string(255)
+#  reset_password_sent_at :datetime
+#  remember_created_at    :datetime
+#  sign_in_count          :integer          default("0"), not null
+#  current_sign_in_at     :datetime
+#  last_sign_in_at        :datetime
+#  current_sign_in_ip     :string(255)
+#  last_sign_in_ip        :string(255)
+#  created_at             :datetime
+#  updated_at             :datetime
+#  admin                  :boolean          default("0")
+#  enabled                :boolean          default("1")
+#  ldap_name              :string(255)
+#  failed_attempts        :integer          default("0")
+#  locked_at              :datetime
+#
+# Indexes
+#
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_ldap_name             (ldap_name) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_users_on_username              (username) UNIQUE
+#
+
 require "rails_helper"
 
 describe User do
@@ -15,7 +47,8 @@ describe User do
     expect(user.save).to be false
     expect(user.errors.size).to eq(1)
     expect(user.errors.first)
-      .to match_array([:username, "cannot be used as name for private namespace"])
+      .to match_array([:username, "'coolname' cannot be used: there's either a namespace or " \
+        "a team named like this."])
   end
 
   it "#email_required?" do

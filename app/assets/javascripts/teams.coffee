@@ -1,5 +1,4 @@
 $(document).on "page:change", ->
-
   set_typeahead = (url) ->
     $('.remote .typeahead').typeahead 'destroy'
     bloodhound = new Bloodhound(
@@ -14,6 +13,9 @@ $(document).on "page:change", ->
     $('.remote .typeahead').typeahead null,
       displayKey: 'name',
       source: bloodhound.ttAdapter()
+
+  $('#edit_namespace').on 'click', (event) ->
+    set_typeahead('/teams/typeahead/%QUERY')
 
   $('#add_team_user_btn').on 'click', (event) ->
     $('#team_user_user').val('')
@@ -53,7 +55,6 @@ $(document).on "page:change", ->
       open_close_icon(el)
       $('.description').toggle()
       $('#change_description_namespace_' + event.currentTarget.value).toggle()
-      $('#namespace_description').focus()
   )
 
   $('#add_namespace_btn').unbind('click').on 'click', (event) ->

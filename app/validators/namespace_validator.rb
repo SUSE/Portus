@@ -6,6 +6,9 @@ class NamespaceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     # Already validated by the presence validator.
     return if value.nil?
-    record.errors[attribute] << "Namespace name must match #{NAME_REGEXP}" if value !~ NAME_REGEXP
+    return if value =~ NAME_REGEXP
+
+    record.errors[attribute] << "can only contain lower case alphanumeric "\
+      "characters, with optional underscores and dashes in the middle."
   end
 end

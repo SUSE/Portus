@@ -32,6 +32,10 @@ module Portus
       uri = URI.join(@base_url, path)
       req = Net::HTTP.const_get(method.capitalize).new(uri)
 
+      # So we deal with compatibility issues in distribution 2.3 and later.
+      # See: https://github.com/docker/distribution/blob/master/docs/compatibility.md#content-addressable-storage-cas
+      req["Accept"] = "application/vnd.docker.distribution.manifest.v2+json"
+
       # This only happens if the auth token has already been set by a previous
       # call.
       req["Authorization"] = "Bearer #{@token}" if @token

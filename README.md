@@ -69,7 +69,7 @@ each Portus version:
 | master | 1.6+ | 2.0+ |
 | 2.0.0 & 2.0.1 | 1.6 to 1.9 | 2.0 to 2.2 |
 | 2.0.2 | 1.6 to 1.9 | 2.0+ |
-| 2.0.3 | 1.6+ | 2.0+ |
+| 2.0.3+ | 1.6+ | 2.0+ |
 
 Let's detail some of the version being specified:
 
@@ -93,6 +93,8 @@ of Portus.
 First of all, make sure that you have a working development environment. You
 can easily do this with either Docker or Vagrant, as it's explained on the
 [wiki](https://github.com/SUSE/Portus/wiki#developmentplayground-environments).
+The wiki also has notable pages like
+[How we test Portus](https://github.com/SUSE/Portus/wiki/How-we-test-Portus).
 
 Also, make sure to understand our contribution guidelines, as explained in
 [this](https://github.com/SUSE/Portus/blob/master/CONTRIBUTING.md) document.

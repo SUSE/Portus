@@ -65,4 +65,27 @@ feature "Admin - Users panel" do
       expect(page).to have_content("User '#{user.username}' is no longer an admin")
     end
   end
+
+  describe "Edit user" do
+    scenario "allows the admin to update a user", js: true do
+      visit edit_admin_user_path(user)
+
+      fill_in "Email", with: "another@example.com"
+      click_button "Update"
+
+      wait_for_effect_on("#alert")
+      expect(page).to have_content("another@example.com")
+      expect(page).to have_content("User updated successfully")
+    end
+
+    scenario "disallows the admin to update a user with a wrong name", js: true do
+      visit edit_admin_user_path(user)
+
+      fill_in "Email", with: admin.email
+      click_button "Update"
+
+      wait_for_effect_on("#alert")
+      expect(page).to have_content("has already been taken")
+    end
+  end
 end

@@ -25,5 +25,13 @@ module Portus
     config.autoload_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("app/validators/")
     config.exceptions_app = routes
+
+    config.generators do |g|
+      g.template_engine :slim
+      g.test_framework :rspec
+      g.fixture_replacement :factory_girl
+
+      g.fallbacks[:rspec] = :test_unit
+    end
   end
 end

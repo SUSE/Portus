@@ -29,6 +29,17 @@ email:
 gravatar:
   enabled: <%= @options["gravatar-enable"] %>
 
+# Allow admins and owners to delete images and tags. This feature should *only*
+# be enabled if the version of the running registry is 2.4 or higher since
+# it's the first version that supports garbage collection. That being said,
+# Portus will only delete the manifests of the tags and administrators are
+# supposed to be responsible for garbage collecting unreferenced blobs. This is
+# because the registry 2.4 does not garbage collect automatically. For more
+# information on garbage collection on the registry, read the documentation:
+# https://github.com/docker/distribution/blob/master/docs/garbage-collection.md
+delete:
+  enabled: <%= @options["delete-enable"] %>
+
 # LDAP support. If enabled, then only users of the specified LDAP server will
 # be able to use Portus.
 ldap:
