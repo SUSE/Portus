@@ -31,14 +31,6 @@ check_mandatory_flags() {
   fi
 }
 
-create_configuration_files() {
-  # registry config
-  sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" compose/registry/config.yml.template > compose/registry/config.yml
-
-  # compose setup
-  sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" compose/docker-compose.yml.template > docker-compose.yml
-}
-
 setup_database() {
   set +e
 
@@ -141,7 +133,6 @@ sleep 2
 
 check_mandatory_flags
 check_version
-create_configuration_files
 clean
 docker-compose up -d
 
