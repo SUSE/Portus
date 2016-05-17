@@ -5,7 +5,7 @@ require "spec_helper"
 # The supported Docker Distribution versions. Make sure that these values
 # correspond to valid tags on DockerHub.
 # See: https://hub.docker.com/r/library/registry/tags/
-SUPPORTED_DISTRIBUTION_VERSIONS = ["2.3.1", "2.4.0", "master"]
+SUPPORTED_DISTRIBUTION_VERSIONS = ["2.3.1", "2.4.0", "latest"]
 
 # Integration encapsulates an integration test. This method accepts one special
 # tag: `distribution`. It can either be an Array of strings or a String, and it

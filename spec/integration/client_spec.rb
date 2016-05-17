@@ -49,6 +49,9 @@ integration "Client" do
       next if key.nil?
       expect(key).to eq r["tags"]
     end
+
+    tags = client.tags("registre")
+    expect(tags).to eq(expected["registre"])
   end
 
   it "fetches the manifest of the given repo/tag" do
@@ -57,7 +60,29 @@ integration "Client" do
     client = Portus::RegistryClient.new(registry_hostname)
     manifest = client.manifest("registre", "2.3.1")
 
-    expect(manifest["name"]).to eq "registre"
-    expect(manifest["tag"]).to eq "2.3"
+    expect(manifest[0]).to_not be_empty
+    expect(manifest[1]).to_not be_empty
+    expect(manifest[2]["schemaVersion"]).to eq 2
+  end
+
+  it "supports deleting manifests" do
+    push_test_images
+
+    client = Portus::RegistryClient.new(registry_hostname)
+
+    # Provided digest did not match uploaded content
+    expect do
+      client.delete("registry", "itsdangeroustogoalonetakethis", "manifests")
+    end.to raise_error(RuntimeError)
+
+    _, dig, = client.manifest("registre", "2.3.1")
+
+    # Not found
+    expect do
+      client.delete("registry", dig, "manifests")
+    end.to raise_error(Portus::HttpHelpers::NotFoundError)
+
+    client.delete("registre", dig, "manifests")
+    eventually_expect(2) { rails_exec("Tag.all.to_json").size }
   end
 end
