@@ -78,13 +78,6 @@ update_package() {
   sed -e "s/%define branch $BRANCH/%define branch $RELEASE/g" -i portus.spec
   # We set the Version to the RELEASE tag
   sed -e "s/Version: .*/Version:        $RELEASE/g" -i portus.spec
-  # TODO: Clean up this when releasing 2.1.* version because it will
-  #       get the right Portus.spec.in from master
-  #       This is for renaming Portus to portus on the already tagged
-  #       2.0.3 version and subsequent 2.0.* versions
-  #       Once we use the Portus.spec.in from master, this will be useless
-  sed -e "s/Name:           Portus/Name:           portus/g" -i portus.spec
-  sed -e "s/Provides:       Portus = %{version}/Provides:       Portus = %{version}\nObsoletes: Portus < %{version}\nObsoletes: Portus = 20151120162040 /g" -i portus.spec
   popd
 }
 
