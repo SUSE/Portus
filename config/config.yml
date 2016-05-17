@@ -91,3 +91,8 @@ check_ssl_usage:
 # See: https://github.com/SUSE/Portus/issues/510
 jwt_expiration_time:
   value: "5.minutes"
+
+# The FQDN of the machine where Portus is being deployed. The default is kept
+# empty to make sure that backwards-compatibility is not broken.
+machine_fqdn:
+  value: ""

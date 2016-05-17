@@ -76,3 +76,7 @@ first_user_admin:
 # By default require ssl to be enabled when running on production
 check_ssl_usage:
   enabled: <%= @options["secure"] %>
+
+# The FQDN of the machine where Portus is being deployed.
+machine_fqdn:
+  value: <%= HOSTNAME %>

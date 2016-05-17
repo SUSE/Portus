@@ -29,7 +29,7 @@ module Portus
     # specification.
     def claim
       @claim ||= {}.tap do |hash|
-        hash[:iss]    = Rails.application.secrets.machine_fqdn
+        hash[:iss]    = fqdn
         hash[:sub]    = @account
         hash[:aud]    = @service
         hash[:iat]    = issued_at

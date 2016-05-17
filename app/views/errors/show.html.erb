@@ -46,7 +46,7 @@
                 <% if Rails.env.production? %>
                   Set <i>PORTUS_MACHINE_FQDN</i> environment variable.
                 <% else %>
-                  Set <i>machine_fqdn</i> in <i>config/secrets.yml</i>.
+                  Set <i>machine_fqdn</i> in <i>config/secrets.yml</i> or <i>config/config-local.yml</i>.
                 <% end %>
               <% end %>
               <% if @fix[:secret_encryption_private_key_path] %>
