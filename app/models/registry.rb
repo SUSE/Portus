@@ -58,15 +58,10 @@ class Registry < ActiveRecord::Base
     registry = Registry.find_by(hostname: request_hostname)
     if registry.nil?
       logger.debug("No hostname matching #{request_hostname}, testing external_hostname")
-    else
-      # The internal name we use to connect to the registry might not be 
-      # the same as the external name used by the clients
-      # see https://godoc.org/github.com/docker/distribution/notifications#RequestRecord
       registry = Registry.find_by(external_hostname: request_hostname)
     end
     if registry.nil?
-       logger.info("Ignoring event coming from unknown registry
-                  #{event["request"]["host"]}")
+       logger.info("Ignoring event coming from unknown registry #{request_hostname}")
     end
     registry
   end
