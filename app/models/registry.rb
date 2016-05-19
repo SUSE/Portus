@@ -52,8 +52,7 @@ class Registry < ActiveRecord::Base
   end
 
   # Find the registry for the given push event.
-  def self.find_from_event(event)
-    
+  def self.find_from_event(event)    
     request_hostname = event["request"]["host"]
     registry = Registry.find_by(hostname: request_hostname)
     if registry.nil?
@@ -61,7 +60,7 @@ class Registry < ActiveRecord::Base
       registry = Registry.find_by(external_hostname: request_hostname)
     end
     if registry.nil?
-       logger.info("Ignoring event coming from unknown registry #{request_hostname}")
+      logger.info("Ignoring event coming from unknown registry #{request_hostname}")
     end
     registry
   end
