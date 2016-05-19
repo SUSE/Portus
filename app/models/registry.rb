@@ -2,12 +2,13 @@
 #
 # Table name: registries
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)      not null
-#  hostname   :string(255)      not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  use_ssl    :boolean
+#  id                :integer          not null, primary key
+#  name              :string(255)      not null
+#  hostname          :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  use_ssl           :boolean
+#  external_hostname :string(255)
 #
 # Indexes
 #
@@ -25,6 +26,7 @@ class Registry < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :hostname, presence: true, uniqueness: true
+  validates :external_hostname, presence: false
   validates :use_ssl, inclusion: [true, false]
 
   # On create, make sure that all the needed namespaces are in place.
@@ -51,9 +53,19 @@ class Registry < ActiveRecord::Base
 
   # Find the registry for the given push event.
   def self.find_from_event(event)
-    registry = Registry.find_by(hostname: event["request"]["host"])
+    
+    request_hostname = event["request"]["host"]
+    registry = Registry.find_by(hostname: request_hostname)
     if registry.nil?
-      logger.info("Ignoring event coming from unknown registry
+      logger.debug("No hostname matching #{request_hostname}, testing external_hostname")
+    else
+      # The internal name we use to connect to the registry might not be 
+      # the same as the external name used by the clients
+      # see https://godoc.org/github.com/docker/distribution/notifications#RequestRecord
+      registry = Registry.find_by(external_hostname: request_hostname)
+    end
+    if registry.nil?
+       logger.info("Ignoring event coming from unknown registry
                   #{event["request"]["host"]}")
     end
     registry

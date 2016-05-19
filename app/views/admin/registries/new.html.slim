@@ -44,6 +44,13 @@
             = f.check_box(:use_ssl, checked: true)
           - else
             = f.check_box(:use_ssl)
+      .form-group
+        = f.label :external_hostname, "External Registry Name", {class:'control-label col-md-2', title: 'Set this if the name that clients use to communicate with the registry is different than the name that portus uses to connect'}
+        .col-md-7 
+          - if params[:external_hostname]
+            = f.text_field(:external_hostname, class: 'form-control', value: params[:external_hostname], required: false)
+          - else
+            = f.text_field(:external_hostname, class: 'form-control',required: false)
       - unless flash[:alert].nil? || flash[:alert].empty?
         .form-group.has-error
           = label_tag :force, "Skip remote checks", {class: 'control-label col-md-2', title: "Force the creation of the registry, even if it's not reachable."}
