@@ -54,13 +54,24 @@ update_package() {
 
   echo "Setting version in _service file"
   cd $DEST_PROJECT/portus
+  cp _service _service.orig
   sed -e "s/master.tar.gz/$RELEASE.tar.gz/g" -i _service
+  if [ $? -eq 0 ];then
+    echo "WARNING: _service file has not been changed"
+  fi
+
+  cp _service _service.orig
+  echo "Disabling service"
+  sed -e "s/<service name=\"download_url\">/<service name=\"download_url\" mode=\"disabled\">/g" -i _service
+  if [ $? -eq 0 ];then
+    echo "WARNING: _service file has not been changed"
+  fi
 
   echo "Getting tarball"
-  $OSC service run
+  $OSC service disabledrun
+  $OSC add $RELEASE.tar.gz
 
   echo "Generate spec file"
-  mv _service\:download_url\:$RELEASE.tar.gz $RELEASE.tar.gz
   tar zxvf $RELEASE.tar.gz
   cd Portus-$RELEASE/packaging/suse
   TRAVIS_COMMIT=$RELEASE TRAVIS_BRANCH=$BRANCH ./make_spec.sh
