@@ -1,3 +1,27 @@
+## 2.0.5
+
+### Improvements
+
+- The FQDN can now be specified from the configuration too. This is meant to
+  help users to transition from 2.0.x to 2.1. See
+  [commit](https://github.com/SUSE/Portus/commit/f0850459cc43e9b9258e70867d5608f2ef303f3e).
+- Portus is now more explicit on the allowed name format. See
+[commit](https://github.com/SUSE/Portus/commit/5e1f164bacca8119fd6f9d8ec0461281914a0ecd).
+- Portus is now more friendly on errors based on the namespace name. See
+[commit](https://github.com/SUSE/Portus/commit/2cc3ea0803632c13ba49022f369d74dbb4e549c9).
+
+### portusctl
+
+- Disable automatic generation of certificates. For this, now there are two new
+  flags: `--ssl-gen-self-signed-certs` and `--ssl-certs-dir <dir>`. See
+  [commit](https://github.com/SUSE/Portus/commit/d34714f9a43024b1b565699bbcef22d51ea3a4f2).
+- Wrap crono with the `exec` command. See
+[commit](https://github.com/SUSE/Portus/commit/78f8f949c46e6cf41f058237683e2d8f5795e53e).
+
+### Misc
+
+- Some fixes on the generation of the RPM in OBS.
+
 ## 2.0.4
 
 ### RPM
