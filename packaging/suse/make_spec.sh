@@ -16,7 +16,8 @@ if [ $TRAVIS_COMMIT ];then
 else
   commit=$(git log -1 --pretty=format:'%H')
 fi
-version=$(date +%Y%m%d%H%M%S)
+version=$(cat ../../VERSION)
+version="$version+git$commit"
 date=$(date --rfc-2822)
 year=$(date +%Y)
 
