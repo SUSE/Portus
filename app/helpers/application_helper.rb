@@ -4,7 +4,7 @@ module ApplicationHelper
     if APP_CONFIG.enabled?("gravatar") && !email.nil? && !email.empty?
       gravatar_image_tag(email)
     else
-      image_tag "user.svg", class: "user-picture"
+      content_tag :i, nil, class: "fa fa-user user-picture"
     end
   end
 
