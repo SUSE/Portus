@@ -37,6 +37,20 @@ Therefore, when you want to create a new documentation page, you have to think
 about in which collection does it fall, and then create the document with the
 proper headers. After that, you can write you page in Markdown format.
 
+## Adding a new blog post
+
+Since we are using Jekyll, blog posts are stored in the `_posts` directory, and
+the files are formatted like `yyyy-mm-dd-title.md`. Each blogpost has the
+following metadata:
+
+- `title` & `subtitle`: the title and the subtitle of the blog post.
+- `author`: the author publishing the post.
+- `layout`: should be set to `blogpost`.
+
+Once you are set, then you can write your blog post in plain markdown. The
+style for blog posts have been adapted from
+[rootco.de-web](https://github.com/sysrich/rootco.de-web).
+
 ## Editing the assets
 
 If you are modifiying Less, JS or images in the `/assets` folder, you need to

@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
     <!-- bootstrap + Portus theme -->
-    <link href="build/css/portus.min.css" type="text/css" rel="stylesheet" />
+    <link href="/build/css/portus.min.css" type="text/css" rel="stylesheet" />
     <!--external libraries CSS -->
-    <link href="build/css/vendor.min.css" type="text/css" rel="stylesheet" />
+    <link href="/build/css/vendor.min.css" type="text/css" rel="stylesheet" />
     <!--external libraries JS + portus JS -->
-    <script src="build/js/main.min.js"    type="text/javascript" charset="utf-8"></script>
+    <script src="/build/js/main.min.js"    type="text/javascript" charset="utf-8"></script>
 
     {% include devices.html %}
   </head>
