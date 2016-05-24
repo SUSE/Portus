@@ -22,17 +22,23 @@ if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]];then
 fi 
 
 RELEASE=$1
-MAJOR_VERSION=$(echo $RELEASE | rev | cut -d. -f1 --complement | rev)
-BRANCH="v$MAJOR_VERSION"
+VERSION_2D=$(echo $RELEASE | rev | cut -d. -f1 --complement | rev)
+BRANCH="v$VERSION_2D"
 ORIG_PROJECT=Virtualization:containers:Portus
-DEST_PROJECT=$ORIG_PROJECT:Release:$RELEASE
+DEST_PROJECT=$ORIG_PROJECT:$VERSION_2D
 API=https://api.opensuse.org
 OSC="osc -A $API"
 PKG_DIR=/tmp/$0/$RANDOM
 
 create_subproject() {
-  echo "Setting release $RELEASE in project config template"
-  sed -e "s/__RELEASE__/$RELEASE/g" project.xml.template > project.xml
+  $OSC ls $DEST_PROJECT > /dev/null 2>&1
+  if [ "$?" == "0" ];then
+    echo "Project $DEST_PROJECT already exists."
+    return
+  fi
+
+  echo "Setting version $VERSION_2D in project config template"
+  sed -e "s/__VERSION__/$VERSION_2D/g" project.xml.template > project.xml
 
   echo "Creating new subproject $DEST_PROJECT"
   $OSC meta prj $DEST_PROJECT --file=project.xml
@@ -48,13 +54,28 @@ update_package() {
 
   echo "Setting version in _service file"
   cd $DEST_PROJECT/portus
-  sed -e "s/master.tar.gz/$RELEASE.tar.gz/g" -i _service
+  cp _service _service.orig
+  sed -e "s|/SUSE/Portus/archive/.*.tar.gz|/SUSE/Portus/archive/$RELEASE.tar.gz|g" -i _service
+  if [ $? -eq 0 ];then
+    echo "WARNING: _service file has not been changed"
+  fi
 
+  cp _service _service.orig
+  echo "Disabling service"
+  sed -e "s/<service name=\"download_url\">/<service name=\"download_url\" mode=\"disabled\">/g" -i _service
+  if [ $? -eq 0 ];then
+    echo "WARNING: _service file has not been changed"
+  fi
+
+  echo "Remove previous tarballs"
+  $OSC rm $(ls *.tar.gz)
   echo "Getting tarball"
-  $OSC service run
+  $OSC service disabledrun
+
+  echo "Add new tarball"
+  $OSC add $RELEASE.tar.gz
 
   echo "Generate spec file"
-  mv _service\:download_url\:$RELEASE.tar.gz $RELEASE.tar.gz
   tar zxvf $RELEASE.tar.gz
   cd Portus-$RELEASE/packaging/suse
   TRAVIS_COMMIT=$RELEASE TRAVIS_BRANCH=$BRANCH ./make_spec.sh
@@ -72,13 +93,9 @@ update_package() {
   sed -e "s/%define branch $BRANCH/%define branch $RELEASE/g" -i portus.spec
   # We set the Version to the RELEASE tag
   sed -e "s/Version: .*/Version:        $RELEASE/g" -i portus.spec
-  # TODO: Clean up this when releasing 2.1.* version because it will
-  #       get the right Portus.spec.in from master
-  #       This is for renaming Portus to portus on the already tagged
-  #       2.0.3 version and subsequent 2.0.* versions
-  #       Once we use the Portus.spec.in from master, this will be useless
-  sed -e "s/Name:           Portus/Name:           portus/g" -i portus.spec
-  sed -e "s/Provides:       Portus = %{version}/Provides:       Portus = %{version}\nObsoletes: Portus = %{version}\nObsoletes: Portus < %{version}\nObsoletes: Portus = 20151120162040 /g" -i portus.spec
+  echo "Fix source filename because when releasing we are using a disabled service"
+  echo "which cause the tarball be named differently"
+  sed -e "s/Source:.*Portus-%{branch}.tar.gz/Source:        %{branch}.tar.gz/g" -i portus.spec
   popd
 }
 
@@ -96,7 +113,7 @@ clean() {
 }
 
 mkdir -p $PKG_DIR
-# create_subproject
+create_subproject
 update_package
 commit_all
 clean
