@@ -11,3 +11,9 @@ header .topbar.btn.btn-default {
     background: rgba(255,255,255,0.7);
   }
 }
+.btn-toolbar {
+  margin-bottom: 1em;
+  .pull-right {
+    margin-left: 1em;
+  }
+}
