@@ -45,7 +45,7 @@ class Tag < ActiveRecord::Base
     Tag.where(digest: dig).update_all(marked: true)
 
     begin
-      Registry.get.client.delete(repository.name, dig, "manifests")
+      Registry.get.client.delete(repository.full_name, dig, "manifests")
     rescue StandardError => e
       Rails.logger.error "Could not delete tag on the registry: #{e.message}"
       return false
@@ -84,7 +84,7 @@ class Tag < ActiveRecord::Base
       client = Registry.get.client
 
       begin
-        _, dig, = client.manifest(repository.name, name)
+        _, dig, = client.manifest(repository.full_name, name)
         update_attributes(digest: dig)
         dig
       rescue StandardError => e

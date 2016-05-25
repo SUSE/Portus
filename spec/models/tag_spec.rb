@@ -97,6 +97,28 @@ describe Tag do
                                         repository_name: repository.name,
                                         tag_name:        tag.name)
     end
+
+    it "calls the registry with the right parameters if digest is blank" do
+      team = create(:team)
+      namespace = create(:namespace, name: "a", team: team, registry: registry)
+      repo = create(:repository, name: "repo", namespace: namespace)
+      tag = create(:tag, name: "t", repository: repo)
+
+      allow_any_instance_of(Portus::RegistryClient).to(
+        receive(:manifest)
+          .with(repo.full_name, tag.name)
+          .and_return([nil, "digest", nil])
+      )
+      allow_any_instance_of(Portus::RegistryClient).to(
+        receive(:delete)
+          .with(repo.full_name, "digest", "manifests")
+          .and_return(true)
+      )
+
+      tag.delete_by_digest!(user)
+
+      expect(Tag.find_by(name: "t")).to be_nil
+    end
   end
 
   # NOTE: lots of cases are being left out on purpose because they are already

@@ -53,6 +53,22 @@ describe Repository do
     end
   end
 
+  describe "#full_name" do
+    let(:registry) { create(:registry) }
+
+    it "returns the bare name when it lives in a global namespace" do
+      repository = create(:repository, namespace: registry.global_namespace)
+      expect(repository.full_name).to eq repository.name
+    end
+
+    it "returns the namespaced name when it lives inside of a namespace" do
+      team = create(:team)
+      namespace = create(:namespace, name: "a", team: team)
+      repository = create(:repository, namespace: namespace)
+      expect(repository.full_name).to eq "a/#{repository.name}"
+    end
+  end
+
   describe "handle push event" do
     let(:tag_name) { "latest" }
     let(:repository_name) { "busybox" }
@@ -394,8 +410,21 @@ describe Repository do
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
     before :each do
-      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return(
-        ["id", "digest", ""])
+      # Even if the returned value is dummy, we want to make sure that the
+      # given arguments are set accordingly. The checked values are basically
+      # hardcoded, which shouldn't be a problem since there are not a lot of
+      # tests anyways.
+      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest) do |_, *args|
+        if args.first != "busybox" && !args.first.include?("/")
+          raise "Should be included inside of a namespace"
+        end
+        if args.last != "latest" && args.last != "0.1"
+          raise "Using an unknown tag"
+        end
+
+        ["id", "digest", ""]
+      end
+
       allow(Repository).to receive(:id_and_digest_from_event).and_return(["id", "digest"])
     end
 
