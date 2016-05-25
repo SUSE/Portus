@@ -56,7 +56,7 @@
                       = t.name
                   td= tag.first.author.username
                   td
-                    - if tag.first.image_id.empty?
+                    - if tag.first.image_id.blank?
                       = "-"
                     - else
                       span[title="sha256:#{tag.first.image_id}"]
@@ -70,7 +70,7 @@
                       = t.name
                 td= tag.first.author.username
                 td
-                  - if tag.first.image_id.empty?
+                  - if tag.first.image_id.blank?
                     = "-"
                   - else
                     span[title="sha256:#{tag.first.image_id}"]

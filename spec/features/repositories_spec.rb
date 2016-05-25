@@ -59,5 +59,12 @@ feature "Repositories support" do
         expectations[idx - 1].each { |tag| expect(row.text.include?(tag)).to be_truthy }
       end
     end
+
+    scenario "it works if both the digest and the image_id are blank", js: true do
+      create(:tag, author: user, repository: repository, digest: nil, image_id: nil)
+      create(:tag, author: user, repository: repository, digest: "nonblank", image_id: nil)
+
+      visit repository_path(repository)
+    end
   end
 end
