@@ -334,5 +334,18 @@ describe NamespacesController do
       expect(namespace_description_activity.parameters[:old]).to eq(old_description)
       expect(namespace_description_activity.parameters[:new]).to eq("new description")
     end
+
+    it "tracks change team" do
+      team2 = create(:team)
+      expect do
+        patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+      end.to change(PublicActivity::Activity, :count).by(1)
+      namespace_change_team_activity = PublicActivity::Activity.find_by(
+        key: "namespace.change_team")
+      expect(namespace_change_team_activity.owner).to eq(owner)
+      expect(namespace_change_team_activity.trackable).to eq(namespace)
+      expect(namespace_change_team_activity.parameters[:old]).to eq(team.id)
+      expect(namespace_change_team_activity.parameters[:new]).to eq(team2.id)
+    end
   end
 end

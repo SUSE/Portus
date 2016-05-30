@@ -59,6 +59,9 @@ class NamespacesController < ApplicationController
     if @team.nil?
       @namespace.errors[:team_id] << "'#{p[:team]}' unknown."
     else
+      @namespace.create_activity :change_team,
+        owner:      current_user,
+        parameters: { old: @namespace.team.id, new: @team.id }
       @namespace.update_attributes(team: @team)
     end
   end
