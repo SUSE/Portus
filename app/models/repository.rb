@@ -40,6 +40,13 @@ class Repository < ActiveRecord::Base
     # options :namespace_name, type: :fulltext
   end
 
+  # Returns the full name for this repository. What this means is that it
+  # returns the bare name if it belongs to the global namespace, otherwise
+  # it prefixes the name with the name of the namespace.
+  def full_name
+    namespace.global? ? name : "#{namespace.name}/#{name}"
+  end
+
   # Set this repo as starred for the given user if there was no star
   # associated. Otherwise, remove the star.
   def toggle_star(user)
@@ -137,7 +144,7 @@ class Repository < ActiveRecord::Base
     end
 
     # And store the tag and its activity.
-    id, digest = Repository.id_and_digest_from_event(event, repo)
+    id, digest = Repository.id_and_digest_from_event(event, repository.full_name)
     tag = repository.tags.create(name: tag, author: actor, digest: digest, image_id: id)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
@@ -190,7 +197,7 @@ class Repository < ActiveRecord::Base
     to_be_created_tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
-        id, digest, = client.manifest(name, tag)
+        id, digest, = client.manifest(repository.full_name, tag)
       rescue
         id = ""
         digest = ""
