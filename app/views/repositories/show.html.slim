@@ -33,46 +33,51 @@
           | /
           = @repository.name
       .col-xs-6.text-right
-        .circle-label.permissions-label.circle-label-sm[data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You can push images"
-          data-original-title="What can I do?"
-          tabindex="0" data-html="true"]
-            i.fa.fa-arrow-up
-            ' Push
-        .circle-label.permissions-label.circle-label-sm[data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You can pull images"
-          data-original-title="What can I do?"
-          tabindex="0" data-html="true"]
-          i.fa.fa-arrow-down
-          ' Pull
-        .circle-label.permissions-label.circle-label-sm[data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You are the owner of this repository"
-          data-original-title="What's my role?"
-          tabindex="0" data-html="true"]
-          i.fa.fa-male
-          ' Owner
-        .circle-label.permissions-label.circle-label-sm[data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You are a contributor in this repository"
-          data-original-title="What's my role?"
-          tabindex="0" data-html="true"]
-          i.fa.fa-exchange
-          ' Contr.
-        .circle-label.permissions-label.circle-label-sm[data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You are a viewer in this repository"
-          data-original-title="What's my role?"
-          tabindex="0" data-html="true"]
-          i.fa.fa-eye
-          ' Viewer
+        - if can_push?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You can push images"
+            data-original-title="What can I do?"
+            tabindex="0" data-html="true"]
+              i.fa.fa-arrow-up
+              ' Push
+        - if can_pull?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You can pull images"
+            data-original-title="What can I do?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-arrow-down
+            ' Pull
+        - if owner?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are an owner of this repository"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-male
+            ' Owner
+        - elsif contributor?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are a contributor in this repository"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-exchange
+            ' Contr.
+        - elsif viewer?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are a viewer in this repository"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-eye
+            ' Viewer
 
 
   .panel-body

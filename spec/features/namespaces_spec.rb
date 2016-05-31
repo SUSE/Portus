@@ -3,7 +3,9 @@ require "rails_helper"
 feature "Namespaces support" do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:admin) }
-  let!(:team) { create(:team, owners: [user]) }
+  let!(:user2) { create(:user) }
+  let!(:user3) { create(:user) }
+  let!(:team) { create(:team, owners: [user], contributors: [user2], viewers: [user3]) }
   let!(:namespace) { create(:namespace, team: team, registry: registry) }
 
   before do
@@ -137,6 +139,21 @@ feature "Namespaces support" do
       wait_for_ajax
       wait_for_effect_on("#alert")
       expect(page).to have_content("Team 'unknown' unknown")
+    end
+  end
+
+  describe "#show" do
+    it "shows the proper visual aid for each role", js: true do
+      visit namespace_path(namespace.id)
+      expect(page).to have_content("Push Pull Owner")
+
+      login_as user2, scope: :user
+      visit namespace_path(namespace.id)
+      expect(page).to have_content("Push Pull Contr.")
+
+      login_as user3, scope: :user
+      visit namespace_path(namespace.id)
+      expect(page).to have_content("Pull Viewer")
     end
   end
 end
