@@ -1,8 +1,10 @@
 .panel.panel-default
   .panel-heading
-    h5
-      ' Registered users
-      .pull-right
+    .row
+      .col-sm-6
+        h5
+          ' Registered users
+      .col-sm-6.text-right
         = link_to new_admin_user_path, class: 'btn btn-xs btn-link', role: 'button'
           i.fa.fa-plus-circle
           | Create new user

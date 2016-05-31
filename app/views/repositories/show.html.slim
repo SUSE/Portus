@@ -104,18 +104,21 @@
 
 .panel.panel-default
   .panel-heading.clearfix
-    h5
-      .pull-right
+    .row
+      .col-sm-6
+        h5
+          span class="number_of_comments"
+            = @repository.comments.count
+          span class="comment_string"
+            - if @repository.comments.count == 1
+              |  Comment
+            - else
+              |  Comments
+      .col-sm-6.text-right
         a#write_comment_repository_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
           i.fa.fa-comment
           | Write a comment
-      span class="number_of_comments"
-        = @repository.comments.count
-      span class="comment_string"
-        - if @repository.comments.count == 1
-          |  Comment
-        - else
-          |  Comments
+
   #comments.panel-body
     .container-full
       - if @repository_comments.empty?

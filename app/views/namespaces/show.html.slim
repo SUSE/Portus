@@ -1,23 +1,26 @@
 .panel.panel-default
   .panel-heading
-    h5
-      strong
-        '#{@namespace.clean_name}
-      ' namespace
-      - if can_manage_namespace?(@namespace)
-        .pull-right
+    .row
+      .col-sm-6
+        h5
+          strong
+            '#{@namespace.clean_name}
+          ' namespace
+          small
+            a[data-placement="right"
+              data-toggle="popover"
+              data-container=".panel-heading"
+              data-content="<p>Information about the namespace.</p>"
+              data-original-title="What's this?"
+              tabindex="0" data-html="true"]
+                i.fa.fa-info-circle
+      .col-sm-6.text-right
+        - if can_manage_namespace?(@namespace)
           button.btn.btn-link.btn-xs.btn-edit-role[
             value="#{@namespace.id}" id="edit_namespace" class="button_namespace_description"]
             i.fa.fa-pencil.fa-lg
             | Edit namespace
-      small
-        a[data-placement="right"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="<p>Information about the namespace.</p>"
-          data-original-title="What's this?"
-          tabindex="0" data-html="true"]
-            i.fa.fa-info-circle
+
   .panel-body
     .description
       - if @namespace.description.blank?
