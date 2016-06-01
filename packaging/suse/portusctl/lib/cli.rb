@@ -117,6 +117,12 @@ Looks for the following required certificate files in the specified folder:
     type:    :boolean,
     default: true
 
+  # Display name
+  option "display-name-enable",
+    desc:    "Enable users to set a display name",
+    type:    :boolean,
+    default: false
+
   option "delete-enable",
     desc:    "Enable delete support. Only do this if your registry is 2.4 or higher",
     type:    :boolean,
