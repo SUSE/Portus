@@ -75,6 +75,10 @@ describe Repository do
     let(:registry) { create(:registry, hostname: "registry.test.lan") }
     let(:user) { create(:user) }
 
+    before :each do
+      VCR.turn_on!
+    end
+
     context "adding an existing repo/tag" do
       it "does not add a new activity when an already existing repo/tag already existed" do
         event = { "actor" => { "name" => user.username } }

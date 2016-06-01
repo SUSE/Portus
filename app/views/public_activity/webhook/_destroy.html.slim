@@ -7,10 +7,10 @@ li
     .description
       h6
         strong
-          = "#{activity.owner.username} removed the "
-        = activity.trackable.url
-        = " webhook from the "
-        = activity.trackable.namespace.name
+          = "#{activity.owner.username} removed webhook "
+        = activity.parameters[:webhook_host]
+        = " from the "
+        = link_to activity.parameters[:namespace_name], controller: "namespaces", id: activity.parameters[:namespace_id]
         = " namespace"
       small
         i.fa.fa-clock-o

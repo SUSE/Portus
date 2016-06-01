@@ -42,6 +42,8 @@ describe CatalogJob do
     end
 
     it "raises an exception when there has been a problem in /v2/_catalog" do
+      VCR.turn_on!
+
       create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
@@ -52,6 +54,8 @@ describe CatalogJob do
     end
 
     it "performs the job as expected" do
+      VCR.turn_on!
+
       registry = create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_registry_catalog", record: :none) do
@@ -69,6 +73,8 @@ describe CatalogJob do
     end
 
     it "handles registries even if there some namespaces missing" do
+      VCR.turn_on!
+
       registry = create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_registry_catalog_namespace_missing", record: :none) do

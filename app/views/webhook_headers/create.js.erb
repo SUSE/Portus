@@ -2,7 +2,7 @@
   $('#alert p').html("<%= escape_javascript(@webhook_header.errors.full_messages.join('<br/>')) %>");
   $('#alert').fadeIn();
 <% else %>
-  $('#alert p').html("New header created");
+  $('#alert p').html("Header '<%= @webhook_header.name %>' has been created successfully");
   $('#alert').fadeIn();
 
   $('#add_webhook_header_form').fadeOut();

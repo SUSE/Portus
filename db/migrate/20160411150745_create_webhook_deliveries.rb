@@ -3,7 +3,7 @@ class CreateWebhookDeliveries < ActiveRecord::Migration
     create_table :webhook_deliveries do |t|
       t.references :webhook, index: true, foreign_key: true
       t.string :uuid
-      t.string :status
+      t.integer :status
       t.text :request_header
       t.text :request_body
       t.text :response_header

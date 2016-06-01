@@ -3,6 +3,6 @@
   $('#alert').fadeIn();
 <% else %>
   $("#webhook_header_<%= @webhook_header.id %>").remove();
-  $('#alert p').html("Header removed from the webhook");
+  $('#alert p').html("Header '<%= @webhook_header.name %>' has been removed successfully");
   $('#alert').fadeIn();
 <% end %>

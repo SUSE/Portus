@@ -39,14 +39,23 @@ class Namespace < ActiveRecord::Base
   # namespace, returns two values:
   #   1. The namespace where the given repository belongs to.
   #   2. The name of the repository itself.
-  def self.get_from_name(name)
+  # If a registry is provided, it will query it for the given repository name.
+  def self.get_from_name(name, registry = nil)
     if name.include?("/")
       namespace, name = name.split("/", 2)
-      namespace = Namespace.find_by(name: namespace)
+      if registry.nil?
+        namespace = Namespace.find_by(name: namespace)
+      else
+        namespace = registry.namespaces.find_by(name: namespace)
+      end
     else
-      namespace = Namespace.find_by(global: true)
+      if registry.nil?
+        namespace = Namespace.find_by(global: true)
+      else
+        namespace = Namespace.find_by(registry: registry, global: true)
+      end
     end
-    [namespace, name]
+    [namespace, name, registry]
   end
 
   # Returns a String containing the cleaned name for this namespace. The

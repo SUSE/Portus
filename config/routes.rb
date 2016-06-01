@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     put "toggle_public", on: :member
     resources :webhooks do
       resources :headers, only: [:create, :destroy], controller: :webhook_headers
+      resources :deliveries, only: [:update], controller: :webhook_deliveries
       member do
         put "toggle_enabled"
       end

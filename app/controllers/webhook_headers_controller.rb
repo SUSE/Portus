@@ -1,9 +1,9 @@
+# WebhookHeadersController manages the creation/removal of webhook headers.
 class WebhookHeadersController < ApplicationController
   respond_to :html, :js
 
   before_action :set_namespace
   before_action :set_webhook
-  before_action :set_webhook_header, only: [:destroy]
 
   after_action :verify_authorized
 
@@ -23,6 +23,8 @@ class WebhookHeadersController < ApplicationController
   # DELETE /namespaces/1/webhooks/1/headers/1
   # DELETE /namespaces/1/webhooks/1/headers/1.json
   def destroy
+    @webhook_header = @webhook.headers.find(params[:id])
+
     authorize @webhook_header
 
     @webhook_header.destroy
@@ -37,10 +39,6 @@ class WebhookHeadersController < ApplicationController
 
   def set_webhook
     @webhook = @namespace.webhooks.find(params[:webhook_id])
-  end
-
-  def set_webhook_header
-    @webhook_header = @webhook.headers.find(params[:id])
   end
 
   def webhook_header_params

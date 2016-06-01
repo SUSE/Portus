@@ -7,7 +7,7 @@ class CreateWebhooks < ActiveRecord::Migration
       t.string :password
       t.integer :request_method
       t.integer :content_type
-      t.boolean :enabled
+      t.boolean :enabled, default: false
 
       t.timestamps null: false
     end

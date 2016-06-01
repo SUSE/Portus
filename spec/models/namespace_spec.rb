@@ -97,7 +97,7 @@ describe Namespace do
     let!(:registry)    { create(:registry) }
     let!(:owner)       { create(:user) }
     let!(:team)        { create(:team, owners: [owner]) }
-    let!(:namespace)   { create(:namespace, team: team) }
+    let!(:namespace)   { create(:namespace, team: team, registry: registry) }
     let!(:repo)        { create(:repository, namespace: namespace) }
 
     it "works for global namespaces" do
@@ -111,6 +111,21 @@ describe Namespace do
       ns, name = Namespace.get_from_name("#{namespace.name}/#{repo.name}")
       expect(ns.id).to eq namespace.id
       expect(name).to eq repo.name
+    end
+
+    context "when providing a registry" do
+      it "works for global namespaces" do
+        ns = Namespace.find_by(global: true)
+        namespace, name = Namespace.get_from_name(repo.name, registry)
+        expect(namespace.id).to eq ns.id
+        expect(name).to eq repo.name
+      end
+
+      it "works for user namespaces" do
+        ns, name = Namespace.get_from_name("#{namespace.name}/#{repo.name}", registry)
+        expect(ns.id).to eq namespace.id
+        expect(name).to eq repo.name
+      end
     end
   end
 end

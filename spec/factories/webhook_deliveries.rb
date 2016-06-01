@@ -5,7 +5,7 @@
 #  id              :integer          not null, primary key
 #  webhook_id      :integer
 #  uuid            :string(255)
-#  status          :string(255)
+#  status          :integer
 #  request_header  :text(65535)
 #  request_body    :text(65535)
 #  response_header :text(65535)
@@ -21,5 +21,8 @@
 
 FactoryGirl.define do
   factory :webhook_delivery do
+    sequence(:uuid) { |n| "uuid_#{n}" }
+    request_body "{}"
+    status 404
   end
 end

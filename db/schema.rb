@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 20160502140301) do
   create_table "webhook_deliveries", force: :cascade do |t|
     t.integer  "webhook_id",      limit: 4
     t.string   "uuid",            limit: 255
-    t.string   "status",          limit: 255
+    t.integer  "status",          limit: 4
     t.text     "request_header",  limit: 65535
     t.text     "request_body",    limit: 65535
     t.text     "response_header", limit: 65535
@@ -205,9 +205,9 @@ ActiveRecord::Schema.define(version: 20160502140301) do
     t.string   "password",       limit: 255
     t.integer  "request_method", limit: 4
     t.integer  "content_type",   limit: 4
-    t.boolean  "enabled",        limit: 1
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.boolean  "enabled",                    default: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   add_index "webhooks", ["namespace_id"], name: "index_webhooks_on_namespace_id", using: :btree

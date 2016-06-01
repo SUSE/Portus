@@ -3,6 +3,6 @@
   $('#alert').fadeIn();
 <% else %>
   $("#webhook_<%= @webhook.id %>").remove();
-  $('#alert p').html("Webhook removed from the namespace");
+  $('#alert p').html("Webhook '<%= @webhook.host %>' has been removed successfully");
   $('#alert').fadeIn();
 <% end %>
