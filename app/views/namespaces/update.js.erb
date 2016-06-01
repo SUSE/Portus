@@ -13,6 +13,6 @@
 
   $("#team-label a").replaceWith("<%= escape_javascript(link_to(@team.name, @team)) %>")
 <% else %>
-  $('#alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
+  $('#float-alert').fadeIn(setTimeOutAlertDelay());
 <% end %>

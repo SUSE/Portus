@@ -66,6 +66,7 @@ describe RepositoriesController, type: :controller do
 
       delete :destroy, { id: repository.id }, valid_session
       expect(flash[:notice]).to eq "Repository removed with all its tags"
+      expect(flash[:float]).to eq true
       expect(response.status).to eq 302
 
       expect(Repository.find_by(id: repository.id)).to be_nil
@@ -76,6 +77,7 @@ describe RepositoriesController, type: :controller do
 
       delete :destroy, { id: repository.id }, valid_session
       expect(flash[:alert]).to eq "Could not remove all the tags"
+      expect(flash[:float]).to eq true
       expect(response.status).to eq 302
 
       # Even if it fails in our tests, all tags should be "marked".

@@ -36,11 +36,11 @@ feature "Namespaces support" do
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(Namespace.count).to eql namespaces_count
       expect(current_path).to eql namespaces_path
       expect(page).to have_content("Name has already been taken")
-      expect(page).to have_css("#alert .alert.alert-dismissible.alert-info")
+      expect(page).to have_css("#float-alert .alert.alert-dismissible.alert-info.float-alert")
     end
 
     scenario "An user cannot create a namespace for a hidden team", js: true do
@@ -54,11 +54,11 @@ feature "Namespaces support" do
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(Namespace.count).to eql namespaces_count
       expect(current_path).to eql namespaces_path
       expect(page).to have_content("Selected team does not exist")
-      expect(page).to have_css("#alert .alert.alert-dismissible.alert-info")
+      expect(page).to have_css("#float-alert .alert.alert-dismissible.alert-info")
     end
 
     scenario "A namespace can be created from the index page", js: true do
@@ -78,7 +78,7 @@ feature "Namespaces support" do
       expect(current_path).to eql namespaces_path
       expect(page).to have_content("valid-namespace")
 
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(page).to have_content("New namespace created")
 
       # Check that it created a link to it and that it's accessible.
@@ -120,7 +120,7 @@ feature "Namespaces support" do
       namespace = Namespace.find(id)
       expect(namespace.public?).to be true
 
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(page).to have_content("Namespace '#{namespace.name}' is now public")
     end
   end
@@ -135,7 +135,7 @@ feature "Namespaces support" do
       find("#change_description_namespace_#{namespace.id} .btn").click
 
       wait_for_ajax
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(page).to have_content("Team 'unknown' unknown")
     end
   end

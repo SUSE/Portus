@@ -15,9 +15,10 @@
       - else
         p Ask an administrator to complete configuration.
 
+- flash.each do |key, value|
+  - if key == 'notice' || key == 'alert'
+    = render template: 'shared/_notification.html.slim',
+        locals: { messages: value, alert: key, float: flash[:float] }
 
 = render template: 'shared/_notification.html.slim',
-    locals: { messages: flash[:notice], alert: 'info' }
-
-= render template: 'shared/_notification.html.slim',
-    locals: { messages: flash[:alert], alert: 'danger' }
+    locals: { messages: flash[:notice], alert: 'info', float: true }

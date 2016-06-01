@@ -1,12 +1,9 @@
 <% if @error %>
-  $('#alert p').html("<%= escape_javascript(@error) %>");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("<%= escape_javascript(@error) %>");
 <% elsif @namespace.errors.any? %>
-  $('#alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
 <% else %>
-  $('#alert p').html("New namespace created");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("New namespace created");
 
   $('#add_namespace_form').fadeOut();
   $('#add_namespace_btn i').addClass("fa-chevron-down")
@@ -21,3 +18,4 @@
     <% end %>
   }
 <% end %>
+$('#float-alert').fadeIn(setTimeOutAlertDelay());
