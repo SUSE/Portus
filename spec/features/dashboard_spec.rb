@@ -52,7 +52,7 @@ feature "Dashboard page" do
     end
   end
 
-  describe "Display name", focus: true do
+  describe "Display name" do
     scenario "Shows the display name of the user when needed" do
       visit authenticated_root_path
       expect(page).not_to have_content("docker-gangsta")
