@@ -117,3 +117,9 @@ jwt_expiration_time:
 # The FQDN of the machine where Portus is being deployed.
 machine_fqdn:
   value: "portus.test.lan"
+
+# Allow users to have different display names on the web site. This will
+# **not** be the username used by `docker login`. It defaults to false because
+# it might confuse users that are not fully aware of it.
+display_name:
+  enabled: false

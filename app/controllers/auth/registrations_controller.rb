@@ -41,7 +41,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
       sign_in(current_user, bypass: true) if succ
       succ
     else
-      current_user.update_without_password(params.require(:user).permit(:email))
+      current_user.update_without_password(params.require(:user).permit(:email, :display_name))
     end
 
     if success

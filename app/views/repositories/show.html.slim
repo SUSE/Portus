@@ -54,7 +54,7 @@
                   td
                     .label.label-success
                       = t.name
-                  td= tag.first.author.username
+                  td= tag.first.author.display_username
                   td
                     - if tag.first.image_id.blank?
                       = "-"
@@ -68,7 +68,7 @@
                   - tag.each do |t|
                     .label.label-success
                       = t.name
-                td= tag.first.author.username
+                td= tag.first.author.display_username
                 td
                   - if tag.first.image_id.blank?
                     = "-"

@@ -8,6 +8,12 @@
         .col-md-7
           = f.email_field(:email, class: 'form-control', required: true, autofocus: true)
 
+      - if APP_CONFIG.enabled?("display_name")
+        .form-group
+          = f.label :display_name, {class: 'control-label col-md-2'}
+          .col-md-7
+            = f.text_field(:display_name, class: 'form-control')
+
       .form-group
         .col-md-offset-2.col-md-7
           = f.submit('Update', class: 'btn btn-primary')

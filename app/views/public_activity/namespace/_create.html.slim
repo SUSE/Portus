@@ -7,7 +7,7 @@ li
     .description
       h6
         strong
-          = "#{activity.owner.username} created the "
+          = "#{activity.owner.display_username} created the "
         = link_to activity.trackable.name , activity.trackable
         = " namespace under the "
         = link_to activity.trackable.team.name, activity.trackable.team

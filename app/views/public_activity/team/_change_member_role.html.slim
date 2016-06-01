@@ -8,9 +8,9 @@ li
       h6
         strong
           - if activity.owner == activity.recipient
-            = "#{activity.owner.username} changed its role "
+            = "#{activity.owner.display_username} changed its role "
           - else
-            = "#{activity.owner.username} changed role of user #{activity.recipient.username} "
+            = "#{activity.owner.display_username} changed role of user #{activity.recipient.display_username} "
         = "from #{activity.parameters[:old_role]} to #{activity.parameters[:new_role]} "
         = "within the team "
         = link_to activity.trackable.name, activity.trackable

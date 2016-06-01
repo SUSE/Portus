@@ -1,1 +1,1 @@
-= CSV.generate_line(['namespace', activity.trackable.name, 'create', '-', activity.owner.username, activity.created_at, "owned by team #{activity.trackable.team.name}"])
+= CSV.generate_line(['namespace', activity.trackable.name, 'create', '-', activity.owner.display_username, activity.created_at, "owned by team #{activity.trackable.team.name}"])

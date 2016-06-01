@@ -15,7 +15,14 @@
                 = f.label :email
               - else
                 = f.label :email, "Email", class: "control-label", title: "This profile is not complete. You need to provide an email first"
-              = f.text_field(:email, class: 'form-control', required: true, autofocus: true)
+              = f.email_field(:email, class: 'form-control', required: true, autofocus: true)
+
+          - if APP_CONFIG.enabled?("display_name")
+            .form-group
+              .field
+                = f.label :display_name
+                = f.text_field(:display_name, class: 'form-control')
+
           .form-group
             .actions
               = f.submit('Update', class: 'btn btn-primary', disabled: true)
