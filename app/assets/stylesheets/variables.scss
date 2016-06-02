@@ -76,6 +76,8 @@ $font-size-h2: floor(($font-size-base * 1.95));
 $activity-change-description:            $light-blue;
 $activity-create-namespace:              $blue;
 $activity-change-namespace-visibility:   $dark-green;
+$activity-create-webhook:                $blue;
+$activity-change-webhook-visibility:     $dark-green;
 $activity-add-member-team:               $green;
 $activity-remove-member-team:            $yellow;
 $activity-change-role:                   $orange;

@@ -66,4 +66,15 @@ FactoryGirl.define do
     parameters Hash.new(application: "test application")
   end
 
+  factory :activity_webhook_create, class: PublicActivity::Activity do
+    trackable_type "Webhook"
+    owner_type "User"
+    key "webhook.create"
+  end
+
+  factory :activity_webhook_destroy, class: PublicActivity::Activity do
+    trackable_type "Webhook"
+    owner_type "User"
+    key "webhook.destroy"
+  end
 end

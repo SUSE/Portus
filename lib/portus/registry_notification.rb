@@ -5,11 +5,11 @@ module Portus
     # An array with the events that a handler has to support.
     HANDLED_EVENTS = ["push", "delete"].freeze
 
-    # Processes the notification data with the given handler. The data is the
+    # Processes the notification data with the given handlers. The data is the
     # parsed JSON body as given by the registry. A handler is a class that can
     # call the `handle_#{event}_event` method. This method receives an `event`
     # object, which is the event object as given by the registry.
-    def self.process!(data, handler)
+    def self.process!(data, *handlers)
       data["events"].each do |event|
         Rails.logger.debug "Incoming event:\n#{JSON.pretty_generate(event)}"
         next unless relevant?(event)
@@ -18,7 +18,7 @@ module Portus
         next unless HANDLED_EVENTS.include?(action)
         Rails.logger.info "Handling '#{action}' event:\n#{JSON.pretty_generate(event)}"
 
-        handler.send("handle_#{action}_event".to_sym, event)
+        handlers.each { |handler| handler.send("handle_#{action}_event".to_sym, event) }
       end
     end
 

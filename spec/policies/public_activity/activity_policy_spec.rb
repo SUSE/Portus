@@ -4,12 +4,15 @@ describe PublicActivity::ActivityPolicy do
 
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
+  let(:viewer) { create(:user) }
+  let(:contributor) { create(:user) }
   let(:activity_owner) { create(:user) }
   let(:registry) { create(:registry) }
   let(:namespace) { create(:namespace, registry: registry, team: team) }
-  let(:team) { create(:team, owners: [user]) }
+  let(:team) { create(:team, owners: [user], contributors: [contributor], viewers: [viewer]) }
   let(:repository) { create(:repository, namespace: namespace) }
   let(:tag) { create(:tag, repository: repository) }
+  let(:webhook) { create(:webhook, namespace: namespace, url: "http://example.com") }
 
   subject { described_class }
 
@@ -124,6 +127,19 @@ describe PublicActivity::ActivityPolicy do
 
       expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
     end
+
+    it "returns pertinent webhook activities" do
+      activities = [
+        create_activity_webhook_create(webhook, activity_owner),
+        create_activity_webhook_destroy(webhook, activity_owner, namespace)
+      ]
+
+      expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
+      expect(Pundit.policy_scope(contributor, PublicActivity::Activity).to_a)
+        .to match_array(activities)
+      expect(Pundit.policy_scope(viewer, PublicActivity::Activity).to_a).to match_array(activities)
+      expect(Pundit.policy_scope(another_user, PublicActivity::Activity).to_a).to be_empty
+    end
   end
 
   private
@@ -165,4 +181,20 @@ describe PublicActivity::ActivityPolicy do
            owner_id:     owner.id)
   end
 
+  def create_activity_webhook_create(webhook, activity_owner)
+    create(:activity_webhook_create,
+           trackable_id: webhook.id,
+           owner_id:     activity_owner.id)
+  end
+
+  def create_activity_webhook_destroy(webhook, activity_owner, namespace)
+    create(:activity_webhook_destroy,
+           trackable_id: webhook.id,
+           owner_id:     activity_owner.id,
+           parameters:   { namespace_id:   namespace.id,
+                           namespace_name: namespace.name,
+                           webhook_url:    webhook.url,
+                           webhook_host:   webhook.host }
+          )
+  end
 end
