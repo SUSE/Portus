@@ -20,5 +20,13 @@
         .col-md-7
           = f.check_box(:use_ssl)
       .form-group
+        = f.label :external_hostname, "External Registry Name", {class:'control-label col-md-2', title: 'Set this if the name that clients use to communicate with the registry is different than the name that portus uses to connect'}
+        .col-md-7 
+          - if params[:external_hostname]
+            = f.text_field(:external_hostname, class: 'form-control', value: @registry.external_hostname, required: false)
+          - else
+            = f.text_field(:external_hostname, class: 'form-control',required: false)
+      .form-group
         .col-md-offset-2.col-md-7
           = f.submit('Update', class: 'btn btn-primary')
+
