@@ -1,25 +1,81 @@
-header {
-  height: 50px;
+.portus-topbar {
+  height: 5rem;
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  padding: .5em 1em;
   z-index: 9999;
 
-  #gradient > .horizontal(@mainColour, @secondColour, 0%, 100%);
+  background-color: rgba(0, 0, 0, 0);
+  transition-property: all;
+  transition-duration: 0.5s;
+
+  .container-fluid {
+    height: 100%;
+  }
+
+  .pull-right{
+    height: 100%;
+  }
+
+  .topbar-logo {
+    padding-top: 1rem;
+  }
 
   .btn-link {
     color: @white;
-    font-weight: 400;
+    font-weight: bold;
     font-size: 14px;
-    margin-left: 18px;
+    height: 100%;
+
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    padding-top: 2rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+
+    border: 0;
+    border-bottom: 0.3rem solid @white;
+
+    transition-duration: 0.5s;
+    transition-property: all;
 
     &:hover {
       color: @white;
+      text-decoration: none;
+
+      margin-left: 0rem;
+      margin-right: 0rem;
+      padding: 1rem 4rem 0 4rem;
+
+      border-bottom-color: @white;
+      transition-duration: 0.5s;
+      transition-property: all;
     }
   }
 }
+
+.opaque {
+  background-color: fade(@mainColour, 90%);
+  height: 6rem;
+  transition-property: all;
+  transition-duration: 0.5s;
+  box-shadow: 0 0px 2rem 0 rgba(0, 0, 0, 0.7);
+  .btn-link {
+    margin: 0;
+    border: 0;
+
+    font-weight: normal;
+    &:hover {
+      padding: 2rem 4rem 0 4rem;
+      background-color: fade(@secondColour, 20%);
+    }
+  }
+}
+
 
 footer {
   padding: 2em 0;
