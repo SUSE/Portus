@@ -21,6 +21,13 @@ header {
   }
   .username-logout {
     @extend .button-container;
+    a:hover {
+      text-decoration: none;
+    }
+    .btn-inline-header {
+      height: 40px;
+      display: inline-block;
+    }
   }
   .search-header {
     position: relative;
