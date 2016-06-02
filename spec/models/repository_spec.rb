@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: repositories
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)      default(""), not null
+#  namespace_id :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  marked       :boolean          default("0")
+#
+# Indexes
+#
+#  fulltext_index_repositories_on_name          (name)
+#  index_repositories_on_name_and_namespace_id  (name,namespace_id) UNIQUE
+#  index_repositories_on_namespace_id           (namespace_id)
+#
+
 require "rails_helper"
 
 # Auxiliar method to get the URL format used in this spec file.
@@ -32,6 +50,22 @@ describe Repository do
       repository.toggle_star(user)
       expect(repository.starred_by?(user)).to be false
       expect(repository.starred_by?(other_user)).to be false
+    end
+  end
+
+  describe "#full_name" do
+    let(:registry) { create(:registry) }
+
+    it "returns the bare name when it lives in a global namespace" do
+      repository = create(:repository, namespace: registry.global_namespace)
+      expect(repository.full_name).to eq repository.name
+    end
+
+    it "returns the namespaced name when it lives inside of a namespace" do
+      team = create(:team)
+      namespace = create(:namespace, name: "a", team: team)
+      repository = create(:repository, namespace: namespace)
+      expect(repository.full_name).to eq "a/#{repository.name}"
     end
   end
 
@@ -375,6 +409,25 @@ describe Repository do
     let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
+    before :each do
+      # Even if the returned value is dummy, we want to make sure that the
+      # given arguments are set accordingly. The checked values are basically
+      # hardcoded, which shouldn't be a problem since there are not a lot of
+      # tests anyways.
+      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest) do |_, *args|
+        if args.first != "busybox" && !args.first.include?("/")
+          raise "Should be included inside of a namespace"
+        end
+        if args.last != "latest" && args.last != "0.1"
+          raise "Using an unknown tag"
+        end
+
+        ["id", "digest", ""]
+      end
+
+      allow(Repository).to receive(:id_and_digest_from_event).and_return(["id", "digest"])
+    end
+
     it "adds and deletes tags accordingly" do
       # Removes the existing tag and adds two.
       repo = { "name" => "#{namespace.name}/repo1", "tags" => ["latest", "0.1"] }
@@ -400,13 +453,14 @@ describe Repository do
       repo = Repository.create_or_update!(repo)
       expect(repo.name).to eq "busybox"
       expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
+      expect(repo.tags.map(&:digest).uniq).to match_array(["digest"])
 
       # Trying to create a repo into an unknown namespace.
       repo = { "name" => "unknown/repo1", "tags" => ["latest", "0.1"] }
       expect(Repository.create_or_update!(repo)).to be_nil
     end
 
-    it "dosnt remove tags of same name for different repo" do
+    it "doesn't remove tags of same name for different repo" do
       # create "latest" for repo1 and repo2
       event_one = { "name" => "#{namespace.name}/repo1", "tags" => ["latest"] }
       Repository.create_or_update!(event_one)
@@ -419,6 +473,145 @@ describe Repository do
 
       expect(repo1.tags.pluck(:name)).to include("latest")
       expect(repo2.tags.pluck(:name)).not_to include("latest")
+    end
+  end
+
+  describe "Groupped tags" do
+    let!(:registry)   { create(:registry) }
+    let!(:owner)      { create(:user) }
+    let!(:portus)     { create(:user, username: "portus") }
+    let!(:team)       { create(:team, owners: [owner]) }
+    let!(:namespace)  { create(:namespace, team: team) }
+    let!(:repo)        { create(:repository, namespace: namespace) }
+    let!(:tag1)        { create(:tag, repository: repo, digest: "1234") }
+    let!(:tag2)        { create(:tag, repository: repo, digest: tag1.digest) }
+    let!(:tag3)        { create(:tag, repository: repo, digest: "5678", created_at: 2.hours.ago) }
+
+    it "groups tags as expected" do
+      tags = repo.groupped_tags
+      expect(tags.size).to eq 2
+      expect(tags.flatten.map(&:name).uniq).to eq [tag1.name, tag2.name, tag3.name]
+      expect(tags.flatten.map(&:digest).uniq).to eq ["1234", "5678"]
+    end
+  end
+
+  describe "handle delete event" do
+    let!(:registry)   { create(:registry) }
+    let!(:owner)      { create(:user) }
+    let!(:portus)     { create(:user, username: "portus") }
+    let!(:team)       { create(:team, owners: [owner]) }
+    let!(:namespace)  { create(:namespace, team: team, registry: registry) }
+    let!(:repo)       { create(:repository, namespace: namespace) }
+    let!(:tag1)       { create(:tag, repository: repo, digest: "1234") }
+    let!(:tag2)       { create(:tag, repository: repo, digest: tag1.digest) }
+    let!(:tag3)       { create(:tag, repository: repo, digest: "5678") }
+
+    let!(:event) do
+      {
+        "id"        => "6d673710-06b5-48b5-a7d9-94cbaacf776b",
+        "timestamp" => "2016-04-13T15:03:39.595901492+02:00",
+        "action"    => "delete",
+        "target"    => {
+          "digest"     => "sha256:03d564cd8008f956c844cd3e52affb49bc0b65e451087a1ac9013c0140c595df",
+          "repository" => namespace.name + "/" + repo.name
+        },
+        "request"   => {
+          "id"        => "fae66612-ef48-4157-8994-bd146fbdd951",
+          "addr"      => "127.0.0.1:55452",
+          "host"      => registry.hostname,
+          "method"    => "DELETE",
+          "useragent" => "Ruby"
+        },
+        "actor"     => {
+          "name" => "portus"
+        },
+        "source"    => {
+          "addr"       => "bucket:5000",
+          "instanceID" => "741bc03b-6ebe-4ffc-b6b1-4b33d5fc2090"
+        }
+      }
+    end
+
+    it "doesn't do anything for a non-existing tag" do
+      Repository.handle_delete_event(event)
+      expect(Repository.count).to eq 1
+      expect(Tag.count).to eq 3
+    end
+
+    it "does not allow to delete a tag from a non-existing repository" do
+      # Digest exists but not the repo.
+      another = event.dup
+      another["target"]["digest"] = tag1.digest
+      another["target"]["repository"] = "unknown"
+
+      Repository.handle_delete_event(another)
+      expect(Repository.count).to eq 1
+      expect(Tag.count).to eq 3
+    end
+
+    it "deletes an existing tags, and the image when empty" do
+      another = event.dup
+      another["target"]["digest"] = tag1.digest
+
+      Repository.handle_delete_event(another)
+      expect(Repository.count).to eq 1
+      expect(Tag.count).to eq 1 # 2 were deleted because there was a re-tag
+
+      another["target"]["digest"] = tag3.digest
+
+      Repository.handle_delete_event(another)
+      expect(Repository.count).to eq 0
+      expect(Tag.count).to eq 0
+    end
+  end
+
+  describe "#delete_and_update!" do
+    let(:registry)        { create(:registry, hostname: "registry.test.lan") }
+    let(:user)            { create(:user) }
+    let(:repository_name) { "busybox" }
+    let(:tag_name)        { "latest" }
+
+    it "deletes the repository and updates activities accordingly" do
+      event = { "actor" => { "name" => user.username } }
+
+      # First we create it, and make sure that it creates the activity.
+      repo = nil
+      expect do
+        repo = Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.first
+      expect(activity.trackable_type).to eq "Repository"
+      expect(activity.trackable_id).to eq Repository.first.id
+      expect(activity.key).to eq "repository.push"
+      expect(activity.owner_id).to eq user.id
+      expect(activity.parameters).to be_empty
+
+      # And now delete and see what happens.
+      expect do
+        repo.delete_and_update!(user)
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      # The original push activity has changed, so it's still trackable.
+      activity = PublicActivity::Activity.first
+      expect(activity.trackable_type).to eq "Namespace"
+      expect(activity.trackable_id).to eq registry.global_namespace.id
+      expect(activity.key).to eq "repository.push"
+      expect(activity.owner_id).to eq user.id
+      expect(activity.parameters).to be_empty
+
+      # There's now a delete activity.
+      activity = PublicActivity::Activity.last
+      expect(activity.trackable_type).to eq "Namespace"
+      expect(activity.trackable_id).to eq registry.global_namespace.id
+      expect(activity.key).to eq "namespace.delete"
+      expect(activity.owner_id).to eq user.id
+      expect(activity.parameters).to eq(repository_name: repository_name,
+                                        namespace_id:    registry.global_namespace.id,
+                                        namespace_name:  registry.global_namespace.clean_name)
+
+      # Of course, the repo should be removed
+      expect(Repository.count).to eq 0
     end
   end
 end

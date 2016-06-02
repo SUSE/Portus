@@ -7,13 +7,13 @@ if (window.location.pathname == '/admin/users') {
   if (enabled) {
     element.removeClass("fa-toggle-off")
     element.addClass("fa-toggle-on")
-    $('#alert p').html("User '<%= user.username %>' has been enabled.");
+    $('#float-alert p').html("User '<%= user.username %>' has been enabled.");
   } else {
     element.removeClass("fa-toggle-on")
     element.addClass("fa-toggle-off")
-    $('#alert p').html("User '<%= user.username %>' has been disabled.");
+    $('#float-alert p').html("User '<%= user.username %>' has been disabled.");
   }
-  $('#alert').fadeIn();
+  $('#float-alert').fadeIn(setTimeOutAlertDelay());
 } else {
   // The user profile page.
   window.location.pathname = '/';

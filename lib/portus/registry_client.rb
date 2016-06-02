@@ -28,13 +28,25 @@ module Portus
       !res.nil? && res.code.to_i == 401
     end
 
-    # Retrieves the manifest for the required repository:tag. If everything goes
-    # well, it will return a parsed response from the registry, otherwise it will
-    # raise either ManifestNotFoundError or a RuntimeError.
+    # Calls the `/:repository/manifests/:tag` endpoint from the registry. It
+    # returns a three-sized array:
+    #
+    #   - The image ID (without the "sha256:" prefix): only available for v2
+    #     manifests (nil if v1).
+    #   - The manifest digest.
+    #   - The manifest itself as a ruby hash.
+    #
+    # It will raise either a ManifestNotFoundError or a RuntimeError if
+    # something goes wrong.
     def manifest(repository, tag = "latest")
-      res = perform_request("#{repository}/manifests/#{tag}")
+      res = perform_request("#{repository}/manifests/#{tag}", "get")
+
       if res.code.to_i == 200
-        JSON.parse(res.body)
+        mf = JSON.parse(res.body)
+        id = mf.try(:[], "config").try(:[], "digest")
+        id = id.split(":").last if id.is_a? String
+        digest = res["Docker-Content-Digest"]
+        [id, digest, mf]
       elsif res.code.to_i == 404
         handle_error res, repository: repository, tag: tag
       else
@@ -61,11 +73,10 @@ module Portus
       paged_response("#{repository}/tags/list", "tags")
     end
 
-    # Deletes a layer of the specified image. The layer is pointed by the digest
-    # as given by the manifest of the image itself. Returns true if the request
-    # was successful, otherwise it raises an exception.
-    def delete(name, digest)
-      res = perform_request("#{name}/blobs/#{digest}", "delete")
+    # Deletes a blob/manifest of the specified image. Returns true if the
+    # request was successful, otherwise it raises an exception.
+    def delete(name, digest, object = "blobs")
+      res = perform_request("#{name}/#{object}/#{digest}", "delete")
       if res.code.to_i == 202
         true
       elsif res.code.to_i == 404 || res.code.to_i == 405
@@ -87,6 +98,7 @@ module Portus
 
       until link.empty?
         page, link = get_page(link)
+        next unless page[field]
         res += page[field]
       end
       res
@@ -125,9 +137,11 @@ module Portus
 
       result = []
       repositories.each do |repo|
-        res = perform_request("#{repo}/tags/list")
-        if res.code.to_i == 200
-          result << JSON.parse(res.body)
+        begin
+          ts = tags(repo)
+          result << { "name" => repo, "tags" => ts } unless ts.blank?
+        rescue StandardError => e
+          Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
         end
       end
       result

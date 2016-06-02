@@ -1,11 +1,11 @@
-#alert[class="#{messages && messages.first ? '' : 'collapse'}"]
-  .alert.alert-dismissible.fade.in.text-left[class="alert-#{alert}"]
-    button.close data-dismiss="alert" type="button"
+div [id="#{float == true ? 'float' : 'fixed'}-alert" class="#{messages && messages.first ? '' : 'collapse'}"]
+  .alert.alert-dismissible.fade.in.text-left[class="alert-#{alert == 'alert' ? 'danger' : 'info'} #{float == true ? 'float-alert' : ''}"]
+    button.close class="alert-hide" type="button"
       span aria-hidden="true" &times;
       span.sr-only Close
     .alert-message
       .alert-icon.pull-left
-        i.fa.fa-info-circle.fa-3x
+        i.fa.fa-3x class=(alert == 'alert' ? 'fa-exclamation-circle' : 'fa-info-circle')
       p
         - if messages.is_a?(String)
           = messages
@@ -17,3 +17,6 @@
               - messages.each do |c|
                 li
                   = c
+
+javascript:
+  refreshFloatAlertPosition()

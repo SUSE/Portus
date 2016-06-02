@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: team_users
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  team_id    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  role       :integer          default("0")
+#
+# Indexes
+#
+#  index_team_users_on_team_id  (team_id)
+#  index_team_users_on_user_id  (user_id)
+#
+
 require "rails_helper"
 
 describe TeamUser do

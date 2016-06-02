@@ -116,10 +116,10 @@ feature "Signup feature" do
     fill_in "user_password_confirmation", with: "532"
     click_button("Create account")
 
-    expect(page).to have_css("#alert ul")
-    expect(page).to have_selector("#alert ul li", count: 2)
-    expect(page).to have_selector("#alert ul li", text: "Email is invalid")
-    expect(page).to have_selector("#alert ul li",
+    expect(page).to have_css("#fixed-alert ul")
+    expect(page).to have_selector("#fixed-alert ul li", count: 2)
+    expect(page).to have_selector("#fixed-alert ul li", text: "Email is invalid")
+    expect(page).to have_selector("#fixed-alert ul li",
                                   text: 'Password confirmation doesn\'t match Password')
   end
 

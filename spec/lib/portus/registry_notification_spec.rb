@@ -27,6 +27,32 @@ describe Portus::RegistryNotification do
     }
   end
 
+  let(:delete) do
+    {
+      "id"        => "6d673710-06b5-48b5-a7d9-94cbaacf776b",
+      "timestamp" => "2016-04-13T15:03:39.595901492+02:00",
+      "action"    => "delete",
+      "target"    => {
+        "digest"     => "sha256:03d564cd8008f956c844cd3e52affb49bc0b65e451087a1ac9013c0140c595df",
+        "repository" => "registry"
+      },
+      "request"   => {
+        "id"        => "fae66612-ef48-4157-8994-bd146fbdd951",
+        "addr"      => "127.0.0.1:55452",
+        "host"      => "registry.mssola.cat:5000",
+        "method"    => "DELETE",
+        "useragent" => "Ruby"
+      },
+      "actor"     => {
+        "name" => "portus"
+      },
+      "source"    => {
+        "addr"       => "bucket:5000",
+        "instanceID" => "741bc03b-6ebe-4ffc-b6b1-4b33d5fc2090"
+      }
+    }
+  end
+
   # This is a real even notification as given by docker distribution v2.3
   # rubocop:disable Metrics/LineLength
   let(:version23) do
@@ -62,8 +88,10 @@ describe Portus::RegistryNotification do
 
   it "processes all the relevant events" do
     body["events"] << relevant
+    body["events"] << delete
     body["events"] << version23
     expect(Repository).to receive(:handle_push_event).with(relevant)
+    expect(Repository).to receive(:handle_delete_event).with(delete)
     expect(Repository).to receive(:handle_push_event).with(version23)
     Portus::RegistryNotification.process!(body, Repository)
   end

@@ -1,5 +1,6 @@
 class Admin::UsersController < Admin::BaseController
   respond_to :html, :js
+  before_action :another_user_access, only: [:edit, :update]
 
   def index
     @users = User.not_portus.page(params[:page])
@@ -15,10 +16,29 @@ class Admin::UsersController < Admin::BaseController
 
     if @user.persisted?
       flash[:notice] = "User created successfully!"
+      flash[:float] = true
       redirect_to admin_users_path
     else
       flash[:alert] = @user.errors.full_messages
+      flash[:float] = true
       render "new"
+    end
+  end
+
+  # GET /admin/user/1/edit
+  def edit
+  end
+
+  # PATCH/PUT /admin/user/1
+  def update
+    return if @user.nil?
+
+    attr = params.require(:user).permit([:email])
+
+    if @user.update_attributes(attr)
+      redirect_to admin_users_path, notice: "User updated successfully", float: true
+    else
+      redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages, float: true
     end
   end
 
@@ -39,5 +59,16 @@ class Admin::UsersController < Admin::BaseController
   def user_create_params
     permitted = [:username, :email, :password, :password_confirmation]
     params.require(:user).permit(permitted)
+  end
+
+  # Sets the @user instance variable if the current user is different from the
+  # one specified in params[:id]. Moreover, if the current user is the same as
+  # the targeted one, then a 403 response is rendered.
+  def another_user_access
+    @user = User.find(params[:id])
+    return if !@user.nil? && @user != current_user
+
+    @user = nil
+    render nothing: true, status: 403
   end
 end

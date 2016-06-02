@@ -13,7 +13,7 @@ class PasswordsController < Devise::PasswordsController
     if successfully_sent?(resource)
       respond_with({}, location: after_sending_reset_password_instructions_path_for(resource_name))
     else
-      redirect_to new_user_password_path, alert: resource.errors.full_messages
+      redirect_to new_user_password_path, alert: resource.errors.full_messages, float: true
     end
   end
 
@@ -27,7 +27,7 @@ class PasswordsController < Devise::PasswordsController
     else
       token = params[:user][:reset_password_token]
       redirect_to "/users/password/edit?reset_password_token=#{token}",
-        alert: resource.errors.full_messages
+        alert: resource.errors.full_messages, float: true
     end
   end
 
@@ -40,7 +40,12 @@ class PasswordsController < Devise::PasswordsController
     set_flash_message(:notice, flash_message) if is_flashing_format?
     sign_in(resource_name, resource)
 
-    respond_with resource, location: after_resetting_password_path_for(resource)
+    respond_with resource, location: after_resetting_password_path_for(resource), float: true
+  end
+
+  # Prevents redirect loops
+  def after_resetting_password_path_for(resource)
+    signed_in_root_path(resource)
   end
 
   # Prevents redirect loops

@@ -119,4 +119,7 @@ function open_mobile_menu () {
   }
 }
 
-
+// Hide alert box instead of closing it
+$(document).on('click', '.alert-hide', function() {
+  $(this).parent().parent().fadeOut();
+});

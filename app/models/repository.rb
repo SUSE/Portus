@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: repositories
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)      default(""), not null
+#  namespace_id :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  marked       :boolean          default("0")
+#
+# Indexes
+#
+#  fulltext_index_repositories_on_name          (name)
+#  index_repositories_on_name_and_namespace_id  (name,namespace_id) UNIQUE
+#  index_repositories_on_namespace_id           (namespace_id)
+#
+
 class Repository < ActiveRecord::Base
   include PublicActivity::Common
   include SearchCop
@@ -22,6 +40,13 @@ class Repository < ActiveRecord::Base
     # options :namespace_name, type: :fulltext
   end
 
+  # Returns the full name for this repository. What this means is that it
+  # returns the bare name if it belongs to the global namespace, otherwise
+  # it prefixes the name with the name of the namespace.
+  def full_name
+    namespace.global? ? name : "#{namespace.name}/#{name}"
+  end
+
   # Set this repo as starred for the given user if there was no star
   # associated. Otherwise, remove the star.
   def toggle_star(user)
@@ -32,6 +57,41 @@ class Repository < ActiveRecord::Base
   # Check if this repo has been starred by the given user.
   def starred_by?(user)
     stars.exists? user: user
+  end
+
+  # Returns an array of all the tags from this repository grouped by the
+  # digest.
+  def groupped_tags
+    tags.group_by(&:digest).values.sort do |x, y|
+      y.first.created_at <=> x.first.created_at
+    end
+  end
+
+  # Updates the activities related to this repository and adds a new activity
+  # regarding the removal of this.
+  def delete_and_update!(actor)
+    logger.tagged("catalog") { logger.info "Removed the image '#{name}'." }
+
+    # Take care of current activities.
+    PublicActivity::Activity.where(trackable: self).update_all(
+      trackable_type: Namespace,
+      trackable_id:   namespace.id,
+      recipient_type: nil
+    )
+
+    # Add a "delete" activity"
+    namespace.create_activity(
+      :delete,
+      owner:      actor,
+      recipient:  self,
+      parameters: {
+        repository_name: name,
+        namespace_id:    namespace.id,
+        namespace_name:  namespace.clean_name
+      }
+    )
+
+    destroy
   end
 
   # Handle a push event from the registry.
@@ -49,6 +109,25 @@ class Repository < ActiveRecord::Base
     repository
   end
 
+  # Handle a delete event.
+  def self.handle_delete_event(event)
+    registry = Registry.find_from_event(event)
+    return if registry.nil?
+
+    # Fetch the repo.
+    ns, repo_name, = registry.get_namespace_from_event(event, false)
+    repo = ns.repositories.find_by(name: repo_name)
+    return if repo.nil? || repo.marked?
+
+    # Destroy tags and the repository if it's empty now.
+    user = User.find_from_event(event)
+    repo.tags.where(digest: event["target"]["digest"], marked: false).map do |t|
+      t.delete_and_update!(user)
+    end
+    repo = repo.reload
+    repo.delete_and_update!(user) if !repo.nil? && repo.tags.empty?
+  end
+
   # Add the repository with the given `repo` name and the given `tag`. The
   # actor is guessed from the given `event`.
   def self.add_repo(event, namespace, repo, tag)
@@ -64,10 +143,27 @@ class Repository < ActiveRecord::Base
       return
     end
 
-    digest = event.try(:[], "target").try(:[], "digest")
-    tag = repository.tags.create(name: tag, author: actor, digest: digest)
+    # And store the tag and its activity.
+    id, digest = Repository.id_and_digest_from_event(event, repository.full_name)
+    tag = repository.tags.create(name: tag, author: actor, digest: digest, image_id: id)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
+  end
+
+  # Fetch the image ID and the manifest digest from the given event.
+  def self.id_and_digest_from_event(event, repo)
+    digest = event.try(:[], "target").try(:[], "digest")
+    id = ""
+
+    unless digest.blank?
+      begin
+        id, = Registry.get.client.manifest(repo, digest)
+      rescue StandardError => e
+        logger.warn "Could not fetch manifest for '#{repo}' with digest '#{digest}': " + e.message
+      end
+    end
+
+    [id, digest]
   end
 
   # Create or update the given repository in JSON format. The given repository
@@ -97,13 +193,22 @@ class Repository < ActiveRecord::Base
     to_be_created_tags = repo["tags"] - tags
     to_be_deleted_tags = tags - repo["tags"]
 
+    client = Registry.get.client
     to_be_created_tags.each do |tag|
-      Tag.create!(name: tag, repository: repository, author: portus)
+      # Try to fetch the manifest digest of the tag.
+      begin
+        id, digest, = client.manifest(repository.full_name, tag)
+      rescue
+        id = ""
+        digest = ""
+      end
+
+      Tag.create!(name: tag, repository: repository, author: portus, digest: digest, image_id: id)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
 
     # Finally remove the tags that are left and return the repo.
-    repository.tags.where(name: to_be_deleted_tags).find_each(&:delete_and_update!)
+    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_and_update!(portus) }
     repository.reload
   end
 end

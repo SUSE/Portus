@@ -11,3 +11,5 @@
 /bin/portus
 /docker-compose.yml
 /docker-compose.overlay.yml
+/spec/integration/fixtures/config.yml
+/spec/integration/fixtures/data

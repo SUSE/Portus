@@ -1,6 +1,5 @@
 .panel.panel-default
   .panel-heading
-
     h5
       strong
         '#{@namespace.clean_name}
@@ -8,7 +7,7 @@
       - if can_manage_namespace?(@namespace)
         .pull-right
           button.btn.btn-link.btn-xs.btn-edit-role[
-            value="#{@namespace.id}" class="button_namespace_description"]
+            value="#{@namespace.id}" id="edit_namespace" class="button_namespace_description"]
             i.fa.fa-pencil.fa-lg
             | Edit namespace
       small
@@ -28,11 +27,18 @@
         = markdown(@namespace.description)
     .collapse id="change_description_namespace_#{@namespace.id}"
       = form_for @namespace, remote: true, html: {role: 'form'} do |f|
-        = f.text_area(:description, class: 'form-control fixed-size', placeholder: html_escape(@namespace.description))
-        br
-          = button_tag(type: 'submit', class: 'btn btn-primary pull-right') do
-            i.fa.fa-check
-            | Save
+        .form-group
+          = f.label :team, "Team", {class: 'control-label col-md-2'}
+          .remote
+            = f.text_field(:team, value: "#{@namespace.team.name}", class: 'form-control typeahead', required: true, placeholder: "Name of the team")
+        .form-group
+          = f.label :description, {class: 'control-label col-md-2'}
+          = f.text_area(:description, class: 'form-control fixed-size', placeholder: html_escape(@namespace.description))
+        .form-group
+          br
+            = button_tag(type: 'submit', class: 'btn btn-primary pull-right') do
+              i.fa.fa-check
+              | Save
 
         .errors
   .panel-footer
@@ -43,9 +49,10 @@
       'Namespace:
       strong
         = @namespace.clean_name
-    h6.label.label-info
-      | <span>Belongs to: </span>
-      = link_to "#{@namespace.team.name}", @namespace.team
+    - unless @namespace.global?
+      h6.label.label-info#team-label
+        | <span>Belongs to: </span>
+        = link_to "#{@namespace.team.name}", @namespace.team
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover

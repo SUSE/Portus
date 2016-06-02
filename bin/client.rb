@@ -5,7 +5,7 @@
 #
 # These are the available commands:
 #   - catalog
-#   - delete <name> <digest>
+#   - delete <name> <digest> blobs/manifests
 #   - manifest <name>[:<tag>]
 #   - ping <hostname:port> [use_ssl]
 
@@ -23,11 +23,17 @@ when "catalog"
   puts catalog.inspect
   puts "Size: #{catalog.size}"
 when "delete"
-  if ARGV.length == 2
-    puts "You have to specify first the name, and then the digest"
+  if ARGV.length != 4
+    puts "usage: delete <name> <digest> blobs/manifests"
     exit 1
   end
-  pp registry.client.delete(ARGV[1], ARGV[2])
+
+  if ARGV[3] != "blobs" && ARGV[3] != "manifests"
+    puts "Unknown #{ARGV[3]} object. Only available: blobs and manifests."
+    exit 1
+  end
+
+  pp registry.client.delete(ARGV[1], ARGV[2], ARGV[3])
 when "manifest"
   if ARGV.length == 1
     puts "You have to at least specify the name of the image"
@@ -39,7 +45,11 @@ when "manifest"
   else
     name, tag = ARGV[1], "latest"
   end
-  puts JSON.pretty_generate(registry.client.manifest(name, tag))
+
+  id, digest, manifest = registry.client.manifest(name, tag)
+  puts "Image ID: #{id} (truncated as in Docker: #{id[0, 12]})"
+  puts "Manifest digest: #{digest}"
+  puts JSON.pretty_generate(manifest)
 when "ping"
   # No registry was found, trying to ping another one.
   if registry.nil?

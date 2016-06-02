@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: registries
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  hostname   :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  use_ssl    :boolean
+#
+# Indexes
+#
+#  index_registries_on_hostname  (hostname) UNIQUE
+#  index_registries_on_name      (name) UNIQUE
+#
+
 require "rails_helper"
 
 # Open up Portus::RegistryClient to inspect some attributes.
@@ -24,7 +41,11 @@ class RegistryMock < Registry
       end
     else
       def o.manifest(*_)
-        { "tag" => "latest" }
+        ["id", "digest", { "tag" => "latest" }]
+      end
+
+      def o.tags(*_)
+        ["latest", "0.1"]
       end
 
       def o.tags(*_)

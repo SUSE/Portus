@@ -14,6 +14,8 @@ class TeamsController < ApplicationController
   # GET /teams/1
   # GET /teams/1.json
   def show
+    raise ActiveRecord::RecordNotFound if @team.name.starts_with?("portus_global_team_")
+
     authorize @team
     @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
     @team_namespaces = @team.namespaces.page(params[:namespaces_page]).per(15)
@@ -36,7 +38,8 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1
   # PATCH/PUT /teams/1.json
   def update
-    change_name_description(@team, :team)
+    p = params.require(:team).permit(:name, :description)
+    change_name_description(@team, :team, p)
   end
 
   # GET /teams/1/typeahead/%QUERY
@@ -45,6 +48,16 @@ class TeamsController < ApplicationController
     @query = params[:query]
     matches = User.search_from_query(@team.member_ids, "#{@query}%").pluck(:username)
     matches = matches.map { |user| { name: user } }
+    respond_to do |format|
+      format.json { render json: matches.to_json }
+    end
+  end
+
+  # GET /teams/typeahead/%QUERY
+  def all_with_query
+    query = "#{params[:query]}%"
+    teams = policy_scope(Team).where("name LIKE ?", query).pluck(:name)
+    matches = teams.map { |t| { name: t } }
     respond_to do |format|
       format.json { render json: matches.to_json }
     end

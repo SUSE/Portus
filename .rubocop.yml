@@ -2,9 +2,9 @@
 inherit_from:
   - ./config/rubocop-suse.yml
 
-# TODO: (mssola) only the LDAP class requires this.
+# TODO: (mssola) only the LDAP class and portusctl require this.
 Metrics/ClassLength:
-  Max: 150
+  Max: 160
 
 # TODO: (mssola) Some methods are offending this cop. In the SUSE's style guide
 # the approach is to use Rubocop's default value. In the near future I will

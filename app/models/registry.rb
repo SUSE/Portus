@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: registries
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  hostname   :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  use_ssl    :boolean
+#
+# Indexes
+#
+#  index_registries_on_hostname  (hostname) UNIQUE
+#  index_registries_on_name      (name) UNIQUE
+#
+
 # Registry holds data regarding the registries registered in the Portus
 # application.
 #
@@ -47,8 +64,9 @@ class Registry < ActiveRecord::Base
   # returns three values:
   #   - A Namespace object.
   #   - A String containing the name of the repository.
-  #   - A String containing the name of the tag.
-  def get_namespace_from_event(event)
+  #   - A String containing the name of the tag or nil if the `fetch_tag`
+  #     parameter has been set to false.
+  def get_namespace_from_event(event, fetch_tag = true)
     repo = event["target"]["repository"]
     if repo.include?("/")
       namespace_name, repo = repo.split("/", 2)
@@ -62,8 +80,12 @@ class Registry < ActiveRecord::Base
       return
     end
 
-    tag_name = get_tag_from_target(namespace, repo, event["target"])
-    return if tag_name.nil?
+    if fetch_tag
+      tag_name = get_tag_from_target(namespace, repo, event["target"])
+      return if tag_name.nil?
+    else
+      tag_name = nil
+    end
 
     [namespace, repo, tag_name]
   end
@@ -157,7 +179,8 @@ class Registry < ActiveRecord::Base
   #
   # Returns the name of the tag if found, nil otherwise.
   def get_tag_from_manifest(target)
-    client.manifest(target["repository"], target["digest"])["tag"]
+    _, _, manifest = client.manifest(target["repository"], target["digest"])
+    manifest["tag"]
   end
 
   # Create the global namespace for this registry and create the personal

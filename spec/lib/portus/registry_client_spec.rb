@@ -199,7 +199,7 @@ describe Portus::RegistryClient do
           username,
           password)
 
-        manifest = registry.manifest(repository, tag)
+        _, _, manifest = registry.manifest(repository, tag)
         expect(manifest["name"]).to eq(repository)
         expect(manifest["tag"]).to eq(tag)
       end

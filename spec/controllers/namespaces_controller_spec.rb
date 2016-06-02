@@ -81,7 +81,6 @@ describe NamespacesController do
 
       expect(response.status).to eq 401
     end
-
   end
 
   describe "POST #create" do
@@ -221,6 +220,36 @@ describe NamespacesController do
       patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
       expect(response.status).to eq(200)
     end
+
+    it "does not allow to change the team to viewers" do
+      sign_out user
+
+      sign_in viewer
+      patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: "js"
+      expect(response.status).to eq(401)
+    end
+
+    it "does not allow to change the team to contributors" do
+      sign_out user
+      sign_in contributor
+      patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: "js"
+      expect(response.status).to eq(401)
+    end
+
+    it "changes the team if needed" do
+      team2 = create(:team)
+      sign_in owner
+      patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+      expect(response.status).to eq(200)
+      expect(namespace.reload.team.id).to eq team2.id
+    end
+
+    it "does nothing if you try to change to a non-existing team" do
+      sign_in owner
+      patch :update, id: namespace.id, namespace: { team: "unknown" }, format: "js"
+      expect(response.status).to eq(200)
+      expect(namespace.reload.team.id).to eq team.id
+    end
   end
 
   describe "typeahead" do
@@ -304,6 +333,19 @@ describe NamespacesController do
       expect(namespace_description_activity.trackable).to eq(namespace)
       expect(namespace_description_activity.parameters[:old]).to eq(old_description)
       expect(namespace_description_activity.parameters[:new]).to eq("new description")
+    end
+
+    it "tracks change team" do
+      team2 = create(:team)
+      expect do
+        patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+      end.to change(PublicActivity::Activity, :count).by(1)
+      namespace_change_team_activity = PublicActivity::Activity.find_by(
+        key: "namespace.change_team")
+      expect(namespace_change_team_activity.owner).to eq(owner)
+      expect(namespace_change_team_activity.trackable).to eq(namespace)
+      expect(namespace_change_team_activity.parameters[:old]).to eq(team.id)
+      expect(namespace_change_team_activity.parameters[:new]).to eq(team2.id)
     end
   end
 end

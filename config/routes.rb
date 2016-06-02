@@ -5,16 +5,20 @@ Rails.application.routes.draw do
       get "typeahead/:query" => "teams#typeahead", :defaults => { format: "json" }
     end
   end
+  get "/teams/typeahead/:query" => "teams#all_with_query", :defaults => { format: "json" }
+
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show, :update] do
     put "toggle_public", on: :member
   end
   get "namespaces/typeahead/:query" => "namespaces#typeahead", :defaults => { format: "json" }
 
-  resources :repositories, only: [:index, :show] do
+  resources :repositories, only: [:index, :show, :destroy] do
     post :toggle_star, on: :member
     resources :comments, only: [:create, :destroy]
   end
+
+  resources :tags, only: [:destroy]
 
   resources :application_tokens, only: [:create, :destroy]
 
@@ -47,7 +51,7 @@ Rails.application.routes.draw do
     resources :registries, except: [:show, :destroy]
     resources :namespaces, only: [:index]
     resources :teams, only: [:index]
-    resources :users, only: [:index, :create, :new] do
+    resources :users, except: [:destroy] do
       put "toggle_admin", on: :member
     end
   end
