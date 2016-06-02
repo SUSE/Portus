@@ -1,6 +1,6 @@
 <% if @team_user.errors.any? %>
-  $('#alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
+  $('#float-alert').fadeIn(setTimeOutAlertDelay());
 <% else %>
   <% old_role = @team_user.previous_changes['role'].try(:first) %>
   <% unless @team_user.role == old_role %>

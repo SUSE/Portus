@@ -236,5 +236,13 @@ RSpec.describe TeamsController, type: :controller do
       expect(team_name_activity.parameters[:old]).to eq(old_name)
       expect(team_name_activity.parameters[:new]).to eq("new name")
     end
+
+    it "does not track activity if team name exists" do
+      team2 = create(:team, owners: [owner])
+      expect do
+        team_attributes = { name: team2.name, description: team.description }
+        patch :update, id: team.id, team: team_attributes, format: "js"
+      end.not_to change(PublicActivity::Activity, :count)
+    end
   end
 end

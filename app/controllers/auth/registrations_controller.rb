@@ -22,7 +22,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     if resource.persisted?
       set_flash_message :notice, :signed_up
       sign_up(resource_name, resource)
-      respond_with resource, location: after_sign_up_path_for(resource)
+      respond_with resource, location: after_sign_up_path_for(resource), float: true
     else
       redirect_to new_user_registration_path,
         alert: resource.errors.full_messages
@@ -46,10 +46,10 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
     if success
       redirect_to edit_user_registration_path,
-        notice: "Profile updated successfully!"
+        notice: "Profile updated successfully!", float: true
     else
       redirect_to edit_user_registration_path,
-        alert: resource.errors.full_messages
+        alert: resource.errors.full_messages, float: true
     end
   end
 

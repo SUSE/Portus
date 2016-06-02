@@ -1,33 +1,84 @@
+.btn-toolbar
+  #repo-stars.pull-right
+    .btn-group
+      - if @repository.starred_by?(current_user)
+        = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
+          i.fa.fa-star
+      - else
+        = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
+          i.fa.fa-star-o
+      span#star-counter.btn.btn-primary.btn-xs
+        = @repository.stars.count
+  - if APP_CONFIG.enabled?("delete")
+    #remove-repo.pull-right
+      button.remove-repo.btn-x.btn-edit-role.btn.btn-link.btn-xs[
+        data-placement="left"
+        data-toggle="popover"
+        data-title="Please confirm"
+        data-content="<p>Are you sure you want to remove this \
+        image?</p><a class='btn btn-default'>No</a> <a class='btn \
+        btn-primary' data-method='delete' \
+        href='#{url_for(@repository)}'>Yes</a>"
+        data-html="true"
+        role="button"
+        title="Delete image"]
+        .fa.fa-trash
+        ' Delete image
 .panel.panel-default
   .panel-heading
-    h5
-      = link_to @repository.namespace.clean_name, @repository.namespace
-      | /
-      = @repository.name
-      #repo-stars.pull-right
-        .btn-group
-          - if @repository.starred_by?(current_user)
-            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
-              i.fa.fa-star
-          - else
-            = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
-              i.fa.fa-star-o
-          span#star-counter.btn.btn-primary.btn-xs
-            = @repository.stars.count
-
-      - if APP_CONFIG.enabled?("delete")
-        #remove-repo.pull-right
-          button.remove-repo.fa.fa-lg.fa-trash-o.btn-x.btn-edit-role.btn.btn-link[
-            data-placement="left"
+    .row
+      .col-xs-6
+        h5
+          = link_to @repository.namespace.clean_name, @repository.namespace
+          | /
+          = @repository.name
+      .col-xs-6.text-right
+        - if can_push?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
             data-toggle="popover"
-            data-title="Please confirm"
-            data-content='<p>Are you sure you want to remove this \
-            image?</p><a class="btn btn-default">No</a> <a class="btn \
-            btn-primary" data-method="delete" \
-            href="#{url_for(@repository)}">Yes</a>'
-            data-html="true"
-            role="button"
-            title="Delete image"]
+            data-container=".panel-heading"
+            data-content="You can push images"
+            data-original-title="What can I do?"
+            tabindex="0" data-html="true"]
+              i.fa.fa-arrow-up
+              ' Push
+        - if can_pull?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You can pull images"
+            data-original-title="What can I do?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-arrow-down
+            ' Pull
+        - if owner?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are an owner of this repository"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-male
+            ' Owner
+        - elsif contributor?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are a contributor in this repository"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-exchange
+            ' Contr.
+        - elsif viewer?(@repository.namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are a viewer in this repository"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-eye
+            ' Viewer
+
 
   .panel-body
     .table-responsive.tags
@@ -83,10 +134,10 @@
                       data-placement="left"
                       data-toggle="popover"
                       data-title="Please confirm"
-                      data-content='<p>Are you sure you want to remove this \
-                      tag?</p><a class="btn btn-default">No</a> <a class="btn \
-                      btn-primary" data-method="delete" \
-                      href="#{url_for(tag.first)}">Yes</a>'
+                      data-content="<p>Are you sure you want to remove this \
+                      tag?</p><a class='btn btn-default'>No</a> <a class='btn \
+                      btn-primary' data-method='delete' \
+                      href='#{url_for(tag.first)}'>Yes</a>"
                       data-html="true"
                       role="button"
                       title="Delete tag"]

@@ -48,14 +48,63 @@
 
 .panel.panel-default
   .panel-heading
-    h5
-      'Namespace:
-      strong
-        = @namespace.clean_name
-    - unless @namespace.global?
-      h6.label.label-info#team-label
-        | <span>Belongs to: </span>
-        = link_to "#{@namespace.team.name}", @namespace.team
+    .row
+      .col-xs-6
+        h5
+          'Namespace:
+          strong
+            = @namespace.clean_name
+        - unless @namespace.global?
+          h6.label.label-info#team-label
+            | <span>Belongs to: </span>
+            = link_to "#{@namespace.team.name}", @namespace.team
+      .col-xs-6.text-right
+        - if can_push?(@namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You can push images"
+            data-original-title="What can I do?"
+            tabindex="0" data-html="true"]
+              i.fa.fa-arrow-up
+              ' Push
+        - if can_pull?(@namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You can pull images"
+            data-original-title="What can I do?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-arrow-down
+            ' Pull
+        - if owner?(@namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are an owner of this namespace"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-male
+            ' Owner
+        - elsif contributor?(@namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are a contributor in this namespace"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-exchange
+            ' Contr.
+        - elsif viewer?(@namespace)
+          .circle-label.permissions-label.circle-label-sm[data-placement="left"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="You are a viewer in this namespace"
+            data-original-title="What's my role?"
+            tabindex="0" data-html="true"]
+            i.fa.fa-eye
+            ' Viewer
+
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover

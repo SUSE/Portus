@@ -1,6 +1,7 @@
 # Portus
 
 - Website: http://port.us.org/
+- [Blog](http://port.us.org/blog/index.html)
 - Mailing list: [Google Groups](https://groups.google.com/forum/#!forum/portus-dev)
 
 Portus is an authoritzation server and a user interface for the next generation
