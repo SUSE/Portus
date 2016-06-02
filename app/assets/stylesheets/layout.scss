@@ -176,10 +176,12 @@ body:not([class*="login"]) {
 }
 
 footer {
-  font-size: 1em;
-  font-family: Raleway;
+  font-size: .9em;
   i.fa {
     color: $primary-colour
+  }
+  .container-footer p {
+    padding: 8px 0 0 0px;
   }
 }
 
