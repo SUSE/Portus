@@ -158,7 +158,7 @@
     .row
       .col-sm-6
         h5
-          span class="number_of_comments"
+          span class="number_of_comments badge"
             = @repository.comments.count
           span class="comment_string"
             - if @repository.comments.count == 1
