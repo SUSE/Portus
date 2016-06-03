@@ -31,11 +31,13 @@
           = f.label :namespace, {class: 'control-label col-md-2'}
           .col-md-7
             = f.text_field(:namespace, class: 'form-control', required: true, placeholder: "Name")
-        .form-group
+        .form-group.has-feedback
           = f.label :team, {class: 'control-label col-md-2'}
           .col-md-7
             .remote
               = f.text_field(:team, class: 'form-control typeahead', required: true, placeholder: "Name of the team")
+            span.fa.fa-search.form-control-feedback
+
         .form-group
           = f.label :description, {class: 'control-label col-md-2'}
           .col-md-7
