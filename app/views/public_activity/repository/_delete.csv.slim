@@ -1,9 +1,9 @@
 - unless activity.trackable.nil?
   - if activity.recipient.nil?
     - if activity.parameters[:tag_name].nil?
-      = CSV.generate_line(['repository', "#{activity.trackable.namespace.global? ?  activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}", 'delete tag', '-', activity.owner.username, activity.created_at, "-"])
+      = CSV.generate_line(['repository', "#{activity.trackable.namespace.global? ?  activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}", 'delete tag', '-', activity.owner.display_username, activity.created_at, "-"])
     - else
       = CSV.generate_line(['repository',
-          "#{activity.trackable.namespace.global? ?  activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}:#{activity.parameters[:tag_name]}", 'delete tag', '-', activity.owner.username, activity.created_at, "-"])
+          "#{activity.trackable.namespace.global? ?  activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}:#{activity.parameters[:tag_name]}", 'delete tag', '-', activity.owner.display_username, activity.created_at, "-"])
   - else
-    = CSV.generate_line(['repository', "#{activity.trackable.namespace.global?  ? activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}:#{activity.recipient.name}", 'delete tag', '-', activity.owner.username, activity.created_at, "-"])
+    = CSV.generate_line(['repository', "#{activity.trackable.namespace.global?  ? activity.trackable.namespace.registry.hostname : activity.trackable.namespace.name}/#{activity.trackable.name}:#{activity.recipient.name}", 'delete tag', '-', activity.owner.display_username, activity.created_at, "-"])

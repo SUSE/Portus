@@ -2,7 +2,7 @@ require "rails_helper"
 
 feature "Dashboard page" do
   let!(:registry) { create(:registry) }
-  let!(:user) { create(:admin) }
+  let!(:user) { create(:admin, display_name: "docker-gangsta") }
   let!(:team) { create(:team, owners: [user]) }
   let!(:namespace) { create(:namespace, team: team) }
   let!(:repository) { create(:repository, namespace: namespace) }
@@ -49,6 +49,16 @@ feature "Dashboard page" do
       expect(page).not_to have_content("#{personal_namespace.name}/#{personal_repository.name}")
       expect(page).not_to have_content("#{namespace.name}/#{repository.name}")
       expect(page).not_to have_content("#{public_namespace.name}/#{public_repository.name}")
+    end
+  end
+
+  describe "Display name" do
+    scenario "Shows the display name of the user when needed" do
+      visit authenticated_root_path
+      expect(page).not_to have_content("docker-gangsta")
+      APP_CONFIG["display_name"] = { "enabled" => true }
+      visit authenticated_root_path
+      expect(page).to have_content("docker-gangsta")
     end
   end
 end

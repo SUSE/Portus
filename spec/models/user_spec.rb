@@ -21,9 +21,11 @@
 #  ldap_name              :string(255)
 #  failed_attempts        :integer          default("0")
 #  locked_at              :datetime
+#  display_name           :string(255)
 #
 # Indexes
 #
+#  index_users_on_display_name          (display_name) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_ldap_name             (ldap_name) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
@@ -242,6 +244,21 @@ describe User do
       # the factory uses appication's name as plain token
       create(:application_token, application: "bad", user: user)
       expect(user.application_token_valid?("good")).to be false
+    end
+  end
+
+  describe "#display_username" do
+    let(:user)  { build(:user, username: "user", display_name: "display") }
+    let(:user2) { build(:user, username: "user") }
+
+    it "returns the username of the feature is disabled" do
+      expect(user.display_username).to eq user.username
+    end
+
+    it "returns the username/display_name if the feature is enabled" do
+      APP_CONFIG["display_name"] = { "enabled" => true }
+      expect(user2.display_username).to eq user.username
+      expect(user.display_username).to eq user.display_name
     end
   end
 end

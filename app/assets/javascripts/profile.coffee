@@ -1,9 +1,22 @@
 
 jQuery ->
   email = $('#user_email').val()
+  display = $('#user_display_name').val()
+
   $('#user_email').keyup ->
     val = $('#user_email').val()
-    if val == email || val == ''
+    dname = $('#user_display_name').val()
+
+    if dname == display && (val == email || val == '')
+      $('#edit_user.profile .btn').attr('disabled', 'disabled')
+    else
+      $('#edit_user.profile .btn').removeAttr('disabled')
+
+  $('#user_display_name').keyup ->
+    val = $('#user_display_name').val()
+    em = $('#user_email').val()
+
+    if val == display && (em == email || em == '')
       $('#edit_user.profile .btn').attr('disabled', 'disabled')
     else
       $('#edit_user.profile .btn').removeAttr('disabled')

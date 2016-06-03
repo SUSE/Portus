@@ -21,9 +21,11 @@
 #  ldap_name              :string(255)
 #  failed_attempts        :integer          default("0")
 #  locked_at              :datetime
+#  display_name           :string(255)
 #
 # Indexes
 #
+#  index_users_on_display_name          (display_name) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_ldap_name             (ldap_name) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
@@ -75,6 +77,12 @@ class User < ActiveRecord::Base
   # Returns true if the current user is the Portus user.
   def portus?
     username == "portus"
+  end
+
+  # Returns the username to be displayed.
+  def display_username
+    return username unless APP_CONFIG.enabled?("display_name")
+    display_name.blank? ? username : display_name
   end
 
   # This method will be called automatically once a user is created. It will

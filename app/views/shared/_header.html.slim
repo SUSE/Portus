@@ -16,6 +16,6 @@
         = user_image_tag(current_user.email)
 
         = link_to edit_user_registration_path, class: 'nav-a' do
-          span.username = current_user.username
+          span.username = current_user.display_username
       = link_to destroy_user_session_path, method: :delete, class: 'topbar btn btn-default', id: 'logout' do
         i.fa.fa-sign-out
