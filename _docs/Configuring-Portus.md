@@ -219,3 +219,17 @@ token to 2 hours, one would write:
 jwt_expiration_time:
   value: "2.hours"
 {% endhighlight %}
+
+### Display name
+
+**Note**: feature only available in Portus 2.1 or later.
+
+This option tells Portus to not use the username when showing users, rather a
+user-defined "display name". You can read more about this
+[here](/features/display_name.html). By default this feature is disabled, and
+it's controlled with this setting:
+
+{% highlight yaml %}
+display_name:
+  enabled: false
+{% endhighlight %}
