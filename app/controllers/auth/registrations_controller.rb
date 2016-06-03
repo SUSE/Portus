@@ -2,6 +2,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   layout "authentication", except: :edit
 
   include CheckLDAP
+  include SessionFlash
 
   before_action :check_signup, only: [:new, :create]
   before_action :check_admin, only: [:new, :create]
@@ -20,7 +21,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
     resource.save
     if resource.persisted?
-      set_flash_message :notice, :signed_up
+      session_flash(resource, :signed_up)
       sign_up(resource_name, resource)
       respond_with resource, location: after_sign_up_path_for(resource), float: true
     else

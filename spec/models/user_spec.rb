@@ -22,12 +22,13 @@
 #  failed_attempts        :integer          default("0")
 #  locked_at              :datetime
 #  display_name           :string(255)
+#  namespace_id           :integer
 #
 # Indexes
 #
 #  index_users_on_display_name          (display_name) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
-#  index_users_on_ldap_name             (ldap_name) UNIQUE
+#  index_users_on_namespace_id          (namespace_id)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_username              (username) UNIQUE
 #
@@ -41,23 +42,65 @@ describe User do
   it { should validate_uniqueness_of(:username) }
   it { should allow_value("test1", "1test").for(:username) }
 
-  it "should block user creation when the private namespace is not available" do
-    name = "coolname"
-    team = create(:team, owners: [subject])
-    create(:namespace, team: team, name: name)
-    user = build(:user, username: name)
-    expect(user.save).to be false
-    expect(user.errors.size).to eq(1)
-    expect(user.errors.first)
-      .to match_array([:username, "'coolname' cannot be used: there's either a namespace or " \
-        "a team named like this."])
+  describe "#private_namespace_and_team_available" do
+    it "adds an error if the username cannot produce a valid namespace" do
+      user = build(:user, username: "!!!!!")
+      expect(user.save).to be false
+      expect(user.errors.size).to eq(1)
+      expect(user.errors.first)
+        .to match_array([:username, "'!!!!!' cannot be transformed into a " \
+          "valid namespace name"])
+    end
+
+    it "adds an error if the namespace name clashes" do
+      name = "coolname"
+      team = create(:team, owners: [subject])
+      create(:namespace, team: team, name: name)
+
+      user = build(:user, username: name)
+      expect(user.save).to be false
+      expect(user.errors.size).to eq(1)
+      expect(user.errors.first)
+        .to match_array([:username, "cannot be used: there is already a " \
+          "namespace named 'coolname'"])
+
+      user = build(:user, username: name + "_")
+      expect(user.save).to be false
+      expect(user.errors.size).to eq(1)
+      expect(user.errors.first)
+        .to match_array([:username, "cannot be used: there is already a " \
+          "namespace named 'coolname' (modified so it's valid)"])
+    end
+
+    it "adds an error if there's a team named like that" do
+      name = "coolname"
+      team = create(:team, name: name, owners: [subject])
+      create(:namespace, team: team, name: "somethingelse")
+
+      user = build(:user, username: name)
+      expect(user.save).to be false
+      expect(user.errors.size).to eq(1)
+      expect(user.errors.first)
+        .to match_array([:username, "cannot be used: there is already a " \
+          "team named like this"])
+    end
+
+    it "works beautifully if everything was fine" do
+      name = "coolname"
+      team = create(:team, owners: [subject])
+      create(:namespace, team: team, name: "somethingelse")
+
+      user = build(:user, username: name)
+      expect(user.save).to be_truthy
+      expect(user.errors).to be_empty
+    end
   end
 
   it "#email_required?" do
     expect(subject.email_required?).to be true
 
     APP_CONFIG["ldap"] = { "enabled" => true }
-    incomplete = create(:user, email: "", ldap_name: "user")
+    incomplete = create(:user, email: "")
 
     expect(subject.email_required?).to be true
     expect(incomplete.email_required?).to be false
@@ -67,27 +110,19 @@ describe User do
     create(:registry)
     expect(Namespace.find_by(name: "test")).to be nil
 
-    create(:user, username: "test")
-    expect(Namespace.find_by(name: "test")).to_not be nil
+    user2 = create(:user, username: "test")
+    namespace = Namespace.find_by(name: "test")
+    expect(namespace).to_not be nil
+    expect(user2.namespace.id).to eq namespace.id
   end
 
   describe ".find_from_event" do
-    let!(:user)   { create(:user, username: "username001", ldap_name: "user@domain.com") }
+    let!(:user)   { create(:user, username: "username001") }
 
-    context "LDAP is enabled" do
-      it "find user by ldap_name" do
-        APP_CONFIG["ldap"] = { "enabled" => true }
-        event = { "actor" => { "name" => "user@domain.com" } }
-        expect(User.find_from_event(event)).not_to be_nil
-      end
-    end
-
-    context "LDAP is disabled" do
-      it "find user by username" do
-        APP_CONFIG["ldap"] = { "enabled" => false }
-        event = { "actor" => { "name" => "username001" } }
-        expect(User.find_from_event(event)).not_to be_nil
-      end
+    it "find user by username" do
+      APP_CONFIG["ldap"] = { "enabled" => false }
+      event = { "actor" => { "name" => "username001" } }
+      expect(User.find_from_event(event)).not_to be_nil
     end
   end
 
@@ -119,6 +154,12 @@ describe User do
         TeamUser.find_by!(user: subject, team: team)
         expect(team.owners).to include(subject)
         expect(team).to be_hidden
+      end
+
+      it "creates a namespace with the modified username" do
+        user = build(:user, username: "name_")
+        expect(user.save).to be_truthy
+        Namespace.find_by!(name: "name")
       end
     end
   end

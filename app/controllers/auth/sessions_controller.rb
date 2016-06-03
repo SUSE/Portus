@@ -1,4 +1,6 @@
 class Auth::SessionsController < Devise::SessionsController
+  include SessionFlash
+
   layout "authentication"
 
   # Re-implementing. The logic is: if there is already a user that can log in
@@ -23,7 +25,13 @@ class Auth::SessionsController < Devise::SessionsController
 
   def create
     super
-    flash[:notice] = nil
+
+    if ::Portus::LDAP.enabled? && session[:first_login]
+      session[:first_login] = nil
+      session_flash(current_user, nil)
+    else
+      flash[:notice] = nil
+    end
   end
 
   def destroy

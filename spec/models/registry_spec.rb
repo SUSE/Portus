@@ -106,9 +106,7 @@ describe Registry, type: :model do
       expect(Namespace.count).to be(0)
 
       create(:registry)
-      User.all.each do |user|
-        expect(Namespace.find_by(name: user.username)).not_to be(nil)
-      end
+      User.all.each { |user| expect(user.namespace).not_to be(nil) }
     end
 
     it "#create_namespaces!" do
