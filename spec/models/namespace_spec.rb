@@ -128,4 +128,28 @@ describe Namespace do
       end
     end
   end
+
+  describe "make_valid" do
+    it "does nothing on already valid names" do
+      ["name", "a", "a_a", "45", "n4", "h2o", "flavio.castelli"].each do |name|
+        expect(Namespace.make_valid(name)).to eq name
+      end
+    end
+
+    it "returns nil if the name cannot be changed" do
+      ["", ".", "_", "-", "!!!!"].each do |name|
+        expect(Namespace.make_valid(name)).to be_nil
+      end
+    end
+
+    it "changes invalid names that can be saved" do
+      expect(Namespace.make_valid("_name")).to eq "name"
+      expect(Namespace.make_valid("name_")).to eq "name"
+      expect(Namespace.make_valid("___name_-aa__")).to eq "name_aa"
+      expect(Namespace.make_valid("_ma._.n")).to eq "ma_n"
+      expect(Namespace.make_valid("ma_s")).to eq "ma_s"
+      expect(Namespace.make_valid("!lol!")).to eq "lol"
+      expect(Namespace.make_valid("!lol!name")).to eq "lol_name"
+    end
+  end
 end

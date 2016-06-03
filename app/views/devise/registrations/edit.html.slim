@@ -78,8 +78,8 @@
                       any affiliations with any team will be lost.
                   = submit_tag('Disable', class: 'btn btn-primary')
 
-  - if current_user.email?
-    - if current_user.ldap_name.nil?
+  - unless ::Portus::LDAP.enabled?
+    - if current_user.email?
       .col-sm-6
         .panel.panel-default
           .panel-heading

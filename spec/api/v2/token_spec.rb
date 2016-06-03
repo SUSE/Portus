@@ -1,9 +1,7 @@
 require "rails_helper"
 
 describe "/v2/token" do
-
   describe "get token" do
-
     def parse_token(body)
       token = JSON.parse(body)["token"]
       JWT.decode(token, nil, false, leeway: 2)[0]
@@ -156,10 +154,8 @@ describe "/v2/token" do
         # Check that the user has actually been registered.
         ldapuser = User.find_by(username: "ldapuser")
         expect(ldapuser.username).to eq "ldapuser"
-        expect(ldapuser.ldap_name).to eq "ldapuser"
         expect(ldapuser.valid_password?("12341234")).to be true
       end
-
     end
 
     context "as valid user" do
@@ -222,7 +218,7 @@ describe "/v2/token" do
 
       context "repository scope" do
         it "delegates authentication to the Namespace policy" do
-          personal_namespace = Namespace.find_by(name: user.username)
+          personal_namespace = user.namespace
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
             .with(personal_namespace, :push?)
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)

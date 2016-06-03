@@ -165,12 +165,13 @@ ActiveRecord::Schema.define(version: 20160531151718) do
     t.string   "ldap_name",              limit: 255
     t.integer  "failed_attempts",        limit: 4,   default: 0
     t.datetime "locked_at"
+    t.integer  "namespace_id",           limit: 4
     t.string   "display_name",           limit: 255
   end
 
   add_index "users", ["display_name"], name: "index_users_on_display_name", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["ldap_name"], name: "index_users_on_ldap_name", unique: true, using: :btree
+  add_index "users", ["namespace_id"], name: "index_users_on_namespace_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
@@ -217,6 +218,7 @@ ActiveRecord::Schema.define(version: 20160531151718) do
   add_foreign_key "comments", "repositories"
   add_foreign_key "stars", "repositories"
   add_foreign_key "stars", "users"
+  add_foreign_key "users", "namespaces"
   add_foreign_key "webhook_deliveries", "webhooks"
   add_foreign_key "webhook_headers", "webhooks"
   add_foreign_key "webhooks", "namespaces"

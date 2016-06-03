@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe Auth::RegistrationsController do
-
   let(:valid_session) { {} }
 
   describe "POST #create" do

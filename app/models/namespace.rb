@@ -23,6 +23,13 @@
 class Namespace < ActiveRecord::Base
   include PublicActivity::Common
 
+  # This regexp is extracted from the reference package of Docker Distribution
+  # and it matches a valid namespace name.
+  NAME_REGEXP = /\A[a-z0-9]+(?:[._\\-][a-z0-9]+)*\Z/
+
+  # The maximum length of a namespace name.
+  MAX_NAME_LENGTH = 255
+
   has_many :webhooks
   has_many :repositories
   belongs_to :registry
@@ -32,7 +39,7 @@ class Namespace < ActiveRecord::Base
   validates :name,
             presence:   true,
             uniqueness: { scope: "registry_id" },
-            length:     { maximum: 255 },
+            length:     { maximum: MAX_NAME_LENGTH },
             namespace:  true
 
   # From the given repository name that can be prefix by the name of the
@@ -56,6 +63,31 @@ class Namespace < ActiveRecord::Base
       end
     end
     [namespace, name, registry]
+  end
+
+  # Tries to transform the given name to a valid namespace name. If the name is
+  # already valid, then it's returned untouched. Otherwise, if the name cannot
+  # be turned into a valid namespace name, then nil is returned.
+  def self.make_valid(name)
+    return name if name =~ NAME_REGEXP
+
+    # First of all we strip extra characters from the beginning and end.
+    first = name.index(/[a-z0-9]/)
+    return nil if first.nil?
+    last = name.rindex(/[a-z0-9]/)
+    str = name[first..last]
+
+    # Replace weird characters with underscores.
+    str = str.gsub(/[^[a-z0-9\\.\\-_]]/, "_")
+
+    # Only one special character is allowed in between of alphanumeric
+    # characters. Thus, let's merge multiple appearences into one on each case.
+    # After that, the name should be fine, so let's trim it if it's too large.
+    final = str.gsub(/[._\\-]{2,}/, "_")
+    name = final[0..MAX_NAME_LENGTH]
+
+    return nil if name !~ NAME_REGEXP
+    name
   end
 
   # Returns a String containing the cleaned name for this namespace. The

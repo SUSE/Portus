@@ -31,7 +31,7 @@ describe NamespacesController do
     it "assigns all namespaces as @namespaces" do
       get :index, {}, valid_session
       expect(assigns(:special_namespaces)).to match_array(
-        [Namespace.find_by(name: user.username), Namespace.find_by(global: true)])
+        [user.namespace, Namespace.find_by(global: true)])
       expect(assigns(:namespaces).ids).to be_empty
     end
 

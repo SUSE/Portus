@@ -8,7 +8,7 @@ feature "Dashboard page" do
   let!(:repository) { create(:repository, namespace: namespace) }
   let!(:starred_repo) { create(:repository, namespace: namespace) }
   let!(:star) { create(:star, user: user, repository: starred_repo) }
-  let!(:personal_namespace) { Namespace.find_by(name: user.username) }
+  let!(:personal_namespace) { user.namespace }
   let!(:personal_repository) { create(:repository, namespace: personal_namespace) }
 
   let!(:another_user) { create(:admin) }

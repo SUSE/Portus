@@ -40,12 +40,23 @@ namespace :portus do
       end
     end
 
-    User.create!(
+    u = User.create!(
       username: args["username"],
       password: args["password"],
       email:    args["email"],
       admin:    args["admin"]
     )
+
+    if u.username != u.namespace.name
+      puts <<HERE
+
+NOTE: the user you just created contained characters that are not accepted for
+naming namespaces. Because of this, you've got the following:
+
+  * User name: '#{u.username}'
+  * Personal namespace: '#{u.namespace.name}'
+HERE
+    end
   end
 
   desc "Give 'admin' role to a user"
@@ -119,6 +130,20 @@ HERE
       end
     end
     puts
+  end
+
+  # NOTE: this is only available from 2.0.x -> 2.1.x.
+  # TODO: (mssola) prevent in the future to execute this if the version of
+  # Portus is higher than 2.1.x.
+  desc "Update personal namespaces"
+  task update_personal_namespaces: :environment do
+    ActiveRecord::Base.transaction do
+      User.all.find_each do |u|
+        namespace = Namespace.find_by(name: u.username)
+        raise "There is no valid personal namespace for #{u.username}!" if namespace.nil?
+        u.update_attributes(namespace: namespace)
+      end
+    end
   end
 
   desc "Properly test Portus"
