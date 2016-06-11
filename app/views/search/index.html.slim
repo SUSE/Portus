@@ -1,18 +1,18 @@
 .panel.panel-default
   .panel-heading
     h5 Search results
-  .panel-body
-    - if @repositories.empty?
-      p No match found.
-    - else
-      .table-responsive
-        table.table.table-striped.table-hover
-          thead
-            tr
-              th Namespace
-              th Repository
-          tbody
-            - @repositories.each do |repository|
-              tr
-                td= link_to repository.namespace.clean_name, repository.namespace
-                td= link_to repository.name, repository
+  .panel-body.search
+    .row
+      .col-xs-12.col-md-4.col-lg-3.category-panel
+          .hidden-xs
+            = render template: "search/_desktop_categories.html.slim"
+          .visible-xs
+            = render template: "search/_mobile_categories.html.slim"
+      .col-xs-12.col-md-8.col-lg-9.search.search-result
+        - case params[:type]
+          - when 'repositories'
+          = render template: "search/_repositories.html.slim"
+          -when 'namespaces'
+          = render template: "search/_namespaces.html.slim"
+          -when 'teams'
+          = render template: "search/_teams.html.slim"
