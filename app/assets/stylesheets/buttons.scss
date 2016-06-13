@@ -17,3 +17,13 @@ header .topbar.btn.btn-default {
     margin-left: 1em;
   }
 }
+.dropdown-aligned-right {
+  right: 0;
+  left: auto;
+  text-align: left;
+  min-width: 100px;
+}
+.align-top-inline {
+  display: inline-block;
+  vertical-align: top;
+}
