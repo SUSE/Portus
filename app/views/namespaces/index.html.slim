@@ -1,11 +1,14 @@
-.btn-toolbar
-  a.btn.btn-xs.btn-link.pull-right[data-placement="left" data-toggle="popover" data-container=".btn-toolbar" data-content="A namespace groups a series of repositories." data-original-title="What's this?" tabindex="0"]
-    i.fa.fa-info-circle
-    | What's this?
-
 .panel.panel-default
   .panel-heading
     h5
+      small
+        a[data-placement="right"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="<p>A namespace groups a series of repositories.</p>"
+          data-original-title="What's this?"
+          tabindex="0" data-html="true"]
+            i.fa.fa-info-circle
       ' Special namespaces
   .panel-body
     .table-responsive

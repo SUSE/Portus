@@ -3,9 +3,6 @@
     .row
       .col-sm-6
         h5
-          strong
-            '#{@namespace.clean_name}
-          ' namespace
           small
             a[data-placement="right"
               data-toggle="popover"
@@ -14,6 +11,9 @@
               data-original-title="What's this?"
               tabindex="0" data-html="true"]
                 i.fa.fa-info-circle
+          strong
+            '#{@namespace.clean_name}
+          ' namespace
       .col-sm-6.text-right
         - if can_manage_namespace?(@namespace)
           button.btn.btn-link.btn-xs.btn-edit-role[
