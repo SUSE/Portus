@@ -50,7 +50,18 @@
   .panel-heading
     .row
       .col-xs-6
-        h5
+        - if current_user.admin? || @namespace.team.users.include?(current_user)
+          .dropdown.align-top-inline
+            i.btn.btn-options.fa.fa-ellipsis-v.fa-fw[aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" type="button"]
+            ul.dropdown-menu
+              li
+                a.btn.btn-link.btn-xs.btn-show-webhooks[
+                  value="#{@namespace.id}" class="button_namespace_description"
+                  href=url_for(namespace_webhooks_path(@namespace))
+                  ]
+                  i.fa.fa-eye
+                  | Show webhooks
+        h5.align-top-inline
           'Namespace:
           strong
             = @namespace.clean_name
@@ -104,17 +115,6 @@
             tabindex="0" data-html="true"]
             i.fa.fa-eye
             ' Viewer
-        - if current_user.admin? || @namespace.team.users.include?(current_user)
-          .dropdown.align-top-inline
-            i.fa.fa-ellipsis-v.fa-fw.btn.btn-link[aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" type="button"]
-            ul.dropdown-menu.dropdown-aligned-right
-              li
-                a.btn.btn-link.btn-xs.btn-show-webhooks[
-                  value="#{@namespace.id}" class="button_namespace_description"
-                  href=url_for(namespace_webhooks_path(@namespace))
-                  ]
-                  i.fa.fa-eye
-                  | Show webhooks
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
