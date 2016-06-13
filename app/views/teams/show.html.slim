@@ -31,10 +31,6 @@
       .row
         .col-sm-6
           h5
-            strong
-              span class="team_name"
-                '#{@team.name}
-            |&nbsp;team description
             small
               a[data-placement="right"
                 data-toggle="popover"
@@ -43,6 +39,11 @@
                 data-original-title="What's this?"
                 tabindex="0" data-html="true"]
                   i.fa.fa-info-circle
+            strong
+              span class="team_name"
+                '#{@team.name}
+            |&nbsp;team description
+
         .col-sm-6.text-right
           - if can_manage_team?(@team)
             button.btn.btn-link.btn-xs.btn-edit-role[
@@ -83,7 +84,6 @@
     .row
       .col-sm-6
         h5
-          ' Members
           small
             a[data-placement="right"
               data-toggle="popover"
@@ -92,6 +92,7 @@
               data-original-title="What's this?"
               tabindex="0" data-html="true"]
               i.fa.fa-info-circle
+          ' Members
       .col-sm-6.text-right
         - if can_manage_team?(@team)
           a#add_team_user_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
@@ -147,10 +148,10 @@
     .row
       .col-sm-6
         h5
-          ' Namespaces owned
           small
             a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to all Portus users by toggling the "public" flag.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
               i.fa.fa-info-circle
+          ' Namespaces owned
       .col-sm-6.text-right
         - if can_manage_team?(@team) && Registry.any?
           a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
