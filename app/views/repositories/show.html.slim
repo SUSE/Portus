@@ -175,7 +175,8 @@
   #comments.panel-body.panel-no-side-padding
     .container-full
       - if @repository_comments.empty?
-        ' Nobody has left a comment yet.
+        .no-comments-found
+          ' Nobody has left a comment yet.
       - else
         - @repository_comments.each do |comment|
           = render(comment)
