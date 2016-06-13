@@ -1,6 +1,10 @@
 tr id="namespace_#{namespace.id}"
   td= link_to namespace.clean_name, namespace
   td= namespace.repositories.count
+  - if current_user.admin? || namespace.team.users.include?(current_user)
+    td= link_to namespace.webhooks.count, namespace_webhooks_path(namespace)
+  - else
+    td= namespace.webhooks.count
   td= time_tag namespace.created_at
   td
     - if can_manage_namespace?(namespace) && !namespace.global

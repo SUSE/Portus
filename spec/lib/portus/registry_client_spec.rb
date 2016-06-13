@@ -67,6 +67,7 @@ describe Portus::RegistryClient do
   end
 
   it "fails if the registry has authentication enabled and no credentials are set" do
+    VCR.turn_on!
     path = ""
     registry = RegistryClientMissingCredentials.new(registry_server)
     VCR.use_cassette("registry/missing_credentials", record: :none) do

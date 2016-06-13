@@ -20,6 +20,10 @@ integration "Login" do
 
     # Invalid password.
     expect { login(name, password + "o", email) }.to raise_error(LoginError)
+
+    create_user("mc!", email, password, true)
+    expect { login(name, password, email) }.not_to raise_error
+
   end
 
   it "allows users to push images with multiple tags" do

@@ -8,9 +8,9 @@ li
       h6
         strong
           - if activity.owner == activity.recipient
-            = "#{activity.owner.username} removed itself "
+            = "#{activity.owner.display_username} removed itself "
           - else
-            = "#{activity.owner.username} removed user #{activity.recipient.username} "
+            = "#{activity.owner.display_username} removed user #{activity.recipient.display_username} "
         = "from the "
         = link_to activity.trackable.name, activity.trackable
         |  team

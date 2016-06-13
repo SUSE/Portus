@@ -104,7 +104,14 @@
             tabindex="0" data-html="true"]
             i.fa.fa-eye
             ' Viewer
-
+    - if current_user.admin? || @namespace.team.users.include?(current_user)
+      .pull-right
+        a.btn.btn-link.btn-xs.btn-show-webhooks[
+          value="#{@namespace.id}" class="button_namespace_description"
+          href=url_for(namespace_webhooks_path(@namespace))
+          ]
+          i.fa.fa-eye.fa-lg
+          | Show webhooks
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover

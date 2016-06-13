@@ -30,6 +30,12 @@ class NamespacePolicy
       namespace.team.contributors.exists?(user.id)
   end
 
+  def index?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
+    user.admin? || namespace.team.users.exists?(user.id)
+  end
+
   alias_method :all?,       :push?
   alias_method :create?,    :push?
   alias_method :update?,    :push?
