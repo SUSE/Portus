@@ -1,9 +1,11 @@
-<header>
+<header id="portus-header" class="portus-topbar">
   <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
     <a href="/">
-      <img class="pull-left img-responsive" src="/build/images/logo-header.png">
+      <img class="pull-left img-responsive topbar-logo" src="/build/images/logo-header.png">
     </a>
-    <div class="pull-right">
+    <div class="pull-right hidden-xs">
       <a class="btn btn-link" href="/blog/index.html">Blog</a>
       <a class="btn btn-link" href="/features.html">Features</a>
       <a class="btn btn-link" href="/documentation.html">Documentation</a>
@@ -11,3 +13,11 @@
     <div class="clearfix"></div>
   </div>
 </header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-comments"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+  </ul>
+</div>
