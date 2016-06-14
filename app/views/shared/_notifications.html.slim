@@ -21,4 +21,4 @@
         locals: { messages: value, alert: key, float: flash[:float] }
 
 = render template: 'shared/_notification.html.slim',
-    locals: { messages: flash[:notice], alert: 'info', float: true }
+    locals: { messages: nil, alert: 'info', float: true }
