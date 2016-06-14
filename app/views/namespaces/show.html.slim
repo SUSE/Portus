@@ -66,9 +66,10 @@
           strong
             = @namespace.clean_name
         - unless @namespace.global?
-          h6.label.label-info#team-label
-            | <span>Belongs to: </span>
-            = link_to "#{@namespace.team.name}", @namespace.team
+          .clearfix
+            h6.label.label-info#team-label
+              | <span>Belongs to: </span>
+              = link_to "#{@namespace.team.name}", @namespace.team
       .col-xs-6.text-right
         - if can_push?(@namespace)
           .circle-label.permissions-label.circle-label-sm[data-placement="left"
