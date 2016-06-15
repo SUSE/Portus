@@ -82,6 +82,8 @@ Note that if **smtp** is disabled, then `sendmail` is used instead (the specific
 
 ### FQDN of your machine
 
+**Note**: feature only available in Portus 2.1 or later.
+
 On the next release of Portus, the FQDN of the machine is no longer a secret
 and it's now considered a configurable value. The fact the it was a secret
 before is because of legacy code. However, you now can configure it like this:
@@ -132,6 +134,23 @@ There are three possibilities for the **guess_email** option:
 
 If something goes wrong when trying to guess the email, then it just falls back to the default behavior (empty email).
 
+### Delete support
+
+**Note**: feature only available in Portus 2.1 or later. Also bear in mind that
+this will only work accordingly if you are using Docker Distribution 2.4 or later.
+
+As of 2.1, and if you are using a Docker Distribution version not older than
+2.4, you will be able to delete images, tags, users, namespaces and teams. In
+order to do so just enable the `delete` option:
+
+{% highlight yaml %}
+delete:
+  enabled: true
+{% endhighlight %}
+
+This option is **disabled** by default. This is because we want users enabling
+this if they are really sure about the feature itself and its requirements.
+
 ### Creating the first admin user
 
 As explained [here](/features/3_teams_namespaces_and_users.html), an admin user
@@ -174,6 +193,8 @@ When Portus has been installed via RPM, this operation can be performed via
     $ portusctl make_admin <username>
 
 ### Disabling the sign up form
+
+**Note**: feature only available in Portus 2.1 or later.
 
 By default Portus will have the sign up form available for any person that comes
 across your Portus instance. You can change that by disabling the `signup`
