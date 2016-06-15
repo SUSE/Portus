@@ -1,0 +1,40 @@
+<aside class="hidden-xs hidden-sm content-list">
+  <ul class="topics">
+    <li>Documentation</li>
+    <ul class="subtopics">
+      {% assign docs = (site.docs | sort: 'order') %}
+      {% for subtopic in docs %}
+        <li>
+          <a href="{{ subtopic.url | prepend: site.baseurl }}">
+            {{ subtopic.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <li>Setups</li>
+    <ul class="subtopics">
+      {% assign setups = (site.setups | sort: 'order') %}
+      {% for subtopic in setups %}
+        <li>
+          <a href="{{ subtopic.url | prepend: site.baseurl }}">
+            {{ subtopic.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <li>Features</li>
+    <ul class="subtopics">
+      {% assign features = (site.features | sort: 'order') %}
+      {% for subtopic in features %}
+        <li>
+          <a href="{{ subtopic.url | prepend: site.baseurl }}">
+            {{ subtopic.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </ul>
+  <div class="credits">
+    <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+  </div>
+</aside>
