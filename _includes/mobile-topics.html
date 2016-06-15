@@ -1,0 +1,39 @@
+<div class="visible-xs visible-sm">
+  <div class="content-bar">
+    <ul class="topics">
+      <li class="dropdown">
+        <button class="dropdown-toggle" type="button" data-toggle="dropdown">Documentation Index
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Documentation</li>
+          {% assign docs = (site.docs | sort: 'order') %}
+          {% for subtopic in docs %}
+            <li>
+              <a href="{{ subtopic.url | prepend: site.baseurl }}">
+                {{ subtopic.title }}
+              </a>
+            </li>
+          {% endfor %}
+          <li class="dropdown-header">Setups</li>
+          {% assign setups = (site.setups | sort: 'order') %}
+          {% for subtopic in setups %}
+            <li>
+              <a href="{{ subtopic.url | prepend: site.baseurl }}">
+                {{ subtopic.title }}
+              </a>
+            </li>
+          {% endfor %}
+          <li class="dropdown-header">Features</li>
+          {% assign features = (site.features | sort: 'order') %}
+          {% for subtopic in features %}
+            <li>
+              <a href="{{ subtopic.url | prepend: site.baseurl }}">
+                {{ subtopic.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

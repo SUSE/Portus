@@ -169,3 +169,105 @@ body {
   background: @text-selected;
   color: #fff;
 }
+
+.credits {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid @portus-users-bg-hover;
+}
+
+aside {
+  .credits {
+    background: lighten(@thirdColour, 2%);
+  }
+}
+
+.content-list {
+  background-color: @gray-darker;
+  height: 100%;
+  width: calc(100vw - 75vw);
+  position: fixed;
+  margin-left: 0;
+  overflow-y: auto;
+
+  .topics {
+    padding: 0 !important;
+    > li {
+      background: lighten(@thirdColour, 1%);
+      list-style: none;
+      padding: 1rem 2rem;
+      text-transform: uppercase;
+      font-family: Roboto,sans-serif;
+      color: @aside-titles;
+    }
+  }
+  .subtopics {
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+    padding-left: 0;
+    > li {
+      list-style: none;
+      padding: 0.3rem;
+      padding-left: 3rem;
+      a {
+        color: @white;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+      &:hover {
+        background-color: lighten(@thirdColour, 3%);
+      }
+    }
+  }
+}
+
+.content-list::-webkit-scrollbar {
+  width: 0.8rem;
+  margin-right: 0.5rem;
+}
+
+.content-list::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: darken(@thirdColour, 3%);
+}
+
+.content-bar {
+  margin: 1rem auto 1rem auto;
+  display: table;
+  .topics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    > li {
+      display: inline-flex;
+      button {
+        border-radius: 0;
+        border: 0;
+        border-bottom: 3px solid @portus-users-bg;
+        background: transparent;
+        padding: 1rem;
+        text-transform: uppercase;
+        text-align: left;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        width: 40rem;
+        span {
+          float: right;
+          margin: 1rem;
+        }
+      }
+    }
+    .dropdown-menu {
+      width: 40rem;
+      margin-left: 1rem;
+      .dropdown-header {
+        color: @portus-users-bg;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-top: 1rem;
+      }
+    }
+  }
+}

@@ -16,57 +16,25 @@
   </head>
   <body>
     {% include header.html %}
-    <div class="container-fluid" id="documentation">
+    <div class="container" id="documentation">
       <div class="row">
-        <aside class="col-xs-3 aside-max">
-          <h4>Documentation</h4>
-          <ul>
-            {% assign docs = (site.docs | sort: 'order') %}
-            {% for d in docs %}
-              <li>
-                <a href="{{ d.url | prepend: site.baseurl }}">
-                  {{ d.title }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-          <h4>Setups</h4>
-          <ul>
-            {% assign setups = (site.setups | sort: 'order') %}
-            {% for s in setups %}
-              <li>
-                <a href="{{ s.url | prepend: site.baseurl }}">
-                  {{ s.title }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-          <h4>Features</h4>
-            <ul>
-            {% assign features = (site.features | sort: 'order') %}
-            {% for f in features %}
-              <li>
-                <a href="{{ f.url | prepend: site.baseurl }}">
-                  {{ f.title }}
-                </a>
-              </li>
-            {% endfor %}
-            </ul>
-        </aside>
-        <div class="col-md-8 col-sm-11 col-xs-11 post-wrapper">
+        <div class="col-md-9 col-md-offset-3 col-sm-12 col-xs-12">
           <section>
+            <div class="row">
+              {% include mobile-topics.html %}
+            </div>
             <div class="row post">
-              <article class="post-content col-md-10">
+              <article>
                 {{ content }}
               </article>
             </div>
           </section>
-
         </div>
       </div>
+      {% include desktop-topics.html %}
+      <div class="visible-xs visible-sm credits">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
     </div>
-  <footer class="col-xs-3 footer-documentation aside-max">
-    <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
-  </footer>
   </body>
 </html>
