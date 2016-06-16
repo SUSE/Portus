@@ -2,8 +2,13 @@
 # Makes the app version available to the application itself
 # Needs the git executable for all git operations
 module Version
-  # Returns true if git is in the system, false otherwise.
+  # Returns true if the version can be extracted by using git, false
+  # otherwise.
   def self.git?
+    # Check that the ".git" directory at least exists.
+    return false unless File.exists?(Rails.root.join(".git"))
+
+    # Check whether we have git in our system.
     paths = ENV["PATH"].split(":")
     paths.each { |p| return true if File.executable?(File.join(p, "git")) }
     false
