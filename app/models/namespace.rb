@@ -22,6 +22,11 @@
 
 class Namespace < ActiveRecord::Base
   include PublicActivity::Common
+  include SearchCop
+
+  search_scope :search do
+    attributes :name, :description
+  end
 
   # This regexp is extracted from the reference package of Docker Distribution
   # and it matches a valid namespace name.
