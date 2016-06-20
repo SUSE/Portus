@@ -15,21 +15,23 @@ On this page you can find information about:
 ## Quick start
 
 Are you new to Portus and you have no idea how to start with it? Please, follow
-this quick start guide. First of all, you need to install or deploy Portus. You
-can do this in multiple ways:
+this quick start guide.
 
-- Setting it up for development purposes. This is the best way to mess with
+First of all, if you are only interested in knowing how you can *login* and *push*
+images to a registry which has Portus as an authorization service, you might be
+interested in reading [this page for newcomers](/docs/first-steps.html).
+Otherwise, if you need to install or deploy Portus, you can do it in two ways:
+
+- Set it up for development purposes. This is the best way to mess with
 Portus and getting to know it. Read more about this
 [here](https://github.com/SUSE/Portus/wiki#developmentplayground-environments).
-- Deploying Portus in production.
+- Deploy Portus in production.
 
 This guide will assume that you want to deploy Portus on production. In order
 to do this, you have to first install it on your system. You can do this in
 multiple ways, our favorite being installing Portus through the provided
-[RPM](/docs/setups/1_rpm_packages.html).
-
-There are other alternative ways to install Portus, just check the `Setups`
-section in the sidebar on the left for more information about them.
+[RPM](/docs/setups/1_rpm_packages.html). Note that there are other alternative
+ways to install Portus (see the `Setups` section in the sidebar on the left).
 
 Now, before you jump into trying to use Portus in your browser, there are
 some configuration steps that you should follow. This is thoroughly explained
