@@ -24,23 +24,29 @@
         .col-md-offset-2.col-md-7
           = f.submit('Create', class: 'btn btn-primary')
 
-span
-  a[data-placement="right" data-toggle="popover" data-container="span" data-content="A webhook is an HTTP callback which is triggered after an event, e.g. a push event, occurs." data-original-title="What's this?" tabindex="0"]
-    i.fa.fa-info-circle
-    | What's this?
 .panel.panel-default
   .panel-heading
-    h5
-      ' Webhooks for
-      - if @namespace.name == "portus_global_namespace_1"
-        strong
-         = link_to " global namespace", @namespace
-      - else
-        ' namespace
-        strong
-          = link_to @namespace.name, @namespace
-      - if can_manage_namespace?(@namespace)
-        .pull-right
+    .row
+      .col-sm-6
+        h5
+          small
+            a[data-placement="right"
+              data-toggle="popover"
+              data-container=".panel-heading"
+              data-content="<p>A webhook is an HTTP callback which is triggered after an event, e.g. a push event, occurs.</p>"
+              data-original-title="What's this?"
+              tabindex="0" data-html="true"]
+                i.fa.fa-info-circle
+          ' Webhooks for
+          - if @namespace.name == "portus_global_namespace_1"
+            strong
+             = link_to " global namespace", @namespace
+          - else
+            ' namespace
+            strong
+              = link_to @namespace.name, @namespace
+      .col-sm-6.text-right
+        - if can_manage_namespace?(@namespace)
           a#add_webhook_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
             i.fa.fa-plus-circle
             | Create new webhook

@@ -1,11 +1,14 @@
-span
-  a[data-placement="right" data-toggle="popover" data-container="span" data-content="A namespace groups a series of repositories." data-original-title="What's this?" tabindex="0"]
-    i.fa.fa-info-circle
-    | What's this?
-
 .panel.panel-default
   .panel-heading
     h5
+      small
+        a[data-placement="right"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="<p>A namespace groups a series of repositories.</p>"
+          data-original-title="What's this?"
+          tabindex="0" data-html="true"]
+            i.fa.fa-info-circle
       ' Special namespaces
   .panel-body
     .table-responsive
@@ -33,11 +36,13 @@ span
           = f.label :namespace, {class: 'control-label col-md-2'}
           .col-md-7
             = f.text_field(:namespace, class: 'form-control', required: true, placeholder: "Name")
-        .form-group
+        .form-group.has-feedback
           = f.label :team, {class: 'control-label col-md-2'}
           .col-md-7
             .remote
               = f.text_field(:team, class: 'form-control typeahead', required: true, placeholder: "Name of the team")
+            span.fa.fa-search.form-control-feedback
+
         .form-group
           = f.label :description, {class: 'control-label col-md-2'}
           .col-md-7
@@ -48,10 +53,12 @@ span
 
 .panel.panel-default
   .panel-heading
-    h5
-      ' Namespaces you have access to
-      - if Registry.any?
-        .pull-right
+    .row
+      .col-sm-6
+        h5
+          ' Namespaces you have access to
+      .col-sm-6.text-right
+        - if Registry.any?
           a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
             i.fa.fa-plus-circle
             | Create new namespace

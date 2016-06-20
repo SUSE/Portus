@@ -39,9 +39,11 @@
 
     .panel.panel-default
       .panel-heading
-        h5
-          ' Application tokens
-          .pull-right
+        .row
+          .col-sm-6
+            h5
+              ' Application tokens
+          .col-sm-6.text-right
             - if current_user.application_tokens.count >= User::APPLICATION_TOKENS_MAX
               a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[disabled="disabled" role="button"]
                 i.fa.fa-plus-circle

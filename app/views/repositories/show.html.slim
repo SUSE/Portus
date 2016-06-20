@@ -1,14 +1,16 @@
 .btn-toolbar
   #repo-stars.pull-right
-    .btn-group
-      - if @repository.starred_by?(current_user)
-        = link_to toggle_star_repository_path(@repository), method: :post, title: 'Unstar repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
+    = link_to toggle_star_repository_path(@repository), method: :post,
+      class: 'btn btn-primary btn-xs', remote: true, id: 'toggle_star',
+      data: {placement: 'bottom', toggle: 'tooltip'},
+      title: (@repository.starred_by?(current_user) ? 'Unstar repository' : 'Star repository')
+      do
+        - if @repository.starred_by?(current_user)
           i.fa.fa-star
-      - else
-        = link_to toggle_star_repository_path(@repository), method: :post, title: 'Star repository', class: 'btn btn-small btn-default btn-xs', remote: true, id: 'toggle_star' do
+        - else
           i.fa.fa-star-o
-      span#star-counter.btn.btn-primary.btn-xs
-        = @repository.stars.count
+        span#star-counter.badge
+          = @repository.stars.count
   - if APP_CONFIG.enabled?("delete")
     #remove-repo.pull-right
       button.remove-repo.btn-x.btn-edit-role.btn.btn-link.btn-xs[
@@ -22,7 +24,7 @@
         data-html="true"
         role="button"
         title="Delete image"]
-        .fa.fa-trash
+        .fa.fa-trash.space-xs-sides
         ' Delete image
 .panel.panel-default
   .panel-heading
@@ -155,22 +157,26 @@
 
 .panel.panel-default
   .panel-heading.clearfix
-    h5
-      .pull-right
+    .row
+      .col-sm-6
+        h5
+          span class="number_of_comments badge"
+            = @repository.comments.count
+          span class="comment_string"
+            - if @repository.comments.count == 1
+              |  Comment
+            - else
+              |  Comments
+      .col-sm-6.text-right
         a#write_comment_repository_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
           i.fa.fa-comment
           | Write a comment
-      span class="number_of_comments"
-        = @repository.comments.count
-      span class="comment_string"
-        - if @repository.comments.count == 1
-          |  Comment
-        - else
-          |  Comments
-  #comments.panel-body
+
+  #comments.panel-body.panel-no-side-padding
     .container-full
       - if @repository_comments.empty?
-        ' Nobody has left a comment yet.
+        .no-comments-found
+          ' Nobody has left a comment yet.
       - else
         - @repository_comments.each do |comment|
           = render(comment)

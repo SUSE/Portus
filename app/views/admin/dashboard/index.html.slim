@@ -57,10 +57,15 @@
 
 .panel.panel-default
   .panel-heading
-    h5
-      | Recent activities
-      .pull-right
-        = link_to "View all activities", admin_activities_path, class: "btn btn-link btn-xs"
+    .row
+      .col-sm-6
+        h5
+          | Recent activities
+      .col-sm-6.text-right
+        = link_to admin_activities_path, class: "btn btn-link btn-xs" do
+          i.fa.fa-eye
+          ' View all activities
+
   .panel-body
     - if @recent_activities.empty?
       p No activities in the last 24 hours.
