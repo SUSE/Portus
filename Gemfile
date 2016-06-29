@@ -22,7 +22,10 @@ gem "redcarpet"
 gem "font-awesome-rails"
 gem "bootstrap-typeahead-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
-gem "typhoeus"
+
+# Pinning these specific versions because that's what we have on OBS.
+gem "ethon", "~> 0.9.0"
+gem "typhoeus", "~> 1.0.2"
 
 # Used to store application tokens. This is already a Rails depedency. However
 # better safe than sorry...
