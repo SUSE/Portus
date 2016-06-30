@@ -31,6 +31,9 @@ additional_native_build_requirements() {
   if [ $1 == "mysql2" ];then
     echo "BuildRequires: libmysqlclient-devel\nRecommends: mariadb\n"
   fi
+  if [ $1 == "ethon" ];then
+    echo "BuildRequires: libcurl-devel\nRequires: libcurl4\n"
+  fi
 }
 
 mkdir -p build/Portus-$branch
