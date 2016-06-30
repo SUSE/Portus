@@ -16,7 +16,7 @@ if [ $TRAVIS_COMMIT ];then
 else
   commit=$(git log -1 --pretty=format:'%H')
 fi
-version=$(cat ../../VERSION)
+version=$(sed s/-/~/g ../../VERSION)
 version="$version+git$commit"
 date=$(date --rfc-2822)
 year=$(date +%Y)
@@ -75,4 +75,3 @@ else
   echo "A problem occured creating the spec file."
   exit -1
 fi
-
