@@ -4,7 +4,7 @@
 - [Blog](http://port.us.org/blog/index.html)
 - Mailing list: [Google Groups](https://groups.google.com/forum/#!forum/portus-dev)
 
-Portus is an authoritzation server and a user interface for the next generation
+Portus is an authorization server and a user interface for the next generation
 of the Docker registry. Portus targets
 [version 2](https://github.com/docker/distribution/blob/master/docs/spec/api.md)
 of the Docker Registry API. The minimum required version of Registry is 2.1,
