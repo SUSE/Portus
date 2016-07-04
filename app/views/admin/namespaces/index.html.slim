@@ -16,7 +16,7 @@
             th Repositories
             th Webhooks
             th Created At
-            th Public
+            th Visibility
         tbody
           - @special_namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
@@ -39,7 +39,7 @@
             th Repositories
             th Webhooks
             th Created At
-            th Public
+            th Visibility
         tbody
           - @namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}

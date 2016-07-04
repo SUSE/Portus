@@ -8,10 +8,14 @@ class NamespacePolicy
 
   def pull?
     # Even non-logged in users can pull from a public namespace.
-    return true if namespace.public?
+    return true if namespace.visibility_public?
 
     # From now on, all the others require to be logged in.
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
+    # Logged-in users can pull from a protected namespace even if they are
+    # not part of the team.
+    return true if namespace.visibility_protected?
 
     # All the members of the team have READ access or anyone if
     # the namespace is public
@@ -40,9 +44,10 @@ class NamespacePolicy
   alias_method :create?,    :push?
   alias_method :update?,    :push?
 
-  def toggle_public?
+  def change_visibility?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    !namespace.global? && (user.admin? || namespace.team.owners.exists?(user.id))
+    (namespace.global? && user.admin?) || \
+      (!namespace.global? && (user.admin? || namespace.team.owners.exists?(user.id)))
   end
 
   # Only owners and admins can change the team ownership.
@@ -63,9 +68,10 @@ class NamespacePolicy
       scope
         .joins(team: [:team_users])
         .where(
-          "(namespaces.public = :public OR team_users.user_id = :user_id) AND " \
+          "(namespaces.visibility = :visibility OR team_users.user_id = :user_id) AND " \
           "namespaces.global = :global AND namespaces.name != :username",
-          public: true, user_id: user.id, global: false, username: user.username)
+          visibility: Namespace.visibilities[:visibility_public],
+          user_id: user.id, global: false, username: user.username)
         .distinct
     end
   end

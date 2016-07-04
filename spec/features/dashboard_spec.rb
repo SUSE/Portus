@@ -13,8 +13,19 @@ feature "Dashboard page" do
 
   let!(:another_user) { create(:admin) }
   let!(:another_team) { create(:team, owners: [another_user]) }
-  let!(:public_namespace) { create(:namespace, team: another_team, public: true) }
+  let!(:another_team2) { create(:team, owners: [another_user]) }
+  let!(:public_namespace) do
+    create(:namespace,
+           team:       another_team,
+           visibility: Namespace.visibilities[:visibility_public])
+  end
   let!(:public_repository) { create(:repository, namespace: public_namespace) }
+  let!(:protected_namespace) do
+    create(:namespace,
+           team:       another_team2,
+           visibility: Namespace.visibilities[:visibility_protected])
+  end
+  let!(:protected_repository) { create(:repository, namespace: protected_namespace) }
 
   before do
     login_as user, scope: :user
@@ -27,6 +38,7 @@ feature "Dashboard page" do
       expect(page).to have_content("#{namespace.name}/#{repository.name}")
       expect(page).to have_content("#{namespace.name}/#{starred_repo.name}")
       expect(page).to have_content("#{public_namespace.name}/#{public_repository.name}")
+      expect(page).to have_content("#{protected_namespace.name}/#{protected_repository.name}")
     end
 
     scenario "Show personal repositories", js: true do
@@ -38,6 +50,7 @@ feature "Dashboard page" do
       expect(page).not_to have_content("#{namespace.name}/#{starred_repo.name}")
       expect(page).not_to have_content("#{namespace.name}/#{repository.name}")
       expect(page).not_to have_content("#{public_namespace.name}/#{public_repository.name}")
+      expect(page).not_to have_content("#{protected_namespace.name}/#{protected_repository.name}")
     end
 
     scenario "Show personal repositories", js: true do
@@ -49,6 +62,7 @@ feature "Dashboard page" do
       expect(page).not_to have_content("#{personal_namespace.name}/#{personal_repository.name}")
       expect(page).not_to have_content("#{namespace.name}/#{repository.name}")
       expect(page).not_to have_content("#{public_namespace.name}/#{public_repository.name}")
+      expect(page).not_to have_content("#{protected_namespace.name}/#{protected_repository.name}")
     end
   end
 

@@ -31,8 +31,12 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     let(:activity_owner) { create(:user, username: "castiel") }
     let(:registry) { create(:registry, hostname: "registry.test.lan") }
     let(:global_namespace) do
-      create(:namespace, name: "globalnamespace", registry: registry, global: true,
-             team: global_team, public: true)
+      create(:namespace,
+             name:       "globalnamespace",
+             registry:   registry,
+             global:     true,
+             team:       global_team,
+             visibility: "visibility_public")
     end
     let(:namespace) { create(:namespace, name: "patched_images", registry: registry, team: team) }
     let(:team) { create(:team, name: "qa", owners: [user]) }
@@ -65,12 +69,18 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
       create(:activity_namespace_create,
              trackable_id: namespace.id,
              owner_id:     activity_owner.id)
-      create(:activity_namespace_public,
+      create(:activity_namespace_change_visibility,
              trackable_id: namespace.id,
-             owner_id:     activity_owner.id)
-      create(:activity_namespace_private,
+             owner_id:     activity_owner.id,
+             parameters:   { visibility: "visibility_public" })
+      create(:activity_namespace_change_visibility,
              trackable_id: namespace.id,
-             owner_id:     activity_owner.id)
+             owner_id:     activity_owner.id,
+             parameters:   { visibility: "visibility_protected" })
+      create(:activity_namespace_change_visibility,
+             trackable_id: namespace.id,
+             owner_id:     activity_owner.id,
+             parameters:   { visibility: "visibility_private" })
       create(:activity_repository_push,
              trackable_id: tag.repository.id,
              recipient_id: tag.id,
@@ -95,8 +105,9 @@ team,qa,add member,dean,castiel,2015-01-01 00:00:00 UTC,role viewer
 team,qa,remove member,dean,castiel,2015-01-01 00:00:00 UTC,role viewer
 team,qa,change member role,dean,castiel,2015-01-01 00:00:00 UTC,from viewer to contributor
 namespace,patched_images,create,-,castiel,2015-01-01 00:00:00 UTC,owned by team qa
-namespace,patched_images,make public,-,castiel,2015-01-01 00:00:00 UTC,-
-namespace,patched_images,make private,-,castiel,2015-01-01 00:00:00 UTC,-
+namespace,patched_images,change visibility,-,castiel,2015-01-01 00:00:00 UTC,is public
+namespace,patched_images,change visibility,-,castiel,2015-01-01 00:00:00 UTC,is protected
+namespace,patched_images,change visibility,-,castiel,2015-01-01 00:00:00 UTC,is private
 repository,patched_images/sles12:1.0.0,push tag,-,castiel,2015-01-01 00:00:00 UTC,-
 repository,registry.test.lan/sles11sp3:1.0.0,push tag,-,castiel,2015-01-01 00:00:00 UTC,-
 CSV

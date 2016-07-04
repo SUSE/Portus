@@ -65,19 +65,25 @@ describe NamespacesController do
     end
   end
 
-  describe "PUT #toggle_public" do
-    it "allows the owner of the team to change the public attribute" do
+  describe "PUT #change_visibility" do
+    it "allows the owner of the team to change the visibility attribute" do
       sign_in owner
-      put :toggle_public, id: namespace.id, format: :js
+      put :change_visibility,
+        id:         namespace.id,
+        visibility: "visibility_public",
+        format:     :js
 
       namespace.reload
-      expect(namespace).to be_public
+      expect(namespace.visibility).to eq("visibility_public")
       expect(response.status).to eq 200
     end
 
     it "blocks users that are not part of the team" do
       sign_in create(:user)
-      put :toggle_public, id: namespace.id, format: :js
+      put :change_visibility,
+        id:         namespace.id,
+        visibility: "visibility_public",
+        format:     :js
 
       expect(response.status).to eq 401
     end
@@ -296,27 +302,52 @@ describe NamespacesController do
     end
 
     it "tracks set namespace private" do
-      namespace.update_attributes(public: true)
+      namespace.update_attributes(visibility: Namespace.visibilities[:visibilty_public])
 
       expect do
-        put :toggle_public, id: namespace.id, format: :js
+        put :change_visibility,
+            id:         namespace.id,
+            visibility: "visibility_private",
+            format:     :js
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.last
-      expect(activity.key).to eq("namespace.private")
+      expect(activity.key).to eq("namespace.change_visibility")
+      expect(activity.parameters[:visibility]).to eq("visibility_private")
+      expect(activity.owner).to eq(owner)
+      expect(activity.trackable).to eq(namespace)
+    end
+
+    it "tracks set namespace protected" do
+      namespace.update_attributes(visibility: Namespace.visibilities[:visibilty_public])
+
+      expect do
+        put :change_visibility,
+            id:         namespace.id,
+            visibility: "visibility_protected",
+            format:     :js
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      activity = PublicActivity::Activity.last
+      expect(activity.key).to eq("namespace.change_visibility")
+      expect(activity.parameters[:visibility]).to eq("visibility_protected")
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(namespace)
     end
 
     it "tracks set namespace public" do
-      namespace.update_attributes(public: false)
+      namespace.update_attributes(visibility: Namespace.visibilities[:visibility_private])
 
       expect do
-        put :toggle_public, id: namespace.id, format: :js
+        put :change_visibility,
+            id:         namespace.id,
+            visibility: "visibility_public",
+            format:     :js
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.last
-      expect(activity.key).to eq("namespace.public")
+      expect(activity.key).to eq("namespace.change_visibility")
+      expect(activity.parameters[:visibility]).to eq("visibility_public")
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(namespace)
     end

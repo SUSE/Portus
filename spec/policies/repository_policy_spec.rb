@@ -12,8 +12,19 @@ describe RepositoryPolicy do
 
   permissions :show? do
     before :each do
-      public_namespace = create(:namespace, team: team2, public: true, registry: registry)
+      public_namespace = create(
+        :namespace,
+        team:       team2,
+        visibility: Namespace.visibilities[:visibility_public],
+        registry:   registry)
       @public_repository = create(:repository, namespace: public_namespace)
+
+      protected_namespace = create(
+        :namespace,
+        team:       team2,
+        visibility: Namespace.visibilities[:visibility_protected],
+        registry:   registry)
+      @protected_repository = create(:repository, namespace: protected_namespace)
 
       private_namespace = create(:namespace, team: team2, registry: registry)
       @private_repository = create(:repository, namespace: private_namespace)
@@ -31,6 +42,10 @@ describe RepositoryPolicy do
       expect(subject).to permit(user, @public_repository)
     end
 
+    it "grants access if the namespace is protected" do
+      expect(subject).to permit(user, @protected_repository)
+    end
+
     it "grants access if the repository belongs to a namespace of a team member" do
       user3 = create(:user)
       TeamUser.create(team: team2, user: user3, role: TeamUser.roles["viewer"])
@@ -44,7 +59,11 @@ describe RepositoryPolicy do
 
   describe "scope" do
     before :each do
-      public_namespace = create(:namespace, team: team2, public: true, registry: registry)
+      public_namespace = create(
+        :namespace,
+        team:       team2,
+        visibility: Namespace.visibilities[:visibility_public],
+        registry:   registry)
       @public_repository = create(:repository, namespace: public_namespace)
 
       private_namespace = create(:namespace, team: team2, registry: registry)

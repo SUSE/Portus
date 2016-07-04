@@ -42,9 +42,12 @@ class WebhookPolicy < NamespacePolicy
         namespaces = Namespace
           .joins(team: [:team_users])
           .where(
-            "(namespaces.public = :public OR team_users.user_id = :user_id) AND " \
+            "(namespaces.visibility = :public OR namespaces.visibility = :protected OR "\
+            "team_users.user_id = :user_id) AND " \
             "namespaces.global = :global AND namespaces.name != :username",
-            public: true, user_id: user.id, global: false, username: user.username)
+            public: Namespace.visibilities[:visibility_public],
+            protected: Namespace.visibilities[:visibility_protected], user_id: user.id,
+            global: false, username: user.username)
           .pluck(:id)
 
         scope.includes(:headers, :deliveries).where(namespace: namespaces)
