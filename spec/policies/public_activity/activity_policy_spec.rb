@@ -34,27 +34,26 @@ describe PublicActivity::ActivityPolicy do
 
     it "returns pertinent namespace events" do
       namespace2 = create(:namespace,
-                          registry: registry,
-                          team:     create(:team,
-                                       owners: [another_user]),
-                          public:   true)
+                          registry:   registry,
+                          team:       create(:team, owners: [another_user]),
+                          visibility: Namespace.visibilities[:visibility_public])
 
       activities = [
         create(:activity_namespace_create,
                trackable_id: namespace.id,
                owner_id:     activity_owner.id),
-        create(:activity_namespace_public,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace.id,
                owner_id:     activity_owner.id),
-        create(:activity_namespace_private,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace.id,
                owner_id:     activity_owner.id),
         # all the public/private events are shown, even the ones
         # involving namespaces the user does not control
-        create(:activity_namespace_public,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace2.id,
                owner_id:     activity_owner.id),
-        create(:activity_namespace_private,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace2.id,
                owner_id:     activity_owner.id)
       ]
@@ -74,9 +73,9 @@ describe PublicActivity::ActivityPolicy do
       private_tag = create(:tag, repository: create(:repository, namespace: namespace2))
 
       public_namespace = create(:namespace,
-                                registry: registry,
-                                public:   true,
-                                team:     create(:team,
+                                registry:   registry,
+                                visibility: Namespace.visibilities[:visibility_public],
+                                team:       create(:team,
                                              owners:     [another_user],
                                              namespaces: [namespace2]))
       public_tag = create(:tag, repository: create(:repository, namespace: public_namespace))

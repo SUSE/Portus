@@ -8,7 +8,8 @@ class RepositoryPolicy
 
   def show?
     @user.admin? ||
-      @repository.namespace.public? ||
+      @repository.namespace.visibility_public? ||
+      @repository.namespace.visibility_protected? ||
       @repository.namespace.team.users.exists?(user.id)
   end
 
@@ -28,9 +29,10 @@ class RepositoryPolicy
         # the repository belongs to the current_user
         @scope
           .joins(namespace: { team: :users })
-          .where("namespaces.public = :namespace_public OR " \
+          .where("namespaces.visibility = :namespace_visibility OR " \
                  "users.id = :user_id",
-                  namespace_public: true, user_id: @user.id)
+                  namespace_visibility: Namespace.visibilities[:visibility_public],
+                  user_id:              @user.id)
           .distinct
       end
     end

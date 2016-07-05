@@ -110,6 +110,7 @@ class User < ActiveRecord::Base
     namespace = Namespace.find_or_create_by!(
       team:        team,
       name:        namespace_name,
+      visibility:  Namespace.visibilities[:visibility_private],
       description: default_description,
       registry:    Registry.get # TODO: fix once we handle more registries
     )

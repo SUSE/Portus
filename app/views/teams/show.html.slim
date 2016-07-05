@@ -149,7 +149,7 @@
       .col-sm-6
         h5
           small
-            a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to all Portus users by toggling the "public" flag.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
+            a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to logged-in users or all Portus users by changing the visibility to "protected" or "public" respectively.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
               i.fa.fa-info-circle
           ' Namespaces owned
       .col-sm-6.text-right
@@ -173,7 +173,7 @@
             th Repositories
             th Webhooks
             th Created At
-            th Public
+            th Visibility
         tbody#namespaces
           - @team_namespaces.each do |namespace|
             = render(namespace)

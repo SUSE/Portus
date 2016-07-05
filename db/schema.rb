@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160531151718) do
+ActiveRecord::Schema.define(version: 20160614122012) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -66,10 +66,10 @@ ActiveRecord::Schema.define(version: 20160531151718) do
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
     t.integer  "team_id",     limit: 4
-    t.boolean  "public",                    default: false
     t.integer  "registry_id", limit: 4,                     null: false
     t.boolean  "global",                    default: false
     t.text     "description", limit: 65535
+    t.integer  "visibility",  limit: 4
   end
 
   add_index "namespaces", ["name", "registry_id"], name: "index_namespaces_on_name_and_registry_id", unique: true, using: :btree

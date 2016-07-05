@@ -7,10 +7,10 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  team_id     :integer
-#  public      :boolean          default("0")
 #  registry_id :integer          not null
 #  global      :boolean          default("0")
 #  description :text(65535)
+#  visibility  :integer
 #
 # Indexes
 #
@@ -40,13 +40,25 @@ class Namespace < ActiveRecord::Base
   belongs_to :registry
   belongs_to :team
 
-  validates :public, inclusion: { in: [true] }, if: :global?
+  enum visibility: [:visibility_private, :visibility_protected, :visibility_public]
+
+  validate :global_namespace_cannot_be_private
   validates :name,
             presence:   true,
             uniqueness: { scope: "registry_id" },
             length:     { maximum: MAX_NAME_LENGTH },
             namespace:  true
 
+  # global_namespace_cannot_be_private adds an error and returns false if the
+  # visibility of the global namespace is set to private. Otherwise, it returns
+  # true. This function is used to validate the visibility.
+  def global_namespace_cannot_be_private
+    if global? && visibility_private?
+      errors.add(:visibility, "global namespace cannot be private")
+      return false
+    end
+    true
+  end
   # From the given repository name that can be prefix by the name of the
   # namespace, returns two values:
   #   1. The namespace where the given repository belongs to.

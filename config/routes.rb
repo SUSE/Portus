@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show, :update] do
-    put "toggle_public", on: :member
+    put "change_visibility", on: :member
     resources :webhooks do
       resources :headers, only: [:create, :destroy], controller: :webhook_headers
       resources :deliveries, only: [:update], controller: :webhook_deliveries

@@ -7,10 +7,10 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  team_id     :integer
-#  public      :boolean          default("0")
 #  registry_id :integer          not null
 #  global      :boolean          default("0")
 #  description :text(65535)
+#  visibility  :integer
 #
 # Indexes
 #
@@ -66,10 +66,16 @@ describe Namespace do
   end
 
   context "global namespace" do
-    it "must be public" do
-      namespace = create(:namespace, global: true, public: true)
-      namespace.public = false
+    it "cannot be private" do
+      namespace = create(
+        :namespace,
+        global:     true,
+        visibility: Namespace.visibilities[:visibility_public])
+      namespace.visibility = Namespace.visibilities[:visibility_private]
       expect(namespace.save).to be false
+
+      namespace.visibility = Namespace.visibilities[:visibility_protected]
+      expect(namespace.save).to be true
     end
   end
 
@@ -87,7 +93,11 @@ describe Namespace do
 
     context "global namespace" do
       it "returns the name of the namespace" do
-        global_namespace = create(:namespace, global: true, public: true, registry: registry)
+        global_namespace = create(
+          :namespace,
+          global:     true,
+          visibility: Namespace.visibilities[:visibility_public],
+          registry:   registry)
         expect(global_namespace.clean_name).to eq(registry.hostname)
       end
     end

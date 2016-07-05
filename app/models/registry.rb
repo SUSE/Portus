@@ -196,7 +196,7 @@ class Registry < ActiveRecord::Base
     Namespace.create!(
       name:        "portus_global_namespace_#{count}",
       registry:    self,
-      public:      true,
+      visibility:  Namespace.visibilities[:visibility_public],
       global:      true,
       description: "The global namespace for the registry #{Registry.name}.",
       team:        team)
