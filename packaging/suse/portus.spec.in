@@ -140,6 +140,7 @@ fi
 %exclude %{portusdir}/spec
 %exclude %{portusdir}/vagrant
 %exclude %{portusdir}/Vagrantfile
+%exclude %{portusdir}/compose
 %doc %{portusdir}/README.md
 %doc %{portusdir}/CONTRIBUTING.md
 %doc %{portusdir}/LICENSE
