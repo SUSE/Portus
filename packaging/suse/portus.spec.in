@@ -140,6 +140,8 @@ fi
 %exclude %{portusdir}/spec
 %exclude %{portusdir}/vagrant
 %exclude %{portusdir}/Vagrantfile
+%exclude %{portusdir}/docker
+%exclude %{portusdir}/docker-compose.yml
 %doc %{portusdir}/README.md
 %doc %{portusdir}/CONTRIBUTING.md
 %doc %{portusdir}/LICENSE
