@@ -84,6 +84,16 @@ class NamespacesController < ApplicationController
     # Update the visibility if needed
     return if params[:visibility] == @namespace.visibility
 
+    # Check whether or not the user may change the visibility of his/her
+    # personal namespace. Admins of course may do whatever they want.
+    if !current_user.admin? && !APP_CONFIG.enabled?("user_change_visibility") && \
+        @namespace == current_user.namespace
+      respond_to do |format|
+        format.js { respond_with nil, status: :unauthorized }
+      end
+      return
+    end
+
     return unless @namespace.update_attributes(visibility: params[:visibility])
     @namespace.create_activity :change_visibility,
       owner:      current_user,

@@ -128,6 +128,11 @@ Looks for the following required certificate files in the specified folder:
     type:    :boolean,
     default: false
 
+  option "user-change-visibility-enable",
+    desc:    "Allow users to change the visibility of their personal namespace",
+    type:    :boolean,
+    default: true
+
   def setup
     ensure_root
     check_setup_flags options

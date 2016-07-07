@@ -4,7 +4,7 @@ inherit_from:
 
 # TODO: (mssola) only the LDAP class and portusctl require this.
 Metrics/ClassLength:
-  Max: 160
+  Max: 162
 
 # TODO: (mssola) Some methods are offending this cop. In the SUSE's style guide
 # the approach is to use Rubocop's default value. In the near future I will
