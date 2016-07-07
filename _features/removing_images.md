@@ -28,6 +28,11 @@ referencing them). We have two challenges though:
    administrator has to
    [explicitly enable this](/docs/Configuring-Portus.html#delete-support).
 
+Note that this feature has to be enabled from the registry's side too. This can
+be enabled by setting the
+[storage/delete](https://github.com/docker/distribution/blob/master/docs/configuration.md#delete)
+option to true.
+
 ## Removing images & tags
 
 Removing images and tags is quite intuitive from a user point of view. Just go
