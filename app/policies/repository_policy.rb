@@ -13,6 +13,12 @@ class RepositoryPolicy
       @repository.namespace.team.users.exists?(user.id)
   end
 
+  # Returns true if the repository can be destroyed.
+  def destroy?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless @user
+    @user.admin? || @repository.namespace.team.owners.exists?(user.id)
+  end
+
   class Scope
     attr_reader :user, :scope
 

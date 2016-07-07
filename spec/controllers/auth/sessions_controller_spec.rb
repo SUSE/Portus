@@ -8,7 +8,7 @@ describe Auth::SessionsController do
       APP_CONFIG["ldap"] = { "enabled" => true }
     end
 
-    it "sets the session hash on LDAP when it's the first time", focus: true do
+    it "sets the session hash on LDAP when it's the first time" do
       create(:registry)
 
       # Warden magic
