@@ -11,7 +11,7 @@
           i.fa.fa-star-o
         span#star-counter.badge
           = @repository.stars.count
-  - if APP_CONFIG.enabled?("delete")
+  - if can_destroy?(@repository)
     #remove-repo.pull-right
       button.remove-repo.btn-x.btn-edit-role.btn.btn-link.btn-xs[
         data-placement="left"
@@ -89,7 +89,7 @@
         col.col-20
         col.col-15
         col.col-20
-        - if APP_CONFIG.enabled?("delete")
+        - if can_destroy?(@repository)
           col.col-5
         thead
           tr
@@ -130,7 +130,7 @@
                       = tag.first.image_id[0, 12]
                 td= tag.first.created_at
 
-                - if APP_CONFIG.enabled?("delete")
+                - if can_destroy?(@repository)
                   td
                     button.remove-tag.fa.fa-lg.fa-trash-o.btn-x.btn-edit-role.btn.btn-link[
                       data-placement="left"

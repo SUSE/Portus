@@ -12,6 +12,12 @@ module RepositoriesHelper
     render_repo_activity(activity, "deleted")
   end
 
+  # Returns true if the user can remove the given repository.
+  def can_destroy?(repository)
+    APP_CONFIG.enabled?("delete") &&
+      RepositoryPolicy.new(current_user, repository).destroy?
+  end
+
   protected
 
   # General method for rendering an activity regarding repositories.

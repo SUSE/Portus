@@ -6,6 +6,7 @@ class TagsController < ApplicationController
   # the tags.
   def destroy
     tag = Tag.find(params[:id])
+    authorize tag
 
     # And now remove the tag by the digest. If the repository containing said
     # tags becomes empty after that, remove it too.
