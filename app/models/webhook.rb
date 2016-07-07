@@ -85,6 +85,12 @@ class Webhook < ActiveRecord::Base
     hydra.run
   end
 
+  # Handle a delete event from the registry. All enabled webhooks of the provided
+  # namespace are triggered in parallel.
+  def self.handle_delete_event(event)
+    handle_push_event(event)
+  end
+
   # host returns the host part of the URL. This is useful when wanting a pretty
   # representation of a webhook.
   def host
