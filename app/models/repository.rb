@@ -135,11 +135,14 @@ class Repository < ActiveRecord::Base
     return if actor.nil?
 
     # Get or create the repository as "namespace/repo". If both the repo and
-    # the given tag already exists, return early.
+    # the given tag already exists, update the digest and return early.
     repository = Repository.find_by(namespace: namespace, name: repo)
     if repository.nil?
       repository = Repository.create(namespace: namespace, name: repo)
     elsif repository.tags.exists?(name: tag)
+      # Update digest if the given tag already exists.
+      _, digest = Repository.id_and_digest_from_event(event, repository.full_name)
+      repository.tags.find_by(name: tag).update!(digest: digest)
       return
     end
 
