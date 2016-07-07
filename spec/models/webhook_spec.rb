@@ -36,7 +36,7 @@ RSpec.describe Webhook, type: :model do
   it { should define_enum_for(:content_type) }
   it { should allow_value(*content_types).for(:content_type) }
 
-  describe "push event" do
+  describe "push and delete events" do
     let!(:registry)  { create(:registry) }
     let!(:owner)     { create(:user) }
     let!(:team)      { create(:team, owners: [owner]) }
@@ -69,10 +69,20 @@ RSpec.describe Webhook, type: :model do
         delivery = WebhookDelivery.find_by(webhook: webhook_auth)
         expect(delivery.status).to eq 200
         expect(JSON.parse(delivery.request_body)).to eq event
+
+        Webhook.handle_delete_event(event)
+        delivery = WebhookDelivery.find_by(webhook: webhook_auth)
+        expect(delivery.status).to eq 200
+        expect(JSON.parse(delivery.request_body)).to eq event
       end
 
       it "should work when providing no user credentials" do
         Webhook.handle_push_event(event)
+        delivery = WebhookDelivery.find_by(webhook: webhook_noauth)
+        expect(delivery.status).to eq 200
+        expect(JSON.parse(delivery.request_body)).to eq event
+
+        Webhook.handle_delete_event(event)
         delivery = WebhookDelivery.find_by(webhook: webhook_noauth)
         expect(delivery.status).to eq 200
         expect(JSON.parse(delivery.request_body)).to eq event
@@ -81,11 +91,15 @@ RSpec.describe Webhook, type: :model do
       it "should fail in the given namespace cannot be found" do
         event["target"]["repository"] = "unknown_namespace/unknown_repo"
         expect(Webhook.handle_push_event(event)).to be nil
+        expect(Webhook.handle_delete_event(event)).to be nil
       end
     end
 
     it "should skip disabled webhooks" do
       Webhook.handle_push_event(event)
+      expect(WebhookDelivery.all).to be_empty
+
+      Webhook.handle_delete_event(event)
       expect(WebhookDelivery.all).to be_empty
     end
   end
