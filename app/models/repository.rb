@@ -141,8 +141,9 @@ class Repository < ActiveRecord::Base
       repository = Repository.create(namespace: namespace, name: repo)
     elsif repository.tags.exists?(name: tag)
       # Update digest if the given tag already exists.
-      _, digest = Repository.id_and_digest_from_event(event, repository.full_name)
-      repository.tags.find_by(name: tag).update!(digest: digest)
+      id, digest = Repository.id_and_digest_from_event(event, repository.full_name)
+      repository.tags.find_by(name: tag).destroy!
+      repository.tags.create!(name: tag, author: actor, digest: digest, image_id: id)
       return
     end
 
@@ -193,11 +194,10 @@ class Repository < ActiveRecord::Base
     repository = Repository.find_or_create_by!(name: name, namespace: namespace)
     tags = repository.tags.pluck(:name)
 
-    to_be_created_tags = repo["tags"] - tags
     to_be_deleted_tags = tags - repo["tags"]
 
     client = Registry.get.client
-    to_be_created_tags.each do |tag|
+    repo["tags"].each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
         id, digest, = client.manifest(repository.full_name, tag)
@@ -206,8 +206,20 @@ class Repository < ActiveRecord::Base
         digest = ""
       end
 
-      Tag.create!(name: tag, repository: repository, author: portus, digest: digest, image_id: id)
-      logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
+      current_tag = repository.tags.find_by_name(tag)
+      if current_tag
+        # This tag already exists - let's verify whether we need to update it or not
+        if current_tag.digest != digest || current_tag.image_id != id
+          # The digest or the image id ar different - let's update
+          current_tag.destroy!
+          repository.tags.create!(name: tag, author: portus, digest: digest, image_id: id)
+          logger.tagged("catalog") { logger.info "Updated '#{namespace}/#{name}:#{tag}'." }
+        end
+      else
+        # The tag didn't exist - let's create it
+        repository.tags.create!(name: tag, author: portus, digest: digest, image_id: id)
+        logger.tagged("catalog") { logger.info "Created '#{namespace}/#{name}:#{tag}'." }
+      end
     end
 
     # Finally remove the tags that are left and return the repo.
