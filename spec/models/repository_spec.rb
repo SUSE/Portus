@@ -93,6 +93,16 @@ describe Repository do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
         end.to change(PublicActivity::Activity, :count).by(0)
       end
+
+      it "updates the digest of an already existing tag" do
+        event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
+        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("foo")
+
+        event["target"]["digest"] = "bar"
+        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("bar")
+      end
     end
 
     context "event does not match regexp of manifest" do
