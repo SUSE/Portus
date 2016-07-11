@@ -49,7 +49,7 @@ RSpec.describe TeamsController, type: :controller do
       expect(response.status).to eq 401
     end
 
-    it "drops requests to a hidden global team" do
+    it "drops requests to a hidden team" do
       sign_in owner
 
       expect { get :show, id: hidden_team.id }.to raise_error(ActiveRecord::RecordNotFound)
@@ -137,6 +137,14 @@ RSpec.describe TeamsController, type: :controller do
       patch :update, id: team.id, team: { name:        "new name",
                                           description: "new description" }, format: "js"
       expect(response.status).to eq(200)
+    end
+
+    it "does not allow a hidden team to be changed" do
+      sign_in owner
+
+      patch :update, id: hidden_team.id, team: { name:        "new name",
+                                                 description: "new description" }, format: "js"
+      expect(response.status).to eq(401)
     end
   end
 
