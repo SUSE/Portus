@@ -14,7 +14,7 @@ class TeamsController < ApplicationController
   # GET /teams/1
   # GET /teams/1.json
   def show
-    raise ActiveRecord::RecordNotFound if @team.name.starts_with?("portus_global_team_")
+    raise ActiveRecord::RecordNotFound if @team.hidden?
 
     authorize @team
     @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)

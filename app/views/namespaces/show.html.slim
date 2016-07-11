@@ -65,7 +65,7 @@
           'Namespace:
           strong
             = @namespace.clean_name
-        - unless @namespace.global?
+        - unless @namespace.global? || @namespace.team.hidden?
           .clearfix
             h6.label.label-info#team-label
               | <span>Belongs to: </span>

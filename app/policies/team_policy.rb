@@ -15,7 +15,10 @@ class TeamPolicy
     user.admin? || @team.owners.exists?(user.id)
   end
 
-  alias_method :update?,    :owner?
+  def update?
+    !@team.hidden? && owner?
+  end
+
   alias_method :show?,      :member?
   alias_method :typeahead?, :owner?
 
