@@ -80,11 +80,7 @@ describe NamespacesController do
 
   describe "PUT #change_visibility" do
     # users may change the visibility of their personal namespace
-    context "when option user_change_visibility is enabled" do
-      before :each do
-        APP_CONFIG["user_change_visibility"] = { "enabled" => true }
-      end
-
+    context "when option user_permission.change_visibility is enabled" do
       it "allows the user to change the visibility attribute" do
         sign_in owner
         put :change_visibility,
@@ -99,9 +95,9 @@ describe NamespacesController do
     end
 
     # only admins may change the visibility of a user's personal namespace
-    context "when option user_change_visibility is disabled" do
+    context "when option user_permission.change_visibility is disabled" do
       before :each do
-        APP_CONFIG["user_change_visibility"] = { "enabled" => false }
+        APP_CONFIG["user_permission"]["change_visibility"]["enabled"] = false
       end
 
       it "prohibits the user from changing the visibility attribute" do
@@ -235,29 +231,41 @@ describe NamespacesController do
         }
       end
 
-      it "creates a new Namespace" do
-        expect do
+      context "non-admins are allowed to create namespaces" do
+        it "creates a new Namespace" do
+          expect do
+            post :create, @post_params
+          end.to change(Namespace, :count).by(1)
+          expect(assigns(:namespace).team).to eq(team)
+          expect(assigns(:namespace).name).to eq(valid_attributes[:namespace])
+          expect(assigns(:namespace).description).to be_nil
+        end
+
+        it "assigns a newly created namespace as @namespace" do
           post :create, @post_params
-        end.to change(Namespace, :count).by(1)
-        expect(assigns(:namespace).team).to eq(team)
-        expect(assigns(:namespace).name).to eq(valid_attributes[:namespace])
-        expect(assigns(:namespace).description).to be_nil
+          expect(assigns(:namespace)).to be_a(Namespace)
+          expect(assigns(:namespace)).to be_persisted
+        end
+
+        it "creates a new Namespace with the given description" do
+          @post_params[:namespace]["description"] = "desc"
+          expect do
+            post :create, @post_params
+          end.to change(Namespace, :count).by(1)
+          expect(assigns(:namespace).team).to eq(team)
+          expect(assigns(:namespace).name).to eq(valid_attributes[:namespace])
+          expect(assigns(:namespace).description).to eq("desc")
+        end
       end
 
-      it "assigns a newly created namespace as @namespace" do
-        post :create, @post_params
-        expect(assigns(:namespace)).to be_a(Namespace)
-        expect(assigns(:namespace)).to be_persisted
-      end
-
-      it "creates a new Namespace with the given description" do
-        @post_params[:namespace]["description"] = "desc"
-        expect do
-          post :create, @post_params
-        end.to change(Namespace, :count).by(1)
-        expect(assigns(:namespace).team).to eq(team)
-        expect(assigns(:namespace).name).to eq(valid_attributes[:namespace])
-        expect(assigns(:namespace).description).to eq("desc")
+      context "non-admins are not allowed to create namespaces" do
+        it "does not create a new Namespace" do
+          APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
+          expect do
+            post :create, @post_params
+          end.to change(Namespace, :count).by(0)
+          expect(response.status).to eq(401)
+        end
       end
     end
 
@@ -280,14 +288,47 @@ describe NamespacesController do
       user = create(:user)
       TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
       sign_in user
-      patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
+      patch :update, id: namespace.id, namespace: { description: "new description" },
+        format: "js"
       expect(response.status).to eq(401)
     end
 
-    it "does allow to change the description by owners" do
-      sign_in owner
-      patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
-      expect(response.status).to eq(200)
+    context "non-admins are allowed to update namespaces" do
+      it "does allow to change the description by owners" do
+        sign_in owner
+        patch :update, id: namespace.id, namespace: { description: "new description" },
+          format: "js"
+        expect(response.status).to eq(200)
+      end
+
+      it "changes the team if needed" do
+        team2 = create(:team)
+        sign_in owner
+        patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+        expect(response.status).to eq(200)
+        expect(namespace.reload.team.id).to eq team2.id
+      end
+    end
+
+    context "non-admins are not allowed to update namespaces" do
+      before :each do
+        APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
+      end
+
+      it "does not allow to change the description by owners" do
+        sign_in owner
+        patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
+        expect(response.status).to eq(401)
+        expect(namespace.reload.description).to eq "short test description"
+      end
+
+      it "does not change the team" do
+        team2 = create(:team)
+        sign_in owner
+        patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+        expect(response.status).to eq(401)
+        expect(namespace.reload.team.id).to eq team.id
+      end
     end
 
     it "does not allow to change the team to viewers" do
@@ -296,21 +337,6 @@ describe NamespacesController do
       sign_in viewer
       patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: "js"
       expect(response.status).to eq(401)
-    end
-
-    it "does not allow to change the team to contributors" do
-      sign_out user
-      sign_in contributor
-      patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: "js"
-      expect(response.status).to eq(401)
-    end
-
-    it "changes the team if needed" do
-      team2 = create(:team)
-      sign_in owner
-      patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
-      expect(response.status).to eq(200)
-      expect(namespace.reload.team.id).to eq team2.id
     end
 
     it "does nothing if you try to change to a non-existing team" do
@@ -415,33 +441,56 @@ describe NamespacesController do
       expect(activity.trackable).to eq(namespace)
     end
 
-    it "editing of a namespace description" do
-      old_description = namespace.description
-      expect do
-        patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
-      end.to change(PublicActivity::Activity, :count).by(1)
+    context "non-admins are allowed to update namespaces" do
+      it "tracks editing of a namespace description" do
+        old_description = namespace.description
+        expect do
+          patch :update, id: namespace.id, namespace: { description: "new description" },
+            format: "js"
+        end.to change(PublicActivity::Activity, :count).by(1)
 
-      namespace_description_activity = PublicActivity::Activity.find_by(
-        key: "namespace.change_namespace_description"
-      )
-      expect(namespace_description_activity.owner).to eq(owner)
-      expect(namespace_description_activity.trackable).to eq(namespace)
-      expect(namespace_description_activity.parameters[:old]).to eq(old_description)
-      expect(namespace_description_activity.parameters[:new]).to eq("new description")
+        namespace_description_activity = PublicActivity::Activity.find_by(
+          key: "namespace.change_namespace_description"
+        )
+        expect(namespace_description_activity.owner).to eq(owner)
+        expect(namespace_description_activity.trackable).to eq(namespace)
+        expect(namespace_description_activity.parameters[:old]).to eq(old_description)
+        expect(namespace_description_activity.parameters[:new]).to eq("new description")
+      end
+
+      it "tracks change team" do
+        team2 = create(:team)
+        expect do
+          patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+        end.to change(PublicActivity::Activity, :count).by(1)
+        namespace_change_team_activity = PublicActivity::Activity.find_by(
+          key: "namespace.change_team"
+        )
+        expect(namespace_change_team_activity.owner).to eq(owner)
+        expect(namespace_change_team_activity.trackable).to eq(namespace)
+        expect(namespace_change_team_activity.parameters[:old]).to eq(team.id)
+        expect(namespace_change_team_activity.parameters[:new]).to eq(team2.id)
+      end
     end
 
-    it "tracks change team" do
-      team2 = create(:team)
-      expect do
-        patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
-      end.to change(PublicActivity::Activity, :count).by(1)
-      namespace_change_team_activity = PublicActivity::Activity.find_by(
-        key: "namespace.change_team"
-      )
-      expect(namespace_change_team_activity.owner).to eq(owner)
-      expect(namespace_change_team_activity.trackable).to eq(namespace)
-      expect(namespace_change_team_activity.parameters[:old]).to eq(team.id)
-      expect(namespace_change_team_activity.parameters[:new]).to eq(team2.id)
+    context "non-admins are not allowed to update namespaces" do
+      before :each do
+        APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
+      end
+
+      it "does not track editing of a namespace description" do
+        expect do
+          patch :update, id: namespace.id, namespace: { description: "new description" },
+            format: "js"
+        end.to change(PublicActivity::Activity, :count).by(0)
+      end
+
+      it "does not tracks change team" do
+        team2 = create(:team)
+        expect do
+          patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+        end.to change(PublicActivity::Activity, :count).by(0)
+      end
     end
   end
 end

@@ -24,7 +24,8 @@ class TeamsController < ApplicationController
   # POST /teams
   # POST /teams.json
   def create
-    @team = Team.new(team_params)
+    @team = fetch_team
+    authorize @team
     @team.owners << current_user
 
     if @team.save
@@ -65,11 +66,16 @@ class TeamsController < ApplicationController
 
   private
 
-  def set_team
-    @team = Team.find(params[:id])
+  # Fetch the team to be created from the given parameters.
+  def fetch_team
+    team = params.require(:team).permit(:name, :description)
+
+    @team = Team.new(name: team["name"])
+    @team.description = team["description"] if team["description"]
+    @team
   end
 
-  def team_params
-    params.require(:team).permit(:name, :description)
+  def set_team
+    @team = Team.find(params[:id])
   end
 end
