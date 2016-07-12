@@ -12,7 +12,7 @@ tr id="namespace_#{namespace.id}"
         a.btn[
           id="private"
           class=(namespace.visibility_private? ? "btn-primary" : "btn-default")
-          class=("disabled" if !can_manage_namespace?(namespace))
+          class=("disabled" if !can_change_visibility?(namespace))
           title=(!namespace.global? ? "Team members can pull images from this namespace" : "The global namespace cannot be private")
           data-remote="true"
           data-method="put"
@@ -23,7 +23,7 @@ tr id="namespace_#{namespace.id}"
       a.btn[
         id="protected"
         class=(namespace.visibility_protected? ? "btn-primary" : "btn-default")
-        class=("disabled" if !can_manage_namespace?(namespace))
+        class=("disabled" if !can_change_visibility?(namespace))
         title="Logged-in users can pull images from this namespace"
         data-remote="true"
         data-method="put"
@@ -34,7 +34,7 @@ tr id="namespace_#{namespace.id}"
       a.btn[
         id="public"
         class=(namespace.visibility_public? ? "btn-primary" : "btn-default")
-        class=("disabled" if !can_manage_namespace?(namespace))
+        class=("disabled" if !can_change_visibility?(namespace))
         title="Anyone can pull images from this namespace"
         data-remote="true"
         data-method="put"

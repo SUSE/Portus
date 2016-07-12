@@ -123,3 +123,8 @@ machine_fqdn:
 # it might confuse users that are not fully aware of it.
 display_name:
   enabled: false
+
+# Allow users to change the visibility or their personal namespace. If this is
+# disabled, only an admin will be able to change this. It defaults to true.
+user_change_visibility:
+  enabled: true

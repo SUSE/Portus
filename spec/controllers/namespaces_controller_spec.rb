@@ -7,6 +7,7 @@ describe NamespacesController do
   let(:viewer) { create(:user) }
   let(:contributor) { create(:user) }
   let(:owner) { create(:user) }
+  let(:admin) { create(:user, admin: true) }
   let(:team) do
     create(:team,
            owners:       [owner],
@@ -66,6 +67,56 @@ describe NamespacesController do
   end
 
   describe "PUT #change_visibility" do
+    # users may change the visibility of their personal namespace
+    context "when option user_change_visibility is enabled" do
+      before :each do
+        APP_CONFIG["user_change_visibility"] = { "enabled" => true }
+      end
+
+      it "allows the user to change the visibility attribute" do
+        sign_in owner
+        put :change_visibility,
+          id:         owner.namespace.id,
+          visibility: "visibility_public",
+          format:     :js
+
+        owner.namespace.reload
+        expect(owner.namespace.visibility).to eq("visibility_public")
+        expect(response.status).to eq 200
+      end
+    end
+
+    # only admins may change the visibility of a user's personal namespace
+    context "when option user_change_visibility is disabled" do
+      before :each do
+        APP_CONFIG["user_change_visibility"] = { "enabled" => false }
+      end
+
+      it "prohibits the user from changing the visibility attribute" do
+        sign_in owner
+        put :change_visibility,
+          id:         owner.namespace.id,
+          visibility: "visibility_public",
+          format:     :js
+
+        owner.namespace.reload
+        expect(owner.namespace.visibility).to eq("visibility_private")
+        expect(response.status).to eq 401
+      end
+
+      it "allows an admin to change the visibility attribute" do
+        sign_in admin
+        put :change_visibility,
+          id:         owner.namespace.id,
+          visibility: "visibility_public",
+          format:     :js
+
+        owner.namespace.reload
+        expect(owner.namespace.visibility).to eq("visibility_public")
+        expect(response.status).to eq 200
+      end
+    end
+
     it "allows the owner of the team to change the visibility attribute" do
       sign_in owner
       put :change_visibility,

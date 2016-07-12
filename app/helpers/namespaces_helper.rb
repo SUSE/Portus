@@ -3,6 +3,10 @@ module NamespacesHelper
     current_user.admin? || owner?(namespace)
   end
 
+  def can_change_visibility?(namespace)
+    current_user.admin? || (owner?(namespace) && APP_CONFIG.enabled?("user_change_visibility"))
+  end
+
   def owner?(namespace)
     namespace.team.owners.exists?(current_user.id)
   end
