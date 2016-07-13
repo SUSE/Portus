@@ -88,4 +88,9 @@ describe Portus::Config do
     fetched["ldap"]["authentication"]["password"] = "****"
     expect(fetched).to eq(evaled)
   end
+
+  it "works for nested options" do
+    cfg = get_config("config.yml", "").fetch
+    expect(cfg.enabled?("email.smtp")).to be true
+  end
 end
