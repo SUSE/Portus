@@ -177,9 +177,11 @@ HERE
       exit 0
     end
 
-    print "Are you sure that you want to proceed with this ? (y/N) "
-    opt = $stdin.gets.strip
-    exit 0 if opt != "y" && opt != "Y" && opt != "yes"
+    unless ENV["PORTUS_FORCE_LDAP_NAME_UPDATE"]
+      print "Are you sure that you want to proceed with this ? (y/N) "
+      opt = $stdin.gets.strip
+      exit 0 if opt != "y" && opt != "Y" && opt != "yes"
+    end
 
     ActiveRecord::Base.transaction do
       User.all.find_each do |u|
