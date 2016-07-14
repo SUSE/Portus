@@ -82,7 +82,7 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "wirble"
     gem "factory_girl_rails"
     gem "ffaker"
-    gem "rubocop", require: false
+    gem "rubocop", "~> 0.41.2", require: false
     gem "brakeman", require: false
     gem "database_cleaner"
   end

@@ -24,7 +24,8 @@ describe Auth::SessionsController do
       }
 
       expect(flash["notice"]).to eq(
-        "Welcome! Your personal namespace is '#{user.username}'.")
+        "Welcome! Your personal namespace is '#{user.username}'."
+      )
     end
   end
 end

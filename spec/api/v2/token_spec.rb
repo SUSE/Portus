@@ -70,7 +70,8 @@ describe "/v2/token" do
         create(
           :application_token,
           application: token_plain, # this factory uses application as plain token
-          user:        user)
+          user:        user
+        )
 
         get v2_token_url,
           {
@@ -88,7 +89,8 @@ describe "/v2/token" do
         create(
           :application_token,
           application: token_plain, # this factory uses application as plain token
-          user:        user)
+          user:        user
+        )
 
         get v2_token_url,
           {
@@ -264,7 +266,8 @@ describe "/v2/token" do
         let(:valid_portus_auth_header) do
           {
             "HTTP_AUTHORIZATION" =>
-              auth_mech.encode_credentials("portus", Rails.application.secrets.portus_password)
+                                    auth_mech.encode_credentials("portus",
+                                         Rails.application.secrets.portus_password)
           }
         end
 

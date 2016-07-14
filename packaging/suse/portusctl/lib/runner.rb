@@ -33,14 +33,15 @@ class Runner
       [
         restart ? "restart" : "start",
         service
-      ])
+      ]
+    )
   end
 
   # Creates a new file called "versions.log" with information about the version
   # of the different components.
   def self.produce_versions_file!
     File.open(File.join(PORTUS_ROOT, "log/versions.log"), "w+") do |file|
-      %w( docker docker-distribution-registry Portus ).each do |package|
+      %w(docker docker-distribution-registry Portus).each do |package|
         rpm = `rpm -qi #{package}`
         file.puts("#{rpm}\n")
       end

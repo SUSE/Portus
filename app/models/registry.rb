@@ -96,6 +96,7 @@ class Registry < ActiveRecord::Base
   def reachable?
     msg = ""
 
+    # rubocop:disable Lint/ShadowedException:
     begin
       r = client.reachable?
 
@@ -108,10 +109,10 @@ class Registry < ActiveRecord::Base
     rescue Errno::ETIMEDOUT, Net::OpenTimeout
       msg = "Error: connection timed out. The given registry is not available!"
     rescue Net::HTTPBadResponse
-      if use_ssl
-        msg = "Error: there's something wrong with your SSL configuration."
+      msg = if use_ssl
+        "Error: there's something wrong with your SSL configuration."
       else
-        msg = "Error: not using SSL, but the given registry does use SSL."
+        "Error: not using SSL, but the given registry does use SSL."
       end
     rescue OpenSSL::SSL::SSLError => e
       msg = "SSL error while communicating with the registry, check the server " \
@@ -122,6 +123,7 @@ class Registry < ActiveRecord::Base
       logger.info "Registry not reachable: #{e.inspect}"
       msg = "Error: something went wrong. Check your configuration."
     end
+    # rubocop:enable Lint/ShadowedException:
     msg
   end
 
@@ -192,14 +194,16 @@ class Registry < ActiveRecord::Base
     team = Team.create(
       name:   "portus_global_team_#{count}",
       owners: User.where(admin: true),
-      hidden: true)
+      hidden: true
+    )
     Namespace.create!(
       name:        "portus_global_namespace_#{count}",
       registry:    self,
       visibility:  Namespace.visibilities[:visibility_public],
       global:      true,
       description: "The global namespace for the registry #{Registry.name}.",
-      team:        team)
+      team:        team
+    )
 
     # TODO: change code once we support multiple registries
     User.find_each(&:create_personal_namespace!)

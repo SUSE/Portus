@@ -23,7 +23,7 @@ class NamespacePolicy
     namespace.global? || user.admin? || namespace.team.users.exists?(user.id)
   end
 
-  alias_method :show?, :pull?
+  alias show? pull?
 
   def push?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
@@ -40,9 +40,9 @@ class NamespacePolicy
     user.admin? || namespace.team.users.exists?(user.id)
   end
 
-  alias_method :all?,       :push?
-  alias_method :create?,    :push?
-  alias_method :update?,    :push?
+  alias all? push?
+  alias create? push?
+  alias update? push?
 
   def change_visibility?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
@@ -71,7 +71,8 @@ class NamespacePolicy
           "(namespaces.visibility = :visibility OR team_users.user_id = :user_id) AND " \
           "namespaces.global = :global AND namespaces.name != :username",
           visibility: Namespace.visibilities[:visibility_public],
-          user_id: user.id, global: false, username: user.username)
+          user_id: user.id, global: false, username: user.username
+        )
         .distinct
     end
   end

@@ -223,7 +223,8 @@ RSpec.describe TeamsController, type: :controller do
       end.to change(PublicActivity::Activity, :count).by(1)
 
       team_description_activity = PublicActivity::Activity.find_by(
-        key: "team.change_team_description")
+        key: "team.change_team_description"
+      )
       expect(team_description_activity.owner).to eq(owner)
       expect(team_description_activity.trackable).to eq(team)
       expect(team_description_activity.parameters[:old]).to eq(old_description)
@@ -238,7 +239,8 @@ RSpec.describe TeamsController, type: :controller do
       end.to change(PublicActivity::Activity, :count).by(1)
 
       team_name_activity = PublicActivity::Activity.find_by(
-        key: "team.change_team_name")
+        key: "team.change_team_name"
+      )
       expect(team_name_activity.owner).to eq(owner)
       expect(team_name_activity.trackable).to eq(team)
       expect(team_name_activity.parameters[:old]).to eq(old_name)

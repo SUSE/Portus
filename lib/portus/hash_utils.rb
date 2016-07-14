@@ -60,8 +60,8 @@ module Portus
       return nil if env.nil?
 
       # Try to convert it into a boolean value.
-      return true if env.downcase == "true"
-      return false if env.downcase == "false"
+      return true if env.casecmp("true").zero?
+      return false if env.casecmp("false").zero?
 
       # Try to convert it into an integer. Otherwise just keep the string.
       begin

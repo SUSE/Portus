@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe ApplicationTokensController do
-  let(:user)       { create(:user) }
+  let(:user) { create(:user) }
 
   before :each do
     sign_in user

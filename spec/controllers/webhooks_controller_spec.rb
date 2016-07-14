@@ -18,7 +18,8 @@ RSpec.describe WebhooksController, type: :controller do
       :namespace,
       team:        team,
       description: "short test description",
-      registry:    registry)
+      registry:    registry
+    )
   end
   let!(:webhook) do
     create(
@@ -37,7 +38,8 @@ RSpec.describe WebhooksController, type: :controller do
     it "assigns all webhooks as @webhooks" do
       get :index, { namespace_id: namespace }, valid_session
       expect(assigns(:webhooks)).to match_array(
-        [Webhook.find_by(namespace: namespace)])
+        [Webhook.find_by(namespace: namespace)]
+      )
     end
 
     it "paginates webhooks" do
@@ -322,7 +324,8 @@ RSpec.describe WebhooksController, type: :controller do
       TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
       sign_in user
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
-        url: "port.us" }, format: "js"
+        url: "port.us"
+      }, format: "js"
       expect(response.status).to eq(401)
     end
 
@@ -332,7 +335,8 @@ RSpec.describe WebhooksController, type: :controller do
       TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
       sign_in user
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
-        request_method: "POST" }, format: "js"
+        request_method: "POST"
+      }, format: "js"
       expect(response.status).to eq(401)
     end
 
@@ -342,7 +346,8 @@ RSpec.describe WebhooksController, type: :controller do
       TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
       sign_in user
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
-        content_type: "application/json" }, format: "js"
+        content_type: "application/json"
+      }, format: "js"
       expect(response.status).to eq(401)
     end
 
@@ -352,7 +357,8 @@ RSpec.describe WebhooksController, type: :controller do
       TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
       sign_in user
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
-        username: "alice" }, format: "js"
+        username: "alice"
+      }, format: "js"
       expect(response.status).to eq(401)
     end
 
@@ -362,21 +368,24 @@ RSpec.describe WebhooksController, type: :controller do
       TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
       sign_in user
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
-        password: "supersecure" }, format: "js"
+        password: "supersecure"
+      }, format: "js"
       expect(response.status).to eq(401)
     end
 
     it "does allow to change the url by owners" do
       sign_in owner
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
-        url: "port.us" }, format: "js"
+        url: "port.us"
+      }, format: "js"
       expect(response.status).to eq(200)
     end
 
     it "fails when providing invalid parameters" do
       sign_in owner
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
-        url: "" }, format: "js"
+        url: ""
+      }, format: "js"
       expect(response.status).to eq(422)
     end
   end

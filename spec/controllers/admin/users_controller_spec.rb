@@ -51,7 +51,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       sign_in admin
     end
 
-    it "changes the admin value of an user"do
+    it "changes the admin value of an user" do
       put :toggle_admin, id: user.id, format: :js
 
       user.reload

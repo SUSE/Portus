@@ -72,7 +72,7 @@ class Api::V2::TokensController < Api::BaseController
       # we combine them into one:
       # e.g. scope=repository:busybox:push&scope=repository:busybox:pull
       #      -> access=>[{:type=>"repository", :name=>"busybox", :actions=>["push", "pull"]}
-      k = [auth_scope.resource_type,  auth_scope.resource_name]
+      k = [auth_scope.resource_type, auth_scope.resource_name]
       if auth_scopes[k]
         auth_scopes[k].actions.concat(auth_scope.actions).uniq!
       else

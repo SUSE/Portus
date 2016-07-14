@@ -85,7 +85,8 @@ describe Portus::RegistryClient do
         registry_server,
         false,
         username,
-        password)
+        password
+      )
 
       VCR.use_cassette("registry/successful_authentication", record: :none) do
         res = registry.perform_request(path)
@@ -98,7 +99,8 @@ describe Portus::RegistryClient do
         registry_server,
         false,
         username,
-        "wrong password")
+        "wrong password"
+      )
 
       VCR.use_cassette("registry/wrong_authentication", record: :none) do
         expect do
@@ -112,7 +114,8 @@ describe Portus::RegistryClient do
         registry_server,
         false,
         username,
-        password)
+        password
+      )
 
       begin
         VCR.turned_off do
@@ -139,7 +142,8 @@ describe Portus::RegistryClient do
         registry_server,
         false,
         username,
-        password)
+        password
+      )
 
       begin
         VCR.turned_off do
@@ -161,7 +165,8 @@ describe Portus::RegistryClient do
         registry_server,
         false,
         username,
-        password)
+        password
+      )
 
       begin
         VCR.turned_off do
@@ -198,7 +203,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           username,
-          password)
+          password
+        )
 
         _, _, manifest = registry.manifest(repository, tag)
         expect(manifest["name"]).to eq(repository)
@@ -212,7 +218,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           username,
-          password)
+          password
+        )
 
         expect do
           registry.manifest(repository, "2.0.0")
@@ -225,7 +232,8 @@ describe Portus::RegistryClient do
         registry_server,
         false,
         username,
-        password)
+        password
+      )
       tag = "2.0.0"
 
       begin
@@ -254,7 +262,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         catalog = registry.catalog
         expect(catalog.length).to be 1
@@ -280,7 +289,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         catalog = registry.catalog
         expect(catalog.length).to be 102
@@ -296,7 +306,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         catalog = registry.catalog
         expect(catalog.length).to be 1
@@ -311,7 +322,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           username,
-          password)
+          password
+        )
 
         expect do
           registry.catalog
@@ -324,7 +336,8 @@ describe Portus::RegistryClient do
         registry_server,
         false,
         username,
-        password)
+        password
+      )
 
       begin
         VCR.turned_off do
@@ -359,7 +372,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         tags = registry.tags("busybox")
         (1..102).each_with_index { |v, idx| expect(tags[idx]).to eq v.to_s }
@@ -374,7 +388,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         expect do
           registry.delete("busybox",
@@ -389,7 +404,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         expect do
           registry.delete("busybox",
@@ -404,7 +420,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         sha = "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
         res = registry.delete("busybox", sha)
@@ -418,7 +435,8 @@ describe Portus::RegistryClient do
           registry_server,
           false,
           "portus",
-          Rails.application.secrets.portus_password)
+          Rails.application.secrets.portus_password
+        )
 
         expect do
           registry.delete("busybox",

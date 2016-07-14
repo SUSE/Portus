@@ -64,7 +64,7 @@ Rails.application.routes.draw do
   end
 
   # Error pages.
-  %w( 401 404 422 500 ).each do |code|
+  %w(401 404 422 500).each do |code|
     get "/#{code}", to: "errors#show", status: code
   end
 end

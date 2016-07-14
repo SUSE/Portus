@@ -3,11 +3,11 @@ require "yaml"
 
 # Format the given key from the config to portusctl's expectations.
 def format_key(key)
-  key.gsub("_", "-")
-    .gsub("enabled", "enable")
-    .gsub("user-name", "username")
-    .gsub(/^jwt-expiration-time-value$/, "jwt-expiration-time")
-    .gsub(/^check-ssl-usage-enable$/, "secure")
+  key.tr("_", "-")
+     .gsub("enabled", "enable")
+     .gsub("user-name", "username")
+     .gsub(/^jwt-expiration-time-value$/, "jwt-expiration-time")
+     .gsub(/^check-ssl-usage-enable$/, "secure")
 end
 
 # Get the keys as given by the config.yml file.

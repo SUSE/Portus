@@ -66,11 +66,8 @@ class RegistryReachableClient < Registry
   end
 
   def reachable?
-    if @constant.nil?
-      @result
-    else
-      raise @constant
-    end
+    raise @constant unless @constant.nil?
+    @result
   end
 end
 
@@ -183,7 +180,7 @@ describe Registry, type: :model do
 
       # Differentiate between global & local namespace
 
-      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+      ret = mock.get_tag_from_target_test(create_empty_namespace,
                                            "busybox",
                                            "application/vnd.docker.distribution.manifest.v2+json",
                                            "sha:1234")
@@ -217,7 +214,7 @@ describe Registry, type: :model do
       expect(Rails.logger).to receive(:info).with(/Could not fetch the tag/)
       expect(Rails.logger).to receive(:info).with(/Reason: Some message/)
 
-      ret  = mock.get_tag_from_target_test(create_empty_namespace,
+      ret = mock.get_tag_from_target_test(create_empty_namespace,
                                            "busybox",
                                            "application/vnd.docker.distribution.manifest.v2+json",
                                            "sha:1234")
