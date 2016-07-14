@@ -124,7 +124,7 @@ describe Tag do
   # NOTE: lots of cases are being left out on purpose because they are already
   # tested in the previous `describe` block.
   describe "#delete_and_update!" do
-    let!(:tag)  { create(:tag, name: "tag1", repository: repository, digest: "1") }
+    let!(:tag) { create(:tag, name: "tag1", repository: repository, digest: "1") }
 
     before :each do
       tag.destroy
@@ -145,7 +145,8 @@ describe Tag do
 
     it "returns the digest as given by the registry" do
       allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return(
-        ["id", "2", ""])
+        ["id", "2", ""]
+      )
 
       tag = TagMock.create(name: "tag", repository: repository)
       expect(tag.fetch_digest_test).to eq "2"

@@ -21,7 +21,8 @@ class TemplateWriter
   def self.load_template(template_name)
     t = File.join(
       File.expand_path("../../templates", __FILE__),
-        template_name)
+        template_name
+    )
     File.read(t)
   end
 end

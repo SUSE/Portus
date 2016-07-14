@@ -59,6 +59,7 @@ class Namespace < ActiveRecord::Base
     end
     true
   end
+
   # From the given repository name that can be prefix by the name of the
   # namespace, returns two values:
   #   1. The namespace where the given repository belongs to.
@@ -67,16 +68,16 @@ class Namespace < ActiveRecord::Base
   def self.get_from_name(name, registry = nil)
     if name.include?("/")
       namespace, name = name.split("/", 2)
-      if registry.nil?
-        namespace = Namespace.find_by(name: namespace)
+      namespace = if registry.nil?
+        Namespace.find_by(name: namespace)
       else
-        namespace = registry.namespaces.find_by(name: namespace)
+        registry.namespaces.find_by(name: namespace)
       end
     else
-      if registry.nil?
-        namespace = Namespace.find_by(global: true)
+      namespace = if registry.nil?
+        Namespace.find_by(global: true)
       else
-        namespace = Namespace.find_by(registry: registry, global: true)
+        Namespace.find_by(registry: registry, global: true)
       end
     end
     [namespace, name, registry]

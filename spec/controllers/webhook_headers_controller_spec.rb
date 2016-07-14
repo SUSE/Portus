@@ -18,7 +18,8 @@ RSpec.describe WebhookHeadersController, type: :controller do
       :namespace,
       team:        team,
       description: "short test description",
-      registry:    registry)
+      registry:    registry
+    )
   end
   let(:webhook) { create(:webhook, namespace: namespace) }
 

@@ -62,7 +62,7 @@ describe Portus::Config do
       }
     }
     local = {
-      "ldap"     => {
+      "ldap" => {
         "enabled" => true,
         "count"   => 1
       }

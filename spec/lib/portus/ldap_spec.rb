@@ -70,7 +70,7 @@ class LdapMock < Portus::LDAP
     guess_email
   end
 
-  alias_method :fail, :fail!
+  alias fail fail!
 
   protected
 

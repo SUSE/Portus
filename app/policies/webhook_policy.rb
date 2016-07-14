@@ -23,9 +23,9 @@ class WebhookPolicy < NamespacePolicy
     user.admin? || namespace.team.users.exists?(user.id)
   end
 
-  alias_method :destroy?, :create?
-  alias_method :toggle_enabled?, :create?
-  alias_method :update?, :create?
+  alias destroy? create?
+  alias toggle_enabled? create?
+  alias update? create?
 
   class Scope
     attr_reader :user, :scope
@@ -40,15 +40,16 @@ class WebhookPolicy < NamespacePolicy
         scope.all
       else
         namespaces = Namespace
-          .joins(team: [:team_users])
-          .where(
-            "(namespaces.visibility = :public OR namespaces.visibility = :protected OR "\
-            "team_users.user_id = :user_id) AND " \
-            "namespaces.global = :global AND namespaces.name != :username",
+                     .joins(team: [:team_users])
+                     .where(
+                       "(namespaces.visibility = :public OR namespaces.visibility = :protected OR "\
+                       "team_users.user_id = :user_id) AND " \
+                       "namespaces.global = :global AND namespaces.name != :username",
             public: Namespace.visibilities[:visibility_public],
             protected: Namespace.visibilities[:visibility_protected], user_id: user.id,
-            global: false, username: user.username)
-          .pluck(:id)
+            global: false, username: user.username
+                     )
+                     .pluck(:id)
 
         scope.includes(:headers, :deliveries).where(namespace: namespaces)
       end

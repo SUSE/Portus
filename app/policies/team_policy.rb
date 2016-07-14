@@ -19,8 +19,8 @@ class TeamPolicy
     !@team.hidden? && owner?
   end
 
-  alias_method :show?,      :member?
-  alias_method :typeahead?, :owner?
+  alias show? member?
+  alias typeahead? owner?
 
   class Scope
     attr_reader :user, :scope

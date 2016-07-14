@@ -39,8 +39,12 @@ module ApplicationHelper
       safe_links_only:     true,
       space_after_headers: true
     }
+
     renderer = Redcarpet::Render::HTML.new(render_options)
     m = Redcarpet::Markdown.new(renderer, extensions)
+
+    # rubocop:disable Rails/OutputSafety
     m.render(text).html_safe
+    # rubocop:enable Rails/OutputSafety
   end
 end

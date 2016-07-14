@@ -3,10 +3,10 @@ class Namespace::AuthScope < Portus::AuthScope
   attr_accessor :resource, :actions, :resource_type, :resource_name
 
   def resource
-    if @namespace_name.blank?
-      found_resource = @registry.namespaces.find_by(global: true)
+    found_resource = if @namespace_name.blank?
+      @registry.namespaces.find_by(global: true)
     else
-      found_resource = @registry.namespaces.find_by(name: @namespace_name)
+      @registry.namespaces.find_by(name: @namespace_name)
     end
 
     raise ResourceNotFound, "Cannot find namespace #{@namespace_name}" if found_resource.nil?

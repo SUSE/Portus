@@ -19,7 +19,8 @@ describe NamespacesController do
       :namespace,
       team:        team,
       description: "short test description",
-      registry:    registry)
+      registry:    registry
+    )
   end
 
   before :each do
@@ -32,7 +33,8 @@ describe NamespacesController do
     it "assigns all namespaces as @namespaces" do
       get :index, {}, valid_session
       expect(assigns(:special_namespaces)).to match_array(
-        [user.namespace, Namespace.find_by(global: true)])
+        [user.namespace, Namespace.find_by(global: true)]
+      )
       expect(assigns(:namespaces).ids).to be_empty
     end
 
@@ -410,7 +412,8 @@ describe NamespacesController do
       end.to change(PublicActivity::Activity, :count).by(1)
 
       namespace_description_activity = PublicActivity::Activity.find_by(
-        key: "namespace.change_namespace_description")
+        key: "namespace.change_namespace_description"
+      )
       expect(namespace_description_activity.owner).to eq(owner)
       expect(namespace_description_activity.trackable).to eq(namespace)
       expect(namespace_description_activity.parameters[:old]).to eq(old_description)
@@ -423,7 +426,8 @@ describe NamespacesController do
         patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
       end.to change(PublicActivity::Activity, :count).by(1)
       namespace_change_team_activity = PublicActivity::Activity.find_by(
-        key: "namespace.change_team")
+        key: "namespace.change_team"
+      )
       expect(namespace_change_team_activity.owner).to eq(owner)
       expect(namespace_change_team_activity.trackable).to eq(namespace)
       expect(namespace_change_team_activity.parameters[:old]).to eq(team.id)

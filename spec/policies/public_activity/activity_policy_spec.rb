@@ -22,7 +22,8 @@ describe PublicActivity::ActivityPolicy do
         create_activity_team_create(team, activity_owner),
         create_activity_team_add_member(team, activity_owner, another_user),
         create_activity_team_change_member_role(
-          team, activity_owner, another_user, "viewer", "owner"),
+          team, activity_owner, another_user, "viewer", "owner"
+        ),
         create_activity_team_remove_member(team, activity_owner, another_user)
       ]
 
@@ -193,7 +194,6 @@ describe PublicActivity::ActivityPolicy do
            parameters:   { namespace_id:   namespace.id,
                            namespace_name: namespace.name,
                            webhook_url:    webhook.url,
-                           webhook_host:   webhook.host }
-          )
+                           webhook_host:   webhook.host })
   end
 end

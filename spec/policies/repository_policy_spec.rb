@@ -15,14 +15,16 @@ describe RepositoryPolicy do
         :namespace,
         team:       team2,
         visibility: Namespace.visibilities[:visibility_public],
-        registry:   registry)
+        registry:   registry
+      )
       @public_repository = create(:repository, namespace: public_namespace)
 
       protected_namespace = create(
         :namespace,
         team:       team2,
         visibility: Namespace.visibilities[:visibility_protected],
-        registry:   registry)
+        registry:   registry
+      )
       @protected_repository = create(:repository, namespace: protected_namespace)
 
       private_namespace = create(:namespace, team: team2, registry: registry)
@@ -62,14 +64,16 @@ describe RepositoryPolicy do
         :namespace,
         team:       team2,
         visibility: Namespace.visibilities[:visibility_public],
-        registry:   registry)
+        registry:   registry
+      )
       @public_repository = create(:repository, namespace: public_namespace)
 
       protected_namespace = create(
         :namespace,
         team:       team2,
         visibility: Namespace.visibilities[:visibility_protected],
-        registry:   registry)
+        registry:   registry
+      )
       @protected_repository = create(:repository, namespace: protected_namespace)
 
       private_namespace = create(:namespace, team: team2, registry: registry)
@@ -111,7 +115,8 @@ describe RepositoryPolicy do
         :namespace,
         team:       team2,
         visibility: Namespace.visibilities[:visibility_public],
-        registry:   registry)
+        registry:   registry
+      )
       @public_repository = create(:repository, namespace: public_namespace)
 
       private_namespace = create(:namespace, team: team2, registry: registry)

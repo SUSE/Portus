@@ -33,7 +33,7 @@ namespace :release do
     end
     number = args[:number]
     check_release_number(number)
-    number.match(/^(\d+)\.(\d+)./)
+    number =~ /^(\d+)\.(\d+)./
     unless system("git checkout #{branch(number)}")
       puts "There was an error checking out #{branch(number)}. Make sure it does exists"
       exit(-3)

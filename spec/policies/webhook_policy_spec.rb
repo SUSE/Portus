@@ -18,7 +18,8 @@ describe WebhookPolicy do
       :namespace,
       description: "short test description.",
       registry:    @registry,
-      team:        team)
+      team:        team
+    )
   end
   let(:webhook) { create(:webhook, namespace: namespace) }
 

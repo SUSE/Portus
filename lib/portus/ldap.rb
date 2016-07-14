@@ -29,6 +29,7 @@ module Portus
 
       # If LDAP is enabled try to authenticate through the LDAP server.
       # Otherwise we fall back to the next strategy.
+      # rubocop:disable Style/GuardClause
       if @ldap
         # Try to bind to the LDAP server. If there's any failure, the
         # authentication process will fail without going to the any other
@@ -40,6 +41,7 @@ module Portus
         fail(:ldap_failed)
         # rubocop:enable Style/SignalException
       end
+      # rubocop:enable Style/GuardClause
     end
 
     # Returns true if LDAP has been enabled in the application, false

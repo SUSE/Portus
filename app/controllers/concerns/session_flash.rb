@@ -23,10 +23,10 @@ module SessionFlash
     # Now inform the user
     ns = user.namespace.name
     str = " Your personal namespace is '#{ns}'"
-    if user.username == ns
-      str += "."
+    str += if user.username == ns
+      "."
     else
-      str += " (your username was not a valid Docker namespace, so we had to tweak it)."
+      " (your username was not a valid Docker namespace, so we had to tweak it)."
     end
     flash[:notice] << str
   end

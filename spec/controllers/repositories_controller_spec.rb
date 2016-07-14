@@ -69,7 +69,7 @@ describe RepositoriesController, type: :controller do
     end
 
     it "removes the repository properly" do
-      allow_any_instance_of(Tag).to receive(:fetch_digest) { |o| o.digest }
+      allow_any_instance_of(Tag).to receive(:fetch_digest, &:digest)
       allow_any_instance_of(Portus::RegistryClient).to receive(:delete).and_return(true)
 
       delete :destroy, { id: repository.id }, valid_session

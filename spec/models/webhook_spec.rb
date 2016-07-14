@@ -44,7 +44,7 @@ RSpec.describe Webhook, type: :model do
     let!(:repo)      { create(:repository, namespace: namespace) }
     let!(:event) do
       {
-        "request" => { "host" => "#{registry.hostname}" },
+        "request" => { "host" => registry.hostname.to_s },
         "target"  => { "repository" => "#{namespace.name}/#{repo.name}" }
       }
     end

@@ -37,13 +37,13 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
   def update
     success =
-    if password_update?
-      succ = current_user.update_with_password(user_params)
-      sign_in(current_user, bypass: true) if succ
-      succ
-    else
-      current_user.update_without_password(params.require(:user).permit(:email, :display_name))
-    end
+      if password_update?
+        succ = current_user.update_with_password(user_params)
+        sign_in(current_user, bypass: true) if succ
+        succ
+      else
+        current_user.update_without_password(params.require(:user).permit(:email, :display_name))
+      end
 
     if success
       redirect_to edit_user_registration_path,
@@ -107,7 +107,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   # Returns the required parameters and the permitted ones for updating a user.
   def user_params
     params.require(:user)
-      .permit(:password, :password_confirmation, :current_password)
+          .permit(:password, :password_confirmation, :current_password)
   end
 
   # Prevents redirect loops

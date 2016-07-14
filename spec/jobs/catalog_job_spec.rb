@@ -15,10 +15,10 @@ describe CatalogJob do
 
       job = CatalogJobMock.new
       job.update_registry!([
-        { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
-        { "name" => "alpine",                   "tags" => ["latest"]        },
-        { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]        }
-      ])
+                             { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
+                             { "name" => "alpine",                   "tags" => ["latest"]        },
+                             { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]        }
+                           ])
 
       # Global repos.
       ns = Namespace.where(global: true)
@@ -106,11 +106,11 @@ describe CatalogJob do
     it "updates the registry" do
       job = CatalogJobMock.new
       job.update_registry!([
-        { "name" => "busybox",                  "tags" => ["latest", "0.1"]  },
-        { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"]         },
-        { "name" => "#{namespace.name}/repo2",  "tags" => ["latest", "tag2"] },
-        { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]         }
-      ])
+                             { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
+                             { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"]         },
+                             { "name" => "#{namespace.name}/repo2",  "tags" => ["latest", "tag2"] },
+                             { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]         }
+                           ])
 
       # Global repos
       ns = Namespace.where(global: true)

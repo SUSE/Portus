@@ -18,7 +18,8 @@ describe NamespacePolicy do
       :namespace,
       description: "short test description.",
       registry:    @registry,
-      team:        team)
+      team:        team
+    )
   end
 
   before :each do

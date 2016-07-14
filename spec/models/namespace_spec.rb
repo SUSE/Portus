@@ -70,7 +70,8 @@ describe Namespace do
       namespace = create(
         :namespace,
         global:     true,
-        visibility: Namespace.visibilities[:visibility_public])
+        visibility: Namespace.visibilities[:visibility_public]
+      )
       namespace.visibility = Namespace.visibilities[:visibility_private]
       expect(namespace.save).to be false
 
@@ -97,7 +98,8 @@ describe Namespace do
           :namespace,
           global:     true,
           visibility: Namespace.visibilities[:visibility_public],
-          registry:   registry)
+          registry:   registry
+        )
         expect(global_namespace.clean_name).to eq(registry.hostname)
       end
     end
