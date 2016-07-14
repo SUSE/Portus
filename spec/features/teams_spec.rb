@@ -104,6 +104,7 @@ feature "Teams support" do
 
   describe "teams#show" do
     let!(:another) { create(:user) }
+    let!(:another_admin) { create(:admin) }
 
     before :each do
       visit team_path(team)
@@ -141,6 +142,20 @@ feature "Teams support" do
 
       expect(page).to have_content("New user added to the team")
       expect(page).to have_content("Contributor")
+    end
+
+    scenario "An admin can only be added as a team owner", js: true do
+      find("#add_team_user_btn").click
+      wait_for_effect_on("#add_team_user_form")
+      find("#team_user_role").select "Contributor"
+      find("#team_user_user").set another_admin.username
+      find("#add_team_user_form .btn").click
+
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_content("New user added to the team (promoted to")
+      expect(page).to have_content("Owner")
     end
 
     scenario "New team members have to exist on the system", js: true do
