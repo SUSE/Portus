@@ -64,11 +64,11 @@ maintained by Docker Inc (or some hacks like a custom entrypoint added via a vol
 
 ### The init script
 
-As mentioned before, this Docker image has a init script which takes care of the
+As mentioned before, this Docker image has an init script which takes care of the
 following actions:
 
   1. Setup the database required by Portus
-  2. Import all the `.crt` located under `/certificates`
+  2. Import all the `.crt` files located under `/certificates`
   3. Start Apache
 
 The next sections will provide more details about these steps.
@@ -83,7 +83,7 @@ image stateless.
 This image has a custom `init` script that takes care of configuring the external
 database.
 
-The script will keep trying to reach the database for 90 seconds. A 5 seconds
+The script will keep trying to reach the database for 90 seconds. A 5-second
 pause is done after each failed attempt. The container will exit with an error
 message if the database is not reachable.
 
@@ -95,7 +95,7 @@ by the upstream project.
 
 ### Secrets and certificates
 
-Portus requires both a SSL key and a certificate to serve its contents over
+Portus requires both an SSL key and a certificate to serve its contents over
 HTTPS.
 These files must be located here:
 
