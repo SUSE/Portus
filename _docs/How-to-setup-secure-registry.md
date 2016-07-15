@@ -76,7 +76,7 @@ Some things to note:
 - The **auth** value defines the communication between Portus and this
   registry. Some important things to note:
   - The **issues** should be the same as the one defined by `machine_fqdn` in
-    the `config/secrets.yml` file. This can be changed with the `PORTUS_MACHINE_FQDN`
+    the `config/config.yml` file. This can be changed with the `PORTUS_MACHINE_FQDN`
     environment variable.
   - The **rootcertbundle** should point to the same location as the
     `encryption_private_key_path` configurable value as defined also in the
