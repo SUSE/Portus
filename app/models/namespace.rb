@@ -49,6 +49,13 @@ class Namespace < ActiveRecord::Base
             length:     { maximum: MAX_NAME_LENGTH },
             namespace:  true
 
+  scope :not_portus, -> { where.not name: "portus" }
+
+  # Returns true if this namespace belongs to the internal user "portus".
+  def portus?
+    name == "portus"
+  end
+
   # global_namespace_cannot_be_private adds an error and returns false if the
   # visibility of the global namespace is set to private. Otherwise, it returns
   # true. This function is used to validate the visibility.
