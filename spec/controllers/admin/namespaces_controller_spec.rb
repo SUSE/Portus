@@ -11,6 +11,8 @@ RSpec.describe Admin::NamespacesController, type: :controller do
     end
 
     describe "GET #index" do
+      let!(:portus) { create(:admin, username: "portus") }
+
       it "paginates namespaces" do
         get :index
         expect(assigns(:namespaces)).to respond_to(:total_pages)
@@ -19,6 +21,15 @@ RSpec.describe Admin::NamespacesController, type: :controller do
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
+      end
+
+      it "does not contain the portus namespace" do
+        get :index
+        namespaces = assigns(:namespaces)
+        expect(namespaces.count).to eq 2
+
+        # Global & portus namespaces.
+        expect(Namespace.all.count).to eq 4
       end
     end
   end

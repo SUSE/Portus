@@ -45,6 +45,8 @@ describe NamespacesController do
   end
 
   describe "GET #show" do
+    let!(:portus) { create(:admin, username: "portus") }
+
     it "should paginate repositories" do
       sign_in owner
       get :show, id: namespace.id
@@ -65,6 +67,14 @@ describe NamespacesController do
       get :show, id: namespace.id
 
       expect(response.status).to eq 401
+    end
+
+    it "does not show the namespace for the portus user" do
+      sign_in create(:user)
+
+      expect do
+        get :show, id: portus.namespace.id
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 

@@ -65,6 +65,24 @@ describe Namespace do
     end
   end
 
+  context "is portus" do
+    let!(:registry)    { create(:registry) }
+    let!(:owner)       { create(:user) }
+    let!(:portus)      { create(:admin, username: "portus") }
+
+    it "returns true when the given namespace belongs to portus" do
+      expect(Namespace.find_by(name: portus.username).portus?).to be_truthy
+      expect(Namespace.find_by(name: owner.username).portus?).to be_falsey
+    end
+
+    it "only returns the namespaces that are not portus" do
+      # The registry creates one extra user, so we have two personal
+      # namespace. Furthermore, there's the global one.
+      expect(Namespace.not_portus.count).to eq 3
+      expect(Namespace.count).to eq 4
+    end
+  end
+
   context "global namespace" do
     it "cannot be private" do
       namespace = create(

@@ -23,6 +23,8 @@ class NamespacesController < ApplicationController
   # GET /namespaces/1
   # GET /namespaces/1.json
   def show
+    raise ActiveRecord::RecordNotFound if @namespace.portus?
+
     authorize @namespace
     @repositories = @namespace.repositories.page(params[:page])
 
