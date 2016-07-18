@@ -180,6 +180,10 @@ describe Namespace do
       expect(Namespace.make_valid("ma_s")).to eq "ma_s"
       expect(Namespace.make_valid("!lol!")).to eq "lol"
       expect(Namespace.make_valid("!lol!name")).to eq "lol_name"
+      expect(Namespace.make_valid("Miquel.Sabate")).to eq "miquel.sabate"
+      expect(Namespace.make_valid("Miquel.Sabate.")).to eq "miquel.sabate"
+      expect(Namespace.make_valid("M")).to eq "m"
+      expect(Namespace.make_valid("_M_")).to eq "m"
     end
   end
 end
