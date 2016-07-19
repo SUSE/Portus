@@ -41,6 +41,5 @@ AllCops:
     - bin/*
     - vendor/**/*
     - tmp/**/*
-    - config/cronotab.rb
     - config/initializers/*
     - config/environments/*
