@@ -96,7 +96,12 @@ class Namespace < ActiveRecord::Base
   def self.make_valid(name)
     return name if name =~ NAME_REGEXP
 
-    # First of all we strip extra characters from the beginning and end.
+    # One common case is LDAP and case sensitivity. With this in mind, try to
+    # downcase everything and see if now it's fine.
+    name = name.downcase
+    return name if name =~ NAME_REGEXP
+
+    # Let's strip extra characters from the beginning and end.
     first = name.index(/[a-z0-9]/)
     return nil if first.nil?
     last = name.rindex(/[a-z0-9]/)
