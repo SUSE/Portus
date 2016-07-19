@@ -2,6 +2,8 @@
 # configurations too. Moreover, this way we get richer pages while sharing as
 # much code as possible.
 class ErrorsController < ApplicationController
+  respond_to :html, :csv
+
   skip_before_action :check_requirements
   skip_before_action :authenticate_user!
   skip_before_action :force_update_profile!
