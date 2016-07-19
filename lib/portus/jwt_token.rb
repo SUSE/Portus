@@ -1,3 +1,5 @@
+require "portus/migrate"
+
 module Portus
   # This class implements the JSON Web Token as expected by the registry. Read
   # the `spec` for more information:
@@ -64,9 +66,7 @@ module Portus
 
     # The expiration time to be added to the current token.
     def expiration_time
-      # rubocop:disable Lint/Eval
-      eval(APP_CONFIG["jwt_expiration_time"]["value"])
-      # rubocop:enable Lint/Eval
+      Portus::Migrate.from_humanized_time(APP_CONFIG["jwt_expiration_time"]["value"], 5)
     end
 
     # Returns an array with the authorized actions hash.
