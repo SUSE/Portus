@@ -4,12 +4,14 @@
 # It gets overwritten when you run the `spring binstub` command.
 
 unless defined?(Spring)
-  require 'rubygems'
-  require 'bundler'
+  require "rubygems"
+  require "bundler"
 
+  # rubocop:disable Lint/AssignmentInCondition:
   if match = Bundler.default_lockfile.read.match(/^GEM$.*?^    (?:  )*spring \((.*?)\)$.*?^$/m)
-    Gem.paths = { 'GEM_PATH' => [Bundler.bundle_path.to_s, *Gem.path].uniq }
-    gem 'spring', match[1]
-    require 'spring/binstub'
+    Gem.paths = { "GEM_PATH" => [Bundler.bundle_path.to_s, *Gem.path].uniq }
+    gem "spring", match[1]
+    require "spring/binstub"
   end
+  # rubocop:enable Lint/AssignmentInCondition:
 end

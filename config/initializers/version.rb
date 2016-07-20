@@ -6,7 +6,7 @@ module Version
   # otherwise.
   def self.git?
     # Check that the ".git" directory at least exists.
-    return false unless File.exists?(Rails.root.join(".git"))
+    return false unless File.exist?(Rails.root.join(".git"))
 
     # Check whether we have git in our system.
     paths = ENV["PATH"].split(":")
@@ -14,24 +14,26 @@ module Version
     false
   end
 
-  BRANCH = Version.git? ? `git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3  2>/dev/null`.chomp : nil
   COMMIT = Version.git? ? `git log --pretty=format:'%h' -n 1 2>/dev/null`.chomp : nil
   TAG    = Version.git? ? `git tag --points-at $(git rev-parse HEAD) 2>/dev/null`.chomp : nil
+  BRANCH = if Version.git?
+    `git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3 2>/dev/null`.chomp
+  end
 
   # Version.value returns the app version
   # Priority: git tag > git branch/commit > VERSION file
   def self.value
     if TAG.present?
-      "#{TAG}"
+      TAG.to_s
     elsif COMMIT.present?
       if BRANCH.present?
         "#{BRANCH}@#{COMMIT}"
       else
-        "#{COMMIT}"
+        COMMIT.to_s
       end
     else
       version = Rails.root.join("VERSION")
-      File.read(version).chomp if File.exists?(version)
+      File.read(version).chomp if File.exist?(version)
     end
   end
 end
