@@ -38,8 +38,4 @@ AllCops:
     # default config of rubocop.
     - db/schema.rb
     - db/migrate/*
-    - bin/*
     - vendor/**/*
-    - tmp/**/*
-    - config/initializers/*
-    - config/environments/*
