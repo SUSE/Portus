@@ -38,5 +38,20 @@ module Portus
       eval(duration)
       # rubocop:enable Lint/Eval
     end
+
+    # Provides a compatibility layer for Portus 2.1 for users that haven't
+    # migrated yet from `jwt_expiration_time` to `registry.jwt_expiration_time`.
+    #
+    # TODO: (mssola) remove in the next version.
+    def self.registry_config(key)
+      return APP_CONFIG["registry"][key]["value"] if APP_CONFIG["registry"]
+
+      Rails.logger.tagged("deprecated") do
+        Rails.logger.warn "The usage of '#{key}' is deprecated and it's now under the 'registry' "\
+                          "configuration section."
+      end
+
+      APP_CONFIG[key]["value"]
+    end
   end
 end

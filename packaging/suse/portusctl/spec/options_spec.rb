@@ -6,7 +6,8 @@ def format_key(key)
   key.tr("_", "-")
      .gsub("enabled", "enable")
      .gsub("user-name", "username")
-     .gsub(/^jwt-expiration-time-value$/, "jwt-expiration-time")
+     .gsub(/^registry-jwt-expiration-time-value$/, "jwt-expiration-time")
+     .gsub(/^registry-catalog-page-value$/, "catalog-page")
      .gsub(/^check-ssl-usage-enable$/, "secure")
 end
 
