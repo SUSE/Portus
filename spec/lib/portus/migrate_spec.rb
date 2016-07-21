@@ -26,4 +26,24 @@ describe Portus::Migrate do
       expect(val).to eq 3.seconds
     end
   end
+
+  describe "registry_config" do
+    before :each do
+      @registry = APP_CONFIG["registry"]
+    end
+
+    after :each do
+      APP_CONFIG["registry"] = @registry
+      APP_CONFIG["jwt_expiration_time"] = nil
+    end
+
+    it "returns a value depending of the format" do
+      expect(Portus::Migrate.registry_config("jwt_expiration_time")).to_not be_nil
+
+      APP_CONFIG["registry"] = nil
+      APP_CONFIG["jwt_expiration_time"] = { "value" => 5 }
+
+      expect(Portus::Migrate.registry_config("jwt_expiration_time")).to eq 5
+    end
+  end
 end

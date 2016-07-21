@@ -74,7 +74,7 @@ describe Portus::JwtToken do
 
       describe ":exp" do
         it "is set to #expires_at" do
-          APP_CONFIG["jwt_expiration_time"] = { "value" => "6.minutes" }
+          APP_CONFIG["registry"]["jwt_expiration_time"] = { "value" => "6.minutes" }
 
           now = Time.zone.now
           expected = now + 6.minutes

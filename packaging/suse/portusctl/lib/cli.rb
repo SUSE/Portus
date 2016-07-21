@@ -109,7 +109,12 @@ Looks for the following required certificate files in the specified folder:
   # JWT EXPIRATION TIME
   option "jwt-expiration-time",
     desc:    "Expiration time for the JWT token used by Portus",
-    default: "5.minutes"
+    default: 5
+
+  # Catalog pagination
+  option "catalog-page",
+    desc:    "Pagination value for API calls to the registry",
+    default: 100
 
   # FIRST USER
   option "first-user-admin-enable",

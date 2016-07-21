@@ -94,7 +94,7 @@ module Portus
     # wrong, it raises an exception.
     def paged_response(link, field)
       res = []
-      link += "?n=100"
+      link += "?n=#{APP_CONFIG["registry"]["catalog_page"]["value"]}"
 
       until link.empty?
         page, link = get_page(link)
