@@ -11,14 +11,14 @@ longtitle: Frequently asked questions
   {% assign faq = (site.faq | sort: 'order') %}
   {% for question in faq %}
     <div class="panel panel-default faq-panel">
-      <div class="panel-heading faq-panel-heading" role="tab" id="heading{{question.order}}">
+      <div class="panel-heading faq-panel-heading" role="tab" id="heading-{{question.anchor_link}}">
         <h4 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="#faq-accordion" href="#question{{question.order}}" aria-expanded="true" aria-controls="collapseOne">
-            {{question.title}} <i class="pull-right fa fa-sort-down"></i>
+          <a role="button" data-toggle="collapse" data-parent="#faq-accordion" href="#{{question.anchor_link}}" aria-expanded="true" aria-controls="collapseOne">
+            {{question.title}} <i class="pull-right fa fa-sort-down faq-header-arrow"></i>
           </a>
         </h4>
       </div>
-      <div id="question{{question.order}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{question.order}}">
+      <div id="{{question.anchor_link}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{question.anchor_link}}">
         <div class="panel-body">
           {{question.content}}
         </div>

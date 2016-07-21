@@ -1,6 +1,7 @@
 ---
 title: How can I use and deploy Portus?
 order: 3
+anchor_link: how
 ---
 
 <h4>Deploying in production</h4>

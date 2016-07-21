@@ -97,8 +97,18 @@ footer {
     border-radius: 0;
     background-color: white;
     border-bottom: 2px solid @mainColour;
+    &.active {
+      .faq-header-arrow {
+        transform: rotate(90deg);
+      }
+    }
   }
   .panel-body {
     background-color: @white;
+  }
+  .panel-title {
+    i {
+      transition: all 0.1s;
+    }
   }
 }
