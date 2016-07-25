@@ -49,6 +49,15 @@ RSpec.configure do |config|
       "jwt_expiration_time" => { "value" => 5   },
       "catalog_page"        => { "value" => 100 }
     }
+
+    APP_CONFIG["user_permission"] = {
+      # This allows non-admins to change the visibility of their personal namespace
+      "change_visibility" => { "enabled" => true },
+      # This allows non-admins to modify namespaces
+      "manage_namespace"  => { "enabled" => true },
+      # This allows non-admins to modify teams
+      "manage_team"       => { "enabled" => true }
+    }
   end
 
   config.order = :random

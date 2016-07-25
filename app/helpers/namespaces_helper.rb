@@ -1,10 +1,16 @@
 module NamespacesHelper
   def can_manage_namespace?(namespace)
-    current_user.admin? || owner?(namespace)
+    current_user.admin? || (owner?(namespace) &&
+                            APP_CONFIG.enabled?("user_permission.manage_namespace"))
+  end
+
+  def can_create_namespace?
+    current_user.admin? || APP_CONFIG.enabled?("user_permission.manage_namespace")
   end
 
   def can_change_visibility?(namespace)
-    current_user.admin? || (owner?(namespace) && APP_CONFIG.enabled?("user_change_visibility"))
+    current_user.admin? || (owner?(namespace) &&
+                            APP_CONFIG.enabled?("user_permission.change_visibility"))
   end
 
   def owner?(namespace)

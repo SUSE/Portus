@@ -133,8 +133,18 @@ Looks for the following required certificate files in the specified folder:
     type:    :boolean,
     default: false
 
-  option "user-change-visibility-enable",
-    desc:    "Allow users to change the visibility of their personal namespace",
+  option "change-visibility-enable",
+    desc:    "Allow users to change the visibility of their namespaces",
+    type:    :boolean,
+    default: true
+
+  option "manage-namespace-enable",
+    desc:    "Allow users to modify their namespaces",
+    type:    :boolean,
+    default: true
+
+  option "manage-team-enable",
+    desc:    "Allow users to modify their teams",
     type:    :boolean,
     default: true
 

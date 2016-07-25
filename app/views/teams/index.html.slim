@@ -19,9 +19,10 @@
         h5
           ' Teams you are member of
       .col-sm-6.text-right
-        a#add_team_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
-          i.fa.fa-plus-circle
-          | Create new team
+        - if can_create_team?
+          a#add_team_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
+            i.fa.fa-plus-circle
+            | Create new team
 
   .panel-body
     .table-responsive

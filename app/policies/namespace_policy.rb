@@ -40,20 +40,25 @@ class NamespacePolicy
     user.admin? || namespace.team.users.exists?(user.id)
   end
 
+  def create?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    (APP_CONFIG.enabled?("user_permission.manage_namespace") || user.admin?) && push?
+  end
+
+  alias update? create?
   alias all? push?
-  alias create? push?
-  alias update? push?
 
   def change_visibility?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    (namespace.global? && user.admin?) || \
-      (!namespace.global? && (user.admin? || namespace.team.owners.exists?(user.id)))
+    user.admin? || (APP_CONFIG.enabled?("user_permission.change_visibility") &&
+                    !namespace.global? && namespace.team.owners.exists?(user.id))
   end
 
   # Only owners and admins can change the team ownership.
   def change_team?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    user.admin? || namespace.team.owners.exists?(user.id)
+    user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
+                    namespace.team.owners.exists?(user.id))
   end
 
   class Scope

@@ -58,7 +58,7 @@
         h5
           ' Namespaces you have access to
       .col-sm-6.text-right
-        - if Registry.any?
+        - if Registry.any? && can_create_namespace?
           a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
             i.fa.fa-plus-circle
             | Create new namespace
