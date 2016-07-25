@@ -20,6 +20,8 @@ collections:
   features:
     output: true
     permalink: /features/:path.html
+  faq:
+    output: false
 
 # By default, assume the post layout.
 defaults:

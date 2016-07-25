@@ -19,6 +19,7 @@ gulp.task('customeScripts', function() {
                    assets + 'js/smoothscroll.js',
                    assets + 'js/anchors.js',
                    assets + 'js/topbar.js',
+                   assets + 'js/faq.js',
                    ])
     .pipe(concat('main.js'))
     .pipe(rename({suffix: '.min'}))
