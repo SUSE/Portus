@@ -419,7 +419,7 @@ describe Repository do
     let!(:namespace)   { create(:namespace, team: team) }
     let!(:repo1)       { create(:repository, name: "repo1", namespace: namespace) }
     let!(:repo2)       { create(:repository, name: "repo2", namespace: namespace) }
-    let!(:tag1)        { create(:tag, name: "tag1", repository: repo1) }
+    let!(:tag1)        { create(:tag, name: "tag1", repository: repo1, digest: "foo") }
     let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
@@ -432,7 +432,7 @@ describe Repository do
         if args.first != "busybox" && !args.first.include?("/")
           raise "Should be included inside of a namespace"
         end
-        if args.last != "latest" && args.last != "0.1"
+        if args.last != "latest" && args.last != "0.1" && args.last != "tag1"
           raise "Using an unknown tag"
         end
 
@@ -443,6 +443,12 @@ describe Repository do
     end
 
     it "adds and deletes tags accordingly" do
+      # Update existing tag's digest
+      repo = { "name" => "#{namespace.name}/repo1", "tags" => ["tag1"] }
+      repo = Repository.create_or_update!(repo)
+      expect(repo.id).to eq repo1.id
+      expect(repo.tags.find_by(name: "tag1").digest).to match("digest")
+
       # Removes the existing tag and adds two.
       repo = { "name" => "#{namespace.name}/repo1", "tags" => ["latest", "0.1"] }
       repo = Repository.create_or_update!(repo)

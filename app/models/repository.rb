@@ -193,11 +193,38 @@ class Repository < ActiveRecord::Base
     repository = Repository.find_or_create_by!(name: name, namespace: namespace)
     tags = repository.tags.pluck(:name)
 
-    to_be_created_tags = repo["tags"] - tags
     to_be_deleted_tags = tags - repo["tags"]
 
     client = Registry.get.client
-    to_be_created_tags.each do |tag|
+
+    update_tags client, repository, repo["tags"] & tags
+    create_tags client, repository, portus, repo["tags"] - tags
+
+    # Finally remove the tags that are left and return the repo.
+    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_and_update!(portus) }
+    repository.reload
+  end
+
+  # Update digest of already existing tags.
+  def self.update_tags(client, repository, tags)
+    tags.each do |tag|
+      # Try to fetch the manifest digest of the tag.
+      begin
+        _, digest, = client.manifest(repository.full_name, tag)
+      rescue StandardError => e
+        logger.tagged("catalog") do
+          logger.warn "Could not fetch manifest for '#{repository.full_name}' " \
+            "with tag '#{tag}': " + e.message
+        end
+        next
+      end
+      repository.tags.find_by(name: tag).update!(digest: digest)
+    end
+  end
+
+  # Create new tags.
+  def self.create_tags(client, repository, author, tags)
+    tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
         id, digest, = client.manifest(repository.full_name, tag)
@@ -206,12 +233,8 @@ class Repository < ActiveRecord::Base
         digest = ""
       end
 
-      Tag.create!(name: tag, repository: repository, author: portus, digest: digest, image_id: id)
+      Tag.create!(name: tag, repository: repository, author: author, digest: digest, image_id: id)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
-
-    # Finally remove the tags that are left and return the repo.
-    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_and_update!(portus) }
-    repository.reload
   end
 end
