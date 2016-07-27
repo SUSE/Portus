@@ -22,11 +22,11 @@ RSpec.describe RepositoriesHelper, type: :helper do
     let!(:tag4)       { create(:tag, name: "0.4", author: owner, repository: repo3) }
 
     it "creates the proper HTML for each kind of activity" do
-      repo.create_activity(:push, owner: owner, recipient: tag)
-      repo.create_activity(:push, owner: owner, recipient: tag1)
-      repo1.create_activity(:push, owner: owner, recipient: tag2)
-      repo2.create_activity(:push, owner: owner, recipient: tag3)
-      repo3.create_activity(:push, owner: owner, recipient: tag4)
+      repo.create_activity(:push, owner: owner, recipient: tag, created_at: 1.hour.ago)
+      repo.create_activity(:push, owner: owner, recipient: tag1, created_at: 2.hours.ago)
+      repo1.create_activity(:push, owner: owner, recipient: tag2, created_at: 3.hours.ago)
+      repo2.create_activity(:push, owner: owner, recipient: tag3, created_at: 4.hours.ago)
+      repo3.create_activity(:push, owner: owner, recipient: tag4, created_at: 5.hours.ago)
 
       tag1.destroy
       repo1.destroy
