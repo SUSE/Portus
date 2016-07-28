@@ -69,7 +69,7 @@ feature "Repositories support" do
     scenario "Groupped tags are handled properly", js: true do
       ["", "", "same", "same", "another", "yet-another"].each_with_index do |digest, idx|
         create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
-               image_id: "Image")
+               image_id: "Image", created_at: idx.hours.ago)
       end
 
       expectations = [["tag0"], ["tag1"], ["tag2", "tag3"], ["tag4"], ["tag5"]]
