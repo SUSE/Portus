@@ -80,7 +80,7 @@ The next sections will provide more details about these steps.
 
 ### Volumes
 
-Portus' state is stored inside of a MariaDB database. This makes this Docker
+Portus' state is stored inside of a MariaDB database. This makes the Docker
 image stateless.
 
 ### External database
