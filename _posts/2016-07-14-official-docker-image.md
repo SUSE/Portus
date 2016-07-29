@@ -62,6 +62,11 @@ certificate to be added to the Docker container running the registry. This is
 not hard to be done, but involves some changes to the official Registry image
 maintained by Docker Inc (or some hacks like a custom entrypoint added via a volume).
 
+> **Note well:** this image uses Apache only because the current Portus RPM requires
+> `mod_passenger` to run. The next minor release of Portus (ETA Sept 2016) will instead
+> use [puma](http://puma.io/), hence Apache will no longer be needed inside of the
+> image.
+
 ### The init script
 
 As mentioned before, this Docker image has an init script which takes care of the
