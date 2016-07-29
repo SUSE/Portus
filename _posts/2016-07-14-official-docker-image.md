@@ -135,8 +135,11 @@ The following environment variables must be defined to run the image:
 
 Security related settings:
 
-  * `PORTUS_SECRET_KEY_BASE`: you can generate it using `openssl rand -hex 64`
+  * `PORTUS_SECRET_KEY_BASE`
   * `PORTUS_PORTUS_PASSWORD`: you can generate it using `openssl rand -hex 64`
+
+These values must be specified when running the container. You can generate them
+in a safe way by using the following command `openssl rand -hex 64`.
 
 Database related settings:
 
