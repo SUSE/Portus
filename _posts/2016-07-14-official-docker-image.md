@@ -163,9 +163,12 @@ defined inside of
 [this](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus)
 repository on GitHub.
 
-The image has different tags. The `head` tag points to the image using the Portus
-from the `master` branch.
-Each stable release of Portus has a dedicated tag.
+The image has different tags:
+
+  * `head`: image using Portus from the `master` branch.
+  * `latest`: image using latetest stable release of Portus.
+  * `<major version>.<minor version>`: image using latest release of Portus from
+    the `<major version>.<minor version>` branch (eg: `2.0`, then `2.0.1`, `2.0.2`,...)
 
 ## The road ahead
 
