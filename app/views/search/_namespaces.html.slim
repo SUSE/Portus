@@ -19,3 +19,4 @@
             - else
               td= namespace.webhooks.count
             td= time_tag namespace.created_at
+  = paginate(@namespaces)

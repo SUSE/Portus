@@ -1,0 +1,14 @@
+$('#search_results').html('<%= escape_javascript(render("search/#{@search_type}")) %>');
+$('#teams_count').html(<%= @teams_count %>);
+$('#namespaces_count').html(<%= @namespaces_count %>);
+$('#repositories_count').html(<%= @repositories_count %>);
+
+function updateCategoryLink(selector) {
+    var new_href = $(selector).attr('href');
+    new_href = new_href.replace(/([\&?]search=)\w*(\&?)/g, '$1<%= @search_query %>$2');
+    $(selector).attr("href", new_href);
+}
+
+updateCategoryLink("#teams_category");
+updateCategoryLink("#namespaces_category");
+updateCategoryLink("#repositories_category");

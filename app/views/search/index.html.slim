@@ -9,10 +9,14 @@
           .visible-xs
             = render template: "search/_mobile_categories.html.slim"
       .col-xs-12.col-md-8.col-lg-9.search.search-result
-        - case params[:type]
-          - when 'repositories'
-          = render template: "search/_repositories.html.slim"
-          -when 'namespaces'
-          = render template: "search/_namespaces.html.slim"
-          -when 'teams'
-          = render template: "search/_teams.html.slim"
+        .search-filter
+          = form_tag search_index_path, method: 'get', id: 'search_form', class: 'input-group shared-search'
+            = text_field_tag :search, params[:search], id: 'search_input', class: 'form-control', placeholder: 'Search'
+            = hidden_field_tag 'page', params[:page]
+            = hidden_field_tag 'type', params[:type]
+            span.input-group-btn
+              button.btn.btn-default
+                i.fa.fa-search
+        #search_results
+          = render template: "search/_#{params[:type]}.html.slim"
+

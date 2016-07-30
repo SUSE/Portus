@@ -14,3 +14,4 @@
             td= link_to repository.namespace.clean_name, repository.namespace
             td= link_to repository.name, repository
             td= time_tag repository.updated_at
+  = paginate(@repositories)
