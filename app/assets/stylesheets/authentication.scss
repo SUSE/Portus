@@ -7,7 +7,8 @@
 @import "font-awesome";
 @import "raleway";
 
-@import "bootstrap-sprockets";
+@import 'bootstrap/variables';
+@import 'lifeitup/variables';
 @import 'variables';
 @import 'mixins';
 @import 'bootstrap';
@@ -15,8 +16,4 @@
 
 //custom style overriding lifeitup
 @import 'layout';
-@import 'activities';
-@import 'buttons';
-@import 'images';
-@import 'tables';
-@import 'responsive-utilities';
+@import 'includes/forms';
