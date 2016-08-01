@@ -73,9 +73,11 @@ class NamespacePolicy
       scope
         .joins(team: [:team_users])
         .where(
-          "(namespaces.visibility = :visibility OR team_users.user_id = :user_id) AND " \
+          "(namespaces.visibility = :public OR namespaces.visibility = :protected " \
+          "OR team_users.user_id = :user_id) AND " \
           "namespaces.global = :global AND namespaces.name != :username",
-          visibility: Namespace.visibilities[:visibility_public],
+          public: Namespace.visibilities[:visibility_public],
+          protected: Namespace.visibilities[:visibility_protected],
           user_id: user.id, global: false, username: user.username
         )
         .distinct
