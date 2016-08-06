@@ -18,7 +18,7 @@ class TeamsController < ApplicationController
 
     authorize @team
     @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
-    @team_namespaces = @team.namespaces.page(params[:namespaces_page]).per(15)
+    @namespaces = @team.namespaces.search(params[:filter]).page(params[:namespaces_page]).per(15)
   end
 
   # POST /teams

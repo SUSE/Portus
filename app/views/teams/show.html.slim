@@ -159,23 +159,7 @@
             i.fa.fa-plus
             | Add namespace
 
-  .panel-body
-    .table-responsive
-      table.table.table-striped.table-hover
-        colgroup
-          col.col-50
-          col.col-15
-          col.col-15
-          col.col-20
-          col.col-10
-        thead
-          tr
-            th Namespace
-            th Repositories
-            th Webhooks
-            th Created At
-            th Visibility
-        tbody#namespaces
-          - @team_namespaces.each do |namespace|
-            = render(namespace)
-  .panel-footer= paginate(@team_namespaces, param_name: 'namespaces_page')
+  .panel-filter-section
+    = dynamic_filter_input url_for namespaces_path
+  #filter_results
+    = render partial: 'namespaces/namespaces'

@@ -189,3 +189,22 @@ i.fa {
     border-right: 1px solid $primary-colour;
   }
 }
+.filter-wrapper {
+  position: relative;
+  margin-bottom: 0;
+  .filter-input {
+    border: 1px solid $primary-colour;
+    padding-left: 3rem;
+    color: $gray;
+  }
+  i.fa-filter {
+    position: absolute;
+    top: 1rem;
+    left: 0.8rem;
+  }
+}
+
+.panel-filter-section {
+  padding: 15px;
+  padding-bottom: 0;
+}
