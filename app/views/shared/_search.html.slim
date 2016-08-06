@@ -1,4 +1,4 @@
-- if not current_page?(url_for controller: 'search')
+- if not current_page?(url_for controller: '/search')
   .row
     .col-xs-12.visible-xs
       = form_tag search_index_path, method: 'get', class: 'input-group shared-search' do
