@@ -92,7 +92,7 @@ RSpec.describe RepositoriesHelper, type: :helper do
       wh = "activities.key='repository.delete' OR activities.key='namespace.delete'"
       PublicActivity::Activity.where(wh).order(created_at: :desc).each do |activity|
         html = render_delete_activity(activity)
-        expect(html).to eq expectations[idx]
+        expect(expectations).to include(html)
         idx += 1
       end
     end
