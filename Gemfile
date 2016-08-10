@@ -85,6 +85,7 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "rubocop", "~> 0.41.2", require: false
     gem "brakeman", require: false
     gem "database_cleaner"
+    gem "md2man", "~>5.1.1", require: false
   end
 
   group :test do

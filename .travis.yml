@@ -27,8 +27,7 @@ before_script:
   - mysql -e 'create database portus_test;'
 
 script:
-  - bundle exec rspec spec
-  - bundle exec rspec packaging/suse/portusctl/spec
+  - bundle exec rspec spec packaging/suse/portusctl/spec
   - bundle exec rubocop -V
   - bundle exec rubocop -F
   - bundle exec brakeman -z -A -x CheckUnscopedFind,CheckRender
