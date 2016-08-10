@@ -30,7 +30,7 @@ Looks for the following required certificate files in the specified folder:
     default: "DE" # gensslcert -c
   option "ssl-city",
     desc:    "SSL certificate: city",
-    default: "Nueremberg" # gensslcert -l
+    default: "Nuernberg" # gensslcert -l
   option "ssl-state",
     desc:    "SSL certificate: state",
     default: "Bayern" # gensslcert -s
