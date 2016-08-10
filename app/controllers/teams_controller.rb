@@ -7,7 +7,7 @@ class TeamsController < ApplicationController
 
   # GET /teams
   def index
-    @teams = policy_scope(Team).page(params[:page])
+    @teams = policy_scope(Team).search(params[:filter]).page(params[:page])
     respond_with(@teams)
   end
 
