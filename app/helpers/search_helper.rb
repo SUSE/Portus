@@ -4,9 +4,11 @@ module SearchHelper
   end
 
   def dynamic_filter_input(action)
-    form_tag action, method: 'get', id: 'filter_form', class: 'input-group shared-search filter-wrapper' do
-      concat(content_tag :i, nil, class: 'fa fa-filter')
-      concat(text_field_tag :filter, params[:filter], id: 'filter_input', class: 'form-control filter-input', placeholder: 'Filter')
+    form_classes = "input-group shared-search filter-wrapper"
+    form_tag action, method: "get", id: "filter_form", class: form_classes do
+      concat(content_tag(:i, nil, class: "fa fa-filter"))
+      concat(text_field_tag(:filter, params[:filter], id: "filter_input",
+        class: "form-control filter-input", placeholder: "Filter"))
     end
   end
 end

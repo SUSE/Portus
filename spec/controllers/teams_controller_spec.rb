@@ -34,7 +34,7 @@ RSpec.describe TeamsController, type: :controller do
     it "paginates namespaces" do
       sign_in owner
       get :show, id: team.id
-      expect(assigns(:team_namespaces)).to respond_to(:total_pages)
+      expect(assigns(:namespaces)).to respond_to(:total_pages)
     end
 
     it "allows team members to view the page" do

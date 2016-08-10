@@ -6,14 +6,14 @@ class SearchController < ApplicationController
 
     repositories = policy_scope(Repository).search(search)
     @repositories = repositories.page(params[:page])
-    @repositories_count = repositories.count()
+    @repositories_count = repositories.count
 
     teams = policy_scope(Team).search(search)
     @teams = teams.page(params[:page])
-    @teams_count = teams.count()
+    @teams_count = teams.count
 
     namespaces = policy_scope(Namespace).search(search)
     @namespaces = namespaces.page(params[:page])
-    @namespaces_count = namespaces.count()
+    @namespaces_count = namespaces.count
   end
 end
