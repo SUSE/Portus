@@ -67,14 +67,14 @@ module Portus
         )
 
         rand(2..5).times do
-          name = FFaker::Food.ingredient.downcase.gsub(/[^#{User::USERNAME_CHARS}]/, "")
+          name = FFaker::Food.ingredient.downcase.gsub(/[^#{Namespace::NAME_REGEXP}]/, "")
           name += rand(0..1000).to_s
 
           Namespace.create!(
-            name:     name,
-            team:     t,
-            public:   rand(0..1) == 1,
-            registry: Registry.get
+            name:       name,
+            team:       t,
+            visibility: Namespace.visibilities.values.sample,
+            registry:   Registry.get
           )
         end
       end
