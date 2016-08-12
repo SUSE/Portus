@@ -62,10 +62,14 @@ RSpec.describe RepositoriesHelper, type: :helper do
 
       idx = 0
 
+      na = "<strong>Someone pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+           "<a href=\"/repositories/#{repo.id}\">repo:0.1</a>"
+      expectations = expectations.unshift na
+
       # Changes because of the Catalog job.
-      expectations[3] = "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">"\
+      expectations[4] = "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">"\
         "registry:5000</a> / <span>repo2:0.3</span>"
-      expectations[4] = "<strong>#{nameo} pushed </strong><span>namespace</span> / <span>repo"\
+      expectations[5] = "<strong>#{nameo} pushed </strong><span>namespace</span> / <span>repo"\
           "3:0.4</span>"
 
       # Push activities

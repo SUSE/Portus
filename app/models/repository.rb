@@ -142,7 +142,9 @@ class Repository < ActiveRecord::Base
     elsif repository.tags.exists?(name: tag)
       # Update digest if the given tag already exists.
       _, digest = Repository.id_and_digest_from_event(event, repository.full_name)
-      repository.tags.find_by(name: tag).update!(digest: digest)
+      tag = repository.tags.find_by(name: tag)
+      tag.update!(digest: digest, updated_at: Time.current)
+      repository.create_activity(:push, owner: actor, recipient: tag)
       return
     end
 
@@ -207,6 +209,8 @@ class Repository < ActiveRecord::Base
 
   # Update digest of already existing tags.
   def self.update_tags(client, repository, tags)
+    portus = User.find_by(username: "portus")
+
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
@@ -218,12 +222,21 @@ class Repository < ActiveRecord::Base
         end
         next
       end
-      repository.tags.find_by(name: tag).update!(digest: digest)
+
+      # Let's update the tag, if it really changed,
+      t = repository.tags.find_by(name: tag)
+      t.digest = digest
+      if t.changed.any?
+        t.save!
+        repository.create_activity(:push, owner: portus, recipient: t)
+      end
     end
   end
 
   # Create new tags.
   def self.create_tags(client, repository, author, tags)
+    portus = User.find_by(username: "portus")
+
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
@@ -233,7 +246,14 @@ class Repository < ActiveRecord::Base
         digest = ""
       end
 
-      Tag.create!(name: tag, repository: repository, author: author, digest: digest, image_id: id)
+      t = Tag.create!(
+        name:       tag,
+        repository: repository,
+        author:     author,
+        digest:     digest,
+        image_id:   id
+      )
+      repository.create_activity(:push, owner: portus, recipient: t)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
   end

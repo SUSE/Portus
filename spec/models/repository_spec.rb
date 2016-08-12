@@ -80,7 +80,7 @@ describe Repository do
     end
 
     context "adding an existing repo/tag" do
-      it "does not add a new activity when an already existing repo/tag already existed" do
+      it "adds a new activity when an already existing repo/tag already existed" do
         event = { "actor" => { "name" => user.username } }
 
         # First we create it, and make sure that it creates the activity.
@@ -88,10 +88,10 @@ describe Repository do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
         end.to change(PublicActivity::Activity, :count).by(1)
 
-        # And now it shouldn't create more activities.
+        # And now it should create another activities.
         expect do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        end.to change(PublicActivity::Activity, :count).by(0)
+        end.to change(PublicActivity::Activity, :count).by(1)
       end
 
       it "updates the digest of an already existing tag" do
@@ -99,9 +99,16 @@ describe Repository do
         Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
         expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("foo")
 
+        # Making sure that the updated_at column is set in the past.
+        tag = Repository.find_by(name: repository_name).tags.first
+        tag.update!(updated_at: 2.hours.ago)
+        ua = tag.updated_at
+
         event["target"]["digest"] = "bar"
         Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("bar")
+        tag = Repository.find_by(name: repository_name).tags.first
+        expect(tag.digest).to eq("bar")
+        expect(tag.updated_at).to_not eq(ua)
       end
     end
 

@@ -114,7 +114,7 @@
                     - else
                       span[title="sha256:#{tag.first.image_id}"]
                         = tag.first.image_id[0, 12]
-                  td= tag.first.created_at
+                  td= tag.first.updated_at
             - else
               tr
                 td
@@ -128,7 +128,7 @@
                   - else
                     span[title="sha256:#{tag.first.image_id}"]
                       = tag.first.image_id[0, 12]
-                td= tag.first.created_at
+                td= tag.first.updated_at
 
                 - if can_destroy?(@repository)
                   td
