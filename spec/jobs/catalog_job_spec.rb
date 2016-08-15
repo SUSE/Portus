@@ -157,9 +157,11 @@ describe CatalogJob do
       job = CatalogJobMock.new
       job.update_registry!([{ "name" => "repo", "tags" => ["0.1"] }])
 
-      # Two activities: push and then delete.
-      expect(PublicActivity::Activity.count).to eq 2
+      # Three activities: the original one, one more push for 0.1 and then the
+      # delete for latest.
+      expect(PublicActivity::Activity.count).to eq 3
       expect(PublicActivity::Activity.first.parameters[:tag_name]).to eq "latest"
+      expect(PublicActivity::Activity.all[1].recipient.name).to eq "0.1"
       expect(PublicActivity::Activity.last.key).to eq "repository.delete"
     end
   end
