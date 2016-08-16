@@ -16,5 +16,5 @@
           th Number of namespaces
       tbody#teams
         - @teams.each do |team|
-          = render team
+          = render partial: 'teams/team', locals: {team: team}
 .panel-footer= paginate(@teams)
