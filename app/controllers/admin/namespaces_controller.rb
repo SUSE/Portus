@@ -3,7 +3,8 @@ class Admin::NamespacesController < Admin::BaseController
 
   def index
     @special_namespaces = Namespace.where(global: true)
-    @namespaces = Namespace.not_portus.where(global: false).search(params[:filter]).page(params[:page])
+    namespaces = Namespace.not_portus.where(global: false)
+    @namespaces = namespaces.search(params[:filter]).page(params[:page])
     respond_with(@namespaces)
   end
 end

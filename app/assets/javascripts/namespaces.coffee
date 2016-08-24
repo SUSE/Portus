@@ -1,6 +1,5 @@
 #= require includes/set_typehead
 #= require includes/open_close_icon
-#= require includes/filter
 
 $(document).on "page:change", ->
   $('#edit_namespace').on 'click', (event) ->

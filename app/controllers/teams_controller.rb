@@ -17,8 +17,11 @@ class TeamsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @team.hidden?
 
     authorize @team
-    @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
-    @namespaces = @team.namespaces.search(params[:filter]).page(params[:namespaces_page]).per(15)
+    team_users = @team.team_users.enabled.search(params[:filter_users])
+    @team_users = team_users.page(params[:users_page]).per(10)
+
+    namespaces = @team.namespaces.search(params[:filter_namespaces])
+    @namespaces = namespaces.page(params[:namespaces_page]).per(15)
   end
 
   # POST /teams

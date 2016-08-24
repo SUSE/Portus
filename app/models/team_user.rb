@@ -22,6 +22,12 @@
 #   * contributor: has RW access to the namespaces associated with the team
 #   * owner: like contributor, but can also manage the team
 class TeamUser < ActiveRecord::Base
+  include SearchCop
+
+  search_scope :search do
+    attributes user: ["user.username", "user.email"]
+  end
+
   enum role: [:viewer, :contributor, :owner]
 
   scope :enabled, -> { joins(:user).merge(User.enabled).distinct }

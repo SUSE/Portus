@@ -11,14 +11,33 @@ RSpec.describe SearchHelper, type: :helper do
   end
 
   describe "dynamic_filter_input" do
-    it "renders dynamic filter input form" do
-      expected = '<form id="filter_form" class="input-group shared-search filter-wrapper" '\
-                 'action="/namespaces" accept-charset="UTF-8" method="get">'\
-                 '<input name="utf8" type="hidden" value="&#x2713;" />'\
-                 '<i class="fa fa-filter"></i><input type="text" name="filter" '\
-                 'id="filter_input" class="form-control filter-input" placeholder="Filter" />' \
-                 "</form>"
+    it "renders dynamic filter input form with default values" do
+      expected =  '<form id="filter_form" class="input-group shared-search filter-wrapper" '\
+                  'action="/namespaces" accept-charset="UTF-8" method="get">'\
+                  '<input name="utf8" type="hidden" value="&#x2713;" />'\
+                  '<i class="fa fa-filter"></i><input type="text" name="filter" '\
+                  'id="filter" class="form-control filter-input" placeholder="Filter" /><script>'\
+                  "\n//<![CDATA["\
+                  "\nactivateFilter('#filter', '#filter_form');"\
+                  "\n//]]>"\
+                  "\n</script></form>"
       expect(helper.dynamic_filter_input("/namespaces")).to eq expected
+    end
+
+    it "renders dynamic filter input form with specific values" do
+      expected =  '<form id="test_form" class="input-group shared-search filter-wrapper" '\
+                  'action="/namespaces" accept-charset="UTF-8" method="get">'\
+                  '<input name="utf8" type="hidden" value="&#x2713;" />'\
+                  '<i class="fa fa-filter"></i><input type="text" name="test" '\
+                  'id="test" class="form-control filter-input" placeholder="Filter" /><script>'\
+                  "\n//<![CDATA["\
+                  "\nactivateFilter('#test', '#test_form');"\
+                  "\n//]]>"\
+                  "\n</script></form>"
+      helper_result = helper.dynamic_filter_input(
+        "/namespaces", param_name: "test", form_id: "test_form"
+      )
+      expect(helper_result).to eq expected
     end
   end
 end

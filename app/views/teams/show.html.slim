@@ -100,33 +100,10 @@
             i.fa.fa-user-plus
             | Add members
 
-
-  .panel-body
-    .table-responsive
-      table.table.table-striped.table-hover
-        colgroup
-          - if can_manage_team?(@team)
-            col.col-5
-            col.col-40
-            col.col-35
-            col.col-10
-            col.col-10
-          - else
-            col.col-5
-            col.col-50
-            col.col-45
-        thead
-          tr
-            th
-            th User
-            th Role
-            - if can_manage_team?(@team)
-              th Edit
-              th Remove
-        tbody#team_users
-          - @team_users.each do |tu|
-            = render(tu)
-  .panel-footer= paginate(@team_users, param_name: 'users_page')
+  .panel-filter-section
+    = dynamic_filter_input "#{teams_path}/#{@team.id}", param_name: 'filter_users', form_id: 'filter_users_form'
+  #filter_users_results
+    = render partial: 'team_users/team_users'
 
 - if can_manage_team?(@team)
   #add_namespace_form.collapse
@@ -160,6 +137,6 @@
             | Add namespace
 
   .panel-filter-section
-    = dynamic_filter_input url_for namespaces_path
-  #filter_results
+    = dynamic_filter_input "#{teams_path}/#{@team.id}", param_name: 'filter_namespaces', form_id: 'filter_namespaces_form'
+  #filter_namespaces_results
     = render partial: 'namespaces/namespaces'
