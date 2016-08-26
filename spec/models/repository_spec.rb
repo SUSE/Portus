@@ -72,7 +72,11 @@ describe Repository do
   describe "handle push event" do
     let(:tag_name) { "latest" }
     let(:repository_name) { "busybox" }
-    let(:registry) { create(:registry, hostname: "registry.test.lan") }
+    let(:registry) do
+      create(:registry,
+             hostname:          "registry.test.lan",
+             external_hostname: "external.test.lan")
+    end
     let(:user) { create(:user) }
 
     before :each do
@@ -130,6 +134,62 @@ describe Repository do
       end
     end
 
+    context "event comes from an internally named registry" do
+      before :each do
+        @event = build(:raw_push_manifest_event).to_test_hash
+        @event["target"]["repository"] = repository_name
+        @event["target"]["url"] = get_url(repository_name, tag_name)
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
+        @event["request"]["host"] = "registry.test.lan"
+        @event["actor"]["name"] = user.username
+      end
+
+      it "sends event to logger" do
+        expect(Rails.logger).to receive(:info)
+        expect do
+          Repository.handle_push_event(@event)
+        end.to change(Repository, :count).by(0)
+      end
+
+      it "finds an internal registry" do
+        registry # create registry
+
+        reg = Registry.find_by(hostname: @event["request"]["host"])
+        expect(reg).not_to be_nil
+
+        reg = Registry.find_from_event(@event)
+        expect(reg).not_to be_nil
+      end
+    end
+
+    context "event comes from an externally named registry" do
+      before :each do
+        @event = build(:raw_push_manifest_event).to_test_hash
+        @event["target"]["repository"] = repository_name
+        @event["target"]["url"] = get_url(repository_name, tag_name)
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
+        @event["request"]["host"] = "external.test.lan"
+        @event["actor"]["name"] = user.username
+      end
+
+      it "sends event to logger" do
+        expect(Rails.logger).to receive(:info)
+        expect do
+          Repository.handle_push_event(@event)
+        end.to change(Repository, :count).by(0)
+      end
+
+      it "finds an external registry" do
+        registry # create registry
+
+        reg = Registry.find_by(hostname: @event["request"]["host"])
+        expect(reg).to be_nil
+
+        reg = Registry.find_from_event(@event)
+        expect(reg).not_to be_nil
+      end
+    end
+
     context "event comes from an unknown registry" do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
@@ -145,6 +205,13 @@ describe Repository do
         expect do
           Repository.handle_push_event(@event)
         end.to change(Repository, :count).by(0)
+      end
+
+      it "doesn't find any registry" do
+        registry # create registry
+
+        reg = Registry.find_from_event(@event)
+        expect(reg).to be_nil
       end
     end
 

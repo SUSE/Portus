@@ -30,7 +30,8 @@ class Admin::RegistriesController < Admin::BaseController
       unless msg.empty?
         logger.info "\nRegistry not reachable:\n#{@registry.inspect}\n#{msg}\n"
         msg = "#{msg} You can skip this check by clicking on the \"Skip remote checks\" checkbox."
-        hsh = { name: @registry.name, hostname: @registry.hostname, use_ssl: @registry.use_ssl }
+        hsh = { name: @registry.name, hostname: @registry.hostname,
+          use_ssl: @registry.use_ssl, external_hostname: @registry.external_hostname }
         redirect_to new_admin_registry_path(hsh), alert: msg
         return
       end
@@ -73,13 +74,13 @@ class Admin::RegistriesController < Admin::BaseController
 
   # The required/permitted parameters on the create method.
   def create_params
-    params.require(:registry).permit(:name, :hostname, :use_ssl)
+    params.require(:registry).permit(:name, :hostname, :use_ssl, :external_hostname)
   end
 
   # The required/permitted parameters on update. The hostname parameter will be
   # allowed depending whether there are repositories already created or not.
   def update_params
-    permitted = [:name, :use_ssl, (:hostname unless Repository.any?)].compact
+    permitted = [:name, :use_ssl, (:hostname unless Repository.any?), :external_hostname].compact
     params.require(:registry).permit(permitted)
   end
 end

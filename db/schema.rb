@@ -78,11 +78,12 @@ ActiveRecord::Schema.define(version: 20160614122012) do
   add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id", using: :btree
 
   create_table "registries", force: :cascade do |t|
-    t.string   "name",       limit: 255, null: false
-    t.string   "hostname",   limit: 255, null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",              limit: 255, null: false
+    t.string   "hostname",          limit: 255, null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.boolean  "use_ssl"
+    t.string   "external_hostname", limit: 255
   end
 
   add_index "registries", ["hostname"], name: "index_registries_on_hostname", unique: true, using: :btree
