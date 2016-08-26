@@ -27,8 +27,7 @@ gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :product
 gem "ethon", "~> 0.9.0"
 gem "typhoeus", "~> 1.0.2"
 
-# Used to store application tokens. This is already a Rails depedency. However
-# better safe than sorry...
+# Used to store application tokens.
 gem "bcrypt"
 
 # This is already a Rails dependency, but we use it to run portusctl
