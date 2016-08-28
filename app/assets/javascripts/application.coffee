@@ -4,5 +4,7 @@
 #= require turbolinks
 #= require bootstrap-sprockets
 #= require lifeitup_layout
-#= require_tree .
+#= require bootstrap
+#= require open_search
+#= require alert
 #= require bootstrap-typeahead-rails

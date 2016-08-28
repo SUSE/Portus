@@ -14,12 +14,15 @@
 
 .panel.panel-default
   .panel-heading
-    h5
-      ' Teams you are member of
-      .pull-right
-        a#add_team_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
-          i.fa.fa-plus-circle
-          | Create new team
+    .row
+      .col-sm-6
+        h5
+          ' Teams you are member of
+      .col-sm-6.text-right
+        - if can_create_team?
+          a#add_team_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
+            i.fa.fa-plus-circle
+            | Create new team
 
   .panel-body
     .table-responsive

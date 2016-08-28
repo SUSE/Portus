@@ -9,7 +9,14 @@ Rails.application.routes.draw do
 
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show, :update] do
-    put "toggle_public", on: :member
+    put "change_visibility", on: :member
+    resources :webhooks do
+      resources :headers, only: [:create, :destroy], controller: :webhook_headers
+      resources :deliveries, only: [:update], controller: :webhook_deliveries
+      member do
+        put "toggle_enabled"
+      end
+    end
   end
   get "namespaces/typeahead/:query" => "namespaces#typeahead", :defaults => { format: "json" }
 
@@ -57,7 +64,7 @@ Rails.application.routes.draw do
   end
 
   # Error pages.
-  %w( 401 404 422 500 ).each do |code|
+  %w(401 404 422 500).each do |code|
     get "/#{code}", to: "errors#show", status: code
   end
 end

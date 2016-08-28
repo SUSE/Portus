@@ -2,12 +2,13 @@
 #
 # Table name: registries
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)      not null
-#  hostname   :string(255)      not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  use_ssl    :boolean
+#  id                :integer          not null, primary key
+#  name              :string(255)      not null
+#  hostname          :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  use_ssl           :boolean
+#  external_hostname :string(255)
 #
 # Indexes
 #
@@ -25,6 +26,7 @@ class Registry < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :hostname, presence: true, uniqueness: true
+  validates :external_hostname, presence: false
   validates :use_ssl, inclusion: [true, false]
 
   # On create, make sure that all the needed namespaces are in place.
@@ -51,10 +53,14 @@ class Registry < ActiveRecord::Base
 
   # Find the registry for the given push event.
   def self.find_from_event(event)
-    registry = Registry.find_by(hostname: event["request"]["host"])
+    request_hostname = event["request"]["host"]
+    registry = Registry.find_by(hostname: request_hostname)
     if registry.nil?
-      logger.info("Ignoring event coming from unknown registry
-                  #{event["request"]["host"]}")
+      logger.debug("No hostname matching #{request_hostname}, testing external_hostname")
+      registry = Registry.find_by(external_hostname: request_hostname)
+    end
+    if registry.nil?
+      logger.info("Ignoring event coming from unknown registry #{request_hostname}")
     end
     registry
   end
@@ -96,6 +102,7 @@ class Registry < ActiveRecord::Base
   def reachable?
     msg = ""
 
+    # rubocop:disable Lint/ShadowedException:
     begin
       r = client.reachable?
 
@@ -108,10 +115,10 @@ class Registry < ActiveRecord::Base
     rescue Errno::ETIMEDOUT, Net::OpenTimeout
       msg = "Error: connection timed out. The given registry is not available!"
     rescue Net::HTTPBadResponse
-      if use_ssl
-        msg = "Error: there's something wrong with your SSL configuration."
+      msg = if use_ssl
+        "Error: there's something wrong with your SSL configuration."
       else
-        msg = "Error: not using SSL, but the given registry does use SSL."
+        "Error: not using SSL, but the given registry does use SSL."
       end
     rescue OpenSSL::SSL::SSLError => e
       msg = "SSL error while communicating with the registry, check the server " \
@@ -122,6 +129,7 @@ class Registry < ActiveRecord::Base
       logger.info "Registry not reachable: #{e.inspect}"
       msg = "Error: something went wrong. Check your configuration."
     end
+    # rubocop:enable Lint/ShadowedException:
     msg
   end
 
@@ -192,14 +200,16 @@ class Registry < ActiveRecord::Base
     team = Team.create(
       name:   "portus_global_team_#{count}",
       owners: User.where(admin: true),
-      hidden: true)
+      hidden: true
+    )
     Namespace.create!(
       name:        "portus_global_namespace_#{count}",
       registry:    self,
-      public:      true,
+      visibility:  Namespace.visibilities[:visibility_public],
       global:      true,
       description: "The global namespace for the registry #{Registry.name}.",
-      team:        team)
+      team:        team
+    )
 
     # TODO: change code once we support multiple registries
     User.find_each(&:create_personal_namespace!)

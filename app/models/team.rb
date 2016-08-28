@@ -16,6 +16,11 @@
 
 class Team < ActiveRecord::Base
   include PublicActivity::Common
+  include SearchCop
+
+  search_scope :search do
+    attributes :name, :description
+  end
 
   # Returns all the teams that are not special. By special team we mean:
   #   - It's the global namespace (see: Registry#create_namespaces!).

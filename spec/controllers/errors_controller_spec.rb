@@ -82,7 +82,7 @@ describe ErrorsController do
     end
 
     it "shows the proper code when given" do
-      %w( 401 404 422 500).each do |code|
+      %w(401 404 422 500).each do |code|
         get :show, status: code
         expect(response.status).to eq code.to_i
       end

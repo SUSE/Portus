@@ -1,29 +1,28 @@
-.row id="comment_#{comment.id}"
-  .col-md-1.comment-thumbnail
-    .pull-right
-      .user-image
-        = user_image_tag(comment.author.email)
-  .col-md-11
-    .panel.panel-default
-      .panel-heading
-        h5
+.comment-row id="comment_#{comment.id}"
+  .comment-thumbnail
+    .user-image
+      = user_image_tag(comment.author.email)
+  .comment-content
+    .row
+      .col-xs-8
+        p
           strong
             = comment.author.username
-          '  commented
-          = activity_time_tag comment.updated_at
-          '  ago
-          .pull-right
-            button.btn.btn-link.btn-x.btn-edit-role.destroy_comments_btn[
-              data-placement="left"
-              data-toggle="popover"
-              data-title="Please confirm"
-              data-content='<p>Are you sure you want to remove this \
-              comment?</p><a class="btn btn-default">No</a> <a class="btn \
-              btn-primary" data-method="delete" rel="nofollow" \
-              data-remote="true" href="#{url_for([comment.repository, comment])}">Yes</a>'
-              data-html="true"
-              role="button"]
-              if.fa.fa-trash
-              |  Delete comment
-      .panel-body
-        = markdown(comment.body)
+          span.text-muted.space-xs-sides
+            = activity_time_tag comment.updated_at
+            '  ago
+      .col-xs-4.text-right
+        button.btn.btn-link.btn-xs.btn-edit-role.destroy_comments_btn[
+          data-placement="left"
+          data-toggle="popover"
+          data-title="Please confirm"
+          data-content="<p>Are you sure you want to remove this \
+          comment?</p><a class='btn btn-default'>No</a> <a class='btn \
+          btn-primary' data-method='delete' rel='nofollow' \
+          data-remote='true' href='#{url_for([comment.repository, comment])}'>Yes</a>"
+          data-html="true"
+          role="button"]
+          if.fa.fa-trash
+          |  Delete comment
+
+    = markdown(comment.body)

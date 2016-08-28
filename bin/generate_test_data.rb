@@ -8,7 +8,7 @@ module Portus
     NUSERS = 100
 
     # Name of the only user that is not created with a random name.
-    SPECIAL_USER = "admin"
+    SPECIAL_USER = "admin".freeze
 
     # Teams to be created.
     TEAM_NAMES = [
@@ -22,7 +22,7 @@ module Portus
       "security",
       "sitereliability",
       "ui"
-    ]
+    ].freeze
 
     # Create some random users + the admin.
     def create_users!
@@ -67,14 +67,14 @@ module Portus
         )
 
         rand(2..5).times do
-          name = FFaker::Food.ingredient.downcase.gsub(/[^#{User::USERNAME_CHARS}]/, "")
+          name = FFaker::Food.ingredient.downcase.gsub(/[^#{Namespace::NAME_REGEXP}]/, "")
           name += rand(0..1000).to_s
 
           Namespace.create!(
-            name:     name,
-            team:     t,
-            public:   rand(0..1) == 1,
-            registry: Registry.get
+            name:       name,
+            team:       t,
+            visibility: Namespace.visibilities.values.sample,
+            registry:   Registry.get
           )
         end
       end
@@ -129,7 +129,8 @@ HERE
   exit 1
 end
 
-hostname, ssl = ARGV.first.chomp, ARGV.last.chomp.downcase
+hostname = ARGV.first.chomp
+ssl = ARGV.last.chomp.downcase
 ssl = ssl == "y" || ssl == "yes" || ssl == "t" || ssl == "true"
 
 unless Rails.env.development?
@@ -155,7 +156,6 @@ User.create!(
   email:    "portus@portus.com",
   admin:    true
 )
-
 
 #
 # Generate test data.

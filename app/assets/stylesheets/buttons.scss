@@ -11,3 +11,18 @@ header .topbar.btn.btn-default {
     background: rgba(255,255,255,0.7);
   }
 }
+.btn-toolbar {
+  margin-bottom: 1em;
+  .pull-right {
+    margin-left: 1em;
+  }
+}
+
+.align-top-inline {
+  display: inline-block;
+  vertical-align: top;
+}
+
+i.btn.btn-options {
+  padding: .4em 1em 0 0;
+}

@@ -33,7 +33,7 @@ class Admin::UsersController < Admin::BaseController
   def update
     return if @user.nil?
 
-    attr = params.require(:user).permit([:email])
+    attr = params.require(:user).permit([:email, :display_name])
 
     if @user.update_attributes(attr)
       redirect_to admin_users_path, notice: "User updated successfully", float: true

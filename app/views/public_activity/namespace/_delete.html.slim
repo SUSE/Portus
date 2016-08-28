@@ -7,7 +7,7 @@ li
     .description
       h6
         strong
-          = " #{activity.owner.username} deleted "
+          = " #{activity.owner.display_username} deleted "
         - if activity.parameters[:repository_name]
           = link_to activity.trackable.clean_name, activity.trackable
           = " / #{activity.parameters[:repository_name]}"

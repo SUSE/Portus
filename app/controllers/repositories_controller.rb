@@ -27,6 +27,8 @@ class RepositoriesController < ApplicationController
 
   # Removes all the tags that belong to this repository, and removes it.
   def destroy
+    authorize @repository
+
     # First of all we mark the repo and the tags, so we don't have concurrency
     # problems when "delete" events come in.
     @repository.tags.update_all(marked: true)

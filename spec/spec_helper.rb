@@ -1,4 +1,3 @@
-
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
@@ -46,7 +45,19 @@ RSpec.configure do |config|
 
     # This value is expected to be always available. The default value will be
     # set
-    APP_CONFIG["jwt_expiration_time"] = { "value" => "5.minutes" }
+    APP_CONFIG["registry"] = {
+      "jwt_expiration_time" => { "value" => 5   },
+      "catalog_page"        => { "value" => 100 }
+    }
+
+    APP_CONFIG["user_permission"] = {
+      # This allows non-admins to change the visibility of their personal namespace
+      "change_visibility" => { "enabled" => true },
+      # This allows non-admins to modify namespaces
+      "manage_namespace"  => { "enabled" => true },
+      # This allows non-admins to modify teams
+      "manage_team"       => { "enabled" => true }
+    }
   end
 
   config.order = :random

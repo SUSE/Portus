@@ -7,7 +7,7 @@ li
     .description
       h6
         strong
-          = "#{activity.owner.username} renamed the team #{activity.parameters[:old]} to "
+          = "#{activity.owner.display_username} renamed the team #{activity.parameters[:old]} to "
         =  link_to activity.parameters[:new], activity.trackable
       small
         i.fa.fa-clock-o

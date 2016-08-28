@@ -30,7 +30,7 @@ Looks for the following required certificate files in the specified folder:
     default: "DE" # gensslcert -c
   option "ssl-city",
     desc:    "SSL certificate: city",
-    default: "Nueremberg" # gensslcert -l
+    default: "Nuernberg" # gensslcert -l
   option "ssl-state",
     desc:    "SSL certificate: state",
     default: "Bayern" # gensslcert -s
@@ -109,7 +109,12 @@ Looks for the following required certificate files in the specified folder:
   # JWT EXPIRATION TIME
   option "jwt-expiration-time",
     desc:    "Expiration time for the JWT token used by Portus",
-    default: "5.minutes"
+    default: 5
+
+  # Catalog pagination
+  option "catalog-page",
+    desc:    "Pagination value for API calls to the registry",
+    default: 100
 
   # FIRST USER
   option "first-user-admin-enable",
@@ -117,10 +122,31 @@ Looks for the following required certificate files in the specified folder:
     type:    :boolean,
     default: true
 
+  # Display name
+  option "display-name-enable",
+    desc:    "Enable users to set a display name",
+    type:    :boolean,
+    default: false
+
   option "delete-enable",
     desc:    "Enable delete support. Only do this if your registry is 2.4 or higher",
     type:    :boolean,
     default: false
+
+  option "change-visibility-enable",
+    desc:    "Allow users to change the visibility of their namespaces",
+    type:    :boolean,
+    default: true
+
+  option "manage-namespace-enable",
+    desc:    "Allow users to modify their namespaces",
+    type:    :boolean,
+    default: true
+
+  option "manage-team-enable",
+    desc:    "Allow users to modify their teams",
+    type:    :boolean,
+    default: true
 
   def setup
     ensure_root

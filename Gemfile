@@ -23,8 +23,11 @@ gem "font-awesome-rails"
 gem "bootstrap-typeahead-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
 
-# Used to store application tokens. This is already a Rails depedency. However
-# better safe than sorry...
+# Pinning these specific versions because that's what we have on OBS.
+gem "ethon", "~> 0.9.0"
+gem "typhoeus", "~> 1.0.2"
+
+# Used to store application tokens.
 gem "bcrypt"
 
 # This is already a Rails dependency, but we use it to run portusctl
@@ -78,9 +81,10 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "wirble"
     gem "factory_girl_rails"
     gem "ffaker"
-    gem "rubocop", require: false
+    gem "rubocop", "~> 0.41.2", require: false
     gem "brakeman", require: false
     gem "database_cleaner"
+    gem "md2man", "~>5.1.1", require: false
   end
 
   group :test do

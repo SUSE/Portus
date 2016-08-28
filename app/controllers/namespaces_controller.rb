@@ -2,7 +2,7 @@ class NamespacesController < ApplicationController
   include ChangeNameDescription
 
   respond_to :html, :js
-  before_action :set_namespace, only: [:toggle_public, :show, :update]
+  before_action :set_namespace, only: [:change_visibility, :show, :update]
   before_action :check_team, only: [:create]
   before_action :check_role, only: [:create]
 
@@ -13,7 +13,8 @@ class NamespacesController < ApplicationController
   # GET /namespaces.json
   def index
     @special_namespaces = Namespace.where(
-      "global = ? OR namespaces.name = ?", true, current_user.username)
+      "global = ? OR namespaces.name = ?", true, current_user.username
+    )
     @namespaces = policy_scope(Namespace).page(params[:page])
 
     respond_with(@namespaces)
@@ -22,6 +23,8 @@ class NamespacesController < ApplicationController
   # GET /namespaces/1
   # GET /namespaces/1.json
   def show
+    raise ActiveRecord::RecordNotFound if @namespace.portus?
+
     authorize @namespace
     @repositories = @namespace.repositories.page(params[:page])
 
@@ -77,17 +80,18 @@ class NamespacesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /namespace/1/toggle_public
-  def toggle_public
+  # PATCH/PUT /namespace/1/change_visibility
+  def change_visibility
     authorize @namespace
 
-    @namespace.update_attributes(public: !(@namespace.public?))
-    if @namespace.public?
-      @namespace.create_activity :public, owner: current_user
-    else
-      @namespace.create_activity :private, owner: current_user
-    end
-    render template: "namespaces/toggle_public", locals: { namespace: @namespace }
+    # Update the visibility if needed
+    return if params[:visibility] == @namespace.visibility
+
+    return unless @namespace.update_attributes(visibility: params[:visibility])
+    @namespace.create_activity :change_visibility,
+      owner:      current_user,
+      parameters: { visibility: @namespace.visibility }
+    render template: "namespaces/change_visibility", locals: { namespace: @namespace }
   end
 
   private
@@ -98,9 +102,10 @@ class NamespacesController < ApplicationController
     ns = params.require(:namespace).permit(:namespace, :description)
 
     @namespace = Namespace.new(
-      team:     @team,
-      name:     ns["namespace"],
-      registry: Registry.get
+      team:       @team,
+      name:       ns["namespace"],
+      visibility: Namespace.visibilities[:visibility_private],
+      registry:   Registry.get
     )
     @namespace.description = ns["description"] if ns["description"]
     @namespace

@@ -3,7 +3,11 @@ html
   head
     title Portus
     = stylesheet_link_tag 'application', media: 'all'
+    - if Rails.application.assets.find_asset("#{params[:controller]}.css")
+      = stylesheet_link_tag params[:controller], media: 'all'
     = javascript_include_tag 'application'
+    - if Rails.application.assets.find_asset("#{params[:controller]}.js")
+      = javascript_include_tag params[:controller]
     = csrf_meta_tags
     meta content="width=device-width, initial-scale=1" name="viewport"
     link href="/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57"
@@ -41,10 +45,15 @@ html
   footer
     .aside-footer
     .container-footer
-      p
-        'Created with
-        i.fa.fa-heart
-        'by the SUSE team
-      - if current_user.admin? && Version.value
+      .row-0
+        .col-xs-6
           p
-            'Version: #{Version.value}
+            'Created with
+            i.fa.fa-heart
+            'by the SUSE team
+        .col-xs-6.text-right
+          - if current_user.admin? && Version.value
+              p
+                strong
+                  'Version:
+                | #{Version.value}

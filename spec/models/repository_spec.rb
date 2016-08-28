@@ -72,11 +72,19 @@ describe Repository do
   describe "handle push event" do
     let(:tag_name) { "latest" }
     let(:repository_name) { "busybox" }
-    let(:registry) { create(:registry, hostname: "registry.test.lan") }
+    let(:registry) do
+      create(:registry,
+             hostname:          "registry.test.lan",
+             external_hostname: "external.test.lan")
+    end
     let(:user) { create(:user) }
 
+    before :each do
+      VCR.turn_on!
+    end
+
     context "adding an existing repo/tag" do
-      it "does not add a new activity when an already existing repo/tag already existed" do
+      it "adds a new activity when an already existing repo/tag already existed" do
         event = { "actor" => { "name" => user.username } }
 
         # First we create it, and make sure that it creates the activity.
@@ -84,10 +92,27 @@ describe Repository do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
         end.to change(PublicActivity::Activity, :count).by(1)
 
-        # And now it shouldn't create more activities.
+        # And now it should create another activities.
         expect do
           Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        end.to change(PublicActivity::Activity, :count).by(0)
+        end.to change(PublicActivity::Activity, :count).by(1)
+      end
+
+      it "updates the digest of an already existing tag" do
+        event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
+        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("foo")
+
+        # Making sure that the updated_at column is set in the past.
+        tag = Repository.find_by(name: repository_name).tags.first
+        tag.update!(updated_at: 2.hours.ago)
+        ua = tag.updated_at
+
+        event["target"]["digest"] = "bar"
+        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        tag = Repository.find_by(name: repository_name).tags.first
+        expect(tag.digest).to eq("bar")
+        expect(tag.updated_at).to_not eq(ua)
       end
     end
 
@@ -109,6 +134,62 @@ describe Repository do
       end
     end
 
+    context "event comes from an internally named registry" do
+      before :each do
+        @event = build(:raw_push_manifest_event).to_test_hash
+        @event["target"]["repository"] = repository_name
+        @event["target"]["url"] = get_url(repository_name, tag_name)
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
+        @event["request"]["host"] = "registry.test.lan"
+        @event["actor"]["name"] = user.username
+      end
+
+      it "sends event to logger" do
+        expect(Rails.logger).to receive(:info)
+        expect do
+          Repository.handle_push_event(@event)
+        end.to change(Repository, :count).by(0)
+      end
+
+      it "finds an internal registry" do
+        registry # create registry
+
+        reg = Registry.find_by(hostname: @event["request"]["host"])
+        expect(reg).not_to be_nil
+
+        reg = Registry.find_from_event(@event)
+        expect(reg).not_to be_nil
+      end
+    end
+
+    context "event comes from an externally named registry" do
+      before :each do
+        @event = build(:raw_push_manifest_event).to_test_hash
+        @event["target"]["repository"] = repository_name
+        @event["target"]["url"] = get_url(repository_name, tag_name)
+        @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
+        @event["request"]["host"] = "external.test.lan"
+        @event["actor"]["name"] = user.username
+      end
+
+      it "sends event to logger" do
+        expect(Rails.logger).to receive(:info)
+        expect do
+          Repository.handle_push_event(@event)
+        end.to change(Repository, :count).by(0)
+      end
+
+      it "finds an external registry" do
+        registry # create registry
+
+        reg = Registry.find_by(hostname: @event["request"]["host"])
+        expect(reg).to be_nil
+
+        reg = Registry.find_from_event(@event)
+        expect(reg).not_to be_nil
+      end
+    end
+
     context "event comes from an unknown registry" do
       before :each do
         @event = build(:raw_push_manifest_event).to_test_hash
@@ -124,6 +205,13 @@ describe Repository do
         expect do
           Repository.handle_push_event(@event)
         end.to change(Repository, :count).by(0)
+      end
+
+      it "doesn't find any registry" do
+        registry # create registry
+
+        reg = Registry.find_from_event(@event)
+        expect(reg).to be_nil
       end
     end
 
@@ -405,7 +493,7 @@ describe Repository do
     let!(:namespace)   { create(:namespace, team: team) }
     let!(:repo1)       { create(:repository, name: "repo1", namespace: namespace) }
     let!(:repo2)       { create(:repository, name: "repo2", namespace: namespace) }
-    let!(:tag1)        { create(:tag, name: "tag1", repository: repo1) }
+    let!(:tag1)        { create(:tag, name: "tag1", repository: repo1, digest: "foo") }
     let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
@@ -418,7 +506,7 @@ describe Repository do
         if args.first != "busybox" && !args.first.include?("/")
           raise "Should be included inside of a namespace"
         end
-        if args.last != "latest" && args.last != "0.1"
+        if args.last != "latest" && args.last != "0.1" && args.last != "tag1"
           raise "Using an unknown tag"
         end
 
@@ -429,6 +517,12 @@ describe Repository do
     end
 
     it "adds and deletes tags accordingly" do
+      # Update existing tag's digest
+      repo = { "name" => "#{namespace.name}/repo1", "tags" => ["tag1"] }
+      repo = Repository.create_or_update!(repo)
+      expect(repo.id).to eq repo1.id
+      expect(repo.tags.find_by(name: "tag1").digest).to match("digest")
+
       # Removes the existing tag and adds two.
       repo = { "name" => "#{namespace.name}/repo1", "tags" => ["latest", "0.1"] }
       repo = Repository.create_or_update!(repo)

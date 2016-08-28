@@ -2,6 +2,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   layout "authentication", except: :edit
 
   include CheckLDAP
+  include SessionFlash
 
   before_action :check_signup, only: [:new, :create]
   before_action :check_admin, only: [:new, :create]
@@ -20,7 +21,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
     resource.save
     if resource.persisted?
-      set_flash_message :notice, :signed_up
+      session_flash(resource, :signed_up)
       sign_up(resource_name, resource)
       respond_with resource, location: after_sign_up_path_for(resource), float: true
     else
@@ -36,13 +37,13 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
   def update
     success =
-    if password_update?
-      succ = current_user.update_with_password(user_params)
-      sign_in(current_user, bypass: true) if succ
-      succ
-    else
-      current_user.update_without_password(params.require(:user).permit(:email))
-    end
+      if password_update?
+        succ = current_user.update_with_password(user_params)
+        sign_in(current_user, bypass: true) if succ
+        succ
+      else
+        current_user.update_without_password(params.require(:user).permit(:email, :display_name))
+      end
 
     if success
       redirect_to edit_user_registration_path,
@@ -106,7 +107,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   # Returns the required parameters and the permitted ones for updating a user.
   def user_params
     params.require(:user)
-      .permit(:password, :password_confirmation, :current_password)
+          .permit(:password, :password_confirmation, :current_password)
   end
 
   # Prevents redirect loops

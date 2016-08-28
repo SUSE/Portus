@@ -5,28 +5,18 @@
 
 // Vendored fonts and styles.
 @import "font-awesome";
-@import "pacifico";
 @import "raleway";
 
 @import "bootstrap-sprockets";
-@import 'bootstrap/variables';
-@import 'lifeitup/variables';
 @import 'variables';
 @import 'mixins';
 @import 'bootstrap';
 @import 'lifeitup/lifeitup';
 
 //custom style overriding lifeitup
-@import 'labels';
 @import 'layout';
 @import 'activities';
 @import 'buttons';
 @import 'images';
-@import 'dashboard';
-@import 'panels';
 @import 'tables';
-@import 'forms';
-@import 'types';
-@import 'comments';
-@import 'repositories';
 @import 'responsive-utilities';

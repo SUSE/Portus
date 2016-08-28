@@ -13,7 +13,7 @@ feature "Global application" do
 
     it "redirects properly for accounts without email", js: true do
       APP_CONFIG["ldap"] = { "enabled" => true }
-      incomplete = create(:user, email: "", ldap_name: "user")
+      incomplete = create(:user, email: "")
       login_as incomplete, scope: :user
 
       visit root_path

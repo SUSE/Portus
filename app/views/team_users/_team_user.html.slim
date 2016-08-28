@@ -1,6 +1,6 @@
 tr id="team_user_#{team_user.id}"
   td.table-icon= team_user_role_icon(team_user)
-  td= team_user.user.username
+  td= team_user.user.display_username
   td
     .role= team_user.role.titleize
     .collapse id="change_role_team_user_#{team_user.id}"

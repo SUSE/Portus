@@ -1,0 +1,19 @@
+// Typeahead
+/*
+*= require bootstrap-typeahead-rails
+*/
+
+// Vendored fonts and styles.
+@import "font-awesome";
+@import "raleway";
+
+@import 'bootstrap/variables';
+@import 'lifeitup/variables';
+@import 'variables';
+@import 'mixins';
+@import 'bootstrap';
+@import 'lifeitup/lifeitup';
+
+//custom style overriding lifeitup
+@import 'layout';
+@import 'includes/forms';

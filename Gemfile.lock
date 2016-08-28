@@ -45,9 +45,7 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (6.0.3)
-    ast (2.0.0)
-    astrolabe (1.3.0)
-      parser (>= 2.2.0.pre.3, < 3.0)
+    ast (2.3.0)
     autoprefixer-rails (5.2.0.1)
       execjs
       json
@@ -56,6 +54,8 @@ GEM
     bcrypt (3.1.10)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    binman (5.1.0)
+      opener (>= 0.1.0, < 1)
     bootstrap-sass (3.3.5)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
@@ -93,7 +93,7 @@ GEM
       execjs
     coffee-script-source (1.9.1.1)
     columnize (0.9.0)
-    crack (0.4.2)
+    crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crono (0.9.0)
       activerecord (~> 4.0)
@@ -113,6 +113,8 @@ GEM
       excon (>= 0.38.0)
       json
     erubis (2.7.0)
+    ethon (0.9.0)
+      ffi (>= 1.3.0)
     excon (0.49.0)
     execjs (2.2.2)
     factory_girl (4.5.0)
@@ -184,6 +186,10 @@ GEM
     lumberjack (1.0.10)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    md2man (5.1.1)
+      binman (~> 5.0)
+      redcarpet (~> 3.0)
+      rouge (~> 1.0)
     method_source (0.8.2)
     mime-types (3.0)
       mime-types-data (~> 3.2015)
@@ -202,10 +208,11 @@ GEM
       shellany (~> 0.0)
     octokit (2.0.0)
       sawyer (~> 0.3.0)
+    opener (0.1.0)
     orm_adapter (0.5.0)
     paint (1.0.0)
-    parser (2.2.2.5)
-      ast (>= 1.1, < 3.0)
+    parser (2.3.1.2)
+      ast (~> 2.2)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -264,7 +271,7 @@ GEM
       activesupport (= 4.2.6)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rainbow (2.0.0)
+    rainbow (2.1.0)
     rake (11.1.2)
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)
@@ -272,6 +279,7 @@ GEM
     redcarpet (3.3.3)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    rouge (1.11.1)
     rspec (3.3.0)
       rspec-core (~> 3.3.0)
       rspec-expectations (~> 3.3.0)
@@ -293,14 +301,14 @@ GEM
       rspec-mocks (~> 3.3.0)
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
-    rubocop (0.32.0)
-      astrolabe (~> 1.3)
-      parser (>= 2.2.2.5, < 3.0)
+    rubocop (0.41.2)
+      parser (>= 2.3.1.1, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
-      ruby-progressbar (~> 1.4)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-graphviz (1.2.2)
-    ruby-progressbar (1.7.5)
+    ruby-progressbar (1.8.1)
     ruby2ruby (2.3.0)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
@@ -355,11 +363,14 @@ GEM
       polyglot (~> 0.3)
     turbolinks (2.5.3)
       coffee-rails
+    typhoeus (1.0.2)
+      ethon (>= 0.9.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unicode-display_width (1.1.0)
     uri_template (0.5.3)
     vcr (2.9.3)
     warden (1.2.3)
@@ -403,6 +414,7 @@ DEPENDENCIES
   database_cleaner
   devise
   docker-api (~> 1.28.0)
+  ethon (~> 0.9.0)
   factory_girl_rails
   ffaker
   font-awesome-rails
@@ -417,6 +429,7 @@ DEPENDENCIES
   json-schema
   jwt
   kaminari
+  md2man (~> 5.1.1)
   mysql2
   net-ldap
   poltergeist
@@ -431,7 +444,7 @@ DEPENDENCIES
   rails_stdout_logging (~> 0.0.5)
   redcarpet
   rspec-rails
-  rubocop
+  rubocop (~> 0.41.2)
   sass-rails (>= 3.2)
   search_cop
   shoulda
@@ -441,6 +454,7 @@ DEPENDENCIES
   thor
   timecop
   turbolinks
+  typhoeus (~> 1.0.2)
   uglifier
   vcr
   web-console (~> 2.1.3)

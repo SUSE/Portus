@@ -21,6 +21,13 @@ header {
   }
   .username-logout {
     @extend .button-container;
+    a:hover {
+      text-decoration: none;
+    }
+    .btn-inline-header {
+      height: 40px;
+      display: inline-block;
+    }
   }
   .search-header {
     position: relative;
@@ -85,27 +92,53 @@ body.login {
   }
 }
 
-.oops {
-  padding-top: 2em;
-  text-align: center;
-  .broken-lighthouse {
-    margin: 2em 0;
-  }
-  h1, h3 {
-    color: $third-colour;
-    line-height: 0;
-    color: $logo-text-colour;
-  }
-  h1 {
-    font-size: 4em;
-    font-family: 'Pacifico', cursive;
-    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
-  }
-  h3 {
-    padding-top: 2em;
-    font-size: 1.5em;
+body:not([class*="login"]) {
+  .container-fluid aside {
+    ul {
+      li:nth-child(8n+1) {
+        a:hover {
+          border-left: 5px solid $light-blue;
+        }
+      }
+      li:nth-child(8n+2) {
+        a:hover {
+          border-left: 5px solid $yellow;
+        }
+      }
+      li:nth-child(8n+3) {
+        a:hover {
+          border-left: 5px solid $dark-green;
+        }
+      }
+      li:nth-child(8n+4) {
+        a:hover {
+          border-left: 5px solid $pink;
+        }
+      }
+      li:nth-child(8n+5) {
+        a:hover {
+          border-left: 5px solid $blue;
+        }
+      }
+      li:nth-child(8n+6) {
+        a:hover {
+          border-left: 5px solid $orange;
+        }
+      }
+      li:nth-child(8n+7) {
+        a:hover {
+          border-left: 5px solid $green;
+        }
+      }
+      li:nth-child(8n+8) {
+        a:hover {
+          border-left: 5px solid $purple;
+        }
+      }
+    }
   }
 }
+
 .error-fixes {
   background: rgba(255,255,255,0.3);
   color: $third-colour;
@@ -122,10 +155,12 @@ body.login {
 }
 
 footer {
-  font-size: 1em;
-  font-family: Raleway;
+  font-size: .9em;
   i.fa {
     color: $primary-colour
+  }
+  .container-footer p {
+    padding: 8px 0 0 0px;
   }
 }
 

@@ -3,9 +3,17 @@ require "rails_helper"
 describe RepositoriesController, type: :controller do
   let(:valid_session) { {} }
   let(:user) { create(:user) }
-  let!(:public_namespace) { create(:namespace, public: 1, team: create(:team)) }
+  let!(:public_namespace) do
+    create(:namespace,
+           visibility: Namespace.visibilities[:visibility_public],
+           team:       create(:team))
+  end
   let!(:visible_repository) { create(:repository, namespace: public_namespace) }
-  let!(:private_namespace) { create(:namespace, public: 0, team: create(:team)) }
+  let!(:private_namespace) do
+    create(:namespace,
+           visibility: Namespace.visibilities[:visibility_private],
+           team:       create(:team))
+  end
   let!(:invisible_repository) { create(:repository, namespace: private_namespace) }
 
   before :each do
@@ -61,7 +69,7 @@ describe RepositoriesController, type: :controller do
     end
 
     it "removes the repository properly" do
-      allow_any_instance_of(Tag).to receive(:fetch_digest) { |o| o.digest }
+      allow_any_instance_of(Tag).to receive(:fetch_digest, &:digest)
       allow_any_instance_of(Portus::RegistryClient).to receive(:delete).and_return(true)
 
       delete :destroy, { id: repository.id }, valid_session

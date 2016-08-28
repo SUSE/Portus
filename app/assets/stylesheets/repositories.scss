@@ -1,3 +1,14 @@
+@import 'includes/panels';
+@import 'includes/forms';
+@import 'includes/types';
+@import 'comments';
+
+#write_comment_repository_btn {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: 0px;
+}
+
 .tags .label.label-success {
   margin: 0px 2px;
 }

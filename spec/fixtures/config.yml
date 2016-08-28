@@ -10,3 +10,7 @@ ldap:
     enabled: false
     bind_dn: ""
     password: "mypassword"
+
+email:
+  smtp:
+    enabled: true

@@ -1,8 +1,10 @@
 .panel.panel-default
   .panel-heading
-    h5
-      ' Registered users
-      .pull-right
+    .row
+      .col-sm-6
+        h5
+          ' Registered users
+      .col-sm-6.text-right
         = link_to new_admin_user_path, class: 'btn btn-xs btn-link', role: 'button'
           i.fa.fa-plus-circle
           | Create new user
@@ -27,10 +29,10 @@
           - @users.each do |user|
             tr[id="user_#{user.id}"]
               - if user == current_user
-                td= user.username
+                td= user.display_username
               - else
                 td
-                  = link_to user.username, edit_admin_user_path(user), { title: "Edit user '#{user.username}'" }
+                  = link_to user.display_username, edit_admin_user_path(user), { title: "Edit user '#{user.display_username}'" }
               td= user.email
               td.admin-btn
                 - if current_user.id == user.id

@@ -40,12 +40,23 @@ namespace :portus do
       end
     end
 
-    User.create!(
+    u = User.create!(
       username: args["username"],
       password: args["password"],
       email:    args["email"],
       admin:    args["admin"]
     )
+
+    if u.username != u.namespace.name
+      puts <<HERE
+
+NOTE: the user you just created contained characters that are not accepted for
+naming namespaces. Because of this, you've got the following:
+
+  * User name: '#{u.username}'
+  * Personal namespace: '#{u.namespace.name}'
+HERE
+    end
   end
 
   desc "Give 'admin' role to a user"
@@ -54,14 +65,14 @@ namespace :portus do
       puts "Specify a username, as in"
       puts " rake portus:make_admin[username]"
       puts "valid usernames are"
-      puts "#{User.pluck(:username)}"
+      puts User.pluck(:username).to_s
       exit(-1)
     end
     u = User.find_by_username(args[:username])
     if u.nil?
       puts "#{args[:username]} not found in database"
       puts "valid usernames are"
-      puts "#{User.pluck(:username)}"
+      puts User.pluck(:username).to_s
       exit(-2)
     end
     u.admin = true
@@ -91,10 +102,10 @@ HERE
 
     # Fetch the tags to be updated.
     update = args[:update] == "true" || args[:update] == "t"
-    if update
-      tags = Tag.all
+    tags = if update
+      Tag.all
     else
-      tags = Tag.where("tags.digest='' OR tags.image_id=''")
+      Tag.where("tags.digest='' OR tags.image_id=''")
     end
 
     # Some information on the amount of tags to be updated.

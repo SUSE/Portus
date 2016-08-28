@@ -2,7 +2,11 @@
   $('#float-alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
 <% else %>
   $("<%= escape_javascript(render @team_user) %>").appendTo("#team_users");
-  $('#float-alert p').html("New user added to the team");
+  <% if @promoted_role %>
+    $('#float-alert p').html("New user added to the team (promoted to owner because it is a Portus admin).");
+  <% else %>
+    $('#float-alert p').html("New user added to the team");
+  <% end %>
   $('#add_team_user_form').fadeOut();
   $('#add_team_user_btn i').addClass("fa-chevron-down")
   $('#add_team_user_btn i').removeClass("fa-chevron-up")

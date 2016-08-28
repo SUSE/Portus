@@ -1,6 +1,12 @@
+@import "../variables";
+
 .panel-overview {
-  @extend .panel;
-  @extend .panel-default;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   .fa {
     color: $overview-icon-color;
     border-radius: 100%;
@@ -26,4 +32,13 @@
 
 #profile .panel {
   max-width: 700px;
+}
+
+.panel-no-side-padding {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.panel .panel-heading .col-sm-6:last-of-type > a {
+  margin-top: 8px;
 }

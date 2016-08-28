@@ -8,10 +8,10 @@ li
       h6
         - if activity.parameters[:new].blank?
           strong
-            = "#{activity.owner.username} deleted the description of the namespace "
+            = "#{activity.owner.display_username} deleted the description of the namespace "
         - else
           strong
-            = "#{activity.owner.username} edited the description of the namespace "
+            = "#{activity.owner.display_username} edited the description of the namespace "
         = link_to activity.trackable.name, activity.trackable
       small
         i.fa.fa-clock-o

@@ -29,21 +29,19 @@ module Portus
 
       # If LDAP is enabled try to authenticate through the LDAP server.
       # Otherwise we fall back to the next strategy.
+      # rubocop:disable Style/GuardClause
       if @ldap
         # Try to bind to the LDAP server. If there's any failure, the
         # authentication process will fail without going to the any other
-        # strategy.
-        if @ldap.bind_as(bind_options)
-          user = find_or_create_user!
-          user.valid? ? success!(user) : fail!(user.errors.full_messages.join(","))
-        else
-          fail!(:ldap_bind_failed)
-        end
+        # strategy. Otherwise, login the current user into Portus (and create
+        # it if it doesn't exist).
+        @ldap.bind_as(bind_options) ? portus_login! : fail!(:ldap_bind_failed)
       else
         # rubocop:disable Style/SignalException
         fail(:ldap_failed)
         # rubocop:enable Style/SignalException
       end
+      # rubocop:enable Style/GuardClause
     end
 
     # Returns true if LDAP has been enabled in the application, false
@@ -148,53 +146,37 @@ module Portus
       params[:user] = { username: user, password: pass }
     end
 
-    # Retrieve the given user as an LDAP user. If it doesn't exist, create it
-    # with the parameters given in the form.
-    def find_or_create_user!
-      user = User.find_by(ldap_name: username)
-
-      # The user does not exist in Portus yet, let's create it. If it does
-      # not match a valid username, it will be transformed into a proper one.
-      unless user
-        ldap_name = username.dup
-        if User::USERNAME_FORMAT.match(ldap_name)
-          name = ldap_name
-        else
-          name = ldap_name.gsub(/[^#{User::USERNAME_CHARS}]/, "")
-        end
-
-        # This is to check that no clashes occur. This is quite improbable to
-        # happen, since it would mean that the name contains characters like
-        # "$", "!", etc. We also check that the name is longer than 4
-        # (requirement from Docker).
-        if name.length < 4 || User.exists?(username: name)
-          name = generate_random_name(name)
-        end
-
-        user = User.create(
-          username:  name,
-          email:     guess_email,
-          password:  password,
-          admin:     !User.not_portus.any?,
-          ldap_name: ldap_name
-        )
+    # Fetch the user assumed from `params` and log it. If the user does not
+    # exist yet, it will be created and the `session[:first_login]` value will
+    # be set to true, so the sessions controller can act accordingly.
+    def portus_login!
+      user, created = find_or_create_user!
+      if user.valid?
+        session[:first_login] = true if created
+        success!(user)
+      else
+        fail!(user.errors.full_messages.join(","))
       end
-      user
     end
 
-    # It generates a new name that doesn't clash with any of the existing ones.
-    def generate_random_name(name)
-      # Even if the name has just one character, adding a number of at least
-      # three digits would make the name valid.
-      offset = name.length < 4 ? 100 : 0
+    # Retrieve the given user as an LDAP user. If it doesn't exist, create it
+    # with the parameters given in the form. Returns two objects: the user
+    # object and a boolean set to true if the returned user was just created.
+    def find_or_create_user!
+      user = User.find_by(username: username)
+      created = false
 
-      10.times do
-        nn = "#{name}#{Random.rand(offset + 101)}"
-        return nn unless User.exists?(username: nn)
+      # The user does not exist in Portus yet, let's create it.
+      unless user
+        user = User.create(
+          username: username,
+          email:    guess_email,
+          password: password,
+          admin:    !User.not_portus.any?
+        )
+        created = user.persisted?
       end
-
-      # We have not been able to generate a new name, let's raise an exception.
-      fail!(:random_generation_failed)
+      [user, created]
     end
 
     # If the "ldap.guess_email" option is enabled, try to guess the email for

@@ -5,7 +5,7 @@ require "spec_helper"
 # The supported Docker Distribution versions. Make sure that these values
 # correspond to valid tags on DockerHub.
 # See: https://hub.docker.com/r/library/registry/tags/
-SUPPORTED_DISTRIBUTION_VERSIONS = ["2.3.1", "2.4.0", "latest"]
+SUPPORTED_DISTRIBUTION_VERSIONS = ["2.3.1", "2.4.0", "latest"].freeze
 
 # Integration encapsulates an integration test. This method accepts one special
 # tag: `distribution`. It can either be an Array of strings or a String, and it
@@ -76,10 +76,10 @@ def parameters_from_tags(tags)
   # Pick the versions to be executed.
   versions = SUPPORTED_DISTRIBUTION_VERSIONS
   if tags.key?(:distribution)
-    if tags[:distribution].is_a? Array
-      filter = tags[:distribution]
+    filter = if tags[:distribution].is_a? Array
+      tags[:distribution]
     else
-      filter = [tags[:distribution]]
+      [tags[:distribution]]
     end
     versions &= filter
   end
@@ -92,8 +92,8 @@ def parameters_from_tags(tags)
 end
 
 # Execute the given block just once.
-def once(id, &blk)
-  blk.call if ENV["INTEGRATION_ONCE_BLOCK_#{id}"] != "t"
+def once(id)
+  yield if ENV["INTEGRATION_ONCE_BLOCK_#{id}"] != "t"
   ENV["INTEGRATION_ONCE_BLOCK_#{id}"] = "t"
 end
 
@@ -105,9 +105,9 @@ end
 # Makes sure that there is a container running the given Docker distribution
 # version.
 def ensure_distribution!(version)
-  name = "portus_distribution_#{version.gsub(".", "")}"
+  name = "portus_distribution_#{version.delete(".")}"
 
-  src  = File.expand_path(File.dirname(__FILE__)) + "/" + ("fixtures")
+  src  = File.expand_path(File.dirname(__FILE__)) + "/" + "fixtures"
   img  = "registry:#{version}"
   opts = {
     "Volumes"      => { src => { "/etc/docker/registry" => "ro,Z", "/registry_data" => "" } },
@@ -268,7 +268,7 @@ end
 def setup_templates!
   # Render the template
   @ip = ip
-  src = File.expand_path(File.dirname(__FILE__)) + "/" + ("fixtures")
+  src = File.expand_path(File.dirname(__FILE__)) + "/" + "fixtures"
   tpl = File.read(File.join(src, "config.yml.erb"))
   res = ERB.new(tpl, nil, "<>").result(binding)
 
@@ -326,7 +326,7 @@ end
 def setup_ldap!(name, password)
   # Spin up the LDAP server.
   opts = {
-    "Env"           => [
+    "Env" => [
       "LDAP_READONLY_USER=true",
       "LDAP_READONLY_USER_USERNAME=#{name}",
       "LDAP_READONLY_USER_PASSWORD=#{password}"
@@ -339,14 +339,14 @@ def setup_ldap!(name, password)
   hostname  = `docker inspect -f {{.NetworkSettings.IPAddress}} #{cname}`.strip
   portus    = `docker inspect -f {{.NetworkSettings.IPAddress}} integration_portus`.strip
   setup_portus!(false, [
-    "PORTUS_LDAP_ENABLED=true",
-    "PORTUS_LDAP_HOSTNAME=#{hostname}",
-    "PORTUS_LDAP_UID=cn",
-    "PORTUS_LDAP_BASE=dc=example,dc=org",
-    "PORTUS_LDAP_AUTHENTICATION_ENABLED=true",
-    "PORTUS_LDAP_AUTHENTICATION_BIND_DN=cn=admin,dc=example,dc=org",
-    "PORTUS_LDAP_AUTHENTICATION_PASSWORD=admin"
-  ], portus)
+                  "PORTUS_LDAP_ENABLED=true",
+                  "PORTUS_LDAP_HOSTNAME=#{hostname}",
+                  "PORTUS_LDAP_UID=cn",
+                  "PORTUS_LDAP_BASE=dc=example,dc=org",
+                  "PORTUS_LDAP_AUTHENTICATION_ENABLED=true",
+                  "PORTUS_LDAP_AUTHENTICATION_BIND_DN=cn=admin,dc=example,dc=org",
+                  "PORTUS_LDAP_AUTHENTICATION_PASSWORD=admin"
+                ], portus)
 end
 
 # Execute the given command inside of the Portus container. Raises an ExecError
@@ -403,10 +403,11 @@ def rails_exec(cmd)
 end
 
 # Capture the stdout of the given block.
-def capture_stdout(&blk)
+def capture_stdout
   stream = StringIO.new
-  orginal, $stdout = $stdout, stream
-  blk.call
+  orginal = $stdout
+  $stdout = stream
+  yield
   stream.string
 ensure
   $stdout = orginal
@@ -414,9 +415,9 @@ end
 
 # Run the given block and check whether it meets the given expectation for a
 # reasonable amount of time. If not, it will raise an `ExpectError` exception.
-def eventually_expect(expect, &blk)
+def eventually_expect(expect)
   15.times do
-    res = blk.call
+    res = yield
     return true if res == expect
     puts "Expecting '#{expect}', got '#{res}'"
     sleep 5
@@ -434,7 +435,7 @@ end
 
 # Cleanup distribution versions.
 def cleanup_distribution!
-  SUPPORTED_DISTRIBUTION_VERSIONS.map { |v| "portus_distribution_#{v.gsub(".", "")}" }.each do |c|
+  SUPPORTED_DISTRIBUTION_VERSIONS.map { |v| "portus_distribution_#{v.delete(".")}" }.each do |c|
     cleanup_container!(c)
   end
 end

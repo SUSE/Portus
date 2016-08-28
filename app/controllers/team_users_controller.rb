@@ -1,6 +1,7 @@
 # TeamUsersController manages the creation/removal/update of members of a team.
 class TeamUsersController < ApplicationController
   before_action :set_team_user
+  before_action :promoted_owner, only: [:create, :update]
   before_action :only_owner, only: [:update, :destroy]
   after_action :verify_authorized
 
@@ -8,6 +9,9 @@ class TeamUsersController < ApplicationController
 
   # POST /team_users
   def create
+    # Promote this user if it is a Portus admin.
+    @team_user.role = TeamUser.roles[:owner] if @promoted_role
+
     if @team_user.errors.empty? && @team_user.save
       @team_user.create_activity!(:add_member, current_user)
       respond_with @team_user
@@ -18,6 +22,13 @@ class TeamUsersController < ApplicationController
 
   # PATCH/PUT /team_users/1
   def update
+    # Send an error if an admin was about to get demoted.
+    if @promoted_role
+      @team_user.errors.add(:user, "cannot be demoted because it's a Portus admin")
+      respond_with @team_user.errors, status: :unprocessable_entity
+      return
+    end
+
     team_user_params = params.require(:team_user).permit(:role)
 
     old_role = @team_user.role
@@ -66,6 +77,18 @@ class TeamUsersController < ApplicationController
     end
 
     authorize @team_user
+  end
+
+  # Sets the @promoted_role instance variable if a Portus admin is going to be
+  # set a role other than owner.
+  def promoted_owner
+    return if @team_user.user.nil?
+
+    tu   = params.require(:team_user).permit(:role)
+    role = TeamUser.roles[tu["role"]]
+
+    return if role == TeamUser.roles[:owner] || !@team_user.user.admin?
+    @promoted_role = true
   end
 
   # Responds with an error if the client is trying to remove the only owner of

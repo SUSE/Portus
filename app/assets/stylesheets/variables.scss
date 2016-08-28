@@ -1,3 +1,6 @@
+@import 'bootstrap/variables';
+@import 'lifeitup/variables';
+
 //Overriding Lifeitup colours
 //main colours
 //TIP: get your favurite pallet from here: http://coolors.co/app/
@@ -76,6 +79,8 @@ $font-size-h2: floor(($font-size-base * 1.95));
 $activity-change-description:            $light-blue;
 $activity-create-namespace:              $blue;
 $activity-change-namespace-visibility:   $dark-green;
+$activity-create-webhook:                $blue;
+$activity-change-webhook-visibility:     $dark-green;
 $activity-add-member-team:               $green;
 $activity-remove-member-team:            $yellow;
 $activity-change-role:                   $orange;
@@ -88,3 +93,12 @@ $activity-application-token-destroyed:   $red;
 // placeholder
 
 $placeholder-colour: lighten($second-colour,20%);
+
+// permissions-label
+
+$permissions-label-border: $second-colour;
+$permissions-label-font-color: $second-colour;
+
+// comments
+
+$comment-row-hover: lighten($gray-light, 17%);

@@ -1,6 +1,11 @@
 module TeamsHelper
   def can_manage_team?(team)
-    current_user.admin? || team.owners.exists?(current_user.id)
+    current_user.admin? || (team.owners.exists?(current_user.id) &&
+                            APP_CONFIG.enabled?("user_permission.manage_team"))
+  end
+
+  def can_create_team?
+    current_user.admin? || APP_CONFIG.enabled?("user_permission.manage_team")
   end
 
   def role_within_team(team)

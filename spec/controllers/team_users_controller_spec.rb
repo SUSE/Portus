@@ -55,6 +55,16 @@ describe TeamUsersController do
         expect(assigns(:team_user).errors).to be_empty
       end
 
+      it "does not allow an admin to be demoted" do
+        user = create(:admin)
+        team.owners << user
+
+        put :update, id: team.team_users.find_by(user: user).id,
+                     team_user: { role: "contributor" }, format: "js"
+        expect(response.status).to eq 422
+        expect(team.owners.exists?(user.id)).to be true
+      end
+
       it "forces a page reload when the current user changes his role" do
         user = create(:user)
         team.owners << user
@@ -72,6 +82,18 @@ describe TeamUsersController do
         new_user = create(:user)
         post :create,
              team_user: { team: team.name, user: new_user.username, role: TeamUser.roles["owner"] },
+             format:    "js"
+        expect(team.owners.exists?(new_user.id)).to be true
+      end
+
+      it "sets admins as owners always" do
+        new_user = create(:admin)
+        post :create,
+             team_user: {
+               team: team.name,
+               user: new_user.username,
+               role: TeamUser.roles["viewer"]
+             },
              format:    "js"
         expect(team.owners.exists?(new_user.id)).to be true
       end

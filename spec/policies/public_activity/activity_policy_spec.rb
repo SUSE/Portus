@@ -4,12 +4,15 @@ describe PublicActivity::ActivityPolicy do
 
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
+  let(:viewer) { create(:user) }
+  let(:contributor) { create(:user) }
   let(:activity_owner) { create(:user) }
   let(:registry) { create(:registry) }
   let(:namespace) { create(:namespace, registry: registry, team: team) }
-  let(:team) { create(:team, owners: [user]) }
+  let(:team) { create(:team, owners: [user], contributors: [contributor], viewers: [viewer]) }
   let(:repository) { create(:repository, namespace: namespace) }
   let(:tag) { create(:tag, repository: repository) }
+  let(:webhook) { create(:webhook, namespace: namespace, url: "http://example.com") }
 
   subject { described_class }
 
@@ -19,7 +22,8 @@ describe PublicActivity::ActivityPolicy do
         create_activity_team_create(team, activity_owner),
         create_activity_team_add_member(team, activity_owner, another_user),
         create_activity_team_change_member_role(
-          team, activity_owner, another_user, "viewer", "owner"),
+          team, activity_owner, another_user, "viewer", "owner"
+        ),
         create_activity_team_remove_member(team, activity_owner, another_user)
       ]
 
@@ -31,27 +35,26 @@ describe PublicActivity::ActivityPolicy do
 
     it "returns pertinent namespace events" do
       namespace2 = create(:namespace,
-                          registry: registry,
-                          team:     create(:team,
-                                       owners: [another_user]),
-                          public:   true)
+                          registry:   registry,
+                          team:       create(:team, owners: [another_user]),
+                          visibility: Namespace.visibilities[:visibility_public])
 
       activities = [
         create(:activity_namespace_create,
                trackable_id: namespace.id,
                owner_id:     activity_owner.id),
-        create(:activity_namespace_public,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace.id,
                owner_id:     activity_owner.id),
-        create(:activity_namespace_private,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace.id,
                owner_id:     activity_owner.id),
         # all the public/private events are shown, even the ones
         # involving namespaces the user does not control
-        create(:activity_namespace_public,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace2.id,
                owner_id:     activity_owner.id),
-        create(:activity_namespace_private,
+        create(:activity_namespace_change_visibility,
                trackable_id: namespace2.id,
                owner_id:     activity_owner.id)
       ]
@@ -71,9 +74,9 @@ describe PublicActivity::ActivityPolicy do
       private_tag = create(:tag, repository: create(:repository, namespace: namespace2))
 
       public_namespace = create(:namespace,
-                                registry: registry,
-                                public:   true,
-                                team:     create(:team,
+                                registry:   registry,
+                                visibility: Namespace.visibilities[:visibility_public],
+                                team:       create(:team,
                                              owners:     [another_user],
                                              namespaces: [namespace2]))
       public_tag = create(:tag, repository: create(:repository, namespace: public_namespace))
@@ -124,6 +127,19 @@ describe PublicActivity::ActivityPolicy do
 
       expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
     end
+
+    it "returns pertinent webhook activities" do
+      activities = [
+        create_activity_webhook_create(webhook, activity_owner),
+        create_activity_webhook_destroy(webhook, activity_owner, namespace)
+      ]
+
+      expect(Pundit.policy_scope(user, PublicActivity::Activity).to_a).to match_array(activities)
+      expect(Pundit.policy_scope(contributor, PublicActivity::Activity).to_a)
+        .to match_array(activities)
+      expect(Pundit.policy_scope(viewer, PublicActivity::Activity).to_a).to match_array(activities)
+      expect(Pundit.policy_scope(another_user, PublicActivity::Activity).to_a).to be_empty
+    end
   end
 
   private
@@ -165,4 +181,19 @@ describe PublicActivity::ActivityPolicy do
            owner_id:     owner.id)
   end
 
+  def create_activity_webhook_create(webhook, activity_owner)
+    create(:activity_webhook_create,
+           trackable_id: webhook.id,
+           owner_id:     activity_owner.id)
+  end
+
+  def create_activity_webhook_destroy(webhook, activity_owner, namespace)
+    create(:activity_webhook_destroy,
+           trackable_id: webhook.id,
+           owner_id:     activity_owner.id,
+           parameters:   { namespace_id:   namespace.id,
+                           namespace_name: namespace.name,
+                           webhook_url:    webhook.url,
+                           webhook_host:   webhook.host })
+  end
 end

@@ -7,7 +7,7 @@ li
     .description
       h6
         strong
-          = "#{activity.owner.username} added user #{activity.recipient.username} "
+          = "#{activity.owner.display_username} added user #{activity.recipient.display_username} "
         = "with role #{activity.parameters[:role]} to the "
         = link_to activity.trackable.name, activity.trackable
         |  team

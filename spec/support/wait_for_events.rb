@@ -20,9 +20,9 @@ module WaitForEvents
 
   # This method will loop until the given block evaluates to true. It will
   # respect to default timeout as specifyied by Capybara.
-  def wait_until(&blk)
+  def wait_until
     Timeout.timeout(Capybara.default_wait_time) do
-      loop until blk.call
+      loop until yield
     end
   end
 

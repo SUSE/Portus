@@ -21,6 +21,8 @@ RSpec.describe TeamsController, type: :controller do
            description: "short test description", owners: [owner],
            hidden: true)
   end
+  # creating a registry also creates an admin user who is needed later on
+  let!(:registry) { create(:registry) }
 
   describe "GET #show" do
     it "paginates team users" do
@@ -49,7 +51,7 @@ RSpec.describe TeamsController, type: :controller do
       expect(response.status).to eq 401
     end
 
-    it "drops requests to a hidden global team" do
+    it "drops requests to a hidden team" do
       sign_in owner
 
       expect { get :show, id: hidden_team.id }.to raise_error(ActiveRecord::RecordNotFound)
@@ -63,7 +65,7 @@ RSpec.describe TeamsController, type: :controller do
       get :show, id: team.id
 
       expect(response.status).to eq 200
-      expect(TeamUser.count).to be 3
+      expect(TeamUser.count).to be 6
       expect(assigns(:team_users).count).to be 1
     end
   end
@@ -116,6 +118,31 @@ RSpec.describe TeamsController, type: :controller do
           expect(response.status).to eq 422
         end
       end
+
+      context "non-admins are not allowed to create teams" do
+        it "prohibits user from creating a new Team" do
+          APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
+
+          expect do
+            post :create, team: valid_attributes, format: :js
+          end.to change(Team, :count).by(0)
+        end
+      end
+    end
+  end
+
+  describe "as an admin" do
+    describe "POST #create" do
+      it "always creates a new Team" do
+        APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
+        admin = User.find_by(admin: true)
+        sign_in admin
+
+        expect do
+          post :create, team: valid_attributes, format: :js
+        end.to change(Team, :count).by(1)
+        expect(assigns(:team).owners.exists?(admin.id))
+      end
     end
   end
 
@@ -132,11 +159,44 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    it "does allow to change the description by owners" do
+    context "non-admins are allowed to update teams" do
+      it "does allow to change the description by owners" do
+        sign_in owner
+        patch :update, id: team.id, team: { name:        "new name",
+                                            description: "new description" }, format: "js"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "non-admins are not allowed to update teams" do
+      before :each do
+        APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
+      end
+
+      it "prohibits owners from changing the description" do
+        sign_in owner
+
+        patch :update, id: team.id, team: { name:        "new name",
+                                            description: "new description" }, format: "js"
+        expect(response.status).to eq(401)
+      end
+
+      it "allows admins to change the description" do
+        admin = User.find_by(admin: true)
+        sign_in admin
+
+        patch :update, id: team.id, team: { name:        "new name",
+                                            description: "new description" }, format: "js"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it "does not allow a hidden team to be changed" do
       sign_in owner
-      patch :update, id: team.id, team: { name:        "new name",
-                                          description: "new description" }, format: "js"
-      expect(response.status).to eq(200)
+
+      patch :update, id: hidden_team.id, team: { name:        "new name",
+                                                 description: "new description" }, format: "js"
+      expect(response.status).to eq(401)
     end
   end
 
@@ -150,8 +210,10 @@ RSpec.describe TeamsController, type: :controller do
       TeamUser.create(team: team, user: user1, role: TeamUser.roles["viewer"])
       get :typeahead, id: team.id, query: "user", format: "json"
       usernames = JSON.parse(response.body)
-      expect(usernames.length).to eq(1)
-      expect(usernames[0]["name"]).to eq("user2")
+      # usernames also includes the admin user, and some other user
+      # which is automatically created when creating the registry
+      expect(usernames.length).to eq(2)
+      expect(usernames[1]["name"]).to eq("user2")
     end
 
     it "does not allow to search by contributors or viewers" do
@@ -215,7 +277,8 @@ RSpec.describe TeamsController, type: :controller do
       end.to change(PublicActivity::Activity, :count).by(1)
 
       team_description_activity = PublicActivity::Activity.find_by(
-        key: "team.change_team_description")
+        key: "team.change_team_description"
+      )
       expect(team_description_activity.owner).to eq(owner)
       expect(team_description_activity.trackable).to eq(team)
       expect(team_description_activity.parameters[:old]).to eq(old_description)
@@ -230,7 +293,8 @@ RSpec.describe TeamsController, type: :controller do
       end.to change(PublicActivity::Activity, :count).by(1)
 
       team_name_activity = PublicActivity::Activity.find_by(
-        key: "team.change_team_name")
+        key: "team.change_team_name"
+      )
       expect(team_name_activity.owner).to eq(owner)
       expect(team_name_activity.trackable).to eq(team)
       expect(team_name_activity.parameters[:old]).to eq(old_name)

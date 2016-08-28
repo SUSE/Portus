@@ -1,9 +1,7 @@
 require "rails_helper"
 
 describe "/v2/token" do
-
   describe "get token" do
-
     def parse_token(body)
       token = JSON.parse(body)["token"]
       JWT.decode(token, nil, false, leeway: 2)[0]
@@ -72,7 +70,8 @@ describe "/v2/token" do
         create(
           :application_token,
           application: token_plain, # this factory uses application as plain token
-          user:        user)
+          user:        user
+        )
 
         get v2_token_url,
           {
@@ -90,7 +89,8 @@ describe "/v2/token" do
         create(
           :application_token,
           application: token_plain, # this factory uses application as plain token
-          user:        user)
+          user:        user
+        )
 
         get v2_token_url,
           {
@@ -156,10 +156,8 @@ describe "/v2/token" do
         # Check that the user has actually been registered.
         ldapuser = User.find_by(username: "ldapuser")
         expect(ldapuser.username).to eq "ldapuser"
-        expect(ldapuser.ldap_name).to eq "ldapuser"
         expect(ldapuser.valid_password?("12341234")).to be true
       end
-
     end
 
     context "as valid user" do
@@ -222,7 +220,7 @@ describe "/v2/token" do
 
       context "repository scope" do
         it "delegates authentication to the Namespace policy" do
-          personal_namespace = Namespace.find_by(name: user.username)
+          personal_namespace = user.namespace
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
             .with(personal_namespace, :push?)
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
@@ -268,7 +266,8 @@ describe "/v2/token" do
         let(:valid_portus_auth_header) do
           {
             "HTTP_AUTHORIZATION" =>
-              auth_mech.encode_credentials("portus", Rails.application.secrets.portus_password)
+                                    auth_mech.encode_credentials("portus",
+                                         Rails.application.secrets.portus_password)
           }
         end
 

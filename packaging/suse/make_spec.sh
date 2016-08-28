@@ -16,7 +16,7 @@ if [ $TRAVIS_COMMIT ];then
 else
   commit=$(git log -1 --pretty=format:'%H')
 fi
-version=$(cat ../../VERSION)
+version=$(sed s/-/~/g ../../VERSION)
 version="$version+git$commit"
 date=$(date --rfc-2822)
 year=$(date +%Y)
@@ -30,6 +30,9 @@ additional_native_build_requirements() {
   fi
   if [ $1 == "mysql2" ];then
     echo "BuildRequires: libmysqlclient-devel\nRecommends: mariadb\n"
+  fi
+  if [ $1 == "ethon" ];then
+    echo "BuildRequires: libcurl-devel\nRequires: libcurl4\n"
   fi
 }
 
@@ -75,4 +78,3 @@ else
   echo "A problem occured creating the spec file."
   exit -1
 fi
-

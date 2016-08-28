@@ -36,12 +36,13 @@ end
 
 class LdapMock < Portus::LDAP
   attr_reader :params, :user, :last_symbol
-  attr_accessor :bind_result
+  attr_accessor :bind_result, :session
 
   def initialize(params)
     @params = { user: params }
     @bind_result = true
     @last_symbol = :ok
+    @session = {}
   end
 
   def load_configuration_test
@@ -54,10 +55,6 @@ class LdapMock < Portus::LDAP
 
   def find_or_create_user_test!
     find_or_create_user!
-  end
-
-  def generate_random_name_test(name)
-    generate_random_name(name)
   end
 
   def success!(user)
@@ -73,7 +70,7 @@ class LdapMock < Portus::LDAP
     guess_email
   end
 
-  alias_method :fail, :fail!
+  alias fail fail!
 
   protected
 
@@ -221,41 +218,35 @@ describe Portus::LDAP do
     end
 
     it "the ldap user could be located" do
-      user = create(:user, ldap_name: "name")
+      user = create(:user, username: "name")
       lm = LdapMock.new(username: "name", password: "1234")
-      ret = lm.find_or_create_user_test!
+      ret, created = lm.find_or_create_user_test!
       expect(ret.id).to eq user.id
+      expect(created).to be_falsey
     end
 
     it "creates a new ldap user" do
       lm = LdapMock.new(username: "name", password: "12341234")
-      lm.find_or_create_user_test!
+      _, created = lm.find_or_create_user_test!
 
       expect(User.count).to eq 1
-      expect(User.find_by(ldap_name: "name")).to_not be nil
+      expect(User.find_by(username: "name")).to_not be nil
+      expect(created).to be_truthy
     end
 
     it "creates a new ldap user even if it has weird characters" do
+      # Remember that this will create a new admin, so it has its consequences
+      # on the expected values in this test.
+      create(:registry)
+
       lm = LdapMock.new(username: "name!o", password: "12341234")
-      lm.find_or_create_user_test!
-
-      expect(User.count).to eq 1
-      user = User.find_by(ldap_name: "name!o")
-      expect(user.username).to eq "nameo"
-      expect(user.ldap_name).to eq "name!o"
-      expect(user.admin?).to be_truthy
-    end
-
-    it "creates a new ldap user with a new username if it clashes" do
-      create(:admin, username: "name")
-      lm = LdapMock.new(username: "name", password: "12341234")
-      lm.find_or_create_user_test!
+      _, created = lm.find_or_create_user_test!
 
       expect(User.count).to eq 2
-      created = User.find_by(ldap_name: "name")
-      expect(created.username).to_not eq "name"
-      expect(created.username.start_with?("name")).to be_truthy
-      expect(created.admin?).to be_falsey
+      user = User.find_by(username: "name!o")
+      expect(user.username).to eq "name!o"
+      expect(user.namespace.name).to eq "name_o"
+      expect(created).to be_truthy
     end
 
     it "allows multiple users to have no email setup" do
@@ -268,34 +259,6 @@ describe Portus::LDAP do
       lm.find_or_create_user_test!
 
       expect(User.count).to eq 2
-    end
-  end
-
-  describe "#generate_random_name" do
-    it "creates a random name" do
-      lm = LdapMock.new(nil)
-      name = lm.generate_random_name_test("name")
-      expect(name).to_not eq "name"
-      expect(name.start_with?("name")).to be_truthy
-    end
-
-    it "generates a name that is large enough" do
-      lm = LdapMock.new(nil)
-      name = lm.generate_random_name_test("n")
-      expect(name).to_not eq "n"
-      expect(name.start_with?("n")).to be_truthy
-    end
-
-    it "raises an exception if it fails" do
-      # Let's make sure that there will be a clash.
-      create(:user, username: "name")
-      101.times do |i|
-        create(:user, username: "name#{i}")
-      end
-
-      lm = LdapMock.new(nil)
-      lm.generate_random_name_test("name")
-      expect(lm.last_symbol).to be :random_generation_failed
     end
   end
 

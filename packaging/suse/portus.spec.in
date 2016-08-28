@@ -112,6 +112,9 @@ cp packaging/suse/bin/portus_crono %{buildroot}/%{_sbindir}/
 cp packaging/suse/bin/portusctl %{buildroot}/%{_sbindir}/
 %__install -D -m 444 packaging/suse/conf/portus_crono.service %{buildroot}%{_unitdir}/portus_crono.service
 
+# Man pages
+install -d %{buildroot}%{_mandir}/man1
+install -p -m 644 packaging/suse/portusctl/man/man1/*.1 %{buildroot}%{_mandir}/man1
 
 %fdupes %{buildroot}/%{portusdir}
 
@@ -140,6 +143,7 @@ fi
 %exclude %{portusdir}/spec
 %exclude %{portusdir}/vagrant
 %exclude %{portusdir}/Vagrantfile
+%exclude %{portusdir}/compose
 %doc %{portusdir}/README.md
 %doc %{portusdir}/CONTRIBUTING.md
 %doc %{portusdir}/LICENSE
@@ -152,5 +156,7 @@ fi
 %{_sbindir}/portus_crono
 %{_sbindir}/portusctl
 %{_unitdir}/portus_crono.service
+%{_mandir}/man1/portusctl-*.1.gz
+%{_mandir}/man1/portusctl.1.gz
 
 %changelog

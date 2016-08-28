@@ -135,11 +135,16 @@ class Repository < ActiveRecord::Base
     return if actor.nil?
 
     # Get or create the repository as "namespace/repo". If both the repo and
-    # the given tag already exists, return early.
+    # the given tag already exists, update the digest and return early.
     repository = Repository.find_by(namespace: namespace, name: repo)
     if repository.nil?
       repository = Repository.create(namespace: namespace, name: repo)
     elsif repository.tags.exists?(name: tag)
+      # Update digest if the given tag already exists.
+      _, digest = Repository.id_and_digest_from_event(event, repository.full_name)
+      tag = repository.tags.find_by(name: tag)
+      tag.update!(digest: digest, updated_at: Time.current)
+      repository.create_activity(:push, owner: actor, recipient: tag)
       return
     end
 
@@ -190,11 +195,49 @@ class Repository < ActiveRecord::Base
     repository = Repository.find_or_create_by!(name: name, namespace: namespace)
     tags = repository.tags.pluck(:name)
 
-    to_be_created_tags = repo["tags"] - tags
     to_be_deleted_tags = tags - repo["tags"]
 
     client = Registry.get.client
-    to_be_created_tags.each do |tag|
+
+    update_tags client, repository, repo["tags"] & tags
+    create_tags client, repository, portus, repo["tags"] - tags
+
+    # Finally remove the tags that are left and return the repo.
+    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_and_update!(portus) }
+    repository.reload
+  end
+
+  # Update digest of already existing tags.
+  def self.update_tags(client, repository, tags)
+    portus = User.find_by(username: "portus")
+
+    tags.each do |tag|
+      # Try to fetch the manifest digest of the tag.
+      begin
+        _, digest, = client.manifest(repository.full_name, tag)
+      rescue StandardError => e
+        logger.tagged("catalog") do
+          logger.warn "Could not fetch manifest for '#{repository.full_name}' " \
+            "with tag '#{tag}': " + e.message
+        end
+        next
+      end
+
+      # Let's update the tag, if it really changed,
+      t = repository.tags.find_by(name: tag)
+      t.digest = digest
+      if t.changed.any?
+        t.save!
+        repository.create_activity(:push, owner: portus, recipient: t)
+      end
+    end
+  end
+
+  # Create new tags.
+  def self.create_tags(client, repository, author, tags)
+    portus = User.find_by(username: "portus")
+
+    tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
         id, digest, = client.manifest(repository.full_name, tag)
@@ -203,12 +246,15 @@ class Repository < ActiveRecord::Base
         digest = ""
       end
 
-      Tag.create!(name: tag, repository: repository, author: portus, digest: digest, image_id: id)
+      t = Tag.create!(
+        name:       tag,
+        repository: repository,
+        author:     author,
+        digest:     digest,
+        image_id:   id
+      )
+      repository.create_activity(:push, owner: portus, recipient: t)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
-
-    # Finally remove the tags that are left and return the repo.
-    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_and_update!(portus) }
-    repository.reload
   end
 end

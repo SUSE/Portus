@@ -15,10 +15,10 @@ describe CatalogJob do
 
       job = CatalogJobMock.new
       job.update_registry!([
-        { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
-        { "name" => "alpine",                   "tags" => ["latest"]        },
-        { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]        }
-      ])
+                             { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
+                             { "name" => "alpine",                   "tags" => ["latest"]        },
+                             { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]        }
+                           ])
 
       # Global repos.
       ns = Namespace.where(global: true)
@@ -42,6 +42,8 @@ describe CatalogJob do
     end
 
     it "raises an exception when there has been a problem in /v2/_catalog" do
+      VCR.turn_on!
+
       create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
@@ -52,6 +54,8 @@ describe CatalogJob do
     end
 
     it "performs the job as expected" do
+      VCR.turn_on!
+
       registry = create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_registry_catalog", record: :none) do
@@ -69,6 +73,8 @@ describe CatalogJob do
     end
 
     it "handles registries even if there some namespaces missing" do
+      VCR.turn_on!
+
       registry = create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_registry_catalog_namespace_missing", record: :none) do
@@ -100,11 +106,11 @@ describe CatalogJob do
     it "updates the registry" do
       job = CatalogJobMock.new
       job.update_registry!([
-        { "name" => "busybox",                  "tags" => ["latest", "0.1"]  },
-        { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"]         },
-        { "name" => "#{namespace.name}/repo2",  "tags" => ["latest", "tag2"] },
-        { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]         }
-      ])
+                             { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
+                             { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"]         },
+                             { "name" => "#{namespace.name}/repo2",  "tags" => ["latest", "tag2"] },
+                             { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]         }
+                           ])
 
       # Global repos
       ns = Namespace.where(global: true)
@@ -151,9 +157,11 @@ describe CatalogJob do
       job = CatalogJobMock.new
       job.update_registry!([{ "name" => "repo", "tags" => ["0.1"] }])
 
-      # Two activities: push and then delete.
-      expect(PublicActivity::Activity.count).to eq 2
+      # Three activities: the original one, one more push for 0.1 and then the
+      # delete for latest.
+      expect(PublicActivity::Activity.count).to eq 3
       expect(PublicActivity::Activity.first.parameters[:tag_name]).to eq "latest"
+      expect(PublicActivity::Activity.all[1].recipient.name).to eq "0.1"
       expect(PublicActivity::Activity.last.key).to eq "repository.delete"
     end
   end

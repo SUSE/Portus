@@ -1,3 +1,5 @@
+require "portus/migrate"
+
 module Portus
   # This class implements the JSON Web Token as expected by the registry. Read
   # the `spec` for more information:
@@ -11,7 +13,7 @@ module Portus
     def initialize(account, service, scopes)
       @account = account
       @service = service
-      @scopes   = scopes
+      @scopes = scopes
     end
 
     # Returns a hash containing the encoded token, ready to be sent as a JSON
@@ -49,13 +51,23 @@ module Portus
       end
     end
 
+    # Generates and returns a "kid" value to be used in the JOSE header. Read
+    # the specification for further information.
+    def self.kid(private_key)
+      sha256 = Digest::SHA256.new
+      sha256.update(private_key.public_key.to_der)
+      payload = StringIO.new(sha256.digest).read(30)
+      Base32.encode(payload).split("").each_slice(4).each_with_object([]) do |slice, mem|
+        mem << slice.join
+      end.join(":")
+    end
+
     protected
 
     # The expiration time to be added to the current token.
     def expiration_time
-      # rubocop:disable Lint/Eval
-      eval(APP_CONFIG["jwt_expiration_time"]["value"])
-      # rubocop:enable Lint/Eval
+      value = Portus::Migrate.registry_config("jwt_expiration_time")
+      Portus::Migrate.from_humanized_time(value, 5)
     end
 
     # Returns an array with the authorized actions hash.
@@ -77,17 +89,6 @@ module Portus
     # Returns the time in which the token has been issued (now).
     def issued_at
       @now ||= Time.zone.now.to_i
-    end
-
-    # Generates and returns a "kid" value to be used in the JOSE header. Read
-    # the specification for further information.
-    def self.kid(private_key)
-      sha256 = Digest::SHA256.new
-      sha256.update(private_key.public_key.to_der)
-      payload = StringIO.new(sha256.digest).read(30)
-      Base32.encode(payload).split("").each_slice(4).each_with_object([]) do |slice, mem|
-        mem << slice.join
-      end.join(":")
     end
   end
 end
