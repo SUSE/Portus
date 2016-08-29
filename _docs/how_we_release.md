@@ -12,7 +12,7 @@ been done, the team meets to plan which features has to be implemented for the
 next version. Once we agree on this, we set a more or less fixed date in which
 we should release the next stable version. Once we are around said date, we
 will release the next version whenever we feel that Portus is ready (while
-    taking into account other stuff like documentation, etc.).
+taking into account other stuff like documentation, etc.).
 
 ## The procedure
 
@@ -29,12 +29,25 @@ First of all, we follow this steps on the Github repository:
 
 With the steps above, we have released the new stable release on Github.
 However, in SUSE we also make use of the [Open Build
-Service](https://build.opensuse.org/). So, after releasing on Github, we
-do the following on Open Build Service:
+Service](https://build.opensuse.org/). The containers team at SUSE usually works
+in the
+[Virtualization:containers](https://build.opensuse.org/project/show/Virtualization:containers)
+project, but for Portus we decided to work on three different subprojects:
 
-1. Create a project for X.Y.Z (e.g. `Virtualization:containters:Portus:Releases:X.Y.Z`).
-2. Submit all the packages there from `Virtualization:containers:Portus`.
-3. Edit the `Portus.spec` file and set Version to X.Y.Z and branch to X.Y.Z.
-4. In the Portus package, change \_service to download source code with tag X.Y.Z.
-5. Edit changes file with the contents of CHANGELOG.
-6. Wait for the packages to finish.
+- [Virtualization:containers:Portus](https://build.opensuse.org/project/show/Virtualization:containers:Portus), which contains an RPM with the latest commit on the `master` branch.
+- [Virtualization:containers:Portus:2.0](https://build.opensuse.org/project/show/Virtualization:containers:Portus:2.0), containing the latest stable release (2.0).
+- [Virtualization:containers:Portus:2.0-git](https://build.opensuse.org/project/show/Virtualization:containers:Portus:2.0-git), containing the latest commit on the stable branch (v2.0).
+
+New minor and major releases will have their own subproject, which will follow the
+same rationale as for the ones that we have for the 2.0 release. Also note that
+the RPMs produced by these three different projects are the ones that will also
+be used in the [official Docker images](https://hub.docker.com/r/opensuse/portus/).
+You can find more information about these pages
+[here](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus).
+
+## Scripts
+
+To handle the release process as it has been described, we use some custom
+scripts and rake tasks. In particular, the rake tasks are `release:prepare`
+and `release:bump`. The other scripts being used can be found
+[here](https://github.com/SUSE/Portus/tree/master/packaging/suse/release).
