@@ -15,7 +15,9 @@ automatically redirect you to this page:
 ![New registry form](/build/images/docs/new-registry.png)
 
 In this form you have to provide the information about your registry. You can
-set any name you want, but the `Hostname` and the `Use SSL` fields are crucial.
+set any name you want, but the `Hostname` and the `Use SSL` fields are crucial
+(see what does the `Show Advanced` button stand for
+[here](/docs/Configuring-the-registry.html#adding-an-external-hostname)).
 For the hostname, remember to also provide the port. As an example:
 
 ![Well configured](/build/images/docs/new-registry-filled.png)
@@ -36,6 +38,26 @@ Moreover, now in the form you'll see the new field `Skip remote checks`. If you
 check this field, then no more checks will be performed by Portus when trying
 to introduce this registry. This can be useful when setting up Portus when your
 registry is down at the moment, or you haven't configured it yet.
+
+## Adding an external hostname
+
+As you can see in the following image, the form includes a `Show Advanced` button:
+
+![Registry advanced configuration](/build/images/docs/advanced-registry-config.png)
+
+If you click this button, the following elements will be available:
+
+![Filled advanced configuration](/build/images/docs/advanced-filled-registry-config.png)
+
+As the shown paragraph describes, you can configure Portus to use an external
+hostname that will be used for the events received from the registry (e.g. a new
+tag has been pushed). You can leave this empty, which is the default action and
+the usual situation, which means that the hostname given in the `Hostname` field
+is the one to be used always.
+
+A common use case for setting an external hostname is when Portus is hidden in an
+internal network that is not accessible by clients, but these same clients can
+connect to the registry with a different hostname thanks to a reverse proxy.
 
 ## Editing the configuration for your registry
 
