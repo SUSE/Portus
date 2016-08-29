@@ -44,3 +44,10 @@ the RPMs produced by these three different projects are the ones that will also
 be used in the [official Docker images](https://hub.docker.com/r/opensuse/portus/).
 You can find more information about these pages
 [here](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus).
+
+## Scripts
+
+To handle the release process as it has been described, we use some custom
+scripts and rake tasks. In particular, the rake tasks are `release:prepare`
+and `release:bump`. The other scripts being used can be found
+[here](https://github.com/SUSE/Portus/tree/master/packaging/suse/release).
