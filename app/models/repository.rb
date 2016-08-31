@@ -141,9 +141,9 @@ class Repository < ActiveRecord::Base
       repository = Repository.create(namespace: namespace, name: repo)
     elsif repository.tags.exists?(name: tag)
       # Update digest if the given tag already exists.
-      _, digest = Repository.id_and_digest_from_event(event, repository.full_name)
+      id, digest = Repository.id_and_digest_from_event(event, repository.full_name)
       tag = repository.tags.find_by(name: tag)
-      tag.update!(digest: digest, updated_at: Time.current)
+      tag.update!(image_id: id, digest: digest, updated_at: Time.current)
       repository.create_activity(:push, owner: actor, recipient: tag)
       return
     end

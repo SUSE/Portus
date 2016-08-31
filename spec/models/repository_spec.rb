@@ -114,6 +114,25 @@ describe Repository do
         expect(tag.digest).to eq("bar")
         expect(tag.updated_at).to_not eq(ua)
       end
+
+      it "updates the image id of an already existing tag" do
+        allow(Repository).to receive(:id_and_digest_from_event).and_return(["image_id", "foo"])
+        event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
+        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("foo")
+
+        # Making sure that the updated_at column is set in the past.
+        tag = Repository.find_by(name: repository_name).tags.first
+        tag.update!(updated_at: 2.hours.ago)
+        ua = tag.updated_at
+
+        allow(Repository).to receive(:id_and_digest_from_event).and_return(["id", "bar"])
+        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        tag = Repository.find_by(name: repository_name).tags.first
+        expect(tag.image_id).to eq("id")
+        expect(tag.digest).to eq("bar")
+        expect(tag.updated_at).to_not eq(ua)
+      end
     end
 
     context "event does not match regexp of manifest" do
