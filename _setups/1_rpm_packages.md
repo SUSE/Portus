@@ -61,9 +61,11 @@ and SUSE Linux Enterprise systems. To perform the initial setup execute:
     $ portusctl setup
 
 The `setup` command takes multiple parameters. You can see all the options
-(and their default values) by typing `portusctl help setup`. Note that you
-have to pass the `--local-registry` flag to properly configure a Docker
-registry V2 instance running on the same host of Portus.
+(and their default values) by typing `portusctl help setup`. One common flag is
+the `--local-registry`, which tells `portusctl` that the registry to be
+targeted is running locally. Note that this is only used for generating a
+proper configuration for the registry: administrators will still need to
+[configure the registry](/docs/Configuring-the-registry.html) afterwards.
 
 Note that you don't need your registry to be running in order to perform the
 above command. However, if you already had the registry running, you will have
