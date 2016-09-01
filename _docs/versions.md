@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Supported Docker Versions
-order: 4
+order: 6
 longtitle: Which Docker versions are supported by Portus
 ---
 
@@ -29,4 +29,3 @@ Let's detail some of the versions being specified:
 - Docker Distribution `2.3` supports both Manifest versions, but some changes
   had to be made in order to offer backwards compatibility. This is not
   supported neither for Portus `2.0.0` nor `2.0.1`.
-
