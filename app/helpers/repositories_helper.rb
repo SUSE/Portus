@@ -2,6 +2,8 @@
 # them, dangling repositories that used to contain them. Because of this, this
 # helper renders the proper HTML for push activities, while being safe at it.
 module RepositoriesHelper
+  include ActivitiesHelper
+
   # Renders a push activity, that is, a repository/tag has been pushed.
   def render_push_activity(activity)
     render_repo_activity(activity, "pushed")
@@ -22,17 +24,12 @@ module RepositoriesHelper
 
   # General method for rendering an activity regarding repositories.
   def render_repo_activity(activity, action)
-    owner = content_tag(:strong, "#{fetch_owner(activity)} #{action} ")
+    owner = content_tag(:strong, "#{activity_owner(activity)} #{action} ")
 
     namespace = render_namespace(activity)
     namespace += " / " unless namespace.empty?
 
     owner + namespace + render_repository(activity)
-  end
-
-  # Fetches the owner of the activity in a safe way.
-  def fetch_owner(activity)
-    activity.owner.nil? ? "Someone" : activity.owner.username
   end
 
   # Renders the namespace part of the activity in a safe manner. If the

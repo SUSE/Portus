@@ -155,4 +155,28 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(user.reload.email).to eq(original + "o")
     end
   end
+
+  describe "DELETE #destroy" do
+    before :each do
+      create(:registry)
+      sign_in admin
+    end
+
+    it "updates activities when a user gets removed" do
+      team = create(:team)
+      team.create_activity :create, owner: user
+      original = user.username
+
+      delete :destroy, id: user.id
+
+      activities = PublicActivity::Activity.all
+      expect(activities.count).to eq 2
+
+      params = activities.first.parameters
+      expect(params[:owner_name]).to eq original
+
+      params = activities.last.parameters
+      expect(params[:username]).to eq original
+    end
+  end
 end

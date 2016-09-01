@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160614122012) do
+ActiveRecord::Schema.define(version: 20160825105515) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(version: 20160614122012) do
     t.string   "digest",        limit: 255
     t.string   "image_id",      limit: 255, default: ""
     t.boolean  "marked",                    default: false
+    t.string   "username",      limit: 255
   end
 
   add_index "tags", ["name", "repository_id"], name: "index_tags_on_name_and_repository_id", unique: true, using: :btree

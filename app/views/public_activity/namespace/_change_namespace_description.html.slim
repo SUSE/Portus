@@ -3,15 +3,15 @@ li
     .activity-type.change-description
       i.fa.fa-list-alt
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         - if activity.parameters[:new].blank?
           strong
-            = "#{activity.owner.display_username} deleted the description of the namespace "
+            = "#{activity_owner(activity)} deleted the description of the namespace "
         - else
           strong
-            = "#{activity.owner.display_username} edited the description of the namespace "
+            = "#{activity_owner(activity)} edited the description of the namespace "
         = link_to activity.trackable.name, activity.trackable
       small
         i.fa.fa-clock-o

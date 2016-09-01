@@ -2,7 +2,7 @@
                       activity.trackable.name,
                       'change member role',
                       activity.recipient.display_username,
-                      activity.owner.display_username,
+                      activity_owner(activity),
                       activity.created_at,
                       "from #{activity.parameters[:old_role]} to \
                       #{activity.parameters[:new_role]}"])

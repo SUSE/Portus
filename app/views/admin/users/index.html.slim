@@ -11,8 +11,9 @@
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
+        col.col-20
         col.col-30
-        col.col-30
+        col.col-10
         col.col-10
         col.col-10
         col.col-10
@@ -25,6 +26,7 @@
             th Namespaces
             th Teams
             th Enabled
+            th Remove
         tbody
           - @users.each do |user|
             tr[id="user_#{user.id}"]
@@ -45,7 +47,7 @@
                     href=url_for(toggle_admin_admin_user_path(user))]
                       i.fa.fa-lg[class="fa-toggle-#{user.admin? ? 'on': 'off'}"]
 
-              td= user.teams.reduce(0){ |sum, t| sum += t.namespaces.count}
+              td= user.teams.reduce(0) { |sum, t| sum += t.namespaces.count}
               td= user.teams.all_non_special.count
               td.enabled-btn
                 - if current_user.id == user.id && @admin_count == 1
@@ -57,4 +59,19 @@
                     rel="nofollow"
                     href=url_for(toggle_enabled_path(user))]
                       i.fa.fa-lg[class="fa-toggle-#{user.enabled? ? 'on': 'off'}"]
+              td.remove-btn
+                - if current_user == user
+                    a[class="btn btn-default" disabled=true]
+                      i.fa.fa-trash.fa-lg
+                - else
+                    a[class="btn btn-default"
+                        data-placement="left"
+                        data-toggle="popover"
+                        data-title="Please confirm"
+                        data-content='<p>Are you sure you want to remove this user?</p><a class="btn btn-default">No</a> <a class="btn btn-primary btn-confirm-remove" data-method="delete" rel="nofollow" href="#{admin_user_path(user)}">Yes</a>'
+                        data-html="true"
+                        tabindex="0"
+                        role="button"
+                    ]
+                      i.fa.fa-trash.fa-lg
   .panel-footer= paginate(@users)
