@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Portus Releases
-order: 4
+order: 7
 longtitle: How we release Portus
 ---
 

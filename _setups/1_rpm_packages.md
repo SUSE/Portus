@@ -54,18 +54,19 @@ project on the Open Build Service.
 
 ## Initial setup
 
-The Portus RPM ships with a cli tool named `portusctl`. This tool can be
-run only by the `root` user and makes easier to manage Portus on openSUSE
-and SUSE Linux Enterprise systems. To perform the initial setup execute:
+The Portus RPM ships with a cli tool named `portusctl` (see
+[its documentation](/docs/portusctl.html)). This tool can be run only by the
+`root` user and makes it easier to manage Portus on openSUSE and SUSE Linux
+Enterprise systems. To perform the initial setup execute:
 
     $ portusctl setup
 
 The `setup` command takes multiple parameters. You can see all the options
-(and their default values) by typing `portusctl help setup`. One common flag is
-the `--local-registry`, which tells `portusctl` that the registry to be
-targeted is running locally. Note that this is only used for generating a
-proper configuration for the registry: administrators will still need to
-[configure the registry](/docs/Configuring-the-registry.html) afterwards.
+(and their default values) by typing `portusctl help setup`. One common
+situation is when the registry is running on the same host. For this case, you
+have to pass the `--local-registry` flag. Note that this flag will *not*
+configure the registry on the DB (this has to be done afterwards as described
+[here](/docs/Configuring-the-registry.html))
 
 Note that you don't need your registry to be running in order to perform the
 above command. However, if you already had the registry running, you will have
