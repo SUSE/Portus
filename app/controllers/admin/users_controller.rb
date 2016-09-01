@@ -1,6 +1,6 @@
 class Admin::UsersController < Admin::BaseController
   respond_to :html, :js
-  before_action :another_user_access, only: [:edit, :update]
+  before_action :another_user_access, only: [:edit, :update, :destroy]
 
   def index
     @users = User.not_portus.page(params[:page])
@@ -40,6 +40,23 @@ class Admin::UsersController < Admin::BaseController
     else
       redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages, float: true
     end
+  end
+
+  # DELETE /admin/user/:id
+  def destroy
+    return if @user.nil?
+
+    PublicActivity::Activity.where(owner_id: @user.id).update_all(
+      owner_id:   nil,
+      owner_type: nil,
+      parameters: { owner_name: @user.username }
+    )
+    @user.create_activity :delete,
+                          owner:      current_user,
+                          parameters: { username: @user.username }
+    @user.destroy!
+
+    redirect_to admin_users_path, notice: "User removed successfully", float: true
   end
 
   # PATCH/PUT /admin/user/1/toggle_admin

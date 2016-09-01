@@ -1,6 +1,10 @@
 module ApplicationHelper
+  include ActivitiesHelper
+
   # Render the user profile picture depending on the gravatar configuration.
-  def user_image_tag(email)
+  def user_image_tag(owner)
+    email = owner.nil? ? nil : owner.email
+
     if APP_CONFIG.enabled?("gravatar") && !email.nil? && !email.empty?
       gravatar_image_tag(email)
     else

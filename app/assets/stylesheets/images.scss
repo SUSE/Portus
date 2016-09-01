@@ -6,6 +6,10 @@ i.user-picture {
   padding-top: 5px;
 }
 
+.activitie-container .user-picture {
+    margin-right: 0;
+}
+
 .user-picture {
   background-color: #fff;
   display: inline-block;
@@ -18,4 +22,3 @@ i.user-picture {
   border: 4px solid darken($header-user-bg, 15%);
   border-radius: 100px;
 }
-

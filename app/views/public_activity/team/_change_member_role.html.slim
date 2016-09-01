@@ -3,14 +3,14 @@ li
     .activity-type.change-role
       i.fa.fa-user
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         strong
           - if activity.owner == activity.recipient
-            = "#{activity.owner.display_username} changed its role "
+            = "#{activity_owner(activity)} changed its role "
           - else
-            = "#{activity.owner.display_username} changed role of user #{activity.recipient.display_username} "
+            = "#{activity_owner(activity)} changed role of user #{activity.recipient.display_username} "
         = "from #{activity.parameters[:old_role]} to #{activity.parameters[:new_role]} "
         = "within the team "
         = link_to activity.trackable.name, activity.trackable

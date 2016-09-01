@@ -11,6 +11,7 @@
 #  digest        :string(255)
 #  image_id      :string(255)      default("")
 #  marked        :boolean          default("0")
+#  username      :string(255)
 #
 # Indexes
 #
@@ -29,6 +30,17 @@ class Tag < ActiveRecord::Base
   # We don't validate the tag, because we will fetch that from the registry,
   # and that's guaranteed to have a good format.
   validates :name, uniqueness: { scope: "repository_id" }
+
+  # Returns a string containing the username of the user that pushed this tag.
+  def owner
+    if author
+      author.display_username
+    elsif username.blank?
+      "someone"
+    else
+      username
+    end
+  end
 
   # Delete all the tags that match the given digest. Call this method if you
   # want to:

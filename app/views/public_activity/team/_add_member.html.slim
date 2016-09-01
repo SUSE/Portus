@@ -3,11 +3,11 @@ li
     .activity-type.add-member-team
       i.fa.fa-user-plus
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         strong
-          = "#{activity.owner.display_username} added user #{activity.recipient.display_username} "
+          = "#{activity_owner(activity)} added user #{activity.recipient.display_username} "
         = "with role #{activity.parameters[:role]} to the "
         = link_to activity.trackable.name, activity.trackable
         |  team

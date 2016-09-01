@@ -302,4 +302,21 @@ describe User do
       expect(user.display_username).to eq user.display_name
     end
   end
+
+  describe "#destroy" do
+    let!(:registry)   { create(:registry, hostname: "registry.test.lan") }
+    let!(:user)       { create(:admin, username: "admin") }
+    let!(:user2)      { create(:user, username: "user") }
+    let!(:repo)       { create(:repository, namespace: registry.global_namespace, name: "repo") }
+    let!(:tag)        { create(:tag, name: "t", repository: repo, user_id: user.id, digest: "1") }
+
+    it "updates tags being owned by this user on destroy" do
+      create(:tag, name: "tag", repository: repo, digest: "1")
+      user.destroy
+
+      t = Tag.find_by(name: "t")
+      expect(t.user_id).to be_nil
+      expect(t.username).to eq "admin"
+    end
+  end
 end

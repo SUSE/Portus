@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe ApplicationHelper, type: :helper do
   describe "#user_image_tag" do
+    let(:user) { create(:user, email: "user@example.com") }
+
     # Mocking the gravatar_image_tag
     def gravatar_image_tag(email)
       email
@@ -9,21 +11,18 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it "uses the gravatar image tag if enabled" do
       APP_CONFIG["gravatar"] = { "enabled" => true }
-      expect(user_image_tag("user@example.com")).to eq "user@example.com"
+      expect(user_image_tag(user)).to eq "user@example.com"
     end
 
     it "uses the fa icon if gravatar support is disabled" do
       APP_CONFIG["gravatar"] = { "enabled" => false }
-      expect(user_image_tag("user@example.com")).to eq(
+      expect(user_image_tag(user)).to eq(
         '<i class="fa fa-user user-picture"></i>'
       )
     end
 
     it "uses the fa icon if the user had no email set" do
       APP_CONFIG["gravatar"] = { "enabled" => false }
-      expect(user_image_tag("")).to eq(
-        '<i class="fa fa-user user-picture"></i>'
-      )
       expect(user_image_tag(nil)).to eq(
         '<i class="fa fa-user user-picture"></i>'
       )
@@ -104,6 +103,21 @@ RSpec.describe ApplicationHelper, type: :helper do
       APP_CONFIG["ldap"]             = { "enabled" => true }
       APP_CONFIG["first_user_admin"] = { "enabled" => true }
       expect(show_first_user_alert?).to be_falsey
+    end
+  end
+
+  describe "#activity_owner" do
+    let(:user) { create(:user, email: "user@example.com") }
+
+    it "returns the proper activity owner" do
+      t = create(:team)
+      activity = t.create_activity :create, owner: user
+
+      expect(activity_owner(activity)).to eq user.display_username
+      activity.owner = nil
+      expect(activity_owner(activity)).to eq "Someone"
+      activity.parameters = { owner_name: "user" }
+      expect(activity_owner(activity)).to eq "user"
     end
   end
 end

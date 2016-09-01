@@ -3,11 +3,11 @@ li
     .activity-type.repo-deleted
       i.fa.fa-ship
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         strong
-          = " #{activity.owner.display_username} deleted "
+          = " #{activity_owner(activity)} deleted "
         - if activity.parameters[:repository_name]
           = link_to activity.trackable.clean_name, activity.trackable
           = " / #{activity.parameters[:repository_name]}"

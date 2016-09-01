@@ -11,6 +11,7 @@
 #  digest        :string(255)
 #  image_id      :string(255)      default("")
 #  marked        :boolean          default("0")
+#  username      :string(255)
 #
 # Indexes
 #
@@ -159,6 +160,18 @@ describe Tag do
 
       tag = TagMock.create(name: "tag", repository: repository)
       expect(tag.fetch_digest_test).to be_nil
+    end
+  end
+
+  describe "#owner" do
+    let!(:tag) { create(:tag, name: "tag1", user_id: user.id, repository: repository, digest: "1") }
+
+    it "returns the proper owner" do
+      expect(tag.owner).to eq user.display_username
+      tag.user_id = nil
+      expect(tag.owner).to eq "someone"
+      tag.username = "user"
+      expect(tag.owner).to eq "user"
     end
   end
 end
