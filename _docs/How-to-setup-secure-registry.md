@@ -43,14 +43,14 @@ http:
     key: /etc/nginx/ssl/my.registry.key
 auth:
   token:
-    realm: https://my.registry/v2/token
+    realm: https://my.portus/v2/token
     service: my.registry:5000
-    issuer: my.registry
+    issuer: my.portus
     rootcertbundle: /etc/nginx/ssl/my.registry.crt
 notifications:
   endpoints:
     - name: portus
-      url: https://my.registry/v2/webhooks/events
+      url: https://my.portus/v2/webhooks/events
       timeout: 500ms
       threshold: 5
       backoff: 1s
@@ -75,7 +75,7 @@ Some things to note:
   `portusctl` if you are using the [RPM package](/docs/setups/1_rpm_packages.html).
 - The **auth** value defines the communication between Portus and this
   registry. Some important things to note:
-  - The **issues** should be the same as the one defined by `machine_fqdn` in
+  - The **issuer** should be the same as the one defined by `machine_fqdn` in
     the `config/config.yml` file. This can be changed with the `PORTUS_MACHINE_FQDN`
     environment variable.
   - The **rootcertbundle** should point to the same location as the
