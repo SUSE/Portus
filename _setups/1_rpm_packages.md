@@ -41,7 +41,8 @@ Enterprise:
 
 Make sure you invoke `/usr/bin/mysql_secure_installation` to secure your
 installation (note that you must have MariaDB already running in order to
-execute this).
+execute this). Even if Portus might work with older releases of MariaDB, we
+recommend using the latest one.
 
 ### Docker registry V2
 
@@ -50,7 +51,9 @@ We maintain packages for Docker registry V2 named
 `docker-distribution-registry` inside of the *"Containers"* module. openSUSE
 users can find the package inside of the
 [Virtualization:containers](https://build.opensuse.org/project/show/Virtualization:containers)
-project on the Open Build Service.
+project on the Open Build Service. If you already have Docker Distribution
+installed, make sure that it abides to
+[our requirements](/docs/versions.html#docker-and-docker-distribution).
 
 ## Initial setup
 
