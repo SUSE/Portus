@@ -15,18 +15,24 @@ can be enabled and configured by modifying the proper
 file.
 
 Even if users are authenticated through the LDAP server, Portus needs to store
-them in its database in order to perform all the interaction with the registry.
-Because of this, you have to be aware that some of the characters that are
-allowed in the user name on an LDAP server are not allowed in Portus (this is
-a restriction from Docker). Portus will try to generate a new name for invalid
-names (by removing invalid characters, and appending a random number to it if
-it clashes). This given name is the one that will be used when interacting
-with namespaces and the registry. To put it simply:
+them in its database in order to perform all the interaction with the
+registry. Moreover, each user will have a personal namespace, which will be
+named after the given username. Bear in mind that
+[Docker's naming rules](https://github.com/docker/docker/blob/master/docs/reference/commandline/tag.md)
+might be more strict than what is required on your LDAP server. For this
+reason, Portus will change the name of the personal namespace of users with a
+username that contains characters that are not accepted by Docker rules. Users in
+this situation will be notified on their first login in Portus. The implications
+of this are:
 
-- The real LDAP name is only used for authentication (both in Portus, and in
-  the Docker CLI).
-- The generated name is the one that will be used for creating the user's
-  namespace.
+- Users can use their LDAP credentials to login as usual.
+- The name of the personal namespace will not be the same as the username if the
+  name contains characters that are not accepted for namespaces.
+
+For example, if a user with an LDAP username `mssola` tries to login, this same
+user will have `mssola` as a personal namespace. However, if a user is named
+`username$`, then this user can login with that username, but the personal
+namespace will be `username`.
 
 ### Email guessing
 
