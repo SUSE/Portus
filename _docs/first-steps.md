@@ -87,9 +87,12 @@ out [this page](/features/3_teams_namespaces_and_users.html) for more
 information on the topic.
 
 Assuming that your user is called `mssola`, you can be sure that a namespace
-with the exact same name exists. This is because each user has a **personal
-namespace**. In there, you will always be able to push and pull. We will use
-this as an example because of its simplicity.
+with the exact same name exists (unless the given user name does not abide to
+[Docker's naming rules](https://github.com/docker/docker/blob/master/docs/reference/commandline/tag.md).
+In this case, the name of the namespace will be transformed and the user will
+get notified about this change). This is because each user has a
+**personal namespace**. In there, you will always be able to push and pull. We
+will use this as an example because of its simplicity.
 
 Let's say that you want to push a local image called `image:latest` to your
 registry. The first thing that comes to our mind is to perform the following

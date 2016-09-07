@@ -110,18 +110,6 @@ tags does the repository have. For example:
 
 ## Users
 
-### Allowed names
-
-User names have to follow a specific format. This is done as a requirement of
-the registry. Moreover, there are some further restrictions when dealing with
-an LDAP server (read more about this
-[here](/features/2_LDAP-support.html#ldap-user-authentication)). Otherwise the
-restrictions are as follows:
-
-- Only lowercase ASCII letters and numbers are allowed.
-- The name has to be between 4 to 30 digits long.
-- The `portus` name is a reserved name of the application.
-
 ### Adding more admin users
 
 Only the admin user can add more administrators to the system. In order to do
