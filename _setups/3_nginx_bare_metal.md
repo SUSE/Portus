@@ -4,12 +4,23 @@ order: 3
 layout: post
 ---
 
+## Introduction
+
 As you probably have noticed, there is a Passenger configuration bundled with
 the rpm that is being built for Portus. That is, the production setup in which
 the Portus developers are continuously testing is with Apache in place. This
 doesn't mean, however, that Portus cannot run with other setups. In this page,
 an example will be provided where NGinx will be used to handle SSL for
 Portus.
+
+The versions being used for this example are:
+
+- NGINX 1.8.1
+- Thin 1.7.0
+- Puma 2.14.0
+- Docker Distribution 2.4.0
+
+Older versions are known to work too.
 
 ## The Registry
 
