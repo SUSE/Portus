@@ -34,6 +34,29 @@ feature "Login feature" do
     expect(page).to_not have_content("The first user to be created will have admin permissions !")
   end
 
+  scenario "Skips validation of minimum password length when authenticating via LDAP" do
+    APP_CONFIG["ldap"] = { "enabled" => true }
+
+    # Skipping validation for LDAP users is configured when the user model is first interpreted
+    # Use a clean room to guard against side effects
+    module CleanRoom
+      # rubocop:disable Lint/Eval
+      eval File.read(File.join(Rails.root, "app", "models", "user.rb"))
+      # rubocop:enable Lint/Eval
+    end
+
+    ldap_user = CleanRoom::User.first
+    ldap_user.password = "short"
+    expect(ldap_user.save).to eql(true)
+
+    fill_in "user_username", with: ldap_user.username
+    fill_in "user_password", with: ldap_user.password
+    click_button "Login"
+
+    expect(page).to have_content("Recent activities")
+    expect(page).to have_content("Repositories")
+  end
+
   scenario "Existing user is able using his login and password to login into Portus", js: true do
     expect(page).to_not have_content("Invalid username or password")
 
