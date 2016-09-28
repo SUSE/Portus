@@ -36,8 +36,12 @@
 class User < ActiveRecord::Base
   include PublicActivity::Common
 
-  devise :database_authenticatable, :registerable, :lockable,
-         :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:username]
+  enabled_devise_modules = [:database_authenticatable, :registerable, :lockable,
+                            :recoverable, :rememberable, :trackable, :validatable,
+                            authentication_keys: [:username]]
+
+  enabled_devise_modules.delete(:validatable) if Portus::LDAP.enabled?
+  devise(*enabled_devise_modules)
 
   APPLICATION_TOKENS_MAX = 5
 
