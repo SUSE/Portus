@@ -32,11 +32,14 @@ gravatar:
 # because the registry 2.4 does not garbage collect automatically. For more
 # information on garbage collection on the registry, read the documentation:
 # https://github.com/docker/distribution/blob/master/docs/garbage-collection.md
+# Also, you can read more in our documentation here:
+# http://port.us.org/features/removing_images.html
 delete:
   enabled: false
 
 # LDAP support. If enabled, then only users of the specified LDAP server will
-# be able to use Portus.
+# be able to use Portus. Take a look at the documentation of LDAP support in our
+# online docs: http://port.us.org/features/2_LDAP-support.html.
 ldap:
   enabled: false
 
@@ -97,7 +100,8 @@ first_user_admin:
 # is responsible of creating new users by either:
 #   - Using the "portus:create_user" rake task.
 #   - Using the form available in the admin panel.
-# This is ignored if LDAP is enabled.
+# This is ignored if LDAP is enabled. Read more about this here:
+# http://port.us.org/features/disabling_signup.html
 signup:
   enabled: true
 
@@ -132,7 +136,8 @@ machine_fqdn:
 
 # Allow users to have different display names on the web site. This will
 # **not** be the username used by `docker login`. It defaults to false because
-# it might confuse users that are not fully aware of it.
+# it might confuse users that are not fully aware of it. You can read more about
+# it here: http://port.us.org/features/display_name.html
 display_name:
   enabled: false
 
