@@ -103,3 +103,9 @@ this if you really know what you are doing! We only recommend this in
 development/staging/test environments, or to experienced Ruby on Rails
 developers that are just performing read statements for further inspecting
 an issue.
+
+## Man pages
+
+Together with Portus' RPM, you will receive the **man pages** for
+`portusctl`. In there, you will be able to read more thoroughly about the
+capabilities of this tool.
