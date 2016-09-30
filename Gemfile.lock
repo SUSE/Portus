@@ -403,6 +403,7 @@ DEPENDENCIES
   awesome_print
   base32
   bcrypt
+  binman (~> 5.1.0)
   bootstrap-sass (~> 3.3.4)
   bootstrap-typeahead-rails
   brakeman

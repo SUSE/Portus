@@ -85,6 +85,7 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "brakeman", require: false
     gem "database_cleaner"
     gem "md2man", "~>5.1.1", require: false
+    gem "binman", "~>5.1.0"
   end
 
   group :test do
