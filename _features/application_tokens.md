@@ -6,10 +6,7 @@ longtitle: Use Application tokens for improved security
 ---
 
 <div class="alert alert-info">
-  <strong>EXPERIMENTAL</strong>:
-  Application tokens are not available in version <strong>2.0</strong> of Portus. This feature
-  is already available in the <strong>master</strong> branch and it will be released on the
-  next version of Portus.
+  Only available in <strong>2.1 or later</strong>.
 </div>
 
 ## Application tokens
