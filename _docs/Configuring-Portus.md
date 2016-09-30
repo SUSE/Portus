@@ -52,15 +52,6 @@ Note that environment variables override even values from the `config-local.yml`
 
 ## List of configuration options
 
-### Gravatar
-
-If enabled, then the profile picture will be picked from the [Gravatar](https://en.gravatar.com/) associated with each user. Otherwise, a default icon will be shown.
-
-{% highlight yaml %}
-gravatar:
-  enabled: true
-{% endhighlight %}
-
 ### Email configuration
 
 {% highlight yaml %}
@@ -80,18 +71,32 @@ email:
 
 Note that if **smtp** is disabled, then `sendmail` is used instead (the specific command being: `/usr/sbin/sendmail -i -t`).
 
-### FQDN of your machine
+### Gravatar
 
-**Note**: feature only available in Portus 2.1 or later.
-
-On the next release of Portus, the FQDN of the machine is no longer a secret
-and it's now considered a configurable value. The fact the it was a secret
-before is because of legacy code. However, you now can configure it like this:
+If enabled, then the profile picture will be picked from the [Gravatar](https://en.gravatar.com/) associated with each user. Otherwise, a default icon will be shown.
 
 {% highlight yaml %}
-machine_fqdn:
-  value: "portus.test.lan"
+gravatar:
+  enabled: true
 {% endhighlight %}
+
+### Delete support
+
+**Note**: feature only available in Portus 2.1 or later. Also bear in mind that
+this will only work accordingly if you are using Docker Distribution 2.4 or later.
+
+As of 2.1, and if you are using a Docker Distribution version not older than
+2.4, you will be able to delete images, tags, users, namespaces and teams. In
+order to do so just enable the `delete` option:
+
+{% highlight yaml %}
+delete:
+  enabled: true
+{% endhighlight %}
+
+This option is **disabled** by default. This is because we want users enabling
+this if they are really sure about the feature itself and its requirements. For
+more information, read [this page](/features/removing_images.html).
 
 ### LDAP Support
 
@@ -107,14 +112,14 @@ ldap:
   filter: ""
   uid: "uid"
 
-  guess_email:
-    enabled: false
-    attr: ""
-
   authentication:
     enabled: false
     bind_dn: ""
     password: ""
+
+  guess_email:
+    enabled: false
+    attr: ""
 {% endhighlight %}
 
 Some notes:
@@ -133,23 +138,6 @@ There are three possibilities for the **guess_email** option:
 - enabled where "attr" is not empty: with this you specify the attribute inside a LDIF record where the email is set.
 
 If something goes wrong when trying to guess the email, then it just falls back to the default behavior (empty email).
-
-### Delete support
-
-**Note**: feature only available in Portus 2.1 or later. Also bear in mind that
-this will only work accordingly if you are using Docker Distribution 2.4 or later.
-
-As of 2.1, and if you are using a Docker Distribution version not older than
-2.4, you will be able to delete images, tags, users, namespaces and teams. In
-order to do so just enable the `delete` option:
-
-{% highlight yaml %}
-delete:
-  enabled: true
-{% endhighlight %}
-
-This option is **disabled** by default. This is because we want users enabling
-this if they are really sure about the feature itself and its requirements.
 
 ### Creating the first admin user
 
@@ -221,7 +209,20 @@ check_ssl_usage:
   enabled: true
 {% endhighlight %}
 
-### JWT expiration time
+### Advanced registry options
+
+**Note**: this is only available in Portus 2.1 or later.
+
+You can configure some aspects on how Portus interacts with your Docker registry:
+
+{% highlight yaml %}
+registry:
+  jwt_expiration_time:
+    value: 5
+
+  catalog_page:
+    value: 100
+{% endhighlight %}
 
 The JWT token is one of the main keys in the authentication process between
 Portus and the registry. This token has as one of its values the expiration
@@ -231,14 +232,26 @@ because it takes longer than the expiration time. You can read more about this
 in the issue [SUSE/Portus#510](https://github.com/SUSE/Portus/issues/510).
 
 To workaround this, we allow the admin of Portus to raise the expiration time
-as required through the `jwt_expiration_time` configurable value. This value
-follows a human readable format as: "integer" . "seconds | minutes | hours".
-Therefore, as an example, if you wanted to set the expiration time of the JWT
-token to 2 hours, one would write:
+as required through the `jwt_expiration_time` configurable value. This value is
+set in minutes, but we still allow the syntax as allowed before the 2.1 release.
+
+Finally, another option is the `catalog_page`. This tweaks the page size for
+each catalog request performed by Portus. The default value for this should be
+enough for the vast majority of users, but with this we allow administrators to
+workaround a Docker Registry bug as stated
+[here](https://github.com/SUSE/Portus/issues/1001).
+
+### FQDN of your machine
+
+**Note**: feature only available in Portus 2.1 or later.
+
+On the next release of Portus, the FQDN of the machine is no longer a secret
+and it's now considered a configurable value. The fact that it was a secret
+before is because of legacy code. However, you now can configure it like this:
 
 {% highlight yaml %}
-jwt_expiration_time:
-  value: "2.hours"
+machine_fqdn:
+  value: "portus.test.lan"
 {% endhighlight %}
 
 ### Display name
@@ -254,3 +267,32 @@ it's controlled with this setting:
 display_name:
   enabled: false
 {% endhighlight %}
+
+### Granular user permissions
+
+**Note**: this is only available in Portus 2.1 or later.
+
+You can further tweak the permissions that users have on a Portus instance with
+the following options:
+
+{% highlight yaml %}
+user_permission:
+  change_visibility:
+    enabled: true
+
+  manage_team:
+    enabled: true
+
+  manage_namespace:
+    enabled: true
+{% endhighlight %}
+
+- **change_visibility**: allow users to change the visibility or their personal
+  namespace. If this is disabled, only an admin will be able to change this. It
+  defaults to true.
+- **manage_team**: allow users to create/modify teams if they are an owner of
+  it. If this is disabled only an admin will be able to do this. This defaults
+  to true.
+- **manage_namespace**: allow users to create/modify namespaces if they are an
+  owner of it. If this is disabled, only an admin will be able to do this. This
+  defaults to true.
