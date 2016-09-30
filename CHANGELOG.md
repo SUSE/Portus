@@ -1,5 +1,3 @@
-## Upcoming Version
-
 ## 2.1
 
 ### Featured
