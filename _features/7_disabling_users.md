@@ -1,9 +1,21 @@
 ---
 layout: post
-title: Disabling users
+title: Removing/Disabling users
 order: 7
-longtitle: Disable users temporarily
+longtitle: Disable users temporarily, or remove them from the system
 ---
+
+## Removing users
+
+Since Portus 2.1, administrators can remove users from the database
+completely. You can do this by going to the `Admin` section and into
+the `Users` page. In there, you'll see a trash can for each user:
+
+![Removing](/build/images/docs/remove-user.png)
+
+You can also do this from the user's profile:
+
+![Removing](/build/images/docs/remove-user-profile.png)
 
 ## Disabling users
 
