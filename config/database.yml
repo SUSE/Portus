@@ -10,10 +10,34 @@ default: &default
 development:
   <<: *default
   database: portus_development
+  <% if ENV["PORTUS_DEVELOPMENT_HOST"] %>
+  host:     <%= ENV["PORTUS_DEVELOPMENT_HOST"] %>
+  <% end %>
+  <% if ENV["PORTUS_DEVELOPMENT_USERNAME"] %>
+  username: <%= ENV["PORTUS_DEVELOPMENT_USERNAME"] %>
+  <% end %>
+  <% if ENV["PORTUS_DEVELOPMENT_PASSWORD"] %>
+  password: <%= ENV["PORTUS_DEVELOPMENT_PASSWORD"] %>
+  <% end %>
+  <% if ENV["PORTUS_DEVELOPMENT_DATABASE"] %>
+  database: <%= ENV["PORTUS_DEVELOPMENT_DATABASE"] %>
+  <% end %>
 
 staging:
   <<: *default
   database: portus_staging
+  <% if ENV["PORTUS_STAGING_HOST"] %>
+  host:     <%= ENV["PORTUS_STAGING_HOST"] %>
+  <% end %>
+  <% if ENV["PORTUS_STAGING_USERNAME"] %>
+  username: <%= ENV["PORTUS_STAGING_USERNAME"] %>
+  <% end %>
+  <% if ENV["PORTUS_STAGING_PASSWORD"] %>
+  password: <%= ENV["PORTUS_STAGING_PASSWORD"] %>
+  <% end %>
+  <% if ENV["PORTUS_STAGING_DATABASE"] %>
+  database: <%= ENV["PORTUS_STAGING_DATABASE"] %>
+  <% end %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -21,6 +45,18 @@ staging:
 test:
   <<: *default
   database: portus_test
+  <% if ENV["PORTUS_TEST_HOST"] %>
+  host:     <%= ENV["PORTUS_TEST_HOST"] %>
+  <% end %>
+  <% if ENV["PORTUS_TEST_USERNAME"] %>
+  username: <%= ENV["PORTUS_TEST_USERNAME"] %>
+  <% end %>
+  <% if ENV["PORTUS_TEST_PASSWORD"] %>
+  password: <%= ENV["PORTUS_TEST_PASSWORD"] %>
+  <% end %>
+  <% if ENV["PORTUS_TEST_DATABASE"] %>
+  database: <%= ENV["PORTUS_TEST_DATABASE"] %>
+  <% end %>
 
 production:
   <<: *default
