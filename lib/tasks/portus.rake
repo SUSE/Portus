@@ -171,7 +171,7 @@ HERE
       puts "[#{index + 1}/#{tags.size}] Updating #{repo_name}/#{t.name}"
 
       begin
-        id, digest, = client.manifest(t.repository.name, t.name)
+        id, digest, = client.manifest(t.repository.full_name, t.name)
         t.update_attributes(digest: digest, image_id: id)
       rescue StandardError => e
         puts "Could not get the manifest for #{repo_name}: #{e.message}"
