@@ -1,4 +1,4 @@
-FROM library/rails:4.2.2
+FROM library/ruby:2.3.1
 MAINTAINER Flavio Castelli <fcastelli@suse.com>
 
 ENV COMPOSE=1
@@ -16,7 +16,7 @@ RUN wget http://download.opensuse.org/repositories/home:/flavio_castelli:/phanto
   apt-key add Release.key && \
   rm Release.key
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends phantomjs && \
+    apt-get install -y --no-install-recommends phantomjs nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 ADD . .
