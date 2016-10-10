@@ -6,17 +6,15 @@
 // Vendored fonts and styles.
 @import "font-awesome";
 @import "raleway";
+@import "pacifico";
 
+// Core libraries.
 @import "bootstrap-sprockets";
-@import 'variables';
-@import 'mixins';
+@import 'core/**/*';
 @import 'bootstrap';
 @import 'lifeitup/lifeitup';
 
-//custom style overriding lifeitup
-@import 'layout';
-@import 'activities';
-@import 'buttons';
-@import 'images';
-@import 'tables';
-@import 'responsive-utilities';
+// Portus
+@import "includes/**/*";
+@import "pages/**/*";
+@import "components/*";
