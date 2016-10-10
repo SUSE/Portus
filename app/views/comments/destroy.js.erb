@@ -9,6 +9,6 @@
   <% end %>
   $("#comment_<%= escape_javascript(@comment.id.to_s) %>").remove();
   $(".number_of_comments").text("<%= escape_javascript(@repository.comments.count.to_s) %>");
-  $('#float-alert p').html("Comment successfully deleted");
+  $('#float-alert p').html("Comment was deleted successfully");
 <% end %>
 $('#float-alert').fadeIn(setTimeOutAlertDelay());

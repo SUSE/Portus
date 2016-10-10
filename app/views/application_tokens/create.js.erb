@@ -3,7 +3,7 @@
   $('#float-alert').fadeIn(setTimeOutAlertDelay());
 <% else %>
   $("<%= escape_javascript(render @application_token) %>").appendTo("#application_tokens");
-  $('#float-alert p').html("New token created: <code><%= @plain_token %></code>");
+  $('#float-alert p').html("Token <code><%= @plain_token %></code> was created successfully");
   $('#float-alert').fadeIn();
   $('#add_application_token_btn i').removeClass("fa-minus-circle");
   $('#add_application_token_btn i').addClass("fa-plus-circle");
