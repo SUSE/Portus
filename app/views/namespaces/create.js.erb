@@ -3,7 +3,7 @@
 <% elsif @namespace.errors.any? %>
   $('#float-alert p').html("<%= escape_javascript(@namespace.errors.full_messages.join('<br/>')) %>");
 <% else %>
-  $('#float-alert p').html("New namespace created");
+  $('#float-alert p').html("<p>The namespace '<%= escape_javascript(@namespace.name) %>' was created successfully.</p>");
 
   $('#add_namespace_form').fadeOut();
   $('#add_namespace_btn i').addClass("fa-chevron-down")
