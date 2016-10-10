@@ -26,7 +26,7 @@ feature "Application tokens" do
       expect(current_path).to eql edit_user_registration_path
 
       wait_for_effect_on("#float-alert")
-      expect(page).to have_content("New token created")
+      expect(page).to have_content("was created successfully")
       expect(page).to have_content("awesome-application")
     end
 
@@ -70,7 +70,7 @@ feature "Application tokens" do
       expect(current_path).to eql edit_user_registration_path
 
       wait_for_effect_on("#float-alert")
-      expect(page).to have_content("New token created")
+      expect(page).to have_content("was created successfully")
       expect(page).to have_content("awesome-application")
       expect(disabled?("#add_application_token_btn")).to be true
     end
@@ -100,7 +100,7 @@ feature "Application tokens" do
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
-      expect(page).to have_content("token has been removed")
+      expect(page).to have_content("was removed successfully")
     end
   end
 

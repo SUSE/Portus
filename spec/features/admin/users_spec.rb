@@ -22,7 +22,7 @@ feature "Admin - Users panel" do
 
       wait_for_effect_on("#float-alert")
       expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect(page).to have_content("User removed successfully")
+      expect(page).to have_content("User '#{user.username}' was removed successfully")
       expect(page).to_not have_content(original)
     end
 
@@ -37,7 +37,7 @@ feature "Admin - Users panel" do
 
       wait_for_effect_on("#float-alert")
       expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect(page).to have_content("User removed successfully")
+      expect(page).to have_content("User '#{user.username}' was removed successfully")
       expect(page).to_not have_content(original)
     end
   end
@@ -107,7 +107,7 @@ feature "Admin - Users panel" do
 
       wait_for_effect_on("#float-alert")
       expect(page).to have_content("another@example.com")
-      expect(page).to have_content("User updated successfully")
+      expect(page).to have_content("User '#{user.username}' was updated successfully")
     end
 
     scenario "disallows the admin to update a user with a wrong name", js: true do

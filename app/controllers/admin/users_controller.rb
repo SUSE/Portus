@@ -15,7 +15,7 @@ class Admin::UsersController < Admin::BaseController
     @user = User.create(user_create_params)
 
     if @user.persisted?
-      flash[:notice] = "User created successfully!"
+      flash[:notice] = "User '#{@user.username}' was created successfully"
       flash[:float] = true
       redirect_to admin_users_path
     else
@@ -36,7 +36,8 @@ class Admin::UsersController < Admin::BaseController
     attr = params.require(:user).permit([:email, :display_name])
 
     if @user.update_attributes(attr)
-      redirect_to admin_users_path, notice: "User updated successfully", float: true
+      redirect_to admin_users_path, notice: "User '#{@user.username}' was updated successfully",
+                                    float:  true
     else
       redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages, float: true
     end
@@ -56,7 +57,8 @@ class Admin::UsersController < Admin::BaseController
                           parameters: { username: @user.username }
     @user.destroy!
 
-    redirect_to admin_users_path, notice: "User removed successfully", float: true
+    redirect_to admin_users_path, notice: "User '#{@user.username}' was removed successfully",
+                                  float:  true
   end
 
   # PATCH/PUT /admin/user/1/toggle_admin

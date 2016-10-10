@@ -81,7 +81,7 @@ feature "Namespaces support" do
       expect(page).to have_content("valid-namespace")
 
       wait_for_effect_on("#float-alert")
-      expect(page).to have_content("New namespace created")
+      expect(page).to have_content(/Namespace '.+' was created successfully/)
 
       # Check that it created a link to it and that it's accessible.
       click_link "valid-namespace"

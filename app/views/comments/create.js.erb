@@ -9,7 +9,7 @@
   <% end %>
   $(".number_of_comments").text("<%= escape_javascript(@repository.comments.count.to_s) %>");
   $("<%= escape_javascript(render @comment) %>").appendTo(".container-full");
-  $('#float-alert p').html("New comment posted");
+  $('#float-alert p').html("Comment was posted successfully");
   $('#write_comment_form').fadeOut();
 <% end %>
 $('#float-alert').fadeIn(setTimeOutAlertDelay());
