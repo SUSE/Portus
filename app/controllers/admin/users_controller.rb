@@ -3,7 +3,7 @@ class Admin::UsersController < Admin::BaseController
   before_action :another_user_access, only: [:edit, :update, :destroy]
 
   def index
-    @users = User.not_portus.page(params[:page])
+    @users = User.not_portus.order(:username).page(params[:page])
     @admin_count = User.admins.count
   end
 
