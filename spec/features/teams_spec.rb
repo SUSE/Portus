@@ -57,7 +57,7 @@ feature "Teams support" do
       expect(page).to have_content("valid-team")
 
       wait_for_effect_on("#float-alert")
-      expect(page).to have_content("The team 'valid-team' was created successfully")
+      expect(page).to have_content("Team 'valid-team' was created successfully")
     end
 
     scenario 'The "Create new team" link has a toggle effect', js: true do
@@ -140,7 +140,7 @@ feature "Teams support" do
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
-      expect(page).to have_content("New user added to the team")
+      expect(page).to have_content(/User '.+' was added to the team/)
       expect(page).to have_content("Contributor")
     end
 
@@ -154,7 +154,9 @@ feature "Teams support" do
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
-      expect(page).to have_content("New user added to the team (promoted to")
+      expect(page).to have_content(
+        /User '.+' was added to the team \(promoted to owner because it is a Portus admin\)\./
+      )
       expect(page).to have_content("Owner")
     end
 
@@ -184,7 +186,7 @@ feature "Teams support" do
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
-      expect(page).to have_content("User removed from the team")
+      expect(page).to have_content(/User '.+' was removed from the team/)
     end
 
     scenario "The only member of a team cannot be removed", js: true do

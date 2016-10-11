@@ -2,6 +2,6 @@
   $('#float-alert p').html("<%= escape_javascript(@team_user.errors.full_messages.join('<br/>')) %>");
 <% else %>
   $("#team_user_<%= @team_user.id %>").remove();
-  $('#float-alert p').html("User removed from the team");
+  $('#float-alert p').html("User '<%= escape_javascript(@team_user.user.username) %>' was removed from the team");
 <% end %>
 $('#float-alert').fadeIn(setTimeOutAlertDelay());
