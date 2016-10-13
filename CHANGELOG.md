@@ -1,3 +1,16 @@
+## 2.1.1
+
+### Fixes
+
+- Use the full repository name in the `portus:update_tags` task (see [005ec6503208](https://github.com/SUSE/Portus/commit/005ec6503208fa306703f55e0c8564abe12a94a2))
+- Fixed a regression on assets handling (see [fc6982a4bfe2](https://github.com/SUSE/Portus/commit/fc6982a4bfe2400a00176e0981fbd112d9f9b434) and [fdb92fffb5fa](https://github.com/SUSE/Portus/commit/fdb92fffb5fa60dbef8a4dbc8e0e30732816ae58))
+- Fixed the handling of the "*" action from the registry (see [6afb1ac150e6](https://github.com/SUSE/Portus/commit/6afb1ac150e6a0e3cea2cf6c03ec077ab2d59ca3))
+
+### Improvements
+
+- Notification messages are now more consistent (see [72e452b1fd20](https://github.com/SUSE/Portus/commit/72e452b1fd20fa1d3072a1c6fda04077e57dfcb9))
+- Order users by username on the admin panel (see [e92106cd951b](https://github.com/SUSE/Portus/commit/e92106cd951b877df0b7b83fa4241b5afb4eb175))
+
 ## 2.1
 
 ### Featured
