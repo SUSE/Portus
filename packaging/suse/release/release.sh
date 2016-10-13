@@ -31,8 +31,9 @@ OSC="osc -A $API"
 PKG_DIR=/tmp/$0/$RANDOM
 
 create_subproject() {
-  $OSC ls $DEST_PROJECT > /dev/null 2>&1
-  if [ "$?" == "0" ];then
+  prj_exists=true
+  $OSC ls $DEST_PROJECT || prj_exists=false
+  if $prj_exists;then
     echo "Project $DEST_PROJECT already exists."
     return
   fi
@@ -68,7 +69,7 @@ update_package() {
   fi
 
   echo "Remove previous tarballs"
-  $OSC rm $(ls *.tar.gz)
+  $OSC rm $(ls *.tar.gz) || echo "No previous tarball."
   echo "Getting tarball"
   $OSC service disabledrun
 
