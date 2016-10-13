@@ -134,6 +134,36 @@ describe "/v2/token" do
         payload = parse_token response.body
         expect(payload["access"]).to be_empty
       end
+
+      it "does not allow a regular user to delete an image from another user" do
+        scope = "repository:#{user.username}/busybox:*"
+
+        # It works for the regular user
+        get v2_token_url,
+          {
+            service: registry.hostname,
+            account: user.username,
+            scope:   scope
+          },
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+
+        expect(response.status).to eq 200
+        payload = parse_token response.body
+        expect(payload["access"]).not_to be_empty
+
+        # But not for another
+        get v2_token_url,
+          {
+            service: registry.hostname,
+            account: another.username,
+            scope:   scope
+          },
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+
+        expect(response.status).to eq 200
+        payload = parse_token response.body
+        expect(payload["access"]).to be_empty
+      end
     end
 
     context "as LDAP user I can authenticate from Docker CLI" do

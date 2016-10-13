@@ -63,7 +63,7 @@ class Api::V2::TokensController < Api::BaseController
           authorize auth_scope.resource, "#{action}?".to_sym
         rescue NoMethodError, Pundit::NotAuthorizedError, Portus::AuthScope::ResourceNotFound
           logger.debug "action #{action} not handled/authorized, removing from actions"
-          auth_scope.actions.delete_if { |a| a == action }
+          auth_scope.actions.delete_if { |a| match_action(action, a) }
         end
       end
 
@@ -80,6 +80,12 @@ class Api::V2::TokensController < Api::BaseController
       end
     end
     auth_scopes.values
+  end
+
+  # Returns true if the given item matches the given action.
+  def match_action(action, item)
+    action = "*" if action == "all"
+    action == item
   end
 
   # From the given scope string, try to fetch a scope handler class for it.
