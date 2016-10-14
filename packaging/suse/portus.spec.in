@@ -144,6 +144,8 @@ fi
 %exclude %{portusdir}/vagrant
 %exclude %{portusdir}/Vagrantfile
 %exclude %{portusdir}/compose
+%exclude %{portusdir}/lib/man_pages.rb
+%exclude %{portusdir}/lib/tasks/man.rake
 %doc %{portusdir}/README.md
 %doc %{portusdir}/CONTRIBUTING.md
 %doc %{portusdir}/LICENSE
