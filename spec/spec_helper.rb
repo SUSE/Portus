@@ -58,6 +58,8 @@ RSpec.configure do |config|
       # This allows non-admins to modify teams
       "manage_team"       => { "enabled" => true }
     }
+
+    Rails.cache.write("portus-checks", nil)
   end
 
   config.order = :random
