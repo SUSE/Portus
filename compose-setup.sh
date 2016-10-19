@@ -19,11 +19,13 @@ check_mandatory_flags() {
 }
 
 create_configuration_files() {
+  substitutions="s|EXTERNAL_IP|${EXTERNAL_IP}|g; s|REGISTRY_PORT|${REGISTRY_PORT}|g"
+
   # registry config
-  sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" compose/registry/config.yml.template > compose/registry/config.yml
+  sed -e "${substitutions}" compose/registry/config.yml.template > compose/registry/config.yml
 
   # compose setup
-  sed -e "s|EXTERNAL_IP|${EXTERNAL_IP}|g" compose/docker-compose.yml.template > docker-compose.yml
+  sed -e "${substitutions}" compose/docker-compose.yml.template > docker-compose.yml
 }
 
 setup_database() {
@@ -75,9 +77,10 @@ clean() {
 }
 
 usage() {
-  echo "Usage: $0 [-fo] -e EXTERNAL_IP"
+  echo "Usage: $0 [-fo] -e EXTERNAL_IP [-c REGISTRY_PORT]"
   echo "  -f force removal of data"
   echo "  -e EXTERNAL_IP - the IP or FQDN used to publish Portus and the Docker registry"
+  echo "  -c REGISTRY_PORT - the registry port. By default 5000"
 }
 
 # Force the current directory to be named "portus". It's known that other
@@ -94,13 +97,17 @@ HERE
 fi
 
 FORCE=0
-while getopts "foe:h" opt; do
+REGISTRY_PORT=5000
+while getopts "foe:hc:" opt; do
   case "${opt}" in
     f)
       FORCE=1
       ;;
     e)
       EXTERNAL_IP=$OPTARG
+      ;;
+    c)
+      REGISTRY_PORT=$OPTARG
       ;;
     h)
       usage
@@ -142,7 +149,7 @@ cat <<EOM
 
 EOM
 
-echo "Make sure port 3000 and 5000 are open on host ${EXTERNAL_IP}"
+echo "Make sure port 3000 and ${REGISTRY_PORT} are open on host ${EXTERNAL_IP}"
 printf "\n"
 
 echo "Open http://${EXTERNAL_IP}:3000 with your browser and perform the following steps:"
@@ -150,22 +157,22 @@ printf "\n"
 echo "  1. Create an admin account"
 echo "  2. You will be redirected to a page where you have to register the registry. In this form:"
 echo "    - Choose a custom name for the registry."
-echo "    - Enter ${EXTERNAL_IP}:5000 as the hostname."
+echo "    - Enter ${EXTERNAL_IP}:${REGISTRY_PORT} as the hostname."
 echo "    - Do *not* check the \"Use SSL\" checkbox, since this setup is not using SSL."
 printf "\n"
 
 echo "Perform the following actions on the docker hosts that need to interact with your registry:"
 printf "\n"
-echo "  - Ensure the docker daemon is started with the '--insecure-registry ${EXTERNAL_IP}:5000'"
+echo "  - Ensure the docker daemon is started with the '--insecure-registry ${EXTERNAL_IP}:${REGISTRY_PORT}'"
 echo "  - Perform the docker login."
 printf "\n"
 echo "To authenticate against your registry using the docker cli do:"
 printf "\n"
-echo "  $ docker login -u <portus username> -p <password> -e <email> ${EXTERNAL_IP}:5000"
+echo "  $ docker login -u <portus username> -p <password> -e <email> ${EXTERNAL_IP}:${REGISTRY_PORT}"
 printf "\n"
 
 echo "To push an image to the private registry:"
 printf "\n"
 echo "  $ docker pull busybox"
-echo "  $ docker tag busybox ${EXTERNAL_IP}:5000/<username>/busybox"
-echo "  $ docker push ${EXTERNAL_IP}:5000/<username>/busybox"
+echo "  $ docker tag busybox ${EXTERNAL_IP}:${REGISTRY_PORT}/<username>/busybox"
+echo "  $ docker push ${EXTERNAL_IP}:${REGISTRY_PORT}/<username>/busybox"
