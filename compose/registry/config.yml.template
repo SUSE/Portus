@@ -11,7 +11,7 @@ http:
 auth:
   token:
     realm: http://EXTERNAL_IP:3000/v2/token
-    service: EXTERNAL_IP:5000
+    service: EXTERNAL_IP:REGISTRY_PORT
     issuer: EXTERNAL_IP
     rootcertbundle: /etc/docker/registry/portus.crt
 notifications:
