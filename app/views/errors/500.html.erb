@@ -11,7 +11,7 @@
       <p><i> rake secret</i></p>
       to generate a new secret, and then
       <% if Rails.env.production? %>
-        set <i>PORTUS_SECRET_KEY_BASE</i> environment variable to this value.
+        set the <i>PORTUS_SECRET_KEY_BASE</i> environment variable to this value.
       <% else %>
         set <i>secret_key_base</i> to this value in <i>config/secret.yml</i>.
       <% end %>
@@ -25,16 +25,16 @@
       <h2>Fix secret encryption private key path value</h2>
       You need to set the secret encryption private key path value for Portus to work.
       <% if Rails.env.production? %>
-        Set <i>PORTUS_KEY_PATH</i> environment variable.
+        Set the <i>PORTUS_KEY_PATH</i> environment variable.
       <% else %>
         Set <i>encryption_private_key_path</i> in <i>config/secrets.yml</i>.
       <% end %>
     <% end %>
     <% if @fix[:secret_portus_password] %>
       <h2>Fix secret portus password</h2>
-      You need to set the secret encryption private key path value for Portus to work.
+      You need to set the password for the internal Portus user.
       <% if Rails.env.production? %>
-        Set <i>PORTUS_PASSWORD</i> environment variable.
+        Set the <i>PORTUS_PASSWORD</i> environment variable.
       <% else %>
         Set <i>portus_password</i> in <i>config/secrets.yml</i>.
       <% end %>
