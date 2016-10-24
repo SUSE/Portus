@@ -34,6 +34,9 @@ additional_native_build_requirements() {
   if [ $1 == "ethon" ];then
     echo "BuildRequires: libcurl-devel\nRequires: libcurl4\n"
   fi
+  if [ $1 == "ffi" ];then
+    echo "BuildRequires: libffi-devel\n"
+  fi
 }
 
 mkdir -p build/Portus-$branch
