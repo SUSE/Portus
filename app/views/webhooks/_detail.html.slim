@@ -21,6 +21,6 @@
         th Password
         td
           - if webhook.password.present?
-            = webhook.password
+            = '*' * 11
           - else
             ' &mdash;
