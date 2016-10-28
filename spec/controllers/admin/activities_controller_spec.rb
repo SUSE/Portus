@@ -117,8 +117,8 @@ CSV
 
     it "generates an CSV file with all the entries" do
       # Create activities way beyond a single page.
-      50.times do
-        team = Team.new(name: "team#{rand(1000..10000)}")
+      Array.new(50) { rand(1000..10000) }.uniq.each do |nr|
+        team = Team.new(name: "team#{nr}")
         team.owners << user
         team.save
         team.create_activity :create, owner: user
