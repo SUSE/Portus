@@ -213,6 +213,7 @@ GEM
     paint (1.0.0)
     parser (2.3.1.2)
       ast (~> 2.2)
+    phantomjs (2.1.1.0)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -433,6 +434,7 @@ DEPENDENCIES
   md2man (~> 5.1.1)
   mysql2
   net-ldap
+  phantomjs (~> 2.1.1.0)
   poltergeist
   pry-rails
   public_activity
