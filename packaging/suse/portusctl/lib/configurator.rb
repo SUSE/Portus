@@ -1,6 +1,10 @@
+require_relative "registry"
+
 # Class taking care of configuring the system according to
 # what the user specified on the command line
 class Configurator
+  include ::Portusctl::Registry
+
   def initialize(options)
     @options         = options
     @secret_key_base = SecureRandom.hex(64)
@@ -117,27 +121,6 @@ class Configurator
       puts "Something went wrong while seedeing the database"
       puts "Are you sure the database is empty?"
       puts "Ignoring error"
-    end
-  end
-
-  # Creates registry's configuration
-  def registry
-    if @options["local-registry"]
-      # Add the certificated used by Portus to sign the JWT tokens
-      ssldir = "/etc/registry/ssl.crt"
-      FileUtils.mkdir_p(ssldir)
-      FileUtils.ln_sf(
-        "/etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt",
-        File.join(ssldir, "portus.crt")
-      )
-
-      TemplateWriter.process(
-        "registry.yml.erb",
-        "/etc/registry/config.yml",
-        binding
-      )
-    else
-      TemplateWriter.render("registry.yml.erb", binding)
     end
   end
 

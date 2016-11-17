@@ -1,3 +1,4 @@
+require_relative "spec_helper"
 require "man_pages"
 
 # Returns the path of the given markdown file.
