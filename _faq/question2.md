@@ -18,9 +18,9 @@ Portus offers tons of important features like:
 </p>
 
 <ul>
-<li> <a href="features/2_LDAP-support.html">LDAP integration</a></li>
-<li> <a href="features/4_audit.html">Auditing</a></li>
-<li> <a href="features/5_search.html">Search</a></li>
+<li> <a href="/features/2_LDAP-support.html">LDAP integration</a></li>
+<li> <a href="/features/4_audit.html">Auditing</a></li>
+<li> <a href="/features/5_search.html">Search</a></li>
 </ul>
 
 <p>
