@@ -9,7 +9,7 @@ order: 1
 
 The most basic way in which Portus synchronizes the contents of the Registry
 with its database is by listening the
-[notifications](https://github.com/docker/distribution/blob/master/docs/notifications.md)
+[notifications](https://docs.docker.com/registry/notifications/)
 sent by the Registry itself. That is, on each push Portus will get a
 notification from the Docker registry with all the information about the event.
 
