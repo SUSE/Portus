@@ -25,7 +25,7 @@ module Portus
       # contacted. In order to get a 200, this registry should be created and
       # an authorization requested. The former can be inconvenient, because we
       # might want to test whether the registry is reachable.
-      !res.nil? && res.code.to_i == 401
+      !res.nil? && (res.code.to_i == 200 or res.code.to_i == 401)
     end
 
     # Calls the `/:repository/manifests/:tag` endpoint from the registry. It
