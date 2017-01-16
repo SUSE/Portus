@@ -5,7 +5,7 @@ namespace :release do
   end
 
   def check_release_number(number)
-    return if number =~ /^(\d)+\.(\d)+\.(\d)+$/
+    return if number =~ /^(\d)+\.(\d)+\.(\d)+(-rc\d)?$/
     puts "Version number should follow the format X.Y.Z"
     exit(-2)
   end

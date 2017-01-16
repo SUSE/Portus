@@ -1,4 +1,32 @@
-## Upcoming Version
+## 2.2.0-rc1
+
+The 2.2.0 release has been focused on bug fixing, but it also includes a couple
+of additions.
+
+NOTE: This release candidate has known issues that are coming in the PR
+[#1144](https://github.com/SUSE/Portus/pull/1144). These fixes are to be
+matured but they will make it on the final release.
+
+### Fixes
+
+- Portus will now properly update the image ID when a tag has been pushed. See
+  PR [#1054](https://github.com/SUSE/Portus/pull/1054).
+- Fixed how image updates are handled. See PR [#1031](https://github.com/SUSE/Portus/pull/1031).
+- Follow a consistent order in the signup form. See PR [#1119](https://github.com/SUSE/Portus/pull/1119).
+- Hide passwords stored in webhooks. See PR [#1111](https://github.com/SUSE/Portus/pull/1111).
+- Removed reference of missing stylesheets. See PR [#1114](https://github.com/SUSE/Portus/pull/1114).
+
+### Features
+
+- portusctl: it will show a warning when using the `--local-registry` flag but
+  the package has not been installed. See PR [#1096](https://github.com/SUSE/Portus/pull/1096).
+- Portus now supports Docker Distribution 2.5. See PR [#1068](https://github.com/SUSE/Portus/pull/1068).
+- Allow docker-compose users to specify an alternative port. See PR [#1094](https://github.com/SUSE/Portus/pull/1094).
+
+### Documentation
+
+- Avoid the confusion on the hostnames to be used. See PR [#1056](https://github.com/SUSE/Portus/pull/1056).
+- Clarified how the `--local-registry` flag works. PR [#1052](https://github.com/SUSE/Portus/pull/1052).
 
 ## 2.1.1
 
