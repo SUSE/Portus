@@ -29,6 +29,9 @@ License:        Apache-2.0
 Summary:        Authorization service and fronted for Docker registry (v2)
 Url:            https://github.com/SUSE/Portus
 Source:         %{branch}.tar.gz
+# MANUAL
+Patch0:         update.patch
+# /MANUAL
 Group:          System/Management
 %define portusdir /srv/Portus
 
@@ -68,6 +71,7 @@ This package has been built with commit __COMMIT__ from branch __BRANCH__ on dat
 
 %prep
 %setup -q -n Portus-%{branch}
+%patch0 -p1
 
 %build
 
