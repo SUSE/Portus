@@ -17,7 +17,7 @@ fi
 if [ $1 == "-h" ];then
   usage_and_exit
 fi
-if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]];then
+if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$ ]];then
  usage_and_exit
 fi 
 
