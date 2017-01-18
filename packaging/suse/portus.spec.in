@@ -31,6 +31,9 @@ Url:            https://github.com/SUSE/Portus
 Source:         %{branch}.tar.gz
 # MANUAL
 Patch0:         update.patch
+Patch1:         01_downgrade_redcarpet.gem.patch
+Patch2:         02_downgrade_rails.gem.patch
+Patch3:         03_downgrade_json.gem.patch
 # /MANUAL
 Group:          System/Management
 %define portusdir /srv/Portus
@@ -72,6 +75,9 @@ This package has been built with commit __COMMIT__ from branch __BRANCH__ on dat
 %prep
 %setup -q -n Portus-%{branch}
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 
