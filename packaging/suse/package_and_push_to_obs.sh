@@ -14,6 +14,8 @@ if [ $TRAVIS_PULL_REQUEST == "false" ] && [ $OBS_BRANCH ] && [ $TRAVIS_COMMIT ] 
   curl -X PUT -T packaging/suse/portus.spec -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/portus.spec?comment=update_portus.spec\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
   for p in packaging_suse/rpm_patches/*.patch;do
       curl -X PUT -T packaging/suse/rpm_patches/$p -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/$p?comment=update_patches\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
+  for p in packaging_suse/gem_patches/*.patch;do
+      curl -X PUT -T packaging/suse/gem_patches/$p -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/$p?comment=update_patches\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
   done
 else
   echo "Didn't package nor commit to obs"
