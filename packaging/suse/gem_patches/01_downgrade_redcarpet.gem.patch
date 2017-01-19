@@ -1,8 +1,8 @@
 diff --git a/Gemfile.lock b/Gemfile.lock
-index f7e6cab..b42be60 100644
+index 6597e7e..5ae9b28 100644
 --- a/Gemfile.lock
 +++ b/Gemfile.lock
-@@ -276,7 +276,7 @@ GEM
+@@ -277,7 +277,7 @@ GEM
      rb-fsevent (0.9.7)
      rb-inotify (0.9.7)
        ffi (>= 0.5.0)

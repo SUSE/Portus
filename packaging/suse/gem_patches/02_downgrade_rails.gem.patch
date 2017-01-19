@@ -1,5 +1,5 @@
 diff --git a/Gemfile b/Gemfile
-index 9e97848..e552376 100644
+index 7145a71..ed5baab 100644
 --- a/Gemfile
 +++ b/Gemfile
 @@ -1,6 +1,6 @@
@@ -26,7 +26,7 @@ index 9e97848..e552376 100644
      gem "guard", require: false
      gem "guard-rubocop", require: false
      gem "guard-rspec", require: false
-@@ -82,7 +84,6 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
+@@ -83,7 +85,6 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
      gem "factory_girl_rails"
      gem "ffaker"
      gem "rubocop", "~> 0.41.2", require: false
@@ -34,14 +34,14 @@ index 9e97848..e552376 100644
      gem "database_cleaner"
      gem "md2man", "~>5.1.1", require: false
      gem "binman", "~>5.1.0"
-@@ -101,4 +102,5 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
+@@ -102,4 +103,5 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
      gem "codeclimate-test-reporter", group: :test, require: nil
      gem "docker-api", "~> 1.28.0"
    end
 +
  end
 diff --git a/Gemfile.lock b/Gemfile.lock
-index f7e6cab..2ba2627 100644
+index 5ae9b28..9e05c2a 100644
 --- a/Gemfile.lock
 +++ b/Gemfile.lock
 @@ -1,40 +1,40 @@
@@ -161,7 +161,7 @@ index f7e6cab..2ba2627 100644
      notiffany (0.0.8)
        nenv (~> 0.1)
        shellany (~> 0.0)
-@@ -218,7 +217,7 @@ GEM
+@@ -219,7 +218,7 @@ GEM
        cliver (~> 0.3.1)
        multi_json (~> 1.0)
        websocket-driver (>= 0.2.0)
@@ -170,7 +170,7 @@ index f7e6cab..2ba2627 100644
      powerpack (0.1.1)
      pry (0.10.1)
        coderay (~> 1.1.0)
-@@ -239,22 +238,22 @@ GEM
+@@ -240,22 +239,22 @@ GEM
      rack (1.6.4)
      rack-mini-profiler (0.9.3)
        rack (>= 1.1.3)
@@ -204,7 +204,7 @@ index f7e6cab..2ba2627 100644
        activesupport (>= 4.2.0.beta, < 5.0)
        nokogiri (~> 1.6.0)
        rails-deprecated_sanitizer (>= 1.0.1)
-@@ -263,16 +262,16 @@ GEM
+@@ -264,16 +263,16 @@ GEM
        activesupport (>= 3.2)
        choice (~> 0.2.0)
        ruby-graphviz (~> 1.2)
@@ -226,7 +226,7 @@ index f7e6cab..2ba2627 100644
      rb-fsevent (0.9.7)
      rb-inotify (0.9.7)
        ffi (>= 0.5.0)
-@@ -344,23 +343,24 @@ GEM
+@@ -345,23 +344,24 @@ GEM
        temple (~> 0.6.6)
        tilt (>= 1.3.3, < 2.1)
      slop (3.6.0)
@@ -256,7 +256,7 @@ index f7e6cab..2ba2627 100644
      turbolinks (2.5.3)
        coffee-rails
      typhoeus (1.0.2)
-@@ -440,7 +440,7 @@ DEPENDENCIES
+@@ -442,7 +442,7 @@ DEPENDENCIES
    pundit
    quiet_assets
    rack-mini-profiler
