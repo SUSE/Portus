@@ -45,6 +45,9 @@ Create a new file `/etc/apache2/vhosts.d/portus_and_registry.conf`:
        RewriteCond %{REQUEST_URI} !^/portus.*$
        RewriteRule ^/(.*)$ "http:\/\/127\.0\.0\.1\:5000\/$1" [P,L]
 
+       # See: https://github.com/SUSE/Portus/issues/644#issuecomment-220260388
+       RequestHeader set X-Forwarded-Proto "https"
+
        Alias /portus /srv/Portus/public
        <Location /portus>
          PassengerBaseURI /portus
@@ -81,6 +84,7 @@ Enable the following Apache2 modules:
     $ a2enmod proxy
     $ a2enmod proxy_http
     $ a2enmod rewrite
+    $ a2enmod headers
 
 Make sure you restart the apache2 process.
 
