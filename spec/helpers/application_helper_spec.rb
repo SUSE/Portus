@@ -105,19 +105,4 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(show_first_user_alert?).to be_falsey
     end
   end
-
-  describe "#activity_owner" do
-    let(:user) { create(:user, email: "user@example.com") }
-
-    it "returns the proper activity owner" do
-      t = create(:team)
-      activity = t.create_activity :create, owner: user
-
-      expect(activity_owner(activity)).to eq user.display_username
-      activity.owner = nil
-      expect(activity_owner(activity)).to eq "Someone"
-      activity.parameters = { owner_name: "user" }
-      expect(activity_owner(activity)).to eq "user"
-    end
-  end
 end

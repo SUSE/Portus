@@ -13,7 +13,9 @@ class TeamUsersController < ApplicationController
     @team_user.role = TeamUser.roles[:owner] if @promoted_role
 
     if @team_user.errors.empty? && @team_user.save
-      @team_user.create_activity!(:add_member, current_user)
+      @team_user.create_activity!(:add_member, current_user,
+                                  team_user: @team_user.user.username,
+                                  team:      @team_user.team.name)
       respond_with @team_user
     else
       respond_with @team_user.errors, status: :unprocessable_entity
@@ -34,14 +36,19 @@ class TeamUsersController < ApplicationController
     old_role = @team_user.role
     @team_user.update(team_user_params)
     @team_user.create_activity! :change_member_role, current_user,
-      old_role: old_role, new_role: team_user_params["role"]
+                                old_role:  old_role,
+                                new_role:  team_user_params["role"],
+                                team:      @team_user.team.name,
+                                team_user: @team_user.user.username
 
     respond_on_update_or_destroy!("/teams/#{@team_user.team.id}")
   end
 
   # DELETE /team_users/1
   def destroy
-    @team_user.create_activity!(:remove_member, current_user)
+    @team_user.create_activity!(:remove_member, current_user,
+                                team_user: @team_user.user.username,
+                                team:      @team_user.team.name)
     @team_user.destroy
 
     respond_on_update_or_destroy!("/teams")
