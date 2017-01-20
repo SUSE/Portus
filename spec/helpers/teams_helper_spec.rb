@@ -60,6 +60,14 @@ RSpec.describe TeamsHelper, type: :helper do
         '<i class="fa fa-users fa-lg" title="Team"></i>'
       )
     end
+
+    it "renders with the proper icon when a team member has been disabled" do
+      guy = create(:user, enabled: false)
+      uni_team = create(:team, owners: [owner], viewers: [guy])
+      expect(helper.team_scope_icon(uni_team)).to eq(
+        '<i class="fa fa-user fa-lg" title="Personal"></i>'
+      )
+    end
   end
 
   describe "team_user_role_icon" do

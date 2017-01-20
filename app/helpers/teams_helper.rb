@@ -20,7 +20,7 @@ module TeamsHelper
 
   # Render the namespace scope icon.
   def team_scope_icon(team)
-    if team.team_users.count > 1
+    if team.team_users.enabled.count > 1
       icon = "fa-users"
       title = "Team"
     else

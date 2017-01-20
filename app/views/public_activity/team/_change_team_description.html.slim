@@ -12,7 +12,7 @@ li
         - else
           strong
             = "#{activity_owner(activity)} edited the description of the team "
-        =  link_to activity.trackable.name, activity.trackable
+        =  link_to activity_team(activity), activity.trackable
       small
         i.fa.fa-clock-o
         = activity_time_tag activity.created_at

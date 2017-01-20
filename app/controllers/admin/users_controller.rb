@@ -36,10 +36,13 @@ class Admin::UsersController < Admin::BaseController
     attr = params.require(:user).permit([:email, :display_name])
 
     if @user.update_attributes(attr)
-      redirect_to admin_users_path, notice: "User '#{@user.username}' was updated successfully",
-                                    float:  true
+      redirect_to admin_users_path,
+                  notice: "User '#{@user.username}' was updated successfully",
+                  float:  true
     else
-      redirect_to edit_admin_user_path(@user), alert: @user.errors.full_messages, float: true
+      redirect_to edit_admin_user_path(@user),
+                  alert: @user.errors.full_messages,
+                  float: true
     end
   end
 
@@ -47,18 +50,12 @@ class Admin::UsersController < Admin::BaseController
   def destroy
     return if @user.nil?
 
-    PublicActivity::Activity.where(owner_id: @user.id).update_all(
-      owner_id:   nil,
-      owner_type: nil,
-      parameters: { owner_name: @user.username }
-    )
-    @user.create_activity :delete,
-                          owner:      current_user,
-                          parameters: { username: @user.username }
+    @user.update_activities!(current_user)
     @user.destroy!
 
-    redirect_to admin_users_path, notice: "User '#{@user.username}' was removed successfully",
-                                  float:  true
+    redirect_to admin_users_path,
+                notice: "User '#{@user.username}' was removed successfully",
+                float:  true
   end
 
   # PATCH/PUT /admin/user/1/toggle_admin
