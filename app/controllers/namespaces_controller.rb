@@ -39,7 +39,9 @@ class NamespacesController < ApplicationController
 
     respond_to do |format|
       if @namespace.save
-        @namespace.create_activity :create, owner: current_user
+        @namespace.create_activity :create,
+                                   owner:      current_user,
+                                   parameters: { team: @namespace.team.name }
         @namespaces = policy_scope(Namespace)
         format.js { respond_with @namespace }
       else

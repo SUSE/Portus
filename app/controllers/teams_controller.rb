@@ -29,7 +29,9 @@ class TeamsController < ApplicationController
     @team.owners << current_user
 
     if @team.save
-      @team.create_activity :create, owner: current_user
+      @team.create_activity(:create,
+                            owner:      current_user,
+                            parameters: { team: @team.name })
       respond_with(@team)
     else
       respond_with @team.errors, status: :unprocessable_entity
@@ -40,7 +42,7 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1.json
   def update
     p = params.require(:team).permit(:name, :description)
-    change_name_description(@team, :team, p)
+    change_name_description(@team, :team, p, team: @team.name)
   end
 
   # GET /teams/1/typeahead/%QUERY
