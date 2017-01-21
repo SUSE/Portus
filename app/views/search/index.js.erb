@@ -1,7 +1,7 @@
 $('#search_results').html('<%= escape_javascript(render("search/#{@search_type}")) %>');
-$('.teams_count').html(<%= @teams_count %>);
-$('.namespaces_count').html(<%= @namespaces_count %>);
-$('.repositories_count').html(<%= @repositories_count %>);
+$('.teams_count').html(<%= @teams.count %>);
+$('.namespaces_count').html(<%= @namespaces.count %>);
+$('.repositories_count').html(<%= @repositories.count %>);
 
 function updateCategoryLink(selector) {
     var new_href = $(selector).attr('href');

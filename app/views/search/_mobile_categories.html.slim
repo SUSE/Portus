@@ -2,12 +2,12 @@ ul.nav.nav-tabs
   li[class="category #{params[:type] == "repositories" ? 'active-cetegory' : ''}"]
     a#repositories_category  href="#{build_search_category_url params, 'repositories'}"
       | Repositories
-      span.repositories_count.result-counter = @repositories_count
+      span.repositories_count.result-counter = @repositories.count
   li[class="category #{params[:type] == "namespaces" ? 'active-cetegory' : ''}"]
     a#namespaces_category  href="#{build_search_category_url params, 'namespaces'}"
       | Namespaces
-      span.namespaces_count.result-counter = @namespaces_count
+      span.namespaces_count.result-counter = @namespaces.count
   li[class="category #{params[:type] == "teams" ? 'active-cetegory' : ''}"]
     a#teams_category href="#{build_search_category_url params, 'teams'}"
       | Teams
-      span.teams_count.result-counter = @teams_count
+      span.teams_count.result-counter = @teams.count
