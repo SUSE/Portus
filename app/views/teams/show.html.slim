@@ -101,7 +101,7 @@
             | Add members
 
   .panel-filter-section
-    = dynamic_filter_input "#{teams_path}/#{@team.id}", param_name: 'filter_users', form_id: 'filter_users_form'
+    = dynamic_filter_input "#{teams_path}/#{@team.id}", param_name: 'filter_users', form_id: 'filter_users_form', extra_data: 'filter_namespaces'
   #filter_users_results
     = render partial: 'team_users/team_users'
 
@@ -137,6 +137,9 @@
             | Add namespace
 
   .panel-filter-section
-    = dynamic_filter_input "#{teams_path}/#{@team.id}", param_name: 'filter_namespaces', form_id: 'filter_namespaces_form'
+    = dynamic_filter_input "#{teams_path}/#{@team.id}", param_name: 'filter_namespaces', form_id: 'filter_namespaces_form', extra_data: 'filter_users'
   #filter_namespaces_results
     = render partial: 'namespaces/namespaces'
+  javascript:
+    document.cookie = 'filter_namespaces=;path=/'
+    document.cookie = 'filter_users=;path=/'

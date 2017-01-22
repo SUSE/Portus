@@ -18,7 +18,7 @@ RSpec.describe SearchHelper, type: :helper do
                   '<i class="fa fa-filter"></i><input type="text" name="filter" '\
                   'id="filter" class="form-control filter-input" placeholder="Filter" /><script>'\
                   "\n//<![CDATA["\
-                  "\nactivateFilter('#filter', '#filter_form');"\
+                  "\nactivateFilter('#filter', '#filter_form', '#');"\
                   "\n//]]>"\
                   "\n</script></form>"
       expect(helper.dynamic_filter_input("/namespaces")).to eq expected
@@ -31,7 +31,7 @@ RSpec.describe SearchHelper, type: :helper do
                   '<i class="fa fa-filter"></i><input type="text" name="test" '\
                   'id="test" class="form-control filter-input" placeholder="Filter" /><script>'\
                   "\n//<![CDATA["\
-                  "\nactivateFilter('#test', '#test_form');"\
+                  "\nactivateFilter('#test', '#test_form', '#');"\
                   "\n//]]>"\
                   "\n</script></form>"
       helper_result = helper.dynamic_filter_input(
