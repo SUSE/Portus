@@ -1,3 +1,8 @@
+## 2.2.0-rc2
+
+In this second release candidate we merged the PR [#1144](https://github.com/SUSE/Portus/pull/1144).
+This PR fixes the issues #1104 and #1106, while fixing most of #899.
+
 ## 2.2.0-rc1
 
 The 2.2.0 release has been focused on bug fixing, but it also includes a couple
