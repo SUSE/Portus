@@ -28,7 +28,9 @@ settings:
   a: false
 {% endhighlight %}
 
-The result of the previous example is that both `a` and `b` are false.
+The result of the previous example is that both `a` and `b` are false. Moreover,
+the path of the `config-local.yml` file can be tweaked through the
+`PORTUS_LOCAL_CONFIG_PATH` environment variable.
 
 ## Override specific configuration options
 
@@ -296,3 +298,11 @@ user_permission:
 - **manage_namespace**: allow users to create/modify namespaces if they are an
   owner of it. If this is disabled, only an admin will be able to do this. This
   defaults to true.
+
+## Deploying Portus in a Sub-URI
+
+In some deployments it might make sense to make Portus accessible through a
+Sub-URI. That is, to be able to prefix requests to Portus with a subdirectory.
+In non-passenger setups, this can be accomplished by setting the
+`RAILS_RELATIVE_URL_ROOT` environment variable. With this, you will be able to
+serve Portus from the specified subdirectory.
