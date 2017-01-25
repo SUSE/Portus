@@ -2,30 +2,12 @@
 
 set -e
 
-check_version() {
-    VER=$(docker-compose version | head -n1 | sed s/,//g | awk '{ print $3 }')
-    if [ "$VER" = $(echo -e "$VER\n1.6" | sort -V | head -n1) ]; then
-        echo "You have to use docker-compose 1.6 or later."
-        exit 1
-    fi
-}
-
 check_mandatory_flags() {
   if [ -z "$EXTERNAL_IP" ]; then
     echo "external ip not set, use the -e flag." >&2
     usage
     exit 1
   fi
-}
-
-create_configuration_files() {
-  substitutions="s|EXTERNAL_IP|${EXTERNAL_IP}|g; s|REGISTRY_PORT|${REGISTRY_PORT}|g"
-
-  # registry config
-  sed -e "${substitutions}" compose/registry/config.yml.template > compose/registry/config.yml
-
-  # compose setup
-  sed -e "${substitutions}" compose/docker-compose.yml.template > docker-compose.yml
 }
 
 setup_database() {
@@ -97,17 +79,17 @@ HERE
 fi
 
 FORCE=0
-REGISTRY_PORT=5000
+export REGISTRY_PORT=5000
 while getopts "foe:hc:" opt; do
   case "${opt}" in
     f)
       FORCE=1
       ;;
     e)
-      EXTERNAL_IP=$OPTARG
+      export EXTERNAL_IP=$OPTARG
       ;;
     c)
-      REGISTRY_PORT=$OPTARG
+      export REGISTRY_PORT=$OPTARG
       ;;
     h)
       usage
@@ -134,9 +116,8 @@ EOM
 sleep 2
 
 check_mandatory_flags
-check_version
-create_configuration_files
 clean
+docker-compose build
 docker-compose up -d
 
 setup_database
