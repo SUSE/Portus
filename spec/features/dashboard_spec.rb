@@ -32,7 +32,7 @@ feature "Dashboard page" do
   end
 
   describe "Repositories sidebar" do
-    scenario "Show all the repositories user has access to", js: true do
+    scenario "Show all the repositories user has access to" do
       visit authenticated_root_path
       expect(page).to have_content("#{personal_namespace.name}/#{personal_repository.name}")
       expect(page).to have_content("#{namespace.name}/#{repository.name}")

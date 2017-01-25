@@ -16,7 +16,7 @@ feature "Repositories support" do
   end
 
   describe "repository#show" do
-    scenario "Visual aid for each role is shown properly", js: true do
+    scenario "Visual aid for each role is shown properly" do
       visit repository_path(repository)
       expect(page).to have_content("Push Pull Owner")
 
@@ -29,7 +29,7 @@ feature "Repositories support" do
       expect(page).to have_content("Pull Viewer")
     end
 
-    scenario "The delete feature is available only for allowed users", js: true do
+    scenario "The delete feature is available only for allowed users" do
       APP_CONFIG["delete"] = { "enabled" => true }
 
       visit repository_path(repository)
@@ -66,7 +66,7 @@ feature "Repositories support" do
       expect(repo.stars.count).to be 0
     end
 
-    scenario "Groupped tags are handled properly", js: true do
+    scenario "Groupped tags are handled properly" do
       ["", "", "same", "same", "another", "yet-another"].each_with_index do |digest, idx|
         create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
                image_id: "Image", created_at: idx.hours.ago)
@@ -86,7 +86,7 @@ feature "Repositories support" do
       end
     end
 
-    scenario "it works if both the digest and the image_id are blank", js: true do
+    scenario "it works if both the digest and the image_id are blank" do
       create(:tag, author: user, repository: repository, digest: nil, image_id: nil)
       create(:tag, author: user, repository: repository, digest: "nonblank", image_id: nil)
 

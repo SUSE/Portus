@@ -66,7 +66,7 @@ feature "Update password feature" do
     expect(page).to have_content("Login")
   end
 
-  scenario 'The "disable" pannel does not exists if it\'s the only admin', js: true do
+  scenario 'The "disable" pannel does not exists if it\'s the only admin' do
     expect(page).to_not have_css("#disable-form")
   end
 end

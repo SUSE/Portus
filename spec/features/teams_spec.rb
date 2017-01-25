@@ -85,7 +85,7 @@ feature "Teams support" do
       expect(current_path).to eq team_path(team)
     end
 
-    scenario "Disabled users do not count", js: true do
+    scenario "Disabled users do not count" do
       user = create(:user)
       team.viewers = [user]
       team.save!

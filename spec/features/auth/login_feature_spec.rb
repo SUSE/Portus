@@ -8,12 +8,12 @@ feature "Login feature" do
     visit new_user_session_path
   end
 
-  scenario "It does not show any flash when accessing for the first time", js: true do
+  scenario "It does not show any flash when accessing for the first time" do
     visit root_path
     expect(page).to_not have_content("You need to sign in or sign up before continuing.")
   end
 
-  scenario "It does show a warning for the admin creation in LDAP support", js: true do
+  scenario "It does show a warning for the admin creation in LDAP support" do
     User.delete_all
     APP_CONFIG["first_user_admin"] = { "enabled" => false }
     APP_CONFIG["ldap"] = { "enabled" => true }
@@ -57,35 +57,36 @@ feature "Login feature" do
     expect(page).to have_content("Repositories")
   end
 
-  scenario "Existing user is able using his login and password to login into Portus", js: true do
+  scenario "Existing user is able using his login and password to login into Portus" do
     expect(page).to_not have_content("Invalid username or password")
 
     # We don't use Capybara's `login_as` method on purpose, because we are
     # testing the UI for logging in.
     fill_in "user_username", with: user.username
     fill_in "user_password", with: user.password
-    find("button").click
+    find("#login-btn").click
 
     expect(page).to have_content("Recent activities")
     expect(page).to have_content("Repositories")
     expect(page).to_not have_content("Signed in")
   end
 
-  scenario "Wrong password results in an error message", js: true do
+  scenario "Wrong password results in an error message" do
     fill_in "user_username", with: "foo"
     fill_in "user_password", with: "bar"
-    find("button").click
+    find("#login-btn").click
+
     expect(current_path).to eq new_user_session_path
     expect(page).to have_content("Invalid username or password")
   end
 
-  scenario "When guest tries to access dashboard - he is redirected to the login page", js: true do
+  scenario "When guest tries to access dashboard - he is redirected to the login page" do
     visit root_path
     expect(page).to have_content("Login")
     expect(current_path).to eq root_path
   end
 
-  scenario "Successful login when trying to access a page redirects back the guest", js: true do
+  scenario "Successful login when trying to access a page redirects back the guest" do
     visit namespaces_path
     expect(page).to have_content("You need to sign in or sign up before continuing.")
     fill_in "user_username", with: user.username
@@ -95,18 +96,18 @@ feature "Login feature" do
     expect(page).to have_content("Namespaces you have access to")
   end
 
-  scenario "A disabled user cannot login", js: true do
+  scenario "A disabled user cannot login" do
     user.update_attributes(enabled: false)
     fill_in "user_username", with: user.username
     fill_in "user_password", with: user.password
-    find("button").click
+    find("#login-btn").click
 
     expect(page).to have_content(user.inactive_message)
     expect(page).to have_content("Login")
     expect(current_path).to eq new_user_session_path
   end
 
-  scenario "Sign up is disabled", js: true do
+  scenario "Sign up is disabled" do
     APP_CONFIG["signup"] = { "enabled" => true }
 
     visit root_path
@@ -132,7 +133,7 @@ feature "Login feature" do
       Devise.unlock_in        = @unlock_in
     end
 
-    scenario "locks the user when too many attempts have been made", js: true do
+    scenario "locks the user when too many attempts have been made" do
       # Let's be fast and lock on the first attempt.
       Devise.maximum_attempts = 1
 
