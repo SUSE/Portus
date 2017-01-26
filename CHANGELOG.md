@@ -1,5 +1,9 @@
 ## Upcoming Version
 
+### Improvements and small features
+
+- Update the development environment for docker-compose v2.
+
 ## 2.1.1
 
 ### Fixes
