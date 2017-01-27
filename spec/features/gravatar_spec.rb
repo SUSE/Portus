@@ -1,7 +1,6 @@
 require "rails_helper"
 
 feature "Gravatar support" do
-
   let!(:registry) { create(:registry) }
   let!(:user) { create(:user) }
 
@@ -20,5 +19,4 @@ feature "Gravatar support" do
     visit root_url
     expect(page).to have_selector(".user-header .user-picture")
   end
-
 end

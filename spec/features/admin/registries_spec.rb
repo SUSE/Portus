@@ -8,14 +8,14 @@ feature "Admin - Registries panel" do
   end
 
   describe "#force_registry_config!" do
-    it "redirects to new_admin_registry_path if no registry has been configured", js: true do
+    it "redirects to new_admin_registry_path if no registry has been configured" do
       visit authenticated_root_path
       expect(current_path).to eq new_admin_registry_path
     end
   end
 
   describe "create" do
-    it "shows an alert on error, and you can force it afterwards", js: true do
+    it "shows an alert on error, and you can force it afterwards" do
       visit new_admin_registry_path
       expect(page).to_not have_content("Skip remote checks")
       fill_in "registry_name", with: "registry"
@@ -46,7 +46,7 @@ feature "Admin - Registries panel" do
       visit edit_admin_registry_path(registry.id)
     end
 
-    it "does not show the hostname if there are repositories", js: true do
+    it "does not show the hostname if there are repositories" do
       expect(page).to have_css("#registry_hostname")
 
       create(:repository)
@@ -55,7 +55,7 @@ feature "Admin - Registries panel" do
       expect(page).to_not have_css("#registry_hostname")
     end
 
-    it "updates as expected", js: true do
+    it "updates as expected" do
       fill_in "registry_hostname", with: "lala"
       click_button "Update"
 
