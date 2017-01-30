@@ -1,3 +1,9 @@
+## 2.2.0
+
+In the final release of Portus 2.2.0 all the fixes and features described in
+2.2.0rc1 and 2.2.0rc2 have been included, and then we've provided a fix for the
+issue [#1153](https://github.com/SUSE/Portus/issues/1153).
+
 ## 2.2.0-rc2
 
 In this second release candidate we merged the PR [#1144](https://github.com/SUSE/Portus/pull/1144).
