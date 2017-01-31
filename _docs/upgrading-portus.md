@@ -93,3 +93,20 @@ the registry to `readonly` mode before performing this operation, just to avoid
 any concurrency issues. Moreover, this task also asks for confirmation before
 doing anything at all. You can skip this by setting the
 `PORTUS_FORCE_DIGEST_UPDATE` environment variable before calling the rake task.
+
+## Upgrading from 2.1 to 2.2
+
+<div class="alert alert-info">
+  <strong>Important note</strong>: before doing anything at all, make sure to
+  backup the contents of the database.
+</div>
+
+In order to upgrade from 2.1 to 2.2, you only need to perform a database
+migration. So, with the new code in place, simply run the following (wrap it
+with `portusctl` if you are using the RPM for openSUSE/SLE):
+
+```
+$ rake db:migrate
+```
+
+And you should be all set!
