@@ -122,6 +122,7 @@ class Configurator
       puts "Are you sure the database is empty?"
       puts "Ignoring error"
     end
+    FileUtils.chown_R("wwwrun", "www", "/srv/Portus/tmp/cache")
   end
 
   # Creates the config-local.yml file used by Portus
