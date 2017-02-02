@@ -1,3 +1,7 @@
+## 2.2.1-dev
+
+- Fixed some crashes for webhook activities. See PR [#1163](https://github.com/SUSE/Portus/pull/1163).
+
 ## 2.2.0
 
 In the final release of Portus 2.2.0 all the fixes and features described in
