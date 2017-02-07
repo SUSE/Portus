@@ -5,7 +5,7 @@ module NamespacesHelper
   end
 
   def can_create_namespace?
-    current_user.admin? || APP_CONFIG.enabled?("user_permission.manage_namespace")
+    current_user.admin? || APP_CONFIG.enabled?("user_permission.create_namespace")
   end
 
   def can_change_visibility?(namespace)

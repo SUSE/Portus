@@ -121,7 +121,7 @@ RSpec.describe TeamsController, type: :controller do
 
       context "non-admins are not allowed to create teams" do
         it "prohibits user from creating a new Team" do
-          APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
+          APP_CONFIG["user_permission"]["create_team"]["enabled"] = false
 
           expect do
             post :create, team: valid_attributes, format: :js

@@ -260,7 +260,7 @@ describe NamespacesController do
 
       context "non-admins are not allowed to create namespaces" do
         it "does not create a new Namespace" do
-          APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
+          APP_CONFIG["user_permission"]["create_namespace"]["enabled"] = false
           expect do
             post :create, @post_params
           end.to change(Namespace, :count).by(0)

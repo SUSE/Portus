@@ -42,10 +42,15 @@ class NamespacePolicy
 
   def create?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    (APP_CONFIG.enabled?("user_permission.manage_namespace") || user.admin?) && push?
+    (APP_CONFIG.enabled?("user_permission.create_namespace") || user.admin?) && push?
   end
 
-  alias update? create?
+  def update?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    (user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
+                     namespace.team.owners.exists?(user.id))) && push?
+  end
+
   alias all? push?
 
   def change_visibility?

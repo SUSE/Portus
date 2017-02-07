@@ -55,8 +55,12 @@ RSpec.configure do |config|
       "change_visibility" => { "enabled" => true },
       # This allows non-admins to modify namespaces
       "manage_namespace"  => { "enabled" => true },
+      # This allows non-admins to create namespaces
+      "create_namespace"  => { "enabled" => true },
       # This allows non-admins to modify teams
-      "manage_team"       => { "enabled" => true }
+      "manage_team"       => { "enabled" => true },
+      # This allows non-admins to create teams
+      "create_team"       => { "enabled" => true }
     }
 
     Rails.cache.write("portus-checks", nil)

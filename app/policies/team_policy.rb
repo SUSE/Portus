@@ -16,11 +16,11 @@ class TeamPolicy
   end
 
   def create?
-    APP_CONFIG.enabled?("user_permission.manage_team") || user.admin?
+    APP_CONFIG.enabled?("user_permission.create_team") || user.admin?
   end
 
   def update?
-    create? && !@team.hidden? && owner?
+    (APP_CONFIG.enabled?("user_permission.manage_team") || user.admin?) && !@team.hidden? && owner?
   end
 
   alias show? member?

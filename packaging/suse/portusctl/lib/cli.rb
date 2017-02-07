@@ -143,8 +143,18 @@ Looks for the following required certificate files in the specified folder:
     type:    :boolean,
     default: true
 
+  option "create-namespace-enable",
+    desc:    "Allow users to modify new namespaces",
+    type:    :boolean,
+    default: true
+
   option "manage-team-enable",
     desc:    "Allow users to modify their teams",
+    type:    :boolean,
+    default: true
+
+  option "create-team-enable",
+    desc:    "Allow users to create new teams",
     type:    :boolean,
     default: true
 
