@@ -81,13 +81,7 @@ update_package() {
   cd Portus-$RELEASE/packaging/suse
   TRAVIS_COMMIT=$RELEASE TRAVIS_BRANCH=$BRANCH ./make_spec.sh
   cd -
-  # in 2.0.3, Portus is still uppercase
-  if [ -f Portus-$RELEASE/packaging/suse/Portus.spec ];then
-    cp Portus-$RELEASE/packaging/suse/Portus.spec portus.spec
-  # in version >= 2.1, portus is downcase
-  elif [ -f Portus-$RELEASE/packaging/suse/portus.spec ];then
-    cp Portus-$RELEASE/packaging/suse/portus.spec portus.spec
-  fi
+  cp Portus-$RELEASE/packaging/suse/portus.spec portus.spec
 
   echo "Setting version $RELEASE in spec file"
   # We set the BRANCH to the RELEASE tag
