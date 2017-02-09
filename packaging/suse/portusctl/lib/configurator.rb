@@ -64,7 +64,7 @@ class Configurator
     # bsc#1022811
     FileUtils.cp(
       key_file,
-      portus_key,
+      portus_key
     )
     FileUtils.chown("wwwrun", "www", portus_key)
     FileUtils.chmod(0o440, portus_key)
