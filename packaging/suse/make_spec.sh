@@ -29,7 +29,9 @@ additional_native_build_requirements() {
     echo "BuildRequires: libxml2-devel libxslt-devel\n"
   fi
   if [ $1 == "mysql2" ];then
-    echo "BuildRequires: libmysqlclient-devel\nRecommends: mariadb\n"
+    echo "BuildRequires: libmysqlclient-devel < 10.1"
+    echo "Requires: libmysqlclient18 < 10.1"
+    echo "Recommends: mariadb"
   fi
   if [ $1 == "ethon" ];then
     echo "BuildRequires: libcurl-devel\nRequires: libcurl4\n"
