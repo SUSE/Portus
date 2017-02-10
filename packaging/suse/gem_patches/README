@@ -1,6 +1,0 @@
-Add here patches to be applied to Gemfile and Gemfile.lock when generating the
-spec file.
-
-This is useful for setting the gems to a version that is available in openSUSE/SLE,
-so that the package will build.
-

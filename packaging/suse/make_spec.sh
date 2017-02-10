@@ -41,12 +41,17 @@ additional_native_build_requirements() {
 
 mkdir -p build/Portus-$branch
 cp -v ../../Gemfile* build/Portus-$branch
-cp -v gem_patches/*.gem.patch build/Portus-$branch
+cp -v patches/*.patch build/Portus-$branch
 
 pushd build/Portus-$branch/
   echo "apply patches if needed"
-  if ls *.gem.patch >/dev/null 2>&1 ;then
-      for p in *.gem.patch;do
+  if ls *.patch >/dev/null 2>&1 ;then
+      for p in *.patch;do
+          number=$(echo "$p" | cut -d"_" -f1)
+          patchsources="$patchsources\nPatch$number: $p\n"
+          patchexecs="$patchexecs\n%patch$number -p1\n"
+          # skip applying rpm patches
+          [[ $p =~ .rpm\.patch$ ]] && continue
           echo "applying patch $p"
           patch -p1 < $p || exit -1
       done
@@ -81,6 +86,8 @@ sed -e "s/__DATE__/$date/g" -i portus.spec
 sed -e "s/__COMMIT__/$commit/g" -i portus.spec
 sed -e "s/__VERSION__/$version/g" -i portus.spec
 sed -e "s/__CURRENT_YEAR__/$year/g" -i portus.spec
+sed -e "s/__PATCHSOURCES__/$patchsources/g" -i portus.spec
+sed -e "s/__PATCHEXECS__/$patchexecs/g" -i portus.spec
 
 if [ -f portus.spec ];then
   echo "Done!"
