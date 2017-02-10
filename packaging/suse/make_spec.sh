@@ -9,12 +9,12 @@ cd $(dirname $0)
 if [ $TRAVIS_BRANCH ];then
   branch=$TRAVIS_BRANCH
 else
-  branch=$(git branch | grep "*" | cut -d " " -f2)
+  branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 if [ $TRAVIS_COMMIT ];then
   commit=$TRAVIS_COMMIT
 else
-  commit=$(git log -1 --pretty=format:'%H')
+  commit=$(git rev-parse HEAD)
 fi
 version=$(sed s/-/~/g ../../VERSION)
 version="$version+git$commit"
