@@ -14,8 +14,9 @@ class NamespacesController < ApplicationController
   def index
     @special_namespaces = Namespace.where(
       "global = ? OR namespaces.name = ?", true, current_user.username
-    )
+    ).order("created_at ASC")
     @namespaces = policy_scope(Namespace).page(params[:page])
+                                         .order("namespaces.created_at ASC")
 
     respond_with(@namespaces)
   end
