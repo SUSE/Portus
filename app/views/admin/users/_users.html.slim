@@ -1,0 +1,24 @@
+.panel-body
+  .table-responsive
+    table.table.table-stripped.table-hover
+      col.col-20
+      col.col-30
+      col.col-10
+      col.col-10
+      col.col-10
+      col.col-10
+      col.col-10
+      thead
+        tr
+          th Name
+          th Email
+          th Admin
+          th Namespaces
+          th Teams
+          th Enabled
+          th Remove
+      tbody
+        - @users.each do |user|
+          = render partial: 'admin/users/user', locals: {user: user}
+
+.panel-footer= paginate(@users)

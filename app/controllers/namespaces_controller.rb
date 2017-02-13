@@ -15,7 +15,7 @@ class NamespacesController < ApplicationController
     @special_namespaces = Namespace.where(
       "global = ? OR namespaces.name = ?", true, current_user.username
     )
-    @namespaces = policy_scope(Namespace).page(params[:page])
+    @namespaces = policy_scope(Namespace).search(params[:filter]).page(params[:page])
 
     respond_with(@namespaces)
   end

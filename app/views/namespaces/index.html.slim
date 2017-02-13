@@ -62,22 +62,7 @@
           a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
             i.fa.fa-plus-circle
             | Create new namespace
-  .panel-body
-    .table-responsive
-      table.table.table-stripped.table-hover
-        col.col-40
-        col.col-15
-        col.col-15
-        col.col-20
-        col.col-10
-        thead
-          tr
-            th Name
-            th Repositories
-            th Webhooks
-            th Created At
-            th Visibility
-        tbody#accessible-namespaces
-          - @namespaces.each do |namespace|
-            = render partial: 'namespaces/namespace', locals: {namespace: namespace}
-  .panel-footer= paginate(@namespaces)
+  .panel-filter-section
+    = dynamic_filter_input url_for namespaces_path
+  #filter_results
+    = render partial: 'namespaces/namespaces'

@@ -1,5 +1,8 @@
 .search {
   .category-panel {
+    .hidden-xs {
+      margin-bottom: 1rem;
+    }
     .result-counter {
       float: right;
       background-color: $primary-colour;
@@ -25,6 +28,7 @@
       }
     }
     .nav-tabs {
+      border-bottom: none;
       .category {
         border: 1px solid $gray-light;
         border-bottom: 0;

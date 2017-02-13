@@ -16,3 +16,4 @@
             td= link_to team.name, team
             td= team.users.enabled.count
             td= team.namespaces.count
+  = paginate(@teams)

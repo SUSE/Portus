@@ -35,6 +35,11 @@
 
 class User < ActiveRecord::Base
   include PublicActivity::Common
+  include SearchCop
+
+  search_scope :search do
+    attributes :username, :email
+  end
 
   enabled_devise_modules = [:database_authenticatable, :registerable, :lockable,
                             :recoverable, :rememberable, :trackable, :validatable,
