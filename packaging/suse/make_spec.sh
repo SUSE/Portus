@@ -9,12 +9,12 @@ cd $(dirname $0)
 if [ $TRAVIS_BRANCH ];then
   branch=$TRAVIS_BRANCH
 else
-  branch=$(git branch | grep "*" | cut -d " " -f2)
+  branch=$(git rev-parse --abbrev-ref HEAD)
 fi
 if [ $TRAVIS_COMMIT ];then
   commit=$TRAVIS_COMMIT
 else
-  commit=$(git log -1 --pretty=format:'%H')
+  commit=$(git rev-parse HEAD)
 fi
 version=$(sed s/-/~/g ../../VERSION)
 version="$version+git$commit"
@@ -27,26 +27,28 @@ year=$(date +%Y)
 additional_native_build_requirements() {
   if [ $1 == "nokogiri" ];then
     echo "BuildRequires: libxml2-devel libxslt-devel\n"
-  fi
-  if [ $1 == "mysql2" ];then
+  elif [ $1 == "mysql2" ];then
     echo "BuildRequires: libmysqlclient-devel < 10.1\nRequires: libmysqlclient18 < 10.1\nRecommends: mariadb\n"
-  fi
-  if [ $1 == "ethon" ];then
+  elif [ $1 == "ethon" ];then
     echo "BuildRequires: libcurl-devel\nRequires: libcurl4\n"
-  fi
-  if [ $1 == "ffi" ];then
+  elif [ $1 == "ffi" ];then
     echo "BuildRequires: libffi-devel\n"
   fi
 }
 
 mkdir -p build/Portus-$branch
 cp -v ../../Gemfile* build/Portus-$branch
-cp -v gem_patches/*.gem.patch build/Portus-$branch
+cp -v patches/*.patch build/Portus-$branch
 
 pushd build/Portus-$branch/
   echo "apply patches if needed"
-  if ls *.gem.patch >/dev/null 2>&1 ;then
-      for p in *.gem.patch;do
+  if ls *.patch >/dev/null 2>&1 ;then
+      for p in *.patch;do
+          number=$(echo "$p" | cut -d"_" -f1)
+          patchsources="$patchsources\nPatch$number: $p\n"
+          patchexecs="$patchexecs\n%patch$number -p1\n"
+          # skip applying rpm patches
+          [[ $p =~ .rpm\.patch$ ]] && continue
           echo "applying patch $p"
           patch -p1 < $p || exit -1
       done
@@ -81,6 +83,8 @@ sed -e "s/__DATE__/$date/g" -i portus.spec
 sed -e "s/__COMMIT__/$commit/g" -i portus.spec
 sed -e "s/__VERSION__/$version/g" -i portus.spec
 sed -e "s/__CURRENT_YEAR__/$year/g" -i portus.spec
+sed -e "s/__PATCHSOURCES__/$patchsources/g" -i portus.spec
+sed -e "s/__PATCHEXECS__/$patchexecs/g" -i portus.spec
 
 if [ -f portus.spec ];then
   echo "Done!"
