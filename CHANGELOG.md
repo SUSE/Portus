@@ -1,6 +1,7 @@
 ## 2.2.1-dev
 
 - Fixed some crashes for webhook activities. See PR [#1163](https://github.com/SUSE/Portus/pull/1163).
+- Fixed pagination on namespaces pages. See PR [#1183](https://github.com/SUSE/Portus/pull/1183).
 
 ## 2.2.0
 
