@@ -79,7 +79,7 @@ update_package() {
   echo "Generate spec file"
   tar zxvf $RELEASE.tar.gz
   cd Portus-$RELEASE/packaging/suse
-  TRAVIS_COMMIT=$RELEASE TRAVIS_BRANCH=$BRANCH ./make_spec.sh
+  TRAVIS_COMMIT=$RELEASE TRAVIS_BRANCH=$BRANCH ./make_spec.sh portus
   cd -
   cp Portus-$RELEASE/packaging/suse/portus.spec portus.spec
 
