@@ -1,5 +1,7 @@
 # Class implementing the cli interface of portusctl
 class Cli < Thor
+  check_unknown_options!
+
   desc "setup", "Configure Portus"
   option "secure", desc: "Toggle SSL usage for Portus", type: :boolean, default: true
 
