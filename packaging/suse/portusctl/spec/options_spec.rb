@@ -49,4 +49,9 @@ describe Cli do
     msg = raw + diff.join(", ") + "."
     expect(diff).to be_empty, msg
   end
+
+  it "returns the proper name of the given flag" do
+    argv = ["--flag"]
+    expect { Cli.start(argv) }.to output("Unknown switches '--flag'\n").to_stderr
+  end
 end
