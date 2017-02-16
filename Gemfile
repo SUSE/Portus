@@ -52,13 +52,23 @@ unless ENV["IGNORE_ASSETS"] == "yes"
   gem "turbolinks"
 end
 
+# Returns true if the bundle is targeted towards building a package.
+def packaging?
+  ENV["PACKAGING"] == "yes"
+end
+
+# If the deployment is done through Puma, include it in the bundle.
+if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
+  gem "puma", "~> 3.7.0"
+end
+
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
 # run:
 #
 # PACKAGING=yes bundle list
 
-unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
+unless packaging?
   group :development do
     gem "annotate"
     gem "rails-erd"
@@ -75,7 +85,6 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
     gem "rspec-rails"
     gem "byebug"
     gem "web-console", "~> 2.1.3"
-    gem "puma"
     gem "awesome_print"
     gem "hirb"
     gem "wirb"

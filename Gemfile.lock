@@ -232,7 +232,7 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
-    puma (3.6.2)
+    puma (3.7.0)
     pundit (1.0.1)
       activesupport (>= 3.0.0)
     quiet_assets (1.1.0)
@@ -438,7 +438,7 @@ DEPENDENCIES
   poltergeist
   pry-rails
   public_activity
-  puma
+  puma (~> 3.7.0)
   pundit
   quiet_assets
   rack-mini-profiler
@@ -466,4 +466,4 @@ DEPENDENCIES
   wirble
 
 BUNDLED WITH
-   1.11.2
+   1.12.2
