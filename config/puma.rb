@@ -1,8 +1,8 @@
 #!/usr/bin/env puma
 
 # Workers and connections.
-threads 1, (ENV["PORTUS_PUMA_MAX_THREADS"] || 1)
-workers (ENV["PORTUS_PUMA_WORKERS"] || 1)
+threads 1, ENV["PORTUS_PUMA_MAX_THREADS"] || 1
+workers ENV["PORTUS_PUMA_WORKERS"] || 1
 
 # If specified, use the given host:port. Otherwise, we will use a local
 # deployment through a UNIX socket.
