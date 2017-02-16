@@ -51,6 +51,10 @@ cp -v ../../Gemfile* build/$packagename-$branch
 cp -v patches/*.patch build/$packagename-$branch
 
 pushd build/$packagename-$branch/
+  echo "DEBUG: Gemfile"
+  cat Gemfile
+  echo "DEBUG: Gemfile.lock"
+  cat Gemfile.lock
   echo "apply patches if needed"
   if ls *.patch >/dev/null 2>&1 ;then
       for p in *.patch;do
@@ -60,6 +64,8 @@ pushd build/$packagename-$branch/
           # skip applying rpm patches
           [[ $p =~ .rpm\.patch$ ]] && continue
           echo "applying patch $p"
+          echo "DEBUG"
+          cat $p
           patch -p1 < $p || exit -1
       done
   fi
