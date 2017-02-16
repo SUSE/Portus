@@ -3,13 +3,19 @@ li
     .activity-type.add-member-team
       i.fa.fa-user-plus
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         strong
-          = "#{activity.owner.username} added user #{activity.recipient.username} "
+          - if activity.recipient
+            = "#{activity_owner(activity)} added user #{activity.recipient.display_username} "
+          - else
+            - if activity.parameters[:team_user]
+              = "#{activity_owner(activity)} added user #{activity.parameters[:team_user]} "
+            - else
+              = "#{activity_owner(activity)} added a user "
         = "with role #{activity.parameters[:role]} to the "
-        = link_to activity.trackable.name, activity.trackable
+        = link_to activity_team(activity), activity.trackable
         |  team
       small
         i.fa.fa-clock-o

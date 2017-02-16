@@ -31,8 +31,46 @@ namespace :portus do
     )
   end
 
+  desc "Create a registry"
+  task :create_registry, [:name, :hostname, :use_ssl, :external] => :environment do |_, args|
+    if args.count != 3 && args.count != 4
+      puts "There are 3 required arguments and an optional one"
+      exit(-1)
+    end
+
+    args.each do |k, v|
+      if v.empty? && k != :external
+        puts "You have to provide a value for `#{k}'"
+        exit(-1)
+      end
+    end
+
+    if Registry.count > 0
+      puts "There is already a registry configured!"
+      exit(-1)
+    end
+
+    registry = Registry.new(
+      name:              args[:name],
+      hostname:          args[:hostname],
+      use_ssl:           args[:use_ssl],
+      external_hostname: args[:external]
+    )
+    msg = registry.reachable?
+    unless msg.empty?
+      puts "\nRegistry not reachable:\n#{registry.inspect}\n#{msg}\n"
+      exit(-1)
+    end
+    registry.save
+  end
+
   desc "Create a user"
   task :create_user, [:username, :email, :password, :admin] => :environment do |_, args|
+    if args.count != 4
+      puts "There are 4 required arguments"
+      exit(-1)
+    end
+
     args.each do |k, v|
       if v.empty?
         puts "You have to provide a value for `#{k}'"
@@ -40,12 +78,33 @@ namespace :portus do
       end
     end
 
-    User.create!(
+    unless Registry.any?
+      puts <<HERE
+
+ERROR: There is no registry on the DB! You can either call the portus:create_registry
+task, or log in as an administrator into Portus and fill in the form that
+will be presented to you.
+HERE
+      exit(-1)
+    end
+
+    u = User.create!(
       username: args["username"],
       password: args["password"],
       email:    args["email"],
       admin:    args["admin"]
     )
+
+    if u.username != u.namespace.name
+      puts <<HERE
+
+NOTE: the user you just created contained characters that are not accepted for
+naming namespaces. Because of this, you've got the following:
+
+  * User name: '#{u.username}'
+  * Personal namespace: '#{u.namespace.name}'
+HERE
+    end
   end
 
   desc "Give 'admin' role to a user"
@@ -54,14 +113,14 @@ namespace :portus do
       puts "Specify a username, as in"
       puts " rake portus:make_admin[username]"
       puts "valid usernames are"
-      puts "#{User.pluck(:username)}"
+      puts User.pluck(:username).to_s
       exit(-1)
     end
     u = User.find_by_username(args[:username])
     if u.nil?
       puts "#{args[:username]} not found in database"
       puts "valid usernames are"
-      puts "#{User.pluck(:username)}"
+      puts User.pluck(:username).to_s
       exit(-2)
     end
     u.admin = true
@@ -91,10 +150,10 @@ HERE
 
     # Fetch the tags to be updated.
     update = args[:update] == "true" || args[:update] == "t"
-    if update
-      tags = Tag.all
+    tags = if update
+      Tag.all
     else
-      tags = Tag.where("tags.digest='' OR tags.image_id=''")
+      Tag.where("tags.digest='' OR tags.image_id=''")
     end
 
     # Some information on the amount of tags to be updated.
@@ -112,7 +171,7 @@ HERE
       puts "[#{index + 1}/#{tags.size}] Updating #{repo_name}/#{t.name}"
 
       begin
-        id, digest, = client.manifest(t.repository.name, t.name)
+        id, digest, = client.manifest(t.repository.full_name, t.name)
         t.update_attributes(digest: digest, image_id: id)
       rescue StandardError => e
         puts "Could not get the manifest for #{repo_name}: #{e.message}"

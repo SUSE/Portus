@@ -95,4 +95,20 @@ describe Portus::RegistryNotification do
     expect(Repository).to receive(:handle_push_event).with(version23)
     Portus::RegistryNotification.process!(body, Repository)
   end
+
+  it "does not process the same event multiple times" do
+    body["events"] = [version23]
+    expect(Repository).to receive(:handle_push_event).with(version23)
+    Portus::RegistryNotification.process!(body, Repository)
+
+    expect(RegistryEvent.count).to eq 1
+    event = RegistryEvent.find_by(event_id: version23["id"])
+    expect(event.event_id).to eq version23["id"]
+    expect(event.repository).to eq version23["target"]["repository"]
+
+    expect(Repository).to_not receive(:handle_push_event).with(version23)
+    Portus::RegistryNotification.process!(body, Repository)
+
+    expect(RegistryEvent.count).to eq 1
+  end
 end

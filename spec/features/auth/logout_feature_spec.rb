@@ -1,7 +1,6 @@
 require "rails_helper"
 
 feature "Logout feature" do
-
   let!(:registry) { create(:registry) }
   let!(:user) { create(:user) }
 
@@ -21,5 +20,4 @@ feature "Logout feature" do
     expect(page).to have_content("Login")
     expect(current_url).to eq root_url
   end
-
 end

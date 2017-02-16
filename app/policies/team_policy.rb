@@ -15,9 +15,16 @@ class TeamPolicy
     user.admin? || @team.owners.exists?(user.id)
   end
 
-  alias_method :update?,    :owner?
-  alias_method :show?,      :member?
-  alias_method :typeahead?, :owner?
+  def create?
+    APP_CONFIG.enabled?("user_permission.manage_team") || user.admin?
+  end
+
+  def update?
+    create? && !@team.hidden? && owner?
+  end
+
+  alias show? member?
+  alias typeahead? owner?
 
   class Scope
     attr_reader :user, :scope

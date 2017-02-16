@@ -13,12 +13,12 @@ feature "Forgotten password support" do
     ActionMailer::Base.deliveries.clear
   end
 
-  scenario "gives the user a link to reset their password", js: true do
+  scenario "gives the user a link to reset their password" do
     visit new_user_session_path
     expect(page).to have_content("I forgot my password")
   end
 
-  scenario "sends the reset email when appropiate", js: true do
+  scenario "sends the reset email when appropiate" do
     visit new_user_password_path
 
     fill_in "Email", with: "random@example.com"

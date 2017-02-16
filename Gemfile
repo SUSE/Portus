@@ -23,8 +23,11 @@ gem "font-awesome-rails"
 gem "bootstrap-typeahead-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
 
-# Used to store application tokens. This is already a Rails depedency. However
-# better safe than sorry...
+# Pinning these specific versions because that's what we have on OBS.
+gem "ethon", "~> 0.9.0"
+gem "typhoeus", "~> 1.0.2"
+
+# Used to store application tokens.
 gem "bcrypt"
 
 # This is already a Rails dependency, but we use it to run portusctl
@@ -49,13 +52,21 @@ unless ENV["IGNORE_ASSETS"] == "yes"
   gem "turbolinks"
 end
 
+# Returns true if the bundle is targeted towards building a package.
+def packaging?
+  ENV["PACKAGING"] == "yes"
+end
+
+# If the deployment is done through Puma, include it in the bundle.
+gem "puma", "~> 3.7.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
+
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
 # run:
 #
 # PACKAGING=yes bundle list
 
-unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
+unless packaging?
   group :development do
     gem "annotate"
     gem "rails-erd"
@@ -69,23 +80,25 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
   end
 
   group :development, :test do
+    gem "rspec-rails"
     gem "byebug"
     gem "web-console", "~> 2.1.3"
-    gem "puma"
     gem "awesome_print"
     gem "hirb"
     gem "wirb"
     gem "wirble"
     gem "factory_girl_rails"
     gem "ffaker"
-    gem "rubocop", require: false
+    gem "rubocop", "~> 0.41.2", require: false
     gem "brakeman", require: false
     gem "database_cleaner"
+    gem "md2man", "~>5.1.1", require: false
+    gem "binman", "~>5.1.0"
+    gem "phantomjs", "~> 2.1.1.0"
   end
 
   group :test do
     gem "shoulda"
-    gem "rspec-rails"
     gem "vcr"
     gem "webmock", require: false
     gem "simplecov", require: false

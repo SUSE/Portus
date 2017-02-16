@@ -1,8 +1,10 @@
 .panel.panel-default
   .panel-heading
-    h5
-      | All activities
-      .pull-right
+    .row
+      .col-sm-6
+        h5
+          | All activities
+      .col-sm-6.text-right
         a.btn.btn-link.btn-xs[role="button" href="#{url_for(admin_activities_path(format: :csv))}" title="Download in CSV format"]
           i.fa.fa-download
           | Download CSV

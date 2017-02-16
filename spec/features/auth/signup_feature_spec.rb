@@ -53,6 +53,26 @@ feature "Signup feature" do
     click_button("Create account")
     expect(page).to have_content("Recent activities")
     expect(page).to have_content("Repositories")
+    expect(page).to have_content("Welcome! You have signed up successfully. "\
+                                 "Your personal namespace is '#{user.username}'.")
+    expect(current_url).to eq root_url
+  end
+
+  scenario "As a guest I am able to signup with a weird username" do
+    username = user.username + "!"
+
+    expect(page).to_not have_content("Create admin")
+    fill_in "user_username", with: username
+    fill_in "user_email", with: user.email
+    fill_in "user_password", with: user.password
+    fill_in "user_password_confirmation", with: user.password
+    click_button("Create account")
+    expect(page).to have_content("Recent activities")
+    expect(page).to have_content("Repositories")
+    expect(page).to have_content("Welcome! You have signed up successfully. "\
+                                 "Your personal namespace is '#{user.username}' " \
+                                 "(your username was not a valid Docker namespace, "\
+                                 "so we had to tweak it).")
     expect(current_url).to eq root_url
   end
 
@@ -116,10 +136,10 @@ feature "Signup feature" do
     fill_in "user_password_confirmation", with: "532"
     click_button("Create account")
 
-    expect(page).to have_css("#alert ul")
-    expect(page).to have_selector("#alert ul li", count: 2)
-    expect(page).to have_selector("#alert ul li", text: "Email is invalid")
-    expect(page).to have_selector("#alert ul li",
+    expect(page).to have_css("#fixed-alert ul")
+    expect(page).to have_selector("#fixed-alert ul li", count: 2)
+    expect(page).to have_selector("#fixed-alert ul li", text: "Email is invalid")
+    expect(page).to have_selector("#fixed-alert ul li",
                                   text: 'Password confirmation doesn\'t match Password')
   end
 

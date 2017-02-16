@@ -11,6 +11,7 @@
 #  digest        :string(255)
 #  image_id      :string(255)      default("")
 #  marked        :boolean          default("0")
+#  username      :string(255)
 #
 # Indexes
 #
@@ -97,12 +98,34 @@ describe Tag do
                                         repository_name: repository.name,
                                         tag_name:        tag.name)
     end
+
+    it "calls the registry with the right parameters if digest is blank" do
+      team = create(:team)
+      namespace = create(:namespace, name: "a", team: team, registry: registry)
+      repo = create(:repository, name: "repo", namespace: namespace)
+      tag = create(:tag, name: "t", repository: repo)
+
+      allow_any_instance_of(Portus::RegistryClient).to(
+        receive(:manifest)
+          .with(repo.full_name, tag.name)
+          .and_return([nil, "digest", nil])
+      )
+      allow_any_instance_of(Portus::RegistryClient).to(
+        receive(:delete)
+          .with(repo.full_name, "digest", "manifests")
+          .and_return(true)
+      )
+
+      tag.delete_by_digest!(user)
+
+      expect(Tag.find_by(name: "t")).to be_nil
+    end
   end
 
   # NOTE: lots of cases are being left out on purpose because they are already
   # tested in the previous `describe` block.
   describe "#delete_and_update!" do
-    let!(:tag)  { create(:tag, name: "tag1", repository: repository, digest: "1") }
+    let!(:tag) { create(:tag, name: "tag1", repository: repository, digest: "1") }
 
     before :each do
       tag.destroy
@@ -123,7 +146,8 @@ describe Tag do
 
     it "returns the digest as given by the registry" do
       allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return(
-        ["id", "2", ""])
+        ["id", "2", ""]
+      )
 
       tag = TagMock.create(name: "tag", repository: repository)
       expect(tag.fetch_digest_test).to eq "2"
@@ -136,6 +160,18 @@ describe Tag do
 
       tag = TagMock.create(name: "tag", repository: repository)
       expect(tag.fetch_digest_test).to be_nil
+    end
+  end
+
+  describe "#owner" do
+    let!(:tag) { create(:tag, name: "tag1", user_id: user.id, repository: repository, digest: "1") }
+
+    it "returns the proper owner" do
+      expect(tag.owner).to eq user.display_username
+      tag.user_id = nil
+      expect(tag.owner).to eq "someone"
+      tag.username = "user"
+      expect(tag.owner).to eq "user"
     end
   end
 end

@@ -3,16 +3,16 @@ li
     .activity-type.change-description
       i.fa.fa-list-alt
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         - if activity.parameters[:new].blank?
           strong
-            ="#{activity.owner.username} deleted the description of the team "
+            ="#{activity_owner(activity)} deleted the description of the team "
         - else
           strong
-            = "#{activity.owner.username} edited the description of the team "
-        =  link_to activity.trackable.name, activity.trackable
+            = "#{activity_owner(activity)} edited the description of the team "
+        =  link_to activity_team(activity), activity.trackable
       small
         i.fa.fa-clock-o
         = activity_time_tag activity.created_at

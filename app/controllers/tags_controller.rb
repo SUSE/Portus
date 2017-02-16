@@ -6,6 +6,7 @@ class TagsController < ApplicationController
   # the tags.
   def destroy
     tag = Tag.find(params[:id])
+    authorize tag
 
     # And now remove the tag by the digest. If the repository containing said
     # tags becomes empty after that, remove it too.
@@ -13,12 +14,13 @@ class TagsController < ApplicationController
     if tag.delete_by_digest!(current_user)
       if repo.tags.empty?
         repo.delete_and_update!(current_user)
-        redirect_to namespace_path(repo.namespace), notice: "Image removed with all its tags"
+        redirect_to namespace_path(repo.namespace),
+          notice: "Image removed with all its tags", float: true
       else
-        redirect_to repository_path(tag.repository), notice: "Tag removed successfully"
+        redirect_to repository_path(tag.repository), notice: "Tag removed successfully", float: true
       end
     else
-      redirect_to repository_path(tag.repository), alert: "Tag could not be removed"
+      redirect_to repository_path(tag.repository), alert: "Tag could not be removed", float: true
     end
   end
 end

@@ -1,32 +1,20 @@
 // Typeahead
 /*
-*= require bootstrap-typeahead-rails
-*/
+ *= require bootstrap-typeahead-rails
+ */
 
 // Vendored fonts and styles.
 @import "font-awesome";
-@import "pacifico";
 @import "raleway";
+@import "pacifico";
 
+// Core libraries.
 @import "bootstrap-sprockets";
-@import 'bootstrap/variables';
-@import 'lifeitup/variables';
-@import 'variables';
-@import 'mixins';
+@import 'core/**/*';
 @import 'bootstrap';
 @import 'lifeitup/lifeitup';
 
-//custom style overriding lifeitup
-@import 'labels';
-@import 'layout';
-@import 'activities';
-@import 'buttons';
-@import 'images';
-@import 'dashboard';
-@import 'panels';
-@import 'tables';
-@import 'forms';
-@import 'types';
-@import 'comments';
-@import 'repositories';
-@import 'responsive-utilities';
+// Portus
+@import "includes/**/*";
+@import "pages/**/*";
+@import "components/*";

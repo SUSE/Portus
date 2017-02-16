@@ -22,11 +22,11 @@ RSpec.describe RepositoriesHelper, type: :helper do
     let!(:tag4)       { create(:tag, name: "0.4", author: owner, repository: repo3) }
 
     it "creates the proper HTML for each kind of activity" do
-      repo.create_activity(:push, owner: owner, recipient: tag)
-      repo.create_activity(:push, owner: owner, recipient: tag1)
-      repo1.create_activity(:push, owner: owner, recipient: tag2)
-      repo2.create_activity(:push, owner: owner, recipient: tag3)
-      repo3.create_activity(:push, owner: owner, recipient: tag4)
+      repo.create_activity(:push, owner: owner, recipient: tag, created_at: 1.hour.ago)
+      repo.create_activity(:push, owner: owner, recipient: tag1, created_at: 2.hours.ago)
+      repo1.create_activity(:push, owner: owner, recipient: tag2, created_at: 3.hours.ago)
+      repo2.create_activity(:push, owner: owner, recipient: tag3, created_at: 4.hours.ago)
+      repo3.create_activity(:push, owner: owner, recipient: tag4, created_at: 5.hours.ago)
 
       tag1.destroy
       repo1.destroy
@@ -62,10 +62,14 @@ RSpec.describe RepositoriesHelper, type: :helper do
 
       idx = 0
 
+      na = "<strong>Someone pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+           "<a href=\"/repositories/#{repo.id}\">repo:0.1</a>"
+      expectations = expectations.unshift na
+
       # Changes because of the Catalog job.
-      expectations[3] = "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">"\
+      expectations[4] = "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">"\
         "registry:5000</a> / <span>repo2:0.3</span>"
-      expectations[4] = "<strong>#{nameo} pushed </strong><span>namespace</span> / <span>repo"\
+      expectations[5] = "<strong>#{nameo} pushed </strong><span>namespace</span> / <span>repo"\
           "3:0.4</span>"
 
       # Push activities
@@ -92,7 +96,7 @@ RSpec.describe RepositoriesHelper, type: :helper do
       wh = "activities.key='repository.delete' OR activities.key='namespace.delete'"
       PublicActivity::Activity.where(wh).order(created_at: :desc).each do |activity|
         html = render_delete_activity(activity)
-        expect(html).to eq expectations[idx]
+        expect(expectations).to include(html)
         idx += 1
       end
     end

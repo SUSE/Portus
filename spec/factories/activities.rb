@@ -33,15 +33,9 @@ FactoryGirl.define do
     trackable_type "Namespace"
   end
 
-  factory :activity_namespace_public, class: PublicActivity::Activity do
+  factory :activity_namespace_change_visibility, class: PublicActivity::Activity do
     owner_type "User"
-    key "namespace.public"
-    trackable_type "Namespace"
-  end
-
-  factory :activity_namespace_private, class: PublicActivity::Activity do
-    owner_type "User"
-    key "namespace.private"
+    key "namespace.change_visibility"
     trackable_type "Namespace"
   end
 
@@ -66,4 +60,15 @@ FactoryGirl.define do
     parameters Hash.new(application: "test application")
   end
 
+  factory :activity_webhook_create, class: PublicActivity::Activity do
+    trackable_type "Webhook"
+    owner_type "User"
+    key "webhook.create"
+  end
+
+  factory :activity_webhook_destroy, class: PublicActivity::Activity do
+    trackable_type "Webhook"
+    owner_type "User"
+    key "webhook.destroy"
+  end
 end

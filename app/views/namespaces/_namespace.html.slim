@@ -1,19 +1,44 @@
 tr id="namespace_#{namespace.id}"
   td= link_to namespace.clean_name, namespace
   td= namespace.repositories.count
+  - if current_user.admin? || namespace.team.users.include?(current_user)
+    td= link_to namespace.webhooks.count, namespace_webhooks_path(namespace)
+  - else
+    td= namespace.webhooks.count
   td= time_tag namespace.created_at
   td
-    - if can_manage_namespace?(namespace) && !namespace.global
-      a.btn.btn-default[data-remote="true"
+    div.btn-group.pull-right
+      - if !namespace.global?
+        a.btn[
+          id="private"
+          class=(namespace.visibility_private? ? "btn-primary" : "btn-default")
+          class=("disabled" if !can_change_visibility?(namespace))
+          title=(!namespace.global? ? "Team members can pull images from this namespace" : "The global namespace cannot be private")
+          data-remote="true"
           data-method="put"
           rel="nofollow"
-          href=url_for(toggle_public_namespace_path(namespace))
+          href=url_for(change_visibility_namespace_path(namespace, visibility: "visibility_private"))
           ]
-          - if namespace.public?
-            i.fa.fa-lg class="fa-toggle-on"
-          - else
-            i.fa.fa-lg class="fa-toggle-off" title="Click so anyone can pull from this namespace"
-    - elsif namespace.public?
-      i.fa.fa-lg class="fa-toggle-on" title="Anyone can pull images from this namespace"
-    - else
-      i.fa.fa-lg class="fa-toggle-off"
+          i.fa.fa-lock
+      a.btn[
+        id="protected"
+        class=(namespace.visibility_protected? ? "btn-primary" : "btn-default")
+        class=("disabled" if !can_change_visibility?(namespace))
+        title="Logged-in users can pull images from this namespace"
+        data-remote="true"
+        data-method="put"
+        rel="nofollow"
+        href=url_for(change_visibility_namespace_path(namespace, visibility: "visibility_protected"))
+      ]
+        i.fa.fa-users
+      a.btn[
+        id="public"
+        class=(namespace.visibility_public? ? "btn-primary" : "btn-default")
+        class=("disabled" if !can_change_visibility?(namespace))
+        title="Anyone can pull images from this namespace"
+        data-remote="true"
+        data-method="put"
+        rel="nofollow"
+        href=url_for(change_visibility_namespace_path(namespace, visibility: "visibility_public"))
+      ]
+        i.fa.fa.fa-globe

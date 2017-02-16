@@ -11,6 +11,7 @@
 #  digest        :string(255)
 #  image_id      :string(255)      default("")
 #  marked        :boolean          default("0")
+#  username      :string(255)
 #
 # Indexes
 #
@@ -30,6 +31,17 @@ class Tag < ActiveRecord::Base
   # and that's guaranteed to have a good format.
   validates :name, uniqueness: { scope: "repository_id" }
 
+  # Returns a string containing the username of the user that pushed this tag.
+  def owner
+    if author
+      author.display_username
+    elsif username.blank?
+      "someone"
+    else
+      username
+    end
+  end
+
   # Delete all the tags that match the given digest. Call this method if you
   # want to:
   #
@@ -45,7 +57,7 @@ class Tag < ActiveRecord::Base
     Tag.where(digest: dig).update_all(marked: true)
 
     begin
-      Registry.get.client.delete(repository.name, dig, "manifests")
+      Registry.get.client.delete(repository.full_name, dig, "manifests")
     rescue StandardError => e
       Rails.logger.error "Could not delete tag on the registry: #{e.message}"
       return false
@@ -84,7 +96,7 @@ class Tag < ActiveRecord::Base
       client = Registry.get.client
 
       begin
-        _, dig, = client.manifest(repository.name, name)
+        _, dig, = client.manifest(repository.full_name, name)
         update_attributes(digest: dig)
         dig
       rescue StandardError => e

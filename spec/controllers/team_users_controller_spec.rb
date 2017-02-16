@@ -55,6 +55,16 @@ describe TeamUsersController do
         expect(assigns(:team_user).errors).to be_empty
       end
 
+      it "does not allow an admin to be demoted" do
+        user = create(:admin)
+        team.owners << user
+
+        put :update, id: team.team_users.find_by(user: user).id,
+                     team_user: { role: "contributor" }, format: "js"
+        expect(response.status).to eq 422
+        expect(team.owners.exists?(user.id)).to be true
+      end
+
       it "forces a page reload when the current user changes his role" do
         user = create(:user)
         team.owners << user
@@ -72,6 +82,18 @@ describe TeamUsersController do
         new_user = create(:user)
         post :create,
              team_user: { team: team.name, user: new_user.username, role: TeamUser.roles["owner"] },
+             format:    "js"
+        expect(team.owners.exists?(new_user.id)).to be true
+      end
+
+      it "sets admins as owners always" do
+        new_user = create(:admin)
+        post :create,
+             team_user: {
+               team: team.name,
+               user: new_user.username,
+               role: TeamUser.roles["viewer"]
+             },
              format:    "js"
         expect(team.owners.exists?(new_user.id)).to be true
       end
@@ -147,7 +169,12 @@ describe TeamUsersController do
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(team)
       expect(activity.recipient).to eq(new_user)
-      expect(activity.parameters).to eq(role: new_user_role)
+
+      params = activity.parameters
+      expect(params.size).to eq 3
+      expect(params[:role]).to eq new_user_role
+      expect(params[:team_user]).to eq new_user.username
+      expect(params[:team]).to eq team.name
     end
 
     it "tracks removal of team members" do
@@ -164,7 +191,12 @@ describe TeamUsersController do
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(team)
       expect(activity.recipient).to eq(user)
-      expect(activity.parameters).to eq(role: "viewer")
+
+      params = activity.parameters
+      expect(params.size).to eq 3
+      expect(params[:role]).to eq "viewer"
+      expect(params[:team_user]).to eq user.username
+      expect(params[:team]).to eq team.name
     end
 
     it "tracks changes of role" do
@@ -181,7 +213,35 @@ describe TeamUsersController do
       expect(activity.owner).to eq(owner)
       expect(activity.trackable).to eq(team)
       expect(activity.recipient).to eq(user)
-      expect(activity.parameters).to eq(old_role: "viewer", new_role: "contributor")
+
+      params = activity.parameters
+      expect(params.size).to eq 5
+      expect(params[:role]).to eq "contributor"
+      expect(params[:team_user]).to eq user.display_username
+      expect(params[:team]).to eq team.name
+      expect(params[:old_role]).to eq "viewer"
+      expect(params[:new_role]).to eq "contributor"
+    end
+
+    it "tracks changes on the name of the team" do
+      oname = team.name
+
+      # Add team member
+      new_user = create(:user)
+      post :create,
+           team_user: { team: team.name, user: new_user.username, role: TeamUser.roles["viewer"] },
+           format:    "js"
+
+      # Update team member
+      put :update, id: team.team_users.find_by(user: new_user.id).id,
+          team_user: { role: "contributor" }, format: "js"
+
+      # Remove team member
+      delete :destroy, id: team.team_users.find_by(user: new_user.id).id, format: "js"
+
+      team.update(name: "new-name")
+
+      PublicActivity::Activity.all.each { |a| expect(a.parameters[:team]).to eq oname }
     end
   end
 end

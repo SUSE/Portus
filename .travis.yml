@@ -8,8 +8,8 @@ rvm:
 
   # Other Ruby Versions
   - 2.1.10
-  - 2.2.4
-  - 2.3.0
+  - 2.2.5
+  - 2.3.1
 
   # Future versions
   - ruby-head
@@ -22,13 +22,13 @@ before_install:
     bash -c " # Install MariaDB
     sudo bash .travis_mariadb.sh
     "
+  - gem update --system
 
 before_script:
   - mysql -e 'create database portus_test;'
 
 script:
-  - bundle exec rspec spec
-  - bundle exec rspec packaging/suse/portusctl/spec
+  - bundle exec rspec spec packaging/suse/portusctl/spec
   - bundle exec rubocop -V
   - bundle exec rubocop -F
   - bundle exec brakeman -z -A -x CheckUnscopedFind,CheckRender

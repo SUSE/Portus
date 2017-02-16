@@ -11,14 +11,43 @@ RSpec.describe Admin::NamespacesController, type: :controller do
     end
 
     describe "GET #index" do
-      it "paginates namespaces" do
-        get :index
-        expect(assigns(:namespaces)).to respond_to(:total_pages)
+      let!(:portus) { create(:admin, username: "portus") }
+
+      context "pagination" do
+        it "paginates namespaces" do
+          get :index
+          expect(assigns(:namespaces)).to respond_to(:total_pages)
+        end
+
+        it "paginates correctly in multiple pages" do
+          t = create(:team, name: "randomteam")
+          r = Registry.get
+          33.times { |_| create(:namespace, team: t, registry: r) }
+
+          get :index
+          ns = assigns(:namespaces)
+
+          get :index, page: 2
+          ns += assigns(:namespaces)
+
+          # The global namespace and the one for the portus user.
+          ns = Namespace.all - ns
+          expect(ns.count).to eq 2
+        end
       end
 
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
+      end
+
+      it "does not contain the portus namespace" do
+        get :index
+        namespaces = assigns(:namespaces)
+        expect(namespaces.count).to eq 2
+
+        # Global & portus namespaces.
+        expect(Namespace.all.count).to eq 4
       end
     end
   end

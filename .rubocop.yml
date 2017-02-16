@@ -4,7 +4,7 @@ inherit_from:
 
 # TODO: (mssola) only the LDAP class and portusctl require this.
 Metrics/ClassLength:
-  Max: 160
+  Max: 180
 
 # TODO: (mssola) Some methods are offending this cop. In the SUSE's style guide
 # the approach is to use Rubocop's default value. In the near future I will
@@ -22,17 +22,20 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-AllCops:
-  RunRailsCops: true
+# NOTE: (mssola) In versions of Ruby higher than 2.1.x, we get
+# Lint/ShadowedException in some cases where in 2.1.x it complains if we remove
+# such guards. Therefore, we have to disable this cop until we update the
+# version of Ruby to be officially supported.
+Lint/UnneededDisable:
+  Enabled: false
 
+Rails:
+  Enabled: true
+
+AllCops:
   Exclude:
     # Files that are out of our control and that are not excluded in the
     # default config of rubocop.
     - db/schema.rb
     - db/migrate/*
-    - bin/*
     - vendor/**/*
-    - tmp/**/*
-    - config/cronotab.rb
-    - config/initializers/*
-    - config/environments/*

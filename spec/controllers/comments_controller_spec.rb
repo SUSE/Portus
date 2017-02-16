@@ -5,9 +5,23 @@ describe CommentsController, type: :controller do
   let(:owner) { create(:user) }
   let(:user) { create(:user) }
   let!(:team) { create(:team, owners: [owner]) }
-  let!(:public_namespace) { create(:namespace, public: 1, team: team) }
+  let!(:public_namespace) do
+    create(:namespace,
+           visibility: Namespace.visibilities[:visibility_public],
+           team:       team)
+  end
   let!(:visible_repository) { create(:repository, namespace: public_namespace) }
-  let!(:private_namespace) { create(:namespace, public: 0, team: team) }
+  let!(:protected_namespace) do
+    create(:namespace,
+           visibility: Namespace.visibilities[:visibility_protected],
+           team:       team)
+  end
+  let!(:protected_repository) { create(:repository, namespace: protected_namespace) }
+  let!(:private_namespace) do
+    create(:namespace,
+           visibility: Namespace.visibilities[:visibility_private],
+           team:       team)
+  end
   let!(:invisible_repository) { create(:repository, namespace: private_namespace) }
   let(:comment) { create(:comment, author: owner) }
   let!(:commented_repository) do
@@ -37,6 +51,12 @@ describe CommentsController, type: :controller do
       it "does allow everyone to write comments for a repository under a public namespace" do
         sign_in user
         post :create, repository_id: visible_repository.id, comment: valid_attributes, format: :js
+        expect(response.status).to eq 200
+      end
+
+      it "allows logged-in users to write comments for a repository under a protected namespace" do
+        sign_in user
+        post :create, repository_id: protected_repository.id, comment: valid_attributes, format: :js
         expect(response.status).to eq 200
       end
 

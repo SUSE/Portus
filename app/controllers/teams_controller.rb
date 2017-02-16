@@ -14,7 +14,7 @@ class TeamsController < ApplicationController
   # GET /teams/1
   # GET /teams/1.json
   def show
-    raise ActiveRecord::RecordNotFound if @team.name.starts_with?("portus_global_team_")
+    raise ActiveRecord::RecordNotFound if @team.hidden?
 
     authorize @team
     @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
@@ -24,11 +24,14 @@ class TeamsController < ApplicationController
   # POST /teams
   # POST /teams.json
   def create
-    @team = Team.new(team_params)
+    @team = fetch_team
+    authorize @team
     @team.owners << current_user
 
     if @team.save
-      @team.create_activity :create, owner: current_user
+      @team.create_activity(:create,
+                            owner:      current_user,
+                            parameters: { team: @team.name })
       respond_with(@team)
     else
       respond_with @team.errors, status: :unprocessable_entity
@@ -39,7 +42,7 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1.json
   def update
     p = params.require(:team).permit(:name, :description)
-    change_name_description(@team, :team, p)
+    change_name_description(@team, :team, p, team: @team.name)
   end
 
   # GET /teams/1/typeahead/%QUERY
@@ -65,11 +68,16 @@ class TeamsController < ApplicationController
 
   private
 
-  def set_team
-    @team = Team.find(params[:id])
+  # Fetch the team to be created from the given parameters.
+  def fetch_team
+    team = params.require(:team).permit(:name, :description)
+
+    @team = Team.new(name: team["name"])
+    @team.description = team["description"] if team["description"]
+    @team
   end
 
-  def team_params
-    params.require(:team).permit(:name, :description)
+  def set_team
+    @team = Team.find(params[:id])
   end
 end

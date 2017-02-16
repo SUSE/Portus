@@ -118,7 +118,7 @@ module Portus
     def parse_unhauthorized_response(res)
       auth_args = res.to_hash["www-authenticate"].first.split(",").each_with_object({}) do |i, h|
         key, val = i.split("=")
-        h[key] = val.gsub('"', "")
+        h[key] = val.delete('"')
       end
 
       unless credentials?

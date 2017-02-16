@@ -3,7 +3,7 @@ li
     .activity-type.repo-deleted
       i.fa.fa-forward.fa-fw
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         = render_delete_activity(activity)

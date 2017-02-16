@@ -11,7 +11,7 @@ feature "Admin - Dashboard" do
     visit admin_dashboard_index_path
   end
 
-  scenario "The dashboard does not count the Portus user", js: true do
+  scenario "The dashboard does not count the Portus user" do
     create_portus_user!
     visit admin_dashboard_index_path
 
@@ -19,7 +19,7 @@ feature "Admin - Dashboard" do
     expect(find(".users span").text).to eq "3"
   end
 
-  scenario "Warn the admin that the portus user does not exist", js: true do
+  scenario "Warn the admin that the portus user does not exist" do
     expect(page).to have_content("The Portus user does not exist!")
 
     create_portus_user!

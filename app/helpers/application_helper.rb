@@ -1,10 +1,14 @@
 module ApplicationHelper
+  include ActivitiesHelper
+
   # Render the user profile picture depending on the gravatar configuration.
-  def user_image_tag(email)
+  def user_image_tag(owner)
+    email = owner.nil? ? nil : owner.email
+
     if APP_CONFIG.enabled?("gravatar") && !email.nil? && !email.empty?
       gravatar_image_tag(email)
     else
-      image_tag "user.svg", class: "user-picture"
+      content_tag :i, nil, class: "fa fa-user user-picture"
     end
   end
 
@@ -39,8 +43,12 @@ module ApplicationHelper
       safe_links_only:     true,
       space_after_headers: true
     }
+
     renderer = Redcarpet::Render::HTML.new(render_options)
     m = Redcarpet::Markdown.new(renderer, extensions)
+
+    # rubocop:disable Rails/OutputSafety
     m.render(text).html_safe
+    # rubocop:enable Rails/OutputSafety
   end
 end

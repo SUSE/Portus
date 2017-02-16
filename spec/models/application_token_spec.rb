@@ -59,7 +59,8 @@ describe ApplicationToken do
         )
       end.to raise_error(
         ActiveRecord::RecordInvalid,
-        /Users cannot have more than #{User::APPLICATION_TOKENS_MAX} application tokens/)
+        /Users cannot have more than #{User::APPLICATION_TOKENS_MAX} application tokens/
+      )
     end
   end
 end

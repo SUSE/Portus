@@ -1,25 +1,30 @@
-span
-  a[data-placement="right" data-toggle="popover" data-container="span" data-content="A namespace groups a series of repositories." data-original-title="What's this?" tabindex="0"]
-    i.fa.fa-info-circle
-    | What's this?
-
 .panel.panel-default
   .panel-heading
     h5
+      small
+        a[data-placement="right"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="<p>A namespace groups a series of repositories.</p>"
+          data-original-title="What's this?"
+          tabindex="0" data-html="true"]
+            i.fa.fa-info-circle
       ' Special namespaces
   .panel-body
     .table-responsive
       table.table.table-stripped.table-hover
         col.col-40
-        col.col-30
+        col.col-15
+        col.col-15
         col.col-20
         col.col-10
         thead
           tr
             th Name
             th Repositories
+            th Webhooks
             th Created
-            th Public
+            th Visibility
         tbody
           - @special_namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}
@@ -31,11 +36,13 @@ span
           = f.label :namespace, {class: 'control-label col-md-2'}
           .col-md-7
             = f.text_field(:namespace, class: 'form-control', required: true, placeholder: "Name")
-        .form-group
+        .form-group.has-feedback
           = f.label :team, {class: 'control-label col-md-2'}
           .col-md-7
             .remote
               = f.text_field(:team, class: 'form-control typeahead', required: true, placeholder: "Name of the team")
+            span.fa.fa-search.form-control-feedback
+
         .form-group
           = f.label :description, {class: 'control-label col-md-2'}
           .col-md-7
@@ -46,10 +53,12 @@ span
 
 .panel.panel-default
   .panel-heading
-    h5
-      ' Namespaces you have access to
-      - if Registry.any?
-        .pull-right
+    .row
+      .col-sm-6
+        h5
+          ' Namespaces you have access to
+      .col-sm-6.text-right
+        - if Registry.any? && can_create_namespace?
           a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
             i.fa.fa-plus-circle
             | Create new namespace
@@ -57,15 +66,17 @@ span
     .table-responsive
       table.table.table-stripped.table-hover
         col.col-40
-        col.col-30
+        col.col-15
+        col.col-15
         col.col-20
         col.col-10
         thead
           tr
             th Name
             th Repositories
+            th Webhooks
             th Created At
-            th Public
+            th Visibility
         tbody#accessible-namespaces
           - @namespaces.each do |namespace|
             = render partial: 'namespaces/namespace', locals: {namespace: namespace}

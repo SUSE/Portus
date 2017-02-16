@@ -114,14 +114,26 @@ signup:
 check_ssl_usage:
   enabled: <%= @options["secure"] %>
 
-# Set the expiration time for the JWT Token that Portus uses to authenticate
-# with the registry. Note that this is just a work-around on the fact that the
-# registry does not try to get a new token again after the current one has
-# expired. Once a solution is issued upstream, we can deprecate this option.
-#
-# See: https://github.com/SUSE/Portus/issues/510
-jwt_expiration_time:
-  value: <%= @options["jwt-expiration-time"] %>
+# Contains advanced options that tweak how Portus interacts with the
+# Registry. Don't touch any of these values unless you *really* know what you
+# are doing.
+registry:
+  # Set the expiration time in minutes for the JWT Token that Portus uses to
+  # authenticate with the registry.
+  #
+  # Note that this is just a work-around on the fact that the registry does not
+  # try to get a new token again after the current one has expired. Once a
+  # solution is issued upstream, we can deprecate this option.
+  #
+  # See: https://github.com/SUSE/Portus/issues/510
+  jwt_expiration_time:
+    value: <%= @options["jwt-expiration-time"] %>
+
+  # Set the pagination value for API calls that fetch data from the
+  # registry. You can read more about pagination in the registry here:
+  #   https://github.com/docker/distribution/blob/master/docs/spec/api.md#pagination
+  catalog_page:
+    value: <%= @options["catalog-page"] %>
 
 # The FQDN of the machine where Portus is being deployed.
 machine_fqdn:

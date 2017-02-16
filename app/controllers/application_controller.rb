@@ -1,10 +1,13 @@
 class ApplicationController < ActionController::Base
+  include Portus::Checks
   before_action :check_requirements
-  helper_method :fixes
+
   before_action :authenticate_user!
   before_action :force_update_profile!
   before_action :force_registry_config!
   protect_from_forgery with: :exception
+
+  add_flash_types :float
 
   include Pundit
   rescue_from Pundit::NotAuthorizedError, with: :deny_access
@@ -25,31 +28,7 @@ class ApplicationController < ActionController::Base
     new_user_session_path
   end
 
-  def fixes
-    secrets = Rails.application.secrets
-    check_ssl = Rails.env.production? && \
-      !request.ssl? && \
-      APP_CONFIG.enabled?("check_ssl_usage")
-
-    {}.tap do |fix|
-      fix[:ssl]                                = check_ssl
-      fix[:secret_key_base]                    = secrets.secret_key_base == "CHANGE_ME"
-      fix[:secret_machine_fqdn]                = APP_CONFIG["machine_fqdn"]["value"].blank?
-      fix[:secret_encryption_private_key_path] = secrets.encryption_private_key_path.nil?
-      fix[:secret_portus_password]             = secrets.portus_password.nil?
-      fix
-    end
-  end
-
   protected
-
-  # Check whether certain requirements are met, like ssl configuration
-  # for production or having setup secrets.
-  # If they are not met, render a page with status 500
-  def check_requirements
-    return unless fixes.value?(true)
-    redirect_to "/500?fixes=true"
-  end
 
   # Redirect users to their profile page if they haven't set up their email
   # account (this happens when signing up through LDAP suppor).

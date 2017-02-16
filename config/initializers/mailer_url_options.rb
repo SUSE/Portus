@@ -1,10 +1,10 @@
-# If you're on staging/production, then you must be using SSL. Otherwise, if
-# you're on development mode and you have set your own FQDN, then we assume
-# that SSL is in place too. Otherwise, SSL is not setup.
-if !Rails.env.development? || !ENV["PORTUS_USE_SSL"].nil?
-  protocol = "https://"
+# If you're on staging/production, then you must be using SSL. Moreover, if
+# you're on development mode and you have set PORTUS_USE_SSL, then SSL will also
+# be required. Otherwise, we will fallback to regular HTTP.
+protocol = if !Rails.env.development? || !ENV["PORTUS_USE_SSL"].nil?
+  "https://"
 else
-  protocol = "http://"
+  "http://"
 end
 
 host = APP_CONFIG["machine_fqdn"]["value"]

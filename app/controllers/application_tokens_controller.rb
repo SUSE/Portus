@@ -11,7 +11,8 @@ class ApplicationTokensController < ApplicationController
     @application_token.token_salt = BCrypt::Engine.generate_salt
     @application_token.token_hash = BCrypt::Engine.hash_secret(
       @plain_token,
-      @application_token.token_salt)
+      @application_token.token_salt
+    )
 
     if @application_token.save
       @application_token.create_activity!(:create, current_user)

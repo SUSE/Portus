@@ -3,11 +3,11 @@ li
     .activity-type.change-name
       i.fa.fa-list-alt
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         strong
-          = "#{activity.owner.username} renamed the team #{activity.parameters[:old]} to "
+          = "#{activity_owner(activity)} renamed the team #{activity.parameters[:old]} to "
         =  link_to activity.parameters[:new], activity.trackable
       small
         i.fa.fa-clock-o

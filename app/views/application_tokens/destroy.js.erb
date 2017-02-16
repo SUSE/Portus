@@ -1,11 +1,10 @@
 <% if @application_token.errors.any? %>
-  $('#alert p').html("<%= escape_javascript(@application_token.errors.full_messages.join('<br/>')) %>");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("<%= escape_javascript(@application_token.errors.full_messages.join('<br/>')) %>");
 <% else %>
   $("#application_token_<%= @application_token.id %>").remove();
-  $('#alert p').html("<em>\"<%= @application_token.application %>\"</em> token has been removed");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("Token <em>\"<%= @application_token.application %>\"</em> was removed successfully");
   <% if current_user.application_tokens.count < User::APPLICATION_TOKENS_MAX %>
     $('#add_application_token_btn').removeAttr("disabled");
   <% end %>
 <% end %>
+$('#float-alert').fadeIn(setTimeOutAlertDelay());

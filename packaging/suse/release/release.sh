@@ -17,7 +17,7 @@ fi
 if [ $1 == "-h" ];then
   usage_and_exit
 fi
-if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]];then
+if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]];then
  usage_and_exit
 fi 
 
@@ -31,8 +31,9 @@ OSC="osc -A $API"
 PKG_DIR=/tmp/$0/$RANDOM
 
 create_subproject() {
-  $OSC ls $DEST_PROJECT > /dev/null 2>&1
-  if [ "$?" == "0" ];then
+  prj_exists=true
+  $OSC ls $DEST_PROJECT || prj_exists=false
+  if $prj_exists;then
     echo "Project $DEST_PROJECT already exists."
     return
   fi
@@ -55,7 +56,7 @@ update_package() {
   echo "Setting version in _service file"
   cd $DEST_PROJECT/portus
   cp _service _service.orig
-  sed -e "s/master.tar.gz/$RELEASE.tar.gz/g" -i _service
+  sed -e "s|/SUSE/Portus/archive/.*.tar.gz|/SUSE/Portus/archive/$RELEASE.tar.gz|g" -i _service
   if [ $? -eq 0 ];then
     echo "WARNING: _service file has not been changed"
   fi
@@ -67,28 +68,29 @@ update_package() {
     echo "WARNING: _service file has not been changed"
   fi
 
+  echo "Remove previous tarballs"
+  $OSC rm $(ls *.tar.gz) || echo "No previous tarball."
   echo "Getting tarball"
   $OSC service disabledrun
+
+  echo "Add new tarball"
   $OSC add $RELEASE.tar.gz
 
   echo "Generate spec file"
   tar zxvf $RELEASE.tar.gz
   cd Portus-$RELEASE/packaging/suse
-  TRAVIS_COMMIT=$RELEASE TRAVIS_BRANCH=$BRANCH ./make_spec.sh
+  TRAVIS_COMMIT=$RELEASE TRAVIS_BRANCH=$BRANCH ./make_spec.sh portus
   cd -
-  # in 2.0.3, Portus is still uppercase
-  if [ -f Portus-$RELEASE/packaging/suse/Portus.spec ];then
-    cp Portus-$RELEASE/packaging/suse/Portus.spec portus.spec
-  # in version >= 2.1, portus is downcase
-  elif [ -f Portus-$RELEASE/packaging/suse/portus.spec ];then
-    cp Portus-$RELEASE/packaging/suse/portus.spec portus.spec
-  fi
+  cp Portus-$RELEASE/packaging/suse/portus.spec portus.spec
 
   echo "Setting version $RELEASE in spec file"
   # We set the BRANCH to the RELEASE tag
   sed -e "s/%define branch $BRANCH/%define branch $RELEASE/g" -i portus.spec
   # We set the Version to the RELEASE tag
   sed -e "s/Version: .*/Version:        $RELEASE/g" -i portus.spec
+  echo "Fix source filename because when releasing we are using a disabled service"
+  echo "which cause the tarball be named differently"
+  sed -e "s/Source:.*Portus-%{branch}.tar.gz/Source:        %{branch}.tar.gz/g" -i portus.spec
   popd
 }
 

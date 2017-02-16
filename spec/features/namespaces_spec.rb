@@ -3,7 +3,9 @@ require "rails_helper"
 feature "Namespaces support" do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:admin) }
-  let!(:team) { create(:team, owners: [user]) }
+  let!(:user2) { create(:user) }
+  let!(:user3) { create(:user) }
+  let!(:team) { create(:team, owners: [user], contributors: [user2], viewers: [user3]) }
   let!(:namespace) { create(:namespace, team: team, registry: registry) }
 
   before do
@@ -36,11 +38,11 @@ feature "Namespaces support" do
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(Namespace.count).to eql namespaces_count
       expect(current_path).to eql namespaces_path
       expect(page).to have_content("Name has already been taken")
-      expect(page).to have_css("#alert .alert.alert-dismissible.alert-info")
+      expect(page).to have_css("#float-alert .alert.alert-dismissible.alert-info.float-alert")
     end
 
     scenario "An user cannot create a namespace for a hidden team", js: true do
@@ -54,11 +56,11 @@ feature "Namespaces support" do
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(Namespace.count).to eql namespaces_count
       expect(current_path).to eql namespaces_path
       expect(page).to have_content("Selected team does not exist")
-      expect(page).to have_css("#alert .alert.alert-dismissible.alert-info")
+      expect(page).to have_css("#float-alert .alert.alert-dismissible.alert-info")
     end
 
     scenario "A namespace can be created from the index page", js: true do
@@ -78,8 +80,8 @@ feature "Namespaces support" do
       expect(current_path).to eql namespaces_path
       expect(page).to have_content("valid-namespace")
 
-      wait_for_effect_on("#alert")
-      expect(page).to have_content("New namespace created")
+      wait_for_effect_on("#float-alert")
+      expect(page).to have_content(/Namespace '.+' was created successfully/)
 
       # Check that it created a link to it and that it's accessible.
       click_link "valid-namespace"
@@ -106,22 +108,26 @@ feature "Namespaces support" do
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
     end
 
-    scenario "The namespace can be toggled public/private", js: true do
+    scenario "The namespace visibility can be changed", js: true do
       visit namespaces_path
       id = namespace.id
 
-      expect(namespace.public?).to be false
-      expect(page).to have_css("#namespace_#{id} .fa-toggle-off")
+      expect(namespace.visibility_private?).to be true
+      expect(page).to have_css("#namespace_#{id} a#private.btn-primary")
 
-      find("#namespace_#{id} .btn").click
+      find("#namespace_#{id} a#protected.btn").click
       wait_for_ajax
 
-      expect(page).to have_css("#namespace_#{id} .fa-toggle-on")
+      expect(page).to have_css("#namespace_#{id} a#protected.btn-primary")
       namespace = Namespace.find(id)
-      expect(namespace.public?).to be true
+      expect(namespace.visibility_protected?).to be true
 
-      wait_for_effect_on("#alert")
-      expect(page).to have_content("Namespace '#{namespace.name}' is now public")
+      find("#namespace_#{id} a#public.btn").click
+      wait_for_ajax
+
+      expect(page).to have_css("#namespace_#{id} a#public.btn-primary")
+      namespace = Namespace.find(id)
+      expect(namespace.visibility_public?).to be true
     end
   end
 
@@ -135,8 +141,23 @@ feature "Namespaces support" do
       find("#change_description_namespace_#{namespace.id} .btn").click
 
       wait_for_ajax
-      wait_for_effect_on("#alert")
+      wait_for_effect_on("#float-alert")
       expect(page).to have_content("Team 'unknown' unknown")
+    end
+  end
+
+  describe "#show" do
+    it "shows the proper visual aid for each role", js: true do
+      visit namespace_path(namespace.id)
+      expect(page).to have_content("Push Pull Owner")
+
+      login_as user2, scope: :user
+      visit namespace_path(namespace.id)
+      expect(page).to have_content("Push Pull Contr.")
+
+      login_as user3, scope: :user
+      visit namespace_path(namespace.id)
+      expect(page).to have_content("Pull Viewer")
     end
   end
 end

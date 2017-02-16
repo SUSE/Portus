@@ -27,6 +27,8 @@ class RepositoriesController < ApplicationController
 
   # Removes all the tags that belong to this repository, and removes it.
   def destroy
+    authorize @repository
+
     # First of all we mark the repo and the tags, so we don't have concurrency
     # problems when "delete" events come in.
     @repository.tags.update_all(marked: true)
@@ -39,11 +41,11 @@ class RepositoriesController < ApplicationController
     if @repository.reload.tags.any?
       ts = @repository.tags.pluck(:name).join(", ")
       logger.error "The following tags could not be removed: #{ts}."
-      redirect_to repository_path(@repository), alert: "Could not remove all the tags"
+      redirect_to repository_path(@repository), alert: "Could not remove all the tags", float: true
     else
       @repository.delete_and_update!(current_user)
       redirect_to namespace_path(@repository.namespace),
-        notice: "Repository removed with all its tags"
+        notice: "Repository removed with all its tags", float: true
     end
   end
 

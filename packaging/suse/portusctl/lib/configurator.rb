@@ -1,6 +1,10 @@
+require_relative "registry"
+
 # Class taking care of configuring the system according to
 # what the user specified on the command line
 class Configurator
+  include ::Portusctl::Registry
+
   def initialize(options)
     @options         = options
     @secret_key_base = SecureRandom.hex(64)
@@ -15,7 +19,8 @@ class Configurator
     TemplateWriter.process(
       "apache2_portus.conf.erb",
       "/etc/apache2/vhosts.d/portus.conf",
-      binding)
+      binding
+    )
 
     if @options["secure"]
       Runner.exec("a2enmod", ["ssl"])
@@ -50,28 +55,34 @@ class Configurator
 
     key_file = "/etc/apache2/ssl.key/#{HOSTNAME}-ca.key"
     crt_file = "/etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt"
+    portus_key = "/srv/Portus/config/server.key"
 
     missing_file(key_file) unless File.exist?(key_file)
     missing_file(crt_file) unless File.exist?(crt_file)
 
-    FileUtils.chown("wwwrun", "www", "/etc/apache2/ssl.key")
-    FileUtils.chmod(0750, "/etc/apache2/ssl.key")
-
-    FileUtils.chown("wwwrun", "www", key_file)
-    FileUtils.chmod(0440, key_file)
-
-    # Create key used by Portus to sign the JWT tokens
-    FileUtils.ln_sf(
+    # Move key to portus dir, set permissions and create symlink
+    # bsc#1022811
+    FileUtils.cp(
       key_file,
-      File.join("/srv/Portus/config", "server.key"))
+      portus_key
+    )
+    FileUtils.chown("wwwrun", "www", portus_key)
+    FileUtils.chmod(0o440, portus_key)
+    FileUtils.rm(key_file)
+    FileUtils.ln_s(
+      portus_key,
+      key_file
+    )
 
     FileUtils.cp(
       crt_file,
-      "/srv/www/htdocs")
-    FileUtils.chmod(0755, "/srv/www/htdocs/#{HOSTNAME}-ca.crt")
+      "/srv/www/htdocs"
+    )
+    FileUtils.chmod(0o755, "/srv/www/htdocs/#{HOSTNAME}-ca.crt")
     FileUtils.cp(
       crt_file,
-      "/etc/pki/trust/anchors")
+      "/etc/pki/trust/anchors"
+    )
     Runner.exec("update-ca-certificates")
   end
 
@@ -80,9 +91,10 @@ class Configurator
     TemplateWriter.process(
       "database.yml.erb",
       "/srv/Portus/config/database.yml",
-      binding)
+      binding
+    )
     FileUtils.chown("root", "www", "/srv/Portus/config/database.yml")
-    FileUtils.chmod(0640, "/srv/Portus/config/database.yml")
+    FileUtils.chmod(0o640, "/srv/Portus/config/database.yml")
   end
 
   # Creates the database and performs the migrations
@@ -113,25 +125,7 @@ class Configurator
       puts "Are you sure the database is empty?"
       puts "Ignoring error"
     end
-  end
-
-  # Creates registry's configuration
-  def registry
-    if @options["local-registry"]
-      # Add the certificated used by Portus to sign the JWT tokens
-      ssldir = "/etc/registry/ssl.crt"
-      FileUtils.mkdir_p(ssldir)
-      FileUtils.ln_sf(
-        "/etc/apache2/ssl.crt/#{HOSTNAME}-ca.crt",
-        File.join(ssldir, "portus.crt"))
-
-      TemplateWriter.process(
-        "registry.yml.erb",
-        "/etc/registry/config.yml",
-        binding)
-    else
-      TemplateWriter.render("registry.yml.erb", binding)
-    end
+    FileUtils.chown_R("wwwrun", "www", "/srv/Portus/tmp")
   end
 
   # Creates the config-local.yml file used by Portus
@@ -144,9 +138,10 @@ class Configurator
     TemplateWriter.process(
       "config-local.yml.erb",
       "/srv/Portus/config/config-local.yml",
-      binding)
+      binding
+    )
     FileUtils.chown("root", "www", "/srv/Portus/config/config-local.yml")
-    FileUtils.chmod(0640, "/srv/Portus/config/config-local.yml")
+    FileUtils.chmod(0o640, "/srv/Portus/config/config-local.yml")
   end
 
   # Creates the secrets.yml file used by Rails
@@ -156,9 +151,10 @@ class Configurator
     TemplateWriter.process(
       "secrets.yml.erb",
       destination,
-      binding)
+      binding
+    )
     FileUtils.chown("root", "www", destination)
-    FileUtils.chmod(0640, destination)
+    FileUtils.chmod(0o640, destination)
   end
 
   # Ensures all the required services are running
@@ -172,7 +168,7 @@ class Configurator
     # portusctl runs as root and creates this file for the 1st time, so
     # we must fix its permissions
     FileUtils.chown_R("root", "www", "/srv/Portus/log/production.log")
-    FileUtils.chmod_R(0664, "/srv/Portus/log/production.log")
+    FileUtils.chmod_R(0o664, "/srv/Portus/log/production.log")
 
     services = [
       ["portus_crono", false],

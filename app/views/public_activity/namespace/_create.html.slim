@@ -3,14 +3,14 @@ li
     .activity-type.create-namespace
       i.fa.fa-ship
     .user-image
-      = user_image_tag(activity.owner.email)
+      = user_image_tag(activity.owner)
     .description
       h6
         strong
-          = "#{activity.owner.username} created the "
+          = "#{activity_owner(activity)} created the "
         = link_to activity.trackable.name , activity.trackable
         = " namespace under the "
-        = link_to activity.trackable.team.name, activity.trackable.team
+        = link_to activity_team(activity, true), activity.trackable.team
         = " team"
       small
         i.fa.fa-clock-o

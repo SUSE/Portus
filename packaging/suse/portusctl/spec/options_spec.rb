@@ -3,11 +3,15 @@ require "yaml"
 
 # Format the given key from the config to portusctl's expectations.
 def format_key(key)
-  key.gsub("_", "-")
-    .gsub("enabled", "enable")
-    .gsub("user-name", "username")
-    .gsub(/^jwt-expiration-time-value$/, "jwt-expiration-time")
-    .gsub(/^check-ssl-usage-enable$/, "secure")
+  key.tr("_", "-")
+     .gsub("enabled", "enable")
+     .gsub("user-name", "username")
+     .gsub(/^registry-jwt-expiration-time-value$/, "jwt-expiration-time")
+     .gsub(/^registry-catalog-page-value$/, "catalog-page")
+     .gsub(/^check-ssl-usage-enable$/, "secure")
+     .gsub(/^user-permission-change-visibility-enable$/, "change-visibility-enable")
+     .gsub(/^user-permission-manage-namespace-enable$/, "manage-namespace-enable")
+     .gsub(/^user-permission-manage-team-enable$/, "manage-team-enable")
 end
 
 # Get the keys as given by the config.yml file.
@@ -44,5 +48,10 @@ describe Cli do
     raw = "The following keys are available in the config but not in the setup command: "
     msg = raw + diff.join(", ") + "."
     expect(diff).to be_empty, msg
+  end
+
+  it "returns the proper name of the given flag" do
+    argv = ["--flag"]
+    expect { Cli.start(argv) }.to output("Unknown switches '--flag'\n").to_stderr
   end
 end
