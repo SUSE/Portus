@@ -18,10 +18,6 @@ matrix:
     - rvm: ruby-head
 
 before_install:
-  - |
-    bash -c " # Install MariaDB
-    sudo bash .travis_mariadb.sh
-    "
   - gem update --system
 
 before_script:
@@ -49,3 +45,4 @@ after_success:
 addons:
   code_climate:
     repo_token: 18a0cf6c35e0c801678f12f444051c33e0390ce0efa91ec06a2aa5068b10c19e
+  mariadb: '10.0'
