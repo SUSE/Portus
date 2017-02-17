@@ -73,6 +73,7 @@ pushd build/$packagename-$branch/
   export BUNDLE_GEMFILE=$PWD/Gemfile
   cp Gemfile.lock Gemfile.lock.orig
   bundle config build.nokogiri --use-system-libraries
+  export PORTUS_PUMA_DEPLOYMENT=yes
   PACKAGING=yes bundle install --retry=3 --no-deployment
   grep "git-review" Gemfile.lock
   if [ $? == 0 ];then
