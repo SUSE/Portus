@@ -10,14 +10,6 @@ index 7145a71..ed5baab 100644
  gem "jquery-rails"
  gem "sass-rails", ">= 3.2"
  gem "slim"
-@@ -59,6 +59,7 @@ end
- # PACKAGING=yes bundle list
- 
- unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
-+
-   group :development do
-     gem "annotate"
-     gem "rails-erd"
 @@ -66,6 +67,7 @@ unless ENV["PACKAGING"] && ENV["PACKAGING"] == "yes"
      gem "pry-rails"
      gem "git-review", require: false
