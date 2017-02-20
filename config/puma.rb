@@ -4,10 +4,24 @@
 threads 1, ENV["PORTUS_PUMA_MAX_THREADS"] || 1
 workers ENV["PORTUS_PUMA_WORKERS"] || 1
 
-# If specified, use the given host:port. Otherwise, we will use a local
-# deployment through a UNIX socket.
+# We can bind in three different ways:
+#
+#  1. TCP and SSL. For this, you have to specify the host and the path to the
+#     certificates. This is the preferred setup for production environments.
+#  2. TCP with no SSL. For this, simply specify the host. Good for development
+#     purposes inside of a container.
+#  3. UNIX socket. This is the default and it's good for development purposes if
+#     you are not using a container setup.
 if ENV["PORTUS_PUMA_HOST"]
-  bind "tcp://#{ENV["PORTUS_PUMA_HOST"]}"
+  if ENV["PORTUS_PUMA_TLS_KEY"]
+    host, port = ENV["PORTUS_PUMA_HOST"].split(":")
+    port ||= "3000"
+    ssl_bind host, port,
+             key:  ENV["PORTUS_PUMA_TLS_KEY"],
+             cert: ENV["PORTUS_PUMA_TLS_CERT"]
+  else
+    bind "tcp://#{ENV["PORTUS_PUMA_HOST"]}"
+  end
 else
   bind "unix://#{File.join(Dir.pwd, "tmp/sockets/puma.sock")}"
 end
