@@ -11,7 +11,9 @@ def format_key(key)
      .gsub(/^check-ssl-usage-enable$/, "secure")
      .gsub(/^user-permission-change-visibility-enable$/, "change-visibility-enable")
      .gsub(/^user-permission-manage-namespace-enable$/, "manage-namespace-enable")
+     .gsub(/^user-permission-create-namespace-enable$/, "create-namespace-enable")
      .gsub(/^user-permission-manage-team-enable$/, "manage-team-enable")
+     .gsub(/^user-permission-create-team-enable$/, "create-team-enable")
 end
 
 # Get the keys as given by the config.yml file.

@@ -147,9 +147,19 @@ user_permission:
   change_visibility:
     enabled: true
 
+  # Allow users to create teams. If this is disabled only an admin will be able
+  # to do this. This defaults to true.
+  create_team:
+    enabled: true
+
   # Allow users to create/modify teams if they are an owner of it. If this is
   # disabled only an admin will be able to do this. This defaults to true.
   manage_team:
+    enabled: true
+
+  # Allow users to create namespaces. If this is disabled, only an admin will
+  # be able to do this. This defaults to true.
+  create_namespace:
     enabled: true
 
   # Allow users to create/modify namespaces if they are an owner of it. If this

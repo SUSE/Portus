@@ -187,12 +187,20 @@ first time.
   namespaces. It's enabled by default.
 
 **--manage-namespace-enable**
-  Allow users to create/modify namespaces if they are an owner of it. If this
+  Allow users to modify namespaces if they are an owner of it. If this
   is disabled, only an admin will be able to do this. This defaults to true.
 
+**--create-namespace-enable**
+  Allow users to create namespaces. If this is disabled, only an admin will
+  be able to do this. This defaults to true.
+
 **--manage-team-enable**
-  Allow users to create/modify teams if they are an owner of it. If this is
+  Allow users to modify teams if they are an owner of it. If this is
   disabled only an admin will be able to do this. This defaults to true.
+
+**--create-team-enable**
+  Allow users to create teams. If this is disabled only an admin will be
+  able to do this. This defaults to true.
 
 # EXAMPLES
 
