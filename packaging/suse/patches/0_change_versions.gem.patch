@@ -1,5 +1,5 @@
 diff --git a/Gemfile b/Gemfile
-index 8c3e7861f5a6..f6557f962b18 100644
+index 4f8d7f1f46db..f28dc8545b6b 100644
 --- a/Gemfile
 +++ b/Gemfile
 @@ -1,6 +1,6 @@
@@ -10,7 +10,7 @@ index 8c3e7861f5a6..f6557f962b18 100644
  gem "jquery-rails"
  gem "sass-rails", ">= 3.2"
  gem "bootstrap-sass", "~> 3.3.4"
-@@ -58,7 +58,7 @@ def packaging?
+@@ -60,7 +60,7 @@ def packaging?
  end
  
  # If the deployment is done through Puma, include it in the bundle.
@@ -19,7 +19,7 @@ index 8c3e7861f5a6..f6557f962b18 100644
  
  # In order to create the Gemfile.lock required for packaging
  # meaning that it should contain only the production packages
-@@ -74,6 +74,7 @@ unless packaging?
+@@ -76,6 +76,7 @@ unless packaging?
      gem "pry-rails"
      gem "git-review", require: false
      gem "rack-mini-profiler", require: false
@@ -27,7 +27,7 @@ index 8c3e7861f5a6..f6557f962b18 100644
      gem "guard", require: false
      gem "guard-rubocop", require: false
      gem "guard-rspec", require: false
-@@ -90,7 +91,6 @@ unless packaging?
+@@ -92,7 +93,6 @@ unless packaging?
      gem "factory_girl_rails"
      gem "ffaker"
      gem "rubocop", "~> 0.41.2", require: false
@@ -35,7 +35,7 @@ index 8c3e7861f5a6..f6557f962b18 100644
      gem "database_cleaner"
      gem "md2man", "~>5.1.1", require: false
      gem "binman", "~>5.1.0"
-@@ -109,4 +109,5 @@ unless packaging?
+@@ -111,4 +111,5 @@ unless packaging?
      gem "codeclimate-test-reporter", group: :test, require: nil
      gem "docker-api", "~> 1.28.0"
    end
