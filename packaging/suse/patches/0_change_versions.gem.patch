@@ -1,5 +1,5 @@
 diff --git a/Gemfile b/Gemfile
-index 0fa788a2189e..3e58448efcfe 100644
+index 8c3e7861f5a6..f6557f962b18 100644
 --- a/Gemfile
 +++ b/Gemfile
 @@ -1,6 +1,6 @@
@@ -9,7 +9,7 @@ index 0fa788a2189e..3e58448efcfe 100644
 +gem "rails", "~> 4.2.2"
  gem "jquery-rails"
  gem "sass-rails", ">= 3.2"
- gem "slim"
+ gem "bootstrap-sass", "~> 3.3.4"
 @@ -58,7 +58,7 @@ def packaging?
  end
  
