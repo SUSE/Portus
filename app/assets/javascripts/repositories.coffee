@@ -1,4 +1,4 @@
-$(document).on "page:change", ->
+$(document).ready ->
 
   # Shows and hides the comment form
   $('#write_comment_repository_btn').unbind('click').on 'click', (event) ->

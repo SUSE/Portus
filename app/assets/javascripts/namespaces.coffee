@@ -1,7 +1,7 @@
 #= require includes/set_typehead
 #= require includes/open_close_icon
 
-$(document).on "page:change", ->
+$(document).ready ->
   $('#edit_namespace').on 'click', (event) ->
     set_typeahead('/teams/typeahead/%QUERY')
 
