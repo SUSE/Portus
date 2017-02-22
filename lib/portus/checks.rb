@@ -26,7 +26,7 @@ module Portus
 
       {}.tap do |fix|
         fix[:ssl]                                = check_ssl
-        fix[:secret_key_base]                    = secrets.secret_key_base == "CHANGE_ME"
+        fix[:secret_key_base]                    = secrets.secret_key_base.blank?
         fix[:secret_machine_fqdn]                = APP_CONFIG["machine_fqdn"]["value"].blank?
         fix[:secret_encryption_private_key_path] = secrets.encryption_private_key_path.nil?
         fix[:secret_portus_password]             = secrets.portus_password.nil?

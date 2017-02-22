@@ -86,7 +86,8 @@ class Configurator
     Runner.exec("update-ca-certificates")
   end
 
-  # Creates the database.yml file required by Rails
+  # Creates the database.yml file required by Rails. Note that this method will
+  # wipe out any previous contents.
   def database_config
     TemplateWriter.process(
       "database.yml.erb",
@@ -144,10 +145,11 @@ class Configurator
     FileUtils.chmod(0o640, "/srv/Portus/config/config-local.yml")
   end
 
-  # Creates the secrets.yml file used by Rails
+  # Creates the secrets.yml file used by Rails. Note that this method will wipe
+  # out any previous contents.
   def secrets
     destination = "/srv/Portus/config/secrets.yml"
-    return if File.exist?(destination)
+
     TemplateWriter.process(
       "secrets.yml.erb",
       destination,

@@ -28,7 +28,7 @@ describe ErrorsController do
       end
 
       it "sets @fix[:secret_key_base] as true" do
-        Rails.application.secrets.secret_key_base = "CHANGE_ME"
+        Rails.application.secrets.secret_key_base = ""
         get :show, id: 1, fixes: true
         expect(assigns(:fix)[:secret_key_base]).to be true
       end
