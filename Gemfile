@@ -23,10 +23,6 @@ gem "redcarpet"
 gem "font-awesome-rails"
 gem "bootstrap-typeahead-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
-# turbolinks need to be installed on production because if you use nginx or another
-# proxy/load-balancer, it expects this js files to be installed
-gem "jquery-turbolinks"
-gem "turbolinks"
 
 # Pinning these specific versions because that's what we have on OBS.
 gem "ethon", "~> 0.9.0"

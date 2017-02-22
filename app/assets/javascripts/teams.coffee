@@ -1,6 +1,6 @@
 #= require namespaces
 
-$(document).on "page:change", ->
+$(document).ready ->
   $('#add_team_user_btn').on 'click', (event) ->
     $('#team_user_user').val('')
     $('#team_user_role').val('viewer')

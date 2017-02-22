@@ -1,4 +1,4 @@
-$(document).on "page:change", ->
+$(document).ready ->
   $('#add_application_token_btn').on 'click', (event) ->
     $('#add_application_token_form').toggle 400, "swing", ->
       if $('#add_application_token_form').is(':visible')

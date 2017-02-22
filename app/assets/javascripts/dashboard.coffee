@@ -1,4 +1,4 @@
-$(document).on "page:change", ->
+$(document).ready ->
   $('#starred a').on 'click', (event) ->
     e.preventDefault()
     $(this).tab('show')
