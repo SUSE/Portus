@@ -10,6 +10,8 @@ set_typehead.set_typeahead = (url) ->
         wildcard: '%QUERY'
     )
   bloodhound.initialize()
-  $('.remote .typeahead').typeahead null,
+  $('.remote .typeahead').typeahead
+    highlight: true
+  ,
     displayKey: 'name',
     source: bloodhound.ttAdapter()
