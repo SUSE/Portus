@@ -71,6 +71,7 @@ $(document).ready ->
 
   $('#add_team_btn').on 'click', (event) ->
     $('#team_name').val('')
+    $('#team_description').val('')
     $('#add_team_form').toggle 400, "swing", ->
       if $('#add_team_form').is(':visible')
         $('#add_team_btn i').addClass("fa-minus-circle")
