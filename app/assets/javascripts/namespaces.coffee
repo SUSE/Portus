@@ -6,12 +6,11 @@ $(document).ready ->
     set_typeahead('/teams/typeahead/%QUERY')
 
   $('#add_namespace_btn').unbind('click').on 'click', (event) ->
-    $('#namespace_namespace').val('')
-
-    # When we are creating this on the namespaces page.
-    if $('#namespace_team') && $('#namespace_team').is(':visible')
-      $('#namespace_team').val('')
+    # clear only when creating a new namespace
+    if $('#new-namespace-form').length
+      $('#namespace_team.typeahead').val('')
       $('#namespace_description').val('')
+      $('#namespace_namespace').val('')
 
     $('#add_namespace_form').toggle 400, "swing", ->
       if $('#add_namespace_form').is(':visible')
