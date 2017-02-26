@@ -3,6 +3,7 @@
 ### Improvements and small features
 
 - Update the development environment for docker-compose v2.
+- Fixed icon incoherent in teams page on add namespace action button
 
 ## 2.2.0
 

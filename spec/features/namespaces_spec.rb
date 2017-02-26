@@ -108,6 +108,27 @@ feature "Namespaces support" do
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
     end
 
+    scenario 'The "Create new namespace" keeps icon after add new namespace', js: true do
+      visit namespaces_path
+      expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
+      expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
+
+      find("#add_namespace_btn").click
+      fill_in "Namespace", with: "valid-namespace"
+      fill_in "Team", with: namespace.team.name
+      wait_for_effect_on("#add_namespace_form")
+
+      expect(page).to_not have_css("#add_namespace_btn i.fa-plus-circle")
+      expect(page).to have_css("#add_namespace_btn i.fa-minus-circle")
+
+      click_button "Create"
+      wait_for_ajax
+      wait_for_effect_on("#add_namespace_form")
+
+      expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
+      expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
+    end
+
     scenario "The namespace visibility can be changed", js: true do
       visit namespaces_path
       id = namespace.id

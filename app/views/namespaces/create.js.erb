@@ -6,8 +6,8 @@
   $('#float-alert p').html("Namespace '<%= escape_javascript(@namespace.name) %>' was created successfully");
 
   $('#add_namespace_form').fadeOut();
-  $('#add_namespace_btn i').addClass("fa-chevron-down")
-  $('#add_namespace_btn i').removeClass("fa-chevron-up")
+  $('#add_namespace_btn i').addClass("fa-plus-circle")
+  $('#add_namespace_btn i').removeClass("fa-minus-circle")
 
   // Check on which page we are creating the namespace.
   if ($('#namespaces').length > 0) {
