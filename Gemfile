@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 4.2.6"
+gem "rails", "~> 4.2.8"
 gem "jquery-rails"
 gem "sass-rails", ">= 3.2"
 gem "bootstrap-sass", "~> 3.3.4"
@@ -45,10 +45,7 @@ gem "thor"
 # run:
 #
 # IGNORE_ASSETS=yes bundle list
-unless ENV["IGNORE_ASSETS"] == "yes"
-  gem "coffee-rails"
-  gem "uglifier"
-end
+gem "uglifier" unless ENV["IGNORE_ASSETS"] == "yes"
 
 # Returns true if the bundle is targeted towards building a package.
 def packaging?

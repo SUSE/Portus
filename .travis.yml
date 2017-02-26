@@ -19,6 +19,9 @@ matrix:
 
 before_install:
   - gem update --system
+  - nvm install stable
+  - nvm use stable
+  - npm install
 
 before_script:
   - mysql -e 'create database portus_test;'
@@ -28,6 +31,7 @@ script:
   - bundle exec rubocop -V
   - bundle exec rubocop -F
   - bundle exec brakeman -z -A -x CheckUnscopedFind,CheckRender
+  - npm --harmony run eslint
 
 env:
   global:

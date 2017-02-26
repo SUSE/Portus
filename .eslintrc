@@ -1,0 +1,21 @@
+{
+  "env": {
+    "jquery": true,
+    "browser": true,
+  },
+  "extends": "airbnb-base",
+  "globals": {
+    "Bloodhound": false,
+  },
+  "rules": {
+    "camelcase": 0,
+    "func-names": 0,
+    "prefer-arrow-callback": 0,
+    "no-var": 0,
+    "prefer-template": 0,
+    "no-unused-vars": [2, {"args": "all", "argsIgnorePattern": "^_"}],
+    "object-shorthand": 0,
+    "no-plusplus": 0,
+    "no-void": 0
+  }
+}
