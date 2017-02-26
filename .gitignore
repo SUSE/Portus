@@ -11,3 +11,4 @@
 /docker-compose.overlay.yml
 /spec/integration/fixtures/config.yml
 /spec/integration/fixtures/data
+/node_modules
