@@ -156,7 +156,6 @@ fi
 %exclude %{portusdir}/packaging/suse/make_spec.sh
 %exclude %{portusdir}/packaging/suse/patches
 %exclude %{portusdir}/packaging/suse/portus.spec.in
-%exclude %{portusdir}/packaging/suse/README.install
 %exclude %{portusdir}/packaging/suse/release
 %doc %{portusdir}/README.md
 %doc %{portusdir}/CONTRIBUTING.md
