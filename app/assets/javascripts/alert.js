@@ -18,8 +18,8 @@
   };
 
   float_alert.setTimeOutAlertDelay = function () {
-    return setTimeout(function () {
-      return $('.alert-hide').click();
+    setTimeout(function () {
+      $('.alert-hide').click();
     }, 4000);
   };
 
