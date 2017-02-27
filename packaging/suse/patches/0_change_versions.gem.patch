@@ -161,7 +161,7 @@ index 481374c0b290..cf5d577309dc 100644
 -    nokogiri (1.6.7.2)
 -      mini_portile2 (~> 2.0.0.rc2)
 +    nokogiri (1.6.1)
-+      mini_portile2 (~> 0.5.0)
++      mini_portile (~> 0.5.0)
      notiffany (0.0.8)
        nenv (~> 0.1)
        shellany (~> 0.0)
