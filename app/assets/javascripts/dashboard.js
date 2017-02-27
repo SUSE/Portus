@@ -1,16 +1,16 @@
-jQuery(function () {
+jQuery(function ($) {
   $('#starred a').on('click', function (e) {
     e.preventDefault();
-    return $(this).tab('show');
+    $(this).tab('show');
   });
 
   $('#all a').on('click', function (e) {
     e.preventDefault();
-    return $(this).tab('show');
+    $(this).tab('show');
   });
 
-  return $('#personal a').on('click', function (e) {
+  $('#personal a').on('click', function (e) {
     e.preventDefault();
-    return $(this).tab('show');
+    $(this).tab('show');
   });
 });
