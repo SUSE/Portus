@@ -3,18 +3,21 @@ version: '2'
 services:
   web:
     build: .
-    command: puma -b tcp://0.0.0.0:3000 -w 3
+    command: pumactl -F /portus/config/puma.rb start
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${EXTERNAL_IP}
       - PORTUS_DB_HOST=db
       - PORTUS_DB_PASSWORD=portus
+      - PORTUS_PUMA_HOST=0.0.0.0:3000
+      - PORTUS_PUMA_WORKERS=2
+      - PORTUS_PUMA_MAX_THREADS=4
     volumes:
       - .:/portus
     ports:
       - 3000:3000
     links:
       - db
-  
+
   crono:
     image: portus_web
     entrypoint: bin/crono
@@ -26,12 +29,12 @@ services:
       - .:/portus
     links:
       - db
-  
+
   db:
     image: library/mariadb:10.0.23
     environment:
       MYSQL_ROOT_PASSWORD: portus
-  
+
   registry:
     image: library/registry:2.3.1
     environment:
