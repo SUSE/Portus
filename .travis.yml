@@ -19,19 +19,32 @@ matrix:
 
 before_install:
   - gem update --system
+
+  # Use the latest stable Node.js
   - nvm install stable
   - nvm use stable
-  - npm install
+
+  # Install Yarn
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  - sudo apt-get update
+  - sudo apt-get install yarn
+  - yarn install
 
 before_script:
   - mysql -e 'create database portus_test;'
 
 script:
+  # Ruby tests
   - bundle exec rspec spec packaging/suse/portusctl/spec
+
+  # Style and security checks
   - bundle exec rubocop -V
   - bundle exec rubocop -F
   - bundle exec brakeman -z -A -x CheckUnscopedFind,CheckRender
-  - npm --harmony run eslint
+
+  # Javascript style
+  - yarn run eslint
 
 env:
   global:
