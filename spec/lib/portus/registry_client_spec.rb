@@ -120,8 +120,8 @@ describe Portus::RegistryClient do
       begin
         VCR.turned_off do
           WebMock.disable_net_connect!
-          auth = "service=foo,Bearer realm=http://bar.test.lan/token"
-          url  = "http://flavio:this%20is%20a%20test@bar.test.lan/token?account=flavio&service=foo"
+          auth = "service=foo,Bearer realm=http://portus.test.lan/token"
+          url  = "http://portus.test.lan/token?account=flavio&service=foo"
 
           stub_request(:get, "http://#{registry_server}/v2/")
             .to_return(headers: { "www-authenticate" => auth }, status: 401)
@@ -347,7 +347,7 @@ describe Portus::RegistryClient do
 
           expect do
             registry.catalog
-          end.to raise_error(RuntimeError)
+          end.to raise_error(::Portus::RegistryClient::RegistryError)
         end
       ensure
         WebMock.allow_net_connect!
@@ -441,7 +441,7 @@ describe Portus::RegistryClient do
         expect do
           registry.delete("busybox",
                           "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4")
-        end.to raise_error StandardError
+        end.to raise_error ::Portus::RegistryClient::RegistryError
       end
     end
   end

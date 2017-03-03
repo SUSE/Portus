@@ -6,6 +6,10 @@ module Portus
   class RegistryClient
     include HttpHelpers
 
+    # Exception being raised when we get an error from the Registry API that we
+    # don't know how to handle.
+    class RegistryError < StandardError; end
+
     # Initialize the client by setting up a hostname and the user. Note that if
     # no user was given, the "portus" special user is assumed.
     def initialize(host, use_ssl = false, username = nil, password = nil)
@@ -82,7 +86,8 @@ module Portus
       elsif res.code.to_i == 404 || res.code.to_i == 405
         handle_error res, name: name, digest: digest
       else
-        raise "Something went wrong while deleting blob: " \
+        raise ::Portus::RegistryClient::RegistryError,
+          "Something went wrong while deleting blob: " \
           "[#{res.code}] - #{res.body}"
       end
     end
@@ -116,7 +121,8 @@ module Portus
       elsif res.code.to_i == 404
         handle_error res
       else
-        raise "Something went wrong while fetching the catalog " \
+        raise ::Portus::RegistryClient::RegistryError,
+          "Something went wrong while fetching the catalog " \
           "Response: [#{res.code}] - #{res.body}"
       end
     end

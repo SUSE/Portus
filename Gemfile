@@ -95,7 +95,7 @@ unless packaging?
   group :test do
     gem "shoulda"
     gem "vcr"
-    gem "webmock", require: false
+    gem "webmock", "~> 2.3.2", require: false
     gem "simplecov", require: false
     gem "capybara"
     gem "poltergeist", require: false
