@@ -3,6 +3,10 @@
 class Registry::AuthScope < Portus::AuthScope
   def resource
     reg = Registry.find_by(hostname: @registry.hostname)
+    if reg.nil?
+      Rails.logger.debug("No hostname matching #{@registry.hostname}, testing external_hostname")
+      reg = Registry.find_by(external_hostname: @registry.hostname)
+    end
     raise ResourceNotFound, "Could not find registry #{@registry.hostname}" if reg.nil?
     reg
   end
