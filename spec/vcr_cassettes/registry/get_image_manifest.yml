@@ -38,7 +38,7 @@ http_interactions:
   recorded_at: Mon, 20 Apr 2015 10:06:19 GMT
 - request:
     method: get
-    uri: http://flavio:this%20is%20a%20test@portus.test.lan/v2/token?account=flavio&scope=repository:foo/busybox:pull&service=registry.test.lan
+    uri: http://portus.test.lan/v2/token?account=flavio&scope=repository:foo/busybox:pull&service=registry.test.lan
     body:
       encoding: US-ASCII
       string: ''
