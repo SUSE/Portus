@@ -160,7 +160,7 @@ class Repository < ActiveRecord::Base
     digest = event.try(:[], "target").try(:[], "digest")
     id = ""
 
-    unless digest.blank?
+    if digest.blank?
       begin
         id, = Registry.get.client.manifest(repo, digest)
       rescue StandardError => e
