@@ -21,11 +21,7 @@ class Api::V2::TokensController < Api::BaseController
   # operation into the private registry.
   def show
     authenticate_user! if request.headers["Authorization"]
-    registry = Registry.find_by(hostname: params[:service])
-    if registry.nil?
-      logger.debug("No hostname matching #{params[:service]}, testing external_hostname")
-      registry = Registry.find_by(external_hostname: params[:service])
-    end
+    registry = Registry.find_by_hostname(params[:service])
 
     auth_scopes = []
     auth_scopes = authorize_scopes(registry) unless registry.nil?
