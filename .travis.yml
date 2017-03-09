@@ -35,6 +35,9 @@ before_script:
   - mysql -e 'create database portus_test;'
 
 script:
+  # Compile assets
+  - bundle exec rake portus:assets:compile
+
   # Ruby tests
   - bundle exec rspec spec packaging/suse/portusctl/spec
 

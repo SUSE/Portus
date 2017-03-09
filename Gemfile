@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 4.2.8"
-gem "jquery-rails"
 gem "sass-rails", ">= 3.2"
 gem "bootstrap-sass", "~> 3.3.4"
 gem "slim"
@@ -21,7 +20,6 @@ gem "crono"
 gem "net-ldap"
 gem "redcarpet"
 gem "font-awesome-rails"
-gem "bootstrap-typeahead-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
 
 # Pinning these specific versions because that's what we have on OBS.
@@ -45,7 +43,10 @@ gem "thor"
 # run:
 #
 # IGNORE_ASSETS=yes bundle list
-gem "uglifier" unless ENV["IGNORE_ASSETS"] == "yes"
+unless ENV["IGNORE_ASSETS"] == "yes"
+  gem "uglifier"
+  gem "webpack-rails"
+end
 
 # Returns true if the bundle is targeted towards building a package.
 def packaging?

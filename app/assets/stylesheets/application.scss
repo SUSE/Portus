@@ -1,7 +1,6 @@
 // Typeahead
-/*
- *= require bootstrap-typeahead-rails
- */
+// NOTE: this should be removed in the future in favor of a package in the npm
+@import "bootstrap-typeahead";
 
 // Vendored fonts and styles.
 @import "font-awesome";

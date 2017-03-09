@@ -7,6 +7,16 @@
   "globals": {
     "Bloodhound": false,
   },
+  "plugins": [
+    "import"
+  ],
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./config/webpack.js"
+      }
+    }
+  },
   "rules": {
     "camelcase": 0,
     "func-names": 0,
