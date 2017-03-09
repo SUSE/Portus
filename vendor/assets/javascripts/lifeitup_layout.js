@@ -1,5 +1,6 @@
 // to render the layout correctly in every browser/screen
 
+window.$ = window.jQuery;
 var alreadyResizing = false;
 
 $(window).on("load", function() {
@@ -61,6 +62,7 @@ function layout_resizer () {
 
   alreadyResizing = false;
 }
+window.layout_resizer = layout_resizer;
 
 // BOOTSTRAP INITS
 // init popovers
@@ -90,6 +92,7 @@ $(function () {
 function add_view_image_icon () {
   $(".view-img-link").append("<div class='view-img'><i class='fa fa-external-link-square fa-3x fa-inverse'></i></div>")
 }
+window.add_view_image_icon = add_view_image_icon;
 
 function resize_view_image_icon () {
   $(".view-img-link").each(function() {
@@ -104,6 +107,7 @@ function resize_view_image_icon () {
   })
 
 }
+window.resize_view_image_icon = resize_view_image_icon;
 
 
 // Functions for the mobile version
@@ -118,6 +122,7 @@ function open_mobile_menu () {
     menu_open = true
   }
 }
+window.open_mobile_menu = open_mobile_menu;
 
 // Hide alert box instead of closing it
 $(document).on('click', '.alert-hide', function() {

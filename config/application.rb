@@ -33,5 +33,11 @@ module Portus
 
       g.fallbacks[:rspec] = :test_unit
     end
+
+    # Configure webpack
+    config.webpack.config_file = "config/webpack.js"
+    config.webpack.output_dir  = "public/assets/webpack"
+    config.webpack.public_path = "assets/webpack"
+    config.webpack.dev_server.enabled = false
   end
 end
