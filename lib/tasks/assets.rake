@@ -15,7 +15,7 @@ namespace :portus do
 
     desc "Ensure Node dependencies are installed"
     task check: ["yarn:available"] do
-      unless system("yarn check --ignore-engines", out: File::NULL)
+      unless system("yarn check --offline --ignore-engines", out: File::NULL)
         warn(
           "Error: You have unmet dependencies. (`yarn check` command failed)".color(:red),
           "Run `yarn install` to install missing modules.".color(:green)

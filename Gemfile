@@ -21,6 +21,7 @@ gem "net-ldap"
 gem "redcarpet"
 gem "font-awesome-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
+gem "webpack-rails"
 
 # Pinning these specific versions because that's what we have on OBS.
 gem "ethon", "~> 0.9.0"
@@ -43,10 +44,7 @@ gem "thor"
 # run:
 #
 # IGNORE_ASSETS=yes bundle list
-unless ENV["IGNORE_ASSETS"] == "yes"
-  gem "uglifier"
-  gem "webpack-rails"
-end
+gem "uglifier" unless ENV["IGNORE_ASSETS"] == "yes"
 
 # Returns true if the bundle is targeted towards building a package.
 def packaging?
