@@ -1,5 +1,5 @@
 diff --git a/Gemfile b/Gemfile
-index 5548863a624e..3bc8dcf90690 100644
+index 3bd983744bfc..2ba818fcf484 100644
 --- a/Gemfile
 +++ b/Gemfile
 @@ -1,6 +1,6 @@
@@ -36,7 +36,7 @@ index 5548863a624e..3bc8dcf90690 100644
      gem "md2man", "~>5.1.1", require: false
      gem "binman", "~>5.1.0"
 diff --git a/Gemfile.lock b/Gemfile.lock
-index 7211c46565a7..3d4b4da1735f 100644
+index 3f7dcc13cf3f..a3696ac81433 100644
 --- a/Gemfile.lock
 +++ b/Gemfile.lock
 @@ -1,40 +1,40 @@
@@ -103,7 +103,7 @@ index 7211c46565a7..3d4b4da1735f 100644
      annotate (2.6.5)
        activerecord (>= 2.3.0)
        rake (>= 0.8.7)
--    arel (6.0.3)
+-    arel (6.0.4)
 +    arel (6.0.0)
      ast (2.3.0)
      autoprefixer-rails (5.2.0.1)
@@ -117,7 +117,7 @@ index 7211c46565a7..3d4b4da1735f 100644
        activesupport (>= 4.1.0)
      gravatar_image_tag (1.2.0)
      guard (2.13.0)
-@@ -165,28 +165,27 @@ GEM
+@@ -166,28 +166,27 @@ GEM
      listen (3.0.6)
        rb-fsevent (>= 0.9.3)
        rb-inotify (>= 0.9.7)
@@ -156,7 +156,7 @@ index 7211c46565a7..3d4b4da1735f 100644
      notiffany (0.0.8)
        nenv (~> 0.1)
        shellany (~> 0.0)
-@@ -203,7 +202,7 @@ GEM
+@@ -204,7 +203,7 @@ GEM
        cliver (~> 0.3.1)
        multi_json (~> 1.0)
        websocket-driver (>= 0.2.0)
@@ -165,7 +165,7 @@ index 7211c46565a7..3d4b4da1735f 100644
      powerpack (0.1.1)
      pry (0.10.1)
        coderay (~> 1.1.0)
-@@ -216,7 +215,7 @@ GEM
+@@ -217,7 +216,7 @@ GEM
        activerecord (>= 3.0)
        i18n (>= 0.5.0)
        railties (>= 3.0.0)
@@ -174,7 +174,7 @@ index 7211c46565a7..3d4b4da1735f 100644
      pundit (1.0.1)
        activesupport (>= 3.0.0)
      quiet_assets (1.1.0)
-@@ -224,22 +223,22 @@ GEM
+@@ -225,22 +224,22 @@ GEM
      rack (1.6.4)
      rack-mini-profiler (0.9.3)
        rack (>= 1.1.3)
@@ -208,7 +208,7 @@ index 7211c46565a7..3d4b4da1735f 100644
        activesupport (>= 4.2.0.beta, < 5.0)
        nokogiri (~> 1.6.0)
        rails-deprecated_sanitizer (>= 1.0.1)
-@@ -248,20 +247,20 @@ GEM
+@@ -249,20 +248,20 @@ GEM
        activesupport (>= 3.2)
        choice (~> 0.2.0)
        ruby-graphviz (~> 1.2)
@@ -235,7 +235,7 @@ index 7211c46565a7..3d4b4da1735f 100644
      responders (2.1.0)
        railties (>= 4.2.0, < 5)
      rouge (1.11.1)
-@@ -329,23 +328,24 @@ GEM
+@@ -330,23 +329,24 @@ GEM
        temple (~> 0.6.6)
        tilt (>= 1.3.3, < 2.1)
      slop (3.6.0)
@@ -265,7 +265,7 @@ index 7211c46565a7..3d4b4da1735f 100644
      typhoeus (1.0.2)
        ethon (>= 0.9.0)
      tzinfo (1.2.2)
-@@ -418,11 +418,11 @@ DEPENDENCIES
+@@ -420,11 +420,11 @@ DEPENDENCIES
    poltergeist
    pry-rails
    public_activity
