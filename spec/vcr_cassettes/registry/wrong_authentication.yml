@@ -34,11 +34,11 @@ http_interactions:
       encoding: UTF-8
       string: |
         {"errors":[{"code":"UNAUTHORIZED","message":"access to the requested resource is not authorized","detail":null}]}
-    http_version: 
+    http_version:
   recorded_at: Mon, 20 Apr 2015 09:49:56 GMT
 - request:
     method: get
-    uri: http://flavio:wrong%20password@portus.test.lan/v2/token?account=flavio&service=registry.test.lan
+    uri: http://portus.test.lan/v2/token?account=flavio&service=registry.test.lan
     body:
       encoding: US-ASCII
       string: ''
@@ -87,6 +87,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"error":"Invalid username or password."}'
-    http_version: 
+    http_version:
   recorded_at: Mon, 20 Apr 2015 09:49:57 GMT
 recorded_with: VCR 2.9.3

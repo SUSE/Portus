@@ -38,7 +38,7 @@ http_interactions:
   recorded_at: Thu, 13 Aug 2015 11:34:14 GMT
 - request:
     method: get
-    uri: http://portus:portus1234@portus.test.lan/v2/token?account=portus&scope=repository:busybox:pull&service=registry.test.lan
+    uri: http://portus.test.lan/v2/token?account=portus&scope=repository:busybox:pull&service=registry.test.lan
     body:
       encoding: US-ASCII
       string: ''
