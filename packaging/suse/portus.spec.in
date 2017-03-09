@@ -63,7 +63,6 @@ BuildRequires:  yarn
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
 BuildRequires:  %{rubygem bundler} >= 1.3.0
-BuildRequires:  %{rubygem webpack-rails} >= 0.9.10
 
 __RUBYGEMS_BUILD_REQUIRES__
 
@@ -82,9 +81,15 @@ This package has been built with commit __COMMIT__ from branch __BRANCH__ on dat
 __PATCHEXECS__
 
 %build
+# Untar Javascript dependencies
+cp %{SOURCE1} .
+tar xzvf node_modules.tar.xz
 
+# Deal with Ruby gems.
 install -d vendor/cache
 cp %{_libdir}/ruby/gems/%{rb_ver}/cache/*.gem vendor/cache
+
+# Compile assets
 export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
 export PACKAGING=yes
 SKIP_MIGRATION="yes" PORTUS_SECRET_KEY_BASE="assets_precompilation" RAILS_ENV=production bundle exec rake portus:assets:compile
