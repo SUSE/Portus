@@ -6,8 +6,8 @@ namespace :portus do
     task :available do
       unless system("yarn --version", out: File::NULL)
         warn(
-          "Error: Yarn executable was not detected in the system.".color(:red),
-          "Download Yarn at https://yarnpkg.com/en/docs/install".color(:green)
+          "Error: Yarn executable was not detected in the system.",
+          "Download Yarn at https://yarnpkg.com/en/docs/install"
         )
         abort
       end
@@ -20,8 +20,8 @@ namespace :portus do
 
       unless system(cmd, out: File::NULL)
         warn(
-          "Error: You have unmet dependencies. (`yarn check` command failed)".color(:red),
-          "Run `yarn install` to install missing modules.".color(:green)
+          "Error: You have unmet dependencies. (`yarn check` command failed)",
+          "Run `yarn install` to install missing modules."
         )
         abort
       end
