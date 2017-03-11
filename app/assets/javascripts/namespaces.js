@@ -1,8 +1,3 @@
-/* global layout_resizer, set_typeahead, open_close_icon */
-
-//= require includes/set_typehead
-//= require includes/open_close_icon
-
 jQuery(function ($) {
   $('#edit_namespace').on('click', function (_event) {
     set_typeahead('/teams/typeahead/%QUERY');

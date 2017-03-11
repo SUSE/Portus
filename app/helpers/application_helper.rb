@@ -1,6 +1,18 @@
 module ApplicationHelper
   include ActivitiesHelper
 
+  ACTION_ALIASES = {
+    "update" => "edit",
+    "create" => "new"
+  }.freeze
+
+  def js_route
+    action_name = ACTION_ALIASES[controller.action_name] || controller.action_name
+    controller_name = controller.class.name.underscore.gsub("_controller", "")
+
+    "#{controller_name}/#{action_name}"
+  end
+
   # Render the user profile picture depending on the gravatar configuration.
   def user_image_tag(owner)
     email = owner.nil? ? nil : owner.email

@@ -105,4 +105,25 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(show_first_user_alert?).to be_falsey
     end
   end
+
+  describe "#js_route" do
+    # controller.class === ActionView::TestCase::TestController
+    it "should return controller_name/action_name format" do
+      allow(controller).to receive(:action_name) { "action" }
+
+      expect(js_route).to eq("action_view/test_case/test/action")
+    end
+
+    it "should alias update as edit action name" do
+      allow(controller).to receive(:action_name) { "update" }
+
+      expect(js_route).to eq("action_view/test_case/test/edit")
+    end
+
+    it "should alias create as new action name" do
+      allow(controller).to receive(:action_name) { "create" }
+
+      expect(js_route).to eq("action_view/test_case/test/new")
+    end
+  end
 end

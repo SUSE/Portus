@@ -1,5 +1,3 @@
-/* global layout_resizer */
-
 jQuery(function ($) {
   // Shows and hides the comment form
   $('#write_comment_repository_btn').unbind('click').on('click', function (_e) {

@@ -1,7 +1,3 @@
-/* global layout_resizer, set_typeahead, open_close_icon */
-
-//= require namespaces
-
 jQuery(function ($) {
   $('#add_team_user_btn').on('click', function (_event) {
     var team_id;
