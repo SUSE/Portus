@@ -15,13 +15,6 @@ matrix:
   allow_failures:
     - rvm: ruby-head
 
-# Cache some directories and dependencies
-cache:
-  bundler: true
-  directories:
-    - node_modules
-    - $HOME/.nvm
-
 before_install:
   - gem update --system
 
