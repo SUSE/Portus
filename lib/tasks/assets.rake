@@ -31,7 +31,6 @@ namespace :portus do
   namespace :assets do
     desc "Compile all frontend assets"
     task compile: [
-      "yarn:check",
       "assets:precompile",
       "webpack:compile"
     ]
