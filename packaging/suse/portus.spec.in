@@ -114,7 +114,8 @@ rm -rf \
    vendor/cache \
    node_modules \
    public/assets/application-*.js* \
-   vendor/assets
+   vendor/assets \
+   *.orig
 
 %install
 install -d %{buildroot}/%{portusdir}
