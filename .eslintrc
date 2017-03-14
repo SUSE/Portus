@@ -1,11 +1,14 @@
 {
   "env": {
     "jquery": true,
-    "browser": true,
+    "browser": true
   },
   "extends": "airbnb-base",
   "globals": {
     "Bloodhound": false,
+    "layout_resizer": false,
+    "set_typeahead": false,
+    "open_close_icon": false
   },
   "plugins": [
     "import"

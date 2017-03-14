@@ -17,8 +17,6 @@ require('vendor/bootstrap-typeahead');
 // Require tree.
 // NOTE: This should be moved into proper modules.
 require('./alert');
-require('./auth/cover');
-require('./auth/registrations');
 require('./bootstrap');
 require('./dashboard');
 require('./includes/open_close_icon');
@@ -27,3 +25,7 @@ require('./namespaces');
 require('./open_search');
 require('./repositories');
 require('./teams');
+
+// new modules structure
+require('./modules/users');
+
