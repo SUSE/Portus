@@ -102,6 +102,24 @@ feature "Teams support" do
     end
   end
 
+  describe "teams#update" do
+    scenario "Team name can be updated", js: true do
+      visit team_path(team)
+
+      click_button "Edit team"
+      expect(find("form.edit_team")).to be_visible
+
+      new_team_name = "New #{team}"
+      fill_in "team[name]", with: new_team_name
+      click_button "Save"
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_content("Team '#{new_team_name}' was updated successfully")
+      expect(find(".team_name").text).to eq(new_team_name)
+    end
+  end
+
   describe "teams#show" do
     let!(:another) { create(:user) }
     let!(:another_admin) { create(:admin) }
