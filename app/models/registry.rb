@@ -40,6 +40,17 @@ class Registry < ActiveRecord::Base
     Registry.first
   end
 
+  # Finds the registry with the given hostname. It first looks for the
+  # `hostname` column, and then it fallbacks to `external_hostname`.
+  def self.find_by_hostname(hostname)
+    registry = Registry.find_by(hostname: hostname)
+    if registry.nil?
+      Rails.logger.debug("No hostname matching `#{hostname}', testing external_hostname")
+      registry = Registry.find_by(external_hostname: hostname)
+    end
+    registry
+  end
+
   # Returns the global namespace owned by this registry.
   def global_namespace
     Namespace.find_by(registry: self, global: true)
