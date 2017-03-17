@@ -5,11 +5,11 @@
 ## Default:	""
 ## ServiceRestart: apache2
 #
-# Here you can name files, separated by spaces, that should be Include'd from 
-# httpd.conf. 
+# Here you can name files, separated by spaces, that should be Include'd from
+# httpd.conf.
 #
-# This allows you to add e.g. VirtualHost statements without touching 
-# /etc/apache2/httpd.conf itself, which makes upgrading easier. 
+# This allows you to add e.g. VirtualHost statements without touching
+# /etc/apache2/httpd.conf itself, which makes upgrading easier.
 #
 APACHE_CONF_INCLUDE_FILES="/etc/apache2/httpd.conf.local"
 
@@ -17,8 +17,8 @@ APACHE_CONF_INCLUDE_FILES="/etc/apache2/httpd.conf.local"
 ## Default:	""
 ## ServiceRestart: apache2
 #
-# Here you can name directories, separated by spaces, that should be Include'd 
-# from httpd.conf. 
+# Here you can name directories, separated by spaces, that should be Include'd
+# from httpd.conf.
 #
 # All files contained in these directories will be recursively included by apache.
 # If a pattern like *.conf is appended, apache will use it.
@@ -37,7 +37,7 @@ APACHE_CONF_INCLUDE_DIRS=""
 # However, since the LoadModule statements might need an absolute path to the modules,
 # switching between MPMs can be quite a hassle. It's easier to just give the names here.]
 #
-# * list of all modules shipped with the base distribution: 
+# * list of all modules shipped with the base distribution:
 #
 #    actions alias allowmethods asis auth_basic auth_digest auth_form
 #    authn_anon authn_core authn_dbd authn_dbm authn_file authn_socache
@@ -55,7 +55,7 @@ APACHE_CONF_INCLUDE_DIRS=""
 #    rewrite sed session session_cookie session_crypto session_dbd setenvif
 #    slotmem_plain slotmem_shm socache_dbm socache_memcache socache_shmcb
 #    speling ssl status substitute suexec unique_id userdir usertrack version
-#    vhost_alias watchdog xml2enc 
+#    vhost_alias watchdog xml2enc
 #
 #   see http:///httpd.apache.org/docs/2.4/mod/ !
 #
@@ -67,15 +67,15 @@ APACHE_CONF_INCLUDE_DIRS=""
 # * In the APACHE_MODULES variable, you can use mod_xyz or just xyz syntax.
 #   You may also name an absolute path if you like.
 #
-# * NOTE ON SSL: before you can use mod_ssl, you need a server certificate. 
+# * NOTE ON SSL: before you can use mod_ssl, you need a server certificate.
 #   A test certificate can be created by (as root):
 #   cd /usr/share/doc/packages/apache2; /bin/sh ./mkcert.sh make --no-print-directory /usr/bin/openssl /usr/sbin/ test
 #   Please feel free to have a look at the mkcert.sh script to see how certificates can be created.
-#   Also, you need to set the ServerName inside the <VirtualHost _default_:443> 
+#   Also, you need to set the ServerName inside the <VirtualHost _default_:443>
 #   block to the fully qualified domain name (see /etc/HOSTNAME).
 # * if your server certificate is protected by a passphrase you should increase the
 #   APACHE_START_TIMEOUT (see above)
-# * to finally enable ssl support, you need to add 'SSL' to APACHE_SERVER_FLAGS 
+# * to finally enable ssl support, you need to add 'SSL' to APACHE_SERVER_FLAGS
 #   below.
 #
 # * modules listed here will be ignored if they are not installed
@@ -98,7 +98,7 @@ APACHE_MODULES="actions alias auth_basic authn_file authz_host authz_groupfile  
 #
 # Additional server flags:
 #
-# Put here any server flags ("Defines") that you want to hand over to 
+# Put here any server flags ("Defines") that you want to hand over to
 # httpd at start time, or other command line flags.
 #
 # Background: Any directives within an <IfDefine flag>...</IfDefine>
@@ -130,7 +130,7 @@ APACHE_SERVER_FLAGS=""
 # It is unusual to need to use this setting.
 #
 # Note about ulimits:
-#   if you want to set ulimits, e.g. to increase the max number of open file handle, 
+#   if you want to set ulimits, e.g. to increase the max number of open file handle,
 #   or to allow core files, you can do so by editing /etc/sysconfig/apache2 and
 #   simply write the ulimit commands into that file.
 #   Example:
@@ -148,7 +148,7 @@ APACHE_HTTPD_CONF=""
 # MPM (multi-processing module) to use.
 #
 # Needed to determine with which MPM apache will run, as well as
-# against which header files modules will be built. 
+# against which header files modules will be built.
 #
 # If not set, the system will simply pick one of the installed MPMs.
 #
@@ -162,14 +162,14 @@ APACHE_MPM=""
 ## ServiceReload: apache2
 #
 # email address of the server administrator (ServerAdmin directive)
-# This address is added to the server's responses if APACHE_SERVERSIGNATURE 
-# is set to "email". 
+# This address is added to the server's responses if APACHE_SERVERSIGNATURE
+# is set to "email".
 #
 # If empty ("") it defaults to webmaster@$FQHOSTNAME, where FQHOSTNAME is
-# taken from /etc/HOSTNAME. 
+# taken from /etc/HOSTNAME.
 #
 # Note that ServerAdmin directives inside VirtualHost statements are not
-# changed, even not the one in the stock SSL virtual host block. 
+# changed, even not the one in the stock SSL virtual host block.
 #
 APACHE_SERVERADMIN=""
 
@@ -185,7 +185,7 @@ APACHE_SERVERADMIN=""
 # redirections will not work.  See also the UseCanonicalName directive.
 #
 # If your host doesn't have a registered DNS name, enter its IP address here.
-# You will have to access it by its address anyway, and this will make 
+# You will have to access it by its address anyway, and this will make
 # redirections work in a sensible way.
 #
 APACHE_SERVERNAME=""
@@ -204,8 +204,8 @@ APACHE_START_TIMEOUT="2"
 ## Default:	"on"
 ## ServiceReload: apache2
 #
-# Configures the footer on server-generated documents 
-# This correlates to the ServerSignature directive. 
+# Configures the footer on server-generated documents
+# This correlates to the ServerSignature directive.
 #
 APACHE_SERVERSIGNATURE="off"
 
@@ -228,13 +228,13 @@ APACHE_LOGLEVEL="warn"
 # logged therein and *not* in this file.
 #
 # Simply set it to empty, if you configure it yourself somewhere else.
-# 
+#
 # Examples:
 #
 # If you would like to have agent and referer logfiles:
 #
 # setting it to "/var/log/apache2/referer_log referer, /var/log/apache2/agent_log agent"
-#   corresponds to 
+#   corresponds to
 # CustomLog /var/log/apache2/referer_log referer
 # CustomLog /var/log/apache2/agent_log   agent
 #
@@ -242,7 +242,7 @@ APACHE_LOGLEVEL="warn"
 # (Combined Logfile Format):
 #
 # setting it to "/var/log/apache2/access_log combined"
-#   corresponds to 
+#   corresponds to
 # CustomLog /var/log/apache2/access_log combined
 #
 APACHE_ACCESS_LOG="/var/log/apache2/access_log combined"
@@ -251,7 +251,7 @@ APACHE_ACCESS_LOG="/var/log/apache2/access_log combined"
 ## Default:	"Off"
 ## ServiceReload: apache2
 #
-# UseCanonicalName: Determines how Apache constructs self-referencing 
+# UseCanonicalName: Determines how Apache constructs self-referencing
 # URLs and the SERVER_NAME and SERVER_PORT variables.
 # When set "Off", Apache will use the Hostname and Port supplied
 # by the client.  When set "On", Apache will use the value of the
@@ -273,7 +273,7 @@ APACHE_SERVERTOKENS="ProductOnly"
 ## Default:	"off"
 ## ServiceReload: apache2
 #
-# If mod_status is used, include extended information about the server, like 
+# If mod_status is used, include extended information about the server, like
 # CPU usage, in the status report. It is a server-wide setting, and it can cost
 # some performance!
 #

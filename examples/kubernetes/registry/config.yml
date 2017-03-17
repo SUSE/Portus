@@ -1,0 +1,27 @@
+version: 0.1
+logLevel: debug
+storage:
+  filesystem:
+    rootdirectory: /registry-data
+  delete:
+    enabled: true
+http:
+  addr: 0.0.0.0:5000
+  debug:
+    addr: 0.0.0.0:5001
+  tls:
+    certificate: /certificates/portus.crt
+    key: /certificates/portus.key
+auth:
+  token:
+    realm: https://portus.mssola.cat/v2/token
+    service: registry.mssola.cat
+    issuer: portus.mssola.cat
+    rootcertbundle: /certificates/portus.crt
+notifications:
+  endpoints:
+    - name: portus
+      url: https://portus.mssola.cat/v2/webhooks/events
+      timeout: 500ms
+      threshold: 5
+      backoff: 1s

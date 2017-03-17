@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: portus
+  labels:
+    app: portus
+    tier: registry
+spec:
+  type: NodePort
+  # type: LoadBalancer
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: portus
+    tier: registry
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: portus
+        tier: registry
+    spec:
+      containers:
+      - name: portus
+        image: opensuse/portus:head
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1Gi
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: certificates
+          mountPath: /certificates
+          readOnly: true
+        env:
+        - name:  PORTUS_MACHINE_FQDN_VALUE
+          value: "portus.mssola.cat"
+
+        # DB
+        - name:  PORTUS_PRODUCTION_HOST
+          value: "$(MARIADB_SERVICE_HOST)"
+        - name:  PORTUS_PRODUCTION_DATABASE
+          value: "portus_production"
+        - name: PORTUS_PRODUCTION_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secrets
+              key: password
+
+        # Secrets
+        - name: PORTUS_SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: portus-secrets
+              key: keybase
+        - name: PORTUS_KEY_PATH
+          value: "/certificates/portus.key"
+        - name: PORTUS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: portus-secrets
+              key: password
+
+        # For simplicity we serve assets through Rails.
+        - name: RAILS_SERVE_STATIC_FILES
+          value: "true"
+
+        - name: PORTUS_PUMA_WORKERS
+          value: "2"
+        - name: PORTUS_PUMA_MAX_THREADS
+          value: "4"
+
+        - name: PORTUS_PUMA_TLS_KEY
+          value: "/certificates/portus.key"
+        - name: PORTUS_PUMA_TLS_CERT
+          value: "/certificates/portus.crt"
+      volumes:
+      - name: secrets
+        secret:
+          secretName: certificates
+      - name: certificates
+        secret:
+          secretName: certificates

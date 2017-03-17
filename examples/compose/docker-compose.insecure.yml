@@ -1,0 +1,92 @@
+version: "2"
+
+services:
+  portus:
+    image: opensuse/portus:head
+    environment:
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_CHECK_SSL_USAGE_ENABLED=false
+
+      # DB. The password for the database should definitely not be here. You are
+      # probably better off with Docker Swarm secrets.
+      - PORTUS_PRODUCTION_HOST=db
+      - PORTUS_PRODUCTION_PASSWORD=portus
+      - PORTUS_PRODUCTION_DATABASE=portus_production
+
+      # Secrets. It can possibly be handled better with Swarm's secrets.
+      - PORTUS_SECRET_KEY_BASE=b494a25faa8d22e430e843e220e424e10ac84d2ce0e64231f5b636d21251eb6d267adb042ad5884cbff0f3891bcf911bdf8abb3ce719849ccda9a4889249e5c2
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=12341234
+
+      # Fine tuning.
+      - PORTUS_PUMA_WORKERS=2
+      - PORTUS_PUMA_MAX_THREADS=4
+
+      # NGinx is serving the assets instead of Puma. If you want to change this,
+      # uncomment this line.
+      - RAILS_SERVE_STATIC_FILES=true
+    ports:
+      - 3000:3000
+    links:
+      - db
+    volumes:
+      - ./secrets:/certificates:ro
+
+  crono:
+    image: opensuse/portus:head
+    environment:
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+
+      # DB. The password for the database should definitely not be here. You are
+      # probably better off with Docker Swarm secrets.
+      - PORTUS_PRODUCTION_HOST=db
+      - PORTUS_PRODUCTION_DATABASE=portus_production
+      - PORTUS_PRODUCTION_PASSWORD=portus
+
+      # Secrets. It can possibly be handled better with Swarm's secrets.
+      - PORTUS_SECRET_KEY_BASE=b494a25faa8d22e430e843e220e424e10ac84d2ce0e64231f5b636d21251eb6d267adb042ad5884cbff0f3891bcf911bdf8abb3ce719849ccda9a4889249e5c2
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=12341234
+
+      # We want to execute crono, not portus
+      - PORTUS_INIT_COMMAND=bin/crono
+    links:
+      - db
+    volumes:
+      - ./secrets:/certificates:ro
+
+  db:
+    image: library/mariadb:10.0.23
+    environment:
+      MYSQL_DATABASE: portus_production
+
+      # Again, the password shouldn't be handled like this.
+      MYSQL_ROOT_PASSWORD: portus
+    volumes:
+      - /var/lib/portus/mariadb:/var/lib/mysql
+
+  registry:
+    image: library/registry:2.6
+    environment:
+      # Authentication
+      REGISTRY_AUTH_TOKEN_REALM: http://${MACHINE_FQDN}:3000/v2/token
+      REGISTRY_AUTH_TOKEN_SERVICE: ${MACHINE_FQDN}:5000
+      REGISTRY_AUTH_TOKEN_ISSUER: ${MACHINE_FQDN}
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /secrets/portus.crt
+
+      # Portus endpoint
+      REGISTRY_NOTIFICATIONS_ENDPOINTS: >
+        - name: portus
+          url: http://${MACHINE_FQDN}:3000/v2/webhooks/events
+          timeout: 2000ms
+          threshold: 5
+          backoff: 1s
+    volumes:
+      - /var/lib/portus/registry:/registry_data
+      - ./secrets:/secrets:ro
+      - ./registry/config.yml:/etc/docker/registry/config.yml:ro
+    ports:
+      - 5000:5000
+      - 5001:5001 # required to access debug service
+    links:
+      - portus:portus

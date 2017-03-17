@@ -3,6 +3,7 @@
 - Website: http://port.us.org/
 - [Blog](http://port.us.org/blog/index.html)
 - Mailing list: [Google Groups](https://groups.google.com/forum/#!forum/portus-dev)
+- Official [Docker image](https://hub.docker.com/r/opensuse/portus/)
 
 Portus is an authorization server and a user interface for the next generation
 of the Docker registry. Portus targets

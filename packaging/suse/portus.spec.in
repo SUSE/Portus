@@ -115,6 +115,9 @@ rm -rf \
    node_modules \
    public/assets/application-*.js* \
    vendor/assets \
+   examples \
+   config/secrets.yml \
+   config/database.yml \
    *.orig
 
 %install
