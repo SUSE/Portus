@@ -1,5 +1,5 @@
 jQuery(function ($) {
-  $('#add_team_user_btn').on('click', function (_event) {
+  $('#add_team_user_btn').on('click', function () {
     var team_id;
 
     $('#team_user_user').val('');
@@ -19,8 +19,9 @@ jQuery(function ($) {
     set_typeahead(team_id + '/typeahead/%QUERY');
   });
 
-  $('body').on('click', '.btn-edit-role', function (_event) {
+  $('body').on('click', '.btn-edit-role', function (event) {
     var el = $(this).find('i.fa');
+
     if ($(this).hasClass('add')) {
       open_close_icon(el);
       $('#team_user_' + event.currentTarget.value + ' td .role').toggle();
@@ -32,7 +33,7 @@ jQuery(function ($) {
     }
   });
 
-  $('#add_webhook_btn').unbind('click').on('click', function (_event) {
+  $('#add_webhook_btn').unbind('click').on('click', function () {
     $('#webhook_url').val('');
     $('#webhook_username').val('');
     $('#webhook_password').val('');
@@ -50,7 +51,7 @@ jQuery(function ($) {
     });
   });
 
-  $('body').on('click', '.btn-edit-webhook', function (_event) {
+  $('body').on('click', '.btn-edit-webhook', function (event) {
     if ($(this).hasClass('button_edit_webhook')) {
       $('.webhook_information').toggle();
       $('#update_webhook_' + event.currentTarget.value).toggle();
@@ -59,7 +60,7 @@ jQuery(function ($) {
     }
   });
 
-  $('#add_webhook_header_btn').unbind('click').on('click', function (_event) {
+  $('#add_webhook_header_btn').unbind('click').on('click', function () {
     $('#webhook_header_name').val('');
     $('#webhook_header_value').val('');
 
@@ -76,9 +77,10 @@ jQuery(function ($) {
     });
   });
 
-  $('#add_team_btn').on('click', function (_event) {
+  $('#add_team_btn').on('click', function () {
     $('#team_name').val('');
     $('#team_description').val('');
+
     $('#add_team_form').toggle(400, 'swing', function () {
       if ($('#add_team_form').is(':visible')) {
         $('#add_team_btn i').addClass('fa-minus-circle');
