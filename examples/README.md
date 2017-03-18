@@ -31,6 +31,8 @@ grasp of how to deploy Portus. These other examples are:
 - A setup that runs on Oracle Linux 7 and that uses NGinx to proxy between
   Portus and the registry by [@Djelibeybi](https://github.com/Djelibeybi/). Check
   it out [here](https://github.com/Djelibeybi/Portus-On-OracleLinux7).
+- A lightweight setup by [@h0tbird](https://github.com/h0tbird) that uses Alpine
+  underneath. You can check it out [here](https://github.com/katosys/portus).
 
 If you have an example of your own, and you think it can be useful to other
 people, submit a PR including yours in here!
