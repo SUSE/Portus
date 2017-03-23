@@ -84,14 +84,17 @@ Let's detail some of the version being specified:
   had to be made in order to offer backwards compatibility. This is not
   supported neither for Portus `2.0.0` nor `2.0.1`.
 
-## Overview
+# Deploying
 
-In this video you can get an overview of some of the features and capabilities
-of Portus.
+You can deploy Portus in a wide variety of ways. Most commonly:
 
-[![preview](https://cloud.githubusercontent.com/assets/22728/9274870/897410de-4299-11e5-9ebf-c6ecc1ae7733.png)](https://www.youtube.com/watch?v=hGqvYVvdf7U)
+- Using **containers**: in the `examples` directory you can find different
+  containerized deployment examples (e.g. with Kubernetes).
+- A **bare metal** setup: you can either do it by
+  [installing the RPM](http://port.us.org/docs/setups/1_rpm_packages.html) or
+  installing [everything yourself with NGinx and Puma](http://port.us.org/docs/setups/3_nginx_bare_metal.html).
 
-## Contributing
+# Contributing
 
 First of all, make sure that you have a working development environment. You
 can easily do this with either Docker or Vagrant, as it's explained on the
@@ -104,7 +107,14 @@ Also, make sure to understand our contribution guidelines, as explained in
 
 Happy hacking!
 
-## Licensing
+# Overview
+
+In this video you can get an overview of some of the features and capabilities
+of Portus.
+
+[![preview](https://cloud.githubusercontent.com/assets/22728/9274870/897410de-4299-11e5-9ebf-c6ecc1ae7733.png)](https://www.youtube.com/watch?v=hGqvYVvdf7U)
+
+# Licensing
 
 Portus is licensed under the Apache License, Version 2.0. See
 [LICENSE](https://github.com/SUSE/Portus/blob/master/LICENSE) for the full

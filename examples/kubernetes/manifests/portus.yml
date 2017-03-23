@@ -74,11 +74,6 @@ spec:
         - name: RAILS_SERVE_STATIC_FILES
           value: "true"
 
-        - name: PORTUS_PUMA_WORKERS
-          value: "2"
-        - name: PORTUS_PUMA_MAX_THREADS
-          value: "4"
-
         - name: PORTUS_PUMA_TLS_KEY
           value: "/certificates/portus.key"
         - name: PORTUS_PUMA_TLS_CERT

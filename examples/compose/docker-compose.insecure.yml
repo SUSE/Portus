@@ -18,10 +18,6 @@ services:
       - PORTUS_KEY_PATH=/certificates/portus.key
       - PORTUS_PASSWORD=12341234
 
-      # Fine tuning.
-      - PORTUS_PUMA_WORKERS=2
-      - PORTUS_PUMA_MAX_THREADS=4
-
       # NGinx is serving the assets instead of Puma. If you want to change this,
       # uncomment this line.
       - RAILS_SERVE_STATIC_FILES=true

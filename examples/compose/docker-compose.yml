@@ -21,10 +21,6 @@ services:
       - PORTUS_PUMA_TLS_KEY=/certificates/portus.key
       - PORTUS_PUMA_TLS_CERT=/certificates/portus.crt
 
-      # Fine tuning.
-      - PORTUS_PUMA_WORKERS=2
-      - PORTUS_PUMA_MAX_THREADS=4
-
       # NGinx is serving the assets instead of Puma. If you want to change this,
       # uncomment this line.
       #- RAILS_SERVE_STATIC_FILES=true
