@@ -11,7 +11,14 @@ module Portus
     # object, which is the event object as given by the registry.
     def self.process!(data, *handlers)
       data["events"].each do |event|
-        Rails.logger.debug "Incoming event:\n#{JSON.pretty_generate(event)}"
+        if event["action"] == "pull" && event["request"]["useragent"] == "Ruby" &&
+            event["actor"]["name"] == "portus"
+          Rails.logger.tagged("crono", "catalog_pull") do
+            Rails.logger.debug event["target"]["url"]
+          end
+        else
+          Rails.logger.debug "Incoming event:\n#{JSON.pretty_generate(event)}"
+        end
 
         next unless should_handle?(event)
         action = event["action"]
