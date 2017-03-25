@@ -5,23 +5,23 @@ describe Portus::RegistryNotification do
     {
       "events" => [
         {
-          "action" => "push",
-          "request"   => {},
-          "actor"     => {}
+          "action"  => "push",
+          "request" => {},
+          "actor"   => {}
         },
         {
-          "action" => "push",
-          "target" => { "mediaType" => "some" },
-          "request"   => {},
-          "actor"     => {}
+          "action"  => "push",
+          "target"  => { "mediaType" => "some" },
+          "request" => {},
+          "actor"   => {}
         },
         {
-          "action" => "pull",
-          "target" => {
+          "action"  => "pull",
+          "target"  => {
             "mediaType" => "application/vnd.docker.distribution.manifest.v1+json"
           },
-          "request"   => {},
-          "actor"     => {}
+          "request" => {},
+          "actor"   => {}
         }
       ]
     }
@@ -29,21 +29,21 @@ describe Portus::RegistryNotification do
 
   let(:relevant) do
     {
-      "action" => "push",
-      "target" => {
+      "action"  => "push",
+      "target"  => {
         "mediaType"  => "application/vnd.docker.distribution.manifest.v1+json",
         "digest"     => "sha256:1977980aad73e19f918c676de1860b0ee56167b07c20641ecda3f9d74b69627d",
         "repository" => "mssola/busybox",
         "url"        => "http://registry.test.lan/v2/mssola/busybox/manifests/sha256:1977980aad7"
       },
-      "request"   => {
+      "request" => {
         "id"        => "e30471d8-39c3-41c0-abc2-775ed43e81c9",
         "addr"      => "127.0.0.1:54032",
         "host"      => "registry.mssola.cat:5000",
         "method"    => "PUT",
-        "useragent" => "docker/1.9.1 go/go1.5.2 git-commit/a34a1d5 kernel/4.4.0-1-default os/linux arch/amd64"
+        "useragent" => "docker/1.9.1 go/go1.5.2 git-commit/a34a1d5 kernel/4.4.0-1-default"
       },
-      "actor"     => {
+      "actor"   => {
         "name" => "mssola"
       }
     }
