@@ -90,6 +90,18 @@ cp /vagrant/vagrant/conf/portus/sysconfig_apache2 /etc/sysconfig/apache2
 cp /vagrant/vagrant/conf/portus/httpd.conf.local /etc/apache2/httpd.conf.local
 cp /vagrant/vagrant/conf/portus/portus.test.lan.conf /etc/apache2/vhosts.d/
 
+EOS
+
+    node.vm.provision "shell", inline: <<EOS
+cd /vagrant
+sudo npm install webpack yarn n -g
+sudo n latest
+# Change path so that latest node binary can be used
+PATH=/usr/local/bin:$PATH
+yarn install
+# run webpack locally on the portus web VM
+webpack --watch --config config/webpack.js &
+
 systemctl enable apache2
 systemctl start apache2
 EOS
