@@ -33,11 +33,11 @@ feature "Repositories support" do
       APP_CONFIG["delete"] = { "enabled" => true }
 
       visit repository_path(repository)
-      expect(page).to have_content("Delete image")
+      expect(page).to have_content("Delete repository")
 
       login_as user2, scope: :user
       visit repository_path(repository)
-      expect(page).to_not have_content("Delete image")
+      expect(page).to_not have_content("Delete repository")
     end
 
     scenario "A user can star a repository", js: true do

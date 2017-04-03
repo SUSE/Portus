@@ -10,7 +10,7 @@ module Portus
 
       # Whether the response from the `vulnerabilities` method should be as
       # "Working in Progress".
-      WIP = true
+      WIP = false
 
       # Returns nil if the dummy backend is "working on it", otherwise it
       # returns a list of vulnerabilities as specified by the DUMMY_FIXTURE

@@ -92,7 +92,7 @@ cp %{_libdir}/ruby/gems/%{rb_ver}/cache/*.gem vendor/cache
 # Compile assets
 export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
 export PACKAGING=yes
-SKIP_MIGRATION="yes" PORTUS_SECRET_KEY_BASE="assets_precompilation" RAILS_ENV=production bundle exec rake portus:assets:compile
+SKIP_MIGRATION="yes" PORTUS_SECRET_KEY_BASE="assets_precompilation" RAILS_ENV=production NODE_ENV=production bundle exec rake portus:assets:compile
 export IGNORE_ASSETS=yes
 export PORTUS_PUMA_DEPLOYMENT=yes
 

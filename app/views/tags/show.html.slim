@@ -1,0 +1,25 @@
+.panel.panel-default
+  .panel-heading
+    .row
+      .col-sm-6.text-left
+        h5
+          - if @names.size > 1
+            | Tags: #{@names.join(", ")}
+          - else
+            | Tag: #{@names.first}
+          = "(repository: "
+          = link_to @tag.repository.name, repository_path(@tag.repository)
+          | )
+
+  .panel-body
+    span
+      - @vulnerabilities.each do |backend, vulns|
+        - next if vulns.empty?
+
+        h5= backend
+        ul
+          - vulns.each do |v|
+            li
+              a href="#{v['Link']}"
+                = v["Name"]
+              |  (severity: #{v["Severity"]})
