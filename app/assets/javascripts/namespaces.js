@@ -1,5 +1,7 @@
 import typeahead from '~/utils/typeahead';
 
+import { openCloseIcon } from '~/utils/effects';
+
 jQuery(function ($) {
   $('#edit_namespace').on('click', function (_event) {
     typeahead.set('.remote .typeahead', '/teams/typeahead/%QUERY');
@@ -30,7 +32,7 @@ jQuery(function ($) {
   $('body').on('click', '.btn-edit-role', function (event) {
     var el = $(this).find('i.fa');
     if ($(this).hasClass('button_namespace_description')) {
-      open_close_icon(el);
+      openCloseIcon(el);
       $('.description').toggle();
       $('#change_description_namespace_' + event.currentTarget.value).toggle();
     }

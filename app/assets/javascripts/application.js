@@ -12,14 +12,19 @@ import 'vendor/lifeitup_layout';
 
 // Require tree.
 // NOTE: This should be moved into proper modules.
-import './alert';
 import './bootstrap';
-import './dashboard';
-import './includes/open_close_icon';
 import './namespaces';
-import './open_search';
 import './repositories';
 import './teams';
 
 // new modules structure
 import './modules/users';
+import './modules/dashboard';
+
+import effects from './utils/effects';
+
+// Actions to be done to initialize any page.
+$(function () {
+  effects.setTimeOutAlertDelay();
+  effects.refreshFloatAlertPosition();
+});
