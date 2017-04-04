@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "CVE-2016-6304",
+    "Link": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6304",
+    "Severity": "High"
+  },
+  {
+    "Name": "CVE-2016-7052",
+    "Link": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-7052",
+    "Severity": "Medium"
+  },
+  {
+    "Name": "CVE-2016-2178",
+    "Link": "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-2178",
+    "Severity": "Low"
+  }
+]
