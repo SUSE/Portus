@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   resources :repositories, only: [:index, :show, :destroy] do
     post :toggle_star, on: :member
     resources :comments, only: [:create, :destroy]
+    resources :vulnerabilities, only: [:index]
   end
 
   resources :tags, only: [:destroy]

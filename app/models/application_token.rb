@@ -19,11 +19,10 @@ class ApplicationToken < ActiveRecord::Base
   belongs_to :user
 
   validates :application, uniqueness: { scope: "user_id" }
-
   validate :limit_number_of_tokens_per_user, on: :create
 
   def limit_number_of_tokens_per_user
-    max_reached = ApplicationToken.where(user_id: user_id).count >= User::APPLICATION_TOKENS_MAX
+    max_reached = User.find(user_id).application_tokens.count >= User::APPLICATION_TOKENS_MAX
     errors.add(
       :base,
       "Users cannot have more than #{User::APPLICATION_TOKENS_MAX} " \
