@@ -10,7 +10,7 @@
 module WaitForEvents
   # Wait for all the AJAX requests to have concluded.
   def wait_for_ajax
-    wait_until_zero("jQuery.active")
+    wait_until_zero("$.active")
   end
 
   # Wait for all the effects on the given selector to have concluded.
