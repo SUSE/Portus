@@ -14,12 +14,12 @@ module Portus
       # used to post this images into Clair. Moreover, this method also needs
       # the URL of the registry, since it needs to pass this information to
       # Clair.
-      def vulnerabilities(layers, token, registry_url)
-        @token        = token
-        @registry_url = registry_url
+      def vulnerabilities(params)
+        @token        = params[:token]
+        @registry_url = params[:registry_url]
 
         # Filter out empty layers.
-        @layers = layers.reject { |digest| digest == EMPTY_LAYER_SHA }
+        @layers = params[:layers].reject { |digest| digest == EMPTY_LAYER_SHA }
 
         # We first post everything in reverse order, so parent layers are
         # available when inspecting vulnerabilities.
@@ -78,7 +78,6 @@ module Portus
         digest = @layers.fetch(index)
 
         uri, req = get_request("/v1/layers", "post")
-        puts layer_body(digest, parent).to_json
         req.body = layer_body(digest, parent).to_json
 
         res = get_response_token(uri, req)

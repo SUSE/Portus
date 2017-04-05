@@ -7,8 +7,8 @@ module Portus
       # return two different types:
       #   - An array containing the vulnerabilities found.
       #   - nil if zypper-docker is still working on it.
-      def vulnerabilities(repo, tag)
-        uri, req = get_request("/images?image=#{repo}:#{tag}")
+      def vulnerabilities(_params)
+        uri, req = get_request("/images?image=#{@repo}:#{@tag}")
         res = get_response_token(uri, req)
 
         msg = JSON.parse(res.body)
@@ -18,7 +18,9 @@ module Portus
           nil
         else
           msg = error_message(msg)
-          Rails.logger.tagged("zypper") { Rails.logger.debug "Error for '#{repo}:#{tag}': #{msg}" }
+          Rails.logger.tagged("zypper") do
+            Rails.logger.debug "Error for '#{@repo}:#{@tag}': #{msg}"
+          end
           nil
         end
       end

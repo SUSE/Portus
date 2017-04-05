@@ -9,18 +9,28 @@ image, tag = ARGV
 sec = ::Portus::Security.new(image, tag)
 vulns = sec.vulnerabilities
 
-hsh = { "High" => 0, "Normal" => 0, "Low" => 0 }
+vulns.each do |name, result|
+  hsh = {}
 
-puts ""
-vulns.each do |v|
-  hsh[v["Severity"]] = 0 unless hsh.include?(v["Severity"])
-  hsh[v["Severity"]] += 1
+  n = name.to_s.capitalize
+  print "#{n}\n" + ("=" * n.size) + "\n"
 
-  puts "#{v["Name"]}: #{v["Severity"]}"
+  if result.nil?
+    print "\nWork in progress...\n"
+    next
+  end
+
+  result.each do |v|
+    hsh[v["Severity"]] = 0 unless hsh.include?(v["Severity"])
+    hsh[v["Severity"]] += 1
+
+    puts "#{v["Name"]}: #{v["Severity"]}"
+    puts ""
+    puts v["Link"].to_s
+    puts "---------------"
+  end
+
+  print "\nFound #{result.size} vulnerabilities:\n\n"
+  hsh.each { |k, v| puts "#{k}: #{v}" }
   puts ""
-  puts v["Link"].to_s
-  puts "---------------"
 end
-
-print "\nFound #{vulns.size} vulnerabilities:\n\n"
-hsh.each { |k, v| puts "#{k}: #{v}" }
