@@ -1,3 +1,5 @@
+import typeahead from '~/utils/typeahead';
+
 jQuery(function ($) {
   $('#add_team_user_btn').on('click', function () {
     var team_id;
@@ -16,7 +18,7 @@ jQuery(function ($) {
       layout_resizer();
     });
     team_id = $('.remote').attr('id');
-    set_typeahead(team_id + '/typeahead/%QUERY');
+    typeahead.set('.remote .typeahead', team_id + '/typeahead/%QUERY');
   });
 
   $('body').on('click', '.btn-edit-role', function (event) {
