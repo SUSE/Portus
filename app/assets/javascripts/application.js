@@ -1,31 +1,29 @@
-// jQuery
-window.jQuery = require('jquery');
-require('jquery-ujs');
+import 'jquery';
+import 'jquery-ujs';
 
 // Bootstrap
-require('bootstrap/js/transition');
-require('bootstrap/js/tab');
-require('bootstrap/js/tooltip');
-require('bootstrap/js/popover');
+import 'bootstrap/js/transition';
+import 'bootstrap/js/tab';
+import 'bootstrap/js/tooltip';
+import 'bootstrap/js/popover';
 
 // Life it up
-require('vendor/lifeitup_layout');
+import 'vendor/lifeitup_layout';
 
 // NOTE: should be removed in the future
-require('vendor/bootstrap-typeahead');
+import 'vendor/bootstrap-typeahead';
 
 // Require tree.
 // NOTE: This should be moved into proper modules.
-require('./alert');
-require('./bootstrap');
-require('./dashboard');
-require('./includes/open_close_icon');
-require('./includes/set_typehead');
-require('./namespaces');
-require('./open_search');
-require('./repositories');
-require('./teams');
+import './alert';
+import './bootstrap';
+import './dashboard';
+import './includes/open_close_icon';
+import './includes/set_typehead';
+import './namespaces';
+import './open_search';
+import './repositories';
+import './teams';
 
 // new modules structure
-require('./modules/users');
-
+import './modules/users';
