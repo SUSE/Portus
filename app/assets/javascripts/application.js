@@ -10,6 +10,8 @@ import 'bootstrap/js/popover';
 // Life it up
 import 'vendor/lifeitup_layout';
 
+import './vue_shared';
+
 // Require tree.
 // NOTE: This should be moved into proper modules.
 import './bootstrap';
@@ -20,11 +22,12 @@ import './teams';
 // new modules structure
 import './modules/users';
 import './modules/dashboard';
+import './modules/repositories';
 
-import effects from './utils/effects';
+import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects';
 
 // Actions to be done to initialize any page.
 $(function () {
-  effects.setTimeOutAlertDelay();
-  effects.refreshFloatAlertPosition();
+  setTimeOutAlertDelay();
+  refreshFloatAlertPosition();
 });

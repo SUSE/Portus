@@ -31,7 +31,7 @@
   .panel-heading
     .row
       .col-xs-6
-        h5
+        h5#repo-name data-id="#{@repository.id}"
           = link_to @repository.namespace.clean_name, @repository.namespace
           | /
           = @repository.name
@@ -82,25 +82,27 @@
             i.fa.fa-eye
             ' Viewer
 
+  script#tag-row type="text/x-template"
+    = render "repositories/components/tags"
 
   .panel-body
     .table-responsive.tags
-      table.table.table-stripped.table-hover
-        col.col-40
+      table#tags-table.table.table-stripped.table-hover
+        col.col-45
         col.col-20
+        col.col-10
         col.col-15
-        col.col-20
-        - if can_destroy?(@repository)
-          col.col-5
+        col.col-10
         thead
           tr
             th Tag
             th Author
             th Image
             th Pushed at
-            - if APP_CONFIG.enabled?("delete")
-              th
+            th Security
         tbody
+          <tag-row v-for="tag in tags" v-bind:tag="tag"></tag-row>
+
           - @tags.each do |tag|
             - if tag.first.digest.blank?
               - tag.each do |t|
@@ -116,6 +118,7 @@
                       span[title="sha256:#{tag.first.image_id}"]
                         = tag.first.image_id[0, 12]
                   td= tag.first.updated_at
+                  td.vulnerabilities
             - else
               tr
                 td
@@ -130,20 +133,7 @@
                     span[title="sha256:#{tag.first.image_id}"]
                       = tag.first.image_id[0, 12]
                 td= tag.first.updated_at
-
-                - if can_destroy?(@repository)
-                  td
-                    button.remove-tag.fa.fa-lg.fa-trash-o.btn-x.btn-edit-role.btn.btn-link[
-                      data-placement="left"
-                      data-toggle="popover"
-                      data-title="Please confirm"
-                      data-content="<p>Are you sure you want to remove this \
-                      tag?</p><a class='btn btn-default'>No</a> <a class='btn \
-                      btn-primary' data-method='delete' \
-                      href='#{url_for(tag.first)}'>Yes</a>"
-                      data-html="true"
-                      role="button"
-                      title="Delete tag"]
+                td.vulnerabilities
 
 
 #write_comment_form.collapse

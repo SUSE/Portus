@@ -21,6 +21,9 @@
     "jquery-ujs": "^1.2.1",
     "stats-webpack-plugin": "^0.4.3",
     "typeahead.js": "^0.11.1",
+    "vue": "^2.2.6",
+    "vue-resource": "^1.2.1",
+    "vue-loader": "^11.0.0",
     "webpack": "^2.2.1"
   },
   "babel": {

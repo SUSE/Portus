@@ -24,6 +24,8 @@ module Portus
     config.active_record.raise_in_transactional_callbacks = true
     config.autoload_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("app/validators/")
+    config.eager_load_paths.push(*%W(#{config.root}/lib
+                                     #{config.root}/app/validators/))
     config.exceptions_app = routes
 
     config.generators do |g|

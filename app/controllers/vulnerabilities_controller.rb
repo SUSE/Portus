@@ -1,3 +1,5 @@
+# VulnerabilitiesController implements the JSON API for fetching
+# vulnerabilities.
 class VulnerabilitiesController < ApplicationController
   before_action :set_repository
   respond_to :json

@@ -81,6 +81,17 @@ class Tag < ActiveRecord::Base
     create_delete_activities!(actor)
   end
 
+  # TODO: serializer
+  def as_json(options = {})
+    options[:only] = [:id, :name, :digest]
+    options[:include] = { author: { only: [:id, :username] } }
+
+    super(options).tap do |json|
+      sec = ::Portus::Security.new(repository.full_name, name)
+      json[:vulnerabilities] = sec.vulnerabilities
+    end
+  end
+
   protected
 
   # Fetch the digest for this tag. Usually the digest should already be
