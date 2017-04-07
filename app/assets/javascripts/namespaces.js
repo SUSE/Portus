@@ -1,6 +1,8 @@
+import typeahead from '~/utils/typeahead';
+
 jQuery(function ($) {
   $('#edit_namespace').on('click', function (_event) {
-    set_typeahead('/teams/typeahead/%QUERY');
+    typeahead.set('.remote .typeahead', '/teams/typeahead/%QUERY');
   });
 
   $('#add_namespace_btn').unbind('click').on('click', function (_event) {
@@ -22,7 +24,7 @@ jQuery(function ($) {
       }
       layout_resizer();
     });
-    set_typeahead('/namespaces/typeahead/%QUERY');
+    typeahead.set('.remote .typeahead', '/namespaces/typeahead/%QUERY');
   });
 
   $('body').on('click', '.btn-edit-role', function (event) {
