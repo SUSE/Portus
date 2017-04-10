@@ -7,6 +7,13 @@ class TagPolicy
     @tag = tag
   end
 
+  def show?
+    @user.admin? ||
+      @tag.repository.namespace.visibility_public? ||
+      @tag.repository.namespace.visibility_protected? ||
+      @tag.repository.namespace.team.users.exists?(user.id)
+  end
+
   # Returns true if the tag can be destroyed.
   def destroy?
     raise Pundit::NotAuthorizedError, "must be logged in" unless @user
