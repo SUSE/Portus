@@ -1,3 +1,7 @@
+#actions-toolbar
+  - if can_destroy?(@repository)
+    .delete
+
 .btn-toolbar
   #repo-stars.pull-right
     = link_to toggle_star_repository_path(@repository), method: :post,
@@ -101,40 +105,7 @@
             th Pushed at
             th Security
         tbody
-          <tag-row v-for="tag in tags" v-bind:tag="tag"></tag-row>
-
-          - @tags.each do |tag|
-            - if tag.first.digest.blank?
-              - tag.each do |t|
-                tr
-                  td
-                    .label.label-success
-                      = t.name
-                  td= tag.first.owner
-                  td
-                    - if tag.first.image_id.blank?
-                      = "-"
-                    - else
-                      span[title="sha256:#{tag.first.image_id}"]
-                        = tag.first.image_id[0, 12]
-                  td= tag.first.updated_at
-                  td.vulnerabilities
-            - else
-              tr
-                td
-                  - tag.each do |t|
-                    .label.label-success
-                      = t.name
-                td= tag.first.owner
-                td
-                  - if tag.first.image_id.blank?
-                    = "-"
-                  - else
-                    span[title="sha256:#{tag.first.image_id}"]
-                      = tag.first.image_id[0, 12]
-                td= tag.first.updated_at
-                td.vulnerabilities
-
+          <tr is="tag-row" v-for="tag in tags" :tag="tag"></tr>
 
 #write_comment_form.collapse
   = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|

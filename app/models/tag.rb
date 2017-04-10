@@ -83,7 +83,7 @@ class Tag < ActiveRecord::Base
 
   # TODO: serializer
   def as_json(options = {})
-    options[:only] = [:id, :name, :digest]
+    options[:only] = [:id, :name, :image_id, :digest, :updated_at]
     options[:include] = { author: { only: [:id, :username] } }
 
     super(options).tap do |json|
