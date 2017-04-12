@@ -34,6 +34,7 @@ Vue.component('tag-row', {
 
     vulns: function(tag) {
       var result = {"High": 0, "Normal": 0, "Low": 0};
+      var total = 0; // TODO: remove once we do this properly
 
       AVAILABLE_BACKENDS.forEach((backend) => {
         if (!tag.vulnerabilities[backend]) {
@@ -42,13 +43,27 @@ Vue.component('tag-row', {
 
         tag.vulnerabilities[backend].forEach((vul) => {
           result[vul["Severity"]] += 1;
+          total += 1;
         });
       });
 
       // TODO: proper doughnut chart
       // https://github.com/apertureless/vue-chartjs
-      var total = result["High"] + result["Normal"] + result["Low"];
       return `${total} vulnerabilities`;
+    },
+
+    toggleDelete: function(_event) {
+      if (!this.deletable) {
+        return;
+      }
+
+      if ($("#tags-table tr input:checkbox:checked").length > 0) {
+        $(DELETE_TAG_ELEMENT).removeClass("hidden");
+      } else {
+        if (!$(DELETE_TAG_ELEMENT).hasClass("hidden")) {
+          $(DELETE_TAG_ELEMENT).addClass("hidden");
+        }
+      }
     },
   },
 })
@@ -78,5 +93,18 @@ $(() => {
       this.loadData();
       setInterval(function () { this.loadData() }.bind(this), POLLING_VALUE);
     },
+  });
+
+  $("#actions-toolbar .delete button").click((e) => {
+    $("#tags-table tr input:checkbox:checked").map((_, element) => {
+      var id = element.value;
+
+      Vue.http.delete(`/tags/${id}`).then(response => {
+        console.log(response);
+      }, response => {
+        // TODO: treat errors better
+        console.log("delete failed");
+      });
+    });
   });
 });

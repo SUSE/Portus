@@ -1,6 +1,6 @@
 tr
   td
-    <input v-if="deletable" type="checkbox" class="option-tag">
+    <input v-on:click="toggleDelete" v-if="deletable" type="checkbox" :value="tag[0].id" class="option-tag">
     <div class="label label-success" v-for="t in tag">
       = "{{ t.name }}"
     </div>

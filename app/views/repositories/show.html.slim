@@ -1,6 +1,3 @@
-#actions-toolbar
-  - if can_destroy?(@repository)
-    .delete
 
 .btn-toolbar
   #repo-stars.pull-right
@@ -30,6 +27,12 @@
         title="Delete image"]
         .fa.fa-trash.space-xs-sides
         ' Delete image
+
+  #actions-toolbar.pull-right
+    - if can_destroy?(@repository)
+      .delete.hidden
+        button.btn.btn-danger type="button"
+          | Delete tag
 
 .panel.panel-default
   .panel-heading
