@@ -3,7 +3,7 @@ version: '2'
 services:
   web:
     build: .
-    command: pumactl -F /portus/config/puma.rb start
+    command: bash -c "yarn && yarn run webpack --watch --config /portus/config/webpack & pumactl -F /portus/config/puma.rb start"
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${EXTERNAL_IP}
       - PORTUS_DB_HOST=db
