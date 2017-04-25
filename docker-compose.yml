@@ -3,6 +3,7 @@ version: '2'
 services:
   web:
     build: .
+    command: /patch.sh
     command: pumactl -F /portus/config/puma.rb start
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${EXTERNAL_IP}
