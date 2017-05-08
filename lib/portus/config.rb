@@ -17,7 +17,7 @@ module Portus
       local = {}
       if File.file?(@local)
         # Check for bad user input in the local config.yml file.
-        local = YAML.load_file(@local)
+        local = YAML.load(ERB.new(IO.read(@local)).result)
         unless local.is_a?(Hash)
           raise StandardError, "Wrong format for the config-local file!"
         end
