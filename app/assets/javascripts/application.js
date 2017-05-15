@@ -28,6 +28,10 @@ import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects
 
 // Actions to be done to initialize any page.
 $(function () {
-  setTimeOutAlertDelay();
   refreshFloatAlertPosition();
+
+  // necessary to be compatible with the js rendered
+  // on the server-side via jquery-ujs
+  window.setTimeOutAlertDelay = setTimeOutAlertDelay;
+  window.refreshFloatAlertPosition = refreshFloatAlertPosition;
 });

@@ -1,10 +1,10 @@
-import typeahead from '~/utils/typeahead';
+import { setTypeahead } from '~/utils/typeahead';
 
 import { openCloseIcon } from '~/utils/effects';
 
 jQuery(function ($) {
   $('#edit_namespace').on('click', function (_event) {
-    typeahead.set('.remote .typeahead', '/teams/typeahead/%QUERY');
+    setTypeahead('.remote .typeahead', '/teams/typeahead/%QUERY');
   });
 
   $('#add_namespace_btn').unbind('click').on('click', function (_event) {
@@ -26,7 +26,7 @@ jQuery(function ($) {
       }
       layout_resizer();
     });
-    typeahead.set('.remote .typeahead', '/namespaces/typeahead/%QUERY');
+    setTypeahead('.remote .typeahead', '/namespaces/typeahead/%QUERY');
   });
 
   $('body').on('click', '.btn-edit-role', function (event) {

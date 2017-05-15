@@ -1,4 +1,4 @@
-import typeahead from '~/utils/typeahead';
+import { setTypeahead } from '~/utils/typeahead';
 
 import { openCloseIcon } from '~/utils/effects';
 
@@ -20,7 +20,7 @@ jQuery(function ($) {
       layout_resizer();
     });
     team_id = $('.remote').attr('id');
-    typeahead.set('.remote .typeahead', team_id + '/typeahead/%QUERY');
+    setTypeahead('.remote .typeahead', team_id + '/typeahead/%QUERY');
   });
 
   $('body').on('click', '.btn-edit-role', function (event) {
