@@ -1,91 +1,56 @@
-.btn-toolbar
-  #repo-stars.pull-right
-    = link_to toggle_star_repository_path(@repository), method: :post,
-      class: 'btn btn-primary btn-xs', remote: true, id: 'toggle_star',
-      data: {placement: 'bottom', toggle: 'tooltip'},
-      title: (@repository.starred_by?(current_user) ? 'Unstar repository' : 'Star repository')
-      - if @repository.starred_by?(current_user)
-        i.fa.fa-star
-      - else
-        i.fa.fa-star-o
-      span#star-counter.badge
-        = @repository.stars.count
-  - if can_destroy?(@repository)
-    #remove-repo.pull-right
-      button.remove-repo.btn-x.btn-edit-role.btn.btn-link.btn-xs[
-        data-placement="left"
-        data-toggle="popover"
-        data-title="Please confirm"
-        data-content="<p>Are you sure you want to remove this \
-        image?</p><a class='btn btn-default'>No</a> <a class='btn \
-        btn-primary' data-method='delete' \
-        href='#{url_for(@repository)}'>Yes</a>"
-        data-html="true"
-        role="button"
-        title="Delete image"]
-        .fa.fa-trash.space-xs-sides
-        ' Delete image
+.header.clearfix
+  h4 data-id="#{@repository.id}" ref="repoLink" class="repository-title pull-left"
+    = link_to @repository.namespace.clean_name, @repository.namespace
+    | /
+    = @repository.name
+    a[
+      href="javascript:void(0)"
+      class="btn-link repository-information-icon"
+      data-placement="right"
+      data-toggle="popover"
+      data-trigger="focus click hover"
+      data-title="More information"
+      data-content="#{render_repository_information(@repository)}"
+      data-html="true"]
+      i.fa.fa-info-circle
 
-  #actions-toolbar.pull-right
+  .btn-toolbar.pull-right
+    .btn-group
+      = link_to toggle_star_repository_path(@repository), method: :post,
+        class: 'btn btn-warning', remote: true, id: 'toggle_star',
+        data: {placement: 'bottom', toggle: 'tooltip'},
+        title: (@repository.starred_by?(current_user) ? 'Unstar repository' : 'Star repository')
+        - if @repository.starred_by?(current_user)
+          i.fa.fa-star
+        - else
+          i.fa.fa-star-o
+        span#star-counter.badge
+          = @repository.stars.count
+
     - if can_destroy?(@repository)
-      .delete.hidden
-        button.btn.btn-danger type="button"
-          | Delete tag
+      .btn-group
+        button.btn.btn-danger.btn-edit-role[
+          data-container="body"
+          data-placement="left"
+          data-toggle="popover"
+          data-title="Please confirm"
+          data-content="<p>Are you sure you want to remove this \
+          repository?</p><a class='btn btn-default'>No</a> <a class='btn \
+          btn-primary' data-method='delete' \
+          href='#{url_for(@repository)}'>Yes</a>"
+          data-html="true"
+          role="button"
+          title="Delete image"]
+          i.fa.fa-trash
+          '  Delete repository
 
 .panel.panel-default
   .panel-heading
     .row
       .col-xs-6
-        h5 data-id="#{@repository.id}" ref="repoLink"
-          = link_to @repository.namespace.clean_name, @repository.namespace
-          | /
-          = @repository.name
+        h5 Tags
       .col-xs-6.text-right
-        - if can_push?(@repository.namespace)
-          .circle-label.permissions-label.circle-label-sm[data-placement="left"
-            data-toggle="popover"
-            data-container=".panel-heading"
-            data-content="You can push images"
-            data-original-title="What can I do?"
-            tabindex="0" data-html="true"]
-              i.fa.fa-arrow-up
-              ' Push
-        - if can_pull?(@repository.namespace)
-          .circle-label.permissions-label.circle-label-sm[data-placement="left"
-            data-toggle="popover"
-            data-container=".panel-heading"
-            data-content="You can pull images"
-            data-original-title="What can I do?"
-            tabindex="0" data-html="true"]
-            i.fa.fa-arrow-down
-            ' Pull
-        - if owner?(@repository.namespace)
-          .circle-label.permissions-label.circle-label-sm[data-placement="left"
-            data-toggle="popover"
-            data-container=".panel-heading"
-            data-content="You are an owner of this repository"
-            data-original-title="What's my role?"
-            tabindex="0" data-html="true"]
-            i.fa.fa-male
-            ' Owner
-        - elsif contributor?(@repository.namespace)
-          .circle-label.permissions-label.circle-label-sm[data-placement="left"
-            data-toggle="popover"
-            data-container=".panel-heading"
-            data-content="You are a contributor in this repository"
-            data-original-title="What's my role?"
-            tabindex="0" data-html="true"]
-            i.fa.fa-exchange
-            ' Contr.
-        - elsif viewer?(@repository.namespace)
-          .circle-label.permissions-label.circle-label-sm[data-placement="left"
-            data-toggle="popover"
-            data-container=".panel-heading"
-            data-content="You are a viewer in this repository"
-            data-original-title="What's my role?"
-            tabindex="0" data-html="true"]
-            i.fa.fa-eye
-            ' Viewer
+        <delete-tag-action></delete-tag-action>
 
   .panel-body
     <loading-icon v-if="isLoading"></loading-icon>
