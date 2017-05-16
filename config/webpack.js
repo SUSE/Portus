@@ -42,7 +42,7 @@ var config = {
   ],
 
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.vue'],
     alias: {
       '~': path.join(ROOT_PATH, 'app/assets/javascripts'),
       'bootstrap/js': 'bootstrap-sass/assets/javascripts/bootstrap',
