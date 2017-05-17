@@ -1,0 +1,20 @@
+# By default require ssl to be enabled when running on production
+check_ssl_usage:
+  enabled: false
+
+ldap:
+  enabled: true
+  hostname: "ldap1.us-w2.aws.ccl"
+  port: 389
+  method: "plain"
+  base: "ou=people,dc=socialbakers,dc=com"
+  uid: "uid"
+
+  guess_email:
+    enabled: true
+    attr: "mail"
+
+  authentication:
+    enabled: true
+    bind_dn: "cn=portus,ou=services,dc=socialbakers,dc=com"
+    password: "tO2qQX4W3Er2D3xs7Fyg"
