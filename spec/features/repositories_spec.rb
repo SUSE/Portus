@@ -18,15 +18,30 @@ feature "Repositories support" do
   describe "repository#show" do
     scenario "Visual aid for each role is shown properly" do
       visit repository_path(repository)
-      expect(page).to have_content("Push Pull Owner")
+      info = page.find('.repository-information-icon')['data-content']
+      expect(info).to have_content("You can push images")
+      expect(info).to have_content("You can pull images")
+      expect(info).to have_content("You are an owner of this repository")
+      expect(info).to_not have_content("You are a contributor in this repository")
+      expect(info).to_not have_content("You are a viewer in this repository")
 
       login_as user2, scope: :user
       visit repository_path(repository)
-      expect(page).to have_content("Push Pull Contr.")
+      info = page.find('.repository-information-icon')['data-content']
+      expect(info).to have_content("You can push images")
+      expect(info).to have_content("You can pull images")
+      expect(info).to have_content("You are a contributor in this repository")
+      expect(info).to_not have_content("You are an owner of this repository")
+      expect(info).to_not have_content("You are a viewer in this repository")
 
       login_as user3, scope: :user
       visit repository_path(repository)
-      expect(page).to have_content("Pull Viewer")
+      info = page.find('.repository-information-icon')['data-content']
+      expect(info).to have_content("You can pull images")
+      expect(info).to have_content("You are a viewer in this repository")
+      expect(info).to_not have_content("You can push images")
+      expect(info).to_not have_content("You are an owner of this repository")
+      expect(info).to_not have_content("You are a contributor in this repository")
     end
 
     scenario "The delete feature is available only for allowed users" do
