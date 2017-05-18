@@ -10,7 +10,7 @@ import 'bootstrap/js/popover';
 // Life it up
 import 'vendor/lifeitup_layout';
 
-import './vue_shared';
+import './vue-shared';
 
 // Require tree.
 // NOTE: This should be moved into proper modules.

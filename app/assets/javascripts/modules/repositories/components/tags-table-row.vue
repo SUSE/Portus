@@ -1,10 +1,16 @@
+<style scoped>
+  .selected td {
+    background-color: #e8f1f6;
+  }
+</style>
+
 <template>
-  <tr>
+  <tr :class="{ 'selected': selected }">
+    <td v-if="canDestroy">
+      <input type="checkbox" v-model="selected" @change="toggleTag()">
+    </td>
     <td>
-      <input type="checkbox" class="option-tag" @click="toggleDelete()" v-if="deletable"  :value="tag[0].id" >
-      <div class="label label-success" v-for="t in tag">
-        {{ t.name }}
-      </div>
+      <div class="label label-success" v-for="t in tag">{{ t.name }}</div>
     </td>
 
     <td>{{ tag[0].author.username }}</td>
@@ -27,19 +33,20 @@
 </template>
 
 <script>
-  import EventBus from '~/utils/eventbus';
-
-  const DELETE_TAG_ELEMENT = '#actions-toolbar .delete';
-  const AVAILABLE_BACKENDS = ['clair', 'zypper', 'dummy'];
+  import VulnerabilitiesParser from '../services/vulnerabilities-parser';
 
   export default {
-    props: ['tag'],
+    props: {
+      tag: [Array],
+      canDestroy: Boolean,
+      state: Object,
+    },
 
     data() {
       return {
-        deletable: $(DELETE_TAG_ELEMENT).length > 0,
         tagsPath: '/tags',
         prefixID: 'sha256:',
+        selected: false,
       };
     },
 
@@ -53,50 +60,41 @@
       },
 
       tagLink() {
-        return `${this.tagsPath}/${this.tag.id}`;
+        return `${this.tagsPath}/${this.tag[0].id}`;
       },
 
       vulns() {
-        const result = {
-          High: 0,
-          Normal: 0,
-          Low: 0,
-        };
-        let total = 0; // TODO: remove once we do this properly
-
-        if (this.tag.vulnerabilities) {
-          AVAILABLE_BACKENDS.forEach((backend) => {
-            if (!this.tag.vulnerabilities[backend]) {
-              return;
-            }
-
-            this.tag.vulnerabilities[backend].forEach((vul) => {
-              result[vul.Severity] += 1;
-              total += 1;
-            });
-          });
-        }
+        const vulns = VulnerabilitiesParser.parse(this.tag[0].vulnerabilities);
 
         // TODO: proper doughnut chart
         // https://github.com/apertureless/vue-chartjs
-        return total;
+        return vulns.total;
       },
     },
 
     methods: {
-      toggleDelete(_event) {
-        EventBus.$emit('tagsSelectionChanged');
+      deselectTag() {
+        this.tag.forEach((t) => {
+          const index = this.state.selectedTags.findIndex(s => s.id === t.id);
 
-        if (!this.deletable) {
-          return;
-        }
-
-        if ($('#tags-table tr input:checkbox:checked').length > 0) {
-          $(DELETE_TAG_ELEMENT).removeClass('hidden');
-        } else {
-          if (!$(DELETE_TAG_ELEMENT).hasClass('hidden')) {
-            $(DELETE_TAG_ELEMENT).addClass('hidden');
+          if (index !== -1) {
+            this.state.selectedTags.splice(index, 1);
           }
+        });
+      },
+
+      selectTag() {
+        this.state.selectedTags.push({
+          id: this.tag[0].id,
+          multiple: this.tag.length > 1,
+        });
+      },
+
+      toggleTag() {
+        if (this.selected) {
+          this.selectTag();
+        } else {
+          this.deselectTag();
         }
       },
     },

@@ -1,16 +1,20 @@
 import Vue from 'vue';
-import VueResource from 'vue-resource';
 
 import LoadingIcon from '~/shared/components/loading-icon';
 import Alert from '~/shared/components/alert';
+import EventBus from '~/utils/eventbus';
 
 import TagsTable from '../components/tags-table';
 import TagsNotLoaded from '../components/tags-not-loaded';
+import DeleteTagAction from '../components/delete-tag-action';
 
 import RepositoriesService from '../services/repositories';
 import TagsService from '../services/tags';
 
-Vue.use(VueResource);
+import RepositoriesStore from '../store';
+
+// eslint-disable-next-line
+import '~/vue-shared';
 
 const { set } = Vue;
 
@@ -28,10 +32,14 @@ $(() => {
       LoadingIcon,
       TagsTable,
       TagsNotLoaded,
+      DeleteTagAction,
     },
 
     data() {
+      const store = new RepositoriesStore();
+
       return {
+        state: store.state,
         isLoading: false,
         notLoaded: false,
         tags: [],
@@ -55,8 +63,39 @@ $(() => {
             Alert.show('Unable to fetch newer tags data');
           }
         }).finally(() => {
-          setTimeout(() => this.loadData(), POLLING_VALUE);
+          // setTimeout(() => this.loadData(), POLLING_VALUE);
           set(this, 'isLoading', false);
+        });
+      },
+
+      removeFromCollection(tagId) {
+        const newTags = this.tags.filter(tag => !tag.find(t => t.id === tagId));
+
+        set(this, 'tags', newTags);
+      },
+
+      removeFromSelection(tagId) {
+        const index = this.tags.findIndex(t => t.id === tagId);
+
+        this.state.selectedTags.splice(index, 1);
+      },
+
+      deleteTags() {
+        const success = [];
+
+        const promises = this.state.selectedTags.map((t) => {
+          return TagsService.remove(t.id).then(() => {
+            this.removeFromCollection(t.id);
+            this.removeFromSelection(t.id);
+            success.push(t.id);
+          });
+        });
+
+        Promise.all(promises).then(() => {
+          Alert.show('Tags removed successfully!');
+        }).catch(() => {
+          console.log('something failed');
+          console.log('removed', success);
         });
       },
     },
@@ -64,19 +103,7 @@ $(() => {
     mounted() {
       set(this, 'isLoading', true);
       this.loadData();
+      EventBus.$on('deleteTags', () => this.deleteTags());
     },
-  });
-
-  $('#actions-toolbar .delete button').click(() => {
-    $('#tags-table tr input:checkbox:checked').map((_, element) => {
-      const id = element.value;
-
-      TagsService.remove(id).then((response) => {
-        console.log(response);
-      }, () => {
-        // TODO: treat errors better
-        console.log('delete failed');
-      });
-    });
   });
 });

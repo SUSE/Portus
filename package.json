@@ -18,6 +18,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
     "compression-webpack-plugin": "^0.3.2",
+    "css-loader": "^0.28.1",
     "jquery": "^2.2.1",
     "jquery-ujs": "^1.2.1",
     "stats-webpack-plugin": "^0.4.3",

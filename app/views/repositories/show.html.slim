@@ -50,14 +50,15 @@
       .col-xs-6
         h5 Tags
       .col-xs-6.text-right
-        <delete-tag-action></delete-tag-action>
+        - if can_destroy?(@repository)
+          <delete-tag-action :state="state"></delete-tag-action>
 
   .panel-body
     <loading-icon v-if="isLoading"></loading-icon>
 
     .table-responsive.tags
       <tags-not-loaded v-if="notLoaded"></tags-not-loaded>
-      <tags-table v-if="!isLoading && !notLoaded" :tags="tags"></tags-table>
+      <tags-table v-if="!isLoading && !notLoaded" :tags="tags" :can-destroy="#{can_destroy?(@repository)}" :state="state"></tags-table>
 
 #write_comment_form.collapse
   = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|

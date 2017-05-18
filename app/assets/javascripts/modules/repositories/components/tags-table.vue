@@ -1,7 +1,8 @@
 <template>
   <div>
-    <table class="table table-stripped table-hover">
+    <table class="table table-striped table-hover">
       <colgroup>
+        <col width="10" v-if="canDestroy">
         <col class="col-45">
         <col class="col-20">
         <col class="col-10">
@@ -10,6 +11,7 @@
       </colgroup>
       <thead>
         <tr>
+          <th v-if="canDestroy"></th>
           <th>Tag</th>
           <th>Author</th>
           <th>Image</th>
@@ -18,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        <tag-row v-for="tag in filteredTags" :key="tag.id" :tag="tag"></tag-row>
+        <tag-row v-for="tag in filteredTags" :key="tag[0].id" :tag="tag" :can-destroy="canDestroy" :state="state"></tag-row>
       </tbody>
     </table>
 
@@ -32,7 +34,11 @@
   import TagRow from './tags-table-row';
 
   export default {
-    props: ['tags'],
+    props: {
+      tags: Array,
+      canDestroy: Boolean,
+      state: Object,
+    },
 
     components: {
       TagRow,
@@ -54,10 +60,6 @@
       filteredTags() {
         return this.tags.slice(this.offset, this.limit * this.currentPage);
       },
-    },
-
-    mounted() {
-      console.log('foi', this.tags);
     },
   };
 </script>
