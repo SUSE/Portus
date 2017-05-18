@@ -5,9 +5,8 @@ Vue.use(VueResource);
 
 Vue.http.interceptors.push((request, next) => {
   if ($.rails) {
-    console.log('add csrf token');
     // eslint-disable-next-line no-param-reassign
-    request.headers['X-CSRF-Token'] = $.rails.csrfToken();
+    request.headers.set('X-CSRF-Token', $.rails.csrfToken());
   }
   next();
 });
