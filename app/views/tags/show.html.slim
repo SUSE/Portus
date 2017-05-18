@@ -7,7 +7,7 @@
             | Tags: #{@names.join(", ")}
           - else
             | Tag: #{@names.first}
-          = "(repository: "
+          = " (repository: "
           = link_to @tag.repository.name, repository_path(@tag.repository)
           | )
 

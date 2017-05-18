@@ -1,6 +1,6 @@
 const AVAILABLE_BACKENDS = ['clair', 'zypper', 'dummy'];
 
-export const parse = function (vulnerabilities) {
+const parse = function (vulnerabilities) {
   const severities = {
     High: 0,
     Normal: 0,
@@ -14,7 +14,7 @@ export const parse = function (vulnerabilities) {
         return;
       }
 
-      this.tag[0].vulnerabilities[backend].forEach((vul) => {
+      vulnerabilities[backend].forEach((vul) => {
         severities[vul.Severity] += 1;
         total += 1;
       });

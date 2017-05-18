@@ -7,7 +7,7 @@
         <col class="col-20">
         <col class="col-10">
         <col class="col-15">
-        <col class="col-10">
+        <col class="col-10" v-if="securityEnabled">
       </colgroup>
       <thead>
         <tr>
@@ -16,11 +16,11 @@
           <th>Author</th>
           <th>Image</th>
           <th>Pushed at</th>
-          <th>Security</th>
+          <th v-if="securityEnabled">Security</th>
         </tr>
       </thead>
       <tbody>
-        <tag-row v-for="tag in filteredTags" :key="tag[0].id" :tag="tag" :can-destroy="canDestroy" :state="state"></tag-row>
+        <tag-row v-for="tag in filteredTags" :key="tag[0].id" :tag="tag" :can-destroy="canDestroy" :security-enabled="securityEnabled" :state="state"></tag-row>
       </tbody>
     </table>
 
@@ -37,6 +37,7 @@
     props: {
       tags: Array,
       canDestroy: Boolean,
+      securityEnabled: Boolean,
       state: Object,
     },
 

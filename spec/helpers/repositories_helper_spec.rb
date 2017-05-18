@@ -26,27 +26,32 @@ RSpec.describe RepositoriesHelper, type: :helper do
 
     it "shows you can push images" do
       sign_in owner
-      expect(helper.render_repository_information(repo)).to include('You can push images')
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You can push images")
     end
 
     it "shows you can pull images" do
       sign_in owner
-      expect(helper.render_repository_information(repo)).to include('You can pull images')
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You can pull images")
     end
 
     it "shows you are an owner" do
       sign_in owner
-      expect(helper.render_repository_information(repo)).to include('You are an owner of this repository')
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You are an owner of this repository")
     end
 
     it "shows you are a contributor" do
       sign_in contributor
-      expect(helper.render_repository_information(repo)).to include('You are a contributor in this repository')
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You are a contributor in this repository")
     end
 
     it "shows you are a viewer" do
       sign_in viewer
-      expect(helper.render_repository_information(repo)).to include('You are a viewer in this repository')
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You are a viewer in this repository")
     end
   end
 
@@ -142,6 +147,18 @@ RSpec.describe RepositoriesHelper, type: :helper do
         expect(expectations).to include(html)
         idx += 1
       end
+    end
+  end
+
+  describe "#security_vulns_enabled?" do
+    it "returns true if any security vulnerability server is configured" do
+      enable_security_vulns_module!
+
+      expect(helper.security_vulns_enabled?).to be_truthy
+    end
+
+    it "returns false if no security vulnerability server is configured" do
+      expect(helper.security_vulns_enabled?).to be_falsy
     end
   end
 end

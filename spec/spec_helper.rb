@@ -6,7 +6,10 @@ require "webmock/rspec"
 require "vcr"
 
 SimpleCov.minimum_coverage 100
-SimpleCov.start "rails"
+SimpleCov.start "rails" do
+  # TODO: remove this when this feature is merged in zypper-docker's master branch.
+  add_filter "lib/portus/security_backends/zypper"
+end
 
 VCR.configure do |c|
   c.cassette_library_dir = "spec/vcr_cassettes"
@@ -61,6 +64,16 @@ RSpec.configure do |config|
       "manage_team"       => { "enabled" => true },
       # This allows non-admins to create teams
       "create_team"       => { "enabled" => true }
+    }
+
+    APP_CONFIG["security"] = {
+      "clair" => {
+        "server" => ""
+      }, "zypper" => {
+        "server" => ""
+      }, "dummy" => {
+        "server" => ""
+      }
     }
 
     Rails.cache.write("portus-checks", nil)

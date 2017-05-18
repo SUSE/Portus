@@ -17,7 +17,7 @@
   .btn-toolbar.pull-right
     .btn-group
       = link_to toggle_star_repository_path(@repository), method: :post,
-        class: 'btn btn-warning', remote: true, id: 'toggle_star',
+        class: 'btn btn-primary', remote: true, id: 'toggle_star',
         data: {placement: 'bottom', toggle: 'tooltip'},
         title: (@repository.starred_by?(current_user) ? 'Unstar repository' : 'Star repository')
         - if @repository.starred_by?(current_user)
@@ -29,14 +29,14 @@
 
     - if can_destroy?(@repository)
       .btn-group
-        button.btn.btn-danger.btn-edit-role[
+        button.btn.btn-danger.repository-delete-btn[
           data-container="body"
           data-placement="left"
           data-toggle="popover"
           data-title="Please confirm"
           data-content="<p>Are you sure you want to remove this \
           repository?</p><a class='btn btn-default'>No</a> <a class='btn \
-          btn-primary' data-method='delete' \
+          btn-primary repository-confirm-btn' data-method='delete' \
           href='#{url_for(@repository)}'>Yes</a>"
           data-html="true"
           role="button"
@@ -58,7 +58,7 @@
 
     .table-responsive.tags
       <tags-not-loaded v-if="notLoaded"></tags-not-loaded>
-      <tags-table v-if="!isLoading && !notLoaded" :tags="tags" :can-destroy="#{can_destroy?(@repository)}" :state="state"></tags-table>
+      <tags-table v-if="!isLoading && !notLoaded" :tags="tags" :can-destroy="#{can_destroy?(@repository)}" :state="state" :security-enabled="#{security_vulns_enabled?}"></tags-table>
 
 #write_comment_form.collapse
   = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|

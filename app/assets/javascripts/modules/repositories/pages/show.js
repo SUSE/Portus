@@ -13,9 +13,6 @@ import TagsService from '../services/tags';
 
 import RepositoriesStore from '../store';
 
-// eslint-disable-next-line
-import '~/vue-shared';
-
 const { set } = Vue;
 
 const POLLING_VALUE = 10000;
@@ -25,6 +22,7 @@ $(() => {
     return;
   }
 
+  // eslint-disable-next-line
   new Vue({
     el: 'body[data-route="repositories/show"] .vue-root',
 
@@ -63,13 +61,13 @@ $(() => {
             Alert.show('Unable to fetch newer tags data');
           }
         }).finally(() => {
-          // setTimeout(() => this.loadData(), POLLING_VALUE);
+          setTimeout(() => this.loadData(), POLLING_VALUE);
           set(this, 'isLoading', false);
         });
       },
 
       removeFromCollection(tagId) {
-        const newTags = this.tags.filter(tag => !tag.find(t => t.id === tagId));
+        const newTags = this.tags.filter(tag => !tag.some(t => t.id === tagId));
 
         set(this, 'tags', newTags);
       },
@@ -82,20 +80,38 @@ $(() => {
 
       deleteTags() {
         const success = [];
+        const failure = [];
+        const total = this.state.selectedTags.length;
+        let promiseCount = 0;
 
-        const promises = this.state.selectedTags.map((t) => {
-          return TagsService.remove(t.id).then(() => {
+        const showAlert = (count) => {
+          if (count === total) {
+            let message = '';
+
+            if (success.length) {
+              message += `<strong>${success.join(', ')}</strong> successfully removed. <br />`;
+            }
+            if (failure.length) {
+              message += `<strong>${failure.join(', ')}</strong> unable to be removed.`;
+            }
+
+            Alert.show(message);
+
+            if (!this.tags.length) {
+              const namespaceHref = this.$refs.repoLink.querySelector('a').href;
+              window.location.href = namespaceHref;
+            }
+          }
+        };
+
+        this.state.selectedTags.forEach((t) => {
+          TagsService.remove(t.id).then(() => {
             this.removeFromCollection(t.id);
             this.removeFromSelection(t.id);
-            success.push(t.id);
-          });
-        });
-
-        Promise.all(promises).then(() => {
-          Alert.show('Tags removed successfully!');
-        }).catch(() => {
-          console.log('something failed');
-          console.log('removed', success);
+            success.push(t.name);
+          }).catch(() => {
+            failure.push(t.name);
+          }).finally(() => showAlert(++promiseCount));
         });
       },
     },

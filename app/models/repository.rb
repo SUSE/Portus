@@ -72,10 +72,10 @@ class Repository < ActiveRecord::Base
     options[:only] = [:id, :name]
 
     super(options).tap do |json|
-      json[:full_name] = full_name
-      json[:namespace] = namespace.as_json(only: [:id, :name])
-      json[:team] = namespace.team.as_json(only: [:id, :name])
-      json[:tags] = groupped_tags
+      json["full_name"] = full_name
+      json["namespace"] = namespace.as_json(only: [:id, :name])
+      json["team"] = namespace.team.as_json(only: [:id, :name])
+      json["tags"] = groupped_tags
     end
   end
 

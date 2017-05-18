@@ -59,7 +59,12 @@ module Portus
       def fetch_layer(digest)
         # Now we fetch the vulnerabilities discovered by clair on that layer.
         uri, req = get_request("/v1/layers/#{digest}?features=false&vulnerabilities=true", "get")
-        res = get_response_token(uri, req)
+        begin
+          res = get_response_token(uri, req)
+        rescue SocketError, Errno::ECONNREFUSED => e
+          Rails.logger.tagged("clair.get") { Rails.logger.debug e.message }
+          return
+        end
 
         # Parse the given response and return the result.
         msg = JSON.parse(res.body)
@@ -80,7 +85,13 @@ module Portus
         uri, req = get_request("/v1/layers", "post")
         req.body = layer_body(digest, parent).to_json
 
-        res = get_response_token(uri, req)
+        begin
+          res = get_response_token(uri, req)
+        rescue SocketError, Errno::ECONNREFUSED => e
+          Rails.logger.tagged("clair.post") { Rails.logger.debug e.message }
+          return
+        end
+
         if res.code.to_i != 200 && res.code.to_i != 201
           msg = error_message(JSON.parse(res.body))
           Rails.logger.tagged("clair.post") do

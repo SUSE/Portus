@@ -24,7 +24,7 @@
 
     <td>{{ tag[0].updated_at }}</td>
 
-    <td>
+    <td v-if="securityEnabled">
       <a :href="tagLink">
         {{ vulns }} vulnerabilities
       </a>
@@ -39,6 +39,7 @@
     props: {
       tag: [Array],
       canDestroy: Boolean,
+      securityEnabled: Boolean,
       state: Object,
     },
 
@@ -86,6 +87,7 @@
       selectTag() {
         this.state.selectedTags.push({
           id: this.tag[0].id,
+          name: this.tag.map(t => t.name).join(', '),
           multiple: this.tag.length > 1,
         });
       },

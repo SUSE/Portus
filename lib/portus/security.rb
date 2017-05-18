@@ -3,7 +3,10 @@ require "portus/security_backends/dummy"
 require "portus/security_backends/zypper"
 
 module Portus
+  # Security offers methods that are useful for fetching vulnerabilities for the
+  # given repositories & tags.
   class Security
+    # Supported backends.
     BACKENDS = [
       ::Portus::SecurityBackend::Clair,
       ::Portus::SecurityBackend::Dummy,
@@ -18,10 +21,17 @@ module Portus
       BACKENDS.each { |b| @backends << b.new(repo, tag) if b.enabled? }
     end
 
+    # Returns true if security scanning is enabled, false otherwise.
+    def enabled?
+      !@backends.empty?
+    end
+
     # Returns a hash with the results from all the backends. The results are a
-    # list of hashes.
-    # TODO: document format
+    # list of hashes. If security vulnerability checking is not enabled, then
+    # nil is returned.
     def vulnerabilities
+      return unless enabled?
+
       # First get all the layers composing the given image.
       client = Registry.get.client
       manifest = client.manifest(@repo, @tag)

@@ -69,6 +69,34 @@ describe Repository do
     end
   end
 
+  # TODO: move to proper serializer test
+  describe "#as_json" do
+    it "includes expected attributes" do
+      team = create(:team)
+      namespace = create(:namespace, name: "a", team: team)
+      repository = create(:repository, namespace: namespace)
+
+      repository_json = repository.as_json
+      expect(repository_json["id"]).to eq(repository.id)
+      expect(repository_json["name"]).to eq(repository.name)
+      expect(repository_json["full_name"]).to eq(repository.full_name)
+
+      expect(repository_json.include?("namespace")).to be_truthy
+      expect(repository_json.include?("team")).to be_truthy
+      expect(repository_json.include?("tags")).to be_truthy
+
+      other_attrs = [:id, :name]
+      repo_namespace = repository.namespace
+      repo_team = repo_namespace.team
+      namespace_json = repository_json["namespace"]
+      team_json = repository_json["team"]
+      other_attrs.each do |attr|
+        expect(namespace_json[attr.to_s]).to eq(repo_namespace[attr])
+        expect(team_json[attr.to_s]).to eq(repo_team[attr])
+      end
+    end
+  end
+
   describe "handle push event" do
     let(:tag_name) { "latest" }
     let(:repository_name) { "busybox" }

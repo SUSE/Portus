@@ -87,9 +87,13 @@ class Tag < ActiveRecord::Base
     options[:include] = { author: { only: [:id, :username] } }
 
     super(options).tap do |json|
-      sec = ::Portus::Security.new(repository.full_name, name)
-      json[:vulnerabilities] = sec.vulnerabilities
+      json["vulnerabilities"] = vulnerabilities
     end
+  end
+
+  def vulnerabilities
+    sec = ::Portus::Security.new(repository.full_name, name)
+    sec.vulnerabilities
   end
 
   protected

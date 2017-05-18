@@ -202,6 +202,18 @@ first time.
   Allow users to create teams. If this is disabled only an admin will be
   able to do this. This defaults to true.
 
+**--security-clair-server**
+  The URL allowing Portus to access your CoreOS Clair server. By default this
+  has an empty value, meaning that there is no CoreOS Clair server configured.
+
+**--security-zypper-server**
+  The URL allowing Portus to access your zypper-docker server. By default this
+  has an empty value, meaning that there is no CoreOS Clair server configured.
+
+**--security-dummy-server**
+  Setup a "dummy" security server. **NOTE**: do **not** use this flag in
+  production.
+
 # EXAMPLES
 
 The simplest example is:

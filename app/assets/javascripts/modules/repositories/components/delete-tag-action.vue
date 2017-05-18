@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button type="button" class="btn btn-danger" @click="deleteTags()" v-if="state.selectedTags.length > 0">
+    <button type="button" class="btn btn-danger tag-delete-btn" @click="deleteTags()" v-if="state.selectedTags.length > 0">
       <i class="fa fa-trash"></i>
       Delete {{ tagNormalized }}
     </button>
@@ -8,11 +8,7 @@
 </template>
 
 <script>
-  import Vue from 'vue';
-
   import EventBus from '~/utils/eventbus';
-
-  const { set } = Vue;
 
   export default {
     props: ['state'],

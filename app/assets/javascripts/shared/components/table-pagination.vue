@@ -1,8 +1,10 @@
 <template>
   <div class="form-inline pagination-wrapper">
-    <div class="col-sm-6 text-left">
-      <span v-if="total > 0">Showing from {{ start }} to {{ end }} of {{ total }} entries</span>
-      <span v-else>No entry</span>
+    <div v-if="total === 0">
+      No entry
+    </div>
+    <div class="col-sm-6 text-left" v-if="totalPages > 1">
+      Showing from {{ start }} to {{ end }} of {{ total }} entries
     </div>
     <div class="col-sm-6 text-right" v-if="totalPages > 1">
       <ul class="pagination">
@@ -40,7 +42,7 @@
 
     computed: {
       start() {
-        return (this.currentPage * this.itensPerPage) - this.itensPerPage + 1;
+        return ((this.currentPage * this.itensPerPage) - this.itensPerPage) + 1;
       },
 
       end() {
