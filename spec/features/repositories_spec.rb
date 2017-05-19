@@ -1,13 +1,13 @@
 require "rails_helper"
 
 feature "Repositories support" do
-  let!(:registry) { create(:registry, hostname: 'registry.test.lan') }
+  let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:user) { create(:admin) }
   let!(:user2) { create(:user) }
   let!(:user3) { create(:user) }
   let!(:team) { create(:team, owners: [user], contributors: [user2], viewers: [user3]) }
-  let!(:namespace) { create(:namespace, team: team, name: 'user') }
-  let!(:repository) { create(:repository, namespace: namespace, name: 'busybox') }
+  let!(:namespace) { create(:namespace, team: team, name: "user") }
+  let!(:repository) { create(:repository, namespace: namespace, name: "busybox") }
   let!(:starred_repo) { create(:repository, namespace: namespace) }
   let!(:star) { create(:star, user: user, repository: starred_repo) }
 
@@ -18,7 +18,7 @@ feature "Repositories support" do
   describe "repository#show" do
     scenario "Visual aid for each role is shown properly" do
       visit repository_path(repository)
-      info = page.find('.repository-information-icon')['data-content']
+      info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are an owner of this repository")
@@ -27,7 +27,7 @@ feature "Repositories support" do
 
       login_as user2, scope: :user
       visit repository_path(repository)
-      info = page.find('.repository-information-icon')['data-content']
+      info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are a contributor in this repository")
@@ -36,7 +36,7 @@ feature "Repositories support" do
 
       login_as user3, scope: :user
       visit repository_path(repository)
-      info = page.find('.repository-information-icon')['data-content']
+      info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are a viewer in this repository")
       expect(info).to_not have_content("You can push images")
@@ -61,32 +61,37 @@ feature "Repositories support" do
       visit repository_path(repository)
 
       repository_count = Repository.count
-      find('.repository-delete-btn').click
-      find('.repository-confirm-btn').click
-      expect(Repository.count).to be (repository_count - 1)
-      expect(page).to have_content('Repository removed with all its tags')
+      find(".repository-delete-btn").click
+      find(".repository-confirm-btn").click
+      expect(Repository.count).to be(repository_count - 1)
+      expect(page).to have_content("Repository removed with all its tags")
     end
 
     scenario "A user deletes a tag", js: true do
       APP_CONFIG["delete"] = { "enabled" => true }
 
       APP_CONFIG["security"] = {
-        "clair" => { "server" => '' },
-        "zypper" => { "server" => '' },
-        "dummy" => { "server" => 'dummy' },
+        "clair" => {
+          "server" => ""
+        }, "zypper" => {
+          "server" => ""
+        }, "dummy" => {
+          "server" => "dummy"
+        }
       }
 
-      ['lorem', 'ipsum'].each_with_index do |digest, idx|
-        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest, image_id: "Image", created_at: idx.hours.ago)
+      ["lorem", "ipsum"].each_with_index do |digest, idx|
+        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
+        image_id: "Image", created_at: idx.hours.ago)
       end
 
       VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
         visit repository_path(repository)
 
-        expect(page).to_not have_content('Delete tag')
-        find('tbody tr input[type="checkbox"]', match: :first).click
-        expect(page).to have_content('Delete tag')
-        find('.tag-delete-btn').click
+        expect(page).to_not have_content("Delete tag")
+        find("tbody tr input[type='checkbox']", match: :first).click
+        expect(page).to have_content("Delete tag")
+        find(".tag-delete-btn").click
         expect(page).to have_content("tag0 successfully removed")
       end
     end
@@ -95,23 +100,28 @@ feature "Repositories support" do
       APP_CONFIG["delete"] = { "enabled" => true }
 
       APP_CONFIG["security"] = {
-        "clair" => { "server" => '' },
-        "zypper" => { "server" => '' },
-        "dummy" => { "server" => 'dummy' },
+        "clair" => {
+          "server" => ""
+        }, "zypper" => {
+          "server" => ""
+        }, "dummy" => {
+          "server" => "dummy"
+        }
       }
 
-      ['lorem', 'ipsum'].each_with_index do |digest, idx|
-        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest, image_id: "Image", created_at: idx.hours.ago)
+      ["lorem", "ipsum"].each_with_index do |digest, idx|
+        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
+        image_id: "Image", created_at: idx.hours.ago)
       end
 
       VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
         visit repository_path(repository)
 
-        expect(page).to_not have_content('Delete tags')
-        find('tbody tr input[type="checkbox"]', match: :first)
-        all('tbody tr input[type="checkbox"]').each(&:click)
-        expect(page).to have_content('Delete tags')
-        find('.tag-delete-btn').click
+        expect(page).to_not have_content("Delete tags")
+        find("tbody tr input[type='checkbox']", match: :first)
+        all("tbody tr input[type='checkbox']").each(&:click)
+        expect(page).to have_content("Delete tags")
+        find(".tag-delete-btn").click
         expect(page).to have_content("tag0, tag1 successfully removed")
       end
     end
@@ -120,23 +130,28 @@ feature "Repositories support" do
       APP_CONFIG["delete"] = { "enabled" => true }
 
       APP_CONFIG["security"] = {
-        "clair" => { "server" => '' },
-        "zypper" => { "server" => '' },
-        "dummy" => { "server" => 'dummy' },
+        "clair" => {
+          "server" => ""
+        }, "zypper" => {
+          "server" => ""
+        }, "dummy" => {
+          "server" => "dummy"
+        }
       }
 
-      ['lorem', 'ipsum'].each_with_index do |digest, idx|
-        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest, image_id: "Image", created_at: idx.hours.ago)
+      ["lorem", "ipsum"].each_with_index do |digest, idx|
+        create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
+        image_id: "Image", created_at: idx.hours.ago)
       end
 
       VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
         visit repository_path(repository)
 
-        expect(page).to_not have_content('Delete tags')
-        find('tbody tr input[type="checkbox"]', match: :first)
-        all('tbody tr input[type="checkbox"]').each(&:click)
-        expect(page).to have_content('Delete tags')
-        find('.tag-delete-btn').click
+        expect(page).to_not have_content("Delete tags")
+        find("tbody tr input[type='checkbox']", match: :first)
+        all("tbody tr input[type='checkbox']").each(&:click)
+        expect(page).to have_content("Delete tags")
+        find(".tag-delete-btn").click
         expect(page).to have_content("tag0, tag1 successfully removed")
         expect(page).to have_content("Repository removed with all its tags")
       end
