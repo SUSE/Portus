@@ -22,6 +22,7 @@ $(() => {
     return;
   }
 
+  // eslint-disable-next-line
   new Vue({
     el: 'body[data-route="repositories/show"] .vue-root',
 
@@ -60,7 +61,7 @@ $(() => {
             Alert.show('Unable to fetch newer tags data');
           }
         }).finally(() => {
-          // setTimeout(() => this.loadData(), POLLING_VALUE);
+          setTimeout(() => this.loadData(), POLLING_VALUE);
           set(this, 'isLoading', false);
         });
       },
