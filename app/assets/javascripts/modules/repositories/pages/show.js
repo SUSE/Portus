@@ -84,7 +84,7 @@ $(() => {
         const total = this.state.selectedTags.length;
         let promiseCount = 0;
 
-        const promiseCallback = (count) => {
+        const showAlert = (count) => {
           if (count === total) {
             let message = '';
 
@@ -96,7 +96,6 @@ $(() => {
             }
 
             Alert.show(message);
-
 
             if (!this.tags.length) {
               const namespaceHref = this.$refs.repoLink.querySelector('a').href;
@@ -112,7 +111,7 @@ $(() => {
             success.push(t.name);
           }).catch(() => {
             failure.push(t.name);
-          }).finally(() => promiseCallback(++promiseCount));
+          }).finally(() => showAlert(++promiseCount));
         });
       },
     },

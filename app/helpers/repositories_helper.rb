@@ -6,15 +6,15 @@ module RepositoriesHelper
 
   def render_repository_information(repository)
     content_tag(:ul) do
-      concat content_tag(:li, 'You can push images') if can_push?(repository.namespace)
-      concat content_tag(:li, 'You can pull images') if can_pull?(repository.namespace)
+      concat content_tag(:li, "You can push images") if can_push?(repository.namespace)
+      concat content_tag(:li, "You can pull images") if can_pull?(repository.namespace)
 
       if owner?(repository.namespace)
-        concat content_tag(:li, 'You are an owner of this repository')
+        concat content_tag(:li, "You are an owner of this repository")
       elsif contributor?(repository.namespace)
-        concat content_tag(:li, 'You are a contributor in this repository')
+        concat content_tag(:li, "You are a contributor in this repository")
       elsif viewer?(repository.namespace)
-        concat content_tag(:li, 'You are a viewer in this repository')
+        concat content_tag(:li, "You are a viewer in this repository")
       end
     end
   end
