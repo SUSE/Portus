@@ -7,6 +7,54 @@ class CatalogJobMock < CatalogJob
 end
 
 RSpec.describe RepositoriesHelper, type: :helper do
+  include NamespacesHelper
+
+  describe "#render_repository_information" do
+    let(:registry)    { create(:registry) }
+    let(:admin)       { create(:admin) }
+    let(:owner)       { create(:user) }
+    let(:viewer)      { create(:user) }
+    let(:contributor) { create(:user) }
+    let(:team) do
+      create(:team,
+            owners:       [owner],
+            contributors: [contributor],
+            viewers:      [viewer])
+    end
+    let(:namespace) { create(:namespace, team: team) }
+    let(:repo)      { create(:repository, namespace: namespace) }
+
+    it "shows you can push images" do
+      sign_in owner
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You can push images")
+    end
+
+    it "shows you can pull images" do
+      sign_in owner
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You can pull images")
+    end
+
+    it "shows you are an owner" do
+      sign_in owner
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You are an owner of this repository")
+    end
+
+    it "shows you are a contributor" do
+      sign_in contributor
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You are a contributor in this repository")
+    end
+
+    it "shows you are a viewer" do
+      sign_in viewer
+      message = helper.render_repository_information(repo)
+      expect(message).to include("You are a viewer in this repository")
+    end
+  end
+
   describe "#render_push_activity" do
     let!(:registry)   { create(:registry, hostname: "registry:5000") }
     let!(:namespace)  { create(:namespace, name: "namespace", registry: registry) }

@@ -7,7 +7,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
 
 const ROOT_PATH = path.resolve(__dirname, '..');
-const IS_PRODUCTION = process.env.RAILS_ENV === 'production';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 var config = {
   context: path.join(ROOT_PATH, 'app/assets/javascripts'),
@@ -42,11 +42,12 @@ var config = {
   ],
 
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.vue'],
     alias: {
       '~': path.join(ROOT_PATH, 'app/assets/javascripts'),
       'bootstrap/js': 'bootstrap-sass/assets/javascripts/bootstrap',
       'vendor': path.join(ROOT_PATH, 'vendor/assets/javascripts'),
+      'vue$': 'vue/dist/vue.esm.js',
     },
   },
 
@@ -61,6 +62,11 @@ var config = {
         query: {
           presets: ['es2015'],
         },
+      },
+      {
+        test: /\.vue$/,
+        exclude: /(node_modules|vendor\/assets)/,
+        loader: 'vue-loader',
       },
     ],
   },
@@ -78,7 +84,7 @@ if (IS_PRODUCTION) {
       sourceMap: true,
     }),
     new webpack.DefinePlugin({
-      'process.env': { RAILS_ENV: JSON.stringify('production') },
+      'process.env': { NODE_ENV: JSON.stringify('production') },
     }),
     new CompressionPlugin({
       asset: '[path].gz[query]',

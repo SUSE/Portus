@@ -4,6 +4,9 @@ module Portus
   # it also implements some handy methods on top of some of these endpoints (e.g.
   # the `manifest` method for the Manifest API endpoints).
   class RegistryClient
+    attr_accessor :token
+    attr_reader   :base_url
+
     include HttpHelpers
 
     # Exception being raised when we get an error from the Registry API that we

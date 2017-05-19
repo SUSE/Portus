@@ -96,8 +96,8 @@ unless packaging?
     gem "vcr"
     gem "webmock", "~> 2.3.2", require: false
     gem "simplecov", require: false
-    gem "capybara"
-    gem "poltergeist", require: false
+    gem "capybara", "~> 2.13.0"
+    gem "poltergeist", "~> 1.14.0", require: false
     gem "json-schema"
     gem "timecop"
     gem "codeclimate-test-reporter", group: :test, require: nil

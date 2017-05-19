@@ -21,6 +21,14 @@ module Portus
     # Raised if this client does not have the credentials to perform an API call.
     class CredentialsMissingError < RuntimeError; end
 
+    # Returns an URI object and a request object for the given path & method
+    # pair.
+    def get_request(path, method)
+      uri = URI.join(@base_url, path)
+      req = Net::HTTP.const_get(method.capitalize).new(uri)
+      [uri, req]
+    end
+
     # This is the general method to perform an HTTP request to an endpoint
     # provided by the registry. The first parameter is the URI of the endpoint
     # itself. The second parameter is the HTTP method in downcase (e.g. "post").
@@ -29,8 +37,7 @@ module Portus
     # when calling the given path, it should get an authorization token
     # automatically and try again.
     def perform_request(path, method = "get", request_auth_token = true)
-      uri = URI.join(@base_url, path)
-      req = Net::HTTP.const_get(method.capitalize).new(uri)
+      uri, req = get_request(path, method)
 
       # So we deal with compatibility issues in distribution 2.3 and later.
       # See: https://github.com/docker/distribution/blob/master/docs/compatibility.md#content-addressable-storage-cas

@@ -18,9 +18,7 @@ describe TagsController, type: :controller do
     it "removes a tag" do
       allow_any_instance_of(Tag).to receive(:delete_by_digest!).and_return(true)
       delete :destroy, { id: tag.id }, valid_session
-      expect(flash[:notice]).to eq "Tag removed successfully"
-      expect(flash[:float]).to eq true
-      expect(response.status).to eq 302
+      expect(response.status).to eq 200
     end
 
     it "also removes the repo if there are no more tags" do
@@ -29,18 +27,15 @@ describe TagsController, type: :controller do
       end
 
       delete :destroy, { id: tag.id }, valid_session
-      expect(flash[:notice]).to eq "Image removed with all its tags"
-      expect(flash[:float]).to eq true
-      expect(response.status).to eq 302
+      expect(flash[:notice]).to eq "Repository removed with all its tags"
+      expect(response.status).to eq 200
     end
 
     it "responds accordingly on error" do
       allow_any_instance_of(Tag).to receive(:delete_by_digest!).and_return(false)
 
       delete :destroy, { id: tag.id }, valid_session
-      expect(flash[:alert]).to eq "Tag could not be removed"
-      expect(flash[:float]).to eq true
-      expect(response.status).to eq 302
+      expect(response.status).to eq 500
     end
 
     it "raises the proper exception when a tag cannot be found" do
