@@ -12,9 +12,8 @@ feature "Admin - Users panel" do
 
   describe "remove users" do
     scenario "allows the admin to remove other users", js: true do
-      original = user.username
       expect(page).to have_css("#user_#{user.id}")
-      expect(page).to have_content(original)
+      expect(page).to have_content(user.username)
 
       find("#user_#{user.id} .remove-btn").click
       wait_for_effect_on("#user_#{user.id}")
@@ -23,14 +22,13 @@ feature "Admin - Users panel" do
       wait_for_effect_on("#float-alert")
       expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect(page).to have_content("User '#{user.username}' was removed successfully")
-      expect(page).to_not have_content(original)
     end
 
     scenario "allows the admin to remove other users from the show page", js: true do
       visit edit_admin_user_path(user.id)
 
-      original = user.username
-      expect(page).to have_content(original)
+      expect(page).to_not have_css("#user_#{user.id}")
+      expect(page).to have_content(user.username)
 
       find(".btn-danger").click
       expect(current_path).to eq admin_users_path
@@ -38,7 +36,7 @@ feature "Admin - Users panel" do
       wait_for_effect_on("#float-alert")
       expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect(page).to have_content("User '#{user.username}' was removed successfully")
-      expect(page).to_not have_content(original)
+      expect(page).to_not have_css("#user_#{user.id}")
     end
   end
 

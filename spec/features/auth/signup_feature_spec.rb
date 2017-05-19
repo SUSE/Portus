@@ -23,7 +23,6 @@ feature "Signup feature" do
     User.delete_all
     visit new_user_registration_url
     expect(page).to have_content("Create admin")
-    expect(page).to have_css("#user_admin")
   end
 
   scenario "The first user to be created is NOT admin if first_user_admin is disabled" do
@@ -41,7 +40,6 @@ feature "Signup feature" do
     visit new_user_registration_url
 
     expect(page).to have_content("Create admin")
-    expect(page).to have_css("#user_admin")
   end
 
   scenario "As a guest I am able to signup" do
