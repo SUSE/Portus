@@ -3,6 +3,7 @@ html
   head
     title Portus
     = stylesheet_link_tag 'application', media: 'all'
+    script src="//cdn.polyfill.io/v2/polyfill.js?features=Array.prototype.findIndex"
     = javascript_include_tag(*webpack_asset_paths("application"))
     = csrf_meta_tags
     meta content="width=device-width, initial-scale=1" name="viewport"

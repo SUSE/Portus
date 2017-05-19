@@ -86,6 +86,7 @@
       selectTag() {
         this.state.selectedTags.push({
           id: this.tag[0].id,
+          name: this.tag.map(t => t.name).join(', '),
           multiple: this.tag.length > 1,
         });
       },

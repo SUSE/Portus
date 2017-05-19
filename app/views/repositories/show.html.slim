@@ -29,14 +29,14 @@
 
     - if can_destroy?(@repository)
       .btn-group
-        button.btn.btn-danger.btn-edit-role[
+        button.btn.btn-danger.repository-delete-btn[
           data-container="body"
           data-placement="left"
           data-toggle="popover"
           data-title="Please confirm"
           data-content="<p>Are you sure you want to remove this \
           repository?</p><a class='btn btn-default'>No</a> <a class='btn \
-          btn-primary' data-method='delete' \
+          btn-primary repository-confirm-btn' data-method='delete' \
           href='#{url_for(@repository)}'>Yes</a>"
           data-html="true"
           role="button"
