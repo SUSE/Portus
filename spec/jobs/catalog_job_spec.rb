@@ -129,6 +129,28 @@ describe CatalogJob do
       tags = Repository.find_by(name: "repo2").tags
       expect(tags.map(&:name)).to match_array(["latest", "tag2"])
     end
+
+    it "does nothing on an Unauthorized error" do
+      VCR.turn_on!
+
+      VCR.use_cassette("registry/get_registry_catalog_401", record: :none) do
+        expect do
+          job = CatalogJobMock.new
+          job.perform
+        end.to change { Repository.all.count + Tag.all.count }.by(0)
+      end
+    end
+
+    it "does not remove the repo when its tags were not successfully fetched" do
+      VCR.turn_on!
+
+      VCR.use_cassette("registry/get_registry_catalog_401_tags", record: :none) do
+        expect do
+          job = CatalogJobMock.new
+          job.perform
+        end.to change { Repository.all.count + Tag.all.count }.by(0)
+      end
+    end
   end
 
   describe "uploading repository whose tags is nil" do

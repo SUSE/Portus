@@ -135,20 +135,21 @@ module Portus
     end
 
     # Adds the available tags for each of the given repositories. If there is a
-    # problem while fetching a repository's tag, it will return an empty array.
-    # Otherwise it will return an array with the results as specified in the
-    # documentation of the `catalog` method.
+    # problem while fetching a repository's tag, it will set nil as the "tags"
+    # value. Otherwise it will return an array with the results as specified in
+    # the documentation of the `catalog` method.
     def add_tags(repositories)
       return [] if repositories.nil?
 
       result = []
       repositories.each do |repo|
+        ts = nil
         begin
           ts = tags(repo)
-          result << { "name" => repo, "tags" => ts } unless ts.blank?
         rescue StandardError => e
           Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
         end
+        result << { "name" => repo, "tags" => ts }
       end
       result
     end
