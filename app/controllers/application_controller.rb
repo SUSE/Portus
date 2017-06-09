@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Portus::Checks
+  include AuthFromToken
   before_action :check_requirements
 
   before_action :authenticate_user_from_authentication_token!

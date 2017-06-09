@@ -7,10 +7,9 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  team_id     :integer
-#  registry_id :integer          not null
+#  public      :boolean          default("0")
+#  registry_id :integer
 #  global      :boolean          default("0")
-#  description :text(65535)
-#  visibility  :integer
 #
 # Indexes
 #

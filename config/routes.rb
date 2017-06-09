@@ -57,6 +57,8 @@ Rails.application.routes.draw do
     end
   end
 
+  mount API::RootAPI => "/"
+
   namespace :admin do
     resources :activities, only: [:index]
     resources :dashboard, only: [:index]
