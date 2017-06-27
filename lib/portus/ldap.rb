@@ -168,9 +168,12 @@ module Portus
 
       # The user does not exist in Portus yet, let's create it.
       unless user
+        em = guess_email
+        em = nil if User.exists?(email: em)
+
         user = User.create(
           username: username,
-          email:    guess_email,
+          email:    em,
           password: password,
           admin:    !User.not_portus.any?
         )

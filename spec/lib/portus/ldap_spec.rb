@@ -65,6 +65,10 @@ class LdapMock < Portus::LDAP
     @last_symbol = symbol
   end
 
+  def setup_search_mock!(response)
+    @ldap = LdapSearchAdapter.new(response)
+  end
+
   def guess_email_test(response)
     @ldap = LdapSearchAdapter.new(response)
     guess_email
@@ -213,6 +217,15 @@ describe Portus::LDAP do
   end
 
   describe "#find_or_create_user!" do
+    let(:valid_response) do
+      [
+        {
+          "dn"    => ["ou=users,dc=example,dc=com"],
+          "email" => "user@example.com"
+        }
+      ]
+    end
+
     before :each do
       APP_CONFIG["ldap"] = { "enabled" => true }
     end
@@ -259,6 +272,24 @@ describe Portus::LDAP do
       lm.find_or_create_user_test!
 
       expect(User.count).to eq 2
+    end
+
+    it "raises the proper error on email duplication" do
+      ge = { "enabled" => true, "attr" => "email" }
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      lm.setup_search_mock!(valid_response)
+      lm.find_or_create_user_test!
+
+      lm = LdapMock.new(username: "another", password: "12341234")
+      lm.setup_search_mock!(valid_response)
+      lm.find_or_create_user_test!
+
+      [["name", "user@example.com"], ["another", nil]].each do |u|
+        user = User.find_by(username: u.first)
+        expect(user.email).to eq u.last
+      end
     end
   end
 
