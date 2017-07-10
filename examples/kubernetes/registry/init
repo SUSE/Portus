@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -x
-
-cp /certificates/portus.crt /usr/local/share/ca-certificates
-update-ca-certificates
-registry serve /etc/docker/registry/config.yml
