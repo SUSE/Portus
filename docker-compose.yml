@@ -1,34 +1,43 @@
 version: '2'
 
 services:
-  web:
+  portus:
     build: .
-    command: pumactl -F /portus/config/puma.rb start
+    command: bash /srv/Portus/examples/development/compose/init
     environment:
-      - PORTUS_MACHINE_FQDN_VALUE=${EXTERNAL_IP}
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_PUMA_HOST=0.0.0.0:3000
+
       - PORTUS_DB_HOST=db
       - PORTUS_DB_PASSWORD=portus
-      - PORTUS_PUMA_HOST=0.0.0.0:3000
-      - PORTUS_PUMA_WORKERS=2
-      - PORTUS_PUMA_MAX_THREADS=4
-    volumes:
-      - .:/portus
+
+      - RAILS_SERVE_STATIC_FILES=true
     ports:
       - 3000:3000
     links:
       - db
+    volumes:
+      - .:/srv/Portus
 
   crono:
-    image: portus_web
-    entrypoint: bin/crono
+    image: portus_portus
+    command: ./bin/crono
     environment:
-      - PORTUS_MACHINE_FQDN_VALUE=${EXTERNAL_IP}
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+
       - PORTUS_DB_HOST=db
       - PORTUS_DB_PASSWORD=portus
     volumes:
-      - .:/portus
+      - .:/srv/Portus
     links:
       - db
+
+  webpack:
+    image: kkarczmarczyk/node-yarn:6.9-slim
+    command: yarn run webpack
+    working_dir: /srv/Portus
+    volumes:
+      - .:/srv/Portus
 
   db:
     image: library/mariadb:10.0.23
@@ -38,15 +47,29 @@ services:
   registry:
     image: library/registry:2.3.1
     environment:
-      - REGISTRY_AUTH_TOKEN_REALM=http://${EXTERNAL_IP}:3000/v2/token
-      - REGISTRY_AUTH_TOKEN_SERVICE=${EXTERNAL_IP}:${REGISTRY_PORT}
-      - REGISTRY_AUTH_TOKEN_ISSUER=${EXTERNAL_IP}
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /registry_data
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+
+      REGISTRY_HTTP_ADDR: 0.0.0.0:5000
+      REGISTRY_HTTP_DEBUG_ADDR: 0.0.0.0:5001
+
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /etc/docker/registry/portus.crt
+
+      REGISTRY_AUTH_TOKEN_REALM: http://${MACHINE_FQDN}:3000/v2/token
+      REGISTRY_AUTH_TOKEN_SERVICE: ${MACHINE_FQDN}:${REGISTRY_PORT}
+      REGISTRY_AUTH_TOKEN_ISSUER: ${MACHINE_FQDN}
+
+      REGISTRY_NOTIFICATIONS_ENDPOINTS: >
+        - name: portus
+          url: http://${MACHINE_FQDN}:3000/v2/webhooks/events
+          timeout: 2000ms
+          threshold: 5
+          backoff: 1s
     volumes:
       - /registry_data
-      - ./compose/registry/portus.crt:/etc/docker/registry/portus.crt:ro
-      - ./compose/registry/config.yml:/etc/docker/registry/config.yml:ro
+      - ./examples/development/compose/portus.crt:/etc/docker/registry/portus.crt:ro
     ports:
       - ${REGISTRY_PORT}:5000
-      - 5001:5001 # required to access debug service
+      - 5001:5001
     links:
-      - web
+      - portus

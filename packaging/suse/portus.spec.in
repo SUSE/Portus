@@ -115,6 +115,9 @@ rm -rf \
    node_modules \
    public/assets/application-*.js* \
    vendor/assets \
+   examples \
+   config/secrets.yml \
+   config/database.yml \
    *.orig
 
 %install
@@ -162,11 +165,8 @@ fi
 %defattr(-,root,root)
 %{portusdir}
 %exclude %{portusdir}/spec
-%exclude %{portusdir}/vagrant
 %exclude %{portusdir}/Vagrantfile
 %exclude %{portusdir}/Dockerfile
-%exclude %{portusdir}/compose
-%exclude %{portusdir}/compose-setup.sh
 %exclude %{portusdir}/lib/man_pages.rb
 %exclude %{portusdir}/lib/tasks/man.rake
 %exclude %{portusdir}/packaging/suse/.gitignore

@@ -4,7 +4,7 @@ MAINTAINER Flavio Castelli <fcastelli@suse.com>
 ENV COMPOSE=1
 EXPOSE 3000
 
-WORKDIR /portus
+WORKDIR /srv/Portus
 COPY Gemfile* ./
 RUN bundle install --retry=3 && bundle binstubs phantomjs
 RUN apt-get update && \
