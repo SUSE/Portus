@@ -27,11 +27,10 @@ Portus and getting to know it. Read more about this
 [here](https://github.com/SUSE/Portus/wiki#developmentplayground-environments).
 - Deploy Portus in production.
 
-This guide will assume that you want to deploy Portus on production. In order
-to do this, you have to first install it on your system. You can do this in
-multiple ways, our favorite being installing Portus through the provided
-[RPM](/docs/setups/1_rpm_packages.html). Note that there are other alternative
-ways to install Portus (see the `Setups` section in the sidebar on the left).
+This guide will assume that you want to deploy Portus on production. There are
+multiple ways of achieving this, the recommended ones being the [RPM](/docs/setups/1_rpm_packages.html) setup and
+the [containerized](/docs/setups/2_containerized.html) solutions. There are other alternative ways to install
+Portus, as you can see in the `Setups` section in the sidebar on the left.
 
 Now, before you jump into trying to use Portus in your browser, there are
 some configuration steps that you should follow. This is thoroughly explained
