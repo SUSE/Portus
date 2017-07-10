@@ -88,5 +88,4 @@ Rails.application.configure do
       end
     end
   end
-
 end

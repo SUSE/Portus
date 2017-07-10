@@ -11,4 +11,3 @@ sed -i 's/PassengerInstanceRegistryDir \/run\/passenger/PassengerInstanceRegistr
 a2enmod passenger
 
 chown -R wwwrun /srv/www/portus/
-
