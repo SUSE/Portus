@@ -3,6 +3,7 @@ version: '2'
 services:
   portus:
     build: .
+    image: opensuse/portus:development
     command: bash /srv/Portus/examples/development/compose/init
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
@@ -20,8 +21,10 @@ services:
       - .:/srv/Portus
 
   crono:
-    image: portus_portus
+    image: opensuse/portus:development
     command: ./bin/crono
+    depends_on:
+      - portus
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
 
