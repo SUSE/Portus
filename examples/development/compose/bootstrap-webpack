@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Checking dependencies..."
+yarn check &> /dev/null
+if [ $? -ne 0 ]; then
+  echo "Installing dependencies..."
+  yarn install --no-emoji --no-progress
+fi
+
+yarn run webpack

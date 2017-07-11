@@ -37,7 +37,7 @@ services:
 
   webpack:
     image: kkarczmarczyk/node-yarn:6.9-slim
-    command: yarn run webpack
+    command: bash /srv/Portus/examples/development/compose/bootstrap-webpack
     working_dir: /srv/Portus
     volumes:
       - .:/srv/Portus
