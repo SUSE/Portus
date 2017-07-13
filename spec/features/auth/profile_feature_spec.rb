@@ -18,7 +18,7 @@ feature "Update password feature" do
 
     # Click the button, the contents should be updated.
     click_button("Update")
-    expect(current_path).to eq edit_user_registration_path
+    expect(page).to have_current_path(edit_user_registration_path)
     expect(disabled?("#edit_user .btn")).to be true
     expect(find("#user_email").value).to eq "another@example.com"
   end
@@ -50,7 +50,7 @@ feature "Update password feature" do
 
     # Click the button and see that everything is as expected.
     click_button "Change"
-    expect(current_path).to eq edit_user_registration_path
+    expect(page).to have_current_path(edit_user_registration_path)
     expect(User.first.valid_password?("12341234")).to be true
   end
 
@@ -61,8 +61,7 @@ feature "Update password feature" do
     visit edit_user_registration_path
 
     click_button "Disable"
-    wait_until { current_path == root_path }
-    expect(current_path).to eq root_path
+    expect(page).to have_current_path(root_path)
     expect(page).to have_content("Login")
   end
 

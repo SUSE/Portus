@@ -76,14 +76,14 @@ feature "Login feature" do
     fill_in "user_password", with: "bar"
     find("#login-btn").click
 
-    expect(current_path).to eq new_user_session_path
+    expect(page).to have_current_path(new_user_session_path)
     expect(page).to have_content("Invalid username or password")
   end
 
   scenario "When guest tries to access dashboard - he is redirected to the login page" do
     visit root_path
     expect(page).to have_content("Login")
-    expect(current_path).to eq root_path
+    expect(page).to have_current_path(root_path)
   end
 
   scenario "Successful login when trying to access a page redirects back the guest" do
@@ -92,7 +92,7 @@ feature "Login feature" do
     fill_in "user_username", with: user.username
     fill_in "user_password", with: user.password
     find("button.classbutton").click
-    expect(current_path).to eq namespaces_path
+    expect(page).to have_current_path(namespaces_path)
     expect(page).to have_content("Namespaces you have access to")
   end
 
@@ -104,20 +104,20 @@ feature "Login feature" do
 
     expect(page).to have_content(user.inactive_message)
     expect(page).to have_content("Login")
-    expect(current_path).to eq new_user_session_path
+    expect(page).to have_current_path(new_user_session_path)
   end
 
   scenario "Sign up is disabled" do
     APP_CONFIG["signup"] = { "enabled" => true }
 
     visit root_path
-    expect(current_path).to eq root_path
+    expect(page).to have_current_path(root_path)
     expect(page).to have_content("Create a new account")
 
     APP_CONFIG["signup"] = { "enabled" => false }
 
     visit root_path
-    expect(current_path).to eq root_path
+    expect(page).to have_current_path(root_path)
     expect(page).to have_content("I forgot my password")
     expect(page).to_not have_content("Create a new account")
   end

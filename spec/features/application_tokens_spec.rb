@@ -20,12 +20,10 @@ feature "Application tokens" do
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#add_application_token_form")
 
       expect(user.application_tokens.count).to be(1)
-      expect(current_path).to eql edit_user_registration_path
+      expect(page).to have_current_path(edit_user_registration_path)
 
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("was created successfully")
       expect(page).to have_content("awesome-application")
     end
@@ -42,12 +40,10 @@ feature "Application tokens" do
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#add_application_token_form")
 
       expect(user.application_tokens.count).to be(1)
-      expect(current_path).to eql edit_user_registration_path
+      expect(page).to have_current_path(edit_user_registration_path)
 
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("Application has already been taken")
     end
 
@@ -65,11 +61,9 @@ feature "Application tokens" do
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#add_application_token_form")
 
-      expect(current_path).to eql edit_user_registration_path
+      expect(page).to have_current_path(edit_user_registration_path)
 
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("was created successfully")
       expect(page).to have_content("awesome-application")
       expect(disabled?("#add_application_token_btn")).to be true
@@ -98,7 +92,6 @@ feature "Application tokens" do
       find(".popover-content .btn-primary").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content("was removed successfully")
     end
@@ -110,10 +103,8 @@ feature "Application tokens" do
 
       expect(page).to have_css("#add_application_token_btn i.fa-plus-circle")
       find("#add_application_token_btn").click
-      wait_for_effect_on("#add_application_token_form")
       expect(page).to have_css("#add_application_token_btn i.fa-minus-circle")
       find("#add_application_token_btn").click
-      wait_for_effect_on("#add_application_token_form")
       expect(page).to have_css("#add_application_token_btn i.fa-plus-circle")
     end
   end

@@ -18,13 +18,13 @@ feature "Namespaces support" do
 
       visit namespaces_path
       find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
 
       click_button "Create"
+
       wait_for_ajax
-      wait_for_effect_on("#add_namespace_form")
+
       expect(Namespace.count).to eql namespaces_count
-      expect(current_path).to eql namespaces_path
+      expect(page).to have_current_path(namespaces_path)
     end
 
     scenario "An user cannot create a namespace that already exists", js: true do
@@ -32,17 +32,19 @@ feature "Namespaces support" do
 
       visit namespaces_path
       find("#add_namespace_btn").click
-      fill_in "Namespace", with: Namespace.first.name
-      fill_in "Team", with: Team.where(hidden: false).first.name
       wait_for_effect_on("#add_namespace_form")
 
+      fill_in "Namespace", with: Namespace.first.name
+      fill_in "Team", with: Team.where(hidden: false).first.name
       click_button "Create"
+
       wait_for_ajax
       wait_for_effect_on("#float-alert")
-      expect(Namespace.count).to eql namespaces_count
-      expect(current_path).to eql namespaces_path
+
+      expect(page).to have_current_path(namespaces_path)
+      expect(page).to have_css("#float-alert")
       expect(page).to have_content("Name has already been taken")
-      expect(page).to have_css("#float-alert .alert.alert-dismissible.alert-info.float-alert")
+      expect(Namespace.count).to eql namespaces_count
     end
 
     scenario "An user cannot create a namespace for a hidden team", js: true do
@@ -50,17 +52,19 @@ feature "Namespaces support" do
 
       visit namespaces_path
       find("#add_namespace_btn").click
-      fill_in "Namespace", with: Namespace.first.name
-      fill_in "Team", with: Team.where(hidden: true).first.name
       wait_for_effect_on("#add_namespace_form")
 
+      fill_in "Namespace", with: Namespace.first.name
+      fill_in "Team", with: Team.where(hidden: true).first.name
       click_button "Create"
+
       wait_for_ajax
       wait_for_effect_on("#float-alert")
-      expect(Namespace.count).to eql namespaces_count
-      expect(current_path).to eql namespaces_path
+
+      expect(page).to have_current_path(namespaces_path)
+      expect(page).to have_css("#float-alert")
       expect(page).to have_content("Selected team does not exist")
-      expect(page).to have_css("#float-alert .alert.alert-dismissible.alert-info")
+      expect(Namespace.count).to eql namespaces_count
     end
 
     scenario "A namespace can be created from the index page", js: true do
@@ -68,26 +72,25 @@ feature "Namespaces support" do
 
       visit namespaces_path
       find("#add_namespace_btn").click
+      wait_for_effect_on("#add_namespace_form")
+
       fill_in "Namespace", with: "valid-namespace"
       fill_in "Team", with: namespace.team.name
-      wait_for_effect_on("#add_namespace_form")
-
       click_button "Create"
+
       wait_for_ajax
-      wait_for_effect_on("#add_namespace_form")
-
-      expect(Namespace.count).to eql namespaces_count + 1
-      expect(current_path).to eql namespaces_path
-      expect(page).to have_content("valid-namespace")
-
       wait_for_effect_on("#float-alert")
-      expect(page).to have_content(/Namespace '.+' was created successfully/)
+
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("Namespace 'valid-namespace' was created successfully")
 
       # Check that it created a link to it and that it's accessible.
-      click_link "valid-namespace"
+      expect(Namespace.count).to eql namespaces_count + 1
+      expect(page).to have_link("valid-namespace")
+      find(:link, "valid-namespace").trigger(:click)
+
       namespace = Namespace.find_by(name: "valid-namespace")
-      wait_until { current_path == namespace_path(namespace) }
-      expect(current_path).to eq namespace_path(namespace)
+      expect(page).to have_current_path(namespace_path(namespace))
     end
 
     scenario 'The "Create new namespace" link has a toggle effect', js: true do
@@ -96,13 +99,11 @@ feature "Namespaces support" do
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
 
       find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
 
       expect(page).to_not have_css("#add_namespace_btn i.fa-plus-circle")
       expect(page).to have_css("#add_namespace_btn i.fa-minus-circle")
 
       find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
 
       expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
@@ -116,14 +117,12 @@ feature "Namespaces support" do
       find("#add_namespace_btn").click
       fill_in "Namespace", with: "valid-namespace"
       fill_in "Team", with: namespace.team.name
-      wait_for_effect_on("#add_namespace_form")
 
       expect(page).to_not have_css("#add_namespace_btn i.fa-plus-circle")
       expect(page).to have_css("#add_namespace_btn i.fa-minus-circle")
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#add_namespace_form")
 
       expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
@@ -162,7 +161,6 @@ feature "Namespaces support" do
       find("#change_description_namespace_#{namespace.id} .btn").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("Team 'unknown' unknown")
     end
   end

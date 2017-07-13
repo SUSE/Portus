@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "eslint": "eslint --max-warnings 0 --ext .js .",
+    "eslint": "eslint --max-warnings 0 --ext .js ./app/assets/javascripts",
     "webpack": "webpack --watch --config config/webpack.js"
   },
   "devDependencies": {

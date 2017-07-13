@@ -6,7 +6,7 @@ import { fadeIn } from '~/utils/effects';
 // the user's sign in page components and handle interactions.
 class UsersSignInPage extends BaseComponent {
   mount() {
-    fadeIn(this.$el);
+    fadeIn(this.$el.find('> .container-fluid'));
   }
 }
 

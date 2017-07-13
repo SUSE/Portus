@@ -10,7 +10,7 @@ feature "Admin - Registries panel" do
   describe "#force_registry_config!" do
     it "redirects to new_admin_registry_path if no registry has been configured" do
       visit authenticated_root_path
-      expect(current_path).to eq new_admin_registry_path
+      expect(page).to have_current_path(new_admin_registry_path)
     end
   end
 
@@ -33,7 +33,7 @@ feature "Admin - Registries panel" do
       check "force"
       click_button "Create"
 
-      expect(current_path).to eq admin_registries_path
+      expect(page).to have_current_path(admin_registries_path)
       expect(page).to have_content("Registry was successfully created.")
       expect(Registry.any?).to be_truthy
     end
@@ -60,7 +60,7 @@ feature "Admin - Registries panel" do
       click_button "Update"
 
       expect(page).to have_content("Registry updated successfully!")
-      expect(current_path).to eq admin_registries_path
+      expect(page).to have_current_path(admin_registries_path)
       registry.reload
       expect(registry.hostname).to eq "lala"
     end
