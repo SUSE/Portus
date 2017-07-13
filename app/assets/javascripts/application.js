@@ -6,6 +6,7 @@ import 'bootstrap/js/transition';
 import 'bootstrap/js/tab';
 import 'bootstrap/js/tooltip';
 import 'bootstrap/js/popover';
+import 'bootstrap/js/dropdown';
 
 // Life it up
 import 'vendor/lifeitup_layout';
