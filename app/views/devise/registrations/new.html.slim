@@ -6,14 +6,14 @@ section.sign-up class=(@have_users ? '' : 'first-user')
       = image_tag 'layout/portus-logo-login-page.png', class: 'login-picture'
       = form_for(resource, as: resource_name, url: { action: 'create' }, :html => {:autocomplete => "off"}) do |f|
         = f.text_field :username, class: 'form-control input-lg', placeholder: 'Username', required: true, autofocus: true
-        = f.email_field :email, class: 'form-control input-lg first', placeholder: 'Email', required: true
-        = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password (8 characters min.)', required: true
+        = f.email_field :email, class: 'form-control input-lg first', placeholder: 'Email', required: true 
+        = f.password_field :password, class: 'form-control input-lg', placeholder: 'Password (8 characters min.)', required: true, pattern: '^.{8,}$'
         = f.password_field :password_confirmation, class: 'form-control input-lg last', placeholder: 'Password again', required: true
 
         - if !@admin && @first_user_admin
           = f.hidden_field :admin, value: true
 
-        button.btn.btn-primary.btn-block.btn-lg type="submit"
+        button.btn.btn-primary.btn-block.btn-lg#submit_btn type="submit"
           i.fa.fa-check
           - if @admin || !@first_user_admin
             | Create account
