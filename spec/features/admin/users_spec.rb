@@ -17,10 +17,8 @@ feature "Admin - Users panel" do
       expect(page).to have_content(original)
 
       find("#user_#{user.id} .remove-btn").click
-      wait_for_effect_on("#user_#{user.id}")
       find("#user_#{user.id} .btn-confirm-remove").click
 
-      wait_for_effect_on("#float-alert")
       expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect(page).to have_content("User '#{user.username}' was removed successfully")
       expect(page).to_not have_content(original)
@@ -33,9 +31,8 @@ feature "Admin - Users panel" do
       expect(page).to have_content(original)
 
       find(".btn-danger").click
-      expect(current_path).to eq admin_users_path
+      expect(page).to have_current_path(admin_users_path)
 
-      wait_for_effect_on("#float-alert")
       expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect(page).to have_content("User '#{user.username}' was removed successfully")
       expect(page).to_not have_content(original)
@@ -47,10 +44,7 @@ feature "Admin - Users panel" do
       expect(page).to have_css("#user_#{user.id}")
       find("#user_#{user.id} .enabled-btn").click
 
-      wait_for_effect_on("#user_#{user.id}")
-
       expect(page).to have_css("#user_#{user.id} .fa-toggle-off")
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("User '#{user.username}' has been disabled.")
     end
 
@@ -61,10 +55,7 @@ feature "Admin - Users panel" do
       expect(page).to have_css("#user_#{user.id}")
       find("#user_#{user.id} .enabled-btn").click
 
-      wait_for_effect_on("#user_#{user.id}")
-
       expect(page).to have_css("#user_#{user.id} .fa-toggle-on")
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("User '#{user.username}' has been enabled.")
     end
   end
@@ -74,8 +65,6 @@ feature "Admin - Users panel" do
       expect(page).to have_css("#user_#{user.id}")
       expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-off")
       find("#user_#{user.id} .admin-btn").click
-
-      wait_for_effect_on("#float-alert")
 
       expect(page).to_not have_css("#user_#{user.id} .admin-btn .fa-toggle-off")
       expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-on")
@@ -90,8 +79,6 @@ feature "Admin - Users panel" do
       expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-on")
       find("#user_#{user.id} .admin-btn").click
 
-      wait_for_effect_on("#float-alert")
-
       expect(page).to_not have_css("#user_#{user.id} .admin-btn .fa-toggle-on")
       expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-off")
       expect(page).to have_content("User '#{user.username}' is no longer an admin")
@@ -105,7 +92,6 @@ feature "Admin - Users panel" do
       fill_in "Email", with: "another@example.com"
       click_button "Update"
 
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("another@example.com")
       expect(page).to have_content("User '#{user.username}' was updated successfully")
     end
@@ -116,7 +102,6 @@ feature "Admin - Users panel" do
       fill_in "Email", with: admin.email
       click_button "Update"
 
-      wait_for_effect_on("#float-alert")
       expect(page).to have_content("has already been taken")
     end
   end

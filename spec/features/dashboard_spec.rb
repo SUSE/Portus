@@ -44,7 +44,6 @@ feature "Dashboard page" do
     scenario "Show personal repositories", js: true do
       visit authenticated_root_path
       click_link("Personal")
-      wait_for_effect_on(".tab-content")
 
       expect(page).to have_content("#{personal_namespace.name}/#{personal_repository.name}")
       expect(page).not_to have_content("#{namespace.name}/#{starred_repo.name}")
@@ -56,7 +55,6 @@ feature "Dashboard page" do
     scenario "Show personal repositories", js: true do
       visit authenticated_root_path
       click_link("Starred")
-      wait_for_effect_on(".tab-content")
 
       expect(page).to have_content("#{namespace.name}/#{starred_repo.name}")
       expect(page).not_to have_content("#{personal_namespace.name}/#{personal_repository.name}")

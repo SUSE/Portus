@@ -16,14 +16,14 @@ feature "Signup feature" do
     click_link("Create a new account")
     expect(page).to have_field("user_email")
     expect(page).to_not have_css("section.first-user")
-    expect(page).to_not have_css("#user_admin")
+    expect(page).to_not have_css("#user_admin", visible: false)
   end
 
   scenario "The first user to be created is the admin if first_user_admin is enabled" do
     User.delete_all
     visit new_user_registration_url
     expect(page).to have_content("Create admin")
-    expect(page).to have_css("#user_admin")
+    expect(page).to have_css("#user_admin", visible: false)
   end
 
   scenario "The first user to be created is NOT admin if first_user_admin is disabled" do
@@ -31,7 +31,7 @@ feature "Signup feature" do
     APP_CONFIG["first_user_admin"] = { "enabled" => false }
     visit new_user_registration_url
     expect(page).to_not have_content("Create admin")
-    expect(page).to_not have_css("#user_admin")
+    expect(page).to_not have_css("#user_admin", visible: false)
   end
 
   scenario "The portus user does not interfere with regular admin creation" do
@@ -41,7 +41,7 @@ feature "Signup feature" do
     visit new_user_registration_url
 
     expect(page).to have_content("Create admin")
-    expect(page).to have_css("#user_admin")
+    expect(page).to have_css("#user_admin", visible: false)
   end
 
   scenario "As a guest I am able to signup" do
@@ -145,9 +145,9 @@ feature "Signup feature" do
 
   scenario "If there are users on the system, and can move through sign_in and sign_up" do
     click_link("Login")
-    expect(current_path).to eql(new_user_session_path)
+    expect(page).to have_current_path(new_user_session_path)
     click_link("Create a new account")
-    expect(current_path).to eql(new_user_registration_path)
+    expect(page).to have_current_path(new_user_registration_path)
   end
 
   describe "signup disabled" do
@@ -157,7 +157,7 @@ feature "Signup feature" do
 
     scenario "does not allow the user to access the signup page if disabled" do
       visit new_user_registration_path
-      expect(current_path).to eq new_user_session_path
+      expect(page).to have_current_path(new_user_session_path)
     end
   end
 end

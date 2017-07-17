@@ -125,7 +125,9 @@ CSV
       end
 
       get :index, format: :csv
-      expect(response.body.split("\n").size).to eq 61
+      # The rand() used above will eventually conflict and
+      # we need to rely on Team.count instead of 50
+      expect(response.body.split("\n").size).to eq(Team.count + 3)
     end
   end
 end

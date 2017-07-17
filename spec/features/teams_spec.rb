@@ -15,13 +15,12 @@ feature "Teams support" do
 
       visit teams_path
       find("#add_team_btn").click
-      wait_for_effect_on("#add_team_form")
 
       click_button "Add"
       wait_for_ajax
-      wait_for_effect_on("#add_team_form")
+
       expect(Team.count).to eql teams_count
-      expect(current_path).to eql teams_path
+      expect(page).to have_current_path(teams_path)
     end
 
     scenario "A team cannot be created if the name has already been picked", js: true do
@@ -30,15 +29,14 @@ feature "Teams support" do
       visit teams_path
       find("#add_team_btn").click
       fill_in "Name", with: Team.first.name
-      wait_for_effect_on("#add_team_form")
 
       click_button "Add"
       wait_for_ajax
       wait_for_effect_on("#float-alert")
+
       expect(Team.count).to eql teams_count
-      expect(current_path).to eql teams_path
+      expect(page).to have_current_path(teams_path)
       expect(page).to have_content("Name has already been taken")
-      expect(page).to have_css("#float-alert .alert.alert-dismissible.alert-info")
     end
 
     scenario "A team can be created from the index page", js: true do
@@ -47,16 +45,14 @@ feature "Teams support" do
       visit teams_path
       find("#add_team_btn").click
       fill_in "Name", with: "valid-team"
-      wait_for_effect_on("#add_team_form")
 
       click_button "Add"
       wait_for_ajax
-      wait_for_effect_on("#add_team_form")
-      expect(Team.count).to eql teams_count + 1
-      expect(current_path).to eql teams_path
-      expect(page).to have_content("valid-team")
-
       wait_for_effect_on("#float-alert")
+
+      expect(Team.count).to eql teams_count + 1
+      expect(page).to have_current_path(teams_path)
+      expect(page).to have_link("valid-team")
       expect(page).to have_content("Team 'valid-team' was created successfully")
     end
 
@@ -66,13 +62,11 @@ feature "Teams support" do
       expect(page).to_not have_css("#add_team_btn i.fa-minus-circle")
 
       find("#add_team_btn").click
-      wait_for_effect_on("#add_team_form")
 
       expect(page).to_not have_css("#add_team_btn i.fa-plus-circle")
       expect(page).to have_css("#add_team_btn i.fa-minus-circle")
 
       find("#add_team_btn").click
-      wait_for_effect_on("#add_team_form")
 
       expect(page).to have_css("#add_team_btn i.fa-plus-circle")
       expect(page).to_not have_css("#add_team_btn i.fa-minus-circle")
@@ -82,7 +76,7 @@ feature "Teams support" do
       visit teams_path
       expect(page).to have_content(team.name)
       find("#teams a").click
-      expect(current_path).to eq team_path(team)
+      expect(page).to have_current_path(team_path(team))
     end
 
     scenario "Disabled users do not count" do
@@ -107,13 +101,12 @@ feature "Teams support" do
       visit team_path(team)
 
       click_button "Edit team"
-      expect(find("form.edit_team")).to be_visible
+      expect(page).to have_css("form.edit_team")
 
       new_team_name = "New #{team}"
       fill_in "team[name]", with: new_team_name
       click_button "Save"
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content("Team '#{new_team_name}' was updated successfully")
       expect(find(".team_name").text).to eq(new_team_name)
@@ -130,10 +123,12 @@ feature "Teams support" do
 
     scenario "A namespace can be created from the team page", js: true do
       # The form appears after clicking the "Add namespace" link.
-      expect(find("#add_namespace_form", visible: false)).to_not be_visible
+      expect(page).to have_css("#add_namespace_form", visible: false)
+
       find("#add_namespace_btn").click
       wait_for_effect_on("#add_namespace_form")
-      expect(find("#add_namespace_form")).to be_visible
+
+      expect(page).to have_css("#add_namespace_form")
       expect(focused_element_id).to eq "namespace_namespace"
 
       # Fill the form and wait for the AJAX response.
@@ -144,19 +139,16 @@ feature "Teams support" do
       # See the response.
       namespace = Namespace.find_by(name: "new-namespace")
       expect(page).to have_css("#namespace_#{namespace.id}")
-      wait_for_effect_on("#add_namespace_form")
-      expect(find("#add_namespace_form", visible: false)).to_not be_visible
+      expect(page).to have_css("#add_namespace_form", visible: false)
     end
 
     scenario "An user can be added as a team member", js: true do
       find("#add_team_user_btn").click
-      wait_for_effect_on("#add_team_user_form")
       find("#team_user_role").select "Contributor"
       find("#team_user_user").set another.username
       find("#add_team_user_form .btn").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content(/User '.+' was added to the team/)
       expect(page).to have_content("Contributor")
@@ -164,13 +156,11 @@ feature "Teams support" do
 
     scenario "An admin can only be added as a team owner", js: true do
       find("#add_team_user_btn").click
-      wait_for_effect_on("#add_team_user_form")
       find("#team_user_role").select "Contributor"
       find("#team_user_user").set another_admin.username
       find("#add_team_user_form .btn").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content(
         /User '.+' was added to the team \(promoted to owner because it is a Portus admin\)\./
@@ -180,13 +170,11 @@ feature "Teams support" do
 
     scenario "New team members have to exist on the system", js: true do
       find("#add_team_user_btn").click
-      wait_for_effect_on("#add_team_user_form")
       find("#team_user_role").select "Contributor"
       find("#team_user_user").set "grumpy"
       find("#add_team_user_form .btn").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content("User cannot be found")
     end
@@ -202,7 +190,6 @@ feature "Teams support" do
       find(".popover-content .btn-primary").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content(/User '.+' was removed from the team/)
     end
@@ -215,7 +202,6 @@ feature "Teams support" do
       find(".popover-content .btn-primary").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_content("Cannot remove the only owner of the team")
     end

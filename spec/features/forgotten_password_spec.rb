@@ -23,12 +23,12 @@ feature "Forgotten password support" do
 
     fill_in "Email", with: "random@example.com"
     click_button "Reset password"
-    expect(current_path).to eq new_user_password_path
+    expect(page).to have_current_path(new_user_password_path)
     expect(page).to have_content("Email not found")
 
     fill_in "Email", with: user.email
     click_button "Reset password"
-    expect(current_path).to eq new_user_session_path
+    expect(page).to have_current_path(new_user_session_path)
     expect(page).to have_content("You will receive an email with instructions on " \
       "how to reset your password in a few minutes.")
 

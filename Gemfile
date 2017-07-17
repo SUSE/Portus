@@ -88,7 +88,6 @@ unless packaging?
     gem "database_cleaner"
     gem "md2man", "~>5.1.1", require: false
     gem "binman", "~>5.1.0"
-    gem "phantomjs", "~> 2.1.1.0"
   end
 
   group :test do
@@ -96,8 +95,8 @@ unless packaging?
     gem "vcr"
     gem "webmock", "~> 2.3.2", require: false
     gem "simplecov", require: false
-    gem "capybara"
-    gem "poltergeist", require: false
+    gem "capybara", "~> 2.14.3"
+    gem "poltergeist", "~> 1.15.0", require: false
     gem "json-schema"
     gem "timecop"
     gem "codeclimate-test-reporter", group: :test, require: nil

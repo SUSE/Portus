@@ -6,7 +6,7 @@ EXPOSE 3000
 
 WORKDIR /srv/Portus
 COPY Gemfile* ./
-RUN bundle install --retry=3 && bundle binstubs phantomjs
+RUN bundle install --retry=3
 RUN apt-get update && \
     apt-get install -y --no-install-recommends nodejs
 

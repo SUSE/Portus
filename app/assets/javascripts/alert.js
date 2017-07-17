@@ -22,7 +22,7 @@
     w.setTimeOutAlertDelay = function () {
       setTimeout(function () {
         $('.alert-hide').click();
-      }, 4000);
+      }, 5000);
     };
 
     w.setTimeOutAlertDelay();

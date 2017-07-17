@@ -42,10 +42,10 @@ feature "Repositories support" do
 
     scenario "A user can star a repository", js: true do
       visit repository_path(repository)
-      expect(find("#toggle_star")).to be_visible
+      expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
       wait_for_ajax
-      expect(current_path).to eq repository_path(repository)
+      expect(page).to have_current_path(repository_path(repository))
 
       # See the response.
       repo = Repository.find(repository.id)
@@ -55,10 +55,10 @@ feature "Repositories support" do
 
     scenario "A user can unstar a repository", js: true do
       visit repository_path(starred_repo)
-      expect(find("#toggle_star")).to be_visible
+      expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
       wait_for_ajax
-      expect(current_path).to eq repository_path(starred_repo)
+      expect(page).to have_current_path(repository_path(starred_repo))
 
       # See the response.
       repo = Repository.find(repository.id)
