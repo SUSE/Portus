@@ -40,6 +40,7 @@ $(() => {
         state: store.state,
         isLoading: false,
         notLoaded: false,
+        unableToFetchBefore: false,
         tags: [],
       };
     },
@@ -51,14 +52,18 @@ $(() => {
         RepositoriesService.get(id).then((response) => {
           set(this, 'tags', response.body.tags);
           set(this, 'notLoaded', false);
+          set(this, 'unableToFetchBefore', false);
         }, () => {
           // if the data never came,
           // show message instead of table,
           // otherwise only the alert
           if (this.isLoading) {
             set(this, 'notLoaded', true);
-          } else {
+          }
+
+          if (!this.isLoading && !this.unableToFetchBefore) {
             Alert.show('Unable to fetch newer tags data');
+            set(this, 'unableToFetchBefore', true);
           }
         }).finally(() => {
           setTimeout(() => this.loadData(), POLLING_VALUE);

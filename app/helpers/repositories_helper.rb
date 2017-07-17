@@ -133,4 +133,10 @@ module RepositoriesHelper
   def security_vulns_enabled?
     ::Portus::Security.new(nil, nil).enabled?
   end
+
+  # Returns true if any vulnerability is found
+  # Or false otherwise
+  def vulnerable?(vulnerabilities)
+    !vulnerabilities.select { |_, vulns| !vulns.empty? }.empty?
+  end
 end
