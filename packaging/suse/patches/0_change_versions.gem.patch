@@ -1,12 +1,12 @@
 diff --git a/Gemfile b/Gemfile
-index 203814291c85..29aedaba990f 100644
+index 20381429..87ebd187 100644
 --- a/Gemfile
 +++ b/Gemfile
 @@ -1,6 +1,6 @@
  source "https://rubygems.org"
 
 -gem "rails", "~> 4.2.8"
-+gem "rails", "~> 4.2.2"
++gem "rails", "= 4.2.2"
  gem "sass-rails", ">= 3.2"
  gem "bootstrap-sass", "~> 3.3.4"
  gem "slim"
@@ -15,7 +15,7 @@ index 203814291c85..29aedaba990f 100644
 
  # If the deployment is done through Puma, include it in the bundle.
 -gem "puma", "~> 3.7.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
-+gem "puma", "~> 2.16.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
++gem "puma", "= 2.16.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
 
  # In order to create the Gemfile.lock required for packaging
  # meaning that it should contain only the production packages
@@ -36,10 +36,10 @@ index 203814291c85..29aedaba990f 100644
      gem "md2man", "~>5.1.1", require: false
      gem "binman", "~>5.1.0"
 diff --git a/Gemfile.lock b/Gemfile.lock
-index da341fd344da..f6aa2d0c7a91 100644
+index da341fd3..2e564845 100644
 --- a/Gemfile.lock
 +++ b/Gemfile.lock
-@@ -1,40 +1,40 @@
+@@ -1,41 +1,42 @@
  GEM
    remote: https://rubygems.org/
    specs:
@@ -97,9 +97,11 @@ index da341fd344da..f6aa2d0c7a91 100644
 -    activesupport (4.2.8)
 +    activesupport (4.2.2)
        i18n (~> 0.7)
++      json (~> 1.7, >= 1.7.7)
        minitest (~> 5.1)
        thread_safe (~> 0.3, >= 0.3.4)
-@@ -43,7 +43,7 @@ GEM
+       tzinfo (~> 1.1)
+@@ -43,7 +44,7 @@ GEM
      annotate (2.6.5)
        activerecord (>= 2.3.0)
        rake (>= 0.8.7)
@@ -108,7 +110,7 @@ index da341fd344da..f6aa2d0c7a91 100644
      ast (2.3.0)
      autoprefixer-rails (5.2.0.1)
        execjs
-@@ -127,7 +127,7 @@ GEM
+@@ -127,7 +128,7 @@ GEM
        octokit (~> 2.0.0)
        yajl-ruby
      gli (2.8.1)
@@ -117,7 +119,7 @@ index da341fd344da..f6aa2d0c7a91 100644
        activesupport (>= 4.1.0)
      gravatar_image_tag (1.2.0)
      guard (2.13.0)
-@@ -167,28 +167,27 @@ GEM
+@@ -167,28 +168,28 @@ GEM
      listen (3.0.6)
        rb-fsevent (>= 0.9.3)
        rb-inotify (>= 0.9.7)
@@ -126,22 +128,21 @@ index da341fd344da..f6aa2d0c7a91 100644
        nokogiri (>= 1.5.9)
      lumberjack (1.0.10)
 -    mail (2.6.4)
--      mime-types (>= 1.16, < 4)
-+    mail (2.5.4)
-+      mime-types (>= 1.16)
-+      treetop (~> 1.4.8)
++    mail (2.6.6)
+       mime-types (>= 1.16, < 4)
      md2man (5.1.1)
        binman (~> 5.0)
        redcarpet (~> 3.0)
        rouge (~> 1.0)
      method_source (0.8.2)
 -    mime-types (3.0)
--      mime-types-data (~> 3.2015)
++    mime-types (3.1)
+       mime-types-data (~> 3.2015)
 -    mime-types-data (3.2016.0221)
 -    mini_portile2 (2.0.0)
 -    minitest (5.8.4)
 -    multi_json (1.11.2)
-+    mime-types (1.25)
++    mime-types-data (3.2016.0521)
 +    mini_portile (0.5.2)
 +    minitest (5.7.0)
 +    multi_json (1.8.2)
@@ -156,16 +157,7 @@ index da341fd344da..f6aa2d0c7a91 100644
      notiffany (0.0.8)
        nenv (~> 0.1)
        shellany (~> 0.0)
-@@ -203,7 +202,7 @@ GEM
-       capybara (~> 2.1)
-       cliver (~> 0.3.1)
-       websocket-driver (>= 0.2.0)
--    polyglot (0.3.5)
-+    polyglot (0.3.3)
-     powerpack (0.1.1)
-     pry (0.10.1)
-       coderay (~> 1.1.0)
-@@ -216,7 +215,7 @@ GEM
+@@ -216,7 +217,7 @@ GEM
        activerecord (>= 3.0)
        i18n (>= 0.5.0)
        railties (>= 3.0.0)
@@ -174,7 +166,7 @@ index da341fd344da..f6aa2d0c7a91 100644
      pundit (1.0.1)
        activesupport (>= 3.0.0)
      quiet_assets (1.1.0)
-@@ -224,22 +223,22 @@ GEM
+@@ -224,22 +225,22 @@ GEM
      rack (1.6.4)
      rack-mini-profiler (0.9.3)
        rack (>= 1.1.3)
@@ -208,7 +200,7 @@ index da341fd344da..f6aa2d0c7a91 100644
        activesupport (>= 4.2.0.beta, < 5.0)
        nokogiri (~> 1.6.0)
        rails-deprecated_sanitizer (>= 1.0.1)
-@@ -248,20 +247,20 @@ GEM
+@@ -248,20 +249,20 @@ GEM
        activesupport (>= 3.2)
        choice (~> 0.2.0)
        ruby-graphviz (~> 1.2)
@@ -235,7 +227,7 @@ index da341fd344da..f6aa2d0c7a91 100644
      responders (2.1.0)
        railties (>= 4.2.0, < 5)
      rouge (1.11.1)
-@@ -329,23 +328,24 @@ GEM
+@@ -329,22 +330,22 @@ GEM
        temple (~> 0.6.6)
        tilt (>= 1.3.3, < 2.1)
      slop (3.6.0)
@@ -258,24 +250,21 @@ index da341fd344da..f6aa2d0c7a91 100644
      tilt (1.4.1)
      timecop (0.7.4)
 -    treetop (1.6.5)
--      polyglot (~> 0.3)
-+    treetop (1.4.15)
-+      polyglot
-+      polyglot (>= 0.3.1)
++    treetop (1.6.8)
+       polyglot (~> 0.3)
      typhoeus (1.0.2)
        ethon (>= 0.9.0)
-     tzinfo (1.2.2)
-@@ -419,11 +419,11 @@ DEPENDENCIES
+@@ -419,11 +420,11 @@ DEPENDENCIES
    poltergeist (~> 1.15.0)
    pry-rails
    public_activity
 -  puma (~> 3.7.0)
-+  puma (~> 2.16.0)
++  puma (= 2.16.0)
    pundit
    quiet_assets
    rack-mini-profiler
 -  rails (~> 4.2.8)
-+  rails (~> 4.2.2)
++  rails (= 4.2.2)
    rails-erd
    rails_stdout_logging (~> 0.0.5)
    redcarpet
