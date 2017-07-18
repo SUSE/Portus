@@ -256,6 +256,39 @@ machine_fqdn:
   value: "portus.test.lan"
 {% endhighlight %}
 
+### Security scanning
+
+**Note**: this is only available in Portus 2.3 or later.
+
+You can setup a security scanner for your Portus instance. This way, Portus will
+display whether the images you have on your registry have known security
+vulnerabilities. This feature is disabled by default, but it can be configured
+through the following values:
+
+```yaml
+security:
+  # CoreOS Clair support (https://github.com/coreos/clair).
+  clair:
+    server: ""
+
+  # zypper-docker can be run as a server with its `serve` command. This backend
+  # fetches the information as given by zypper-docker. Note that this feature
+  # from zypper-docker is experimental and only available through another branch
+  # than master.
+  #
+  # NOTE: support for this is experimental since this functionality has not
+  # been merged into master yet in zypper-docker.
+  zypper:
+    server: ""
+
+  # This backend is only used for testing purposes, don't use it.
+  dummy:
+    server: ""
+```
+
+Portus supports having multiple scanners enabled at the same time. You can read
+more about this [here](/features/6_security_scanning.html).
+
 ### Display name
 
 **Note**: feature only available in Portus 2.1 or later.
