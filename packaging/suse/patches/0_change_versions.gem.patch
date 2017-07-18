@@ -1,10 +1,10 @@
 diff --git a/Gemfile b/Gemfile
-index e23be33431f6..38554ac0f9c0 100644
+index 203814291c85..29aedaba990f 100644
 --- a/Gemfile
 +++ b/Gemfile
 @@ -1,6 +1,6 @@
  source "https://rubygems.org"
- 
+
 -gem "rails", "~> 4.2.8"
 +gem "rails", "~> 4.2.2"
  gem "sass-rails", ">= 3.2"
@@ -12,11 +12,11 @@ index e23be33431f6..38554ac0f9c0 100644
  gem "slim"
 @@ -52,7 +52,7 @@ def packaging?
  end
- 
+
  # If the deployment is done through Puma, include it in the bundle.
 -gem "puma", "~> 3.7.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
 +gem "puma", "~> 2.16.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
- 
+
  # In order to create the Gemfile.lock required for packaging
  # meaning that it should contain only the production packages
 @@ -68,6 +68,7 @@ unless packaging?
@@ -36,7 +36,7 @@ index e23be33431f6..38554ac0f9c0 100644
      gem "md2man", "~>5.1.1", require: false
      gem "binman", "~>5.1.0"
 diff --git a/Gemfile.lock b/Gemfile.lock
-index cf67c099378e..8c6315fc4ea3 100644
+index da341fd344da..f6aa2d0c7a91 100644
 --- a/Gemfile.lock
 +++ b/Gemfile.lock
 @@ -1,40 +1,40 @@
@@ -108,7 +108,7 @@ index cf67c099378e..8c6315fc4ea3 100644
      ast (2.3.0)
      autoprefixer-rails (5.2.0.1)
        execjs
-@@ -126,7 +126,7 @@ GEM
+@@ -127,7 +127,7 @@ GEM
        octokit (~> 2.0.0)
        yajl-ruby
      gli (2.8.1)
@@ -117,7 +117,7 @@ index cf67c099378e..8c6315fc4ea3 100644
        activesupport (>= 4.1.0)
      gravatar_image_tag (1.2.0)
      guard (2.13.0)
-@@ -166,28 +166,27 @@ GEM
+@@ -167,28 +167,27 @@ GEM
      listen (3.0.6)
        rb-fsevent (>= 0.9.3)
        rb-inotify (>= 0.9.7)
@@ -146,7 +146,7 @@ index cf67c099378e..8c6315fc4ea3 100644
 +    minitest (5.7.0)
 +    multi_json (1.8.2)
      multipart-post (2.0.0)
-     mysql2 (0.3.18)
+     mysql2 (0.4.8)
      nenv (0.3.0)
      net-ldap (0.11)
 -    nokogiri (1.6.7.2)
@@ -156,16 +156,16 @@ index cf67c099378e..8c6315fc4ea3 100644
      notiffany (0.0.8)
        nenv (~> 0.1)
        shellany (~> 0.0)
-@@ -204,7 +203,7 @@ GEM
+@@ -203,7 +202,7 @@ GEM
+       capybara (~> 2.1)
        cliver (~> 0.3.1)
-       multi_json (~> 1.0)
        websocket-driver (>= 0.2.0)
 -    polyglot (0.3.5)
 +    polyglot (0.3.3)
      powerpack (0.1.1)
      pry (0.10.1)
        coderay (~> 1.1.0)
-@@ -217,7 +216,7 @@ GEM
+@@ -216,7 +215,7 @@ GEM
        activerecord (>= 3.0)
        i18n (>= 0.5.0)
        railties (>= 3.0.0)
@@ -174,7 +174,7 @@ index cf67c099378e..8c6315fc4ea3 100644
      pundit (1.0.1)
        activesupport (>= 3.0.0)
      quiet_assets (1.1.0)
-@@ -225,22 +224,22 @@ GEM
+@@ -224,22 +223,22 @@ GEM
      rack (1.6.4)
      rack-mini-profiler (0.9.3)
        rack (>= 1.1.3)
@@ -208,7 +208,7 @@ index cf67c099378e..8c6315fc4ea3 100644
        activesupport (>= 4.2.0.beta, < 5.0)
        nokogiri (~> 1.6.0)
        rails-deprecated_sanitizer (>= 1.0.1)
-@@ -249,20 +248,20 @@ GEM
+@@ -248,20 +247,20 @@ GEM
        activesupport (>= 3.2)
        choice (~> 0.2.0)
        ruby-graphviz (~> 1.2)
@@ -235,7 +235,7 @@ index cf67c099378e..8c6315fc4ea3 100644
      responders (2.1.0)
        railties (>= 4.2.0, < 5)
      rouge (1.11.1)
-@@ -330,23 +329,24 @@ GEM
+@@ -329,23 +328,24 @@ GEM
        temple (~> 0.6.6)
        tilt (>= 1.3.3, < 2.1)
      slop (3.6.0)
@@ -265,8 +265,8 @@ index cf67c099378e..8c6315fc4ea3 100644
      typhoeus (1.0.2)
        ethon (>= 0.9.0)
      tzinfo (1.2.2)
-@@ -420,11 +420,11 @@ DEPENDENCIES
-   poltergeist
+@@ -419,11 +419,11 @@ DEPENDENCIES
+   poltergeist (~> 1.15.0)
    pry-rails
    public_activity
 -  puma (~> 3.7.0)
