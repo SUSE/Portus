@@ -1,0 +1,145 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://registry.test.cat:5000/v2/coreos/dex/manifests/unrelated
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/vnd.docker.distribution.manifest.v2+json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Docker-Distribution-Api-Version:
+      - registry/2.0
+      Www-Authenticate:
+      - Bearer realm="https://registry.test.cat/v2/token",service="registry.test.cat:5000",scope="repository:coreos/dex:pull"
+      Date:
+      - Fri, 14 Jul 2017 15:07:08 GMT
+      Content-Length:
+      - '153'
+    body:
+      encoding: UTF-8
+      string: |
+        {"errors":[{"code":"UNAUTHORIZED","message":"authentication required","detail":[{"Type":"repository","Class":"","Name":"coreos/dex","Action":"pull"}]}]}
+    http_version:
+  recorded_at: Fri, 14 Jul 2017 15:07:08 GMT
+- request:
+    method: get
+    uri: https://registry.test.cat/v2/token?account=portus&scope=repository:coreos/dex:pull&service=registry.test.cat:5000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Authorization:
+      - Basic cG9ydHVzOnBvcnR1czEyMzQ=
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 14 Jul 2017 15:07:09 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - DENY
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      - nosniff
+      Etag:
+      - W/"39da90b48bfac4fb814e3d5b087477f8"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Set-Cookie:
+      - _portus_session=eUdJMzhKZGdVZTZONjBTUEpVNXFFR1JTOCtvdDB1TkwvYWpYbmxpam9mSjFZUkpKbUt4ZHZEdjBwRXhXMGZTMyt5K2N3YzZhV0Q1WjR5T29QK1NmTkE9PS0tTXJIYTFsN1p6R0VZekhla2hYTi9KQT09--db9741ff7d9c5c3360b4b2227480de27dd5789f5;
+        path=/; HttpOnly
+      X-Request-Id:
+      - 12170f44-b45f-4391-a3bf-7543162fb113
+      X-Runtime:
+      - '0.164698'
+    body:
+      encoding: UTF-8
+      string: '{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkxGNFU6VFRHRjpWN0ZMOlFEQkY6Tk5CVTo2S0RIOjNONU46UlNXQTpWQVNVOkoyUVI6N0tGQjpRTEo0In0.eyJpc3MiOiJyZWdpc3RyeS5tc3NvbGEuY2F0Iiwic3ViIjoicG9ydHVzIiwiYXVkIjoicmVnaXN0cnkubXNzb2xhLmNhdDo1MDAwIiwiaWF0IjoxNTAwMDQ0ODI5LCJuYmYiOjE1MDAwNDQ4MjQsImV4cCI6MTUwMDA0NTEyOSwianRpIjoibWFzU2ZqRkVtV3doOGlMdjdzRXZ4R1RNVnVDYjc4TExWUEh4V0M3eFNuIiwiYWNjZXNzIjpbeyJ0eXBlIjoicmVwb3NpdG9yeSIsIm5hbWUiOiJjb3Jlb3MvZGV4IiwiYWN0aW9ucyI6WyJwdWxsIl19XX0.kFgqcD5sM1_V-Oeik-1Zxp9OX7nV6QRH6IIvgK-PG__uU06EcR49lcWOqselzPQTCP7h0crXmsc57FA5cFCb3vGw5pBOF3Hdb3twzRLR_3udfCH2vds-VgG1FwhNHNdzk34jgcc_y3OvWLM0J2aIhZ9snoz7kpaHFIjyLB0yeki__OpP7D5tUcRMGA1YHmku0BppJ4L6KPgI2MzlKdpTAfNje3QmiaH7bAjEfUF4vE19sHyXd87FlrwhwJFNHBfAAyF3REkjC1o3yFL4q7bqmokc_nx1Ue7rnzTmtoN6crO8F5M26gWm8Bxh3wzXnksG5XeylC12k2JDVEv4Yk-ihw","expires_in":300,"issued_at":"2017-07-14T15:07:09+00:00"}'
+    http_version:
+  recorded_at: Fri, 14 Jul 2017 15:07:09 GMT
+- request:
+    method: get
+    uri: https://registry.test.cat:5000/v2/coreos/dex/manifests/unrelated
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/vnd.docker.distribution.manifest.v2+json
+      User-Agent:
+      - Ruby
+      Authorization:
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkxGNFU6VFRHRjpWN0ZMOlFEQkY6Tk5CVTo2S0RIOjNONU46UlNXQTpWQVNVOkoyUVI6N0tGQjpRTEo0In0.eyJpc3MiOiJyZWdpc3RyeS5tc3NvbGEuY2F0Iiwic3ViIjoicG9ydHVzIiwiYXVkIjoicmVnaXN0cnkubXNzb2xhLmNhdDo1MDAwIiwiaWF0IjoxNTAwMDQ0ODI5LCJuYmYiOjE1MDAwNDQ4MjQsImV4cCI6MTUwMDA0NTEyOSwianRpIjoibWFzU2ZqRkVtV3doOGlMdjdzRXZ4R1RNVnVDYjc4TExWUEh4V0M3eFNuIiwiYWNjZXNzIjpbeyJ0eXBlIjoicmVwb3NpdG9yeSIsIm5hbWUiOiJjb3Jlb3MvZGV4IiwiYWN0aW9ucyI6WyJwdWxsIl19XX0.kFgqcD5sM1_V-Oeik-1Zxp9OX7nV6QRH6IIvgK-PG__uU06EcR49lcWOqselzPQTCP7h0crXmsc57FA5cFCb3vGw5pBOF3Hdb3twzRLR_3udfCH2vds-VgG1FwhNHNdzk34jgcc_y3OvWLM0J2aIhZ9snoz7kpaHFIjyLB0yeki__OpP7D5tUcRMGA1YHmku0BppJ4L6KPgI2MzlKdpTAfNje3QmiaH7bAjEfUF4vE19sHyXd87FlrwhwJFNHBfAAyF3REkjC1o3yFL4q7bqmokc_nx1Ue7rnzTmtoN6crO8F5M26gWm8Bxh3wzXnksG5XeylC12k2JDVEv4Yk-ihw
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Length:
+      - '528'
+      Content-Type:
+      - application/vnd.docker.distribution.manifest.v2+json
+      Docker-Content-Digest:
+      - sha256:1b6c543cc889c8f5f8d7061ddd3941b04568f725960e95896a2fbc06311fa4c0
+      Docker-Distribution-Api-Version:
+      - registry/2.0
+      Etag:
+      - '"sha256:1b6c543cc889c8f5f8d7061ddd3941b04568f725960e95896a2fbc06311fa4c0"'
+      Date:
+      - Fri, 14 Jul 2017 15:07:09 GMT
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+           "schemaVersion": 2,
+           "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+           "config": {
+              "mediaType": "application/vnd.docker.container.image.v1+json",
+              "size": 1278,
+              "digest": "sha256:baa5d63471ead618ff91ddfacf1e2c81bf0612bfeb1daf00eb0843a41fbfade3"
+           },
+           "layers": [
+              {
+                 "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                 "size": 2382139,
+                 "digest": "sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"
+              }
+           ]
+        }
+    http_version:
+  recorded_at: Fri, 14 Jul 2017 15:07:09 GMT
+recorded_with: VCR 3.0.3

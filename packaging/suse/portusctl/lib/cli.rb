@@ -160,6 +160,19 @@ Looks for the following required certificate files in the specified folder:
     type:    :boolean,
     default: true
 
+  # Security scanning
+  option "security-clair-server",
+    desc:    "The URL allowing Portus to access your CoreOS Clair server",
+    default: ""
+
+  option "security-zypper-server",
+    desc:    "The URL allowing Portus to access your zypper-docker server",
+    default: ""
+
+  option "security-dummy-server",
+    desc:    "If non-empty, then Portus will fake a 'dummy' server (only for development)",
+    default: ""
+
   def setup
     ensure_root
     check_setup_flags options

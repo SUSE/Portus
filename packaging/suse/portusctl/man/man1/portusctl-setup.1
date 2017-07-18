@@ -199,6 +199,18 @@ disabled only an admin will be able to do this. This defaults to true.
 \fB\-\-create\-team\-enable\fP
 Allow users to create teams. If this is disabled only an admin will be
 able to do this. This defaults to true.
+.TP
+\fB\-\-security\-clair\-server\fP
+The URL allowing Portus to access your CoreOS Clair server. By default this
+has an empty value, meaning that there is no CoreOS Clair server configured.
+.TP
+\fB\-\-security\-zypper\-server\fP
+The URL allowing Portus to access your zypper\-docker server. By default this
+has an empty value, meaning that there is no CoreOS Clair server configured.
+.TP
+\fB\-\-security\-dummy\-server\fP
+Setup a "dummy" security server. \fBNOTE\fP: do \fBnot\fP use this flag in
+production.
 .SH EXAMPLES
 .PP
 The simplest example is:

@@ -166,3 +166,26 @@ user_permission:
   # is disabled, only an admin will be able to do this. This defaults to true.
   manage_namespace:
     enabled: true
+
+# Security scanner support. Add the server location for each driver in order to
+# enable it. If no drivers have been enabled, then this feature is skipped
+# altogether. Enabling multiple drivers will simply aggregate the information
+# provided by each driver.
+security:
+  # CoreOS Clair support (https://github.com/coreos/clair).
+  clair:
+    server: ""
+
+  # zypper-docker can be run as a server with its `serve` command. This backend
+  # fetches the information as given by zypper-docker. Note that this feature
+  # from zypper-docker is experimental and only available through another branch
+  # than master.
+  #
+  # NOTE: support for this is experimental since this functionality has not
+  # been merged into master yet in zypper-docker.
+  zypper:
+    server: ""
+
+  # This backend is only used for testing purposes, don't use it.
+  dummy:
+    server: ""

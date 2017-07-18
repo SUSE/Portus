@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Portus::Checks
   before_action :check_requirements
 
+  before_action :authenticate_user_from_authentication_token!
   before_action :authenticate_user!
   before_action :force_update_profile!
   before_action :force_registry_config!
@@ -29,6 +30,16 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  # Authenticate the user:token as provided in the "PORTUS-AUTH" header.
+  def authenticate_user_from_authentication_token!
+    auth = request.headers["PORTUS-AUTH"].presence
+    return if auth.nil?
+
+    username, password = auth.split(":")
+    user = User.find_by(username: username)
+    sign_in(user, store: false) if user && user.application_token_valid?(password)
+  end
 
   # Redirect users to their profile page if they haven't set up their email
   # account (this happens when signing up through LDAP suppor).

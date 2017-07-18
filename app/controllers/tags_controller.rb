@@ -1,6 +1,16 @@
 class TagsController < ApplicationController
   include Deletable
 
+  def show
+    @tag = Tag.find(params[:id])
+    authorize @tag
+
+    @names = Tag.where(digest: @tag.digest).sort.map(&:name)
+
+    sec = ::Portus::Security.new(@tag.repository.full_name, @tag.name)
+    @vulnerabilities = sec.vulnerabilities
+  end
+
   # Removes all tags that match the digest of the tag with the given ID.
   # Moreover, it will also remove the image if it's left empty after removing
   # the tags.
@@ -14,13 +24,11 @@ class TagsController < ApplicationController
     if tag.delete_by_digest!(current_user)
       if repo.tags.empty?
         repo.delete_and_update!(current_user)
-        redirect_to namespace_path(repo.namespace),
-          notice: "Image removed with all its tags", float: true
-      else
-        redirect_to repository_path(tag.repository), notice: "Tag removed successfully", float: true
+        flash[:notice] = "Repository removed with all its tags"
       end
+      head :ok
     else
-      redirect_to repository_path(tag.repository), alert: "Tag could not be removed", float: true
+      head :internal_server_error
     end
   end
 end

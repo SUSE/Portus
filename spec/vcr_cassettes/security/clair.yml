@@ -1,0 +1,210 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://registry.test.cat:5000/v2/coreos/dex/manifests/unrelated
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/vnd.docker.distribution.manifest.v2+json
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Content-Type:
+      - application/json; charset=utf-8
+      Docker-Distribution-Api-Version:
+      - registry/2.0
+      Www-Authenticate:
+      - Bearer realm="https://registry.test.cat/v2/token",service="registry.test.cat:5000",scope="repository:coreos/dex:pull"
+      Date:
+      - Fri, 26 May 2017 14:34:09 GMT
+      Content-Length:
+      - '153'
+    body:
+      encoding: UTF-8
+      string: |
+        {"errors":[{"code":"UNAUTHORIZED","message":"authentication required","detail":[{"Type":"repository","Class":"","Name":"coreos/dex","Action":"pull"}]}]}
+    http_version:
+  recorded_at: Fri, 26 May 2017 14:34:09 GMT
+- request:
+    method: get
+    uri: https://registry.test.cat/v2/token?account=portus&scope=repository:coreos/dex:pull&service=registry.test.cat:5000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Authorization:
+      - Basic cG9ydHVzOnBvcnR1czEyMzQ=
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 26 May 2017 14:34:09 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - DENY
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      - nosniff
+      Etag:
+      - W/"36e1a78f0bc071fbb011e4e0b395e298"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Set-Cookie:
+      - _portus_session=RlFGbkxsYUJOL2haUmlDY0twWngvM3dSdkJRajBKRHdvN2svbDA1eDhzK21sUzB2bm5pY2sxRm9qdXJZZ0NiUTdpN2FuSlUwa2xlT0V0NkpCVUJxbWc9PS0tN1lHcElSZ3pKS1FBZGE2TmJlR2FUUT09--6112b1f7d597399fa76eb3bcb9e24092975a5b98;
+        path=/; HttpOnly
+      X-Request-Id:
+      - d02897f2-9851-40a5-804b-b2e48a81e8c4
+      X-Runtime:
+      - '0.099537'
+    body:
+      encoding: UTF-8
+      string: '{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkxGNFU6VFRHRjpWN0ZMOlFEQkY6Tk5CVTo2S0RIOjNONU46UlNXQTpWQVNVOkoyUVI6N0tGQjpRTEo0In0.eyJpc3MiOiJyZWdpc3RyeS5tc3NvbGEuY2F0Iiwic3ViIjoicG9ydHVzIiwiYXVkIjoicmVnaXN0cnkubXNzb2xhLmNhdDo1MDAwIiwiaWF0IjoxNDk1ODA5MjQ5LCJuYmYiOjE0OTU4MDkyNDQsImV4cCI6MTQ5NTgwOTU0OSwianRpIjoieTYxVVN6ZlNMbmk1N0Vxd1NFdmYyZEZEVThRQUpzV1VYTjVjalB1OXMyIiwiYWNjZXNzIjpbeyJ0eXBlIjoicmVwb3NpdG9yeSIsIm5hbWUiOiJjb3Jlb3MvZGV4IiwiYWN0aW9ucyI6WyJwdWxsIl19XX0.zf-Y1CZ1T9jl2MpOiOAHht3fXjLrVk9qcOmgBt-JVoGnVmAXh9-9s_5zL2T2ZVlQ_lotR4CBvxKCrDXcsH7Rd9qyfR_R4G83Gw4QFZLqoWG-m-Ru5r73lEVDncYnxlt9ZZved6eD1ibmnW3OWaiQbwn1gwrzD3I8LpXbKLduMm59T-OwesOQb3XQzHnJv11KAOjox6zaiY9C306TIFf-Yaua3VCN4DGooSJGX49qjZEMKzgy7WFclOdoaFfmE3KUIdGjSP6MGe9ZU1Zy8j0bIP22Blm558TAvS1fUaAHGfoPA1V75vfrfyXz_7vROfUl6C7YjcRFePxhkrfRmuDZGg","expires_in":300,"issued_at":"2017-05-26T14:34:09+00:00"}'
+    http_version:
+  recorded_at: Fri, 26 May 2017 14:34:09 GMT
+- request:
+    method: get
+    uri: https://registry.test.cat:5000/v2/coreos/dex/manifests/unrelated
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/vnd.docker.distribution.manifest.v2+json
+      User-Agent:
+      - Ruby
+      Authorization:
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkxGNFU6VFRHRjpWN0ZMOlFEQkY6Tk5CVTo2S0RIOjNONU46UlNXQTpWQVNVOkoyUVI6N0tGQjpRTEo0In0.eyJpc3MiOiJyZWdpc3RyeS5tc3NvbGEuY2F0Iiwic3ViIjoicG9ydHVzIiwiYXVkIjoicmVnaXN0cnkubXNzb2xhLmNhdDo1MDAwIiwiaWF0IjoxNDk1ODA5MjQ5LCJuYmYiOjE0OTU4MDkyNDQsImV4cCI6MTQ5NTgwOTU0OSwianRpIjoieTYxVVN6ZlNMbmk1N0Vxd1NFdmYyZEZEVThRQUpzV1VYTjVjalB1OXMyIiwiYWNjZXNzIjpbeyJ0eXBlIjoicmVwb3NpdG9yeSIsIm5hbWUiOiJjb3Jlb3MvZGV4IiwiYWN0aW9ucyI6WyJwdWxsIl19XX0.zf-Y1CZ1T9jl2MpOiOAHht3fXjLrVk9qcOmgBt-JVoGnVmAXh9-9s_5zL2T2ZVlQ_lotR4CBvxKCrDXcsH7Rd9qyfR_R4G83Gw4QFZLqoWG-m-Ru5r73lEVDncYnxlt9ZZved6eD1ibmnW3OWaiQbwn1gwrzD3I8LpXbKLduMm59T-OwesOQb3XQzHnJv11KAOjox6zaiY9C306TIFf-Yaua3VCN4DGooSJGX49qjZEMKzgy7WFclOdoaFfmE3KUIdGjSP6MGe9ZU1Zy8j0bIP22Blm558TAvS1fUaAHGfoPA1V75vfrfyXz_7vROfUl6C7YjcRFePxhkrfRmuDZGg
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Length:
+      - '528'
+      Content-Type:
+      - application/vnd.docker.distribution.manifest.v2+json
+      Docker-Content-Digest:
+      - sha256:1b6c543cc889c8f5f8d7061ddd3941b04568f725960e95896a2fbc06311fa4c0
+      Docker-Distribution-Api-Version:
+      - registry/2.0
+      Etag:
+      - '"sha256:1b6c543cc889c8f5f8d7061ddd3941b04568f725960e95896a2fbc06311fa4c0"'
+      Date:
+      - Fri, 26 May 2017 14:34:09 GMT
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+           "schemaVersion": 2,
+           "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+           "config": {
+              "mediaType": "application/vnd.docker.container.image.v1+json",
+              "size": 1278,
+              "digest": "sha256:baa5d63471ead618ff91ddfacf1e2c81bf0612bfeb1daf00eb0843a41fbfade3"
+           },
+           "layers": [
+              {
+                 "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                 "size": 2382139,
+                 "digest": "sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"
+              }
+           ]
+        }
+    http_version:
+  recorded_at: Fri, 26 May 2017 14:34:09 GMT
+- request:
+    method: post
+    uri: http://my.clair:6060/v1/layers
+    body:
+      encoding: UTF-8
+      string: '{"Layer":{"Name":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2","NamespaceName":"","Path":"https://registry.test.cat:5000/v2/coreos/dex/blobs/sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2","Headers":{"Authorization":"Bearer
+        eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkxGNFU6VFRHRjpWN0ZMOlFEQkY6Tk5CVTo2S0RIOjNONU46UlNXQTpWQVNVOkoyUVI6N0tGQjpRTEo0In0.eyJpc3MiOiJyZWdpc3RyeS5tc3NvbGEuY2F0Iiwic3ViIjoicG9ydHVzIiwiYXVkIjoicmVnaXN0cnkubXNzb2xhLmNhdDo1MDAwIiwiaWF0IjoxNDk1ODA5MjQ5LCJuYmYiOjE0OTU4MDkyNDQsImV4cCI6MTQ5NTgwOTU0OSwianRpIjoieTYxVVN6ZlNMbmk1N0Vxd1NFdmYyZEZEVThRQUpzV1VYTjVjalB1OXMyIiwiYWNjZXNzIjpbeyJ0eXBlIjoicmVwb3NpdG9yeSIsIm5hbWUiOiJjb3Jlb3MvZGV4IiwiYWN0aW9ucyI6WyJwdWxsIl19XX0.zf-Y1CZ1T9jl2MpOiOAHht3fXjLrVk9qcOmgBt-JVoGnVmAXh9-9s_5zL2T2ZVlQ_lotR4CBvxKCrDXcsH7Rd9qyfR_R4G83Gw4QFZLqoWG-m-Ru5r73lEVDncYnxlt9ZZved6eD1ibmnW3OWaiQbwn1gwrzD3I8LpXbKLduMm59T-OwesOQb3XQzHnJv11KAOjox6zaiY9C306TIFf-Yaua3VCN4DGooSJGX49qjZEMKzgy7WFclOdoaFfmE3KUIdGjSP6MGe9ZU1Zy8j0bIP22Blm558TAvS1fUaAHGfoPA1V75vfrfyXz_7vROfUl6C7YjcRFePxhkrfRmuDZGg"},"ParentName":"","Format":"Docker","IndexedByVersion":0,"Features":[]}}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Server:
+      - clair
+      Date:
+      - Fri, 26 May 2017 14:34:09 GMT
+      Content-Length:
+      - '842'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Layer":{"Name":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2","Path":"https://registry.test.cat:5000/v2/coreos/dex/blobs/sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2","Headers":{"Authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IkxGNFU6VFRHRjpWN0ZMOlFEQkY6Tk5CVTo2S0RIOjNONU46UlNXQTpWQVNVOkoyUVI6N0tGQjpRTEo0In0.eyJpc3MiOiJyZWdpc3RyeS5tc3NvbGEuY2F0Iiwic3ViIjoicG9ydHVzIiwiYXVkIjoicmVnaXN0cnkubXNzb2xhLmNhdDo1MDAwIiwiaWF0IjoxNDk1ODA5MjQ5LCJuYmYiOjE0OTU4MDkyNDQsImV4cCI6MTQ5NTgwOTU0OSwianRpIjoieTYxVVN6ZlNMbmk1N0Vxd1NFdmYyZEZEVThRQUpzV1VYTjVjalB1OXMyIiwiYWNjZXNzIjpbeyJ0eXBlIjoicmVwb3NpdG9yeSIsIm5hbWUiOiJjb3Jlb3MvZGV4IiwiYWN0aW9ucyI6WyJwdWxsIl19XX0.zf-Y1CZ1T9jl2MpOiOAHht3fXjLrVk9qcOmgBt-JVoGnVmAXh9-9s_5zL2T2ZVlQ_lotR4CBvxKCrDXcsH7Rd9qyfR_R4G83Gw4QFZLqoWG-m-Ru5r73lEVDncYnxlt9ZZved6eD1ibmnW3OWaiQbwn1gwrzD3I8LpXbKLduMm59T-OwesOQb3XQzHnJv11KAOjox6zaiY9C306TIFf-Yaua3VCN4DGooSJGX49qjZEMKzgy7WFclOdoaFfmE3KUIdGjSP6MGe9ZU1Zy8j0bIP22Blm558TAvS1fUaAHGfoPA1V75vfrfyXz_7vROfUl6C7YjcRFePxhkrfRmuDZGg"},"Format":"Docker","IndexedByVersion":3}}
+    http_version:
+  recorded_at: Fri, 26 May 2017 14:34:09 GMT
+- request:
+    method: get
+    uri: http://my.clair:6060/v1/layers/sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2?features=false&vulnerabilities=true
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      Server:
+      - clair
+      Date:
+      - Fri, 26 May 2017 14:34:09 GMT
+      Content-Length:
+      - '511'
+    body:
+      encoding: UTF-8
+      string: |
+        {"Layer":{"Name":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2","NamespaceName":"alpine:v3.4","IndexedByVersion":3,"Features":[{"Name":"busybox","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.24.2-r11","Vulnerabilities":[{"Name":"CVE-2016-6301","NamespaceName":"alpine:v3.4","Link":"https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6301","Severity":"High","Metadata":{"NVD":{"CVSSv2":{"Score":7.8,"Vectors":"AV:N/AC:L/Au:N/C:N/I:N"}}},"FixedBy":"1.24.2-r12"}],"AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"zlib","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.2.8-r2","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"musl","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.1.14-r12","Vulnerabilities":[{"Name":"CVE-2016-8859","NamespaceName":"alpine:v3.4","Link":"https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-8859","Severity":"High","Metadata":{"NVD":{"CVSSv2":{"Score":7.5,"Vectors":"AV:N/AC:L/Au:N/C:P/I:P"}}},"FixedBy":"1.1.14-r13"}],"AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"musl-utils","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.1.14-r12","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"apk-tools","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"2.6.7-r0","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"alpine-keys","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.1-r0","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"scanelf","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.1.6-r0","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"alpine-baselayout","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"3.0.3-r0","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"libc-utils","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"0.7-r0","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"libssl1.0","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.0.2j-r0","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"},{"Name":"libcrypto1.0","NamespaceName":"alpine:v3.4","VersionFormat":"dpkg","Version":"1.0.2j-r0","AddedBy":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"}]}}
+    http_version:
+  recorded_at: Fri, 26 May 2017 14:34:09 GMT
+recorded_with: VCR 3.0.3

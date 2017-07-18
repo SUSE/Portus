@@ -2,13 +2,12 @@ require "rails_helper"
 
 describe ApplicationTokensController do
   let(:user) { create(:user) }
-
-  before :each do
-    sign_in user
-  end
+  let(:application) { "test application" }
 
   describe "POST #create" do
-    let(:application) { "test application" }
+    before :each do
+      sign_in user
+    end
 
     it "creates the token" do
       expect do
@@ -38,6 +37,10 @@ describe ApplicationTokensController do
   end
 
   describe "DELETE #destroy" do
+    before :each do
+      sign_in user
+    end
+
     it "removes the token" do
       token = create(:application_token, user: user)
       expect do
@@ -57,4 +60,17 @@ describe ApplicationTokensController do
     end
   end
 
+  describe "Authentication through application tokens" do
+    it "can authenticate through an application token" do
+      create(:registry)
+      create(:application_token, application: application, user: user)
+
+      # Here's the trick :)
+      request.headers["PORTUS-AUTH"] = "#{user.username}:#{application}"
+
+      expect do
+        post :create, application_token: { application: "another" }, format: "js"
+      end.to change(user.application_tokens, :count).by(1)
+    end
+  end
 end

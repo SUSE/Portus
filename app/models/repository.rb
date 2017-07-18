@@ -67,6 +67,18 @@ class Repository < ActiveRecord::Base
     end
   end
 
+  # TODO: change this with a proper serializer or grape or something like that
+  def as_json(options = {})
+    options[:only] = [:id, :name]
+
+    super(options).tap do |json|
+      json["full_name"] = full_name
+      json["namespace"] = namespace.as_json(only: [:id, :name])
+      json["team"] = namespace.team.as_json(only: [:id, :name])
+      json["tags"] = groupped_tags
+    end
+  end
+
   # Updates the activities related to this repository and adds a new activity
   # regarding the removal of this.
   def delete_and_update!(actor)

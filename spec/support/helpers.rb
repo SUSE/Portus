@@ -18,6 +18,12 @@ module Helpers
     page.evaluate_script("$('#{selector}').attr('disabled')") == "disabled"
   end
 
+  def enable_security_vulns_module!
+    APP_CONFIG["security"]["dummy"] = {
+      "server" => "dummy"
+    }
+  end
+
   # Creates the Portus user. The Portus user cannot be created with neither the
   # "user" factory nor the "admin" one. This is because in the application this
   # same user is created in a special way (directly, without associating a
@@ -32,4 +38,4 @@ module Helpers
   end
 end
 
-RSpec.configure { |config| config.include Helpers, type: :feature }
+RSpec.configure { |config| config.include Helpers }
