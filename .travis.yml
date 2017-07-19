@@ -67,7 +67,7 @@ env:
   # more info at: http://docs.travis-ci.com/user/environment-variables/#Secure-Variables
   - OBS_REPO=Virtualization:containers:Portus
   - OBS_BRANCH=master
-  - secure: "Umlxpe6wARqVCB4MmQj9MpjGy7Q8odYEohwi4kxOj2hp/uCrqrl1HIoAd7mgB0ylpcbri5HVuBg4EpBoT5VC4NYILnSRPxr3dvHcsK8K7ZO3fuxHnQ666s8P19NSVmDf+K0mlHKv5J6dKIPTFIO1e1Ynbbj97CPo4b2mUJjPq/g="
+  - secure: "SgH8Wvm6n71GTZqTk2Ww/vLg3KK1QhgBMRSs+85TFemJvUDEWLKtANGI2szlqJOfOEWqHZ4rdzgMamtYfGmOZvjUBebaIXlYMcPyKSmcQZX/80R1/v7KFyhP2vqrb+ok/rK6lLXX06jDhohUS04vnx4i1EtoxH62dKImdlZsjzI="
 
 after_success:
   - packaging/suse/package_and_push_to_obs.sh
