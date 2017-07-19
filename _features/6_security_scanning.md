@@ -53,12 +53,12 @@ security:
     server: "http://my.clair.server:6060"
 ```
 
-f you have enabled this backend, then in a repository you should be able to see
-something like this:
+If you have enabled this backend, you should be able to see something like this
+in a repository:
 
 ![Repository page with vulnerabilities highlighted](/build/images/docs/security.png)
 
-Clicking these links will take you the the tag's page. For example:
+Clicking these links will take you to the tag's page. For example:
 
 ![Tag page with Clair vulnerabilities](/build/images/docs/tag-vulnerabilities.png)
 
