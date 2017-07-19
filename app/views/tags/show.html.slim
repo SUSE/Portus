@@ -13,13 +13,17 @@
 
   .panel-body
     span
-      - @vulnerabilities.each do |backend, vulns|
-        - next if vulns.empty?
+      - if vulnerable?(@vulnerabilities)
+        - @vulnerabilities.each do |backend, vulns|
+          - next if vulns.empty?
 
-        h5= backend
-        ul
-          - vulns.each do |v|
-            li
-              a href="#{v['Link']}"
-                = v["Name"]
-              |  (severity: #{v["Severity"]})
+          h5= backend
+          ul
+            - vulns.each do |v|
+              li
+                a href="#{v['Link']}"
+                  = v["Name"]
+                |  (severity: #{v["Severity"]})
+
+      - else
+        p No vulnerabilities found
