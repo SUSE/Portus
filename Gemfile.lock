@@ -184,7 +184,7 @@ GEM
     minitest (5.8.4)
     multi_json (1.11.2)
     multipart-post (2.0.0)
-    mysql2 (0.4.8)
+    mysql2 (0.4.7)
     nenv (0.3.0)
     net-ldap (0.11)
     nokogiri (1.6.7.2)
