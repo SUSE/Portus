@@ -37,6 +37,34 @@ feature "Admin - Registries panel" do
       expect(page).to have_content("Registry was successfully created.")
       expect(Registry.any?).to be_truthy
     end
+
+    it "shows advanced options when clicking on Show Advanced", js: true do
+      visit new_admin_registry_path
+
+      expect(page).not_to have_css("#advanced.collapse.in")
+
+      click_button "Show Advanced"
+      wait_for_effect_on("#advanced")
+
+      expect(page).to have_content("External Registry Name")
+      expect(page).to have_css("#advanced.collapse.in")
+    end
+
+    it "hides advanced options when clicking on Hide Advanced", js: true do
+      visit new_admin_registry_path
+
+      click_button "Show Advanced"
+      wait_for_effect_on("#advanced")
+
+      expect(page).to have_content("External Registry Name")
+      expect(page).to have_css("#advanced.collapse.in")
+
+      click_button "Hide Advanced"
+      wait_for_effect_on("#advanced")
+
+      expect(page).not_to have_css("#advanced.collapse.in")
+      expect(page).not_to have_content("External Registry Name")
+    end
   end
 
   describe "update" do
@@ -63,6 +91,30 @@ feature "Admin - Registries panel" do
       expect(page).to have_current_path(admin_registries_path)
       registry.reload
       expect(registry.hostname).to eq "lala"
+    end
+
+    it "shows advanced options when clicking on Show Advanced", js: true do
+      expect(page).not_to have_css("#advanced")
+
+      click_button "Show Advanced"
+      wait_for_effect_on("#advanced")
+
+      expect(page).to have_content("External Registry Name")
+      expect(page).to have_css("#advanced.collapse.in")
+    end
+
+    it "hides advanced options when clicking on Hide Advanced", js: true do
+      click_button "Show Advanced"
+      wait_for_effect_on("#advanced")
+
+      expect(page).to have_content("External Registry Name")
+      expect(page).to have_css("#advanced.collapse.in")
+
+      click_button "Hide Advanced"
+      wait_for_effect_on("#advanced")
+
+      expect(page).not_to have_css("#advanced.collapse.in")
+      expect(page).not_to have_content("External Registry Name")
     end
   end
 end
