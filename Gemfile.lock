@@ -414,7 +414,7 @@ DEPENDENCIES
   jwt
   kaminari
   md2man (~> 5.1.1)
-  mysql2
+  mysql2 (= 0.4.7)
   net-ldap
   poltergeist (~> 1.15.0)
   pry-rails

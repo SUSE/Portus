@@ -7,13 +7,13 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
 
 const ROOT_PATH = path.resolve(__dirname, '..');
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
 
 var config = {
   context: path.join(ROOT_PATH, 'app/assets/javascripts'),
 
   entry: {
-    application: './application.js',
+    application: './main.js',
   },
 
   output: {

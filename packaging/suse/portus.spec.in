@@ -77,13 +77,12 @@ This package has been built with commit __COMMIT__ from branch __BRANCH__ on dat
 
 %prep
 %setup -q -n Portus-%{branch}
-%setup -q -T -D -a 1
 __PATCHEXECS__
 
 %build
 # Untar Javascript dependencies
 cp %{SOURCE1} .
-tar xzvf node_modules.tar.xz
+tar xzvf node_modules.tar.gz
 
 # Deal with Ruby gems.
 install -d vendor/cache
