@@ -26,8 +26,8 @@ Vagrant.configure("2") do |config|
     node.vm.provision "shell", inline: "echo 192.168.1.3 portus.test.lan >> /etc/hosts"
     node.vm.provision "shell", inline: <<EOS
 mkdir -p /etc/registry
-cp /vagrant/vagrant/conf/ca_bundle/server.crt /etc/registry/portus.crt
-cp /vagrant/vagrant/conf/registry-config.yml /etc/registry/config.yml
+cp /vagrant/examples/development/vagrant/conf/ca_bundle/server.crt /etc/registry/portus.crt
+cp /vagrant/examples/development/vagrant/conf/registry-config.yml /etc/registry/config.yml
 systemctl enable registry
 systemctl restart registry
 EOS
@@ -86,9 +86,9 @@ bundle exec rake db:seed
 sudo gem install passenger -v 5.0.7
 passenger-install-apache2-module.ruby2.1 -a
 
-cp /vagrant/vagrant/conf/portus/sysconfig_apache2 /etc/sysconfig/apache2
-cp /vagrant/vagrant/conf/portus/httpd.conf.local /etc/apache2/httpd.conf.local
-cp /vagrant/vagrant/conf/portus/portus.test.lan.conf /etc/apache2/vhosts.d/
+cp /vagrant/examples/development/vagrant/conf/portus/sysconfig_apache2 /etc/sysconfig/apache2
+cp /vagrant/examples/development/vagrant/conf/portus/httpd.conf.local /etc/apache2/httpd.conf.local
+cp /vagrant/examples/development/vagrant/conf/portus/portus.test.lan.conf /etc/apache2/vhosts.d/
 
 EOS
 
