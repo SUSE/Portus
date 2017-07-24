@@ -1,10 +1,13 @@
 <% if @namespace.errors.empty? %>
-  var el = $(".button_namespace_description i.fa");
-  $("#change_description_namespace_<%= @namespace.id %>").fadeToggle(function() {
+  var $edit = $(".edit-namespace-link i.fa");
+
+  $edit.removeClass('fa-close');
+  $edit.addClass('fa-pencil');
+
+  $(".edit-namespace-form").fadeToggle(function() {
     $(".description").fadeToggle();
   });
-  el.removeClass('fa-close');
-  el.addClass('fa-pencil');
+
   <% if @namespace.description.blank? %>
     $('.description').html("No description has been posted yet");
   <% else %>
