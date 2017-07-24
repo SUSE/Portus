@@ -39,8 +39,8 @@ feature "Repositories comments support" do
 
       expect(page).to have_content("Nobody has left a comment")
 
-      find("#write_comment_repository_btn").click
-      wait_for_effect_on("#write_comment_form")
+      find(".add-comment").click
+      wait_for_effect_on(".comment-form")
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -55,8 +55,8 @@ feature "Repositories comments support" do
 
       expect(page).to have_content("Nobody has left a comment")
 
-      find("#write_comment_repository_btn").click
-      wait_for_effect_on("#write_comment_form")
+      find(".add-comment").click
+      wait_for_effect_on(".comment-form")
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -72,8 +72,8 @@ feature "Repositories comments support" do
 
       expect(page).to have_content("Nobody has left a comment")
 
-      find("#write_comment_repository_btn").click
-      wait_for_effect_on("#write_comment_form")
+      find(".add-comment").click
+      wait_for_effect_on(".comment-form")
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -92,8 +92,8 @@ feature "Repositories comments support" do
     scenario "An user cannot comment an empty text", js: true do
       visit repository_path(visible_repository)
 
-      find("#write_comment_repository_btn").click
-      wait_for_effect_on("#write_comment_form")
+      find(".add-comment").click
+      wait_for_effect_on(".comment-form")
 
       click_button "Add"
       wait_for_ajax
