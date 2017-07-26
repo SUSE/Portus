@@ -26,6 +26,7 @@ import './modules/dashboard';
 import './modules/repositories';
 import './modules/namespaces';
 import './modules/teams';
+import './modules/webhooks';
 
 import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects';
 

@@ -37,33 +37,6 @@ jQuery(function ($) {
     }
   });
 
-  $('#add_webhook_btn').unbind('click').on('click', function () {
-    $('#webhook_url').val('');
-    $('#webhook_username').val('');
-    $('#webhook_password').val('');
-
-    $('#add_webhook_form').toggle(400, 'swing', function () {
-      if ($('#add_webhook_form').is(':visible')) {
-        $('#add_webhook_btn i').addClass('fa-minus-circle');
-        $('#add_webhook_btn i').removeClass('fa-plus-circle');
-        $('#webhook_url').focus();
-      } else {
-        $('#add_webhook_btn i').removeClass('fa-minus-circle');
-        $('#add_webhook_btn i').addClass('fa-plus-circle');
-      }
-      layout_resizer();
-    });
-  });
-
-  $('body').on('click', '.btn-edit-webhook', function (event) {
-    if ($(this).hasClass('button_edit_webhook')) {
-      $('.webhook_information').toggle();
-      $('#update_webhook_' + event.currentTarget.value).toggle();
-      $('#webhook_url').focus();
-      layout_resizer();
-    }
-  });
-
   $('#add_webhook_header_btn').unbind('click').on('click', function () {
     $('#webhook_header_name').val('');
     $('#webhook_header_value').val('');

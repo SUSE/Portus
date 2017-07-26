@@ -1,16 +1,13 @@
-.panel-group
+.webhook-details.panel-group
   - if can_manage_namespace?(@namespace)
-    .collapse id="update_webhook_#{@webhook.id}"
+    .edit-webhook-form.collapse
       = form_for [@namespace, @webhook], remote: true, html: {class: 'form-horizontal', role: 'form'} do |f|
         .panel.panel-default
           .panel-heading
             .input-group
               = f.text_field(:url, class: 'form-control', required: true, placeholder: html_escape(@webhook.url), input_html: { tabindex: 1 })
               .input-group-btn
-                button.btn.btn-link.btn-xs.btn-edit-webhook[
-                  value="#{@webhook.id}"
-                  type="button"
-                  class="button_edit_webhook"]
+                button.btn.btn-link.btn-xs.edit-webhook-link type="button"
                   i.fa.fa-close
                   | Edit webhook
           .panel-body
@@ -46,9 +43,7 @@
             i.fa.fa-info-circle
         - if can_manage_namespace?(@namespace)
           .pull-right
-            button.btn.btn-link.btn-xs.btn-edit-webhook[
-              value="#{@webhook.id}"
-              class="button_edit_webhook"]
+            button.btn.btn-link.btn-xs.edit-webhook-link
               i.fa.fa-pencil
               | Edit webhook
     .panel-body

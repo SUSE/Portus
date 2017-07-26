@@ -1,9 +1,9 @@
 <% if @webhook.errors.any? %>
-  $('#alert p').html("<%= escape_javascript(@webhook.errors.full_messages.join('<br/>')) %>");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("<%= escape_javascript(@webhook.errors.full_messages.join('<br/>')) %>");
+  $('#float-alert').fadeIn(setTimeOutAlertDelay());
 <% else %>
-  $('#alert p').html("Webhook '<%= @webhook.host %>' has been created successfully");
-  $('#alert').fadeIn();
+  $('#float-alert p').html("Webhook '<%= @webhook.host %>' has been created successfully");
+  $('#float-alert').fadeIn(setTimeOutAlertDelay());
 
   $('#add_webhook_form').fadeOut();
   $('#add_webhook_btn i').addClass("fa-plus-circle")
