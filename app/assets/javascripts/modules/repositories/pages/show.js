@@ -7,6 +7,7 @@ import EventBus from '~/utils/eventbus';
 import TagsTable from '../components/tags-table';
 import TagsNotLoaded from '../components/tags-not-loaded';
 import DeleteTagAction from '../components/delete-tag-action';
+import CommentsPanel from '../components/comments-panel';
 
 import RepositoriesService from '../services/repositories';
 import TagsService from '../services/tags';
@@ -125,6 +126,8 @@ $(() => {
       set(this, 'isLoading', true);
       this.loadData();
       EventBus.$on('deleteTags', () => this.deleteTags());
+      // eslint-disable-next-line no-new
+      new CommentsPanel($('.comments-wrapper'));
     },
   });
 });
