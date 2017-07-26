@@ -1,6 +1,6 @@
-.panel-group
+.team-details.panel-group
   - if can_manage_team?(@team)
-    .collapse id="update_team_#{@team.id}"
+    .edit-team-form.collapse
       = form_for @team, remote: true, html: {role: 'form'} do |f|
         .panel.panel-default
           .panel-heading
@@ -11,10 +11,7 @@
                              required: true,
                              input_html: { tabindex: 1 })
               .input-group-btn
-                button.btn.btn-link.btn-xs.btn-edit-role[
-                  value="#{@team.id}"
-                  type="button"
-                  class="button_edit_team"]
+                button.btn.btn-xs.btn-link.edit-team-link type="button"
                   i.fa.fa-close
                   | Edit team
           .panel-body
@@ -47,9 +44,7 @@
 
         .col-sm-6.text-right
           - if can_manage_team?(@team)
-            button.btn.btn-link.btn-xs.btn-edit-role[
-              value="#{@team.id}"
-              class="button_edit_team"]
+            button.btn.btn-link.btn-xs.edit-team-link
               i.fa.fa-pencil
               | Edit team
     .panel-body
@@ -63,70 +58,71 @@
       .errors
     .panel-footer
 
-- if can_manage_team?(@team)
-  #add_team_user_form.collapse
-    = form_for :team_user, url: team_users_path, remote: true, html: {id: 'new-team-user-form', class: 'form-horizontal', role: 'form'} do |f|
-      = f.hidden_field(:team, value: @team.name)
-      .form-group
-        = f.label :role, {class: 'control-label col-md-2'}
-        .col-md-7
-          = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
-      .form-group
-        = f.label :user, {class: 'control-label col-md-2'}
-        .col-md-7
-          .remote id="#{@team.id}"
-            = f.text_field(:user, class: 'form-control typeahead', placeholder: 'Name', required: true)
-      .form-group
-        .col-md-offset-2.col-md-7
-          = f.submit('Add', class: 'btn btn-primary')
+.team-users-wrapper
+  - if can_manage_team?(@team)
+    #add_team_user_form.collapse
+      = form_for :team_user, url: team_users_path, remote: true, html: {id: 'new-team-user-form', class: 'form-horizontal', role: 'form'} do |f|
+        = f.hidden_field(:team, value: @team.name)
+        .form-group
+          = f.label :role, {class: 'control-label col-md-2'}
+          .col-md-7
+            = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
+        .form-group
+          = f.label :user, {class: 'control-label col-md-2'}
+          .col-md-7
+            .remote
+              = f.text_field(:user, class: 'form-control typeahead', placeholder: 'Name', required: true, data: { team_id: @team.id })
+        .form-group
+          .col-md-offset-2.col-md-7
+            = f.submit('Add', class: 'btn btn-primary')
 
-.panel.panel-default
-  .panel-heading
-    .row
-      .col-sm-6
-        h5
-          small
-            a[data-placement="right"
-              data-toggle="popover"
-              data-container=".panel-heading"
-              data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>"
-              data-original-title="What's this?"
-              tabindex="0" data-html="true"]
-              i.fa.fa-info-circle
-          ' Members
-      .col-sm-6.text-right
-        - if can_manage_team?(@team)
-          a#add_team_user_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
-            i.fa.fa-user-plus
-            | Add members
-
-
-  .panel-body
-    .table-responsive
-      table.table.table-striped.table-hover
-        colgroup
+  .panel.panel-default
+    .panel-heading
+      .row
+        .col-sm-6
+          h5
+            small
+              a[data-placement="right"
+                data-toggle="popover"
+                data-container=".panel-heading"
+                data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>"
+                data-original-title="What's this?"
+                tabindex="0" data-html="true"]
+                i.fa.fa-info-circle
+            ' Members
+        .col-sm-6.text-right
           - if can_manage_team?(@team)
-            col.col-5
-            col.col-40
-            col.col-35
-            col.col-10
-            col.col-10
-          - else
-            col.col-5
-            col.col-50
-            col.col-45
-        thead
-          tr
-            th
-            th User
-            th Role
+            a#add_team_user_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
+              i.fa.fa-user-plus
+              | Add members
+
+
+    .panel-body
+      .table-responsive
+        table.table.table-striped.table-hover
+          colgroup
             - if can_manage_team?(@team)
-              th Edit
-              th Remove
-        tbody#team_users
-          - @team_users.each do |tu|
-            = render(tu)
-  .panel-footer= paginate(@team_users, param_name: 'users_page')
+              col.col-5
+              col.col-40
+              col.col-35
+              col.col-10
+              col.col-10
+            - else
+              col.col-5
+              col.col-50
+              col.col-45
+          thead
+            tr
+              th
+              th User
+              th Role
+              - if can_manage_team?(@team)
+                th Edit
+                th Remove
+          tbody#team_users
+            - @team_users.each do |tu|
+              = render(tu)
+    .panel-footer= paginate(@team_users, param_name: 'users_page')
 
 .normal-namespaces-wrapper
   - if can_manage_team?(@team)
