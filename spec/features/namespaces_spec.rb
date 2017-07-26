@@ -154,13 +154,13 @@ feature "Namespaces support" do
   describe "#update" do
     it "returns an error when trying to update the team to a non-existing one", js: true do
       visit namespace_path(namespace.id)
-      find("#edit_namespace").click
+      find(".edit-namespace-link").click
       wait_for_ajax
 
       fill_in "Team", with: "unknown"
-      find("#change_description_namespace_#{namespace.id} .btn").click
-
+      find(".edit-namespace-form .btn").click
       wait_for_ajax
+
       expect(page).to have_content("Team 'unknown' unknown")
     end
   end

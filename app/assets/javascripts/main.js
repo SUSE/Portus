@@ -18,7 +18,6 @@ import './vue-shared';
 // Require tree.
 // NOTE: This should be moved into proper modules.
 import './bootstrap';
-import './namespaces';
 import './repositories';
 import './teams';
 
@@ -26,6 +25,8 @@ import './teams';
 import './modules/users';
 import './modules/dashboard';
 import './modules/repositories';
+import './modules/namespaces';
+import './modules/teams';
 
 import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects';
 

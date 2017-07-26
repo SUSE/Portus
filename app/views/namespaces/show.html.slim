@@ -1,4 +1,4 @@
-.panel.panel-default
+.namespace-details.panel.panel-default
   .panel-heading
     .row
       .col-sm-6
@@ -16,8 +16,7 @@
           ' namespace
       .col-sm-6.text-right
         - if can_manage_namespace?(@namespace)
-          button.btn.btn-link.btn-xs.btn-edit-role[
-            value="#{@namespace.id}" id="edit_namespace" class="button_namespace_description"]
+          button.btn.btn-link.btn-xs.edit-namespace-link
             i.fa.fa-pencil
             | Edit namespace
 
@@ -28,7 +27,7 @@
           'No description has been posted yet.
       - else
         = markdown(@namespace.description)
-    .collapse id="change_description_namespace_#{@namespace.id}"
+    .edit-namespace-form.collapse
       = form_for @namespace, remote: true, html: {role: 'form'} do |f|
         .form-group
           = f.label :team, "Team", {class: 'control-label col-md-2'}
