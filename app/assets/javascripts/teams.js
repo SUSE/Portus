@@ -37,23 +37,6 @@ jQuery(function ($) {
     }
   });
 
-  $('#add_webhook_header_btn').unbind('click').on('click', function () {
-    $('#webhook_header_name').val('');
-    $('#webhook_header_value').val('');
-
-    $('#add_webhook_header_form').toggle(400, 'swing', function () {
-      if ($('#add_webhook_header_form').is(':visible')) {
-        $('#add_webhook_header_btn i').addClass('fa-minus-circle');
-        $('#add_webhook_header_btn i').removeClass('fa-plus-circle');
-        $('#webhook_header_name').focus();
-      } else {
-        $('#add_webhook_header_btn i').removeClass('fa-minus-circle');
-        $('#add_webhook_header_btn i').addClass('fa-plus-circle');
-      }
-      layout_resizer();
-    });
-  });
-
   $('#add_team_btn').on('click', function () {
     $('#team_name').val('');
     $('#team_description').val('');

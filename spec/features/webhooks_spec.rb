@@ -8,6 +8,12 @@ feature "Webhooks support" do
   let!(:team) { create(:team, owners: [user], contributors: [user2], viewers: [user3]) }
   let!(:namespace) { create(:namespace, team: team, registry: registry) }
   let!(:webhook) { create(:webhook, namespace: namespace) }
+  let!(:webhook_header) do
+    create(:webhook_header,
+           name:    "h-name",
+           value:   "h-value",
+           webhook: webhook)
+  end
 
   before do
     login_as user, scope: :user
@@ -134,6 +140,86 @@ feature "Webhooks support" do
 
       expect(page).to have_css(".edit-webhook-link .fa-pencil")
       expect(page).to_not have_css(".edit-webhook-link .fa-close")
+    end
+
+    describe "webhook_header" do
+      scenario "A user can create a header from webhook's page", js: true do
+        webhook_headers_count = webhook.headers.count
+
+        visit namespace_webhook_path(namespace, webhook)
+
+        find("#add_webhook_header_btn").click
+        wait_for_effect_on("#add_webhook_header_form")
+
+        fill_in "Name", with: "cool-header"
+        fill_in "Value", with: "cool-value"
+        click_button "Create"
+
+        wait_for_ajax
+        wait_for_effect_on("#float-alert")
+
+        expect(page).to have_css("#float-alert")
+        expect(page).to have_content("cool-header")
+        expect(page).to have_content("cool-value")
+        expect(page).to have_content("Header 'cool-header' was created successfully")
+        expect(webhook.headers.count).to eql webhook_headers_count + 1
+      end
+
+      scenario "A user cannot create a header that already exists", js: true do
+        webhook_headers_count = webhook.headers.count
+
+        visit namespace_webhook_path(namespace, webhook)
+        find("#add_webhook_header_btn").click
+        wait_for_effect_on("#add_webhook_header_form")
+
+        expect(focused_element_id).to eq "webhook_header_name"
+        fill_in "Name", with: webhook_header.name
+        fill_in "Value", with: "something"
+        click_button "Create"
+
+        wait_for_ajax
+        wait_for_effect_on("#float-alert")
+
+        expect(page).to have_css("#float-alert")
+        expect(page).to have_content("Name has already been taken")
+        expect(webhook.headers.count).to eql webhook_headers_count
+      end
+
+      scenario "A user deletes a webhook header", js: true do
+        visit namespace_webhook_path(namespace, webhook)
+        id = webhook_header.id
+
+        expect(page).to have_content(webhook_header.name)
+        expect(page).to have_content(webhook_header.value)
+
+        find("#webhook_header_#{id} .delete-webhook-header-btn").click
+        find(".popover-content .btn-primary").click
+
+        wait_for_ajax
+        wait_for_effect_on("#float-alert")
+
+        expect(page).to have_css("#float-alert")
+        expect(page).to have_content("Header '#{webhook_header.name}' was removed successfully")
+        expect(page).not_to have_content(webhook_header.name)
+        expect(page).not_to have_content(webhook_header.value)
+      end
+
+      scenario 'The "Create new header" link has a toggle effect', js: true do
+        visit namespace_webhook_path(namespace, webhook)
+
+        expect(page).to have_css("#add_webhook_header_btn i.fa-plus-circle")
+        expect(page).to_not have_css("#add_webhook_header_btn i.fa-minus-circle")
+
+        find("#add_webhook_header_btn").click
+
+        expect(page).to_not have_css("#add_webhook_header_btn i.fa-plus-circle")
+        expect(page).to have_css("#add_webhook_header_btn i.fa-minus-circle")
+
+        find("#add_webhook_header_btn").click
+
+        expect(page).to have_css("#add_webhook_header_btn i.fa-plus-circle")
+        expect(page).to_not have_css("#add_webhook_header_btn i.fa-minus-circle")
+      end
     end
   end
 end

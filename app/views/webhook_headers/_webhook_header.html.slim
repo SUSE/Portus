@@ -6,7 +6,7 @@ tr id="webhook_header_#{webhook_header.id}"
     td= '*' * webhook_header.value.length
   - if can_manage_namespace?(@namespace)
     td
-      a[class="btn btn-default"
+      a[class="btn btn-default delete-webhook-header-btn"
         data-placement="left"
         data-toggle="popover"
         data-title="Please confirm"
