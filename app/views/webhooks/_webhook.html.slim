@@ -4,11 +4,12 @@ tr id="webhook_#{webhook.id}"
   td= webhook.content_type
   td
     - if can_manage_namespace?(@namespace)
-      a.btn.btn-default[data-remote="true"
+      a.btn.btn-default.toggle[
+        data-remote="true"
         data-method="put"
         rel="nofollow"
         href=url_for(toggle_enabled_namespace_webhook_path(namespace, webhook))
-        ]
+      ]
         - if webhook.enabled?
           i.fa.fa-lg class="fa-toggle-on"
         - else
@@ -20,7 +21,7 @@ tr id="webhook_#{webhook.id}"
         i.fa.fa-lg class="fa-toggle-off"
   - if can_manage_namespace?(@namespace)
     td
-      a[class="btn btn-default"
+      a[class="btn btn-default delete-webhook-btn"
         data-placement="left"
         data-toggle="popover"
         data-title="Please confirm"
