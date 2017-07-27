@@ -115,8 +115,6 @@ rm -rf \
    public/assets/application-*.js* \
    vendor/assets \
    examples \
-   config/secrets.yml \
-   config/database.yml \
    *.orig
 
 %install
