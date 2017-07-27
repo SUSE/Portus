@@ -49,53 +49,54 @@
     .panel-body
       = render partial: "detail", locals: {webhook: @webhook}
 
-- if can_manage_namespace?(@namespace)
-  #add_webhook_header_form.collapse
-    = form_for :webhook_header, url: namespace_webhook_headers_path(@namespace, @webhook), remote: true, html: {id: 'new-header-form', class: 'form-horizontal', role: 'form'} do |f|
-      .form-group
-        = f.label :name, {class: 'control-label col-md-2'}
-        .col-md-7
-          = f.text_field(:name, class: 'form-control', required: true, placeholder: "Name")
-      .form-group
-        = f.label :value, {class: 'control-label col-md-2'}
-        .col-md-7
-          = f.text_field(:value, class: 'form-control', required: true, placeholder: "Value")
-      .form-group
-        .col-md-offset-2.col-md-7
-          = f.submit('Create', class: 'btn btn-primary')
-      .errors
+.webhook-headers-panel
+  - if can_manage_namespace?(@namespace)
+    #add_webhook_header_form.collapse
+      = form_for :webhook_header, url: namespace_webhook_headers_path(@namespace, @webhook), remote: true, html: {id: 'new-header-form', class: 'form-horizontal', role: 'form'} do |f|
+        .form-group
+          = f.label :name, {class: 'control-label col-md-2'}
+          .col-md-7
+            = f.text_field(:name, class: 'form-control', required: true, placeholder: "Name")
+        .form-group
+          = f.label :value, {class: 'control-label col-md-2'}
+          .col-md-7
+            = f.text_field(:value, class: 'form-control', required: true, placeholder: "Value")
+        .form-group
+          .col-md-offset-2.col-md-7
+            = f.submit('Create', class: 'btn btn-primary')
+        .errors
 
-.panel.panel-default
-  .panel-heading
-    h5
-      ' Headers
-      small
-        a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content="A header is a HTTP header, i.e. is a key-value pair which is included in the HTTP request." data-original-title="What's this?" tabindex="0"]
-          i.fa.fa-info-circle
-      - if can_manage_namespace?(@namespace)
-        .pull-right
-          a#add_webhook_header_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
-            i.fa.fa-plus-circle
-            | Create new header
-  .panel-body
-    .table-responsive
-      table.table.table-stripped.table-hover
-        colgroup
-            col.col-20
-            - if can_manage_namespace?(@namespace)
-              col.col-70
-              col.col-10
-            - else
-              col.col-80
-        thead
-          tr
-            th Name
-            th Value
-            - if can_manage_namespace?(@namespace)
-              th Remove
-        tbody#webhook_headers
-          - @webhook.headers.each do |header|
-            = render partial: 'webhook_headers/webhook_header', locals: {namespace: @namespace, webhook: @webhook, webhook_header: header}
+  .panel.panel-default
+    .panel-heading
+      h5
+        ' Headers
+        small
+          a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content="A header is a HTTP header, i.e. is a key-value pair which is included in the HTTP request." data-original-title="What's this?" tabindex="0"]
+            i.fa.fa-info-circle
+        - if can_manage_namespace?(@namespace)
+          .pull-right
+            a#add_webhook_header_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
+              i.fa.fa-plus-circle
+              | Create new header
+    .panel-body
+      .table-responsive
+        table.table.table-stripped.table-hover
+          colgroup
+              col.col-20
+              - if can_manage_namespace?(@namespace)
+                col.col-70
+                col.col-10
+              - else
+                col.col-80
+          thead
+            tr
+              th Name
+              th Value
+              - if can_manage_namespace?(@namespace)
+                th Remove
+          tbody#webhook_headers
+            - @webhook.headers.each do |header|
+              = render partial: 'webhook_headers/webhook_header', locals: {namespace: @namespace, webhook: @webhook, webhook_header: header}
 
 .panel.panel-default
   .panel-heading
