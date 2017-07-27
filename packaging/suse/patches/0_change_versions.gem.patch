@@ -1,5 +1,5 @@
 diff --git a/Gemfile b/Gemfile
-index 8a38da8500cf..0bf4a7210d86 100644
+index 5a5b38d20e7e..309f537a8fa2 100644
 --- a/Gemfile
 +++ b/Gemfile
 @@ -52,7 +52,7 @@ def packaging?
@@ -28,9 +28,18 @@ index 8a38da8500cf..0bf4a7210d86 100644
      gem "md2man", "~>5.1.1", require: false
      gem "binman", "~>5.1.0"
 diff --git a/Gemfile.lock b/Gemfile.lock
-index 61dab306fd1e..ff8cf25b3fd4 100644
+index 329a6d22d549..d584cc4a122f 100644
 --- a/Gemfile.lock
 +++ b/Gemfile.lock
+@@ -127,7 +127,7 @@ GEM
+       octokit (~> 2.0.0)
+       yajl-ruby
+     gli (2.8.1)
+-    globalid (0.3.7)
++    globalid (0.3.5)
+       activesupport (>= 4.1.0)
+     gravatar_image_tag (1.2.0)
+     guard (2.13.0)
 @@ -180,15 +180,15 @@ GEM
      mime-types (3.1)
        mime-types-data (~> 3.2015)
