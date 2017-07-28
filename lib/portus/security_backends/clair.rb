@@ -40,7 +40,7 @@ module Portus
 
         res = []
         known = []
-        layer["Features"].each do |f|
+        Array(layer["Features"]).each do |f|
           vulns = f["Vulnerabilities"]
           next if vulns.nil?
 
