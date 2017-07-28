@@ -18,7 +18,6 @@ import './vue-shared';
 // Require tree.
 // NOTE: This should be moved into proper modules.
 import './bootstrap';
-import './teams';
 
 // new modules structure
 import './modules/users';

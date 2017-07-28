@@ -1,7 +1,9 @@
 <% if @team.errors.empty? %>
-  $("#update_team_<%= @team.id %>").fadeToggle(function() {
+  $(".edit-team-form").fadeToggle(function() {
     $(".team_information").fadeToggle();
   });
+  $('#team_user_team').val('<%= escape_javascript(@team.name) %>');
+  $('#namespace_team').val('<%= escape_javascript(@team.name) %>');
   $('.team_name').html("<%= escape_javascript(@team.name) %>");
   $('#float-alert p').html("Team '<%= escape_javascript(@team.name) %>' was updated successfully");
   $('#float-alert').fadeIn(setTimeOutAlertDelay());

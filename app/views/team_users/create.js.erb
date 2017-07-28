@@ -8,7 +8,7 @@
     $('#float-alert p').html("User '<%= escape_javascript(@team_user.user.username) %>' was added to the team");
   <% end %>
   $('#add_team_user_form').fadeOut();
-  $('#add_team_user_btn i').addClass("fa-chevron-down")
-  $('#add_team_user_btn i').removeClass("fa-chevron-up")
+  $('#add_team_user_btn i').addClass("fa-user-plus")
+  $('#add_team_user_btn i').removeClass("fa-user-times")
 <% end %>
 $('#float-alert').fadeIn(setTimeOutAlertDelay());

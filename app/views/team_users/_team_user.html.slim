@@ -13,12 +13,10 @@ tr id="team_user_#{team_user.id}"
         .errors
   - if can_manage_team?(team_user.team)
     td
-      button.btn.btn-default.btn-edit-role[
-        value="#{team_user.id}"
-        class="add"]
+      button.btn.btn-default.edit-team-user-btn data-team-user-id="#{team_user.id}"
         i.fa.fa-pencil.fa-lg
     td
-      a[class="btn btn-default"
+      a[class="btn btn-default delete-team-user-btn"
         data-placement="left"
         data-toggle="popover"
         data-title="Please confirm"

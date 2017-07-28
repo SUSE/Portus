@@ -14,7 +14,7 @@
   $("#change_role_team_user_<%= @team_user.id %>").fadeToggle(function() {
     $("#team_user_<%= @team_user.id %> td div.role").fadeToggle();
   });
-  var el = $("#team_user_<%= @team_user.id %> td .btn-edit-role i.fa");
+  var el = $("#team_user_<%= @team_user.id %> td .edit-team-user-btn i.fa");
   el.removeClass('fa-close');
   el.addClass('fa-pencil');
 <% end %>

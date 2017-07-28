@@ -99,11 +99,13 @@ feature "Namespaces support" do
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
 
       find("#add_namespace_btn").click
+      wait_for_effect_on("#add_namespace_form")
 
       expect(page).to_not have_css("#add_namespace_btn i.fa-plus-circle")
       expect(page).to have_css("#add_namespace_btn i.fa-minus-circle")
 
       find("#add_namespace_btn").click
+      wait_for_effect_on("#add_namespace_form")
 
       expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
@@ -115,6 +117,8 @@ feature "Namespaces support" do
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
 
       find("#add_namespace_btn").click
+      wait_for_effect_on("#add_namespace_form")
+
       fill_in "Namespace", with: "valid-namespace"
       fill_in "Team", with: namespace.team.name
 
@@ -123,6 +127,7 @@ feature "Namespaces support" do
 
       click_button "Create"
       wait_for_ajax
+      wait_for_effect_on("#add_namespace_form")
 
       expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
       expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")

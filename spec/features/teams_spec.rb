@@ -34,9 +34,10 @@ feature "Teams support" do
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
-      expect(Team.count).to eql teams_count
-      expect(page).to have_current_path(teams_path)
+      expect(page).to have_css("#float-alert")
       expect(page).to have_content("Name has already been taken")
+      expect(page).to have_current_path(teams_path)
+      expect(Team.count).to eql teams_count
     end
 
     scenario "A team can be created from the index page", js: true do
@@ -50,10 +51,11 @@ feature "Teams support" do
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
-      expect(Team.count).to eql teams_count + 1
-      expect(page).to have_current_path(teams_path)
-      expect(page).to have_link("valid-team")
+      expect(page).to have_css("#float-alert")
       expect(page).to have_content("Team 'valid-team' was created successfully")
+      expect(page).to have_link("valid-team")
+      expect(page).to have_current_path(teams_path)
+      expect(Team.count).to eql(teams_count + 1)
     end
 
     scenario 'The "Create new team" link has a toggle effect', js: true do
@@ -62,11 +64,13 @@ feature "Teams support" do
       expect(page).to_not have_css("#add_team_btn i.fa-minus-circle")
 
       find("#add_team_btn").click
+      wait_for_effect_on("#add_team_form")
 
       expect(page).to_not have_css("#add_team_btn i.fa-plus-circle")
       expect(page).to have_css("#add_team_btn i.fa-minus-circle")
 
       find("#add_team_btn").click
+      wait_for_effect_on("#add_team_form")
 
       expect(page).to have_css("#add_team_btn i.fa-plus-circle")
       expect(page).to_not have_css("#add_team_btn i.fa-minus-circle")
@@ -103,12 +107,14 @@ feature "Teams support" do
       click_button "Edit team"
       expect(page).to have_css("form.edit_team")
 
-      new_team_name = "New #{team}"
+      new_team_name = "New #{team.name}"
       fill_in "team[name]", with: new_team_name
       click_button "Save"
       wait_for_ajax
 
       expect(page).to have_content("Team '#{new_team_name}' was updated successfully")
+      expect(page).to have_css("#team_user_team[value='#{new_team_name}']", visible: false)
+      expect(page).to have_css("#namespace_team[value='#{new_team_name}']", visible: false)
       expect(find(".team_name").text).to eq(new_team_name)
     end
   end
@@ -149,9 +155,11 @@ feature "Teams support" do
       find("#add_team_user_form .btn").click
 
       wait_for_ajax
+      wait_for_effect_on("#float-alert")
 
-      expect(page).to have_content(/User '.+' was added to the team/)
-      expect(page).to have_content("Contributor")
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("User '#{another.username}' was added to the team")
+      expect(page).to have_css(".team-users-wrapper tbody tr:last-child .role", text: "Contributor")
     end
 
     scenario "An admin can only be added as a team owner", js: true do
@@ -161,11 +169,14 @@ feature "Teams support" do
       find("#add_team_user_form .btn").click
 
       wait_for_ajax
+      wait_for_effect_on("#float-alert")
 
+      expect(page).to have_css("#float-alert")
       expect(page).to have_content(
-        /User '.+' was added to the team \(promoted to owner because it is a Portus admin\)\./
+        "User '#{another_admin.username}' was added to the team (promoted to
+        owner because it is a Portus admin)."
       )
-      expect(page).to have_content("Owner")
+      expect(page).to have_css(".team-users-wrapper tbody tr:last-child .role", text: "Owner")
     end
 
     scenario "New team members have to exist on the system", js: true do
@@ -175,7 +186,9 @@ feature "Teams support" do
       find("#add_team_user_form .btn").click
 
       wait_for_ajax
+      wait_for_effect_on("#float-alert")
 
+      expect(page).to have_css("#float-alert")
       expect(page).to have_content("User cannot be found")
     end
 
@@ -183,26 +196,24 @@ feature "Teams support" do
       tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles["viewer"])
       visit team_path(team)
 
-      find("#team_user_#{tu.id} a.btn").click
-      # I don't know how to wait for popovers, since they're created entirely
-      # with JS
-      sleep 0.5
+      find("#team_user_#{tu.id} .delete-team-user-btn").click
       find(".popover-content .btn-primary").click
 
       wait_for_ajax
+      wait_for_effect_on("#float-alert")
 
-      expect(page).to have_content(/User '.+' was removed from the team/)
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("User '#{another.username}' was removed from the team")
     end
 
     scenario "The only member of a team cannot be removed", js: true do
-      find("#team_users a.btn").click
-      # I don't know how to wait for popovers, since they're created entirely
-      # with JS
-      sleep 0.5
+      find("#team_users .delete-team-user-btn").click
       find(".popover-content .btn-primary").click
 
       wait_for_ajax
+      wait_for_effect_on("#float-alert")
 
+      expect(page).to have_css("#float-alert")
       expect(page).to have_content("Cannot remove the only owner of the team")
     end
   end
