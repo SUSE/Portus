@@ -21,7 +21,7 @@ module Portus
           RegistryEvent.create!(
             event_id: event["id"],
             data:     event.to_json,
-            handled:  :fresh
+            handled:  RegistryEvent.statuses[:fresh]
           )
         end
 
