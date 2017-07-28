@@ -81,6 +81,18 @@ describe ::Portus::SecurityBackend::Clair do
     expect_cve_match(["CVE-2016-6301", "CVE-2016-8859"], res[:clair], proper[:clair])
   end
 
+  it "returns no CVEs if 'Features' is nil" do
+    VCR.turn_on!
+    res = {}
+
+    VCR.use_cassette("security/clair_features_nil", record: :none) do
+      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      res = clair.vulnerabilities
+    end
+
+    expect(res[:clair]).to be_empty
+  end
+
   it "logs the proper debug message when posting is unsuccessful" do
     VCR.turn_on!
     res = {}
