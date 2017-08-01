@@ -6,6 +6,8 @@ _timeout=150
 _count=0
 _status=0
 
+export SKIP_MIGRATION=true
+
 # Use portusctl if available. When installing the RPM, bundle might be in an
 # unknown path otherwise.
 if stat /usr/sbin/portusctl &> /dev/null; then
