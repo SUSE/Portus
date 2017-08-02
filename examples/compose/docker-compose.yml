@@ -98,7 +98,7 @@ services:
       - portus:portus
 
   nginx:
-    image: library/nginx
+    image: library/nginx:alpine
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./secrets:/secrets:ro
