@@ -9,25 +9,26 @@ module Portus
     # parsed JSON body as given by the registry. A handler is a class that can
     # call the `handle_#{event}_event` method. This method receives an `event`
     # object, which is the event object as given by the registry.
-    def self.process!(data, *handlers)
+    def self.process!(data)
       data["events"].each do |event|
         Rails.logger.debug "Incoming event:\n#{JSON.pretty_generate(event)}"
 
+        # Skipp irrelevant or already-handled events.
         next unless should_handle?(event)
-        action = event["action"]
 
-        # Only register pushes, since they are the conflicting actions since 2.5
-        if action == "push"
+        # Only register relevant events.
+        if HANDLED_EVENTS.include? event["action"]
           RegistryEvent.create!(
-            event_id:   event["id"],
-            repository: event["target"]["repository"],
-            tag:        event["target"]["tag"]
+            event_id: event["id"],
+            data:     event.to_json,
+            handled:  RegistryEvent.statuses[:fresh]
           )
         end
 
-        # Now it's time to delegate the handling to the proper handler.
-        Rails.logger.info "Handling '#{action}' event:\n#{JSON.pretty_generate(event)}"
-        handlers.each { |handler| handler.send("handle_#{action}_event".to_sym, event) }
+        # Depending on the configuration, the event will be handled right now,
+        # or in the background by someone else.
+        next if APP_CONFIG["registry"]["fetch_info_in_background"].enabled?
+        RegistryEvent.handle!(event)
       end
     end
 

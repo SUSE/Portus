@@ -130,6 +130,10 @@ registry:
   catalog_page:
     value: 100
 
+  # TODO: documentation
+  fetch_info_in_background:
+    enabled: false
+
 # The FQDN of the machine where Portus is being deployed.
 machine_fqdn:
   value: "portus.test.lan"
