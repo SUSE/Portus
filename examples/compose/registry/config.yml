@@ -1,7 +1,7 @@
 version: 0.1
 storage:
   filesystem:
-    rootdirectory: /registry_data
+    rootdirectory: /var/lib/registry
   delete:
     enabled: true
 http:

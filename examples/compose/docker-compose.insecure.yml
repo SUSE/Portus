@@ -78,7 +78,7 @@ services:
           threshold: 5
           backoff: 1s
     volumes:
-      - /var/lib/portus/registry:/registry_data
+      - /var/lib/portus/registry:/var/lib/registry
       - ./secrets:/secrets:ro
       - ./registry/config.yml:/etc/docker/registry/config.yml:ro
     ports:
