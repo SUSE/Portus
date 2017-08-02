@@ -8,6 +8,7 @@ class CatalogJob < ActiveJob::Base
     Registry.find_each do |registry|
       begin
         cat = registry.client.catalog
+        Rails.logger.debug "Catalog:\n #{cat}"
 
         # Update the registry in a transaction, since we don't want to leave
         # the DB in an unknown state because of an update failure.
