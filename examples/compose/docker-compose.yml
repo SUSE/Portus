@@ -87,7 +87,7 @@ services:
           threshold: 5
           backoff: 1s
     volumes:
-      - /var/lib/portus/registry:/registry_data
+      - /var/lib/portus/registry:/var/lib/registry
       - ./secrets:/secrets:ro
       - ./registry/config.yml:/etc/docker/registry/config.yml:ro
       - ./registry/init:/etc/docker/registry/init:ro
@@ -98,7 +98,7 @@ services:
       - portus:portus
 
   nginx:
-    image: library/nginx
+    image: library/nginx:alpine
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./secrets:/secrets:ro
