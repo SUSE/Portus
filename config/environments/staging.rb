@@ -46,8 +46,13 @@ Rails.application.configure do
   # config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :info
+  # when problems arise by default. Otherwise, the user might specify its own
+  # log level through the `PORTUS_LOG_LEVEL` environment variable.
+  config.log_level = if ENV["PORTUS_LOG_LEVEL"]
+    ENV["PORTUS_LOG_LEVEL"].to_sym
+  else
+    :info
+  end
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [:subdomain, :uuid]

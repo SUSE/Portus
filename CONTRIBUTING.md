@@ -36,9 +36,10 @@ points if your issue is about Portus behaving in an unexpected manner:
 - If possible, try to reproduce the same issue with logging set to `:debug`. You
   can set this by modifying `config/environment/production.rb` (or whatever
   environment you are in) and setting `config.log_level` to `:debug`. This will
-  give us more detailed logs. Remember to restart Portus when doing this.
-  And remember to set that value to `:info` back again once you're done,
-  otherwise your logs will grow quite rapidly!
+  give us more detailed logs. Another way to set this in production is by
+  setting the `PORTUS_LOG_LEVEL` environment variable to `debug`. Remember to
+  restart Portus when doing this.  And remember to set that value to `:info`
+  back again once you're done, otherwise your logs will grow quite rapidly!
 
 ## Check for assigned people
 
