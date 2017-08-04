@@ -36,6 +36,10 @@ Rails.application.routes.draw do
   resource :dashboard, only: [:index]
   resources :search, only: [:index]
 
+  # Health check
+  get "/_ping", to: "health#index"
+  get "/_health", to: "health#health"
+
   authenticated :user do
     root "dashboard#index", as: :authenticated_root
   end

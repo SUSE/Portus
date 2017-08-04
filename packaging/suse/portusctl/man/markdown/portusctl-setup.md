@@ -206,6 +206,10 @@ first time.
   The URL allowing Portus to access your CoreOS Clair server. By default this
   has an empty value, meaning that there is no CoreOS Clair server configured.
 
+**--security-clair-health-port**
+  The Port in which Clair exposes the /health endpoint. It takes the same
+  default as Clair: 6061.
+
 **--security-zypper-server**
   The URL allowing Portus to access your zypper-docker server. By default this
   has an empty value, meaning that there is no CoreOS Clair server configured.

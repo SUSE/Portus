@@ -6,12 +6,15 @@ module Portus
     #   * empty: the database has been created but has not been initialized.
     #   * missing: the database has not been created.
     #   * down: cannot connect to the database.
+    #   * unknown: there has been an unexpected error.
     def self.ping
       ::Portus::DB.migrations? ? :ready : :empty
     rescue ActiveRecord::NoDatabaseError
       :missing
     rescue Mysql2::Error
       :down
+    rescue
+      :unknown
     end
 
     # Returns true if the migrations have been run. The implementation is pretty
