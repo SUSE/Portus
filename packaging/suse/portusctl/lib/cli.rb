@@ -165,6 +165,11 @@ Looks for the following required certificate files in the specified folder:
     desc:    "The URL allowing Portus to access your CoreOS Clair server",
     default: ""
 
+  option "security-clair-health-port",
+    desc:    "The port in which Clair exposes the /health endpoint",
+    type:    :numeric,
+    default: 6061
+
   option "security-zypper-server",
     desc:    "The URL allowing Portus to access your zypper-docker server",
     default: ""
