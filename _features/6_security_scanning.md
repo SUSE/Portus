@@ -22,6 +22,10 @@ security:
   clair:
     server: ""
 
+    # Port where Clair exposes the health endpoint.
+    # See http://port.us.org/features/health.html
+    health_port: 6061
+
   # zypper-docker can be run as a server with its `serve` command. This backend
   # fetches the information as given by zypper-docker. Note that this feature
   # from zypper-docker is experimental and only available through another branch
