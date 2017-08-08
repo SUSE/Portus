@@ -1,0 +1,54 @@
+div
+  table.table.table-stripped.table-hover :class=="{'table-sortable': sortable}"
+    colgroup
+      col.col-40
+      col.col-15
+      col.col-15
+      col.col-20
+      col width="160px"
+    thead
+      tr
+        th @click=="sort('attributes.clean_name')"
+          i.fa.fa-fw.fa-sort{
+            :class=="{
+              'fa-sort-amount-asc': sortBy === 'attributes.clean_name' && sortAsc,
+              'fa-sort-amount-desc': sortBy === 'attributes.clean_name' && !sortAsc,
+            }"
+          }
+          |  Name
+        th @click=="sort('relationships.repositories.meta.count')"
+          i.fa.fa-fw.fa-sort{
+            :class=="{
+              'fa-sort-amount-asc': sortBy === 'relationships.repositories.meta.count' && sortAsc,
+              'fa-sort-amount-desc': sortBy === 'relationships.repositories.meta.count' && !sortAsc,
+            }"
+          }
+          |  Repositories
+        th @click=="sort('relationships.webhooks.meta.count')"
+          i.fa.fa-fw.fa-sort{
+            :class=="{
+              'fa-sort-amount-asc': sortBy === 'relationships.webhooks.meta.count' && sortAsc,
+              'fa-sort-amount-desc': sortBy === 'relationships.webhooks.meta.count' && !sortAsc,
+            }"
+          }
+          |  Webhooks
+        th @click=="sort('attributes.created_at')"
+          i.fa.fa-fw.fa-sort{
+            :class=="{
+              'fa-sort-amount-asc': sortBy === 'attributes.created_at' && sortAsc,
+              'fa-sort-amount-desc': sortBy === 'attributes.created_at' && !sortAsc,
+            }"
+          }
+          |  Created at
+        th @click=="sort('attributes.visibility')"
+          i.fa.fa-fw.fa-sort{
+            :class=="{
+              'fa-sort-amount-asc': sortBy === 'attributes.visibility' && sortAsc,
+              'fa-sort-amount-desc': sortBy === 'attributes.visibility' && !sortAsc,
+            }"
+          }
+          |  Visibility
+    tbody
+      <namespace-table-row v-for="namespace in filteredNamespaces" :key="namespace.id" :namespace="namespace"></namespace-table-row>
+
+  <table-pagination :total.sync="namespaces.length" :current-page.sync="currentPage" :itens-per-page.sync="limit"></table-pagination>

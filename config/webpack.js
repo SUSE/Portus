@@ -43,6 +43,7 @@ var config = {
 
   resolve: {
     extensions: ['.js', '.vue'],
+    mainFields: ['jsnext', 'main', 'browser'],
     alias: {
       '~': path.join(ROOT_PATH, 'app/assets/javascripts'),
       'bootstrap/js': 'bootstrap-sass/assets/javascripts/bootstrap',
@@ -61,6 +62,7 @@ var config = {
         loader: 'babel-loader',
         query: {
           presets: ['es2015'],
+          plugins: ['lodash', 'transform-object-rest-spread'],
         },
       },
       {

@@ -37,6 +37,8 @@
   padding-right: 0px;
 }
 
-.panel .panel-heading .col-sm-6:last-of-type > a {
-  margin-top: 8px;
+.panel .panel-heading > .row {
+  > .text-right {
+    line-height: 35px;
+  }
 }

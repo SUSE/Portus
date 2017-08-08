@@ -1,0 +1,16 @@
+tr :class="scopeClass"
+  td
+    a :href="namespace.links.self.href"
+      | {{ namespace.attributes.clean_name }}
+  td
+    | {{ namespace.relationships.repositories.meta.count }}
+  td v-if="namespace.relationships.webhooks.links.related"
+    a :href="namespace.relationships.webhooks.links.related.href"
+      | {{ namespace.relationships.webhooks.meta.count }}
+  td v-else=""
+    | {{ namespace.relationships.webhooks.meta.count }}
+  td
+    time :datetime="namespace.attributes.created_at"
+      | {{ createdAt }}
+  td
+    <namespace-visibility :namespace="namespace"></namespace-visibility>

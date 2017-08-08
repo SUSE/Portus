@@ -14,7 +14,7 @@ export const setTypeahead = function (el, url) {
   });
   bloodhound.initialize();
 
-  $(el).typeahead({ highlight: true }, {
+  return $(el).typeahead({ highlight: true }, {
     displayKey: 'name',
     source: bloodhound.ttAdapter(),
   });

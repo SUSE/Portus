@@ -135,10 +135,10 @@ feature "Teams support" do
       wait_for_effect_on("#add_namespace_form")
 
       expect(page).to have_css("#add_namespace_form")
-      expect(focused_element_id).to eq "namespace_namespace"
+      expect(focused_element_id).to eq "namespace_name"
 
       # Fill the form and wait for the AJAX response.
-      fill_in "Namespace", with: "new-namespace"
+      fill_in "Name", with: "new-namespace"
       click_button "Add"
       wait_for_ajax
 

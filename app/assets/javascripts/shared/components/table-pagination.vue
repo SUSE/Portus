@@ -8,15 +8,16 @@
     </div>
     <div class="col-sm-6 text-right" v-if="totalPages > 1">
       <ul class="pagination">
-        <li v-if="!previousDisabled">
-          <a href="#" @click.prevent="setCurrentPage(currentPage - 1)">Prev</a>
+        <li :class="{ 'disabled': previousDisabled }">
+          <a href="#" @click.prevent="setCurrentPage(currentPage - 1)">Previous</a>
         </li>
         <li
-          v-for="page in displayedPages"
+          v-for="(page, index) in displayedPages"
+          :key="index"
           :class="{'active': currentPage == page}">
             <a href="#" @click.prevent="setCurrentPage(page)">{{ page }}</a>
         </li>
-        <li v-if="!nextDisabled">
+        <li :class="{ 'disabled': nextDisabled }">
           <a href="#" @click.prevent="setCurrentPage(currentPage + 1)">Next</a>
         </li>
       </ul>
@@ -87,6 +88,10 @@
 
     methods: {
       setCurrentPage(page) {
+        if (page === 0 || page > this.totalPages) {
+          return;
+        }
+
         this.$emit('update:currentPage', page);
       },
     },

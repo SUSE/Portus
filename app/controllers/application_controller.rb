@@ -16,6 +16,8 @@ class ApplicationController < ActionController::Base
 
   respond_to :html, :json
 
+  serialization_scope :view_context
+
   # Two things can happen when signing in.
   #   1. The current user has no email: this happens on LDAP registration. In
   #      this case, the user will be asked to submit an email.

@@ -17,7 +17,7 @@ feature "Namespaces support" do
       namespaces_count = Namespace.count
 
       visit namespaces_path
-      find("#add_namespace_btn").click
+      find(".toggle-link-new-namespace").click
 
       click_button "Create"
 
@@ -31,10 +31,10 @@ feature "Namespaces support" do
       namespaces_count = Namespace.count
 
       visit namespaces_path
-      find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      fill_in "Namespace", with: Namespace.first.name
+      fill_in "Name", with: Namespace.first.name
       fill_in "Team", with: Team.where(hidden: false).first.name
       click_button "Create"
 
@@ -51,10 +51,10 @@ feature "Namespaces support" do
       namespaces_count = Namespace.count
 
       visit namespaces_path
-      find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      fill_in "Namespace", with: Namespace.first.name
+      fill_in "Name", with: Namespace.first.name
       fill_in "Team", with: Team.where(hidden: true).first.name
       click_button "Create"
 
@@ -71,10 +71,10 @@ feature "Namespaces support" do
       namespaces_count = Namespace.count
 
       visit namespaces_path
-      find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      fill_in "Namespace", with: "valid-namespace"
+      fill_in "Name", with: "valid-namespace"
       fill_in "Team", with: namespace.team.name
       click_button "Create"
 
@@ -95,42 +95,42 @@ feature "Namespaces support" do
 
     scenario 'The "Create new namespace" link has a toggle effect', js: true do
       visit namespaces_path
-      expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
-      find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      expect(page).to_not have_css("#add_namespace_btn i.fa-plus-circle")
-      expect(page).to have_css("#add_namespace_btn i.fa-minus-circle")
+      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).to have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
-      find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
     end
 
     scenario 'The "Create new namespace" keeps icon after add new namespace', js: true do
       visit namespaces_path
-      expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
-      find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      fill_in "Namespace", with: "valid-namespace"
+      fill_in "Name", with: "valid-namespace"
       fill_in "Team", with: namespace.team.name
 
-      expect(page).to_not have_css("#add_namespace_btn i.fa-plus-circle")
-      expect(page).to have_css("#add_namespace_btn i.fa-minus-circle")
+      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).to have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#add_namespace_form")
+      wait_for_effect_on("#new-namespace-form")
 
-      expect(page).to have_css("#add_namespace_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_namespace_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
     end
 
     scenario "The namespace visibility can be changed", js: true do
@@ -138,19 +138,19 @@ feature "Namespaces support" do
       id = namespace.id
 
       expect(namespace.visibility_private?).to be true
-      expect(page).to have_css("#namespace_#{id} a#private.btn-primary")
+      expect(page).to have_css(".namespace_#{id} .private-btn.btn-primary")
 
-      find("#namespace_#{id} a#protected.btn").click
+      find(".namespace_#{id} .protected-btn").click
       wait_for_ajax
 
-      expect(page).to have_css("#namespace_#{id} a#protected.btn-primary")
+      expect(page).to have_css(".namespace_#{id} .protected-btn.btn-primary")
       namespace = Namespace.find(id)
       expect(namespace.visibility_protected?).to be true
 
-      find("#namespace_#{id} a#public.btn").click
+      find(".namespace_#{id} .public-btn").click
       wait_for_ajax
 
-      expect(page).to have_css("#namespace_#{id} a#public.btn-primary")
+      expect(page).to have_css(".namespace_#{id} .public-btn.btn-primary")
       namespace = Namespace.find(id)
       expect(namespace.visibility_public?).to be true
     end
