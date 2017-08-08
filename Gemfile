@@ -54,6 +54,9 @@ end
 # If the deployment is done through Puma, include it in the bundle.
 gem "puma", "~> 3.7.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
 
+# Configuration management
+gem "cconfig", "~> 1.1.0"
+
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
 # run:
