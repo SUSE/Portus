@@ -37,6 +37,7 @@ Rails.application.routes.draw do
                                     passwords:     "passwords" }
   resource :dashboard, only: [:index]
   resources :search, only: [:index]
+  resources :explore, only: [:index]
 
   # Health check
   get "/_ping", to: "health#index"

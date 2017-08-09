@@ -178,6 +178,12 @@ Looks for the following required certificate files in the specified folder:
     desc:    "If non-empty, then Portus will fake a 'dummy' server (only for development)",
     default: ""
 
+  # Anonymous browsing
+  option "anonymous-browsing-enable",
+    desc:    "Allow anonymous users to explore public repositories",
+    type:    :boolean,
+    default: true
+
   def setup
     ensure_root
     check_setup_flags options

@@ -56,6 +56,16 @@ describe RepositoryPolicy do
     it "denies access if repository is private and the user is no team member or an admin" do
       expect(subject).to_not permit(user, @private_repository)
     end
+
+    context "Anonymous users" do
+      it "grants access if the namespace is public and the user is anonymous" do
+        expect(subject).to permit(nil, @public_repository)
+      end
+
+      it "does not grant access if the namespace is private and the user is anonymous" do
+        expect(subject).to_not permit(nil, @private_repository)
+      end
+    end
   end
 
   permissions :destroy? do

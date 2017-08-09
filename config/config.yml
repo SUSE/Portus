@@ -193,3 +193,8 @@ security:
   # This backend is only used for testing purposes, don't use it.
   dummy:
     server: ""
+
+# Allow anonymous (non-logged-in) users to explore the images available in your
+# Docker Registry. Only images on public namespaces will be shown.
+anonymous_browsing:
+  enabled: true
