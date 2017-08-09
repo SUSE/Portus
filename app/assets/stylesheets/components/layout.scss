@@ -1,4 +1,3 @@
-
 header {
   height: 60px;
   .logo-header {
@@ -89,6 +88,9 @@ body.login {
   }
   .forgot-password {
     text-align: right;
+  }
+  h2 {
+    color: $white
   }
 }
 

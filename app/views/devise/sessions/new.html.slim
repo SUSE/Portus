@@ -17,11 +17,17 @@ section.row-0
 
         .row
           - if signup_enabled?
-            .col-sm-6.create-new-account
+            .col-sm-4.create-new-account
               = link_to 'Create a new account', new_user_registration_path, class: 'btn btn-link'
-            .col-sm-6.forgot-password
+            - if APP_CONFIG.enabled?("anonymous_browsing")
+              .col-sm-4.explore
+                = link_to "Explore", explore_index_path, id: "explore", class: 'btn btn-link', title: "Explore existing images from this registry"
+            .col-sm-4.forgot-password
               = link_to "I forgot my password", new_user_password_path, class: 'btn btn-link'
           - elsif !Portus::LDAP.enabled?
+            - if APP_CONFIG.enabled?("anonymous_browsing")
+              .col-sm-6.explore
+                = link_to "Explore", explore_index_path, id: "explore", class: 'btn btn-link', title: "Explore existing images from this registry"
             .forgot-password
               = link_to "I forgot my password", new_user_password_path, class: 'btn btn-link'
         - if show_first_user_alert?

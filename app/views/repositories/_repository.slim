@@ -1,0 +1,15 @@
+li
+  .repository-container
+    table.description
+      tr
+        td
+          | Name:
+        td
+          = repository.full_name
+      tr
+        td
+          | Tags:
+        td
+          - repository.tags.each do |t|
+            div.label.label-success
+              = t.name
