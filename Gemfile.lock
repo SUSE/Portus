@@ -78,7 +78,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    cconfig (1.1.0)
+    cconfig (1.1.1)
       safe_yaml (~> 1.0.0, >= 1.0.0)
     choice (0.2.0)
     cliver (0.3.2)
