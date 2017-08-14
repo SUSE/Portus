@@ -22,6 +22,11 @@ gem "redcarpet"
 gem "font-awesome-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
 gem "webpack-rails"
+gem "grape"
+gem "grape-entity"
+gem "grape-swagger"
+gem "grape-swagger-entity"
+gem "hashie-forbidden_attributes"
 
 # Pinning these specific versions because that's what we have on OBS.
 gem "ethon", "~> 0.9.0"
@@ -97,7 +102,7 @@ unless packaging?
     gem "shoulda"
     gem "vcr"
     gem "webmock", "~> 2.3.2", require: false
-    gem "simplecov", require: false
+    gem "simplecov", "0.10.0", require: false
     gem "capybara", "~> 2.14.3"
     gem "poltergeist", "~> 1.15.0", require: false
     gem "json-schema"

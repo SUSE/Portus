@@ -29,6 +29,9 @@ Style/Documentation:
 Lint/UnneededDisable:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 Rails:
   Enabled: true
 

@@ -4,18 +4,11 @@ class ApplicationTokensController < ApplicationController
 
   # POST /application_tokens
   def create
-    @plain_token = Devise.friendly_token
-
-    @application_token = ApplicationToken.new(create_params)
-    @application_token.user = current_user
-    @application_token.token_salt = BCrypt::Engine.generate_salt
-    @application_token.token_hash = BCrypt::Engine.hash_secret(
-      @plain_token,
-      @application_token.token_salt
+    @application_token, @plain_token = ApplicationToken.create_token(
+      current_user: current_user, params: create_params
     )
 
-    if @application_token.save
-      @application_token.create_activity!(:create, current_user)
+    if @application_token.errors.empty?
       respond_with @application_token
     else
       respond_with @application_token.errors, status: :unprocessable_entity

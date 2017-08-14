@@ -41,5 +41,7 @@ module Portus
     config.webpack.output_dir  = "public/assets/webpack"
     config.webpack.public_path = "assets/webpack"
     config.webpack.dev_server.enabled = false
+
+    config.middleware.insert_before "ActionDispatch::ParamsParser", "CatchJsonParseErrors"
   end
 end

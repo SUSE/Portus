@@ -38,4 +38,27 @@ class ApplicationToken < ActiveRecord::Base
       parameters: { application: application }
     )
   end
+
+  class << self
+    # Create new application token and generate plain token, salt, nash.
+    # If usre_id passed then created token belongs to the user.
+    #
+    # Return array with application_token and plain_token.
+    def create_token(current_user:, user_id: nil, params:)
+      plain_token = Devise.friendly_token
+
+      application_token = ApplicationToken.new params
+      application_token.user_id = user_id || current_user.id
+      application_token.token_salt = BCrypt::Engine.generate_salt
+      application_token.token_hash = BCrypt::Engine.hash_secret(
+        plain_token,
+        application_token.token_salt
+      )
+      if application_token.save
+        application_token.create_activity!(:create, current_user)
+      end
+
+      [application_token, plain_token]
+    end
+  end
 end
