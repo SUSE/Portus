@@ -1,0 +1,22 @@
+.panel.panel-default
+  .panel-heading
+    h5 Help
+  .panel-body.table-responsive
+    div
+      span
+        | Check one of the following topics:
+
+    br
+
+    ul
+      li
+        = link_to "First steps into Portus", "http://port.us.org/docs/first-steps.html"
+      li
+        = link_to "Explore all the features", "http://port.us.org/features.html"
+      li
+        = link_to "Frequently Asked Questions", "http://port.us.org/docs/FAQ.html"
+      li
+        = link_to "Configuring Portus", "http://port.us.org/docs/Configuring-Portus.html"
+      - unless Rails.env.production?
+        li
+          = link_to "API Documentation", "/api/documentation"

@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   end
   get "/teams/typeahead/:query" => "teams#all_with_query", :defaults => { format: "json" }
 
+  resources :help, only: [:index]
+
   resources :team_users, only: [:create, :destroy, :update]
   resources :namespaces, only: [:create, :index, :show, :update] do
     put "change_visibility", on: :member
@@ -58,6 +60,7 @@ Rails.application.routes.draw do
   end
 
   mount API::RootAPI => "/"
+  mount GrapeSwaggerRails::Engine, at: "/api/documentation" unless Rails.env.production?
 
   namespace :admin do
     resources :activities, only: [:index]
