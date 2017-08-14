@@ -69,7 +69,7 @@ each Portus version:
 | Portus | Docker Engine | Docker Distribution |
 |:------:|:-------------:|:-------------------:|
 | master | 1.6+ | 2.0+ |
-| 2.1+ | 1.6+ | 2.0+ |
+| 2.1.x & 2.2.x | 1.6+ | 2.0+ |
 | 2.0.0 & 2.0.1 | 1.6 to 1.9 | 2.0 to 2.2 |
 | 2.0.2 | 1.6 to 1.9 | 2.0 to 2.4 |
 | 2.0.3+ | 1.6+ | 2.0 to 2.4 |
@@ -93,6 +93,18 @@ You can deploy Portus in a wide variety of ways. Most commonly:
 - A **bare metal** setup: you can either do it by
   [installing the RPM](http://port.us.org/docs/setups/1_rpm_packages.html) or
   installing [everything yourself with NGinx and Puma](http://port.us.org/docs/setups/3_nginx_bare_metal.html).
+
+A quick way to start a development version of Portus is to perform the
+following:
+
+```
+$ docker-compose up
+```
+
+For more information on development environments, check our
+[wiki](https://github.com/SUSE/Portus/wiki#developmentplayground-environments). Otherwise,
+feel free to explore the `examples` directory for a variety of ways in which you
+can deploy Portus.
 
 # Contributing
 
