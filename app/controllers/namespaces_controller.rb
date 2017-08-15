@@ -1,7 +1,6 @@
 class NamespacesController < ApplicationController
   include ChangeNameDescription
 
-  respond_to :html, :js
   before_action :set_namespace, only: [:change_visibility, :show, :update]
   before_action :check_team, only: [:create]
   before_action :check_role, only: [:create]
@@ -12,13 +11,22 @@ class NamespacesController < ApplicationController
   # GET /namespaces
   # GET /namespaces.json
   def index
-    @special_namespaces = Namespace.where(
-      "global = ? OR namespaces.name = ?", true, current_user.username
-    ).order("created_at ASC")
-    @namespaces = policy_scope(Namespace).page(params[:page])
-                                         .order("namespaces.created_at ASC")
+    respond_to do |format|
+      format.html { skip_policy_scope }
+      format.json do
+        @special_namespaces = Namespace.where(
+          "global = ? OR namespaces.name = ?", true, current_user.username
+        ).order("created_at ASC")
+        @namespaces = policy_scope(Namespace).order(created_at: :asc)
 
-    respond_with(@namespaces)
+        accessible_json = serialize_as_json(@namespaces)
+        special_json = serialize_as_json(@special_namespaces)
+        render json: {
+          accessible: accessible_json,
+          special:    special_json
+        }
+      end
+    end
   end
 
   # GET /namespaces/1
@@ -44,9 +52,12 @@ class NamespacesController < ApplicationController
                                    owner:      current_user,
                                    parameters: { team: @namespace.team.name }
         @namespaces = policy_scope(Namespace)
-        format.js { respond_with @namespace }
+
+        format.js
+        format.json { render json: @namespace }
       else
-        format.js { respond_with @namespace.errors, status: :unprocessable_entity }
+        format.js { render :create, status: :unprocessable_entity }
+        format.json { render json: @namespace.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
@@ -83,7 +94,7 @@ class NamespacesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /namespace/1/change_visibility
+  # PATCH/PUT /namespace/1/change_visibility.json
   def change_visibility
     authorize @namespace
 
@@ -91,22 +102,43 @@ class NamespacesController < ApplicationController
     return if params[:visibility] == @namespace.visibility
 
     return unless @namespace.update_attributes(visibility: params[:visibility])
+
     @namespace.create_activity :change_visibility,
       owner:      current_user,
       parameters: { visibility: @namespace.visibility }
-    render template: "namespaces/change_visibility", locals: { namespace: @namespace }
+
+    respond_to do |format|
+      format.js { render :change_visibility }
+      format.json { render json: @namespace }
+    end
   end
 
   private
 
+  # Serializes resource/collection as json using AMS
+  #
+  # This method was only necessary because in #index I wanted to serve
+  # accessible and special namespaces in the same json but in separated keys
+  # and I couldn't find a better solution then this one.
+  # Usually just render :json resource does the job, this is a special case.
+  def serialize_as_json(resource)
+    context = ActiveModelSerializers::SerializationContext.new(request)
+
+    ActiveModelSerializers::SerializableResource.new(
+      resource,
+      scope:                 view_context,
+      serialization_context: context
+    ).as_json
+  end
+
   # Fetch the namespace to be created from the given parameters. Note that this
   # method assumes that the @team instance object has already been set.
   def fetch_namespace
-    ns = params.require(:namespace).permit(:namespace, :description)
+    ns = params.require(:namespace).permit(:name, :description)
 
     @namespace = Namespace.new(
       team:       @team,
-      name:       ns["namespace"],
+      name:       ns["name"],
       visibility: Namespace.visibilities[:visibility_private],
       registry:   Registry.get
     )
@@ -122,7 +154,8 @@ class NamespacesController < ApplicationController
 
     @error = "Selected team does not exist."
     respond_to do |format|
-      format.js { respond_with nil, status: :not_found }
+      format.js { render :create, status: :not_found }
+      format.json { render json: [@error], status: :not_found }
     end
   end
 
@@ -133,7 +166,8 @@ class NamespacesController < ApplicationController
 
     @error = "You are not allowed to create a namespace for the team #{@team.name}."
     respond_to do |format|
-      format.js { respond_with nil, status: :unauthorized }
+      format.js { render :create, status: :unauthorized }
+      format.json { render json: [@error], status: :unauthorized }
     end
   end
 

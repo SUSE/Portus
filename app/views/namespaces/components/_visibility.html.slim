@@ -1,0 +1,36 @@
+.btn-group
+  button{
+    class="btn btn-default private-btn"
+    :title="privateTitle"
+    :class=="{
+      'btn-primary': isPrivate,
+    }"
+    :disabled="namespace.attributes.global || !canChangeVibisility"
+    @click=="change('visibility_private')"
+  }
+    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('visibility_private')"
+    i.fa.fa-fw.fa-lock v-else=""
+
+  button{
+    class="btn btn-default protected-btn"
+    title="Logged-in users can pull images from this namespace"
+    :class=="{
+      'btn-primary': isProtected,
+    }"
+    :disabled="!canChangeVibisility"
+    @click=="change('visibility_protected')"
+  }
+    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('visibility_protected')"
+    i.fa.fa-fw.fa-users v-else=""
+
+  button{
+    class="btn btn-default public-btn"
+    title="Anyone can pull images from this namespace"
+    :class=="{
+      'btn-primary': isPublic
+    }"
+    :disabled="!canChangeVibisility"
+    @click=="change('visibility_public')"
+  }
+    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('visibility_public')"
+    i.fa.fa-fw.fa-globe v-else=""

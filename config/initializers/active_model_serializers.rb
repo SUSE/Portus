@@ -1,2 +1,2 @@
-ActiveModel::Serializer.root = false
-ActiveModel::ArraySerializer.root = false
+ActiveModelSerializers.config.adapter = :json_api
+ActiveModelSerializers.config.key_transform = :unaltered

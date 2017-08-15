@@ -1,0 +1,20 @@
+div ref="form" class="collapse"
+  = form_for :namespace, url: namespaces_path, html: {id: "new-namespace-form", class: "form-horizontal", role: "form", name: "form", "@submit.prevent" => "onSubmit", novalidate: true} do |f|
+      .form-group
+        = f.label :name, {class: "control-label col-md-2"}
+        .col-md-7
+          = f.text_field(:name, class: "form-control", required: true, placeholder: "New namespace's name", ref: "firstField", "v-model" => "namespace.namespace.name")
+      .form-group.has-feedback
+        = f.label :team, {class: "control-label col-md-2"}
+        .col-md-7
+          .remote
+            = f.text_field(:team, class: "form-control typeahead", required: true, placeholder: "Name of the team", "v-model" => "namespace.namespace.team")
+          span.fa.fa-search.form-control-feedback
+
+      .form-group
+        = f.label :description, {class: "control-label col-md-2"}
+        .col-md-7
+          = f.text_area(:description, class: "form-control fixed-size", required: false, placeholder: "A short description of your namespace", "v-model" => "namespace.namespace.description")
+      .form-group
+        .col-md-offset-2.col-md-7
+          = f.submit("Create", class: "btn btn-primary")

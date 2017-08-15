@@ -36,6 +36,8 @@ module Portus
       g.fallbacks[:rspec] = :test_unit
     end
 
+    config.middleware.use Rack::Deflater
+
     # Configure webpack
     config.webpack.config_file = "config/webpack.js"
     config.webpack.output_dir  = "public/assets/webpack"

@@ -1,6 +1,6 @@
 import BaseComponent from '~/base/component';
 
-import NormalNamespacesPanel from '../../namespaces/components/normal-namespaces-panel';
+import NormalNamespacesPanel from '../../namespaces/legacy-components/normal-namespaces-panel';
 import TeamDetails from '../components/team-details';
 import TeamUsersPanel from '../components/team-users-panel';
 

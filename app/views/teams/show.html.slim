@@ -13,7 +13,7 @@
               .input-group-btn
                 button.btn.btn-xs.btn-link.edit-team-link type="button"
                   i.fa.fa-close
-                  | Edit team
+                  |  Edit team
           .panel-body
             = f.text_area(:description,
                           class: 'form-control',
@@ -29,24 +29,23 @@
       .row
         .col-sm-6
           h5
-            small
-              a[data-placement="right"
-                data-toggle="popover"
-                data-container=".panel-heading"
-                data-content="<p>Information about the team.</p>"
-                data-original-title="What's this?"
-                tabindex="0" data-html="true"]
-                  i.fa.fa-info-circle
+            a[data-placement="right"
+              data-toggle="popover"
+              data-container=".panel-heading"
+              data-content="<p>Information about the team.</p>"
+              data-original-title="What's this?"
+              tabindex="0" data-html="true"]
+                i.fa.fa-info-circle
             strong
               span class="team_name"
-                '#{@team.name}
-            |&nbsp;team description
+                '  #{@team.name}
+            |  team description
 
         .col-sm-6.text-right
           - if can_manage_team?(@team)
             button.btn.btn-link.btn-xs.edit-team-link
               i.fa.fa-pencil
-              | Edit team
+              |  Edit team
     .panel-body
       .description
         - if @team.description.blank?
@@ -81,20 +80,19 @@
       .row
         .col-sm-6
           h5
-            small
-              a[data-placement="right"
-                data-toggle="popover"
-                data-container=".panel-heading"
-                data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>"
-                data-original-title="What's this?"
-                tabindex="0" data-html="true"]
-                i.fa.fa-info-circle
-            ' Members
+            a[data-placement="right"
+              data-toggle="popover"
+              data-container=".panel-heading"
+              data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>"
+              data-original-title="What's this?"
+              tabindex="0" data-html="true"]
+              i.fa.fa-info-circle
+            '  Members
         .col-sm-6.text-right
           - if can_manage_team?(@team)
             a#add_team_user_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
               i.fa.fa-user-plus
-              | Add members
+              |  Add members
 
 
     .panel-body
@@ -130,9 +128,9 @@
       = form_for :namespace, url: namespaces_path, remote: true, html: {id: 'new-namespace-form', class: 'form-horizontal', role: 'form'} do |f|
         = f.hidden_field(:team, value: @team.name)
         .form-group
-          = f.label :namespace, {class: 'control-label col-md-2'}
+          = f.label :name, {class: 'control-label col-md-2'}
           .col-md-7
-            = f.text_field(:namespace, class: 'form-control', placeholder: 'Name', required: true)
+            = f.text_field(:name, class: 'form-control', placeholder: 'Name', required: true)
         .form-group
           = f.label :description, {class: 'control-label col-md-2'}
           .col-md-7
@@ -146,15 +144,14 @@
       .row
         .col-sm-6
           h5
-            small
-              a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to logged-in users or all Portus users by changing the visibility to "protected" or "public" respectively.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
-                i.fa.fa-info-circle
-            ' Namespaces owned
+            a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to logged-in users or all Portus users by changing the visibility to "protected" or "public" respectively.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
+              i.fa.fa-info-circle
+            '  Namespaces owned
         .col-sm-6.text-right
           - if can_manage_team?(@team) && Registry.any?
             a#add_namespace_btn.btn.btn-xs.btn-link.js-toggle-button role="button"
               i.fa.fa-plus-circle
-              | Add namespace
+              |  Add namespace
 
     .panel-body
       .table-responsive

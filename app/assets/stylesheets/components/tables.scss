@@ -7,7 +7,26 @@
   vertical-align: middle;
 }
 
-
 .table > tbody > tr > td.table-icon {
   text-align: center;
+}
+
+.table {
+  .fa-sort,
+  .fa-sort-amount-asc,
+  .fa-sort-amount-asc {
+    display: none;
+  }
+}
+
+.table-sortable {
+  .fa-sort,
+  .fa-sort-amount-asc,
+  .fa-sort-amount-asc {
+    display: inline-block;
+  }
+
+  th {
+    cursor: pointer;
+  }
 }

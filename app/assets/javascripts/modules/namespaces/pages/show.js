@@ -1,6 +1,6 @@
 import BaseComponent from '~/base/component';
 
-import NamespaceDetails from '../components/namespace-details';
+import NamespaceDetails from '../legacy-components/namespace-details';
 
 const NAMESPACE_DETAILS = '.namespace-details';
 
