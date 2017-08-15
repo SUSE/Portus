@@ -96,6 +96,7 @@ unless packaging?
     gem "database_cleaner"
     gem "md2man", "~>5.1.1", require: false
     gem "binman", "~>5.1.0"
+    gem "grape-swagger-rails"
   end
 
   group :test do

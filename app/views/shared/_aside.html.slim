@@ -1,31 +1,33 @@
 aside
   ul
     li.active
-      a[href="#{url_for root_path}"]
+      = link_to root_path
         i[class="fa fa-dashboard"]
         | Dashboard
       - if current_page?(url_for root_path) || current_page?(root_path)
         .list-selected
     li.active
-      a[href="#{url_for namespaces_path}"]
+      = link_to namespaces_path
         i[class="fa fa-ship"]
         | Namespaces
       - if current_page?(url_for namespaces_path)
         .list-selected
     li.active
-      a[href="#{url_for teams_path}"]
+      = link_to teams_path
         i[class="fa fa-users"]
         | Teams
       - if current_page?(url_for teams_path)
         .list-selected
     - if current_user.admin?
       li.active
-        a[href="#{url_for controller: 'admin/dashboard', action: 'index'}"]
+        = link_to admin_dashboard_index_path
           i[class="fa fa-cogs"]
           | Admin
         - if current_page?(url_for controller: 'admin/dashboard', action: 'index')
           .list-selected
     li.active
-      a[href="http://port.us.org/documentation" target="_blank"]
+      = link_to help_index_path
         i[class="fa fa-life-ring"]
         | Help
+      - if current_page?(url_for help_index_path)
+        .list-selected
