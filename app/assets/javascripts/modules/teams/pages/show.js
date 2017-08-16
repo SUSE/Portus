@@ -1,27 +1,62 @@
-import BaseComponent from '~/base/component';
+import Vue from 'vue';
 
-import NormalNamespacesPanel from '../../namespaces/legacy-components/normal-namespaces-panel';
+import ToggleLink from '~/shared/components/toggle-link';
+import EventBus from '~/utils/eventbus';
+
+import NamespacesPanel from '../../namespaces/components/panel';
+import NewNamespaceForm from '../../namespaces/components/new-form';
+
+import NamespacesStore from '../../namespaces/store';
+
+// legacy
 import TeamDetails from '../components/team-details';
 import TeamUsersPanel from '../components/team-users-panel';
 
-const NORMAL_NAMESPACES_PANEL = '.normal-namespaces-wrapper';
-const TEAM_USERS_PANEL = '.team-users-wrapper';
-const TEAM_DETAILS = '.team-details';
+const { set } = Vue;
 
-// TeamsShowPage component responsible to instantiate
-// the team's show page components and handle interactions.
-class TeamsShowPage extends BaseComponent {
-  elements() {
-    this.$teamDetails = this.$el.find(TEAM_DETAILS);
-    this.$teamUsersPanel = this.$el.find(TEAM_USERS_PANEL);
-    this.$normalNamespacesPanel = this.$el.find(NORMAL_NAMESPACES_PANEL);
+$(() => {
+  if (!$('body[data-route="teams/show"]').length) {
+    return;
   }
 
-  mount() {
-    this.normalNamespacesPanel = new NormalNamespacesPanel(this.$normalNamespacesPanel);
-    this.teamDetails = new TeamDetails(this.$teamDetails);
-    this.teamUsersPanel = new TeamUsersPanel(this.$teamUsersPanel);
-  }
-}
+  // eslint-disable-next-line no-new
+  new Vue({
+    el: 'body[data-route="teams/show"] .vue-root',
 
-export default TeamsShowPage;
+    components: {
+      NewNamespaceForm,
+      NamespacesPanel,
+      ToggleLink,
+    },
+
+    data() {
+      return {
+        namespaceState: NamespacesStore.state,
+        namespaces: window.teamNamespaces.data,
+      };
+    },
+
+    methods: {
+      onCreate(namespace) {
+        const currentNamespaces = this.namespaces;
+        const namespaces = [
+          ...currentNamespaces,
+          namespace,
+        ];
+
+        set(this, 'namespaces', namespaces);
+      },
+    },
+
+    mounted() {
+      EventBus.$on('namespaceCreated', namespace => this.onCreate(namespace));
+
+      // legacy
+      const $teamDetails = $(this.$refs.details);
+      const $teamUsersPanel = $(this.$refs.usersPanel);
+
+      this.teamDetails = new TeamDetails($teamDetails);
+      this.teamUsersPanel = new TeamUsersPanel($teamUsersPanel);
+    },
+  });
+});

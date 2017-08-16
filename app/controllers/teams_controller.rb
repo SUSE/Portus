@@ -18,7 +18,7 @@ class TeamsController < ApplicationController
 
     authorize @team
     @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
-    @team_namespaces = @team.namespaces.page(params[:namespaces_page]).per(15)
+    @team_namespaces_serialized = serialize_as_json(@team.namespaces)
   end
 
   # POST /teams

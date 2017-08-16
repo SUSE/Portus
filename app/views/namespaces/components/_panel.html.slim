@@ -3,9 +3,8 @@
     .row
       .col-sm-6
         <slot name="name"></slot>
-      .col-sm-6.text-right v-if="formState"
-        - if Registry.any? && can_create_namespace?
-          <toggle-link text="Create new namespace" :on-click="toggleForm" :state="state.newFormVisible" class="toggle-link-new-namespace"></toggle-link>
+      .col-sm-6.text-right
+        <slot name="actions"></slot>
 
   .panel-body
     <loading-icon v-if="state.isLoading"></loading-icon>

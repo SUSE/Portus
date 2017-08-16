@@ -1,22 +1,26 @@
 <template>
-  <a type="button" class="btn btn-xs btn-link toggle-link" @click="onClick">
+  <a type="button" class="btn btn-xs btn-link toggle-link" @click="toggle">
     <i class="fa" :class="icon"></i> {{ text }}
   </a>
 </template>
 
 <script>
+  import Vue from 'vue';
+
+  const { set } = Vue;
+
   export default {
     props: {
       state: {
-        type: Boolean,
+        type: Object,
+        required: true,
+      },
+      stateKey: {
+        type: String,
         required: true,
       },
       text: {
         type: String,
-        required: true,
-      },
-      onClick: {
-        type: Function,
         required: true,
       },
       trueIcon: {
@@ -30,9 +34,15 @@
     computed: {
       icon() {
         return {
-          [this.falseIcon]: this.state === false,
-          [this.trueIcon]: this.state === true,
+          [this.falseIcon]: this.state[this.stateKey] === false,
+          [this.trueIcon]: this.state[this.stateKey] === true,
         };
+      },
+    },
+
+    methods: {
+      toggle() {
+        set(this.state, this.stateKey, !this.state[this.stateKey]);
       },
     },
   };

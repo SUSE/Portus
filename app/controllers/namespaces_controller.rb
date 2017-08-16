@@ -115,22 +115,6 @@ class NamespacesController < ApplicationController
 
   private
 
-  # Serializes resource/collection as json using AMS
-  #
-  # This method was only necessary because in #index I wanted to serve
-  # accessible and special namespaces in the same json but in separated keys
-  # and I couldn't find a better solution then this one.
-  # Usually just render :json resource does the job, this is a special case.
-  def serialize_as_json(resource)
-    context = ActiveModelSerializers::SerializationContext.new(request)
-
-    ActiveModelSerializers::SerializableResource.new(
-      resource,
-      scope:                 view_context,
-      serialization_context: context
-    ).as_json
-  end
-
   # Fetch the namespace to be created from the given parameters. Note that this
   # method assumes that the @team instance object has already been set.
   def fetch_namespace

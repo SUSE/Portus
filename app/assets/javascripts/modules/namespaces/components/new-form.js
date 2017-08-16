@@ -16,12 +16,16 @@ const { set } = Vue;
 export default {
   template: '#js-new-namespace-form-tmpl',
 
+  props: ['teamName'],
+
   mixins: [FormMixin],
 
   data() {
     return {
       namespace: {
-        namespace: {},
+        namespace: {
+          team: this.teamName || '',
+        },
       },
     };
   },
