@@ -1,17 +1,26 @@
-import Vue from 'vue';
 import getProperty from 'lodash/get';
 
 import Comparator from '~/utils/comparator';
+
 import TablePagination from '~/shared/components/table-pagination';
+import TableSortableMixin from '~/shared/mixins/table-sortable';
 
 import NamespaceTableRow from './table-row';
-
-const { set } = Vue;
 
 export default {
   template: '#js-namespaces-table-tmpl',
 
-  props: ['namespaces', 'sortable'],
+  props: {
+    namespaces: {
+      type: Array,
+    },
+    prefix: {
+      type: String,
+      default: 'ns_',
+    },
+  },
+
+  mixins: [TableSortableMixin],
 
   components: {
     NamespaceTableRow,
@@ -20,8 +29,6 @@ export default {
 
   data() {
     return {
-      sortAsc: true,
-      sortBy: 'attributes.clean_name',
       limit: 3,
       currentPage: 1,
     };
@@ -33,16 +40,16 @@ export default {
     },
 
     filteredNamespaces() {
-      const order = this.sortAsc ? 1 : -1;
+      const order = this.sorting.asc ? 1 : -1;
       const sortedNamespaces = [...this.namespaces];
       const sample = sortedNamespaces[0];
-      const value = getProperty(sample, this.sortBy);
+      const value = getProperty(sample, this.sorting.by);
       const comparator = Comparator.of(value);
 
       // sorting
       sortedNamespaces.sort((a, b) => {
-        const aValue = getProperty(a, this.sortBy);
-        const bValue = getProperty(b, this.sortBy);
+        const aValue = getProperty(a, this.sorting.by);
+        const bValue = getProperty(b, this.sorting.by);
 
         return order * comparator(aValue, bValue);
       });
@@ -54,21 +61,5 @@ export default {
     },
   },
 
-  methods: {
-    sort(attribute) {
-      if (!this.sortable) {
-        return;
-      }
 
-      // if sort column has changed, go always asc
-      // inverse current order otherwise
-      if (this.sortBy === attribute) {
-        set(this, 'sortAsc', !this.sortAsc);
-      } else {
-        set(this, 'sortAsc', true);
-      }
-
-      set(this, 'sortBy', attribute);
-    },
-  },
 };

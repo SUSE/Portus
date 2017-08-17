@@ -156,6 +156,44 @@ feature "Teams support" do
       expect(page).to have_current_path(namespace_path(namespace))
     end
 
+    scenario "Namespace table sorting is reachable through url", js: true do
+      # sort asc
+      visit team_path(team, ns_sort_asc: true)
+
+      expect(page).to have_css(".namespaces-panel .fa-sort-amount-asc")
+
+      # sort desc
+      visit team_path(team, ns_sort_asc: false)
+
+      expect(page).to have_css(".namespaces-panel .fa-sort-amount-desc")
+
+      # sort asc & created_at
+      visit team_path(team, ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+
+      expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-asc")
+
+      # sort desc & created_at
+      visit team_path(team, ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+
+      expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
+    end
+
+    scenario "URL is updated when namespaces column is sorted", js: true do
+      # sort asc & created_at
+      find(".namespaces-panel th:nth-child(4)").click
+
+      expect(page).to have_css(".namespaces-panel  th:nth-child(4) .fa-sort-amount-asc")
+      path = team_path(team, ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+      expect(page).to have_current_path(path)
+
+      # sort desc & created_at
+      find(".namespaces-panel th:nth-child(4)").click
+
+      expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
+      path = team_path(team, ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+      expect(page).to have_current_path(path)
+    end
+
     scenario "An user can be added as a team member", js: true do
       find("#add_team_user_btn").click
       find("#team_user_role").select "Contributor"
