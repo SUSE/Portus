@@ -154,6 +154,48 @@ feature "Namespaces support" do
       namespace = Namespace.find(id)
       expect(namespace.visibility_public?).to be true
     end
+
+    scenario "Namespace table sorting is reachable through url", js: true do
+      # sort asc
+      visit namespaces_path(ns_sort_asc: true)
+
+      expect(page).to have_css(".fa-sort-amount-asc")
+
+      # sort desc
+      visit namespaces_path(ns_sort_asc: false)
+
+      expect(page).to have_css(".fa-sort-amount-desc")
+
+      # sort asc & created_at
+      visit namespaces_path(ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+
+      expect(page).to have_css("th:nth-child(4) .fa-sort-amount-asc")
+
+      # sort desc & created_at
+      visit namespaces_path(ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+
+      expect(page).to have_css("th:nth-child(4) .fa-sort-amount-desc")
+    end
+
+    scenario "URL is updated when namespaces column is sorted", js: true do
+      visit namespaces_path
+
+      expect(page).to have_css(".namespaces-panel:last-of-type th:nth-child(4)")
+
+      # sort asc & created_at
+      find(".namespaces-panel:last-of-type th:nth-child(4)").click
+
+      expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-asc")
+      path = namespaces_path(ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+      expect(page).to have_current_path(path)
+
+      # sort desc & created_at
+      find(".namespaces-panel:last-of-type th:nth-child(4)").click
+
+      expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
+      path = namespaces_path(ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+      expect(page).to have_current_path(path)
+    end
   end
 
   describe "#update" do

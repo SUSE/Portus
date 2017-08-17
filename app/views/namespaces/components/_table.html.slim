@@ -11,40 +11,40 @@ div
         th @click=="sort('attributes.clean_name')"
           i.fa.fa-fw.fa-sort{
             :class=="{
-              'fa-sort-amount-asc': sortBy === 'attributes.clean_name' && sortAsc,
-              'fa-sort-amount-desc': sortBy === 'attributes.clean_name' && !sortAsc,
+              'fa-sort-amount-asc': sorting.by === 'attributes.clean_name' && sorting.asc,
+              'fa-sort-amount-desc': sorting.by === 'attributes.clean_name' && !sorting.asc,
             }"
           }
           |  Name
         th @click=="sort('relationships.repositories.meta.count')"
           i.fa.fa-fw.fa-sort{
             :class=="{
-              'fa-sort-amount-asc': sortBy === 'relationships.repositories.meta.count' && sortAsc,
-              'fa-sort-amount-desc': sortBy === 'relationships.repositories.meta.count' && !sortAsc,
+              'fa-sort-amount-asc': sorting.by === 'relationships.repositories.meta.count' && sorting.asc,
+              'fa-sort-amount-desc': sorting.by === 'relationships.repositories.meta.count' && !sorting.asc,
             }"
           }
           |  Repositories
         th @click=="sort('relationships.webhooks.meta.count')"
           i.fa.fa-fw.fa-sort{
             :class=="{
-              'fa-sort-amount-asc': sortBy === 'relationships.webhooks.meta.count' && sortAsc,
-              'fa-sort-amount-desc': sortBy === 'relationships.webhooks.meta.count' && !sortAsc,
+              'fa-sort-amount-asc': sorting.by === 'relationships.webhooks.meta.count' && sorting.asc,
+              'fa-sort-amount-desc': sorting.by === 'relationships.webhooks.meta.count' && !sorting.asc,
             }"
           }
           |  Webhooks
         th @click=="sort('attributes.created_at')"
           i.fa.fa-fw.fa-sort{
             :class=="{
-              'fa-sort-amount-asc': sortBy === 'attributes.created_at' && sortAsc,
-              'fa-sort-amount-desc': sortBy === 'attributes.created_at' && !sortAsc,
+              'fa-sort-amount-asc': sorting.by === 'attributes.created_at' && sorting.asc,
+              'fa-sort-amount-desc': sorting.by === 'attributes.created_at' && !sorting.asc,
             }"
           }
           |  Created at
         th @click=="sort('attributes.visibility')"
           i.fa.fa-fw.fa-sort{
             :class=="{
-              'fa-sort-amount-asc': sortBy === 'attributes.visibility' && sortAsc,
-              'fa-sort-amount-desc': sortBy === 'attributes.visibility' && !sortAsc,
+              'fa-sort-amount-asc': sorting.by === 'attributes.visibility' && sorting.asc,
+              'fa-sort-amount-desc': sorting.by === 'attributes.visibility' && !sorting.asc,
             }"
           }
           |  Visibility

@@ -12,7 +12,6 @@ Vue.http.interceptors.push((_request, next) => {
   });
 });
 
-
 Vue.http.interceptors.push((request, next) => {
   if ($.rails) {
     // eslint-disable-next-line no-param-reassign
@@ -20,5 +19,17 @@ Vue.http.interceptors.push((request, next) => {
   }
   next();
 });
+
+// we are not a SPA and when user clicks on back/forward
+// we want the page to be fully reloaded to take advantage of
+// the url query params state
+window.onpopstate = function (e) {
+  // phantomjs seems to trigger an oppopstate event
+  // when visiting pages, e.state is always null and
+  // in our component we set an empty string
+  if (e.state !== null) {
+    window.location.reload();
+  }
+};
 
 Vue.config.productionTip = process.env.NODE_ENV !== 'production';
