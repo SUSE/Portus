@@ -1,15 +1,20 @@
 import LoadingIcon from '~/shared/components/loading-icon';
 import ToggleLink from '~/shared/components/toggle-link';
-import PanelWithFormMixin from '~/shared/mixins/panel-with-form';
 
 import NamespacesTable from './table';
+
+import NamespacesStore from '../store';
 
 export default {
   template: '#js-namespaces-panel-tmpl',
 
-  mixins: [PanelWithFormMixin],
-
   props: ['namespaces', 'tableSortable'],
+
+  data() {
+    return {
+      state: NamespacesStore.state,
+    };
+  },
 
   components: {
     LoadingIcon,

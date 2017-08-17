@@ -34,6 +34,20 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  # Serializes resource/collection as json using AMS
+  #
+  # This method is only necessary if you want to use the serializer
+  # out of the `render json: resource` situation.
+  def serialize_as_json(resource)
+    context = ActiveModelSerializers::SerializationContext.new(request)
+
+    ActiveModelSerializers::SerializableResource.new(
+      resource,
+      scope:                 view_context,
+      serialization_context: context
+    ).as_json
+  end
+
   # Authenticate the user:token as provided in the "PORTUS-AUTH" header.
   def authenticate_user_from_authentication_token!
     auth = request.headers["PORTUS-AUTH"].presence

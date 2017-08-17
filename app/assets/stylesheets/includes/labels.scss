@@ -21,12 +21,14 @@
   margin: 0 0.5em;
   text-align: center;
   padding-top: 4px;
+  line-height: 1;
   &.circle-label-sm {
     height: 55px;
     width: 55px;
     .fa {
       font-size: 20px;
       padding-top: 5px;
+      padding-bottom: 3px;
       display: block;
     }
   }

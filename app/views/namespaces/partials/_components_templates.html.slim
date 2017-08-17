@@ -1,0 +1,16 @@
+- content_for :js_body do
+  - cache "namespaces/components/templates" do
+    script#js-new-namespace-form-tmpl type="text/x-template"
+      = render "namespaces/components/form"
+
+    script#js-namespaces-panel-tmpl type="text/x-template"
+      = render "namespaces/components/panel"
+
+    script#js-namespaces-table-tmpl type="text/x-template"
+      = render "namespaces/components/table"
+
+    script#js-namespace-table-row-tmpl type="text/x-template"
+      = render "namespaces/components/table_row"
+
+    script#js-namespace-visibility-tmpl type="text/x-template"
+      = render "namespaces/components/visibility"

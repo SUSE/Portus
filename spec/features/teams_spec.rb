@@ -128,24 +128,32 @@ feature "Teams support" do
     end
 
     scenario "A namespace can be created from the team page", js: true do
+      namespaces_count = Namespace.count
+
       # The form appears after clicking the "Add namespace" link.
-      expect(page).to have_css("#add_namespace_form", visible: false)
+      expect(page).to have_css("#new-namespace-form", visible: false)
 
-      find("#add_namespace_btn").click
-      wait_for_effect_on("#add_namespace_form")
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      expect(page).to have_css("#add_namespace_form")
-      expect(focused_element_id).to eq "namespace_name"
+      expect(page).to have_css("#new-namespace-form")
 
       # Fill the form and wait for the AJAX response.
       fill_in "Name", with: "new-namespace"
-      click_button "Add"
-      wait_for_ajax
+      click_button "Create"
 
-      # See the response.
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("Namespace 'new-namespace' was created successfully")
+
+      expect(Namespace.count).to eql namespaces_count + 1
+      expect(page).to have_link("new-namespace")
+      find(:link, "new-namespace").trigger(:click)
+
       namespace = Namespace.find_by(name: "new-namespace")
-      expect(page).to have_css("#namespace_#{namespace.id}")
-      expect(page).to have_css("#add_namespace_form", visible: false)
+      expect(page).to have_current_path(namespace_path(namespace))
     end
 
     scenario "An user can be added as a team member", js: true do
