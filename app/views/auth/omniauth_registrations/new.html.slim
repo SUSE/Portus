@@ -1,0 +1,14 @@
+section.row-0
+  .center-panel
+    .col-md-4.col-sm-2.col-xs-1
+    .col-md-4.col-sm-8.col-xs-10.text-center
+      = render 'shared/notifications'
+      = image_tag 'layout/portus-logo-login-page.png', class: 'login-picture'
+      p.social-login-title.text-left Define your Username and Display Name
+      = form_for @user, url: users_oauth_url do |f|
+        = f.text_field :username, class: 'input form-control input-lg first', placeholder: 'Username', autofocus: true, required: true
+        = f.text_field :display_name, class: 'input form-control input-lg last', placeholder: 'Display name'
+        = f.button class: 'classbutton btn btn-primary btn-block btn-lg' do
+          i.fa.fa-check
+          ' Create account
+      end

@@ -21,8 +21,10 @@
 #  ldap_name              :string(255)
 #  failed_attempts        :integer          default("0")
 #  locked_at              :datetime
-#  display_name           :string(255)
 #  namespace_id           :integer
+#  display_name           :string(255)
+#  provider               :string(255)
+#  uid                    :string(255)
 #
 # Indexes
 #
@@ -38,6 +40,8 @@ class User < ActiveRecord::Base
 
   enabled_devise_modules = [:database_authenticatable, :registerable, :lockable,
                             :recoverable, :rememberable, :trackable, :validatable,
+                            :omniauthable,
+                            omniauth_providers:  [:google_oauth2, :open_id, :github, :gitlab],
                             authentication_keys: [:username]]
 
   enabled_devise_modules.delete(:validatable) if Portus::LDAP.enabled?
@@ -213,7 +217,39 @@ class User < ActiveRecord::Base
                     parameters: { username: username }
   end
 
+  # Create user form params and omnoauth data.
+  #   params - hash with :username and :display_name
+  #   data   - hash from oauth provider. We use info: {:email}, :provider and :uid.
+  def self.create_from_oauth(params, data)
+    params.merge! data["info"].slice("email")
+    params.merge! data.slice("provider", "uid")
+    params[:password] = Devise.friendly_token[0, 20]
+    User.create params
+  end
+
+  # Suggest username based on nickname for GitHub or username for GitLab.
+  # For prlviders which doesn't supply username suggestion is based on left
+  # side of user's email.
+  # If username exists then try variant username + "_nn".
+  def suggest_username(data)
+    self.username = extract_username data
+    if (user = User.find_by(username: username))
+      num = 1
+      while user && num < 999
+        suggest_username = "#{username}_#{num.to_s.rjust(2, "0")}"
+        user = User.find_by(username: suggest_username)
+        num += 1
+      end
+      self.username = suggest_username unless user
+    end
+  end
+
   protected
+
+  # Get username from provider's data.
+  def extract_username(data)
+    data["nickname"] || data["username"] || data["email"].match(/^[^@]*/).to_s
+  end
 
   # Returns whether the given user can be disabled or not. The following rules
   # apply:

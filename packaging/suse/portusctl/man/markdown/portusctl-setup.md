@@ -124,6 +124,63 @@ first time.
   When in combination with **ldap-guess-email-enable**, Portus will use the given
   **attr** to fetch the email instead of guessing it from the DN.
 
+**--oauth-google-oauth2-enable**
+  Enable authentication with Google OAuth2.
+
+**--oauth-google-oauth2-id**
+  When using Google OAuth2, use the given ID to authenticate.
+
+**--oauth-google-oauth2-secret**
+  When using Google OAuth2, use the secret phrase to authenticate.
+
+**--oauth-google-oauth2-domain**
+  If defined, then emails with certain domain are allowed.
+
+**--oauth-google-oauth2-options-hd**
+  G Sute domain. If defined then only members of the domain allowed.
+
+**--oauth-open-id-enable**
+  Enable authentication with OpenID.
+
+**--oauth-open-id-identifier**
+  When using OpenID, use the identifier to authenticate.
+
+**--oauth-open-id-domain**
+  If defined, then emails with certain domain are allowed.
+
+**--oauth-github-enable**
+  Enable authentication with Github.
+
+**--oauth-github-key**
+  When using authentication with Github, use the given key to authenticate.
+
+**--oauth-github-secret**
+  When using authentication with Github, use the secret phrase to authenticate.
+
+**--oauth-github-organization**
+  If defined, then only members of the organization are allowed.
+
+**--oauth-github-team**
+  If defined, then only members of the organization's team are allowed.
+
+**--oauth-github-domain**
+  If defined, then emails with certain domain are allowed.
+
+**--oauth-gitlab-enable**
+  Enable authentication with Gitlab.
+
+**--oauth-gitlab-id**
+  When using authentication with Gitlab, use the given key to authenticate.
+
+**--oauth-gitlab-secret**
+  When using authentication with Gitlab, use the secret phrase to authenticate.
+
+**--oauth-gitlab-group**
+  If defined, then only members of the group are allowed.
+
+**--oauth-gitlab-domain**
+  If defined, then emails with certain domain are allowed.
+
 **--email-from**
   The email to be used as the sender for emails. It defaults to "portus@\<hostname\>".
 

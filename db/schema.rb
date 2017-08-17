@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927141850) do
+ActiveRecord::Schema.define(version: 20170630194953) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -177,6 +177,8 @@ ActiveRecord::Schema.define(version: 20160927141850) do
     t.datetime "locked_at"
     t.integer  "namespace_id",           limit: 4
     t.string   "display_name",           limit: 255
+    t.string   "provider",               limit: 255
+    t.string   "uid",                    limit: 255
   end
 
   add_index "users", ["display_name"], name: "index_users_on_display_name", unique: true, using: :btree
