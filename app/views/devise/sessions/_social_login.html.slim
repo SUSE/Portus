@@ -1,0 +1,33 @@
+.row
+  .col-sm-12.create-new-account
+  h3.social-login-title Social logins
+.row.social-btns
+  - if APP_CONFIG.enabled? "oauth.google_oauth2"
+    .col-xs-12.col-sm-6
+      = link_to user_omniauth_authorize_path(provider: :google_oauth2), class: 'btn btn-primary btn-block btn-lg' do
+        i.fa.fa-google
+        '&nbsp;Google
+
+  - if APP_CONFIG.enabled? "oauth.open_id"
+    .col-xs-12.col-sm-6
+      = link_to user_omniauth_authorize_path(provider: :open_id), class: 'btn btn-primary btn-block btn-lg' do
+        i.fa.fa-openid
+        '&nbsp;Open Id
+
+  - if APP_CONFIG.enabled? "oauth.github"
+    .col-xs-12.col-sm-6
+      = link_to user_omniauth_authorize_path(provider: :github), class: 'btn btn-primary btn-block btn-lg' do
+        i.fa.fa-github
+        '&nbsp;Github
+
+  - if APP_CONFIG.enabled? "oauth.gitlab"
+    .col-xs-12.col-sm-6
+      = link_to user_omniauth_authorize_path(provider: :gitlab), class: 'btn btn-primary btn-block btn-lg' do
+        i.fa.fa-gitlab
+        '&nbsp;Gitlab
+
+  - if APP_CONFIG.enabled? "oauth.bitbucket"
+    .col-xs-12.col-sm-6
+      = link_to user_omniauth_authorize_path(provider: :bitbucket), class: 'btn btn-primary btn-block btn-lg' do
+        i.fa.fa-bitbucket
+        '&nbsp;Bitbucket

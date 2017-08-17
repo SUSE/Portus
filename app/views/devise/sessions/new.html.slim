@@ -24,7 +24,11 @@ section.row-0
           - elsif !Portus::LDAP.enabled?
             .forgot-password
               = link_to "I forgot my password", new_user_password_path, class: 'btn btn-link'
+
         - if show_first_user_alert?
           .alert.alert-info
             strong Note:
             |  The first user to be created will have admin permissions !
+
+        - else
+          = social_login

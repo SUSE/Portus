@@ -36,6 +36,15 @@ section.sign-up {
   .btn-link {
     color: $white
   }
+  .social-login-title {
+    color: $white;
+    margin-top: 25px;
+    margin-bottom: 15px;
+  }
+  .social-btns a.btn{
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
 }
 
 textarea.fixed-size {

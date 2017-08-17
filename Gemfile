@@ -27,6 +27,10 @@ gem "grape-entity"
 gem "grape-swagger"
 gem "grape-swagger-entity"
 gem "hashie-forbidden_attributes"
+gem "omniauth-google-oauth2"
+gem "omniauth-openid"
+gem "omniauth-github"
+gem "omniauth-gitlab"
 
 # Pinning these specific versions because that's what we have on OBS.
 gem "ethon", "~> 0.9.0"
