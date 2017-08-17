@@ -87,6 +87,53 @@ ldap:
     enabled: false
     attr: ""
 
+# OAuth support.
+oauth:
+  # If enabled, users can authenticate with their Google Account.
+  google_oauth2:
+    enabled: false
+    # Credentials. Details on https://developers.google.com/identity/protocols/OpenIDConnect
+    id: ""
+    secret: ""
+    # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+    domain: ""
+    options:
+      # G Suite domain. If set, then only members of the domain can sign in/up.
+      # If it's empty then any google users con sign in/up.
+      hd: ""
+
+  # OpenID authentication support. If enabled, then users can authenticate with OpenID/Connect
+  open_id:
+    enabled: false
+    # Optional. If identifier set then user redirect to the OpenID provider.
+    # If not, then user is asked for identifier before redirect.
+    # Example https://openid.stackexchange.com
+    identifier: ""
+    # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+    domain: ""
+
+  # Github authentication support.
+  github:
+    enabled: false
+    # Application credentials.
+    key: ""
+    secret: ""
+    # Only members of organization's team can sign in/up with Github.
+    organization: ""
+    team: ""
+     # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+    domain: ""
+
+  # Gitlab authentication support.
+  gitlab:
+    enabled: false
+    id: ""
+    secret: ""
+    # Only member of the group can sign in/up with Gitlab.
+    group: ""
+     # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+    domain: ""
+
 # Set first_user_admin to true if you want that the first user that signs up
 # to be an admin.
 #

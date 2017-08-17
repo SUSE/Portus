@@ -1,3 +1,4 @@
+require "openid/store/filesystem"
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -234,6 +235,31 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  if APP_CONFIG.enabled? "oauth.google_oauth2"
+    # Use only setted options.
+    options = APP_CONFIG["oauth"]["google_oauth2"]["options"].select { |_k, v| !v.blank? }
+    options[:skip_jwt] = true
+    config.omniauth :google_oauth2, APP_CONFIG["oauth"]["google_oauth2"]["id"],
+      APP_CONFIG["oauth"]["google_oauth2"]["secret"], options
+  end
+
+  if APP_CONFIG.enabled? "oauth.open_id"
+    options = { store: OpenID::Store::Filesystem.new("/tmp") }
+    unless APP_CONFIG["oauth"]["open_id"]["identifier"].blank?
+      options[:identifier] = APP_CONFIG["oauth"]["open_id"]["identifier"]
+    end
+    config.omniauth :open_id, options
+  end
+
+  if APP_CONFIG.enabled? "oauth.github"
+    config.omniauth :github, APP_CONFIG["oauth"]["github"]["key"],
+      APP_CONFIG["oauth"]["github"]["secret"], scope: "user,read:org"
+  end
+
+  if APP_CONFIG.enabled? "oauth.gitlab"
+    config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["id"],
+      APP_CONFIG["oauth"]["gitlab"]["secret"]
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
