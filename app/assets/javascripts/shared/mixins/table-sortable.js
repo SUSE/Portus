@@ -1,5 +1,4 @@
 import Vue from 'vue';
-
 import queryString from 'query-string';
 
 const { set } = Vue;
@@ -32,19 +31,6 @@ export default {
     };
   },
 
-  beforeMount() {
-    if (!this.sortable) {
-      return;
-    }
-
-    const queryObject = queryString.parse(window.location.search);
-    const sortByQuery = queryObject[this.prefix + 'sort_by'] || this.sorting.by;
-    const sortAscQuery = (queryObject[this.prefix + 'sort_asc'] || this.sorting.asc) === 'true';
-
-    set(this.sorting, 'by', sortByQuery);
-    set(this.sorting, 'asc', sortAscQuery);
-  },
-
   methods: {
     sort(attribute) {
       if (!this.sortable) {
@@ -61,10 +47,10 @@ export default {
 
       set(this.sorting, 'by', attribute);
 
-      this.updateUrlState();
+      this.updateUrlSortingState();
     },
 
-    updateUrlState() {
+    updateUrlSortingState() {
       const queryObject = queryString.parse(window.location.search);
 
       queryObject[this.prefix + 'sort_asc'] = this.sorting.asc;
@@ -74,5 +60,18 @@ export default {
       const url = [location.protocol, '//', location.host, location.pathname].join('');
       history.pushState('', '', `${url}?${queryParams}`);
     },
+  },
+
+  beforeMount() {
+    if (!this.sortable) {
+      return;
+    }
+
+    const queryObject = queryString.parse(window.location.search);
+    const sortByQuery = queryObject[this.prefix + 'sort_by'] || this.sorting.by;
+    const sortAscQuery = (queryObject[this.prefix + 'sort_asc'] || this.sorting.asc) === 'true';
+
+    set(this.sorting, 'by', sortByQuery);
+    set(this.sorting, 'asc', sortAscQuery);
   },
 };

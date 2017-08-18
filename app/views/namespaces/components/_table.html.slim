@@ -51,4 +51,4 @@ div
     tbody
       <namespace-table-row v-for="namespace in filteredNamespaces" :key="namespace.id" :namespace="namespace"></namespace-table-row>
 
-  <table-pagination :total.sync="namespaces.length" :current-page.sync="currentPage" :itens-per-page.sync="limit"></table-pagination>
+  <table-pagination :total.sync="namespaces.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>

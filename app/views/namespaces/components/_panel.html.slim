@@ -11,4 +11,4 @@
 
     .table-responsive
       <namespaces-not-loaded v-if="state.notLoaded"></namespaces-not-loaded>
-      <namespaces-table v-if="!state.isLoading && !state.notLoaded" :namespaces="namespaces" :sortable="tableSortable" sort-by="attributes.clean_name"></namespaces-table>
+      <namespaces-table v-if="!state.isLoading && !state.notLoaded" :namespaces="namespaces" :sortable="tableSortable" sort-by="attributes.clean_name" :prefix="prefix"></namespaces-table>
