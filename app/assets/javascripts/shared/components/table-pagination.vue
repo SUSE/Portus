@@ -14,7 +14,7 @@
         <li
           v-for="(page, index) in displayedPages"
           :key="index"
-          :class="{'active': currentPage == page}">
+          :class="{ 'active': currentPage == page }">
             <a href="#" @click.prevent="setCurrentPage(page)">{{ page }}</a>
         </li>
         <li :class="{ 'disabled': nextDisabled }">
@@ -92,7 +92,7 @@
           return;
         }
 
-        this.$emit('update:currentPage', page);
+        this.$emit('update', page);
       },
     },
   };

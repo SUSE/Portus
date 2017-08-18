@@ -196,6 +196,40 @@ feature "Namespaces support" do
       path = namespaces_path(ns_sort_asc: false, ns_sort_by: "attributes.created_at")
       expect(page).to have_current_path(path)
     end
+
+    scenario "Namespace table pagination is reachable through url", js: true do
+      create_list(:namespace, 5, team: team, registry: registry)
+
+      # page 2
+      visit namespaces_path(ns_page: 2)
+
+      expect(page).to have_css(".namespaces-panel .pagination li.active:nth-child(3)")
+
+      # page 1
+      visit namespaces_path(ns_page: 1)
+
+      expect(page).to have_css(".namespaces-panel .pagination li.active:nth-child(2)")
+    end
+
+    scenario "URL is updated when page is changed", js: true do
+      create_list(:namespace, 5, team: team, registry: registry)
+
+      visit namespaces_path
+
+      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li:nth-child(3)")
+
+      # page 2
+      find(".namespaces-panel:last-of-type .pagination li:nth-child(3) a").click
+
+      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li.active:nth-child(3)")
+      expect(page).to have_current_path(namespaces_path(ns_page: 2))
+
+      # page 1
+      find(".namespaces-panel:last-of-type .pagination li:nth-child(2) a").click
+
+      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li.active:nth-child(2)")
+      expect(page).to have_current_path(namespaces_path(ns_page: 1))
+    end
   end
 
   describe "#update" do

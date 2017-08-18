@@ -2,8 +2,8 @@ import getProperty from 'lodash/get';
 
 import Comparator from '~/utils/comparator';
 
-import TablePagination from '~/shared/components/table-pagination';
 import TableSortableMixin from '~/shared/mixins/table-sortable';
+import TablePaginatedMixin from '~/shared/mixins/table-paginated';
 
 import NamespaceTableRow from './table-row';
 
@@ -20,25 +20,13 @@ export default {
     },
   },
 
-  mixins: [TableSortableMixin],
+  mixins: [TableSortableMixin, TablePaginatedMixin],
 
   components: {
     NamespaceTableRow,
-    TablePagination,
-  },
-
-  data() {
-    return {
-      limit: 3,
-      currentPage: 1,
-    };
   },
 
   computed: {
-    offset() {
-      return (this.currentPage - 1) * this.limit;
-    },
-
     filteredNamespaces() {
       const order = this.sorting.asc ? 1 : -1;
       const sortedNamespaces = [...this.namespaces];
@@ -60,6 +48,4 @@ export default {
       return slicedNamespaces;
     },
   },
-
-
 };

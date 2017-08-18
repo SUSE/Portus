@@ -194,6 +194,40 @@ feature "Teams support" do
       expect(page).to have_current_path(path)
     end
 
+    scenario "Namespace table pagination is reachable through url", js: true do
+      create_list(:namespace, 5, team: team, registry: registry)
+
+      # page 2
+      visit team_path(team, ns_page: 2)
+
+      expect(page).to have_css(".namespaces-panel .pagination li.active:nth-child(3)")
+
+      # page 1
+      visit team_path(team, ns_page: 1)
+
+      expect(page).to have_css(".namespaces-panel .pagination li.active:nth-child(2)")
+    end
+
+    scenario "URL is updated when page is changed", js: true do
+      create_list(:namespace, 5, team: team, registry: registry)
+
+      visit team_path(team)
+
+      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li:nth-child(3)")
+
+      # page 2
+      find(".namespaces-panel:last-of-type .pagination li:nth-child(3) a").click
+
+      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li.active:nth-child(3)")
+      expect(page).to have_current_path(team_path(team, ns_page: 2))
+
+      # page 2
+      find(".namespaces-panel:last-of-type .pagination li:nth-child(2) a").click
+
+      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li.active:nth-child(2)")
+      expect(page).to have_current_path(team_path(team, ns_page: 1))
+    end
+
     scenario "An user can be added as a team member", js: true do
       find("#add_team_user_btn").click
       find("#team_user_role").select "Contributor"
