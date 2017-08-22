@@ -16,7 +16,7 @@ class ExploreController < ActionController::Base
 
     if @current
       repository    = @current.split(":").first
-      @repositories = policy_scope(Repository).search(repository)
+      @repositories = policy_scope(Repository).includes(:stars).search(repository)
     else
       @repositories = []
     end

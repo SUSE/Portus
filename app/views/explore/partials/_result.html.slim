@@ -1,0 +1,10 @@
+- if @repositories.any?
+  h2
+    - repo_count = @repositories.count
+    | #{pluralize(repo_count, 'repository')} #{repo_count == 1 ? "was" : "were"} found
+  ul.result-list
+    - @repositories.each do |r|
+      = render partial: 'explore/partials/result_item', locals: { repository: r }
+
+- if params[:explore] && !@repositories.any?
+  h2 Your search did not match any repositories.

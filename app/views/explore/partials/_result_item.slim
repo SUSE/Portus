@@ -1,0 +1,18 @@
+li.result-item.text-left
+  .clearfix
+    h4.result-item-name.pull-left
+      = repository.full_name
+
+    .result-item-stars.pull-right
+      = repository.stars.count
+      | &nbsp;
+      i.fa.fa-star
+
+  .clearfix
+    .tags-list.pull-left
+      - repository.tags.each do |t|
+        .label.label-success.tag
+          = t.name
+
+    .pull-right
+      | Updated #{time_ago_in_words(repository.updated_at)} ago

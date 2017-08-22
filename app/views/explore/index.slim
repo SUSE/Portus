@@ -1,20 +1,7 @@
 section.row-0
-  .center-panel
-    .col-md-4.col-sm-2.col-xs-1
-    .col-md-4.col-sm-8.col-xs-10.text-center
-      = render 'shared/notifications'
-      = image_tag 'layout/portus-logo-login-page.png', class: 'login-picture'
-
-      = form_for(:explore, method: "GET") do |f|
-        = f.text_field :search, class: 'input form-control input-lg first', placeholder: "Repository", autofocus: true, required: true, value: @current
-        = f.button "Search", id: "login-btn", class: 'classbutton btn btn-primary btn-block btn-lg'
-
-      .text-center = link_to 'Go back to the login page', new_user_session_path, class: 'btn btn-link'
-
-      - if @repositories.any?
-        .text-left
-          h2
-            | Search results
-          ul.repository
-            - @repositories.each do |r|
-              = render r
+  .center-panel.explore
+    .col-md-4.col-sm-3.col-xs-1
+    .col-md-4.col-sm-6.col-xs-10.text-center
+      = render 'explore/partials/top'
+      = render 'explore/partials/form'
+      = render 'explore/partials/result'
