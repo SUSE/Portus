@@ -13,58 +13,65 @@ feature "Namespaces support" do
   end
 
   describe "Namespaces#index" do
-    scenario "An user cannot create an empty namespace", js: true do
-      namespaces_count = Namespace.count
-
+    scenario "An user cannot submit with invalid form", js: true do
       visit namespaces_path
+
       find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
 
-      click_button "Create"
-
-      wait_for_ajax
-
-      expect(Namespace.count).to eql namespaces_count
-      expect(page).to have_current_path(namespaces_path)
+      expect(page).to have_button("Create", disabled: true)
     end
 
-    scenario "An user cannot create a namespace that already exists", js: true do
-      namespaces_count = Namespace.count
-
+    scenario "A user cannot leave name field empty", js: true do
       visit namespaces_path
+
       find(".toggle-link-new-namespace").click
       wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: Namespace.first.name
-      fill_in "Team", with: Team.where(hidden: false).first.name
-      click_button "Create"
+      fill_in "Name", with: ""
 
+      expect(page).to have_content("Name can't be blank")
+      expect(page).to have_button("Create", disabled: true)
+    end
+
+    scenario "A user cannot fill field with an invalid name", js: true do
+      visit namespaces_path
+
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
+
+      fill_in "Name", with: "!@#!@#"
+
+      expect(page).to have_content("Name can only contain lower case alphanumeric characters")
+      expect(page).to have_button("Create", disabled: true)
+    end
+
+    scenario "An user cannot create a namespace that already exists", js: true do
+      visit namespaces_path
+
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
+
+      fill_in "Name", with: Namespace.first.name
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
-      expect(page).to have_current_path(namespaces_path)
-      expect(page).to have_css("#float-alert")
       expect(page).to have_content("Name has already been taken")
-      expect(Namespace.count).to eql namespaces_count
+      expect(page).to have_button("Create", disabled: true)
     end
 
     scenario "An user cannot create a namespace for a hidden team", js: true do
-      namespaces_count = Namespace.count
-
       visit namespaces_path
+
       find(".toggle-link-new-namespace").click
       wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: Namespace.first.name
       fill_in "Team", with: Team.where(hidden: true).first.name
-      click_button "Create"
-
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
-      expect(page).to have_current_path(namespaces_path)
-      expect(page).to have_css("#float-alert")
       expect(page).to have_content("Selected team does not exist")
-      expect(Namespace.count).to eql namespaces_count
+      expect(page).to have_button("Create", disabled: true)
     end
 
     scenario "A namespace can be created from the index page", js: true do

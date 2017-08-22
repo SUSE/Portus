@@ -2,17 +2,30 @@ div ref="form" class="collapse"
   = form_for :namespace, url: namespaces_path, html: {id: "new-namespace-form", class: "form-horizontal", role: "form", name: "form", "@submit.prevent" => "onSubmit", novalidate: true} do |f|
     = f.hidden_field(:team, "v-model" => "namespace.namespace.team", "v-if" => "teamName")
 
-    .form-group
+    .form-group :class=="{ 'has-error': $v.namespace.namespace.name.$error }"
       = f.label :name, {class: "control-label col-md-2"}
       .col-md-7
-        = f.text_field(:name, class: "form-control", required: true, placeholder: "New namespace's name".html_safe, ref: "firstField", "v-model" => "namespace.namespace.name")
+        = f.text_field(:name, class: "form-control", placeholder: "New namespace's name".html_safe, ref: "firstField", "@input" => "$v.namespace.namespace.name.$touch()", "v-model.trim" => "namespace.namespace.name")
+        span.help-block
+          span v-if="!$v.namespace.namespace.name.required"
+            | Name can't be blank
+          span v-if="!$v.namespace.namespace.name.format"
+            | Name can only contain lower case alphanumeric characters, with optional underscores and dashes in the middle
+          span v-if="!$v.namespace.namespace.name.available"
+            | Name has already been taken
 
-    .form-group.has-feedback v-if="!teamName"
+    .form-group.has-feedback :class=="{ 'has-error': $v.namespace.namespace.team.$error }" v-if="!teamName"
       = f.label :team, {class: "control-label col-md-2"}
       .col-md-7
         .remote
-          = f.text_field(:team, class: "form-control typeahead", required: true, placeholder: "Name of the team", "v-model" => "namespace.namespace.team")
+          = f.text_field(:team, class: "form-control typeahead", required: true, placeholder: "Name of the team", "@input" => "$v.namespace.namespace.team.$touch()", "v-model.trim" => "namespace.namespace.team")
         span.fa.fa-search.form-control-feedback
+        span.help-block
+          span v-if="!$v.namespace.namespace.team.required"
+            | Team can't be blank
+            br
+          span v-if="!$v.namespace.namespace.team.available"
+            | Selected team does not exist
 
     .form-group
       = f.label :description, {class: "control-label col-md-2"}
@@ -21,4 +34,4 @@ div ref="form" class="collapse"
 
     .form-group
       .col-md-offset-2.col-md-7
-        = f.submit("Create", class: "btn btn-primary")
+        = f.submit("Create", class: "btn btn-primary", ":disabled" => "$v.$invalid")

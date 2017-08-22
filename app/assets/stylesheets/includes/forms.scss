@@ -47,3 +47,18 @@ textarea.fixed-size {
 .twitter-typeahead, .tt-dropdown-menu {
   width: 100%;
 }
+
+// help block
+.form-group {
+  .help-block {
+    display: none;
+    margin-bottom: 0;
+  }
+}
+.has-success,
+.has-warning,
+.has-error {
+  .help-block {
+    display: block;
+  }
+}
