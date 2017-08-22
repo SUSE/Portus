@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
+import Vuelidate from 'vuelidate';
 
+Vue.use(Vuelidate);
 Vue.use(VueResource);
 
 Vue.http.interceptors.push((_request, next) => {

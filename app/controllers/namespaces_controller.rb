@@ -11,20 +11,24 @@ class NamespacesController < ApplicationController
   # GET /namespaces
   # GET /namespaces.json
   def index
-    respond_to do |format|
-      format.html { skip_policy_scope }
-      format.json do
-        @special_namespaces = Namespace.where(
-          "global = ? OR namespaces.name = ?", true, current_user.username
-        ).order("created_at ASC")
-        @namespaces = policy_scope(Namespace).order(created_at: :asc)
+    if request.head?
+      check_namespace_by_name if params[:name]
+    else
+      respond_to do |format|
+        format.html { skip_policy_scope }
+        format.json do
+          @special_namespaces = Namespace.where(
+            "global = ? OR namespaces.name = ?", true, current_user.username
+          ).order("created_at ASC")
+          @namespaces = policy_scope(Namespace).order(created_at: :asc)
 
-        accessible_json = serialize_as_json(@namespaces)
-        special_json = serialize_as_json(@special_namespaces)
-        render json: {
-          accessible: accessible_json,
-          special:    special_json
-        }
+          accessible_json = serialize_as_json(@namespaces)
+          special_json = serialize_as_json(@special_namespaces)
+          render json: {
+            accessible: accessible_json,
+            special:    special_json
+          }
+        end
       end
     end
   end
@@ -114,6 +118,19 @@ class NamespacesController < ApplicationController
   end
 
   private
+
+  # Checks if namespaces exists based on the name parameter.
+  # Renders an empty response with 200 if exists or 404 otherwise.
+  def check_namespace_by_name
+    skip_policy_scope
+    namespace = Namespace.find_by(name: params[:name])
+
+    if namespace
+      head :ok
+    else
+      head :not_found
+    end
+  end
 
   # Fetch the namespace to be created from the given parameters. Note that this
   # method assumes that the @team instance object has already been set.

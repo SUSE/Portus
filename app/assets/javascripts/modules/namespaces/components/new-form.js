@@ -1,9 +1,10 @@
 import Vue from 'vue';
 
-import EventBus from '~/utils/eventbus';
+import { required } from 'vuelidate/lib/validators';
 
 import { setTypeahead } from '~/utils/typeahead';
 
+import EventBus from '~/utils/eventbus';
 import Alert from '~/shared/components/alert';
 import FormMixin from '~/shared/mixins/form';
 
@@ -24,8 +25,13 @@ export default {
     return {
       namespace: {
         namespace: {
+          name: '',
           team: this.teamName || '',
         },
+      },
+      timeout: {
+        name: null,
+        team: null,
       },
     };
   },
@@ -37,6 +43,7 @@ export default {
         const name = namespace.attributes.clean_name;
 
         this.toggleForm();
+        this.$v.$reset();
         set(this.namespace, 'namespace', {});
 
         Alert.show(`Namespace '${name}' was created successfully`);
@@ -53,12 +60,92 @@ export default {
     },
   },
 
+  validations: {
+    namespace: {
+      namespace: {
+        name: {
+          required,
+          format(value) {
+            // extracted from models/namespace.rb
+            const regexp = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
+
+            // required already taking care of this
+            if (value === '') {
+              return true;
+            }
+
+            return regexp.test(value);
+          },
+          available(value) {
+            clearTimeout(this.timeout.name);
+
+            // required already taking care of this
+            if (value === '') {
+              return true;
+            }
+
+            return new Promise((resolve) => {
+              const searchName = () => {
+                const promise = NamespacesService.existsByName(value);
+
+                promise.then((exists) => {
+                  // leave it for the back-end
+                  if (exists === null) {
+                    resolve(true);
+                  }
+
+                  // if exists, invalid
+                  resolve(!exists);
+                });
+              };
+
+              this.timeout.name = setTimeout(searchName, 1000);
+            });
+          },
+        },
+        team: {
+          required,
+          available(value) {
+            clearTimeout(this.timeout.team);
+
+            // required already taking care of this
+            if (value === '') {
+              return true;
+            }
+
+            return new Promise((resolve) => {
+              const searchTeam = () => {
+                const promise = NamespacesService.teamExists(value);
+
+                promise.then((exists) => {
+                  // leave it for the back-end
+                  if (exists === null) {
+                    resolve(true);
+                  }
+
+                  // if exists, valid
+                  resolve(exists);
+                });
+              };
+
+              this.timeout.team = setTimeout(searchTeam, 1000);
+            });
+          },
+        },
+      },
+    },
+  },
+
   mounted() {
     const $team = setTypeahead(TYPEAHEAD_INPUT, '/namespaces/typeahead/%QUERY');
 
     // workaround because of typeahead
-    $team.on('change', () => {
+    const updateTeam = () => {
       set(this.namespace.namespace, 'team', $team.val());
-    });
+    };
+
+    $team.on('typeahead:selected', updateTeam);
+    $team.on('typeahead:autocompleted', updateTeam);
+    $team.on('change', updateTeam);
   },
 };
