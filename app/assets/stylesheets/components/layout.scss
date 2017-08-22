@@ -89,9 +89,6 @@ body.login {
   .forgot-password {
     text-align: right;
   }
-  h2 {
-    color: $white
-  }
 }
 
 body:not([class*="login"]) {
