@@ -25,6 +25,7 @@ class Repository < ActiveRecord::Base
   has_many :stars, dependent: :delete_all
   has_many :comments, dependent: :delete_all
 
+  delegate :registry, to: :namespace
   # We don't validate the format because we get that from the registry, and
   # it's guaranteed to be well-formatted there.
   validates :name, presence: true, uniqueness: { scope: "namespace_id" }
@@ -73,6 +74,9 @@ class Repository < ActiveRecord::Base
 
     super(options).tap do |json|
       json["full_name"] = full_name
+      json["registry_hostname"] = registry.hostname
+      json["stars"] = stars.count
+      json["updated_at"] = updated_at
       json["namespace"] = namespace.as_json(only: [:id, :name])
       json["team"] = namespace.team.as_json(only: [:id, :name])
       json["tags"] = groupped_tags
