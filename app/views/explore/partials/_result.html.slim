@@ -3,8 +3,16 @@
     - repo_count = @repositories.count
     | #{pluralize(repo_count, 'repository')} #{repo_count == 1 ? "was" : "were"} found
   ul.result-list
-    - @repositories.each do |r|
-      = render partial: 'explore/partials/result_item', locals: { repository: r }
+    <result-item :repository="repository" v-for="repository in repositories" :key="repository.full_name"></result-item>
 
 - if params[:explore] && !@repositories.any?
   h2 Your search did not match any repositories.
+
+- content_for :js_header do
+  javascript:
+    window.repositories = #{raw @repositories.to_json};
+
+- content_for :js_body do
+  - cache "explore/components/templates" do
+    script#js-result-item-tmpl type="text/x-template"
+      = render "explore/components/result_item"
