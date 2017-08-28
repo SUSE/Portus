@@ -14,23 +14,59 @@ feature "Admin - Registries panel" do
     end
   end
 
-  describe "create" do
-    it "shows an alert on error, and you can force it afterwards" do
+  describe "#create", js: true do
+    it "shows an error if name is blank" do
       visit new_admin_registry_path
+
+      fill_in "registry_name", with: "registry"
+      fill_in "registry_name", with: ""
+
+      expect(page).to have_content("Name can't be blank")
+      expect(page).to have_button("Create", disabled: true)
+    end
+
+    it "shows an error if hostname is blank" do
+      visit new_admin_registry_path
+
+      fill_in "registry_hostname", with: "registry"
+      fill_in "registry_hostname", with: ""
+
+      expect(page).to have_content("Hostname can't be blank")
+      expect(page).to have_button("Create", disabled: true)
+    end
+
+    it "shows an error if hostname is not reachable" do
+      visit new_admin_registry_path
+
       expect(page).to_not have_content("Skip remote checks")
+
       fill_in "registry_name", with: "registry"
       fill_in "registry_hostname", with: "url_not_known:1234"
-      click_button "Create"
 
       expect(page).to have_content("Skip remote checks")
       expect(page).to have_content("something went wrong")
-      expect(Registry.any?).to be_falsey
+      expect(page).to have_button("Create", disabled: true)
+    end
+
+    it "shows an error (hostname), but you can force it afterwards" do
+      visit new_admin_registry_path
+
+      fill_in "registry_name", with: "registry"
+      # for each field we do an ajax request to validate
+      # the sleep below is to delay the hostname change
+      # and guarantee the ajax responses order
+      # and avoid flaky and unrealistic state
+      sleep 1
+      fill_in "registry_hostname", with: "url_not_known:1234"
+
+      expect(page).to have_content("Skip remote checks")
+      expect(page).to have_css("#force")
 
       # Use the force, Luke.
 
-      fill_in "registry_name", with: "registry"
-      fill_in "registry_hostname", with: "url_not_known:1234"
       check "force"
+      expect(page).to have_button("Create")
+
       click_button "Create"
 
       expect(page).to have_current_path(admin_registries_path)
@@ -67,7 +103,7 @@ feature "Admin - Registries panel" do
     end
   end
 
-  describe "update" do
+  describe "update", js: true do
     let!(:registry) { create(:registry) }
 
     before :each do
@@ -83,17 +119,16 @@ feature "Admin - Registries panel" do
       expect(page).to_not have_css("#registry_hostname")
     end
 
-    it "updates as expected" do
-      fill_in "registry_hostname", with: "lala"
-      click_button "Update"
+    it "shows an error if hostname is not reachable" do
+      fill_in "registry_name", with: "registry"
+      fill_in "registry_hostname", with: "url_not_known:1234"
 
-      expect(page).to have_content("Registry updated successfully!")
-      expect(page).to have_current_path(admin_registries_path)
-      registry.reload
-      expect(registry.hostname).to eq "lala"
+      expect(page).to have_content("Skip remote checks")
+      expect(page).to have_content("something went wrong")
+      expect(page).to have_button("Update", disabled: true)
     end
 
-    it "shows advanced options when clicking on Show Advanced", js: true do
+    it "shows advanced options when clicking on Show Advanced" do
       expect(page).not_to have_css("#advanced")
 
       click_button "Show Advanced"
@@ -103,7 +138,7 @@ feature "Admin - Registries panel" do
       expect(page).to have_css("#advanced.collapse.in")
     end
 
-    it "hides advanced options when clicking on Hide Advanced", js: true do
+    it "hides advanced options when clicking on Hide Advanced" do
       click_button "Show Advanced"
       wait_for_effect_on("#advanced")
 

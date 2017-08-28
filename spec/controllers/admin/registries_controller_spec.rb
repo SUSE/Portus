@@ -9,8 +9,15 @@ RSpec.describe Admin::RegistriesController, type: :controller do
 
   describe "GET #index" do
     it "returns http success" do
+      create(:registry)
+
       get :index
       expect(response).to have_http_status(:success)
+    end
+
+    it "redirects to #new if no registry is found" do
+      get :index
+      expect(response).to have_http_status(:redirect)
     end
   end
 
@@ -28,11 +35,12 @@ RSpec.describe Admin::RegistriesController, type: :controller do
 
   describe "POST #create" do
     context "not using the Force" do
-      it "redirects when there's something wrong with the reachability of the registry" do
+      it "renders 'new' with unprocessable entity status (422)
+          when there's something wrong with the reachability of the registry" do
         expect do
           post :create, registry: attributes_for(:registry)
         end.to change(Registry, :count).by(0)
-        expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -97,14 +105,38 @@ RSpec.describe Admin::RegistriesController, type: :controller do
       expect(Registry.first.use_ssl).to be_falsey
     end
 
-    it "does not allow to update if there are repos" do
-      old = registry.hostname
+    it "renders 'edit' with unprocessable entity status (422)
+        when there's something wrong with the reachability of the registry" do
+      expect do
+        put :update, id: registry.id, registry: { hostname: "lala" }
+      end.to change(Registry, :count).by(0)
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "renders 'edit' with unprocessable entity status (422)
+        when registry is invalid" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
+      expect do
+        put :update, id: registry.id, registry: { name: "" }
+      end.to change(Registry, :count).by(0)
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "does not allow to update hostname if there are repos" do
       create(:repository)
+      old = registry.hostname
       put :update, id: registry.id, registry: { hostname: "lala" }
       expect(Registry.first.hostname).to eq old
     end
 
+    it "does not allow to update name if empty" do
+      put :update, id: registry.id, registry: { name: "" }
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
     it "updates the registry" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
+
       put :update, id: registry.id, registry: { use_ssl: true, hostname: "lala" }
       reg = Registry.first
       expect(reg.use_ssl).to be_truthy

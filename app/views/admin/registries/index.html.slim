@@ -24,6 +24,7 @@
               th Name
               th Hostname
               th SSL
+              th.text-center Reachable
               th
           tbody
             - @registries.each do |registry|
@@ -32,6 +33,9 @@
                 td= registry.hostname
                 td
                   i.fa.fa-lg class="fa-toggle-#{registry.use_ssl? ? 'on': 'off'}" title="SSL in the comunication between Portus and this registry is #{registry.use_ssl? ? "enabled" : "disabled"}"
+                td.text-center.registry-status
+                  - cache "registry#{registry.id}_status", expires_in: 30.minutes do
+                    = registry_status_icon(registry)
                 td
                   a href="#{edit_admin_registry_path(registry.id)}" Edit
 

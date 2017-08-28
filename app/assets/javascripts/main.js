@@ -13,13 +13,11 @@ import 'bootstrap/js/collapse';
 // Life it up
 import 'vendor/lifeitup_layout';
 
+import './bootstrap';
 import './vue-shared';
 
-// Require tree.
-// NOTE: This should be moved into proper modules.
-import './bootstrap';
-
-// new modules structure
+// modules
+import './modules/admin/registries';
 import './modules/users';
 import './modules/dashboard';
 import './modules/explore';
