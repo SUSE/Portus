@@ -48,7 +48,7 @@ $(() => {
 
     methods: {
       loadData() {
-        const id = this.$refs.repoLink.dataset.id;
+        const id = this.$refs.repoTitle.dataset.id;
 
         RepositoriesService.get(id).then((response) => {
           set(this, 'tags', response.body.tags);
@@ -104,7 +104,7 @@ $(() => {
             Alert.show(message);
 
             if (!this.tags.length) {
-              const namespaceHref = this.$refs.repoLink.querySelector('a').href;
+              const namespaceHref = this.$refs.repoLink.href;
               window.location.href = namespaceHref;
             }
           }

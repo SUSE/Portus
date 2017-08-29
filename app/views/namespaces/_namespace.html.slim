@@ -18,8 +18,8 @@ tr id="namespace_#{namespace.id}"
           data-method="put"
           rel="nofollow"
           href=url_for(change_visibility_namespace_path(namespace, visibility: "visibility_private"))
-          ]
-          i.fa.fa-lock
+        ]
+          i.fa.fa-fw.fa-lock
       a.btn[
         id="protected"
         class=(namespace.visibility_protected? ? "btn-primary" : "btn-default")
@@ -30,7 +30,7 @@ tr id="namespace_#{namespace.id}"
         rel="nofollow"
         href=url_for(change_visibility_namespace_path(namespace, visibility: "visibility_protected"))
       ]
-        i.fa.fa-users
+        i.fa.fa-fw.fa-users
       a.btn[
         id="public"
         class=(namespace.visibility_public? ? "btn-primary" : "btn-default")
@@ -41,4 +41,4 @@ tr id="namespace_#{namespace.id}"
         rel="nofollow"
         href=url_for(change_visibility_namespace_path(namespace, visibility: "visibility_public"))
       ]
-        i.fa.fa.fa-globe
+        i.fa.fa-fw.fa.fa-globe

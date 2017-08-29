@@ -3,22 +3,21 @@
     .row
       .col-sm-6
         h5
-          small
-            a[data-placement="right"
-              data-toggle="popover"
-              data-container=".panel-heading"
-              data-content="<p>Information about the namespace.</p>"
-              data-original-title="What's this?"
-              tabindex="0" data-html="true"]
-                i.fa.fa-info-circle
+          a[data-placement="right"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="<p>Information about the namespace.</p>"
+            data-original-title="What's this?"
+            tabindex="0" data-html="true"]
+              i.fa.fa-info-circle
           strong
-            '#{@namespace.clean_name}
+            '  #{@namespace.clean_name}
           ' namespace
       .col-sm-6.text-right
         - if can_manage_namespace?(@namespace)
           button.btn.btn-link.btn-xs.edit-namespace-link
             i.fa.fa-pencil
-            | Edit namespace
+            |  Edit namespace
 
   .panel-body
     .description
@@ -59,7 +58,7 @@
                   href=url_for(namespace_webhooks_path(@namespace))
                   ]
                   i.fa.fa-eye
-                  | Show webhooks
+                  |  Show webhooks
         h5.align-top-inline
           'Namespace:
           strong

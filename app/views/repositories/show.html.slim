@@ -1,8 +1,5 @@
 .header.clearfix
-  h4 data-id="#{@repository.id}" ref="repoLink" class="repository-title pull-left"
-    = link_to @repository.namespace.clean_name, @repository.namespace
-    | /
-    = @repository.name
+  h4 data-id="#{@repository.id}" ref="repoTitle" class="repository-title pull-left"
     a[
       href="javascript:void(0)"
       class="btn-link repository-information-icon"
@@ -13,6 +10,11 @@
       data-content="#{render_repository_information(@repository)}"
       data-html="true"]
       i.fa.fa-info-circle
+    | &nbsp;
+    = link_to @repository.namespace.clean_name, @repository.namespace, { ref: 'repoLink' }
+    | /
+    = @repository.name
+
 
   .btn-toolbar.pull-right
     .btn-group
@@ -24,6 +26,7 @@
           i.fa.fa-star
         - else
           i.fa.fa-star-o
+        | &nbsp;
         span#star-counter.badge
           = @repository.stars.count
 

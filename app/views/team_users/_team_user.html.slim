@@ -8,7 +8,7 @@ tr id="team_user_#{team_user.id}"
         = f.select(:role, TeamUser.roles.keys.map {|role| [role.titleize,role]}, {}, {class: 'form-control'})
         = button_tag(type: 'submit', class: 'btn btn-primary pull-right') do
           i.fa.fa-check
-          |Save
+          |  Save
 
         .errors
   - if can_manage_team?(team_user.team)
