@@ -48,11 +48,11 @@
               - if current_user.application_tokens.count >= User::APPLICATION_TOKENS_MAX
                 a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[disabled="disabled" role="button"]
                   i.fa.fa-plus-circle
-                  | Create new token
+                  |  Create new token
               - else
                 a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
                   i.fa.fa-plus-circle
-                  | Create new token
+                  |  Create new token
         .panel-body
           .table-responsive
             table.table.table-striped.table-hover
