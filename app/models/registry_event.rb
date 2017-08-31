@@ -3,7 +3,7 @@
 # Table name: registry_events
 #
 #  id         :integer          not null, primary key
-#  event_id   :string(255)      default("")
+#  event_id   :string(255)      default(""), not null
 #  repository :string(255)      default("")
 #  tag        :string(255)      default("")
 #  created_at :datetime         not null
