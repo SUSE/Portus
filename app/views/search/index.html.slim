@@ -11,8 +11,8 @@
       .col-xs-12.col-md-8.col-lg-9.search.search-result
         - case params[:type]
           - when 'repositories'
-          = render template: "search/_repositories.html.slim"
-          -when 'namespaces'
-          = render template: "search/_namespaces.html.slim"
-          -when 'teams'
-          = render template: "search/_teams.html.slim"
+            = render template: "search/_repositories.html.slim"
+          - when 'namespaces'
+            = render template: "search/_namespaces.html.slim"
+          - when 'teams'
+            = render template: "search/_teams.html.slim"
