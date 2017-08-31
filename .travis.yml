@@ -56,6 +56,9 @@ script:
   # Javascript style
   - yarn run eslint
 
+  # Test that the SUSE package can be built.
+  - packaging/suse/make_spec.sh portus
+
 env:
   global:
   # OSC_CREDENTIALS are kept secret
@@ -72,4 +75,4 @@ after_success:
 addons:
   code_climate:
     repo_token: 18a0cf6c35e0c801678f12f444051c33e0390ce0efa91ec06a2aa5068b10c19e
-  mariadb: '10.0'
+  mariadb: '10.2'

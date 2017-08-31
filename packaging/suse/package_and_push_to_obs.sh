@@ -10,6 +10,11 @@
 # http://docs.travis-ci.com/user/environment-variables/#Using-Settings
 
 if [ $TRAVIS_PULL_REQUEST == "false" ] && [ $OBS_BRANCH ] && [ $TRAVIS_COMMIT ] && [ $OSC_CREDENTIALS ] && [ $OBS_REPO ] && [ $TRAVIS_BRANCH == $OBS_BRANCH ];then
+  # Clean up the environment
+  rm -r build
+  rm -r *.orig
+  git checkout -- .
+
   packaging/suse/make_spec.sh portus
   curl -X PUT -T packaging/suse/portus.spec -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/portus.spec?comment=update_portus.spec\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
   for p in packaging/suse/patches/*.patch;do
