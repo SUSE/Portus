@@ -1,8 +1,8 @@
 diff --git a/Gemfile b/Gemfile
-index c381ef85d581..3ce7b07db103 100644
+index 0afcfc575188..3f871ae49680 100644
 --- a/Gemfile
 +++ b/Gemfile
-@@ -52,7 +52,7 @@ def packaging?
+@@ -57,7 +57,7 @@ def packaging?
  end
  
  # If the deployment is done through Puma, include it in the bundle.
@@ -11,7 +11,7 @@ index c381ef85d581..3ce7b07db103 100644
  
  # Configuration management
  gem "cconfig", "~> 1.1.0"
-@@ -71,6 +71,7 @@ unless packaging?
+@@ -76,6 +76,7 @@ unless packaging?
      gem "pry-rails"
      gem "git-review", require: false
      gem "rack-mini-profiler", require: false
@@ -19,7 +19,7 @@ index c381ef85d581..3ce7b07db103 100644
      gem "guard", require: false
      gem "guard-rubocop", require: false
      gem "guard-rspec", require: false
-@@ -87,7 +88,6 @@ unless packaging?
+@@ -92,7 +93,6 @@ unless packaging?
      gem "factory_girl_rails"
      gem "ffaker"
      gem "rubocop", "~> 0.41.2", require: false
@@ -28,29 +28,32 @@ index c381ef85d581..3ce7b07db103 100644
      gem "md2man", "~>5.1.1", require: false
      gem "binman", "~>5.1.0"
 diff --git a/Gemfile.lock b/Gemfile.lock
-index 1002b93fbe80..51a627efb99c 100644
+index 2198731871ca..9e8c6f5830a2 100644
 --- a/Gemfile.lock
 +++ b/Gemfile.lock
-@@ -129,7 +129,7 @@ GEM
+@@ -143,7 +143,7 @@ GEM
        octokit (~> 2.0.0)
        yajl-ruby
      gli (2.8.1)
 -    globalid (0.3.7)
 +    globalid (0.3.5)
        activesupport (>= 4.1.0)
-     gravatar_image_tag (1.2.0)
-     guard (2.13.0)
-@@ -182,15 +182,15 @@ GEM
+     grape (0.19.2)
+       activesupport
+@@ -220,9 +220,9 @@ GEM
      mime-types (3.1)
        mime-types-data (~> 3.2015)
      mime-types-data (3.2016.0521)
 -    mini_portile2 (2.0.0)
--    minitest (5.8.4)
--    multi_json (1.11.2)
+-    minitest (5.10.2)
+-    multi_json (1.12.1)
 +    mini_portile (0.5.2)
 +    minitest (5.7.0)
 +    multi_json (1.8.2)
+     multi_xml (0.6.0)
      multipart-post (2.0.0)
+     mustermann (1.0.0)
+@@ -231,8 +231,8 @@ GEM
      mysql2 (0.4.7)
      nenv (0.3.0)
      net-ldap (0.11)
@@ -61,7 +64,7 @@ index 1002b93fbe80..51a627efb99c 100644
      notiffany (0.0.8)
        nenv (~> 0.1)
        shellany (~> 0.0)
-@@ -218,7 +218,7 @@ GEM
+@@ -260,7 +260,7 @@ GEM
        activerecord (>= 3.0)
        i18n (>= 0.5.0)
        railties (>= 3.0.0)
@@ -70,7 +73,7 @@ index 1002b93fbe80..51a627efb99c 100644
      pundit (1.0.1)
        activesupport (>= 3.0.0)
      quiet_assets (1.1.0)
-@@ -241,7 +241,7 @@ GEM
+@@ -285,7 +285,7 @@ GEM
        sprockets-rails
      rails-deprecated_sanitizer (1.0.3)
        activesupport (>= 4.2.0.alpha)
@@ -79,7 +82,7 @@ index 1002b93fbe80..51a627efb99c 100644
        activesupport (>= 4.2.0.beta, < 5.0)
        nokogiri (~> 1.6.0)
        rails-deprecated_sanitizer (>= 1.0.1)
-@@ -259,11 +259,11 @@ GEM
+@@ -303,11 +303,11 @@ GEM
        rake (>= 0.8.7)
        thor (>= 0.18.1, < 2.0)
      rainbow (2.1.0)
@@ -93,8 +96,8 @@ index 1002b93fbe80..51a627efb99c 100644
      responders (2.1.0)
        railties (>= 4.2.0, < 5)
      rouge (1.11.1)
-@@ -331,18 +331,18 @@ GEM
-       temple (~> 0.6.6)
+@@ -375,18 +375,18 @@ GEM
+       temple (>= 0.7.6, < 0.9)
        tilt (>= 1.3.3, < 2.1)
      slop (3.6.0)
 -    sprockets (2.12.4)
@@ -108,14 +111,14 @@ index 1002b93fbe80..51a627efb99c 100644
        actionpack (>= 3.0)
        activesupport (>= 3.0)
        sprockets (>= 2.8, < 4.0)
-     temple (0.6.7)
+     temple (0.8.0)
      terminal-table (1.5.2)
 -    thor (0.19.1)
 +    thor (0.18.1)
-     thread_safe (0.3.5)
+     thread_safe (0.3.6)
      tilt (1.4.1)
      timecop (0.7.4)
-@@ -422,7 +422,7 @@ DEPENDENCIES
+@@ -477,7 +477,7 @@ DEPENDENCIES
    poltergeist (~> 1.15.0)
    pry-rails
    public_activity
