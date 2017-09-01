@@ -242,4 +242,45 @@ Looks for the following required certificate files in the specified folder:
     Runner.exec("cp", ["/var/log/apache2/error_log", File.join(PORTUS_ROOT, "log/production.log")])
     Runner.tar_files("log/production.log", "log/crono.log", "log/versions.log")
   end
+
+  ## TODO: duplicated stuff...
+
+  desc "get", "Fetches info for the given resource"
+  def get(*args)
+    if args.empty?
+      str = "You have to provide a resource. Available resources:\n"
+      ::Portusctl::API::Client.RESOURCES.each { |r| str += "  - #{r}\n" }
+      warn str
+      exit 1
+    end
+
+    client = ::Portusctl::API::Client.new
+    client.get(args.first, args[1..-1])
+  end
+
+  desc "create", "Create a given resource"
+  def create(*args)
+    if args.empty?
+      str = "You have to provide a resource. Available resources:\n"
+      ::Portusctl::API::Client.RESOURCES.each { |r| str += "  - #{r}\n" }
+      warn str
+      exit 1
+    end
+
+    client = ::Portusctl::API::Client.new
+    client.create(args.first, args[1..-1])
+  end
+
+  desc "delete", "Deletes a given resource"
+  def delete(*args)
+    if args.size != 2
+      str = "You have to provide a resource and the ID. Available resources:\n"
+      ::Portusctl::API::Client.RESOURCES.each { |r| str += "  - #{r}\n" }
+      warn str
+      exit 1
+    end
+
+    client = ::Portusctl::API::Client.new
+    client.delete(args.first, args.last)
+  end
 end

@@ -51,7 +51,7 @@ module API
               )
 
               if application_token.errors.empty?
-                status 200
+                status 201
                 { plain_token: plain_token }
               else
                 status 400
