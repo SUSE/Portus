@@ -1,0 +1,60 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://registry.mssola.cat/api/v1/users/2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Portus-Auth:
+      - mssola:hSeKZmZ2VwrWCvp_sjJf
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 05 Sep 2017 07:51:05 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Request-Method:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Content-Type, api_key, Authorization, portus-auth
+      Vary:
+      - Accept-Encoding
+      Etag:
+      - W/"423579d57995c00b64759ee1fab14251"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - da477b54-2dfb-44a6-82c7-da34ebaae285
+      X-Runtime:
+      - '0.200734'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":2,"username":"mssola","email":"example@test.com","current_sign_in_at":"2017-09-04T10:09:38.000Z","last_sign_in_at":"2017-09-01T10:24:37.000Z","created_at":"2017-08-01T13:53:32.000Z","updated_at":"2017-09-04T11:53:56.000Z","admin":true,"enabled":true,"locked_at":null,"namespace_id":3,"display_name":null}'
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 07:51:05 GMT
+recorded_with: VCR 3.0.3

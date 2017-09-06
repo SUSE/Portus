@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://registry.mssola.cat/api/v1/users/99/application_tokens
+    body:
+      encoding: UTF-8
+      string: '{"application":"newone"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Portus-Auth:
+      - mssola:hSeKZmZ2VwrWCvp_sjJf
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 05 Sep 2017 14:44:09 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 2eacc3e3-1c78-468f-b65c-2df56489c6a4
+      X-Runtime:
+      - '0.176695'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error":"Not found"}'
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 14:44:09 GMT
+recorded_with: VCR 3.0.3

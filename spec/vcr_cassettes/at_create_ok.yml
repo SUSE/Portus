@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://registry.mssola.cat/api/v1/users/2/application_tokens
+    body:
+      encoding: UTF-8
+      string: '{"application":"newone"}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Portus-Auth:
+      - mssola:hSeKZmZ2VwrWCvp_sjJf
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 05 Sep 2017 14:45:42 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Request-Method:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Content-Type, api_key, Authorization, portus-auth
+      Vary:
+      - Accept-Encoding
+      Etag:
+      - W/"c71f9f78527b84804b9c3ba08e23bca1"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 3d147c7d-b902-454c-b35d-0b8e9ede2ecf
+      X-Runtime:
+      - '0.250029'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: ASCII-8BIT
+      string: '{"plain_token":"Y7j7xEz4gNQRTsyJocT-"}'
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 14:45:42 GMT
+recorded_with: VCR 3.0.3

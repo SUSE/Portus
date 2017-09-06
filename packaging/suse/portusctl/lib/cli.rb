@@ -248,27 +248,52 @@ Looks for the following required certificate files in the specified folder:
   desc "get", "Fetches info for the given resource"
   def get(*args)
     if args.empty?
-      str = "You have to provide a resource. Available resources:\n"
-      ::Portusctl::API::Client.RESOURCES.each { |r| str += "  - #{r}\n" }
-      warn str
+      puts "You have to provide a resource. Available resources:"
+      ::Portusctl::API::Client.print_resources
       exit 1
     end
 
     client = ::Portusctl::API::Client.new
-    client.get(args.first, args[1..-1])
+    puts client.get(args.first, args[1])
   end
 
   desc "create", "Create a given resource"
   def create(*args)
-    if args.empty?
+    if args.size < 2
       str = "You have to provide a resource. Available resources:\n"
       ::Portusctl::API::Client.RESOURCES.each { |r| str += "  - #{r}\n" }
       warn str
       exit 1
     end
 
+    if args[1].include?("=")
+      id = nil
+      params = args[1..-1]
+    else
+      id = args[1]
+      params = args[2..-1]
+    end
+
     client = ::Portusctl::API::Client.new
-    client.create(args.first, args[1..-1])
+    ret = client.create(args.first, id, params)
+    return if ret.empty?
+
+    ret.each { |line| puts line }
+    exit 1
+  end
+
+  desc "update", "Update a given resource"
+  def update(*args)
+    # TODO: be more exact
+    if args.size < 3
+      str = "You have to provide a resource and the ID. Available resources:\n"
+      ::Portusctl::API::Client.RESOURCES.each { |r| str += "  - #{r}\n" }
+      warn str
+      exit 1
+    end
+
+    client = ::Portusctl::API::Client.new
+    puts client.update(args.first, args[1], args[2..-1])
   end
 
   desc "delete", "Deletes a given resource"
@@ -281,6 +306,6 @@ Looks for the following required certificate files in the specified folder:
     end
 
     client = ::Portusctl::API::Client.new
-    client.delete(args.first, args.last)
+    puts client.delete(args.first, args[1])
   end
 end

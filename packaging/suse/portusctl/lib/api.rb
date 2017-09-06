@@ -1,21 +1,20 @@
-require "json"
+# TODO: do not require all
+require "active_support/all"
 
-# TODO: it should be more OO, as in, each resource is a class subclassing a base
-# class. The base class does the usual stuff, while each subclass will overwrite
-# some behavior
+require "net/http"
+
+require_relative "api/base"
+require_relative "api/application_token"
+require_relative "api/user"
 
 module Portusctl
   module API
     class Client
       API_VERSION = "v1".freeze
 
-      # TODO: allow singular (e.g. delete user 3)
-      RESOURCES = ["users", "application_tokens"].freeze
-
-      # TODO: can this be taken from grape ?
-      PARAMETERS = {
-        "users"              => [["username", "email", "password"], ["display_name"]],
-        "application_tokens" => [["application", "id"], []]
+      RESOURCES = {
+        "users"              => ["user", "u"],
+        "application_tokens" => ["application_token", "at"]
       }.freeze
 
       def initialize
@@ -24,87 +23,89 @@ module Portusctl
         @server   = ENV["PORTUSCTL_API_SERVER"]
       end
 
-      def get(resource, args = [])
-        test!
-
-        if resource == "application_tokens"
-          raise "We need the ID of the user!" if args.empty?
-          resource = "users"
-          tail = "/#{args.first}/application_tokens"
-        else
-          tail = args.empty? ? "" : "/#{args.join("/")}"
-        end
-
-        resp = request("get", resource, tail)
-        if resp.code.to_i == 200
-          json = JSON.parse(resp.body)
-          puts JSON.pretty_generate(json)
-        end
+      def get(resource, id = nil)
+        call_api(:get, 200, resource, id)
       end
 
-      def create(resource, args = [])
-        test!
+      def create(resource, id, args = [])
+        call_api(:create, 201, resource, id, args)
+      end
 
-        params = check_arguments(resource, args)
-        original = resource
-
-        # TODO: yikes ... ugly...
-        if resource == "application_tokens"
-          raise "We need the ID of the user!" if args.empty?
-          resource = "users"
-          tail = "/#{params["id"]}/application_tokens"
-          params.delete("id")
-          body = params
-        else
-          body = { "user" => params }
-          tail = ""
-        end
-
-        req, uri = bare_request("post", resource, tail)
-        req["Content-Type"] = "application/json"
-        req.body = body.to_json
-        resp = do_request(req, uri)
-
-        if resp.code.to_i == 201
-          puts "Resource '#{original}' created"
-          # TODO: improve
-          puts resp.body if resp.body
-        else
-          puts "Could not create '#{original}' resource:"
-          handle_error(resp)
-        end
+      def update(resource, id, args = [])
+        call_api(:update, 200, resource, id, args)
       end
 
       def delete(resource, id)
-        test!
+        call_api(:delete, 204, resource, id)
+      end
 
-        resource = "users/application_tokens" if resource == "application_tokens"
-        tail     = "/#{id}"
-        resp     = request("delete", resource, tail)
-
-        # TODO
-        if resp.code.to_i == 204
-          puts "Resource '#{resource}' deleted"
+      def self.normalize_resource(resource)
+        if ::Portusctl::API::Client::RESOURCES.include? resource
+          resource
         else
-          puts "Could not remove resource"
+          found = nil
+
+          ::Portusctl::API::Client::RESOURCES.each do |k, v|
+            if v.include? resource
+              found = k
+              break
+            end
+          end
+
+          found
+        end
+      end
+
+      def self.print_resources
+        ::Portusctl::API::Client::RESOURCES.each do |k, v|
+          puts "  - #{k} (aka: #{v.join(", ")})"
         end
       end
 
       protected
 
-      def request(method, resource, tail)
-        req, uri = bare_request(method, resource, tail)
-        do_request(req, uri)
+      def call_api(cmd, code, resource, id, args = [])
+        handler, err = fetch(cmd, resource, id, args)
+        return err unless err.blank?
+
+        req, uri = request(guess_method(cmd), handler.resource, handler.tail)
+        if cmd == :create || cmd == :update
+          # Fix arguments.
+          msg = handler.send("#{cmd}_arguments!".to_sym)
+          return msg unless msg.blank?
+
+          # Add request body
+          req["Content-Type"] = "application/json"
+          req.body = handler.body
+        end
+        resp = perform_request(req, uri)
+
+        if resp.code.to_i == code
+          handler.send("on_#{cmd}_ok".to_sym, resp)
+        else
+          handler.send("on_#{cmd}_fail".to_sym, resp)
+        end
       end
 
-      def bare_request(method, resource, tail)
+      def guess_method(cmd)
+        case cmd
+        when :create
+          "post"
+        when :update
+          "put"
+        else
+          cmd.to_s
+        end
+      end
+
+      def request(method, resource, tail)
         uri = URI.join(@server, "/api/#{API_VERSION}/#{resource}#{tail}")
         req = Net::HTTP.const_get(method.capitalize).new(uri)
         req["PORTUS-AUTH"] = "#{@username}:#{@secret}"
         [req, uri]
       end
 
-      def do_request(request, uri)
+      def perform_request(request, uri)
         options = { use_ssl: uri.scheme == "https", open_timeout: 2 }
 
         Net::HTTP.start(uri.hostname, uri.port, options) do |http|
@@ -112,42 +113,16 @@ module Portusctl
         end
       end
 
-      def check_arguments(resource, args)
-        params = PARAMETERS[resource].dup
-        final = {}
+      def fetch(method, resource, id, args)
+        return [nil, "Not all env. variables have been set"] unless @username && @secret && @server
 
-        args.each do |arg|
-          lval, rval = arg.split("=")
+        nresource = ::Portusctl::API::Client.normalize_resource(resource)
+        return [nil, "Unknown resource '#{resource}'"] unless nresource
 
-          if !params.first.include?(lval) && !params.last.include?(lval)
-            warn "Ignoring unknown field '#{lval}'..."
-            next
-          end
-
-          final[lval] = rval
-          params.each { |p| p.delete(lval) }
-        end
-
-        params.first.each { |p| warn "You need to set the '#{p}' field." }
-        exit 1 unless params.first.empty?
-
-        final
-      end
-
-      # TODO: check that resource exists
-      def test!
-        unless @username && @secret && @server
-          raise StandardError, "Not all env. variables have been set"
-        end
-      end
-
-      def handle_error(resp)
-        data = JSON.parse(resp.body)
-        puts data.inspect
-        data["errors"].each do |k, v|
-          puts "  - #{k}:"
-          v.each { |l| puts "    - #{l.capitalize}." }
-        end
+        klass = nresource.camelize.singularize
+        k = "::Portusctl::API::#{klass}".constantize.new(method, nresource, id, args)
+        err = k.validate!
+        [k, err]
       end
     end
   end
