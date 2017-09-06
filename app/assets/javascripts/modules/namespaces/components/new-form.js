@@ -44,7 +44,10 @@ export default {
 
         this.toggleForm();
         this.$v.$reset();
-        set(this.namespace, 'namespace', {});
+        set(this.namespace, 'namespace', {
+          name: '',
+          team: this.teamName || '',
+        });
 
         Alert.show(`Namespace '${name}' was created successfully`);
         EventBus.$emit('namespaceCreated', namespace);
