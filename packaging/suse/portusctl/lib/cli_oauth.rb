@@ -24,6 +24,7 @@ module CliOAuth
       option "oauth-gitlab-secret", desc: "OAuth: Gitlab secret"
       option "oauth-gitlab-group", desc: "OAuth: Gitlab group restriction"
       option "oauth-gitlab-domain", desc: "OAuth: Gitlab email's domain restriction"
+      option "oauth-gitlab-server", desc: "OAuth: Gitlab server"
       option "oauth-bitbucket-enable",
         desc: "OAuth: Bitbucket enable", type: :boolean, default: false
       option "oauth-bitbucket-key", desc: "OAuth: Bitbucket key"

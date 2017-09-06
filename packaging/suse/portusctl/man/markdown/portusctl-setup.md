@@ -181,6 +181,9 @@ first time.
 **--oauth-gitlab-domain**
   If defined, then emails with certain domain are allowed.
 
+**--oauth-gitlab-server**
+  The Gitlab server to be used. If empty, then https://gitlab.com is assumed.
+
 **--oauth-bitbucket-enable**
   Enable authentication with Bitbucket.
 
