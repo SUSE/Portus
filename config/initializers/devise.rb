@@ -243,6 +243,7 @@ Devise.setup do |config|
   end
 
   if APP_CONFIG.enabled? "oauth.open_id"
+    require "openid/store/filesystem"
     options = { store: OpenID::Store::Filesystem.new("/tmp") }
     unless APP_CONFIG["oauth"]["open_id"]["identifier"].blank?
       options[:identifier] = APP_CONFIG["oauth"]["open_id"]["identifier"]
@@ -256,9 +257,14 @@ Devise.setup do |config|
   end
 
   if APP_CONFIG.enabled? "oauth.gitlab"
+    site = if APP_CONFIG["oauth"]["gitlab"]["server"].blank?
+      "https://gitlab.com"
+    else
+      APP_CONFIG["oauth"]["gitlab"]["server"]
+    end
+    
     config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["id"],
-      APP_CONFIG["oauth"]["gitlab"]["secret"],
-                    client_options: { site: site }
+      APP_CONFIG["oauth"]["gitlab"]["secret"], client_options: { site: site }
   end
 
   if APP_CONFIG.enabled? "oauth.bitbucket"
