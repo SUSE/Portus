@@ -262,7 +262,7 @@ Devise.setup do |config|
     else
       APP_CONFIG["oauth"]["gitlab"]["server"]
     end
-    
+
     config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["id"],
       APP_CONFIG["oauth"]["gitlab"]["secret"], client_options: { site: site }
   end
