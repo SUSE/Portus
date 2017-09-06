@@ -252,8 +252,8 @@ Devise.setup do |config|
   end
 
   if APP_CONFIG.enabled? "oauth.github"
-    config.omniauth :github, APP_CONFIG["oauth"]["github"]["key"],
-      APP_CONFIG["oauth"]["github"]["secret"], scope: "user,read:org"
+    config.omniauth :github, APP_CONFIG["oauth"]["github"]["client_id"],
+      APP_CONFIG["oauth"]["github"]["client_secret"], scope: "user,read:org"
   end
 
   if APP_CONFIG.enabled? "oauth.gitlab"
@@ -263,7 +263,7 @@ Devise.setup do |config|
       APP_CONFIG["oauth"]["gitlab"]["server"]
     end
 
-    config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["id"],
+    config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["application_id"],
       APP_CONFIG["oauth"]["gitlab"]["secret"], client_options: { site: site }
   end
 

@@ -151,10 +151,10 @@ first time.
 **--oauth-github-enable**
   Enable authentication with Github.
 
-**--oauth-github-key**
+**--oauth-github-client-id**
   When using authentication with Github, use the given key to authenticate.
 
-**--oauth-github-secret**
+**--oauth-github-client-secret**
   When using authentication with Github, use the secret phrase to authenticate.
 
 **--oauth-github-organization**
@@ -169,7 +169,7 @@ first time.
 **--oauth-gitlab-enable**
   Enable authentication with Gitlab.
 
-**--oauth-gitlab-id**
+**--oauth-gitlab-application-id**
   When using authentication with Gitlab, use the given key to authenticate.
 
 **--oauth-gitlab-secret**

@@ -14,13 +14,13 @@ module CliOAuth
       option "oauth-open-id-identifier", desc: "OAuth: Open ID identifier"
       option "oauth-open-id-domain", desc: "OAuth: Open ID email's domain restriction"
       option "oauth-github-enable", desc: "OAuth: Github enable", type: :boolean, default: false
-      option "oauth-github-key", desc: "OAuth: Github key"
-      option "oauth-github-secret", desc: "OAuth: Github secret"
+      option "oauth-github-client-id", desc: "OAuth: Github key"
+      option "oauth-github-client-secret", desc: "OAuth: Github secret"
       option "oauth-github-organization", desc: "OAuth: Github organization restriction"
       option "oauth-github-team", desc: "OAuth: Github team restriction"
       option "oauth-github-domain", desc: "OAuth: Github email's domain restriction"
       option "oauth-gitlab-enable", desc: "OAuth: Gitlab enable", type: :boolean, default: false
-      option "oauth-gitlab-id", desc: "OAuth: Gitlab id"
+      option "oauth-gitlab-application-id", desc: "OAuth: Gitlab id"
       option "oauth-gitlab-secret", desc: "OAuth: Gitlab secret"
       option "oauth-gitlab-group", desc: "OAuth: Gitlab group restriction"
       option "oauth-gitlab-domain", desc: "OAuth: Gitlab email's domain restriction"
