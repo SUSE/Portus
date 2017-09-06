@@ -121,18 +121,31 @@ oauth:
     # Only members of organization's team can sign in/up with Github.
     organization: ""
     team: ""
-     # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+    # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
     domain: ""
 
   # Gitlab authentication support.
   gitlab:
     enabled: false
+    # Application credentials.
     id: ""
     secret: ""
     # Only member of the group can sign in/up with Gitlab.
     group: ""
      # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
     domain: ""
+
+  # Bitbucket authentication support. Need permission to read email.
+  bitbucket:
+    enabled: false
+    # Application credentials.
+    key: ""
+    secret: ""
+     # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+    domain: ""
+    options:
+      # Only members of team can sign in/up with Bitbucket. Need permission to read team membership.
+      team: ""
 
 # Set first_user_admin to true if you want that the first user that signs up
 # to be an admin.

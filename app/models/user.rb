@@ -41,7 +41,13 @@ class User < ActiveRecord::Base
   enabled_devise_modules = [:database_authenticatable, :registerable, :lockable,
                             :recoverable, :rememberable, :trackable, :validatable,
                             :omniauthable,
-                            omniauth_providers:  [:google_oauth2, :open_id, :github, :gitlab],
+                            omniauth_providers:  [
+                              :google_oauth2,
+                              :open_id,
+                              :github,
+                              :gitlab,
+                              :bitbucket
+                            ],
                             authentication_keys: [:username]]
 
   enabled_devise_modules.delete(:validatable) if Portus::LDAP.enabled?

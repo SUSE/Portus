@@ -261,6 +261,13 @@ Devise.setup do |config|
       APP_CONFIG["oauth"]["gitlab"]["secret"]
   end
 
+  if APP_CONFIG.enabled? "oauth.bitbucket"
+    require "omni_auth/strategies/bitbucket"
+    options = APP_CONFIG["oauth"]["bitbucket"]["options"].select { |_k, v| !v.blank? }
+    config.omniauth :bitbucket, APP_CONFIG["oauth"]["bitbucket"]["key"],
+      APP_CONFIG["oauth"]["bitbucket"]["secret"], options
+  end
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

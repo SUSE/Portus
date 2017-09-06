@@ -1,0 +1,66 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://bitbucket.org/site/oauth2/authorize?client_id=LSCsarbb6qJ97Z2fvr&redirect_uri=http://localhost:3005/users/auth/bitbucket/callback&response_type=code&state=b1737de8636e5019f4e31464089e50351168409df7527245
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 302
+      message: Found
+    headers:
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - max-age=900
+      Content-Type:
+      - text/html; charset=utf-8
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Date:
+      - Tue, 05 Sep 2017 12:46:09 GMT
+      Location:
+      - "/account/signin/?next=/site/oauth2/authorize%3Fclient_id%3DLSCsarbb6qJ97Z2fvr%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A3005%252Fusers%252Fauth%252Fbitbucket%252Fcallback%26response_type%3Dcode%26state%3Db1737de8636e5019f4e31464089e50351168409df7527245"
+      X-Served-By:
+      - app-164
+      Expires:
+      - Tue, 05 Sep 2017 12:46:09 GMT
+      Transfer-Encoding:
+      - chunked
+      X-Static-Version:
+      - 2aab7148a4ba
+      Etag:
+      - '"d41d8cd98f00b204e9800998ecf8427e"'
+      X-Content-Type-Options:
+      - nosniff
+      X-Render-Time:
+      - '0.00974607467651'
+      Connection:
+      - Keep-Alive
+      Last-Modified:
+      - Tue, 05 Sep 2017 12:46:09 GMT
+      X-Version:
+      - 2aab7148a4ba
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Count:
+      - '218'
+      X-Cache-Info:
+      - cached
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 12:48:12 GMT
+recorded_with: VCR 3.0.3
