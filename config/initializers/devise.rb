@@ -1,4 +1,3 @@
-require "openid/store/filesystem"
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -260,6 +259,13 @@ Devise.setup do |config|
     config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["id"],
       APP_CONFIG["oauth"]["gitlab"]["secret"],
                     client_options: { site: site }
+  end
+
+  if APP_CONFIG.enabled? "oauth.bitbucket"
+    require "omni_auth/strategies/bitbucket"
+    options = APP_CONFIG["oauth"]["bitbucket"]["options"].select { |_k, v| !v.blank? }
+    config.omniauth :bitbucket, APP_CONFIG["oauth"]["bitbucket"]["key"],
+                    APP_CONFIG["oauth"]["bitbucket"]["secret"], options
   end
 
   # ==> Warden configuration

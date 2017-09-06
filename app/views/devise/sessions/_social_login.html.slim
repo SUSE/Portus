@@ -25,3 +25,9 @@
       = link_to user_omniauth_authorize_path(provider: :gitlab), class: 'btn btn-primary btn-block btn-lg' do
         i.fa.fa-gitlab
         ' Gitlab
+
+  - if APP_CONFIG.enabled? "oauth.bitbucket"
+    .col-xs-12.col-sm-6
+      = link_to user_omniauth_authorize_path(provider: :bitbucket), class: 'btn btn-primary btn-block btn-lg' do
+        i.fa.fa-bitbucket
+        ' Bitbucket

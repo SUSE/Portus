@@ -76,7 +76,7 @@ describe Auth::OmniauthCallbacksController do
     end
   end
 
-  describe "GET github" do
+  describe "GET #github" do
     before do
       APP_CONFIG["oauth"] = { "github" => {
         "domain"       => "",
@@ -152,7 +152,7 @@ describe Auth::OmniauthCallbacksController do
     end
   end
 
-  describe "GET gitlab" do
+  describe "GET #gitlab" do
     before do
       APP_CONFIG["oauth"] = { "gitlab" => { "domain" => "", "group" => "" } }
       OmniAuth.config.add_mock(:gitlab,
@@ -188,6 +188,31 @@ describe Auth::OmniauthCallbacksController do
       get :gitlab
       expect(response).to redirect_to authenticated_root_url
       expect(subject.current_user).to_not eql nil
+    end
+  end
+
+  describe "GET #bitbucket" do
+    before do
+      APP_CONFIG["oauth"] = { "bitbucket" => {
+        "domain" => "",
+        "team"   => ""
+      } }
+      OmniAuth.config.add_mock(:gitlab,
+        provider:    "bitbucket",
+        uid:         "12345",
+        credentials: { token: "1234567890" },
+        info:        { email: "test@mail.net" })
+      request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:gitlab]
+      create :user, email: "test@mail.net"
+    end
+
+    context "when team is setted" do
+      it "when team matches, sign in and redirect to /" do
+        APP_CONFIG["oauth"]["bitbucket"]["team"] = "atlant-service"
+        get :bitbucket
+        expect(response).to redirect_to authenticated_root_url
+        expect(subject.current_user).to_not eql nil
+      end
     end
   end
 end

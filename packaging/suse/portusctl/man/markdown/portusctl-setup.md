@@ -181,6 +181,24 @@ first time.
 **--oauth-gitlab-domain**
   If defined, then emails with certain domain are allowed.
 
+**--oauth-gitlab-server**
+  The Gitlab server to be used. If empty, then https://gitlab.com is assumed.
+
+**--oauth-bitbucket-enable**
+  Enable authentication with Bitbucket.
+
+**--oauth-bitbucket-key**
+  When using authentication with Bitbucket, use the given key to authenticate.
+
+**--oauth-bitbucket-secret**
+  When using authentication with Bitbucket, use the given secret phrase to authenticate.
+
+**--oauth-bitbucket-domain**
+  If defined, then emails with certain domain are allowed.
+
+**--oauth-bitbucket-options-team**
+  If defined, then only members of the team are allowed.
+
 **--email-from**
   The email to be used as the sender for emails. It defaults to "portus@\<hostname\>".
 

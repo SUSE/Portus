@@ -16,6 +16,8 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   alias github google_oauth2
   # Callback for GitLab. Need API permission to check group membership.
   alias gitlab google_oauth2
+  # Callback for Bitbucket.
+  alias bitbucket google_oauth2
 
   private
 
