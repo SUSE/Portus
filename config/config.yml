@@ -152,6 +152,7 @@ oauth:
     options:
       # Only members of team can sign in/up with Bitbucket. Need permission to read team membership.
       team: ""
+
 # Set first_user_admin to true if you want that the first user that signs up
 # to be an admin.
 #
