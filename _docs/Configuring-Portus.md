@@ -290,6 +290,20 @@ security:
 Portus supports having multiple scanners enabled at the same time. You can read
 more about this [here](/features/6_security_scanning.html).
 
+### Anonymous browsing
+
+**Note**: feature only available in Portus 2.3 or later.
+
+You can configure Portus to allow anonymous users to explore public
+repositories. This feature is enabled by default:
+
+{% highlight yaml %}
+anonymous_browsing:
+  enabled: true
+{% endhighlight %}
+
+You can read more about this [here](/features/anonymous_browsing.html).
+
 ### Display name
 
 **Note**: feature only available in Portus 2.1 or later.
