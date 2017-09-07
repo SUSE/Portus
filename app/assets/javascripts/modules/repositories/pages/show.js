@@ -51,6 +51,7 @@ $(() => {
         const id = this.$refs.repoTitle.dataset.id;
 
         RepositoriesService.get(id).then((response) => {
+          set(this.state, 'repository', response.body);
           set(this, 'tags', response.body.tags);
           set(this, 'notLoaded', false);
           set(this, 'unableToFetchBefore', false);

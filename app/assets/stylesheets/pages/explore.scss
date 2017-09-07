@@ -1,0 +1,30 @@
+.explore {
+  h2 {
+    color: $white;
+    margin-bottom: 15px;
+  }
+
+  .result-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .result-item {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+  }
+
+  .result-item-name {
+    margin-top: 0;
+  }
+
+  .result-item-stars {
+    line-height: 23px; // 18 height + 5 diff between fonts
+
+    .fa-star {
+      color: $primary-colour;
+    }
+  }
+}

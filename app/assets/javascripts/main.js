@@ -22,6 +22,7 @@ import './bootstrap';
 // new modules structure
 import './modules/users';
 import './modules/dashboard';
+import './modules/explore';
 import './modules/repositories';
 import './modules/namespaces';
 import './modules/teams';

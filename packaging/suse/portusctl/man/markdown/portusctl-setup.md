@@ -218,6 +218,9 @@ first time.
   Setup a "dummy" security server. **NOTE**: do **not** use this flag in
   production.
 
+**--anonymous-browsing-enable**
+  Allow anonymous users to explore public repositories.
+
 # EXAMPLES
 
 The simplest example is:

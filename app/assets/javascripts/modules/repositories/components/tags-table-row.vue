@@ -10,7 +10,7 @@
       <input type="checkbox" v-model="selected" @change="toggleTag()">
     </td>
     <td>
-      <div class="label label-success" v-for="t in tag">{{ t.name }}</div>
+      <tag v-for="t in tag" :key="t.name" :tag="t" :repository="state.repository"></tag>
     </td>
 
     <td>{{ tag[0].author.username }}</td>
@@ -33,6 +33,8 @@
 </template>
 
 <script>
+  import Tag from './tag';
+
   import VulnerabilitiesParser from '../services/vulnerabilities-parser';
 
   export default {
@@ -41,6 +43,10 @@
       canDestroy: Boolean,
       securityEnabled: Boolean,
       state: Object,
+    },
+
+    components: {
+      Tag,
     },
 
     data() {

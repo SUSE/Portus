@@ -7,6 +7,8 @@ class RepositoryPolicy
   end
 
   def show?
+    return @repository.namespace.visibility_public? unless @user
+
     @user.admin? ||
       @repository.namespace.visibility_public? ||
       @repository.namespace.visibility_protected? ||
@@ -28,7 +30,13 @@ class RepositoryPolicy
     end
 
     def resolve
-      if user.admin?
+      if user.nil?
+        @scope
+          .joins(namespace: { team: :users })
+          .where("namespaces.visibility = :namespace_visibility",
+                  namespace_visibility: Namespace.visibilities[:visibility_public])
+          .distinct
+      elsif user.admin?
         @scope.all
       else
         # Show repositories only if the repository is public or

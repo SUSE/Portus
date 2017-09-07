@@ -1,0 +1,4 @@
+= form_for(:explore, method: "GET") do |f|
+  = f.text_field :search, class: 'input form-control input-lg first', placeholder: "Repository", autofocus: true, required: true, value: @current
+
+  = f.button "Search", type: "submit", id: "login-btn", class: 'classbutton btn btn-primary btn-block btn-lg'
