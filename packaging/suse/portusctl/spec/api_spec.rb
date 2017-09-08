@@ -183,7 +183,7 @@ describe ::Portusctl::API::Client do
           res = @client.create("application_tokens", 2, ["application=newone"])
         end
 
-        expect(res).to match(/The token to be used for this/)
+        expect(res.first).to match(/The token to be used for this/)
       end
     end
 

@@ -36,9 +36,9 @@ module Portusctl
 
         if resp.body
           data = JSON.parse(resp.body)
-          "The token to be used for this application is: " + data["plain_token"]
+          ["The token to be used for this application is: " + data["plain_token"]]
         else
-          "Something went wrong. Check the logs of Portus..."
+          ["Something went wrong. Check the logs of Portus..."]
         end
       end
 
