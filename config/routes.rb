@@ -32,9 +32,10 @@ Rails.application.routes.draw do
 
   resources :application_tokens, only: [:create, :destroy]
 
-  devise_for :users, controllers: { registrations: "auth/registrations",
-                                    sessions:      "auth/sessions",
-                                    passwords:     "passwords" }
+  devise_for :users, controllers: { registrations:      "auth/registrations",
+                                    sessions:           "auth/sessions",
+                                    passwords:          "passwords",
+                                    omniauth_callbacks: "auth/omniauth_callbacks" }
   resource :dashboard, only: [:index]
   resources :search, only: [:index]
   resources :explore, only: [:index]
@@ -62,6 +63,9 @@ Rails.application.routes.draw do
 
   mount API::RootAPI => "/"
   mount GrapeSwaggerRails::Engine, at: "/api/documentation" unless Rails.env.production?
+
+  get "users/oauth", to: "auth/omniauth_registrations#new"
+  post "users/oauth", to: "auth/omniauth_registrations#create"
 
   namespace :admin do
     resources :activities, only: [:index]

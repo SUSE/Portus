@@ -70,6 +70,10 @@ Looks for the following required certificate files in the specified folder:
   option "ldap-guess-email-attr",
     desc: "LDAP: attribute to use when guessing email address"
 
+  # OAuth
+  require_relative "cli_oauth"
+  include ::CliOAuth
+
   # MAILER
   option "email-from",
     desc:    "MAIL: sender address",

@@ -50,6 +50,7 @@ Some highlights:
 
 - [Synchronization with your private registry in order to fetch which images and tags are available](http://port.us.org/features/1_Synchronizing-the-Registry-and-Portus.html).
 - [LDAP user authentication](http://port.us.org/features/2_LDAP-support.html).
+- OAuth and OpenID-Connect authentication
 - [Monitoring of all the activities performed onto your private registry and Portus itself](http://port.us.org/features/4_audit.html).
 - [Search for repositories and tags inside of your private registry](http://port.us.org/features/5_search.html).
 - [Star your favorite repositories](http://port.us.org/features/6_starring.html).
