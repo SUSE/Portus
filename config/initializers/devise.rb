@@ -234,6 +234,45 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  if APP_CONFIG.enabled? "oauth.google_oauth2"
+    # Use only setted options.
+    options = APP_CONFIG["oauth"]["google_oauth2"]["options"].select { |_k, v| !v.blank? }
+    options[:skip_jwt] = true
+    config.omniauth :google_oauth2, APP_CONFIG["oauth"]["google_oauth2"]["id"],
+      APP_CONFIG["oauth"]["google_oauth2"]["secret"], options
+  end
+
+  if APP_CONFIG.enabled? "oauth.open_id"
+    require "openid/store/filesystem"
+    options = { store: OpenID::Store::Filesystem.new("/tmp") }
+    unless APP_CONFIG["oauth"]["open_id"]["identifier"].blank?
+      options[:identifier] = APP_CONFIG["oauth"]["open_id"]["identifier"]
+    end
+    config.omniauth :open_id, options
+  end
+
+  if APP_CONFIG.enabled? "oauth.github"
+    config.omniauth :github, APP_CONFIG["oauth"]["github"]["client_id"],
+      APP_CONFIG["oauth"]["github"]["client_secret"], scope: "user,read:org"
+  end
+
+  if APP_CONFIG.enabled? "oauth.gitlab"
+    site = if APP_CONFIG["oauth"]["gitlab"]["server"].blank?
+      "https://gitlab.com"
+    else
+      APP_CONFIG["oauth"]["gitlab"]["server"]
+    end
+
+    config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["application_id"],
+      APP_CONFIG["oauth"]["gitlab"]["secret"], client_options: { site: site }
+  end
+
+  if APP_CONFIG.enabled? "oauth.bitbucket"
+    require "omni_auth/strategies/bitbucket"
+    options = APP_CONFIG["oauth"]["bitbucket"]["options"].select { |_k, v| !v.blank? }
+    config.omniauth :bitbucket, APP_CONFIG["oauth"]["bitbucket"]["key"],
+                    APP_CONFIG["oauth"]["bitbucket"]["secret"], options
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

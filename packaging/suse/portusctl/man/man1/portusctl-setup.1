@@ -122,6 +122,81 @@ change their emails in the future.
 When in combination with \fBldap\-guess\-email\-enable\fP, Portus will use the given
 \fBattr\fP to fetch the email instead of guessing it from the DN.
 .TP
+\fB\-\-oauth\-google\-oauth2\-enable\fP
+Enable authentication with Google OAuth2.
+.TP
+\fB\-\-oauth\-google\-oauth2\-id\fP
+When using Google OAuth2, use the given ID to authenticate.
+.TP
+\fB\-\-oauth\-google\-oauth2\-secret\fP
+When using Google OAuth2, use the secret phrase to authenticate.
+.TP
+\fB\-\-oauth\-google\-oauth2\-domain\fP
+If defined, then emails with certain domain are allowed.
+.TP
+\fB\-\-oauth\-google\-oauth2\-options\-hd\fP
+G Sute domain. If defined then only members of the domain allowed.
+.TP
+\fB\-\-oauth\-open\-id\-enable\fP
+Enable authentication with OpenID.
+.TP
+\fB\-\-oauth\-open\-id\-identifier\fP
+When using OpenID, use the identifier to authenticate.
+.TP
+\fB\-\-oauth\-open\-id\-domain\fP
+If defined, then emails with certain domain are allowed.
+.TP
+\fB\-\-oauth\-github\-enable\fP
+Enable authentication with Github.
+.TP
+\fB\-\-oauth\-github\-client\-id\fP
+When using authentication with Github, use the given key to authenticate.
+.TP
+\fB\-\-oauth\-github\-client\-secret\fP
+When using authentication with Github, use the secret phrase to authenticate.
+.TP
+\fB\-\-oauth\-github\-organization\fP
+If defined, then only members of the organization are allowed.
+.TP
+\fB\-\-oauth\-github\-team\fP
+If defined, then only members of the organization's team are allowed.
+.TP
+\fB\-\-oauth\-github\-domain\fP
+If defined, then emails with certain domain are allowed.
+.TP
+\fB\-\-oauth\-gitlab\-enable\fP
+Enable authentication with Gitlab.
+.TP
+\fB\-\-oauth\-gitlab\-application\-id\fP
+When using authentication with Gitlab, use the given key to authenticate.
+.TP
+\fB\-\-oauth\-gitlab\-secret\fP
+When using authentication with Gitlab, use the secret phrase to authenticate.
+.TP
+\fB\-\-oauth\-gitlab\-group\fP
+If defined, then only members of the group are allowed.
+.TP
+\fB\-\-oauth\-gitlab\-domain\fP
+If defined, then emails with certain domain are allowed.
+.TP
+\fB\-\-oauth\-gitlab\-server\fP
+The Gitlab server to be used. If empty, then \[la]https://gitlab.com\[ra] is assumed.
+.TP
+\fB\-\-oauth\-bitbucket\-enable\fP
+Enable authentication with Bitbucket.
+.TP
+\fB\-\-oauth\-bitbucket\-key\fP
+When using authentication with Bitbucket, use the given key to authenticate.
+.TP
+\fB\-\-oauth\-bitbucket\-secret\fP
+When using authentication with Bitbucket, use the given secret phrase to authenticate.
+.TP
+\fB\-\-oauth\-bitbucket\-domain\fP
+If defined, then emails with certain domain are allowed.
+.TP
+\fB\-\-oauth\-bitbucket\-options\-team\fP
+If defined, then only members of the team are allowed.
+.TP
 \fB\-\-email\-from\fP
 The email to be used as the sender for emails. It defaults to "portus@<hostname>".
 .TP
