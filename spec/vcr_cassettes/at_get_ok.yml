@@ -1,0 +1,61 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://registry.mssola.cat/api/v1/users/2/application_tokens
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Portus-Auth:
+      - mssola:hSeKZmZ2VwrWCvp_sjJf
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 05 Sep 2017 14:38:42 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Request-Method:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Content-Type, api_key, Authorization, portus-auth
+      Vary:
+      - Accept-Encoding
+      Etag:
+      - W/"e6b8b14fe2d9a780b7cddb4d48a21836"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - edef2722-caf4-40e6-aec0-538df4b43bec
+      X-Runtime:
+      - '0.078797'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"id":18,"application":"asdasdqawasd"},{"id":19,"application":"Serious
+        application"}]'
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 14:38:42 GMT
+recorded_with: VCR 3.0.3

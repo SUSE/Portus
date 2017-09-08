@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://registry.mssola.cat/api/v1/users
+    body:
+      encoding: UTF-8
+      string: '{"user":{"username":"test","email":"test@portus.com","password":"12341234"}}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Portus-Auth:
+      - mssola:hSeKZmZ2VwrWCvp_sjJf
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 05 Sep 2017 11:05:15 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Request-Method:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Content-Type, api_key, Authorization, portus-auth
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 7d8cc8ab-4ff1-4e1e-8bba-55111f0bb9da
+      X-Runtime:
+      - '0.275924'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"errors":{"email":["has already been taken"],"username":["has already
+        been taken","cannot be used: there is already a namespace named ''test''"]}}'
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 11:05:15 GMT
+recorded_with: VCR 3.0.3

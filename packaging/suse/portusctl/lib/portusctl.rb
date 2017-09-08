@@ -6,6 +6,7 @@ require "thor"
 
 require_relative "constants"
 require_relative "runner"
+require_relative "api"
 require_relative "template_writer"
 require_relative "configurator"
 require_relative "cli"

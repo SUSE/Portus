@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://registry.mssola.cat/api/v1/users/99
+    body:
+      encoding: UTF-8
+      string: '{"user":{}}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Portus-Auth:
+      - mssola:hSeKZmZ2VwrWCvp_sjJf
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 05 Sep 2017 11:54:31 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 40ddebae-8d5f-4525-96ee-f2cb734ea1c6
+      X-Runtime:
+      - '0.125714'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error":"Not found"}'
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 11:54:31 GMT
+recorded_with: VCR 3.0.3

@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://registry.mssola.cat/api/v1/users/2
+    body:
+      encoding: UTF-8
+      string: '{"user":{"email":"somethingelse@email.com"}}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Portus-Auth:
+      - mssola:hSeKZmZ2VwrWCvp_sjJf
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 05 Sep 2017 11:56:33 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Request-Method:
+      - "*"
+      Access-Control-Allow-Headers:
+      - Content-Type, api_key, Authorization, portus-auth
+      Vary:
+      - Accept-Encoding
+      Etag:
+      - W/"e582b441ea080f00501498f2667842ec"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 3ab8396c-c22d-425b-975d-fac0f285c701
+      X-Runtime:
+      - '0.160003'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: ASCII-8BIT
+      string: 'null'
+    http_version: 
+  recorded_at: Tue, 05 Sep 2017 11:56:33 GMT
+recorded_with: VCR 3.0.3
