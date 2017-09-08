@@ -56,9 +56,6 @@ script:
   # Javascript style
   - yarn run eslint
 
-  # Test that the SUSE package can be built.
-  - packaging/suse/make_spec.sh portus
-
 env:
   global:
   # OSC_CREDENTIALS are kept secret
