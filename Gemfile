@@ -61,7 +61,7 @@ def packaging?
 end
 
 # If the deployment is done through Puma, include it in the bundle.
-gem "puma", "~> 3.7.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
+gem "puma", "~> 3.9.1" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
 
 # Configuration management
 gem "cconfig", "~> 1.1.0"
