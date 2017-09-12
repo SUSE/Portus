@@ -174,32 +174,4 @@ describe Tag do
       expect(tag.owner).to eq "user"
     end
   end
-
-  # TODO: move to proper serializer test
-  describe "#as_json" do
-    let!(:tag) { create(:tag, name: "tag1", user_id: user.id, repository: repository, digest: "1") }
-
-    before do
-      allow(tag).to receive(:vulnerabilities).and_return([])
-
-      enable_security_vulns_module!
-    end
-
-    it "includes expected attributes" do
-      attrs = [:id, :name, :image_id, :digest, :updated_at]
-      tag_json = tag.as_json
-      attrs.each do |attr|
-        expect(tag_json[attr.to_s]).to eq(tag[attr])
-      end
-
-      expect(tag_json.include?("author")).to be_truthy
-
-      author_attrs = [:id, :username]
-      tag_author = tag.author
-      tag_author_json = tag_json["author"]
-      author_attrs.each do |attr|
-        expect(tag_author_json[attr.to_s]).to eq(tag_author[attr])
-      end
-    end
-  end
 end

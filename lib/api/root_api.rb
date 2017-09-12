@@ -1,40 +1,14 @@
 require "grape-swagger"
 
+require "api/entities"
+require "api/helpers"
+require "api/v1/namespaces"
+require "api/v1/repositories"
+require "api/v1/tags"
+require "api/v1/teams"
+require "api/v1/users"
+
 module API
-  module Entities
-    class Users < Grape::Entity
-      expose :id, documentation: { type: Integer, desc: "User id" }
-      expose :username, documentation: { type: String, desc: "User name" }
-      expose :email, documentation: { type: String, desc: "E-mail" }
-      expose :current_sign_in_at, documentation: { type: DateTime }
-      expose :last_sign_in_at, documentation: { type: DateTime }
-      expose :created_at, :updated_at, documentation: { type: DateTime }
-      expose :admin, :enabled, documentation: { type: "boolean" }
-      expose :locked_at, documentation: { type: DateTime }
-      expose :namespace_id, documentation: { type: Integer }
-      expose :display_name, documentation: { type: String, desc: "Display name" }
-    end
-
-    class ApplicationTokens < Grape::Entity
-      expose :id, unless: { type: :create }, documentation: { type: Integer }
-      expose :application, unless: { type: :create }
-      expose :plain_token, if: { type: :create }
-    end
-
-    class ApiErrors < Grape::Entity
-      expose :errors, documentation: {
-        type: "API::Entities::Messages", is_array: true
-      }
-    end
-
-    class Messages < Grape::Entity
-      expose :message
-    end
-  end
-
-  # Load user api for rake task.
-  require "api/v1/users"
-
   class RootAPI < Grape::API
     format :json
     prefix :api
@@ -57,24 +31,23 @@ module API
       error_response message: { errors: e.errors }, status: 400
     end
 
+    rescue_from Pundit::NotAuthorizedError do |_|
+      error_response message: { errors: "Authorization fails" }
+    end
+
     # global exception handler, used for error notifications
     rescue_from :all do |e|
       error_response message: "Internal server error: #{e}", status: 500
     end
 
-    helpers do
-      require "#{Rails.root}/app/controllers/concerns/auth_from_token"
-      include AuthFromToken
+    helpers Pundit
+    helpers ::API::Helpers
 
-      def authorization!
-        return if request.request_method == "OPTIONS"
-        @user = authenticate_user_from_authentication_token!
-        error!("Authentication fails.", 401) unless @user
-        error!("Authorization fails.", 403) unless @user.admin
-      end
-    end
-
-    mount API::V1::Users
+    mount ::API::V1::Namespaces
+    mount ::API::V1::Repositories
+    mount ::API::V1::Tags
+    mount ::API::V1::Teams
+    mount ::API::V1::Users
 
     schemes = ENV["PORTUS_CHECK_SSL_USAGE_ENABLED"] ? [:https] : [:http, :https]
     add_swagger_documentation \

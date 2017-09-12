@@ -18,7 +18,7 @@ const customActions = {
   },
 };
 
-const resource = Vue.resource('namespaces{/id}.json', {}, customActions);
+const resource = Vue.resource('api/v1/namespaces{/id}', {}, customActions);
 
 function all(params = {}) {
   return resource.get({}, params);

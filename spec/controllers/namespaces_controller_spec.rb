@@ -1,8 +1,6 @@
 require "rails_helper"
 
 describe NamespacesController, type: :controller do
-  include ActiveModelSerializers::Test::Serializer
-
   let(:valid_session) { {} }
   let(:registry) { create(:registry) }
   let(:user) { create(:user) }

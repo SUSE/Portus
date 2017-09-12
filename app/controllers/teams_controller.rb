@@ -13,6 +13,7 @@ class TeamsController < ApplicationController
 
   # GET /teams/1
   # GET /teams/1.json
+  # TODO: remove the JSON part in favor of the API
   def show
     raise ActiveRecord::RecordNotFound if @team.hidden?
 

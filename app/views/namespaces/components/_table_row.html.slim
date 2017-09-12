@@ -3,7 +3,7 @@ tr :class="scopeClass"
     a :href="namespace.links.self.href"
       | {{ namespace.attributes.clean_name }}
   td
-    | {{ namespace.relationships.repositories.meta.count }}
+    | {{ namespace.repositories }}
   td v-if="namespace.relationships.webhooks.links.related"
     a :href="namespace.relationships.webhooks.links.related.href"
       | {{ namespace.relationships.webhooks.meta.count }}

@@ -81,16 +81,6 @@ class Tag < ActiveRecord::Base
     create_delete_activities!(actor)
   end
 
-  # TODO: serializer
-  def as_json(options = {})
-    options[:only] = [:id, :name, :image_id, :digest, :updated_at]
-    options[:include] = { author: { only: [:id, :username] } }
-
-    super(options).tap do |json|
-      json["vulnerabilities"] = vulnerabilities
-    end
-  end
-
   def vulnerabilities
     sec = ::Portus::Security.new(repository.full_name, name)
     sec.vulnerabilities

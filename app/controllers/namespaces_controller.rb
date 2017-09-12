@@ -10,6 +10,7 @@ class NamespacesController < ApplicationController
 
   # GET /namespaces
   # GET /namespaces.json
+  # TODO: remove this!
   def index
     if request.head?
       check_namespace_by_name if params[:name]
