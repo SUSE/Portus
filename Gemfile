@@ -18,7 +18,7 @@ gem "search_cop"
 gem "kaminari"
 gem "crono"
 gem "net-ldap"
-gem "redcarpet"
+gem "redcarpet", "~> 3.4.0"
 gem "font-awesome-rails"
 gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
 gem "webpack-rails"
@@ -40,7 +40,7 @@ gem "typhoeus", "~> 1.0.2"
 gem "bcrypt"
 
 # This is already a Rails dependency, but we use it to run portusctl
-gem "thor"
+gem "thor", "~> 0.19.4"
 
 # Assets group.
 #
@@ -61,7 +61,7 @@ def packaging?
 end
 
 # If the deployment is done through Puma, include it in the bundle.
-gem "puma", "~> 3.9.1" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
+gem "puma", "~> 3.10.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
 
 # Configuration management
 gem "cconfig", "~> 1.1.0"
