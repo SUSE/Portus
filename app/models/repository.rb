@@ -64,7 +64,7 @@ class Repository < ActiveRecord::Base
   # digest.
   def groupped_tags
     tags.group_by(&:digest).values.sort do |x, y|
-      y.first.created_at <=> x.first.created_at
+      y.first.updated_at <=> x.first.updated_at
     end
   end
 
