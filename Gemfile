@@ -32,6 +32,8 @@ gem "omniauth-openid"
 gem "omniauth-github"
 gem "omniauth-gitlab"
 
+gem "rack-cors", "~> 1.0.1"
+
 # Pinning these specific versions because that's what we have on OBS.
 gem "ethon", "~> 0.9.0"
 gem "typhoeus", "~> 1.0.2"
