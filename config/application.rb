@@ -38,6 +38,31 @@ module Portus
 
     config.middleware.use Rack::Deflater
 
+    # Allow access to the Portus API from other domains. This code is based on
+    # Gitlab CE.
+    config.middleware.insert_before Warden::Manager, Rack::Cors do
+      allow do
+        origins APP_CONFIG["machine_fqdn"]["value"]
+        resource "/api/*",
+          credentials: true,
+          headers:     :any,
+          methods:     :any,
+          expose:      ["Link", "X-Total", "X-Total-Pages", "X-Per-Page",
+                        "X-Page", "X-Next-Page", "X-Prev-Page"]
+      end
+
+      # Cross-origin requests must not have the session cookie available
+      allow do
+        origins "*"
+        resource "/api/*",
+          credentials: false, # See the `credentials` in https://github.com/cyu/rack-cors#origin
+          headers:     :any,
+          methods:     :any,
+          expose:      ["Link", "X-Total", "X-Total-Pages", "X-Per-Page",
+                        "X-Page", "X-Next-Page", "X-Prev-Page"]
+      end
+    end
+
     # Configure webpack
     config.webpack.config_file = "config/webpack.js"
     config.webpack.output_dir  = "public/assets/webpack"
