@@ -10,26 +10,13 @@ class NamespacesController < ApplicationController
 
   # GET /namespaces
   # GET /namespaces.json
-  # TODO: remove this!
   def index
+    # TODO: remove this!
     if request.head?
       check_namespace_by_name if params[:name]
     else
       respond_to do |format|
         format.html { skip_policy_scope }
-        format.json do
-          @special_namespaces = Namespace.where(
-            "global = ? OR namespaces.name = ?", true, current_user.username
-          ).order("created_at ASC")
-          @namespaces = policy_scope(Namespace).order(created_at: :asc)
-
-          accessible_json = serialize_as_json(@namespaces)
-          special_json = serialize_as_json(@special_namespaces)
-          render json: {
-            accessible: accessible_json,
-            special:    special_json
-          }
-        end
       end
     end
   end
@@ -59,7 +46,7 @@ class NamespacesController < ApplicationController
         @namespaces = policy_scope(Namespace)
 
         format.js
-        format.json { render json: @namespace }
+        format.json { render json: API::Entities::Namespaces.represent(@namespace, current_user: current_user, type: :internal) }
       else
         format.js { render :create, status: :unprocessable_entity }
         format.json { render json: @namespace.errors.full_messages, status: :unprocessable_entity }

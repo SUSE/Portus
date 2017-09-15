@@ -27,6 +27,10 @@ class Namespace < ActiveRecord::Base
     attributes :name, :description
   end
 
+  scope :special_for, -> (user) {
+    where("global = ? OR namespaces.name = ?", true, user.username)
+  }
+
   # This regexp is extracted from the reference package of Docker Distribution
   # and it matches a valid namespace name.
   NAME_REGEXP = /\A[a-z0-9]+(?:[._\\-][a-z0-9]+)*\Z/

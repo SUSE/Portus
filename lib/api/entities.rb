@@ -86,16 +86,20 @@ module API
 
     class Namespaces < Grape::Entity
       expose :id, documentation: { type: Integer, desc: "Namespace ID" }
-      expose :name, documentation: { type: String, desc: "Namespace name" }
+      expose :clean_name, as: :name, documentation: { type: String, desc: "Namespace name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
       expose :team_id, documentation: {
         type: Integer,
         desc: "The ID of the team containing this namespace"
       }
-      expose :repositories, documentation: {
+      expose :repositories_count, documentation: {
         type: Integer,
         desc: "The number of repositories that belong to this namespace"
       } { |n| n.repositories.count }
+      expose :webhooks_count, documentation: {
+        type: Integer,
+        desc: "The number of webooks that belong to this namespace"
+      } { |n| n.webhooks.count }
       expose :registry_id, documentation: {
         type: Integer,
         desc: "The ID of the registry containing this namespace"

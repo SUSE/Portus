@@ -30,28 +30,31 @@ $(() => {
     data() {
       return {
         state: NamespacesStore.state,
-        accessibleNamespaces: [],
+        username: window.currentUsername,
+        normalNamespaces: [],
         specialNamespaces: [],
       };
     },
 
     methods: {
       onCreate(namespace) {
-        const currentNamespaces = this.accessibleNamespaces;
+        const currentNamespaces = this.normalNamespaces;
         const namespaces = [
           ...currentNamespaces,
           namespace,
         ];
 
-        set(this, 'accessibleNamespaces', namespaces);
+        set(this, 'normalNamespaces', namespaces);
       },
 
       loadData() {
         NamespacesService.all().then((response) => {
-          const accessibleNamespaces = response.data.accessible.data;
-          const specialNamespaces = response.data.special.data;
+          const namespaces = response.data;
 
-          set(this, 'accessibleNamespaces', accessibleNamespaces);
+          const normalNamespaces = namespaces.filter(n => !n.global && n.name !== this.username);
+          const specialNamespaces = namespaces.filter(n => n.global || n.name === this.username);
+
+          set(this, 'normalNamespaces', normalNamespaces);
           set(this, 'specialNamespaces', specialNamespaces);
           set(this.state, 'isLoading', false);
         });

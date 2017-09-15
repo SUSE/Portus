@@ -8,9 +8,17 @@ module API
           authorization!(force_admin: false)
         end
 
-        desc "Returns list of namespaces.",
+        helpers do
+          def accessible_namespaces
+            special = Namespace.special_for(current_user).order(created_at: :asc)
+            normal  = policy_scope(Namespace).order(created_at: :asc)
+            special + normal
+          end
+        end
+
+        desc "Returns a list of namespaces.",
           tags:     ["namespaces"],
-          detail:   "This will expose all namespaces.",
+          detail:   "This will expose all accessible namespaces.",
           is_array: true,
           entity:   API::Entities::Namespaces,
           failure:  [
@@ -19,7 +27,7 @@ module API
           ]
 
         get do
-          present policy_scope(Namespace), with: API::Entities::Namespaces
+          present accessible_namespaces, with: API::Entities::Namespaces
         end
 
         route_param :id, type: String, requirements: { id: /.*/ } do

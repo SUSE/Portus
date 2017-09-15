@@ -270,7 +270,10 @@ describe NamespacesController, type: :controller do
         expect do
           post :create, post_params
         end.to change(Namespace, :count).by(1)
-        assert_serializer "NamespaceSerializer"
+
+        serialized = API::Entities::Namespaces.represent(Namespace.last, current_user: contributor, type: :internal).to_json
+        expect(response.body).to eq(serialized)
+        expect(response.status).to eq(200)
       end
     end
 

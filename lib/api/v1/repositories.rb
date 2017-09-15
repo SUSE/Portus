@@ -50,13 +50,14 @@ module API
                 [404, "Not found."]
               ]
 
-            get "/groupped" do
+            get "/grouped" do
               repo = Repository.find params[:id]
               authorize repo, :show?
 
-              present repo.groupped_tags.map do |k1|
-                k1.map { |k2| API::Entities::Tags.represent(k2) }
-              end
+              # don't ask me why but using do end syntax isn't working
+              present repo.groupped_tags.map { |k1|
+                API::Entities::Tags.represent(k1)
+              }
             end
 
             # NOTE: (for v2 ?) the repository ID is ignored...

@@ -32,7 +32,7 @@ $(() => {
     data() {
       return {
         namespaceState: NamespacesStore.state,
-        namespaces: window.teamNamespaces.data,
+        namespaces: window.teamNamespaces,
       };
     },
 

@@ -20,24 +20,24 @@ export default {
 
   computed: {
     isPrivate() {
-      return this.namespace.attributes.visibility === 'visibility_private';
+      return this.namespace.visibility === 'private';
     },
 
     isProtected() {
-      return this.namespace.attributes.visibility === 'visibility_protected';
+      return this.namespace.visibility === 'protected';
     },
 
     isPublic() {
-      return this.namespace.attributes.visibility === 'visibility_public';
+      return this.namespace.visibility === 'public';
     },
 
     canChangeVibisility() {
-      return this.namespace.meta.can_change_visibility &&
+      return this.namespace.permissions.visibility &&
         !this.onGoingRequest;
     },
 
     privateTitle() {
-      if (this.namespace.attributes.global) {
+      if (this.namespace.global) {
         return 'The global namespace cannot be private';
       }
 
@@ -52,7 +52,7 @@ export default {
     },
 
     change(visibility) {
-      const currentVisibility = this.namespace.attributes.visibility;
+      const currentVisibility = this.namespace.visibility;
 
       if (visibility === currentVisibility) {
         return;
@@ -62,8 +62,8 @@ export default {
       set(this, 'newVisibility', visibility);
 
       NamespacesService.changeVisibility(this.namespace.id, { visibility }).then(() => {
-        set(this.namespace.attributes, 'visibility', visibility);
-        Alert.show(`Visibility of '${this.namespace.attributes.clean_name}' namespace updated`);
+        set(this.namespace, 'visibility', visibility);
+        Alert.show(`Visibility of '${this.namespace.name}' namespace updated`);
       }).catch(() => {
         Alert.show('An error happened while updating namespace visibility');
       }).finally(() => {

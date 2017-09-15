@@ -174,12 +174,12 @@ feature "Namespaces support" do
       expect(page).to have_css(".fa-sort-amount-desc")
 
       # sort asc & created_at
-      visit namespaces_path(ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+      visit namespaces_path(ns_sort_asc: true, ns_sort_by: "created_at")
 
       expect(page).to have_css("th:nth-child(4) .fa-sort-amount-asc")
 
       # sort desc & created_at
-      visit namespaces_path(ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+      visit namespaces_path(ns_sort_asc: false, ns_sort_by: "created_at")
 
       expect(page).to have_css("th:nth-child(4) .fa-sort-amount-desc")
     end
@@ -193,14 +193,14 @@ feature "Namespaces support" do
       find(".namespaces-panel:last-of-type th:nth-child(4)").click
 
       expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-asc")
-      path = namespaces_path(ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+      path = namespaces_path(ns_sort_asc: true, ns_sort_by: "created_at")
       expect(page).to have_current_path(path)
 
       # sort desc & created_at
       find(".namespaces-panel:last-of-type th:nth-child(4)").click
 
       expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
-      path = namespaces_path(ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+      path = namespaces_path(ns_sort_asc: false, ns_sort_by: "created_at")
       expect(page).to have_current_path(path)
     end
 

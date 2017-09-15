@@ -4,10 +4,6 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 
 const customActions = {
-  changeVisibility: {
-    method: 'PUT',
-    url: '/namespaces/{id}/change_visibility',
-  },
   teamTypeahead: {
     method: 'GET',
     url: '/namespaces/typeahead/{teamName}',
@@ -18,6 +14,14 @@ const customActions = {
   },
 };
 
+const oldCustomActions = {
+  changeVisibility: {
+    method: 'PUT',
+    url: '/namespaces/{id}/change_visibility',
+  },
+};
+
+const oldResource = Vue.resource('namespaces{/id}.json', {}, oldCustomActions);
 const resource = Vue.resource('api/v1/namespaces{/id}', {}, customActions);
 
 function all(params = {}) {
@@ -25,7 +29,7 @@ function all(params = {}) {
 }
 
 function changeVisibility(id, params = {}) {
-  return resource.changeVisibility({ id }, params);
+  return oldResource.changeVisibility({ id }, params);
 }
 
 function searchTeam(teamName) {
@@ -49,7 +53,7 @@ function get(id) {
 }
 
 function save(namespace) {
-  return resource.save({}, namespace);
+  return oldResource.save({}, namespace);
 }
 
 function teamExists(value) {
