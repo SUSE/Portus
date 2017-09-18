@@ -5,6 +5,8 @@ import Vuelidate from 'vuelidate';
 Vue.use(Vuelidate);
 Vue.use(VueResource);
 
+Vue.http.options.root = window.API_ROOT_URL;
+
 Vue.http.interceptors.push((_request, next) => {
   window.$.active = window.$.active || 0;
   window.$.active += 1;
