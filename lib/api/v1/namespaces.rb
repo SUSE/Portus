@@ -8,13 +8,7 @@ module API
           authorization!(force_admin: false)
         end
 
-        helpers do
-          def accessible_namespaces
-            special = Namespace.special_for(current_user).order(created_at: :asc)
-            normal  = policy_scope(Namespace).order(created_at: :asc)
-            special + normal
-          end
-        end
+        helpers ::API::Helpers::Namespaces
 
         desc "Returns a list of namespaces.",
           tags:     ["namespaces"],
@@ -27,7 +21,10 @@ module API
           ]
 
         get do
-          present accessible_namespaces, with: API::Entities::Namespaces
+          present accessible_namespaces,
+                  with:         API::Entities::Namespaces,
+                  current_user: current_user,
+                  type:         current_type
         end
 
         route_param :id, type: String, requirements: { id: /.*/ } do
@@ -45,7 +42,9 @@ module API
             get do
               namespace = Namespace.find params[:id]
               authorize namespace, :show?
-              present namespace.repositories, with: API::Entities::Repositories
+              present namespace.repositories,
+                      with: API::Entities::Repositories,
+                      type: current_type
             end
           end
 
@@ -64,7 +63,10 @@ module API
           get do
             namespace = Namespace.find(params[:id])
             authorize namespace, :show?
-            present namespace, with: API::Entities::Namespaces
+            present namespace,
+                    with:         API::Entities::Namespaces,
+                    current_user: current_user,
+                    type:         current_type
           end
         end
       end

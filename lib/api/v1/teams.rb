@@ -37,7 +37,7 @@ module API
             get do
               team = Team.find params[:id]
               authorize team, :show?
-              present team.namespaces, with: API::Entities::Namespaces
+              present team.namespaces, with: API::Entities::Namespaces, type: current_type
             end
           end
 

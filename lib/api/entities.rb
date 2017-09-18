@@ -95,15 +95,11 @@ module API
       expose :repositories_count, documentation: {
         type: Integer,
         desc: "The number of repositories that belong to this namespace"
-      } { |n| n.repositories.count }
+      }, if: { type: :internal } { |n| n.repositories.count }
       expose :webhooks_count, documentation: {
         type: Integer,
         desc: "The number of webooks that belong to this namespace"
-      } { |n| n.webhooks.count }
-      expose :registry_id, documentation: {
-        type: Integer,
-        desc: "The ID of the registry containing this namespace"
-      }
+      }, if: { type: :internal } { |n| n.webhooks.count }
       expose :visibility, documentation: {
         type: String,
         desc: "The visibility of namespaces by other people"
@@ -114,6 +110,19 @@ module API
         type: "Boolean",
         desc: "Whether this is the global namespace or not"
       }
+      expose :permissions, documentation: {
+        desc: "Different permissions for the current user"
+      }, if: { type: :internal } do |namespace, options|
+        user = options[:current_user]
+        # TODO: taken from NamespacesHelper. Avoid duplication! (e.g. owner?)
+        {
+          webhooks:   user.admin? ||
+            namespace.team.users.include?(user),
+          visibility: user.admin? ||
+            (namespace.team.owners.exists?(user.id) &&
+              APP_CONFIG.enabled?("user_permission.change_visibility"))
+        }
+      end
     end
   end
 end

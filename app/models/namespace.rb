@@ -27,8 +27,8 @@ class Namespace < ActiveRecord::Base
     attributes :name, :description
   end
 
-  scope :special_for, -> (user) {
-    where("global = ? OR namespaces.name = ?", true, user.username)
+  scope :special_for, lambda { |user|
+    where("global = ? OR namespaces.id = ?", true, user.namespace_id)
   }
 
   # This regexp is extracted from the reference package of Docker Distribution
