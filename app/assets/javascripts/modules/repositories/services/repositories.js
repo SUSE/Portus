@@ -3,7 +3,7 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 
-const resource = Vue.resource('/repositories{/id}.json');
+const resource = Vue.resource('repositories{/id}.json');
 
 function get(id) {
   return resource.get({ id });
