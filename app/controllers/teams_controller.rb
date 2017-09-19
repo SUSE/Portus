@@ -50,7 +50,7 @@ class TeamsController < ApplicationController
     authorize @team
     @query = params[:query]
     matches = User.search_from_query(@team.member_ids, "#{@query}%").pluck(:username)
-    matches = matches.map { |user| { name: user } }
+    matches = matches.map { |user| { name: ActionController::Base.helpers.sanitize(user) } }
     respond_to do |format|
       format.json { render json: matches.to_json }
     end
@@ -60,7 +60,7 @@ class TeamsController < ApplicationController
   def all_with_query
     query = "#{params[:query]}%"
     teams = policy_scope(Team).where("name LIKE ?", query).pluck(:name)
-    matches = teams.map { |t| { name: t } }
+    matches = teams.map { |t| { name: ActionController::Base.helpers.sanitize(t) } }
     respond_to do |format|
       format.json { render json: matches.to_json }
     end
