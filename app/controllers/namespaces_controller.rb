@@ -91,9 +91,9 @@ class NamespacesController < ApplicationController
     authorize @namespace
 
     # Update the visibility if needed
-    return if params[:visibility] == @namespace.visibility
+    return if visibility_param == @namespace.visibility
 
-    return unless @namespace.update_attributes(visibility: params[:visibility])
+    return unless @namespace.update_attributes(visibility: visibility_param)
 
     @namespace.create_activity :change_visibility,
       owner:      current_user,
@@ -106,6 +106,13 @@ class NamespacesController < ApplicationController
   end
 
   private
+
+  # normalizes visibility parameter
+  def visibility_param
+    value = params[:visibility]
+    value = "visibility_#{value}" unless value.start_with?("visibility_")
+    value
+  end
 
   # Checks if namespaces exists based on the name parameter.
   # Renders an empty response with 200 if exists or 404 otherwise.
