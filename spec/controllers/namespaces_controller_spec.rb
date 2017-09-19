@@ -30,15 +30,6 @@ describe NamespacesController, type: :controller do
   end
 
   describe "GET #index" do
-    it "assigns accessible and special namespaces [json]" do
-      get :index, { format: :json }, valid_session
-
-      expect(assigns(:special_namespaces)).to match_array(
-        [user.namespace, Namespace.find_by(global: true)]
-      )
-      expect(assigns(:namespaces).ids).to be_empty
-    end
-
     it "should render index template successfully [html]" do
       get :index, valid_session
 
@@ -270,9 +261,6 @@ describe NamespacesController, type: :controller do
         expect do
           post :create, post_params
         end.to change(Namespace, :count).by(1)
-
-        serialized = API::Entities::Namespaces.represent(Namespace.last, current_user: contributor, type: :internal).to_json
-        expect(response.body).to eq(serialized)
         expect(response.status).to eq(200)
       end
     end
@@ -400,7 +388,6 @@ describe NamespacesController, type: :controller do
           expect(assigns(:namespace).team).to eq(team)
           expect(assigns(:namespace).name).to eq(valid_attributes[:name])
           expect(assigns(:namespace).description).to be_nil
-          assert_serializer "NamespaceSerializer"
         end
 
         it "assigns a newly created namespace as @namespace" do
@@ -417,7 +404,6 @@ describe NamespacesController, type: :controller do
           expect(assigns(:namespace).team).to eq(team)
           expect(assigns(:namespace).name).to eq(valid_attributes[:name])
           expect(assigns(:namespace).description).to eq("desc")
-          assert_serializer "NamespaceSerializer"
         end
       end
 

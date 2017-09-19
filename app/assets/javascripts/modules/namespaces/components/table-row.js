@@ -5,7 +5,7 @@ import NamespaceVisibility from './visibility';
 export default {
   template: '#js-namespace-table-row-tmpl',
 
-  props: ['namespace', 'namespacesUrl', 'webhooksPath'],
+  props: ['namespace', 'namespacesPath', 'webhooksPath'],
 
   computed: {
     scopeClass() {
@@ -13,7 +13,7 @@ export default {
     },
 
     repositoryUrl() {
-      return `${this.namespacesUrl}/${this.namespace.id}`;
+      return `${this.namespacesPath}/${this.namespace.id}`;
     },
 
     webhooksUrl() {

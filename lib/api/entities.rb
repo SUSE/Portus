@@ -48,10 +48,7 @@ module API
       expose :vulnerabilities, documentation: {
         is_array: true,
         desc:     "An array of vulnerabilities for this tag, or null if the feature is not enabled"
-      } do |tag|
-        sec = ::Portus::Security.new(tag.repository.full_name, tag.name)
-        sec.vulnerabilities
-      end
+      }
     end
 
     class Repositories < Grape::Entity
@@ -66,10 +63,22 @@ module API
       expose :namespace, documentation: {
         desc: "The ID of the namespace containing this repository"
       } { |r| { id: r.namespace.id, name: r.namespace.name } }
+      expose :registry_hostname, documentation: {
+        type: Integer,
+        desc: "The repository's registry hostname"
+      }, if: { type: :internal } { |repository| repository.registry.hostname }
       expose :stars, documentation: {
         type: Integer,
         desc: "The number of stars for this repository"
       } { |repository| repository.stars.count }
+      expose :tags, documentation: {
+        is_array: true,
+        desc:     "The repository's tags grouped by digest"
+      }, if: { type: :internal } do |repository|
+        repository.groupped_tags.map do |k1|
+          API::Entities::Tags.represent(k1)
+        end
+      end
     end
 
     # Teams & namespaces

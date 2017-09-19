@@ -7,4 +7,4 @@
 / TODO: move this to be used as a component prop instead of global value
 - content_for :js_header do
   javascript:
-    window.currentUsername = '#{current_user.username}';
+    window.userNamespaceId = #{current_user.namespace_id};

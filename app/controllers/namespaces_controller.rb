@@ -45,8 +45,14 @@ class NamespacesController < ApplicationController
                                    parameters: { team: @namespace.team.name }
         @namespaces = policy_scope(Namespace)
 
+        namespace_json = API::Entities::Namespaces.represent(
+          @namespace,
+          current_user: current_user,
+          type:         :internal
+        )
+
         format.js
-        format.json { render json: API::Entities::Namespaces.represent(@namespace, current_user: current_user, type: :internal) }
+        format.json { render json: namespace_json }
       else
         format.js { render :create, status: :unprocessable_entity }
         format.json { render json: @namespace.errors.full_messages, status: :unprocessable_entity }
@@ -107,7 +113,7 @@ class NamespacesController < ApplicationController
 
   private
 
-  # normalizes visibility parameter
+  # Normalizes visibility parameter
   def visibility_param
     value = params[:visibility]
     value = "visibility_#{value}" unless value.start_with?("visibility_")

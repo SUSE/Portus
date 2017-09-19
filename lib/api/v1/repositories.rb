@@ -54,10 +54,10 @@ module API
               repo = Repository.find params[:id]
               authorize repo, :show?
 
-              # don't ask me why but using do end syntax isn't working
-              present repo.groupped_tags.map { |k1|
+              grouped_tags = repo.groupped_tags.map do |k1|
                 API::Entities::Tags.represent(k1)
-              }
+              end
+              present grouped_tags
             end
 
             # NOTE: (for v2 ?) the repository ID is ignored...

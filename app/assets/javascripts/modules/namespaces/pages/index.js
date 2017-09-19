@@ -30,7 +30,7 @@ $(() => {
     data() {
       return {
         state: NamespacesStore.state,
-        username: window.currentUsername,
+        userNamespaceId: window.userNamespaceId,
         normalNamespaces: [],
         specialNamespaces: [],
       };
@@ -51,11 +51,11 @@ $(() => {
         NamespacesService.all().then((response) => {
           const namespaces = response.data;
 
-          const normalNamespaces = namespaces.filter(n => !n.global && n.name !== this.username);
-          const specialNamespaces = namespaces.filter(n => n.global || n.name === this.username);
+          const normal = namespaces.filter(n => !n.global && n.id !== this.userNamespaceId);
+          const special = namespaces.filter(n => n.global || n.id === this.userNamespaceId);
 
-          set(this, 'normalNamespaces', normalNamespaces);
-          set(this, 'specialNamespaces', specialNamespaces);
+          set(this, 'normalNamespaces', normal);
+          set(this, 'specialNamespaces', special);
           set(this.state, 'isLoading', false);
         });
       },

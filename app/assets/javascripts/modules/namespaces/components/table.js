@@ -14,7 +14,7 @@ export default {
     namespaces: {
       type: Array,
     },
-    namespacesUrl: {
+    namespacesPath: {
       type: String,
     },
     webhooksPath: {

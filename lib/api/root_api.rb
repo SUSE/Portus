@@ -32,7 +32,7 @@ module API
     end
 
     rescue_from Pundit::NotAuthorizedError do |_|
-      error_response message: { errors: "Authorization fails" }
+      error_response message: { errors: "Authorization fails" }, status: 403
     end
 
     # global exception handler, used for error notifications

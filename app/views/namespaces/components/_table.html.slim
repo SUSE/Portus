@@ -49,6 +49,6 @@ div
           }
           |  Visibility
     tbody
-      <namespace-table-row v-for="namespace in filteredNamespaces" :key="namespace.id" :namespace="namespace" :namespaces-url="namespacesUrl" :webhooks-path="webhooksPath"></namespace-table-row>
+      <namespace-table-row v-for="namespace in filteredNamespaces" :key="namespace.id" :namespace="namespace" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath"></namespace-table-row>
 
   <table-pagination :total.sync="namespaces.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>

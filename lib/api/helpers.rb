@@ -45,11 +45,6 @@ module API
       @user
     end
 
-    # TODO: really ?
-    def user_session
-      current_user && warden.session(:user)
-    end
-
     # Returns the current type of API presentation. The two options available
     # are: :official and :internal. The :internal type is the same as the
     # official one, but with some extensions that come in handy for the client
