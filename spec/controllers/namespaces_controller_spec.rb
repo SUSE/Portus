@@ -517,6 +517,7 @@ describe NamespacesController, type: :controller do
 
   describe "typeahead" do
     render_views
+
     it "does allow to search for valid teams by owner" do
       testing_team = create(:team, name: "testing", owners: [owner])
       sign_in owner
@@ -534,6 +535,17 @@ describe NamespacesController, type: :controller do
       expect(response.status).to eq(200)
       teamnames = JSON.parse(response.body)
       expect(teamnames.length).to eq(0)
+    end
+
+    it "prevents XSS attacks" do
+      create(:team, name: "<script>alert(1)</script>", owners: [owner])
+
+      sign_in owner
+      get :typeahead, query: "<", format: "json"
+      expect(response.status).to eq(200)
+      teamnames = JSON.parse(response.body)
+
+      expect(teamnames[0]["name"]).to eq("alert(1)")
     end
   end
 
