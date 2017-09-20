@@ -77,7 +77,7 @@ class NamespacesController < ApplicationController
     @query = params[:query]
     valid_teams = TeamUser.get_valid_team_ids(current_user.id)
     matches = Team.search_from_query(valid_teams, "#{@query}%").pluck(:name)
-    matches = matches.map { |team| { name: team } }
+    matches = matches.map { |team| { name: ActionController::Base.helpers.sanitize(team) } }
     respond_to do |format|
       format.json { render json: matches.to_json }
     end
