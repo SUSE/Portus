@@ -124,7 +124,7 @@
 
 
 <new-namespace-form :state="namespaceState" form-state="newFormVisible" team-name="#{@team.name}"></new-namespace-form>
-<namespaces-panel :namespaces="namespaces" :table-sortable="true">
+<namespaces-panel :namespaces="namespaces" namespaces-path="#{namespaces_path}" webhooks-path="webhooks" :table-sortable="true">
   h5 slot="name"
     a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to logged-in users or all Portus users by changing the visibility to "protected" or "public" respectively.</p>' data-original-title="What's this?" tabindex="0" data-html="true"]
       i.fa.fa-info-circle

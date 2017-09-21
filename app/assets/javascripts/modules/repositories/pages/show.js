@@ -52,7 +52,16 @@ $(() => {
 
         RepositoriesService.get(id).then((response) => {
           set(this.state, 'repository', response.body);
-          set(this, 'tags', response.body.tags);
+        });
+
+        this.fetchTags();
+      },
+
+      fetchTags() {
+        const repositoryId = this.$refs.repoTitle.dataset.id;
+
+        RepositoriesService.groupedTags(repositoryId).then((response) => {
+          set(this, 'tags', response.body);
           set(this, 'notLoaded', false);
           set(this, 'unableToFetchBefore', false);
         }, () => {
@@ -68,7 +77,7 @@ $(() => {
             set(this, 'unableToFetchBefore', true);
           }
         }).finally(() => {
-          setTimeout(() => this.loadData(), POLLING_VALUE);
+          setTimeout(() => this.fetchTags(), POLLING_VALUE);
           set(this, 'isLoading', false);
         });
       },

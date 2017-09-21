@@ -8,7 +8,7 @@ import NamespacesStore from '../store';
 export default {
   template: '#js-namespaces-panel-tmpl',
 
-  props: ['namespaces', 'tableSortable', 'prefix'],
+  props: ['namespaces', 'namespacesPath', 'webhooksPath', 'tableSortable', 'prefix'],
 
   data() {
     return {

@@ -13,10 +13,6 @@ module NamespacesHelper
                             APP_CONFIG.enabled?("user_permission.change_visibility"))
   end
 
-  def can_view_webhooks?(namespace)
-    current_user.admin? || namespace.team.users.include?(current_user)
-  end
-
   def owner?(namespace)
     namespace.team.owners.exists?(current_user.id)
   end

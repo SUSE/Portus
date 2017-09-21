@@ -13,7 +13,7 @@
       <tag v-for="t in tag" :key="t.name" :tag="t" :repository="state.repository"></tag>
     </td>
 
-    <td>{{ tag[0].author.username }}</td>
+    <td>{{ tag[0].author.name }}</td>
 
     <td>
       <span v-if="tag[0].image_id === ''">-</span>

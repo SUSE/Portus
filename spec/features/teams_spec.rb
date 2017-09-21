@@ -168,12 +168,12 @@ feature "Teams support" do
       expect(page).to have_css(".namespaces-panel .fa-sort-amount-desc")
 
       # sort asc & created_at
-      visit team_path(team, ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+      visit team_path(team, ns_sort_asc: true, ns_sort_by: "created_at")
 
       expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-asc")
 
       # sort desc & created_at
-      visit team_path(team, ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+      visit team_path(team, ns_sort_asc: false, ns_sort_by: "created_at")
 
       expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
     end
@@ -183,14 +183,14 @@ feature "Teams support" do
       find(".namespaces-panel th:nth-child(4)").click
 
       expect(page).to have_css(".namespaces-panel  th:nth-child(4) .fa-sort-amount-asc")
-      path = team_path(team, ns_sort_asc: true, ns_sort_by: "attributes.created_at")
+      path = team_path(team, ns_sort_asc: true, ns_sort_by: "created_at")
       expect(page).to have_current_path(path)
 
       # sort desc & created_at
       find(".namespaces-panel th:nth-child(4)").click
 
       expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
-      path = team_path(team, ns_sort_asc: false, ns_sort_by: "attributes.created_at")
+      path = team_path(team, ns_sort_asc: false, ns_sort_by: "created_at")
       expect(page).to have_current_path(path)
     end
 

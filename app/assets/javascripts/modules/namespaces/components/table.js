@@ -14,6 +14,12 @@ export default {
     namespaces: {
       type: Array,
     },
+    namespacesPath: {
+      type: String,
+    },
+    webhooksPath: {
+      type: String,
+    },
     prefix: {
       type: String,
       default: 'ns_',

@@ -5,10 +5,10 @@
     :class=="{
       'btn-primary': isPrivate,
     }"
-    :disabled="namespace.attributes.global || !canChangeVibisility"
-    @click=="change('visibility_private')"
+    :disabled="namespace.global || !canChangeVibisility"
+    @click=="change('private')"
   }
-    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('visibility_private')"
+    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('private')"
     i.fa.fa-fw.fa-lock v-else=""
 
   button{
@@ -18,9 +18,9 @@
       'btn-primary': isProtected,
     }"
     :disabled="!canChangeVibisility"
-    @click=="change('visibility_protected')"
+    @click=="change('protected')"
   }
-    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('visibility_protected')"
+    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('protected')"
     i.fa.fa-fw.fa-users v-else=""
 
   button{
@@ -30,7 +30,7 @@
       'btn-primary': isPublic
     }"
     :disabled="!canChangeVibisility"
-    @click=="change('visibility_public')"
+    @click=="change('public')"
   }
-    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('visibility_public')"
+    i.fa.fa-fw.fa-spinner.fa-spin v-if=="showLoading('public')"
     i.fa.fa-fw.fa-globe v-else=""

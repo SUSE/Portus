@@ -5,7 +5,7 @@ module API
 
       resource :users do
         before do
-          authorization!
+          authorization!(force_admin: true)
         end
 
         route_param :id, type: Integer do

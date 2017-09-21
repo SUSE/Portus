@@ -11,24 +11,12 @@ class NamespacesController < ApplicationController
   # GET /namespaces
   # GET /namespaces.json
   def index
+    # TODO: remove this!
     if request.head?
       check_namespace_by_name if params[:name]
     else
       respond_to do |format|
         format.html { skip_policy_scope }
-        format.json do
-          @special_namespaces = Namespace.where(
-            "global = ? OR namespaces.name = ?", true, current_user.username
-          ).order("created_at ASC")
-          @namespaces = policy_scope(Namespace).order(created_at: :asc)
-
-          accessible_json = serialize_as_json(@namespaces)
-          special_json = serialize_as_json(@special_namespaces)
-          render json: {
-            accessible: accessible_json,
-            special:    special_json
-          }
-        end
       end
     end
   end
@@ -57,8 +45,14 @@ class NamespacesController < ApplicationController
                                    parameters: { team: @namespace.team.name }
         @namespaces = policy_scope(Namespace)
 
+        namespace_json = API::Entities::Namespaces.represent(
+          @namespace,
+          current_user: current_user,
+          type:         :internal
+        )
+
         format.js
-        format.json { render json: @namespace }
+        format.json { render json: namespace_json }
       else
         format.js { render :create, status: :unprocessable_entity }
         format.json { render json: @namespace.errors.full_messages, status: :unprocessable_entity }
@@ -103,9 +97,9 @@ class NamespacesController < ApplicationController
     authorize @namespace
 
     # Update the visibility if needed
-    return if params[:visibility] == @namespace.visibility
+    return if visibility_param == @namespace.visibility
 
-    return unless @namespace.update_attributes(visibility: params[:visibility])
+    return unless @namespace.update_attributes(visibility: visibility_param)
 
     @namespace.create_activity :change_visibility,
       owner:      current_user,
@@ -118,6 +112,13 @@ class NamespacesController < ApplicationController
   end
 
   private
+
+  # Normalizes visibility parameter
+  def visibility_param
+    value = params[:visibility]
+    value = "visibility_#{value}" unless value.start_with?("visibility_")
+    value
+  end
 
   # Checks if namespaces exists based on the name parameter.
   # Renders an empty response with 200 if exists or 404 otherwise.

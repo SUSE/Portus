@@ -13,12 +13,17 @@ class TeamsController < ApplicationController
 
   # GET /teams/1
   # GET /teams/1.json
+  # TODO: remove the JSON part in favor of the API
   def show
     raise ActiveRecord::RecordNotFound if @team.hidden?
 
     authorize @team
     @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
-    @team_namespaces_serialized = serialize_as_json(@team.namespaces)
+    @team_namespaces_serialized = API::Entities::Namespaces.represent(
+      @team.namespaces,
+      current_user: current_user,
+      type:         :internal
+    )
   end
 
   # POST /teams

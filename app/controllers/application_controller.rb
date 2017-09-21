@@ -1,9 +1,12 @@
+require "portus/auth_from_token"
+
 class ApplicationController < ActionController::Base
-  include Portus::Checks
-  include AuthFromToken
+  include ::Portus::Checks
   before_action :check_requirements
 
+  include ::Portus::AuthFromToken
   before_action :authenticate_user_from_authentication_token!
+
   before_action :authenticate_user!
   before_action :force_update_profile!
   before_action :force_registry_config!
@@ -15,8 +18,6 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :deny_access
 
   respond_to :html, :json
-
-  serialization_scope :view_context
 
   # Two things can happen when signing in.
   #   1. The current user has no email: this happens on LDAP registration. In
@@ -33,20 +34,6 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-
-  # Serializes resource/collection as json using AMS
-  #
-  # This method is only necessary if you want to use the serializer
-  # out of the `render json: resource` situation.
-  def serialize_as_json(resource)
-    context = ActiveModelSerializers::SerializationContext.new(request)
-
-    ActiveModelSerializers::SerializableResource.new(
-      resource,
-      scope:                 view_context,
-      serialization_context: context
-    ).as_json
-  end
 
   # Authenticate the user:token as provided in the "PORTUS-AUTH" header.
   def authenticate_user_from_authentication_token!

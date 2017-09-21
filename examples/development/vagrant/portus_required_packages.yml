@@ -4,7 +4,6 @@
 - ruby2.1-rubygem-slim
 - ruby2.1-rubygem-twitter-bootstrap-rails
 - ruby2.1-rubygem-jwt
-- ruby2.1-rubygem-active_model_serializers
 - ruby2.1-rubygem-devise
 - ruby2.1-rubygem-rake
 - ruby2.1-rubygem-json

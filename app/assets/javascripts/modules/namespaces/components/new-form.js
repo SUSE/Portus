@@ -39,8 +39,7 @@ export default {
   methods: {
     onSubmit() {
       NamespacesService.save(this.namespace).then((response) => {
-        const namespace = response.data.data;
-        const name = namespace.attributes.clean_name;
+        const namespace = response.data;
 
         this.toggleForm();
         this.$v.$reset();
@@ -49,7 +48,7 @@ export default {
           team: this.teamName || '',
         });
 
-        Alert.show(`Namespace '${name}' was created successfully`);
+        Alert.show(`Namespace '${namespace.name}' was created successfully`);
         EventBus.$emit('namespaceCreated', namespace);
       }).catch((response) => {
         let errors = response.data;

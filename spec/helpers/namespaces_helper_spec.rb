@@ -36,26 +36,4 @@ RSpec.describe NamespacesHelper, type: :helper do
       expect(helper.can_manage_namespace?(namespace)).to be true
     end
   end
-
-  describe "can_view_webhooks?" do
-    it "returns true if current user (owner) is part of the namespace's team" do
-      sign_in owner
-      expect(helper.can_view_webhooks?(namespace)).to be true
-    end
-
-    it "returns true if current user (viewer) is part of the namespace's team" do
-      sign_in viewer
-      expect(helper.can_view_webhooks?(namespace)).to be true
-    end
-
-    it "returns false if current user is not part of the namespace's team" do
-      sign_in outsider
-      expect(helper.can_view_webhooks?(namespace)).to be false
-    end
-
-    it "returns false if current user is an admin" do
-      sign_in admin
-      expect(helper.can_view_webhooks?(namespace)).to be true
-    end
-  end
 end
