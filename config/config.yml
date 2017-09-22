@@ -196,6 +196,12 @@ registry:
   catalog_page:
     value: 100
 
+  # Set the timeout in seconds for requests to the registry. Only change this
+  # value if you are *really* sure that you have an exceptionally slow
+  # connection to your private Docker registry.
+  timeout:
+    value: 2
+
 # The FQDN of the machine where Portus is being deployed.
 machine_fqdn:
   value: "portus.test.lan"

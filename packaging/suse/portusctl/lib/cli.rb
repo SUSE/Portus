@@ -115,12 +115,19 @@ Looks for the following required certificate files in the specified folder:
   # JWT EXPIRATION TIME
   option "jwt-expiration-time",
     desc:    "Expiration time for the JWT token used by Portus",
+    type:    :numeric,
     default: 5
 
   # Catalog pagination
   option "catalog-page",
     desc:    "Pagination value for API calls to the registry",
+    type:    :numeric,
     default: 100
+
+  option "registry-timeout-value",
+    desc:    "Timeout value for API calls to the registry",
+    type:    :numeric,
+    default: 10
 
   # FIRST USER
   option "first-user-admin-enable",

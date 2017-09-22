@@ -50,7 +50,8 @@ RSpec.configure do |config|
     # set
     APP_CONFIG["registry"] = {
       "jwt_expiration_time" => { "value" => 5   },
-      "catalog_page"        => { "value" => 100 }
+      "catalog_page"        => { "value" => 100 },
+      "timeout"             => { "value" => 2   }
     }
 
     APP_CONFIG["user_permission"] = {

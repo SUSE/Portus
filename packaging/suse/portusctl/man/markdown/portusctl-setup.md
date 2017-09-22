@@ -244,6 +244,9 @@ first time.
   Set a custom pagination value to be used for API calls with the registry. Only
   set this value if you *really* know what you are doing.
 
+**--registry-timeout-value**
+  Timeout value for API calls to the registry.
+
 **--first-user-admin-enable**
   When enabled, the first user to register into Portus will become an
   administrator. It's enabled by default.
