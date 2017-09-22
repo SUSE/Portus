@@ -15,6 +15,45 @@ RSpec.describe NamespacesHelper, type: :helper do
   end
   let(:namespace) { create(:namespace, team: team) }
 
+  describe "can_change_visibility?" do
+    context "feature enabled" do
+      before do
+        APP_CONFIG["user_permission"]["change_visibility"]["enabled"] = true
+      end
+
+      it "returns true if admin" do
+        sign_in admin
+        expect(helper.can_change_visibility?(namespace)).to be true
+      end
+
+      it "returns true if owner and feature enabled" do
+        sign_in owner
+        expect(helper.can_change_visibility?(namespace)).to be true
+      end
+
+      it "returns false if not owner" do
+        sign_in viewer
+        expect(helper.can_change_visibility?(namespace)).to be false
+      end
+    end
+
+    context "feature disabled" do
+      before do
+        APP_CONFIG["user_permission"]["change_visibility"]["enabled"] = false
+      end
+
+      it "returns true if admin " do
+        sign_in admin
+        expect(helper.can_change_visibility?(namespace)).to be true
+      end
+
+      it "returns false if not admin or owner" do
+        sign_in owner
+        expect(helper.can_change_visibility?(namespace)).to be false
+      end
+    end
+  end
+
   describe "can_manage_namespace?" do
     it "returns true if current user is an owner of the namespace" do
       sign_in owner

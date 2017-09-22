@@ -27,6 +27,35 @@ module API
                   type:         current_type
         end
 
+        desc "Create a namespace",
+          entity:  API::Entities::Teams,
+          failure: [
+            [401, "Authentication fails."],
+            [403, "Authorization fails."]
+          ]
+
+        params do
+          requires :name, type: String, documentation: { desc: "Namespace name." }
+          requires :team, type: String, documentation: { desc: "Team name" }
+          optional :description, type: String, documentation: { desc: "Team description" }
+        end
+
+        post do
+          namespace = ::Namespaces::BuildService.new(current_user, permitted_params).execute
+          authorize namespace, :create?
+
+          namespace = ::Namespaces::CreateService.new(current_user, namespace).execute
+
+          if namespace.valid?
+            present namespace,
+                    with:         API::Entities::Namespaces,
+                    current_user: current_user,
+                    type:         current_type
+          else
+            error!({ "errors" => namespace.errors.full_messages }, 422, header)
+          end
+        end
+
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :repositories do
             desc "Returns the list of the repositories for the given namespace.",

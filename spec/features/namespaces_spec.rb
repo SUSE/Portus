@@ -240,16 +240,58 @@ feature "Namespaces support" do
   end
 
   describe "#update" do
-    it "returns an error when trying to update the team to a non-existing one", js: true do
+    scenario "user inputs a team does not exist", js: true do
       visit namespace_path(namespace.id)
-      find(".edit-namespace-link").click
-      wait_for_ajax
+      find(".toggle-link-edit-namespace").click
 
       fill_in "Team", with: "unknown"
-      find(".edit-namespace-form .btn").click
       wait_for_ajax
 
-      expect(page).to have_content("Team 'unknown' unknown")
+      expect(page).to have_content("Selected team does not exist")
+    end
+
+    scenario "user removes the team", js: true do
+      visit namespace_path(namespace.id)
+      find(".toggle-link-edit-namespace").click
+
+      fill_in "Team", with: ""
+
+      expect(page).to have_content("Team can't be blank")
+    end
+
+    scenario "user updates namespace's team", js: true do
+      new_team = create(:team, owners: [user])
+
+      visit namespace_path(namespace.id)
+      find(".toggle-link-edit-namespace").click
+
+      fill_in "Team", with: new_team.name
+      wait_for_ajax
+
+      click_button "Save"
+
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
+    end
+
+    scenario "user updates namespace's description", js: true do
+      visit namespace_path(namespace.id)
+      find(".toggle-link-edit-namespace").click
+
+      fill_in "Description", with: "Cool description"
+      wait_for_ajax
+
+      click_button "Save"
+
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("Cool description")
+      expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
     end
   end
 

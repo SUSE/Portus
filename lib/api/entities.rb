@@ -97,6 +97,12 @@ module API
       expose :id, documentation: { type: Integer, desc: "Namespace ID" }
       expose :clean_name, as: :name, documentation: { type: String, desc: "Namespace name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :description, documentation: {
+        type: String,
+        desc: "The description of the namespace"
+      }
+      expose :team_name, documentation: {
+      }, if: { type: :internal } { |n| n.team.name }
       expose :team_id, documentation: {
         type: Integer,
         desc: "The ID of the team containing this namespace"
