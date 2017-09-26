@@ -95,6 +95,24 @@ module API
         type: "Boolean",
         desc: "Whether the team is visible to the final user or not"
       }
+      expose :role, documentation: {
+        type: String,
+        desc: "The role this of the current user within this team"
+      }, if: { type: :internal } do |team, options|
+        user = options[:current_user]
+
+        # TODO: partially taken from TeamsHelper. Avoid duplication!
+        team_user = team.team_users.find_by(user_id: user.id)
+        team_user.role.titleize if team_user
+      end
+      expose :users_count, documentation: {
+        type: Integer,
+        desc: "The number of enabled users that belong to this team"
+      }, if: { type: :internal } { |t| t.users.enabled.count }
+      expose :namespaces_count, documentation: {
+        type: Integer,
+        desc: "The number of namespaces that belong to this team"
+      }, if: { type: :internal } { |t| t.namespaces.count }
     end
 
     class Namespaces < Grape::Entity

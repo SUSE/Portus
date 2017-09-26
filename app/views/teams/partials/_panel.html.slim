@@ -1,0 +1,13 @@
+.panel.panel-default
+  .panel-heading
+    .row
+      .col-sm-6
+        h5
+          ' Teams you are member of
+      .col-sm-6.text-right
+        - if can_create_team?
+          <toggle-link text="Create new team" :state="state" state-key="newFormVisible" class="toggle-link-new-team"></toggle-link>
+
+  .panel-body
+    .table-responsive
+      <teams-table :teams="teams" :sortable="true" sort-by="name" teams-path="#{teams_path}"></teams-table>

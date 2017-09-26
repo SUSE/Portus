@@ -8,6 +8,11 @@ class TeamsController < ApplicationController
   # GET /teams
   def index
     @teams = policy_scope(Team).page(params[:page])
+    @teams_serialized = API::Entities::Teams.represent(
+      @teams,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     respond_with(@teams)
   end
 
@@ -24,23 +29,6 @@ class TeamsController < ApplicationController
       current_user: current_user,
       type:         :internal
     )
-  end
-
-  # POST /teams
-  # POST /teams.json
-  def create
-    @team = fetch_team
-    authorize @team
-    @team.owners << current_user
-
-    if @team.save
-      @team.create_activity(:create,
-                            owner:      current_user,
-                            parameters: { team: @team.name })
-      respond_with(@team)
-    else
-      respond_with @team.errors, status: :unprocessable_entity
-    end
   end
 
   # PATCH/PUT /teams/1
@@ -72,15 +60,6 @@ class TeamsController < ApplicationController
   end
 
   private
-
-  # Fetch the team to be created from the given parameters.
-  def fetch_team
-    team = params.require(:team).permit(:name, :description)
-
-    @team = Team.new(name: team["name"])
-    @team.description = team["description"] if team["description"]
-    @team
-  end
 
   def set_team
     @team = Team.find(params[:id])

@@ -22,6 +22,33 @@ module API
           present policy_scope(Team), with: API::Entities::Teams
         end
 
+        desc "Create a team",
+          entity:  API::Entities::Teams,
+          failure: [
+            [401, "Authentication fails."],
+            [403, "Authorization fails."]
+          ]
+
+        params do
+          requires :name, type: String, documentation: { desc: "Team name." }
+          optional :description, type: String, documentation: { desc: "Team description" }
+        end
+
+        post do
+          authorize Team, :create?
+
+          team = ::Teams::CreateService.new(current_user, permitted_params).execute
+
+          if team.valid?
+            present team,
+                    with:         API::Entities::Teams,
+                    current_user: current_user,
+                    type:         current_type
+          else
+            error!({ "errors" => team.errors.full_messages }, 422, header)
+          end
+        end
+
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :namespaces do
             desc "Returns the list of namespaces for the given team",

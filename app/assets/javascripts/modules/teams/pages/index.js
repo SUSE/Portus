@@ -1,19 +1,50 @@
-import BaseComponent from '~/base/component';
+import Vue from 'vue';
 
-import TeamsPanel from '../components/teams-panel';
+import ToggleLink from '~/shared/components/toggle-link';
+import EventBus from '~/utils/eventbus';
 
-const TEAMS_PANEL = '.teams-wrapper';
+import NewTeamForm from '../components/new-form';
+import TeamsTable from '../components/table';
+import TeamsStore from '../store';
 
-// TeamsIndexPage component responsible to instantiate
-// the teams index page components and handle interactions.
-class TeamsIndexPage extends BaseComponent {
-  elements() {
-    this.$teamsPanel = this.$el.find(TEAMS_PANEL);
+const { set } = Vue;
+
+$(() => {
+  if (!$('body[data-route="teams/index"]').length) {
+    return;
   }
 
-  mount() {
-    this.teamsPanel = new TeamsPanel(this.$teamsPanel);
-  }
-}
+  // eslint-disable-next-line no-new
+  new Vue({
+    el: 'body[data-route="teams/index"] .vue-root',
 
-export default TeamsIndexPage;
+    components: {
+      ToggleLink,
+      NewTeamForm,
+      TeamsTable,
+    },
+
+    data() {
+      return {
+        state: TeamsStore.state,
+        teams: window.teams,
+      };
+    },
+
+    methods: {
+      onCreate(team) {
+        const currentTeams = this.teams;
+        const teams = [
+          ...currentTeams,
+          team,
+        ];
+
+        set(this, 'teams', teams);
+      },
+    },
+
+    mounted() {
+      EventBus.$on('teamCreated', team => this.onCreate(team));
+    },
+  });
+});
