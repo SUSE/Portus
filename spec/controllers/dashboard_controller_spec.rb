@@ -14,4 +14,11 @@ RSpec.describe DashboardController, type: :controller do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "Headers" do
+    it "sets the X-UA-Compatible header" do
+      get :index
+      expect(response.headers["X-UA-Compatible"]).to eq("IE=edge")
+    end
+  end
 end
