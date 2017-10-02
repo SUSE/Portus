@@ -16,4 +16,13 @@ RSpec.describe ExploreController, type: :controller do
       expect(response).to have_http_status(:found)
     end
   end
+
+  describe "Headers" do
+    it "sets the X-UA-Compatible header" do
+      APP_CONFIG["anonymous_browsing"] = { "enabled" => true }
+
+      get :index
+      expect(response.headers["X-UA-Compatible"]).to eq("IE=edge")
+    end
+  end
 end

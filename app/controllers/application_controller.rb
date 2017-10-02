@@ -10,6 +10,9 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :force_update_profile!
   before_action :force_registry_config!
+
+  include Headers
+
   protect_from_forgery with: :exception
 
   add_flash_types :float
