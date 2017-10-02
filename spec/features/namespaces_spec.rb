@@ -205,7 +205,7 @@ feature "Namespaces support" do
     end
 
     scenario "Namespace table pagination is reachable through url", js: true do
-      create_list(:namespace, 5, team: team, registry: registry)
+      create_list(:namespace, 15, team: team, registry: registry)
 
       # page 2
       visit namespaces_path(ns_page: 2)
@@ -219,7 +219,7 @@ feature "Namespaces support" do
     end
 
     scenario "URL is updated when page is changed", js: true do
-      create_list(:namespace, 5, team: team, registry: registry)
+      create_list(:namespace, 15, team: team, registry: registry)
 
       visit namespaces_path
 

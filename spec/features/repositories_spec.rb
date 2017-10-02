@@ -15,6 +15,86 @@ feature "Repositories support" do
     login_as user, scope: :user
   end
 
+  describe "repository#index", js: true do
+    before do
+      create_list(:repository, 15, namespace: namespace)
+    end
+
+    scenario "Repositories table sorting is reachable through url" do
+      # sort asc
+      visit repositories_path(sort_asc: true)
+
+      expect(page).to have_css(".fa-sort-amount-asc")
+
+      # sort desc
+      visit repositories_path(sort_asc: false)
+
+      expect(page).to have_css(".fa-sort-amount-desc")
+
+      # sort asc & namespace.name
+      visit repositories_path(sort_asc: true, sort_by: "namespace.name")
+
+      expect(page).to have_css("th:nth-child(2) .fa-sort-amount-asc")
+
+      # sort desc & namespace.name
+      visit repositories_path(sort_asc: false, sort_by: "namespace.name")
+
+      expect(page).to have_css("th:nth-child(2) .fa-sort-amount-desc")
+    end
+
+    scenario "URL is updated when repositories column is sorted" do
+      visit repositories_path
+
+      expect(page).to have_css(".repositories-panel:last-of-type th:nth-child(2)")
+
+      # sort asc & namespace.name
+      find(".repositories-panel:last-of-type th:nth-child(2)").click
+
+      expect(page).to have_css(".repositories-panel th:nth-child(2) .fa-sort-amount-asc")
+      path = repositories_path(sort_asc: true, sort_by: "namespace.name")
+      expect(page).to have_current_path(path)
+
+      # sort desc & namespace.name
+      find(".repositories-panel:last-of-type th:nth-child(2)").click
+
+      expect(page).to have_css(".repositories-panel th:nth-child(2) .fa-sort-amount-desc")
+      path = repositories_path(sort_asc: false, sort_by: "namespace.name")
+      expect(page).to have_current_path(path)
+    end
+
+    scenario "Repositories table pagination is reachable through url" do
+      # page 2
+      visit repositories_path(page: 2)
+
+      expect(page).to have_css(".repositories-panel .pagination li.active:nth-child(3)")
+
+      # page 1
+      visit repositories_path(page: 1)
+
+      expect(page).to have_css(".repositories-panel .pagination li.active:nth-child(2)")
+    end
+
+    scenario "URL is updated when page is changed" do
+      visit repositories_path
+
+      expect(page).to have_css(".repositories-panel:last-of-type .pagination li:nth-child(3)")
+
+      # page 2
+      find(".repositories-panel:last-of-type .pagination li:nth-child(3) a").click
+
+      selector = ".repositories-panel:last-of-type .pagination li.active:nth-child(3)"
+      expect(page).to have_css(selector)
+      expect(page).to have_current_path(repositories_path(page: 2))
+
+      # page 1
+      find(".repositories-panel:last-of-type .pagination li:nth-child(2) a").click
+
+      selector = ".repositories-panel:last-of-type .pagination li.active:nth-child(2)"
+      expect(page).to have_css(selector)
+      expect(page).to have_current_path(repositories_path(page: 1))
+    end
+  end
+
   describe "repository#show" do
     scenario "Visual aid for each role is shown properly" do
       visit repository_path(repository)

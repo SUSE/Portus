@@ -71,6 +71,10 @@ module API
         type: Integer,
         desc: "The number of stars for this repository"
       } { |repository| repository.stars.count }
+      expose :tags_count, documentation: {
+        type: Integer,
+        desc: "The number of tags for this repository"
+      } { |repository| repository.tags.count }
       expose :tags, documentation: {
         is_array: true,
         desc:     "The repository's tags grouped by digest"

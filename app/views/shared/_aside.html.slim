@@ -13,6 +13,12 @@ aside
       - if current_page?(url_for namespaces_path)
         .list-selected
     li.active
+      = link_to repositories_path
+        i[class="fa fa-archive"]
+        | Repositories
+      - if current_page?(url_for repositories_path)
+        .list-selected
+    li.active
       = link_to teams_path
         i[class="fa fa-users"]
         | Teams

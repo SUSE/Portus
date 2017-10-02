@@ -9,7 +9,7 @@ export default {
   props: {
     limit: {
       type: Number,
-      default: 3,
+      default: 10,
     },
   },
 
