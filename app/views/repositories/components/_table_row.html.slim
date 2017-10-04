@@ -1,0 +1,11 @@
+tr :class="scopeClass"
+  td
+    a :href="repositoryPath"
+      | {{ repository.name }}
+  td
+    a :href="namespacePath"
+      | {{ repository.namespace.name }}
+  td
+    | {{ repository.tags_count }}
+  td
+    | {{ updatedAt }}

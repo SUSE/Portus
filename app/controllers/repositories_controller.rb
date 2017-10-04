@@ -7,6 +7,11 @@ class RepositoriesController < ApplicationController
   # GET /repositories.json
   def index
     @repositories = policy_scope(Repository).all
+    @repositories_serialized = API::Entities::Repositories.represent(
+      @repositories,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     respond_with(@repositories)
   end
 
