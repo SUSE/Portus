@@ -149,7 +149,10 @@ module Portus
     # Performs an HTTP request to the given URI and request object. It returns an
     # HTTP response that has been sent from the registry.
     def get_response_token(uri, req)
-      options = { use_ssl: uri.scheme == "https", open_timeout: 2 }
+      options = {
+        use_ssl:      uri.scheme == "https",
+        open_timeout: APP_CONFIG["registry"]["timeout"]["value"].to_i
+      }
 
       Net::HTTP.start(uri.hostname, uri.port, options) do |http|
         http.request(req)
