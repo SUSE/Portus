@@ -54,39 +54,6 @@ describe User do
           "valid namespace name"])
     end
 
-    it "adds an error if the namespace name clashes" do
-      name = "coolname"
-      team = create(:team, owners: [subject])
-      create(:namespace, team: team, name: name)
-
-      user = build(:user, username: name)
-      expect(user.save).to be false
-      expect(user.errors.size).to eq(1)
-      expect(user.errors.first)
-        .to match_array([:username, "cannot be used: there is already a " \
-          "namespace named 'coolname'"])
-
-      user = build(:user, username: name + "_")
-      expect(user.save).to be false
-      expect(user.errors.size).to eq(1)
-      expect(user.errors.first)
-        .to match_array([:username, "cannot be used: there is already a " \
-          "namespace named 'coolname' (modified so it's valid)"])
-    end
-
-    it "adds an error if there's a team named like that" do
-      name = "coolname"
-      team = create(:team, name: name, owners: [subject])
-      create(:namespace, team: team, name: "somethingelse")
-
-      user = build(:user, username: name)
-      expect(user.save).to be false
-      expect(user.errors.size).to eq(1)
-      expect(user.errors.first)
-        .to match_array([:username, "cannot be used: there is already a " \
-          "team named like this"])
-    end
-
     it "works beautifully if everything was fine" do
       name = "coolname"
       team = create(:team, owners: [subject])

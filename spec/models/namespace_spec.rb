@@ -159,6 +159,9 @@ describe Namespace do
   end
 
   describe "make_valid" do
+    let!(:team)      { create(:team) }
+    let!(:namespace) { create(:namespace, team: team) }
+
     it "does nothing on already valid names" do
       ["name", "a", "a_a", "45", "n4", "h2o", "flavio.castelli"].each do |name|
         expect(Namespace.make_valid(name)).to eq name
@@ -183,6 +186,13 @@ describe Namespace do
       expect(Namespace.make_valid("Miquel.Sabate.")).to eq "miquel.sabate"
       expect(Namespace.make_valid("M")).to eq "m"
       expect(Namespace.make_valid("_M_")).to eq "m"
+    end
+
+    it "adds an increment if a team with the name already exists" do
+      expect(Namespace.make_valid(namespace.name)).to eq "#{namespace.name}0"
+
+      create(:namespace, name: "#{namespace.name}0", team: team)
+      expect(Namespace.make_valid(namespace.name)).to eq "#{namespace.name}1"
     end
   end
 end

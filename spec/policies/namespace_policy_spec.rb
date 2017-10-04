@@ -7,6 +7,7 @@ describe NamespacePolicy do
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
   let(:contributor) { create(:user) }
+  let(:registry)    { create(:registry) }
   let(:team) do
     create(:team,
            owners:       [owner],
@@ -17,14 +18,13 @@ describe NamespacePolicy do
     create(
       :namespace,
       description: "short test description.",
-      registry:    @registry,
+      registry:    registry,
       team:        team
     )
   end
 
   before :each do
     @admin = create(:admin)
-    @registry = create(:registry)
   end
 
   permissions :pull? do
@@ -54,7 +54,7 @@ describe NamespacePolicy do
     end
 
     it "always allows access to a global namespace" do
-      expect(subject).to permit(create(:user), @registry.global_namespace)
+      expect(subject).to permit(user, registry.global_namespace)
     end
 
     it "disallows access to a non-logged user if the namespace is private" do
@@ -109,11 +109,11 @@ describe NamespacePolicy do
 
     context "global namespace" do
       it "allows access to administrators" do
-        expect(subject).to permit(@admin, @registry.global_namespace)
+        expect(subject).to permit(@admin, registry.global_namespace)
       end
 
       it "denies access to other users" do
-        expect(subject).not_to permit(user, @registry.global_namespace)
+        expect(subject).not_to permit(user, registry.global_namespace)
       end
     end
   end
@@ -137,11 +137,11 @@ describe NamespacePolicy do
 
     context "global namespace" do
       it "allows access to administrators" do
-        expect(subject).to permit(@admin, @registry.global_namespace)
+        expect(subject).to permit(@admin, registry.global_namespace)
       end
 
       it "denies access to other users" do
-        expect(subject).not_to permit(user, @registry.global_namespace)
+        expect(subject).not_to permit(user, registry.global_namespace)
       end
     end
   end
@@ -192,20 +192,19 @@ describe NamespacePolicy do
       expected = team.namespaces
       expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
 
-      expect(Pundit.policy_scope(create(:user), Namespace).to_a).to be_empty
+      expect(Pundit.policy_scope(user, Namespace).to_a).to be_empty
     end
 
     it "always shows public namespaces" do
       n = create(:namespace, visibility: :visibility_public)
       create(:team, namespaces: [n], owners: [owner])
-      expect(Pundit.policy_scope(create(:user), Namespace).to_a).to match_array([n])
+      expect(Pundit.policy_scope(user, Namespace).to_a).to match_array([n])
     end
 
     it "never shows public or personal namespaces" do
-      user = create(:user)
       expect(Namespace.find_by(name: user.username)).not_to be_nil
       create(:namespace, global: true, visibility: :visibility_public)
-      expect(Pundit.policy_scope(create(:user), Namespace).to_a).to be_empty
+      expect(Pundit.policy_scope(user, Namespace).to_a).to be_empty
     end
 
     it "does not show duplicates" do
@@ -216,7 +215,6 @@ describe NamespacePolicy do
     end
 
     it "shows protected namespaces" do
-      user = create(:user)
       n = create(:namespace, visibility: :visibility_protected)
       create(:team, namespaces: [n], owners: [owner])
       expect(Pundit.policy_scope(user, Namespace)).to match_array([n])

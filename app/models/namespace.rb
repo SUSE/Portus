@@ -93,16 +93,16 @@ class Namespace < ActiveRecord::Base
     [namespace, name, registry]
   end
 
-  # Tries to transform the given name to a valid namespace name. If the name is
-  # already valid, then it's returned untouched. Otherwise, if the name cannot
-  # be turned into a valid namespace name, then nil is returned.
+  # Tries to transform the given name to a valid namespace name without
+  # clashing with existent namespaces.
+  # If the name cannot be turned into a valid namespace name,
+  # then nil is returned.
+  # If the name is valid, checks if it clashes with others namespaces and
+  # finds one until it's not being used and returns it.
   def self.make_valid(name)
-    return name if name =~ NAME_REGEXP
-
     # One common case is LDAP and case sensitivity. With this in mind, try to
     # downcase everything and see if now it's fine.
     name = name.downcase
-    return name if name =~ NAME_REGEXP
 
     # Let's strip extra characters from the beginning and end.
     first = name.index(/[a-z0-9]/)
@@ -120,6 +120,19 @@ class Namespace < ActiveRecord::Base
     name = final[0..MAX_NAME_LENGTH]
 
     return nil if name !~ NAME_REGEXP
+
+    # To avoid any name conflict we append an incremental number to the end
+    # of the name returns it as the name that will be used on both Namespace
+    # and Team on the User#create_personal_namespace! method
+    # TODO: workaround until we implement the namespace/team removal
+    increment = 0
+    original_name = name
+    while Namespace.exists?(name: name)
+      name = "#{original_name}#{increment}"
+      increment += 1
+      break if increment > 1000
+    end
+
     name
   end
 
