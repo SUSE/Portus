@@ -7,15 +7,9 @@ class NamespacesController < ApplicationController
   after_action :verify_policy_scoped, only: :index
 
   # GET /namespaces
-  # GET /namespaces.json
   def index
-    # TODO: remove this!
-    if request.head?
-      check_namespace_by_name if params[:name]
-    else
-      respond_to do |format|
-        format.html { skip_policy_scope }
-      end
+    respond_to do |format|
+      format.html { skip_policy_scope }
     end
   end
 
@@ -111,19 +105,6 @@ class NamespacesController < ApplicationController
     value = params[:visibility]
     value = "visibility_#{value}" unless value.start_with?("visibility_")
     value
-  end
-
-  # Checks if namespaces exists based on the name parameter.
-  # Renders an empty response with 200 if exists or 404 otherwise.
-  def check_namespace_by_name
-    skip_policy_scope
-    namespace = Namespace.find_by(name: params[:name])
-
-    if namespace
-      head :ok
-    else
-      head :not_found
-    end
   end
 
   def set_namespace

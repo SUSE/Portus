@@ -9,10 +9,9 @@ div ref="form" class="collapse"
         span.help-block
           span v-if="!$v.namespace.name.required"
             | Name can't be blank
-          span v-if="!$v.namespace.name.format"
-            | Name can only contain lower case alphanumeric characters, with optional underscores and dashes in the middle
-          span v-if="!$v.namespace.name.available"
-            | Name has already been taken
+          span.error-messages v-if="errors.name && errors.name.length"
+            span.error-message v-for="(error, index) in errors.name" :key="index"
+              | Name {{ error }}
 
     .form-group.has-feedback :class=="{ 'has-error': $v.namespace.team.$error }" v-if="!teamName"
       = f.label :team, {class: "control-label col-md-2"}

@@ -27,6 +27,26 @@ module API
                   type:         current_type
         end
 
+        desc "Validates the given namespace",
+             tags:    ["namespaces"],
+             detail:  "Validates the given namespace.",
+             entity:  API::Entities::Status,
+             failure: [
+               [401, "Authentication fails."],
+               [403, "Authorization fails."]
+             ]
+
+        params do
+          requires :name, type: String, documentation: { desc: "Name to be checked." }
+        end
+
+        get "/validate" do
+          namespace = Namespace.new(name: params[:name], registry: Registry.get)
+          valid = namespace.valid?
+          obj = { valid: valid, messages: namespace.errors.messages }
+          present obj, with: API::Entities::Status
+        end
+
         desc "Create a namespace",
           entity:  API::Entities::Teams,
           failure: [

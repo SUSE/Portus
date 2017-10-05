@@ -28,8 +28,11 @@ export default {
         team: this.teamName || '',
       },
       timeout: {
-        name: null,
+        validate: null,
         team: null,
+      },
+      errors: {
+        name: [],
       },
     };
   },
@@ -64,19 +67,8 @@ export default {
     namespace: {
       name: {
         required,
-        format(value) {
-          // extracted from models/namespace.rb
-          const regexp = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
-
-          // required already taking care of this
-          if (value === '') {
-            return true;
-          }
-
-          return regexp.test(value);
-        },
-        available(value) {
-          clearTimeout(this.timeout.name);
+        validate(value) {
+          clearTimeout(this.timeout.validate);
 
           // required already taking care of this
           if (value === '') {
@@ -84,21 +76,16 @@ export default {
           }
 
           return new Promise((resolve) => {
-            const searchName = () => {
-              const promise = NamespacesService.existsByName(value);
+            const validate = () => {
+              const promise = NamespacesService.validate(value);
 
-              promise.then((exists) => {
-                // leave it for the back-end
-                if (exists === null) {
-                  resolve(true);
-                }
-
-                // if exists, invalid
-                resolve(!exists);
+              promise.then((data) => {
+                set(this.errors, 'name', data.messages.name);
+                resolve(data.valid);
               });
             };
 
-            this.timeout.name = setTimeout(searchName, 1000);
+            this.timeout.validate = setTimeout(validate, 1000);
           });
         },
       },

@@ -222,4 +222,25 @@ describe API::V1::Namespaces do
       expect(namespace_creation_activity.trackable).to eq(namespace)
     end
   end
+
+  context "GET /api/v1/namespaces/validate" do
+    it "returns the proper response when the namespace exists" do
+      ns = create(:namespace, visibility: public_visibility, team: team)
+
+      get "/api/v1/namespaces/validate", { name: ns.name }, @admin_header
+      expect(response).to have_http_status(:success)
+
+      data = JSON.parse(response.body)
+      expect(data["valid"]).to be_falsey
+      expect(data["messages"]["name"]).to eq(["has already been taken"])
+    end
+
+    it "returns the proper response when the namespace does not exist" do
+      get "/api/v1/namespaces/validate", { name: "somename" }, @admin_header
+      expect(response).to have_http_status(:success)
+
+      data = JSON.parse(response.body)
+      expect(data["valid"]).to be_truthy
+    end
+  end
 end
