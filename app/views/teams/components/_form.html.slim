@@ -1,0 +1,18 @@
+div ref="form" class="collapse"
+  = form_for :team, url: teams_path, html: {id: 'new-team-form', class: 'form-horizontal', role: 'form', novalidate: true, "@submit.prevent" => "onSubmit"} do |f|
+    .form-group :class=="{ 'has-error': $v.team.name.$error }"
+      = f.label :name, {class: 'control-label col-md-2'}
+      .col-md-7
+        = f.text_field(:name, class: 'form-control', required: true, placeholder: "New team's name", "@input" => "$v.team.name.$touch()", "v-model.trim" => "team.name")
+        span.help-block
+          span v-if="!$v.team.name.required"
+            | Name can't be blank
+          span v-if="!$v.team.name.available"
+            | Name has already been taken
+    .form-group
+      = f.label :description, {class: 'control-label col-md-2'}
+      .col-md-7
+        = f.text_area(:description, class: 'form-control fixed-size', required: false, placeholder: "A short description of your team", "v-model" => "team.description")
+    .form-group
+      .col-md-offset-2.col-md-7
+        = f.submit('Add', class: 'btn btn-primary', ":disabled" => "$v.$invalid")

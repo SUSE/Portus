@@ -9,43 +9,40 @@ feature "Teams support" do
     login_as user, scope: :user
   end
 
-  describe "teams#index" do
-    scenario "A user cannot create an empty team", js: true do
-      teams_count = Team.count
-
+  describe "teams#index", js: true do
+    scenario "A user cannot create an empty team" do
       visit teams_path
-      find("#add_team_btn").click
 
-      click_button "Add"
-      wait_for_ajax
+      find(".toggle-link-new-team").click
+      wait_for_effect_on("#new-team-form")
 
-      expect(Team.count).to eql teams_count
-      expect(page).to have_current_path(teams_path)
-    end
-
-    scenario "A team cannot be created if the name has already been picked", js: true do
-      teams_count = Team.count
-
-      visit teams_path
-      find("#add_team_btn").click
       fill_in "Name", with: Team.first.name
+      fill_in "Name", with: ""
 
-      click_button "Add"
-      wait_for_ajax
-      wait_for_effect_on("#float-alert")
-
-      expect(page).to have_css("#float-alert")
-      expect(page).to have_content("Name has already been taken")
-      expect(page).to have_current_path(teams_path)
-      expect(Team.count).to eql teams_count
+      expect(page).to have_content("Name can't be blank")
+      expect(page).to have_button("Add", disabled: true)
     end
 
-    scenario "A team can be created from the index page", js: true do
+    scenario "A team cannot be created if the name has already been picked" do
+      visit teams_path
+
+      find(".toggle-link-new-team").click
+      wait_for_effect_on("#new-team-form")
+
+      fill_in "Name", with: Team.last.name
+      wait_for_ajax
+
+      expect(page).to have_content("Name has already been taken")
+      expect(page).to have_button("Add", disabled: true)
+    end
+
+    scenario "A team can be created from the index page" do
       teams_count = Team.count
 
       visit teams_path
-      find("#add_team_btn").click
+      find(".toggle-link-new-team").click
       fill_in "Name", with: "valid-team"
+      wait_for_ajax
 
       click_button "Add"
       wait_for_ajax
@@ -58,28 +55,29 @@ feature "Teams support" do
       expect(Team.count).to eql(teams_count + 1)
     end
 
-    scenario 'The "Create new team" link has a toggle effect', js: true do
+    scenario 'The "Create new team" link has a toggle effect' do
       visit teams_path
-      expect(page).to have_css("#add_team_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_team_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-team i.fa-plus-circle")
+      expect(page).to_not have_css(".toggle-link-new-team i.fa-minus-circle")
 
-      find("#add_team_btn").click
-      wait_for_effect_on("#add_team_form")
+      find(".toggle-link-new-team").click
+      wait_for_effect_on("#new-team-form")
 
-      expect(page).to_not have_css("#add_team_btn i.fa-plus-circle")
-      expect(page).to have_css("#add_team_btn i.fa-minus-circle")
+      expect(page).to_not have_css(".toggle-link-new-team i.fa-plus-circle")
+      expect(page).to have_css(".toggle-link-new-team i.fa-minus-circle")
 
-      find("#add_team_btn").click
-      wait_for_effect_on("#add_team_form")
+      find(".toggle-link-new-team").click
+      wait_for_effect_on("#new-team-form")
 
-      expect(page).to have_css("#add_team_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_team_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-team i.fa-plus-circle")
+      expect(page).to_not have_css(".toggle-link-new-team i.fa-minus-circle")
     end
 
     scenario "The name of each team is a link" do
       visit teams_path
-      expect(page).to have_content(team.name)
-      find("#teams a").click
+
+      expect(page).to have_link(team.name)
+      find(".team_#{team.id} a").click
       expect(page).to have_current_path(team_path(team))
     end
 

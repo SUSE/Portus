@@ -83,61 +83,6 @@ RSpec.describe TeamsController, type: :controller do
         expect(assigns(:teams)).to be_empty
       end
     end
-
-    describe "POST #create" do
-      context "with valid params" do
-        it "creates a new Team" do
-          expect do
-            post :create, team: valid_attributes, format: :js
-          end.to change(Team, :count).by(1)
-          expect(assigns(:team).owners.exists?(owner.id))
-        end
-
-        it "assigns a newly created team as @team" do
-          post :create, team: valid_attributes, format: :js
-          expect(assigns(:team)).to be_a(Team)
-          expect(assigns(:team)).to be_persisted
-        end
-
-        it "redirects to the created team" do
-          post :create, team: valid_attributes
-          expect(response).to redirect_to(Team.last)
-        end
-      end
-
-      context "with invalid params" do
-        it "assigns a newly created but unsaved team as @team" do
-          post :create, team: invalid_attributes, format: :js
-          expect(assigns(:team)).to be_a_new(Team)
-          expect(response.status).to eq 422
-        end
-      end
-
-      context "non-admins are not allowed to create teams" do
-        it "prohibits user from creating a new Team" do
-          APP_CONFIG["user_permission"]["create_team"]["enabled"] = false
-
-          expect do
-            post :create, team: valid_attributes, format: :js
-          end.to change(Team, :count).by(0)
-        end
-      end
-    end
-  end
-
-  describe "as an admin" do
-    describe "POST #create" do
-      it "always creates a new Team" do
-        APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
-        admin = User.find_by(admin: true)
-        sign_in admin
-
-        expect do
-          post :create, team: valid_attributes, format: :js
-        end.to change(Team, :count).by(1)
-        expect(assigns(:team).owners.exists?(admin.id))
-      end
-    end
   end
 
   describe "PATCH #update" do
@@ -250,17 +195,6 @@ RSpec.describe TeamsController, type: :controller do
   describe "activity tracking" do
     before :each do
       sign_in owner
-    end
-
-    it "creation of new teams" do
-      expect do
-        post :create, team: valid_attributes, format: :js
-      end.to change(PublicActivity::Activity, :count).by(1)
-
-      team = Team.last
-      team_creation_activity = PublicActivity::Activity.find_by(key: "team.create")
-      expect(team_creation_activity.owner).to eq(owner)
-      expect(team_creation_activity.trackable).to eq(team)
     end
 
     it "editing of a team description" do

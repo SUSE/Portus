@@ -1,0 +1,12 @@
+tr :class="scopeClass"
+  td.table-icon
+    i class="fa fa-lg" :class="teamIcon"
+  td
+    a :href="teamPath"
+      | {{ team.name }}
+  td
+    | {{ team.role }}
+  td
+    | {{ team.users_count }}
+  td
+    | {{ team.namespaces_count }}

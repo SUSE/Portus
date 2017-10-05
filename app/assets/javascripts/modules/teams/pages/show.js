@@ -9,8 +9,8 @@ import NewNamespaceForm from '../../namespaces/components/new-form';
 import NamespacesStore from '../../namespaces/store';
 
 // legacy
-import TeamDetails from '../components/team-details';
-import TeamUsersPanel from '../components/team-users-panel';
+import TeamDetails from '../legacy-components/team-details';
+import TeamUsersPanel from '../legacy-components/team-users-panel';
 
 const { set } = Vue;
 

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :errors, only: [:show]
-  resources :teams, only: [:index, :show, :create, :update] do
+  resources :teams, only: [:index, :show, :update] do
     member do
       get "typeahead/:query" => "teams#typeahead", :defaults => { format: "json" }
     end

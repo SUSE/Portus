@@ -3,6 +3,7 @@ require "rails_helper"
 describe API::V1::Teams do
   let!(:admin) { create(:admin) }
   let!(:token) { create(:application_token, user: admin) }
+  let!(:user_token) { create(:application_token, user: create(:user)) }
   let!(:hidden_team) do
     create(:team,
            name:   "portus_global_team_1",
@@ -12,6 +13,7 @@ describe API::V1::Teams do
 
   before :each do
     @header = build_token_header(token)
+    @user_header = build_token_header(user_token)
   end
 
   context "GET /api/v1/teams" do
@@ -73,6 +75,77 @@ describe API::V1::Teams do
       members = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
       expect(members.length).to eq(2)
+    end
+  end
+
+  context "POST /api/v1/teams" do
+    let(:valid_attributes) do
+      { name: "qa team", description: "short test description" }
+    end
+
+    let(:invalid_attributes) do
+      { admin: "not valid" }
+    end
+
+    it "creates a team" do
+      expect do
+        post "/api/v1/teams", valid_attributes, @header
+      end.to change(Team, :count).by(1)
+
+      team = Team.last
+      team_parsed = JSON.parse(response.body)
+      expect(response).to have_http_status(:success)
+      expect(team_parsed["id"]).to eq(team.id)
+      expect(team_parsed["name"]).to eq(team.name)
+    end
+
+    it "creates a team even if feature is disabled and admin" do
+      APP_CONFIG["user_permission"]["create_team"]["enabled"] = false
+
+      expect do
+        post "/api/v1/teams", valid_attributes, @header
+      end.to change(Team, :count).by(1)
+
+      team = Team.last
+      team_parsed = JSON.parse(response.body)
+      expect(response).to have_http_status(:success)
+      expect(team_parsed["id"]).to eq(team.id)
+      expect(team_parsed["name"]).to eq(team.name)
+    end
+
+    it "returns 400 if invalid params" do
+      post "/api/v1/teams", invalid_attributes, @header
+
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "returns 422 if invalid values" do
+      post "/api/v1/teams", { name: "" }, @header
+
+      parsed = JSON.parse(response.body)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(parsed["errors"]).to include("Name can't be blank")
+    end
+
+    it "returns 403 if non-admins try to create a Team" do
+      APP_CONFIG["user_permission"]["create_team"]["enabled"] = false
+
+      expect do
+        post "/api/v1/teams", valid_attributes, @user_header
+      end.to change(Team, :count).by(0)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "tracks the creations of new teams" do
+      expect do
+        post "/api/v1/teams", valid_attributes, @header
+      end.to change(PublicActivity::Activity, :count).by(1)
+
+      team = Team.last
+      team_creation_activity = PublicActivity::Activity.find_by(key: "team.create")
+      expect(team_creation_activity.owner).to eq(admin)
+      expect(team_creation_activity.trackable).to eq(team)
     end
   end
 end
