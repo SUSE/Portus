@@ -13,7 +13,7 @@ describe API::V1::Users do
   before :each do
     admin = create :admin
     token = create :application_token, user: admin
-    @header = { "PORTUS-AUTH" => "#{token.user.username}:#{token.application}" }
+    @header = build_token_header(token)
   end
 
   context "GET /api/v1/users" do

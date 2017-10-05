@@ -2,8 +2,6 @@ class NamespacesController < ApplicationController
   include ChangeNameDescription
 
   before_action :set_namespace, only: [:change_visibility, :show, :update]
-  before_action :check_team, only: [:create]
-  before_action :check_role, only: [:create]
 
   after_action :verify_authorized, except: [:index, :typeahead]
   after_action :verify_policy_scoped, only: :index
@@ -28,56 +26,35 @@ class NamespacesController < ApplicationController
 
     authorize @namespace
     @repositories = @namespace.repositories.page(params[:page])
+    @namespace_serialized = API::Entities::Namespaces.represent(
+      @namespace,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
 
     respond_with(@namespace)
-  end
-
-  # POST /namespace
-  # POST /namespace.json
-  def create
-    @namespace = fetch_namespace
-    authorize @namespace
-
-    respond_to do |format|
-      if @namespace.save
-        @namespace.create_activity :create,
-                                   owner:      current_user,
-                                   parameters: { team: @namespace.team.name }
-        @namespaces = policy_scope(Namespace)
-
-        namespace_json = API::Entities::Namespaces.represent(
-          @namespace,
-          current_user: current_user,
-          type:         :internal
-        )
-
-        format.js
-        format.json { render json: namespace_json }
-      else
-        format.js { render :create, status: :unprocessable_entity }
-        format.json { render json: @namespace.errors.full_messages, status: :unprocessable_entity }
-      end
-    end
   end
 
   # PATCH/PUT /namespace/1
   # PATCH/PUT /namespace/1.json
   def update
     p = params.require(:namespace).permit(:name, :description, :team)
+
     change_name_description(@namespace, :namespace, p)
+    change_team(p)
 
-    # Update the team if needed/authorized.
-    return if p[:team] == @namespace.team.name
-    authorize @namespace, :change_team?
-
-    @team = Team.find_by(name: p[:team])
-    if @team.nil?
-      @namespace.errors[:team_id] << "'#{p[:team]}' unknown."
-    else
-      @namespace.create_activity :change_team,
-        owner:      current_user,
-        parameters: { old: @namespace.team.id, new: @team.id }
-      @namespace.update_attributes(team: @team)
+    respond_to do |format|
+      format.json do
+        if @namespace.errors.any?
+          render json: @namespace.errors.full_messages, status: :unprocessable_entity
+        else
+          render json: API::Entities::Namespaces.represent(
+            @namespace,
+            current_user: current_user,
+            type:         :internal
+          )
+        end
+      end
     end
   end
 
@@ -113,6 +90,22 @@ class NamespacesController < ApplicationController
 
   private
 
+  def change_team(p)
+    # Update the team if needed/authorized.
+    return if p[:team].blank? || p[:team] == @namespace.team.name
+    authorize @namespace, :change_team?
+
+    @team = Team.find_by(name: p[:team])
+    if @team.nil?
+      @namespace.errors[:team_id] << "'#{p[:team]}' unknown."
+    else
+      @namespace.create_activity :change_team,
+        owner:      current_user,
+        parameters: { old: @namespace.team.id, new: @team.id }
+      @namespace.update_attributes(team: @team)
+    end
+  end
+
   # Normalizes visibility parameter
   def visibility_param
     value = params[:visibility]
@@ -130,46 +123,6 @@ class NamespacesController < ApplicationController
       head :ok
     else
       head :not_found
-    end
-  end
-
-  # Fetch the namespace to be created from the given parameters. Note that this
-  # method assumes that the @team instance object has already been set.
-  def fetch_namespace
-    ns = params.require(:namespace).permit(:name, :description)
-
-    @namespace = Namespace.new(
-      team:       @team,
-      name:       ns["name"],
-      visibility: Namespace.visibilities[:visibility_private],
-      registry:   Registry.get
-    )
-    @namespace.description = ns["description"] if ns["description"]
-    @namespace
-  end
-
-  # Check that the given team exists and that is not hidden. This hook is used
-  # only as a helper of the `create` method.
-  def check_team
-    @team = Team.find_by(name: params["namespace"]["team"], hidden: false)
-    return unless @team.nil?
-
-    @error = "Selected team does not exist."
-    respond_to do |format|
-      format.js { render :create, status: :not_found }
-      format.json { render json: [@error], status: :not_found }
-    end
-  end
-
-  def check_role
-    return false if current_user.admin? ||
-        @team.owners.exists?(current_user.id) ||
-        @team.contributors.exists?(current_user.id)
-
-    @error = "You are not allowed to create a namespace for the team #{@team.name}."
-    respond_to do |format|
-      format.js { render :create, status: :unauthorized }
-      format.json { render json: [@error], status: :unauthorized }
     end
   end
 

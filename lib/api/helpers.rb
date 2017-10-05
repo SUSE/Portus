@@ -53,6 +53,14 @@ module API
       @type
     end
 
+    # Behaves like strong parameters. It will only permit the parameters
+    # declared on the endpoint params
+    def permitted_params
+      @permitted_params ||= declared(params,
+                                     include_missing:           false,
+                                     include_parent_namespaces: false)
+    end
+
     # Helpers for namespaces
     module Namespaces
       # Returns an aggregate of the accessible namespaces for the current user.

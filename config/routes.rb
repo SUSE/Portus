@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :help, only: [:index]
 
   resources :team_users, only: [:create, :destroy, :update]
-  resources :namespaces, only: [:create, :index, :show, :update] do
+  resources :namespaces, only: [:index, :show, :update] do
     put "change_visibility", on: :member
     resources :webhooks do
       resources :headers, only: [:create, :destroy], controller: :webhook_headers

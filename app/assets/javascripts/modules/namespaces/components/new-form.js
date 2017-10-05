@@ -24,10 +24,8 @@ export default {
   data() {
     return {
       namespace: {
-        namespace: {
-          name: '',
-          team: this.teamName || '',
-        },
+        name: '',
+        team: this.teamName || '',
       },
       timeout: {
         name: null,
@@ -43,7 +41,7 @@ export default {
 
         this.toggleForm();
         this.$v.$reset();
-        set(this.namespace, 'namespace', {
+        set(this, 'namespace', {
           name: '',
           team: this.teamName || '',
         });
@@ -64,75 +62,73 @@ export default {
 
   validations: {
     namespace: {
-      namespace: {
-        name: {
-          required,
-          format(value) {
-            // extracted from models/namespace.rb
-            const regexp = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
+      name: {
+        required,
+        format(value) {
+          // extracted from models/namespace.rb
+          const regexp = /^[a-z0-9]+(?:[._-][a-z0-9]+)*$/;
 
-            // required already taking care of this
-            if (value === '') {
-              return true;
-            }
+          // required already taking care of this
+          if (value === '') {
+            return true;
+          }
 
-            return regexp.test(value);
-          },
-          available(value) {
-            clearTimeout(this.timeout.name);
-
-            // required already taking care of this
-            if (value === '') {
-              return true;
-            }
-
-            return new Promise((resolve) => {
-              const searchName = () => {
-                const promise = NamespacesService.existsByName(value);
-
-                promise.then((exists) => {
-                  // leave it for the back-end
-                  if (exists === null) {
-                    resolve(true);
-                  }
-
-                  // if exists, invalid
-                  resolve(!exists);
-                });
-              };
-
-              this.timeout.name = setTimeout(searchName, 1000);
-            });
-          },
+          return regexp.test(value);
         },
-        team: {
-          required,
-          available(value) {
-            clearTimeout(this.timeout.team);
+        available(value) {
+          clearTimeout(this.timeout.name);
 
-            // required already taking care of this
-            if (value === '') {
-              return true;
-            }
+          // required already taking care of this
+          if (value === '') {
+            return true;
+          }
 
-            return new Promise((resolve) => {
-              const searchTeam = () => {
-                const promise = NamespacesService.teamExists(value);
+          return new Promise((resolve) => {
+            const searchName = () => {
+              const promise = NamespacesService.existsByName(value);
 
-                promise.then((exists) => {
-                  // leave it for the back-end
-                  if (exists === null) {
-                    resolve(true);
-                  }
+              promise.then((exists) => {
+                // leave it for the back-end
+                if (exists === null) {
+                  resolve(true);
+                }
 
-                  // if exists, valid
-                  resolve(exists);
-                });
-              };
+                // if exists, invalid
+                resolve(!exists);
+              });
+            };
 
-              this.timeout.team = setTimeout(searchTeam, 1000);
-            });
-          },
+            this.timeout.name = setTimeout(searchName, 1000);
+          });
+        },
+      },
+      team: {
+        required,
+        available(value) {
+          clearTimeout(this.timeout.team);
+
+          // required already taking care of this
+          if (value === '') {
+            return true;
+          }
+
+          return new Promise((resolve) => {
+            const searchTeam = () => {
+              const promise = NamespacesService.teamExists(value);
+
+              promise.then((exists) => {
+                // leave it for the back-end
+                if (exists === null) {
+                  resolve(true);
+                }
+
+                // if exists, valid
+                resolve(exists);
+              });
+            };
+
+            this.timeout.team = setTimeout(searchTeam, 1000);
+          });
         },
       },
     },
@@ -143,7 +139,7 @@ export default {
 
     // workaround because of typeahead
     const updateTeam = () => {
-      set(this.namespace.namespace, 'team', $team.val());
+      set(this.namespace, 'team', $team.val());
     };
 
     $team.on('typeahead:selected', updateTeam);

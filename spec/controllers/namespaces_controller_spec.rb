@@ -75,6 +75,10 @@ describe NamespacesController, type: :controller do
   describe "PUT #change_visibility" do
     # users may change the visibility of their personal namespace
     context "when option user_permission.change_visibility is enabled" do
+      before do
+        APP_CONFIG["user_permission"]["change_visibility"]["enabled"] = true
+      end
+
       it "allows the user to change the visibility attribute" do
         sign_in owner
         put :change_visibility,
@@ -92,7 +96,7 @@ describe NamespacesController, type: :controller do
         put :change_visibility,
           id:         owner.namespace.id,
           visibility: "visibility_public",
-          format:     :js
+          format:     :json
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_public")
@@ -202,264 +206,29 @@ describe NamespacesController, type: :controller do
     end
   end
 
-  describe "POST #create" do
-    render_views
-    let(:valid_attributes) do
-      {
-        team: team.name,
-        name: "qa_team_namespace"
-      }
-    end
-
-    let(:invalid_attributes) do
-      {
-        team: team.name
-      }
-    end
-
-    let(:hidden_attributes) do
-      {
-        team: Team.where(hidden: true).first,
-        name: "qa_team_namespace"
-      }
-    end
-
-    context "as a contributor of the team that is going to control the namespace" do
-      it "is not possible to create a namespace inside of a hidden team" do
-        sign_in contributor
-        post_params = { namespace: hidden_attributes, format: :js }
-
-        expect do
-          post :create, post_params
-        end.not_to change(Namespace, :count)
-        expect(response.status).to eq(404)
-      end
-
-      it "is not possible to create a namespace inside of a hidden team [json]" do
-        sign_in contributor
-        post_params = { namespace: hidden_attributes, format: :json }
-
-        expect do
-          post :create, post_params
-        end.not_to change(Namespace, :count)
-        expect(response.status).to eq(404)
-      end
-
-      it "creates a new namespace" do
-        sign_in contributor
-        post_params = { namespace: valid_attributes, format: :js }
-
-        expect do
-          post :create, post_params
-        end.to change(Namespace, :count).by(1)
-      end
-
-      it "creates a new namespace [json]" do
-        sign_in contributor
-        post_params = { namespace: valid_attributes, format: :json }
-
-        expect do
-          post :create, post_params
-        end.to change(Namespace, :count).by(1)
-        expect(response.status).to eq(200)
-      end
-    end
-
-    context "as a viewer of the team that is going to control the namespace" do
-      it "blocks access" do
-        sign_in viewer
-        post_params = { namespace: valid_attributes, format: :js }
-
-        expect do
-          post :create, post_params
-        end.not_to change(Namespace, :count)
-        expect(response.status).to eq(401)
-      end
-
-      it "blocks access [json]" do
-        sign_in viewer
-        post_params = { namespace: valid_attributes, format: :json }
-
-        expect do
-          post :create, post_params
-        end.not_to change(Namespace, :count)
-        expect(response.status).to eq(401)
-      end
-
-      it "shows an error message" do
-        sign_in viewer
-        post_params = { namespace: valid_attributes, format: :js }
-        xhr :post, :create, post_params
-        expect(response.body).to include("You are not allowed to create a namespace for the team")
-      end
-
-      it "shows an error message [json]" do
-        sign_in viewer
-        post_params = { namespace: valid_attributes, format: :json }
-        xhr :post, :create, post_params
-
-        expect(response.body).to include("You are not allowed to create a namespace for the team")
-      end
-    end
-
-    context "as a generic user not part of the team that is going to control the namespace" do
-      it "blocks access" do
-        sign_in create(:user)
-        post_params = { namespace: valid_attributes, format: :js }
-
-        expect do
-          post :create, post_params
-        end.not_to change(Namespace, :count)
-        expect(response.status).to eq(401)
-      end
-
-      it "blocks access [json]" do
-        sign_in create(:user)
-        post_params = { namespace: valid_attributes, format: :json }
-
-        expect do
-          post :create, post_params
-        end.not_to change(Namespace, :count)
-        expect(response.status).to eq(401)
-      end
-    end
-
-    context "with valid params" do
-      before :each do
-        sign_in owner
-        @post_params = {
-          namespace: valid_attributes,
-          format:    :js
-        }
-      end
-
-      context "non-admins are allowed to create namespaces" do
-        it "creates a new Namespace" do
-          expect do
-            post :create, @post_params
-          end.to change(Namespace, :count).by(1)
-          expect(assigns(:namespace).team).to eq(team)
-          expect(assigns(:namespace).name).to eq(valid_attributes[:name])
-          expect(assigns(:namespace).description).to be_nil
-        end
-
-        it "assigns a newly created namespace as @namespace" do
-          post :create, @post_params
-          expect(assigns(:namespace)).to be_a(Namespace)
-          expect(assigns(:namespace)).to be_persisted
-        end
-
-        it "creates a new Namespace with the given description" do
-          @post_params[:namespace]["description"] = "desc"
-          expect do
-            post :create, @post_params
-          end.to change(Namespace, :count).by(1)
-          expect(assigns(:namespace).team).to eq(team)
-          expect(assigns(:namespace).name).to eq(valid_attributes[:name])
-          expect(assigns(:namespace).description).to eq("desc")
-        end
-      end
-
-      context "non-admins are not allowed to create namespaces" do
-        it "does not create a new Namespace" do
-          APP_CONFIG["user_permission"]["create_namespace"]["enabled"] = false
-          expect do
-            post :create, @post_params
-          end.to change(Namespace, :count).by(0)
-          expect(response.status).to eq(401)
-        end
-      end
-    end
-
-    context "with valid params [json]" do
-      before :each do
-        sign_in owner
-        @post_params = {
-          namespace: valid_attributes,
-          format:    :json
-        }
-      end
-
-      context "non-admins are allowed to create namespaces" do
-        it "creates a new Namespace" do
-          expect do
-            post :create, @post_params
-          end.to change(Namespace, :count).by(1)
-          expect(assigns(:namespace).team).to eq(team)
-          expect(assigns(:namespace).name).to eq(valid_attributes[:name])
-          expect(assigns(:namespace).description).to be_nil
-        end
-
-        it "assigns a newly created namespace as @namespace" do
-          post :create, @post_params
-          expect(assigns(:namespace)).to be_a(Namespace)
-          expect(assigns(:namespace)).to be_persisted
-        end
-
-        it "creates a new Namespace with the given description" do
-          @post_params[:namespace]["description"] = "desc"
-          expect do
-            post :create, @post_params
-          end.to change(Namespace, :count).by(1)
-          expect(assigns(:namespace).team).to eq(team)
-          expect(assigns(:namespace).name).to eq(valid_attributes[:name])
-          expect(assigns(:namespace).description).to eq("desc")
-        end
-      end
-
-      context "non-admins are not allowed to create namespaces" do
-        it "does not create a new Namespace" do
-          APP_CONFIG["user_permission"]["create_namespace"]["enabled"] = false
-          expect do
-            post :create, @post_params
-          end.to change(Namespace, :count).by(0)
-          expect(response.status).to eq(401)
-        end
-      end
-    end
-
-    context "with invalid params" do
-      before :each do
-        sign_in owner
-      end
-
-      it "assigns a newly created but unsaved namespace as @namespace" do
-        post :create, namespace: invalid_attributes, format: :js
-        expect(assigns(:namespace)).to be_a_new(Namespace)
-        expect(response.status).to eq(422)
-      end
-
-      it "assigns a newly created but unsaved namespace as @namespace [json]" do
-        post :create, namespace: invalid_attributes, format: :json
-        expect(assigns(:namespace)).to be_a_new(Namespace)
-        expect(response.status).to eq(422)
-      end
-    end
-  end
-
   describe "PATCH #update" do
     it "does not allow to change the description by viewers" do
       team = create(:team)
       user = create(:user)
       TeamUser.create(team: team, user: user, role: TeamUser.roles["viewers"])
       sign_in user
-      patch :update, id: namespace.id, namespace: { description: "new description" },
-        format: "js"
+      patch :update, id: namespace.id, namespace: { description: "descripti0n" },
+        format: :json
       expect(response.status).to eq(401)
     end
 
     context "non-admins are allowed to update namespaces" do
       it "does allow to change the description by owners" do
         sign_in owner
-        patch :update, id: namespace.id, namespace: { description: "new description" },
-          format: "js"
+        patch :update, id: namespace.id, namespace: { description: "descripti0n" },
+          format: :json
         expect(response.status).to eq(200)
       end
 
       it "changes the team if needed" do
         team2 = create(:team)
         sign_in owner
-        patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+        patch :update, id: namespace.id, namespace: { team: team2.name }, format: :json
         expect(response.status).to eq(200)
         expect(namespace.reload.team.id).to eq team2.id
       end
@@ -472,7 +241,7 @@ describe NamespacesController, type: :controller do
 
       it "does not allow to change the description by owners" do
         sign_in owner
-        patch :update, id: namespace.id, namespace: { description: "new description" }, format: "js"
+        patch :update, id: namespace.id, namespace: { description: "descripti0n" }, format: :json
         expect(response.status).to eq(401)
         expect(namespace.reload.description).to eq "short test description"
       end
@@ -480,7 +249,7 @@ describe NamespacesController, type: :controller do
       it "does not change the team" do
         team2 = create(:team)
         sign_in owner
-        patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+        patch :update, id: namespace.id, namespace: { team: team2.name }, format: :json
         expect(response.status).to eq(401)
         expect(namespace.reload.team.id).to eq team.id
       end
@@ -490,14 +259,14 @@ describe NamespacesController, type: :controller do
       sign_out user
 
       sign_in viewer
-      patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: "js"
+      patch :update, id: namespace.id, namespace: { team: team.name + "o" }, format: :json
       expect(response.status).to eq(401)
     end
 
     it "does nothing if you try to change to a non-existing team" do
       sign_in owner
-      patch :update, id: namespace.id, namespace: { team: "unknown" }, format: "js"
-      expect(response.status).to eq(200)
+      patch :update, id: namespace.id, namespace: { team: "unknown" }, format: :json
+      expect(response.status).to eq(422)
       expect(namespace.reload.team.id).to eq team.id
     end
   end
@@ -508,7 +277,7 @@ describe NamespacesController, type: :controller do
     it "does allow to search for valid teams by owner" do
       testing_team = create(:team, name: "testing", owners: [owner])
       sign_in owner
-      get :typeahead, query: "test", format: "json"
+      get :typeahead, query: "test", format: :json
       expect(response.status).to eq(200)
       teamnames = JSON.parse(response.body)
       expect(teamnames.length).to eq(1)
@@ -518,7 +287,7 @@ describe NamespacesController, type: :controller do
     it "does not allow to search by viewers" do
       create(:team, name: "testing", owners: [owner], viewers: [viewer])
       sign_in viewer
-      get :typeahead, query: "test", format: "json"
+      get :typeahead, query: "test", format: :json
       expect(response.status).to eq(200)
       teamnames = JSON.parse(response.body)
       expect(teamnames.length).to eq(0)
@@ -528,7 +297,7 @@ describe NamespacesController, type: :controller do
       create(:team, name: "<script>alert(1)</script>", owners: [owner])
 
       sign_in owner
-      get :typeahead, query: "<", format: "json"
+      get :typeahead, query: "<", format: :json
       expect(response.status).to eq(200)
       teamnames = JSON.parse(response.body)
 
@@ -539,22 +308,6 @@ describe NamespacesController, type: :controller do
   describe "activity tracking" do
     before :each do
       sign_in owner
-    end
-
-    it "tracks namespace creation" do
-      post_params = {
-        namespace: { team: team.name, name: "qa_team_namespace" },
-        format:    :js
-      }
-
-      expect do
-        post :create, post_params
-      end.to change(PublicActivity::Activity, :count).by(1)
-
-      activity = PublicActivity::Activity.last
-      expect(activity.key).to eq("namespace.create")
-      expect(activity.owner).to eq(owner)
-      expect(activity.trackable).to eq(Namespace.last)
     end
 
     it "tracks set namespace private" do
@@ -612,8 +365,8 @@ describe NamespacesController, type: :controller do
       it "tracks editing of a namespace description" do
         old_description = namespace.description
         expect do
-          patch :update, id: namespace.id, namespace: { description: "new description" },
-            format: "js"
+          patch :update, id: namespace.id, namespace: { description: "descripti0n" },
+            format: :json
         end.to change(PublicActivity::Activity, :count).by(1)
 
         namespace_description_activity = PublicActivity::Activity.find_by(
@@ -622,13 +375,13 @@ describe NamespacesController, type: :controller do
         expect(namespace_description_activity.owner).to eq(owner)
         expect(namespace_description_activity.trackable).to eq(namespace)
         expect(namespace_description_activity.parameters[:old]).to eq(old_description)
-        expect(namespace_description_activity.parameters[:new]).to eq("new description")
+        expect(namespace_description_activity.parameters[:new]).to eq("descripti0n")
       end
 
       it "tracks change team" do
         team2 = create(:team)
         expect do
-          patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+          patch :update, id: namespace.id, namespace: { team: team2.name }, format: :json
         end.to change(PublicActivity::Activity, :count).by(1)
         namespace_change_team_activity = PublicActivity::Activity.find_by(
           key: "namespace.change_team"
@@ -647,15 +400,15 @@ describe NamespacesController, type: :controller do
 
       it "does not track editing of a namespace description" do
         expect do
-          patch :update, id: namespace.id, namespace: { description: "new description" },
-            format: "js"
+          patch :update, id: namespace.id, namespace: { description: "descripti0n" },
+            format: :json
         end.to change(PublicActivity::Activity, :count).by(0)
       end
 
       it "does not tracks change team" do
         team2 = create(:team)
         expect do
-          patch :update, id: namespace.id, namespace: { team: team2.name }, format: "js"
+          patch :update, id: namespace.id, namespace: { team: team2.name }, format: :json
         end.to change(PublicActivity::Activity, :count).by(0)
       end
     end

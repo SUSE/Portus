@@ -1,0 +1,18 @@
+= form_for @namespace, html: { role: 'form', class: "edit-namespace-form", "@submit.prevent" => "onSubmit", novalidate: true } do |f|
+  .form-group.has-feedback :class=="{ 'has-error': $v.model.namespace.team.$error }"
+    = f.label :team, "Team", class: 'control-label'
+    .remote
+      = f.text_field :team, class: 'form-control typeahead', required: true, placeholder: "Name of the team", "@input" => "$v.model.namespace.team.$touch()", "v-model.trim" => "model.namespace.team"
+      span.help-block
+        span v-if="!$v.model.namespace.team.required"
+          | Team can't be blank
+          br
+        span v-if="!$v.model.namespace.team.available"
+          | Selected team does not exist
+  .form-group
+    = f.label :description, class: 'control-label'
+    = f.text_area :description, class: 'form-control fixed-size', placeholder: "A short description of your namespace", "v-model" => "model.namespace.description"
+  .form-group
+    = button_tag type: 'submit', class: 'btn btn-primary pull-right', ":disabled" => "$v.$invalid" do
+      i.fa.fa-check
+      |  Save

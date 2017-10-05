@@ -11,7 +11,7 @@ describe API::V1::Teams do
   end
 
   before :each do
-    @header = { "PORTUS-AUTH" => "#{token.user.username}:#{token.application}" }
+    @header = build_token_header(token)
   end
 
   context "GET /api/v1/teams" do

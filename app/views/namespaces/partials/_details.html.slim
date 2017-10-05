@@ -1,0 +1,22 @@
+.panel.panel-default
+  .panel-heading
+    .row
+      .col-sm-6
+        h5
+          a[data-placement="right"
+            data-toggle="popover"
+            data-container=".panel-heading"
+            data-content="<p>Information about the namespace.</p>"
+            data-original-title="What's this?"
+            tabindex="0" data-html="true"]
+              i.fa.fa-info-circle
+          strong
+            '  #{@namespace.clean_name}
+          ' namespace
+      .col-sm-6.text-right
+        - if can_manage_namespace?(@namespace)
+          <toggle-link text="Edit namespace" :state="state" state-key="editFormVisible" class="toggle-link-edit-namespace" false-icon="fa-pencil" true-icon="fa-close"></toggle-link>
+
+  .panel-body
+    <namespace-info :namespace="namespace" v-if="!state.editFormVisible"></namespace-info>
+    <edit-namespace-form :namespace="namespace" v-if="state.editFormVisible"></edit-namespace-form>

@@ -24,6 +24,12 @@ module Helpers
     }
   end
 
+  def build_token_header(token)
+    {
+      "PORTUS-AUTH" => "#{token.user.username}:#{token.application}"
+    }
+  end
+
   # Creates the Portus user. The Portus user cannot be created with neither the
   # "user" factory nor the "admin" one. This is because in the application this
   # same user is created in a special way (directly, without associating a

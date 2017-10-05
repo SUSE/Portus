@@ -1,19 +1,48 @@
-import BaseComponent from '~/base/component';
+import Vue from 'vue';
 
-import NamespaceDetails from '../legacy-components/namespace-details';
+import ToggleLink from '~/shared/components/toggle-link';
+import EventBus from '~/utils/eventbus';
 
-const NAMESPACE_DETAILS = '.namespace-details';
+import NamespaceInfo from '../components/info';
+import EditNamespaceForm from '../components/edit-form';
+import TeamLink from '../components/team-link';
 
-// NamespaceShowPage component responsible to instantiate
-// the user's edit page components and handle interactions.
-class NamespaceShowPage extends BaseComponent {
-  elements() {
-    this.$details = this.$el.find(NAMESPACE_DETAILS);
+import NamespacesStore from '../store';
+
+const { set } = Vue;
+
+$(() => {
+  if (!$('body[data-route="namespaces/show"]').length) {
+    return;
   }
 
-  mount() {
-    this.details = new NamespaceDetails(this.$details);
-  }
-}
+  // eslint-disable-next-line no-new
+  new Vue({
+    el: 'body[data-route="namespaces/show"] .vue-root',
 
-export default NamespaceShowPage;
+    components: {
+      NamespaceInfo,
+      EditNamespaceForm,
+      TeamLink,
+      ToggleLink,
+    },
+
+    data() {
+      return {
+        state: NamespacesStore.state,
+        namespace: window.namespace,
+      };
+    },
+
+    methods: {
+      onUpdate(namespace) {
+        set(this.state, 'editFormVisible', false);
+        set(this, 'namespace', namespace);
+      },
+    },
+
+    mounted() {
+      EventBus.$on('namespaceUpdated', namespace => this.onUpdate(namespace));
+    },
+  });
+});

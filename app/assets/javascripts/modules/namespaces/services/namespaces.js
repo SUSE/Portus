@@ -53,7 +53,11 @@ function get(id) {
 }
 
 function save(namespace) {
-  return oldResource.save({}, namespace);
+  return resource.save({}, namespace);
+}
+
+function update(id, namespace) {
+  return oldResource.update({ id }, namespace);
 }
 
 function teamExists(value) {
@@ -75,6 +79,7 @@ function teamExists(value) {
 export default {
   get,
   all,
+  update,
   save,
   changeVisibility,
   searchTeam,
