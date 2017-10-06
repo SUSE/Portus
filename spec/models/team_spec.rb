@@ -42,9 +42,26 @@ describe Team do
     expect(Team.count).to be(3)
 
     # Personal namespaces don't count.
-    user = create(:user)
-    user.create_personal_namespace!
+    create(:user)
     expect(Team.all_non_special.count).to be(1)
     expect(Team.count).to be(4)
+  end
+
+  describe "make_valid" do
+    it "does nothing if there's no team with the name" do
+      name = "something"
+
+      expect(Team.make_valid(name)).to eq name
+    end
+
+    it "adds an increment if a team with the name already exists" do
+      name = "something"
+
+      create(:team, name: name)
+      expect(Team.make_valid(name)).to eq "#{name}0"
+
+      create(:team, name: "#{name}0")
+      expect(Team.make_valid(name)).to eq "#{name}1"
+    end
   end
 end

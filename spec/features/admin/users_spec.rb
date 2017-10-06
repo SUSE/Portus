@@ -10,6 +10,43 @@ feature "Admin - Users panel" do
     visit admin_users_path
   end
 
+  describe "create users", js: true do
+    scenario "admin creates a user" do
+      visit new_admin_user_path
+
+      fill_in "Username",              with: "username"
+      fill_in "Email",                 with: "email@email.com"
+      fill_in "user[password]",        with: "password123"
+      fill_in "Password confirmation", with: "password123"
+
+      click_button "Create"
+
+      expect(page).to have_current_path(admin_users_path)
+      expect(page).to have_content("User 'username' was created successfully")
+    end
+
+    scenario "admin adds back a removed user" do
+      expect(page).to have_css("#user_#{user.id}")
+
+      find("#user_#{user.id} .remove-btn").click
+      find("#user_#{user.id} .btn-confirm-remove").click
+
+      expect(page).to have_content("User '#{user.username}' was removed successfully")
+
+      visit new_admin_user_path
+
+      fill_in "Username",              with: user.username
+      fill_in "Email",                 with: user.email
+      fill_in "user[password]",        with: "password123"
+      fill_in "Password confirmation", with: "password123"
+
+      click_button "Create"
+
+      expect(page).to have_current_path(admin_users_path)
+      expect(page).to have_content("User '#{user.username}' was created successfully")
+    end
+  end
+
   describe "remove users" do
     scenario "allows the admin to remove other users", js: true do
       expect(page).to have_css("#user_#{user.id}")

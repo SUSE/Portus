@@ -80,10 +80,10 @@ class NamespacePolicy
         .where(
           "(namespaces.visibility = :public OR namespaces.visibility = :protected " \
           "OR team_users.user_id = :user_id) AND " \
-          "namespaces.global = :global AND namespaces.name != :username",
+          "namespaces.global = :global AND namespaces.id != :namespace_id",
           public: Namespace.visibilities[:visibility_public],
           protected: Namespace.visibilities[:visibility_protected],
-          user_id: user.id, global: false, username: user.username
+          user_id: user.id, global: false, namespace_id: user.namespace_id
         )
         .distinct
     end

@@ -51,4 +51,23 @@ class Team < ActiveRecord::Base
   def self.search_from_query(valid_teams, query)
     all_non_special.where(id: valid_teams).where(arel_table[:name].matches(query))
   end
+
+  # Tries to transform the given name to a valid team name without
+  # clashing with existent teams.
+  # Checks if it clashes with others teams and finds one until it's not
+  # being used and returns it.
+  def self.make_valid(name)
+    # To avoid any name conflict we append an incremental number to the end
+    # of the name returns it as the name that will be used on both Namespace
+    # and Team on the User#create_personal_namespace! method
+    # TODO: workaround until we implement the namespace/team removal
+    increment = 0
+    original_name = name
+    while Team.exists?(name: name)
+      name = "#{original_name}#{increment}"
+      increment += 1
+    end
+
+    name
+  end
 end

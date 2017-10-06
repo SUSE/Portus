@@ -86,13 +86,6 @@ class User < ActiveRecord::Base
     if ns.nil?
       errors.add(:username, "'#{username}' cannot be transformed into a " \
         "valid namespace name")
-    elsif Namespace.exists?(name: ns)
-      clar = (ns != username) ? " (modified so it's valid)" : ""
-      errors.add(:username, "cannot be used: there is already a namespace " \
-        "named '#{ns}'#{clar}")
-    elsif Team.exists?(name: username)
-      errors.add(:username, "cannot be used: there is already a team named " \
-        "like this")
     end
   end
 
@@ -117,13 +110,14 @@ class User < ActiveRecord::Base
     # Leave early if the namespace already exists. This is fine because the
     # `private_namespace_and_team_available` method has already checked that
     # the name of the namespace is fine and that it doesn't clash.
+    return unless namespace_id.nil?
+
     namespace_name = Namespace.make_valid(username)
-    ns = Namespace.find_by(name: namespace_name)
-    return ns if ns
+    team_name = Team.make_valid(username)
 
     # Note that this shouldn't be a problem since the User controller will make
     # sure that we don't create a user that clashes with this team.
-    team = Team.create!(name: username, owners: [self], hidden: true)
+    team = Team.create!(name: team_name, owners: [self], hidden: true)
 
     default_description = "This personal namespace belongs to #{username}."
     namespace = Namespace.find_or_create_by!(
