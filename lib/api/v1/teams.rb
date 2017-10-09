@@ -49,6 +49,42 @@ module API
           end
         end
 
+        # Update team with given :id.
+        desc "Update team",
+             params:   API::Entities::Teams.documentation.slice(:id),
+             failure:  [
+               [400, "Bad request.", API::Entities::ApiErrors],
+               [401, "Authentication fails."],
+               [403, "Authorization fails."],
+               [404, "Not found."]
+             ],
+             consumes: ["application/x-www-form-urlencoded", "application/json"]
+
+        params do
+          requires :team, type: Hash do
+            optional :all,
+                     only:  [:name],
+                     using: API::Entities::Teams.documentation.slice(:name)
+            optional :all,
+                     only:  [:description],
+                     using: API::Entities::Teams.documentation.slice(:description)
+          end
+        end
+
+        put ":id" do
+          attrs = permitted_params.merge(id: params[:id])
+          ts = ::Teams::UpdateService.new(current_user, attrs)
+          team = ts.build
+          authorize team, :update?
+
+          if ts.execute
+            team.reload
+          else
+            status 400
+            { errors: team.errors.messages }
+          end
+        end
+
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :namespaces do
             desc "Returns the list of namespaces for the given team",

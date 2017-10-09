@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :errors, only: [:show]
-  resources :teams, only: [:index, :show, :update] do
+  resources :teams, only: [:index, :show] do
     member do
       get "typeahead/:query" => "teams#typeahead", :defaults => { format: "json" }
     end
@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :help, only: [:index]
 
   resources :team_users, only: [:create, :destroy, :update]
-  resources :namespaces, only: [:index, :show, :update] do
+  resources :namespaces, only: [:index, :show] do
     put "change_visibility", on: :member
     resources :webhooks do
       resources :headers, only: [:create, :destroy], controller: :webhook_headers

@@ -159,6 +159,9 @@ module API
         type: String,
         desc: "The description of the namespace"
       }
+      expose :team, documentation: {
+        desc: "The ID and the name of the team containing this namespace"
+      } { |namespace| namespace.team.slice("id", "name") }
       expose :team_name, documentation: {
       }, if: { type: :internal } { |n| n.team.name }
       expose :team_id, documentation: {
