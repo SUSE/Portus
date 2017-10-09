@@ -8,9 +8,9 @@ const customActions = {
     method: 'GET',
     url: '/namespaces/typeahead/{teamName}',
   },
-  existsByName: {
-    method: 'HEAD',
-    url: '/namespaces',
+  validate: {
+    method: 'GET',
+    url: 'api/v1/namespaces/validate',
   },
 };
 
@@ -36,16 +36,10 @@ function searchTeam(teamName) {
   return resource.teamTypeahead({ teamName });
 }
 
-function existsByName(name) {
-  return resource.existsByName({ name })
-    .then(() => true)
-    .catch((response) => {
-      if (response.status === 404) {
-        return false;
-      }
-
-      return null;
-    });
+function validate(name) {
+  return resource.validate({ name })
+    .then(response => response.data)
+    .catch(() => null);
 }
 
 function get(id) {
@@ -84,5 +78,5 @@ export default {
   changeVisibility,
   searchTeam,
   teamExists,
-  existsByName,
+  validate,
 };

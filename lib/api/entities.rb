@@ -12,6 +12,19 @@ module API
       expose :message
     end
 
+    # Messages for /validate calls.
+    class Status < Grape::Entity
+      expose :messages, documentation: {
+        type: Hash,
+        desc: "Detailed hash with the fields"
+      }
+
+      expose :valid, documentation: {
+        type: "Boolean",
+        desc: "Whether the given resource is valid or not"
+      }
+    end
+
     # Users and application tokens
 
     class Users < Grape::Entity
@@ -31,6 +44,29 @@ module API
       expose :id, unless: { type: :create }, documentation: { type: Integer }
       expose :application, unless: { type: :create }
       expose :plain_token, if: { type: :create }
+    end
+
+    # Registry
+
+    class Registries < Grape::Entity
+      expose :id, unless: { type: :create }, documentation: { type: Integer }
+      expose :name, documentation: {
+        type: String,
+        desc: "The name of the registry"
+      }
+      expose :hostname, documentation: {
+        type: String,
+        desc: "The hostname of the registry"
+      }
+      expose :external_hostname, documentation: {
+        type: String,
+        desc: "An external hostname of the registry, useful if behind a proxy with a different FQDN"
+      }
+      expose :use_ssl, documentation: {
+        type: ::Grape::API::Boolean,
+        desc: "Whether the registry uses SSL or not"
+      }
+      expose :created_at, :updated_at, documentation: { type: DateTime }
     end
 
     # Repositories and tags

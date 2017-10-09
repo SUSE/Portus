@@ -3,7 +3,7 @@ div ref="form" class="collapse"
     .form-group :class=="{ 'has-error': $v.team.name.$error }"
       = f.label :name, {class: 'control-label col-md-2'}
       .col-md-7
-        = f.text_field(:name, class: 'form-control', required: true, placeholder: "New team's name", "@input" => "$v.team.name.$touch()", "v-model.trim" => "team.name")
+        = f.text_field(:name, class: 'form-control', required: true, placeholder: "New team's name".html_safe, "@input" => "$v.team.name.$touch()", "v-model.trim" => "team.name")
         span.help-block
           span v-if="!$v.team.name.required"
             | Name can't be blank

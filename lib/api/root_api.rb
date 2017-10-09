@@ -3,6 +3,7 @@ require "grape-swagger"
 require "api/entities"
 require "api/helpers"
 require "api/v1/namespaces"
+require "api/v1/registries"
 require "api/v1/repositories"
 require "api/v1/tags"
 require "api/v1/teams"
@@ -44,6 +45,7 @@ module API
     helpers ::API::Helpers
 
     mount ::API::V1::Namespaces
+    mount ::API::V1::Registries
     mount ::API::V1::Repositories
     mount ::API::V1::Tags
     mount ::API::V1::Teams
