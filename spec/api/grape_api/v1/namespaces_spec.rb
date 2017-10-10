@@ -243,4 +243,71 @@ describe API::V1::Namespaces do
       expect(data["valid"]).to be_truthy
     end
   end
+
+  context "PUT /api/v1/namespaces/:id" do
+    let!(:registry) { create(:registry) }
+
+    let(:namespace_data) do
+      {
+        name:        "team",
+        description: "description"
+      }
+    end
+
+    it "updates namespace" do
+      namespace = create :namespace, name: "somerandomone", description: "lala"
+
+      put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @admin_header
+      expect(response).to have_http_status(:success)
+
+      n = Namespace.find(namespace.id)
+      expect(n.name).to eq(namespace_data[:name])
+      expect(n.description).to eq(namespace_data[:description])
+    end
+
+    it "returns duplicate namespace name" do
+      n = create :namespace, registry: registry
+      n2 = create :namespace, registry: registry
+
+      put "/api/v1/namespaces/#{n.id}", { namespace: { name: n2.name } }, @admin_header
+      expect(response).to have_http_status(:bad_request)
+
+      data = JSON.parse(response.body)["errors"]
+      expect(data["name"]).to eq(["has already been taken"])
+    end
+
+    it "returns status not found" do
+      create :namespace
+      namespace_id = Namespace.maximum(:id) + 1
+      put "/api/v1/namespaces/#{namespace_id}", { namespace: namespace_data }, @admin_header
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "changes the team successfully" do
+      team = create :team
+      team2 = create :team
+      namespace = create :namespace, team: team
+
+      put "/api/v1/namespaces/#{namespace.id}",
+          { namespace: { team: team2.name } },
+          @admin_header
+      expect(response).to have_http_status(:success)
+
+      n = Namespace.find(namespace.id)
+      expect(n.team.id).to eq(team2.id)
+    end
+
+    it "fails to change to a non-existant team" do
+      team = create :team
+      namespace = create :namespace, team: team
+
+      put "/api/v1/namespaces/#{namespace.id}",
+          { namespace: { team: team.name + "a" } },
+          @admin_header
+      expect(response).to have_http_status(:bad_request)
+
+      data = JSON.parse(response.body)["errors"]
+      expect(data["team"]).to eq(["'#{team.name}a' unknown."])
+    end
+  end
 end

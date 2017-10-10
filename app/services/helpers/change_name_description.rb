@@ -7,8 +7,9 @@ module Helpers
       old_description = object.description
       old_name = object.name
 
-      change_description(object, symbol, old_description, new_description, activity_params)
-      change_name(object, symbol, old_name, new_name, activity_params)
+      ret1 = change_description(object, symbol, old_description, new_description, activity_params)
+      ret2 = change_name(object, symbol, old_name, new_name, activity_params)
+      ret1 || ret2
     end
 
     private
