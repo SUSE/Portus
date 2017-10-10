@@ -1,3 +1,5 @@
+require "api/helpers"
+
 module API
   module Entities
     # General entities
