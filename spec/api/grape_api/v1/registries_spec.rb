@@ -28,27 +28,27 @@ describe API::V1::Registries do
     end
 
     it "returns valid on a proper registry" do
-      allow_any_instance_of(Registry).to receive(:reachable?).and_return(true)
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
       get "/api/v1/registries/validate", registry_data, @header
 
       data = JSON.parse(response.body)
-      expect(data["messages"]["reachable"]).to be_truthy
+      expect(data["messages"]["hostname"]).to be_falsey
       expect(data["valid"]).to be_truthy
     end
 
     it "returns unreachable accordingly" do
-      allow_any_instance_of(Registry).to receive(:reachable?).and_return(false)
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return("Error message")
       get "/api/v1/registries/validate", registry_data, @header
 
       data = JSON.parse(response.body)
-      expect(data["messages"]["reachable"]).to be_falsey
+      expect(data["messages"]["hostname"]).to eq(["Error message"])
       expect(data["valid"]).to be_falsey
     end
 
     it "returns an error when the name is already taken" do
       create :registry, name: registry_data[:name]
 
-      allow_any_instance_of(Registry).to receive(:reachable?).and_return(true)
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return("Error message")
       get "/api/v1/registries/validate", registry_data, @header
 
       data = JSON.parse(response.body)

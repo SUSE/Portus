@@ -1,0 +1,63 @@
+= form_for @registry, url: form_url, html: {class: 'form-horizontal', role: 'form'} do |f|
+  .form-group :class=="{ 'has-error': $v.registry.name.$error }"
+    = f.label :name, {class: 'control-label col-md-2'}
+    .col-md-7
+      = f.text_field(:name, class: 'form-control', autofocus: true, value: @registry.name, ref: "name", "v-model.trim" => "registry.name", "@input" => "$v.registry.name.$touch()")
+      span.help-block
+        span v-if="!$v.registry.name.required"
+          | Name can't be blank
+        span v-for="(error, index) in errors.name" :key="index"
+          | Name {{ error }}
+  .form-group :class=="{ 'has-error': $v.registry.hostname.$error }" v-if="canChangeHostname"
+    = f.label :hostname, {class: 'control-label col-md-2'}
+    .col-md-7
+      = f.text_field(:hostname, class: 'form-control', placeholder: 'registry.test.lan:5000', "v-model.trim" => "registry.hostname", "@input" => "$v.registry.hostname.$touch()")
+      span.help-block
+        span v-if="!$v.registry.hostname.required"
+          | Hostname can't be blank
+          br
+        span v-for="(error, index) in errors.hostname" :key="index"
+          span v-if="!isReachableError(error)"
+            | Hostname {{ error }}
+            br
+          span v-if="isReachableError(error)"
+            | {{ error }} You can skip this check by clicking on the "Skip remote checks" checkbox.
+            br
+  .form-group
+    = f.label :use_ssl, "Use SSL", {class: 'control-label col-md-2', title: 'Set this to enable SSL in the communication between Portus and the Registry'}
+    .col-md-7
+      = f.check_box(:use_ssl, "v-model" => "registry.use_ssl")
+  div.collapse#advanced
+    .form-group
+      = f.label :external_hostname, "External Registry Name", {class:'control-label col-md-2', title: 'Set this if the name that clients use to communicate with the registry is different than the name that Portus uses to connect'}
+      .col-md-7
+        = f.text_field(:external_hostname, class: 'form-control', placeholder: '(Optional)', "v-model" => "registry.external_hostname")
+        span.help-block
+          | Portus uses the hostname field to communicate with the registry,
+            but this may be on an internal network and inaccessible to the
+            client.
+            Clients may connect to the registry by a name different to the
+            hostname above, for example if it is behind a reverse proxy.
+            This field must be set to prevent Portus from ignoring registry
+            events originating from this external hostname.
+  .form-group.has-error v-if="display.force && !edit"
+    = label_tag :force, "Skip remote checks", {class: 'control-label col-md-2', title: "Force the creation of the registry, even if it's not reachable."}
+    .col-md-7
+      = check_box_tag(:force, true, false, { "v-model" => "registry.force" })
+  .form-group
+    .col-md-offset-2.col-md-7
+      div.btn-toolbar role='toolbar'
+        div.btn-group role='group'
+          = f.submit(submit_name, class: 'btn btn-primary', ":disabled" => "submitDisabled")
+        div.btn-group role='group'
+          span data-toggle='collapse' data-target='#advanced'
+            button.btn.btn-primary#advancedButton type='button' data-toggle='button' aria-expanded='false' aria-controls='advanced' Show Advanced
+
+- content_for :js_body do
+  javascript:
+    window.registry = #{raw @registry.to_json};
+    window.showForce = #{!flash[:alert].nil? && !flash[:alert].empty?};
+
+    $('body').on('click', '#advancedButton', function() {
+      $(this).text($(this).text() == 'Show Advanced' ? 'Hide Advanced' : 'Show Advanced');
+    });

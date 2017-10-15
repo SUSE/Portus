@@ -4300,9 +4300,9 @@ vue@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.3.3.tgz#d1eaa8fde5240735a4563e74f2c7fead9cbb064c"
 
-vuelidate@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.5.0.tgz#c315659a023e760d0fb11b6b42b6c3cdf08306c3"
+vuelidate@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.6.0.tgz#e6233c3e7767c5bc503ab5ee533106974e3e87d6"
 
 watchpack@^1.2.0:
   version "1.3.1"

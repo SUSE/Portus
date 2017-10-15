@@ -24,9 +24,10 @@ module API
 
         desc "Validates the given registry",
           tags:    ["registries"],
-          detail:  "Besides containing the usual Status object, it adds a `reachable` " \
-                   "field in the `messages` hash. This field is a string containing the error " \
-                   "as given by the registry. If empty then everything went well",
+          detail:  "Besides containing the usual Status object, it adds the reachable " \
+                   "validation to the `hostname` field in the `messages` hash. This validation " \
+                   "returns a string containing the error as given by the registry. If empty " \
+                   "then everything went well",
           entity:  API::Entities::Status,
           failure: [
             [401, "Authentication fails."],
@@ -42,15 +43,12 @@ module API
             using: API::Entities::Registries.documentation.slice(:external_hostname)
           requires :use_ssl,
             using: API::Entities::Registries.documentation.slice(:use_ssl)
+          optional :only, type: Array[String]
         end
 
         get "/validate" do
-          r         = Registry.new(permitted_params)
-          valid     = r.valid?
-          reachable = r.reachable?
-          fields    = r.errors.messages.merge(reachable: reachable)
-          obj       = { valid: valid && reachable, messages: fields }
-          present obj, with: API::Entities::Status
+          validation = ::Registries::ValidateService.new(permitted_params).execute
+          present validation, with: API::Entities::Status
         end
       end
     end
