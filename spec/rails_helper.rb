@@ -1,5 +1,6 @@
 
 ENV["RAILS_ENV"] ||= "test"
+ENV["NODE_ENV"]  ||= "test"
 
 require "spec_helper"
 require File.expand_path("../../config/environment", __FILE__)

@@ -258,6 +258,7 @@ GEM
     paint (1.0.0)
     parser (2.4.0.0)
       ast (~> 2.2)
+    pg (0.20.0)
     poltergeist (1.15.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -497,6 +498,7 @@ DEPENDENCIES
   omniauth-gitlab
   omniauth-google-oauth2
   omniauth-openid
+  pg (~> 0.20.0)
   poltergeist (~> 1.15.0)
   pry-rails
   public_activity

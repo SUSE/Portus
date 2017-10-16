@@ -151,18 +151,21 @@ describe CatalogJob do
 
     it "removes activities from dangling tags" do
       repo.create_activity(:push, owner: owner, recipient: tag)
-      expect(PublicActivity::Activity.count).to eq 1
-      expect(PublicActivity::Activity.first.parameters[:tag_name]).to be_nil
+
+      activities = PublicActivity::Activity.order(:updated_at)
+      expect(activities.count).to eq 1
+      expect(activities.first.parameters[:tag_name]).to be_nil
 
       job = CatalogJobMock.new
       job.update_registry!([{ "name" => "repo", "tags" => ["0.1"] }])
 
       # Three activities: the original one, one more push for 0.1 and then the
       # delete for latest.
-      expect(PublicActivity::Activity.count).to eq 3
-      expect(PublicActivity::Activity.first.parameters[:tag_name]).to eq "latest"
-      expect(PublicActivity::Activity.all[1].recipient.name).to eq "0.1"
-      expect(PublicActivity::Activity.last.key).to eq "repository.delete"
+      activities = PublicActivity::Activity.order(:updated_at)
+      expect(activities.count).to eq 3
+      expect(activities.first.parameters[:tag_name]).to eq "latest"
+      expect(activities[1].recipient.name).to eq "0.1"
+      expect(activities.last.key).to eq "repository.delete"
     end
   end
 end

@@ -6,10 +6,10 @@ class Admin::ActivitiesController < Admin::BaseController
   def index
     respond_to do |format|
       format.html do
-        @activities = PublicActivity::Activity.order("created_at DESC").page(params[:page])
+        @activities = PublicActivity::Activity.order(created_at: :desc).page(params[:page])
       end
       format.csv do
-        @activities = PublicActivity::Activity.order("created_at DESC")
+        @activities = PublicActivity::Activity.order(created_at: :desc)
         headers["Content-Disposition"] = 'attachment; filename="activities.csv"'
         headers["Content-Type"] = "text/csv"
       end

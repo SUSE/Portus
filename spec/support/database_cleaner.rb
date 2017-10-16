@@ -8,6 +8,8 @@ require "database_cleaner"
 #     with the UI have to go with truncation. This is a requirement from the
 #     Poltergeist gem.
 
+DatabaseCleaner.logger = Rails.logger
+
 RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.clean_with :truncation

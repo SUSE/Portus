@@ -74,7 +74,6 @@ ActiveRecord::Schema.define(version: 20171014192702) do
   end
 
   add_index "namespaces", ["name", "registry_id"], name: "index_namespaces_on_name_and_registry_id", unique: true, using: :btree
-  add_index "namespaces", ["name"], name: "fulltext_index_namespaces_on_name", type: :fulltext
   add_index "namespaces", ["registry_id"], name: "index_namespaces_on_registry_id", using: :btree
   add_index "namespaces", ["team_id"], name: "index_namespaces_on_team_id", using: :btree
 
@@ -107,7 +106,6 @@ ActiveRecord::Schema.define(version: 20171014192702) do
   end
 
   add_index "repositories", ["name", "namespace_id"], name: "index_repositories_on_name_and_namespace_id", unique: true, using: :btree
-  add_index "repositories", ["name"], name: "fulltext_index_repositories_on_name", type: :fulltext
   add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id", using: :btree
 
   create_table "stars", force: :cascade do |t|

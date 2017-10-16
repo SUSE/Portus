@@ -12,7 +12,6 @@ gem "devise"
 gem "gravatar_image_tag"
 gem "public_activity"
 gem "active_record_union"
-gem "mysql2", "= 0.4.7"
 gem "search_cop"
 gem "kaminari"
 gem "crono"
@@ -32,6 +31,10 @@ gem "omniauth-github"
 gem "omniauth-gitlab"
 
 gem "rack-cors", "~> 1.0.1"
+
+# Supported DBs
+gem "mysql2", "= 0.4.7", group: :mysql
+gem "pg", "~> 0.20.0", group: :postgres
 
 # Pinning these specific versions because that's what we have on OBS.
 gem "ethon", "~> 0.9.0"

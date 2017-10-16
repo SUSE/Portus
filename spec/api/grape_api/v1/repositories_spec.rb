@@ -86,8 +86,19 @@ describe API::V1::Repositories do
       tags = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
       expect(tags.length).to eq(2)
-      expect(tags[0].length).to eq(1)
-      expect(tags[1].length).to eq(4)
+
+      # The order depends on the update_at property, which might be slightly
+      # different depending on how fast creation happened on these tests.
+      if tags[0].length == 1
+        first  = 0
+        second = 1
+      else
+        first  = 1
+        second = 0
+      end
+
+      expect(tags[first].length).to eq(1)
+      expect(tags[second].length).to eq(4)
     end
   end
 end

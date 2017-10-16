@@ -1,4 +1,4 @@
-if Rails.env.development?
+if Rails.env.development? && ENV["PORTUS_DB_ADAPTER"] != "postgresql"
   task :set_annotation_options do
     ::Annotate.set_defaults(
       position_in_routes:   "before",

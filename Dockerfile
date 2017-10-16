@@ -16,7 +16,7 @@ COPY Gemfile* ./
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
 RUN zypper ref && \
     zypper -n in --no-recommends ruby2.3-devel ruby2.3-rubygem-bundler \
-           libxml2-devel nodejs libmysqlclient-devel libxslt1 && \
+           libxml2-devel nodejs libmysqlclient-devel postgresql-devel libxslt1 && \
     zypper -n in --no-recommends -t pattern devel_basis && \
     bundle install --retry=3 && \
     zypper -n rm wicked wicked-service autoconf automake \

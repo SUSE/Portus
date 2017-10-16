@@ -11,7 +11,6 @@
 #
 # Indexes
 #
-#  fulltext_index_repositories_on_name          (name)
 #  index_repositories_on_name_and_namespace_id  (name,namespace_id) UNIQUE
 #  index_repositories_on_namespace_id           (namespace_id)
 #

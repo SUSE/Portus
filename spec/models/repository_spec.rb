@@ -11,7 +11,6 @@
 #
 # Indexes
 #
-#  fulltext_index_repositories_on_name          (name)
 #  index_repositories_on_name_and_namespace_id  (name,namespace_id) UNIQUE
 #  index_repositories_on_namespace_id           (namespace_id)
 #
@@ -382,7 +381,7 @@ describe Repository do
             Repository.handle_push_event(event)
           end
 
-          repos = Repository.all.order("id ASC")
+          repos = Repository.all.order(id: :asc)
           expect(repos.count).to be(2)
           expect(repos.first.namespace.id).to be(registry.global_namespace.id)
           expect(repos.last.namespace.id).to be(@ns.id)
@@ -603,8 +602,14 @@ describe Repository do
     it "groups tags as expected" do
       tags = repo.groupped_tags
       expect(tags.size).to eq 2
-      expect(tags.flatten.map(&:name).uniq).to eq [tag1.name, tag2.name, tag3.name]
-      expect(tags.flatten.map(&:digest).uniq).to eq ["1234", "5678"]
+
+      by_name = tags.flatten.map(&:name).uniq
+      expect(by_name).to include(tag1.name, tag2.name, tag3.name)
+      expect(by_name.size).to eq(3)
+
+      by_digest = tags.flatten.map(&:digest).uniq
+      expect(by_digest).to include("1234", "5678")
+      expect(by_digest.size).to eq(2)
     end
   end
 

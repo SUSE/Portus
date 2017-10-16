@@ -1,38 +1,37 @@
+# You could theoretically use anything for the database with this setup, but we
+# have decided on two choices: MariaDB (default) and PostgreSQL. In order to
+# support other RDBMS we would need to add them in the Gemfile and call
+# `bundle`, which is a burden in containerized scenarios.
+#
+# You can pick the adapter with the `PORTUS_DB_ADAPTER` environment variable
+# (defaults to 'mysql2'. If you want to use PostgreSQL you need to set it to
+# `postgresql`).
+#
+# For more documentation check:
+#  - The `examples/development/postgresql` directory. Read the `README.md` file
+#    for more information.
+#  - Our mailing list: https://groups.google.com/forum/#!forum/portus-dev.
+
 default: &default
-  adapter: mysql2
+  adapter:  <%= ENV["PORTUS_DB_ADAPTER"]  || "mysql2"    %>
+
+  host:     <%= ENV['PORTUS_DB_HOST']     || "localhost" %>
+  username: <%= ENV['PORTUS_DB_USERNAME'] || "root"      %>
+  password: <%= ENV['PORTUS_DB_PASSWORD'] || ""          %>
+
   encoding: utf8
-<% if ENV['COMPOSE'] %>
-  host: <%= ENV['PORTUS_DB_HOST'] %>
-  username: root
-  password: portus
-<% end %>
 
-development:
-  <<: *default
-  database: portus_development
+  # Optional stuff.
+  <% if ENV["PORTUS_DB_PORT"] %>
+  port: <%= ENV['PORTUS_DB_PORT'] %>
+  <% end %>
+  <% if ENV["PORTUS_DB_POOL"] %>
+  pool: <%= ENV['PORTUS_DB_POOL'] %>
+  <% end %>
+  <% if ENV["PORTUS_DB_TIMEOUT"] %>
+  timeout: <%= ENV['PORTUS_DB_TIMEOUT'] %>
+  <% end %>
 
-staging:
+<%= Rails.env.downcase %>:
   <<: *default
-  database: portus_staging
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: portus_test
-
-production:
-  <<: *default
-  <% if ENV["PORTUS_PRODUCTION_HOST"] %>
-  host:     <%= ENV["PORTUS_PRODUCTION_HOST"] %>
-  <% end %>
-  <% if ENV["PORTUS_PRODUCTION_USERNAME"] %>
-  username: <%= ENV["PORTUS_PRODUCTION_USERNAME"] %>
-  <% end %>
-  <% if ENV["PORTUS_PRODUCTION_PASSWORD"] %>
-  password: <%= ENV["PORTUS_PRODUCTION_PASSWORD"] %>
-  <% end %>
-  <% if ENV["PORTUS_PRODUCTION_DATABASE"] %>
-  database: <%= ENV["PORTUS_PRODUCTION_DATABASE"] %>
-  <% end %>
+  database: <%= ENV["PORTUS_DB_DATABASE"] || "portus_#{Rails.env.downcase}" %>
