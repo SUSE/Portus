@@ -11,6 +11,10 @@ export default {
       type: Number,
       default: 10,
     },
+    prefix: {
+      type: String,
+      default: '',
+    },
   },
 
   components: {

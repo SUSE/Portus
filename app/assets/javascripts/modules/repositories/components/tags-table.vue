@@ -24,12 +24,12 @@
       </tbody>
     </table>
 
-    <table-pagination :total.sync="tags.length" :current-page.sync="currentPage" :itens-per-page.sync="limit"></table-pagination>
+    <table-pagination :total.sync="tags.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>
   </div>
 </template>
 
 <script>
-  import TablePagination from '~/shared/components/table-pagination';
+  import TablePaginatedMixin from '~/shared/mixins/table-paginated';
 
   import TagRow from './tags-table-row';
 
@@ -41,23 +41,13 @@
       state: Object,
     },
 
+    mixins: [TablePaginatedMixin],
+
     components: {
       TagRow,
-      TablePagination,
-    },
-
-    data() {
-      return {
-        limit: 3,
-        currentPage: 1,
-      };
     },
 
     computed: {
-      offset() {
-        return (this.currentPage - 1) * this.limit;
-      },
-
       filteredTags() {
         return this.tags.slice(this.offset, this.limit * this.currentPage);
       },
