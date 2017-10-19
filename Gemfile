@@ -65,7 +65,7 @@ end
 gem "puma", "~> 3.10.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
 
 # Configuration management
-gem "cconfig", "~> 1.1.0"
+gem "cconfig", "~> 1.2.0"
 
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
