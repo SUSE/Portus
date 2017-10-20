@@ -1,4 +1,4 @@
-FROM opensuse/ruby:2.3
+FROM opensuse/ruby:2.4
 MAINTAINER SUSE Containers Team <containers@suse.com>
 
 ENV COMPOSE=1

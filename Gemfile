@@ -90,7 +90,9 @@ unless packaging?
   end
 
   group :development, :test do
+    gem "rspec-core", "~> 3.7.0"
     gem "rspec-rails"
+
     gem "byebug"
     gem "web-console", "~> 2.1.3"
     gem "awesome_print"
