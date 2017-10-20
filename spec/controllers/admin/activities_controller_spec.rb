@@ -47,44 +47,62 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     let(:global_tag) { create(:tag, name: "1.0.0", repository: global_repository) }
 
     before :each do
-      Timecop.travel(Time.gm(2015))
+      Timecop.travel(Time.gm(2015, 1, 1))
       create(:activity_team_create,
              trackable_id: team.id,
              owner_id:     activity_owner.id)
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 2, 1))
       create(:activity_team_add_member,
              trackable_id: team.id,
              owner_id:     activity_owner.id,
              recipient_id: another_user.id,
              parameters:   { role: "viewer" })
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 3, 1))
       create(:activity_team_remove_member,
              trackable_id: team.id,
              owner_id:     activity_owner.id,
              recipient_id: another_user.id,
              parameters:   { role: "viewer" })
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 4, 1))
       create(:activity_team_change_member_role,
              trackable_id: team.id,
              owner_id:     activity_owner.id,
              recipient_id: another_user.id,
              parameters:   { old_role: "viewer", new_role: "contributor" })
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 5, 1))
       create(:activity_namespace_create,
              trackable_id: namespace.id,
              owner_id:     activity_owner.id)
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 6, 1))
       create(:activity_namespace_change_visibility,
              trackable_id: namespace.id,
              owner_id:     activity_owner.id,
              parameters:   { visibility: "visibility_public" })
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 7, 1))
       create(:activity_namespace_change_visibility,
              trackable_id: namespace.id,
              owner_id:     activity_owner.id,
              parameters:   { visibility: "visibility_protected" })
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 8, 1))
       create(:activity_namespace_change_visibility,
              trackable_id: namespace.id,
              owner_id:     activity_owner.id,
              parameters:   { visibility: "visibility_private" })
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 9, 1))
       create(:activity_repository_push,
              trackable_id: tag.repository.id,
              recipient_id: tag.id,
              owner_id:     activity_owner.id)
+      Timecop.return
+      Timecop.travel(Time.gm(2015, 10, 1))
       create(:activity_repository_push,
              trackable_id: global_tag.repository.id,
              recipient_id: global_tag.id,
@@ -100,16 +118,16 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
 
       csv = <<CSV
 Tracked item,Item,Event,Recipient,Triggered by,Time,Notes
+repository,registry.test.lan/sles11sp3:1.0.0,push tag,-,castiel,2015-10-01 00:00:00 UTC,-
+repository,patched_images/sles12:1.0.0,push tag,-,castiel,2015-09-01 00:00:00 UTC,-
+namespace,patched_images,change visibility,-,castiel,2015-08-01 00:00:00 UTC,is private
+namespace,patched_images,change visibility,-,castiel,2015-07-01 00:00:00 UTC,is protected
+namespace,patched_images,change visibility,-,castiel,2015-06-01 00:00:00 UTC,is public
+namespace,patched_images,create,-,castiel,2015-05-01 00:00:00 UTC,owned by team qa
+team,qa,change member role,dean,castiel,2015-04-01 00:00:00 UTC,from viewer to contributor
+team,qa,remove member,dean,castiel,2015-03-01 00:00:00 UTC,role viewer
+team,qa,add member,dean,castiel,2015-02-01 00:00:00 UTC,role viewer
 team,qa,create,-,castiel,2015-01-01 00:00:00 UTC,-
-team,qa,add member,dean,castiel,2015-01-01 00:00:00 UTC,role viewer
-team,qa,remove member,dean,castiel,2015-01-01 00:00:00 UTC,role viewer
-team,qa,change member role,dean,castiel,2015-01-01 00:00:00 UTC,from viewer to contributor
-namespace,patched_images,create,-,castiel,2015-01-01 00:00:00 UTC,owned by team qa
-namespace,patched_images,change visibility,-,castiel,2015-01-01 00:00:00 UTC,is public
-namespace,patched_images,change visibility,-,castiel,2015-01-01 00:00:00 UTC,is protected
-namespace,patched_images,change visibility,-,castiel,2015-01-01 00:00:00 UTC,is private
-repository,patched_images/sles12:1.0.0,push tag,-,castiel,2015-01-01 00:00:00 UTC,-
-repository,registry.test.lan/sles11sp3:1.0.0,push tag,-,castiel,2015-01-01 00:00:00 UTC,-
 CSV
 
       expect(response.body).to eq(csv)

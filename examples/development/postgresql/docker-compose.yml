@@ -9,6 +9,8 @@ services:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
       - PORTUS_PUMA_HOST=0.0.0.0:3000
 
+      - PORTUS_DB_ADAPTER=postgresql
+      - PORTUS_DB_USERNAME=postgres
       - PORTUS_DB_HOST=db
       - PORTUS_DB_PASSWORD=portus
       - PORTUS_DB_POOL=5
@@ -21,22 +23,6 @@ services:
     volumes:
       - .:/srv/Portus
 
-  crono:
-    image: opensuse/portus:development
-    command: ./bin/crono
-    depends_on:
-      - portus
-    environment:
-      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
-
-      - PORTUS_DB_HOST=db
-      - PORTUS_DB_PASSWORD=portus
-      - PORTUS_DB_POOL=5
-    volumes:
-      - .:/srv/Portus
-    links:
-      - db
-
   webpack:
     image: kkarczmarczyk/node-yarn:6.9-slim
     command: bash /srv/Portus/examples/development/compose/bootstrap-webpack
@@ -45,9 +31,9 @@ services:
       - .:/srv/Portus
 
   db:
-    image: library/mariadb:10.0.23
+    image: library/postgres:10-alpine
     environment:
-      MYSQL_ROOT_PASSWORD: portus
+      POSTGRES_PASSWORD: portus
 
   registry:
     image: library/registry:2.3.1

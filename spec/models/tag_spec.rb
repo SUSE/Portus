@@ -65,10 +65,11 @@ describe Tag do
 
       tag.delete_and_update!(user)
 
-      expect(PublicActivity::Activity.count).to eq 3
+      activities = PublicActivity::Activity.order(:updated_at)
+      expect(activities.count).to eq 3
 
       # The first activity is the first push, which should've changed.
-      activity = PublicActivity::Activity.first
+      activity = activities.first
       expect(activity.trackable_type).to eq "Repository"
       expect(activity.trackable_id).to eq repository.id
       expect(activity.owner_id).to eq user.id
@@ -80,7 +81,7 @@ describe Tag do
 
       # The second activity is the other push, which is unaffected by this
       # action.
-      activity = PublicActivity::Activity.all[1]
+      activity = activities[1]
       expect(activity.trackable_type).to eq "Repository"
       expect(activity.trackable_id).to eq repository.id
       expect(activity.owner_id).to eq user.id
@@ -88,7 +89,7 @@ describe Tag do
       expect(activity.parameters).to be_empty
 
       # The last activity is the removal of the tag.
-      activity = PublicActivity::Activity.last
+      activity = activities.last
       expect(activity.trackable_type).to eq "Repository"
       expect(activity.trackable_id).to eq repository.id
       expect(activity.owner_id).to eq user.id

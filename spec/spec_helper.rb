@@ -20,7 +20,7 @@ VCR.configure do |c|
   c.ignore_hosts "codeclimate.com"
 
   # To debug when a VCR goes wrong.
-  # c.debug_logger = $stdout
+  c.debug_logger = $stdout if ENV["PORTUS_VCR_LOGGER"]
 end
 
 RSpec.configure do |config|

@@ -2,7 +2,6 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-
   # Stable versions
   - 2.3.4
   - 2.4.1
@@ -40,6 +39,7 @@ before_install:
 
 before_script:
   - mysql -e 'create database portus_test;'
+  - psql -c 'create database portus_test' -U postgres
 
 script:
   # Compile assets
@@ -58,13 +58,20 @@ script:
 
 env:
   global:
-  # OSC_CREDENTIALS are kept secret
-  # In order to update them, run:
-  #   travis encrypt OSC_CREDENTIALS=user:password
-  # more info at: http://docs.travis-ci.com/user/environment-variables/#Secure-Variables
-  - OBS_REPO=Virtualization:containers:Portus
-  - OBS_BRANCH=master
-  - secure: "SgH8Wvm6n71GTZqTk2Ww/vLg3KK1QhgBMRSs+85TFemJvUDEWLKtANGI2szlqJOfOEWqHZ4rdzgMamtYfGmOZvjUBebaIXlYMcPyKSmcQZX/80R1/v7KFyhP2vqrb+ok/rK6lLXX06jDhohUS04vnx4i1EtoxH62dKImdlZsjzI="
+    # OSC_CREDENTIALS are kept secret
+    # In order to update them, run:
+    #   travis encrypt OSC_CREDENTIALS=user:password
+    # more info at: http://docs.travis-ci.com/user/environment-variables/#Secure-Variables
+    - OBS_REPO=Virtualization:containers:Portus
+    - OBS_BRANCH=master
+    - secure: "SgH8Wvm6n71GTZqTk2Ww/vLg3KK1QhgBMRSs+85TFemJvUDEWLKtANGI2szlqJOfOEWqHZ4rdzgMamtYfGmOZvjUBebaIXlYMcPyKSmcQZX/80R1/v7KFyhP2vqrb+ok/rK6lLXX06jDhohUS04vnx4i1EtoxH62dKImdlZsjzI="
+
+    # DB options for both adapters and Travis.
+    - PORTUS_DB_USERNAME=travis
+
+  matrix:
+    - PORTUS_DB_ADAPTER=mysql2
+    - PORTUS_DB_ADAPTER=postgresql
 
 after_success:
   - packaging/suse/package_and_push_to_obs.sh
@@ -73,3 +80,4 @@ addons:
   code_climate:
     repo_token: 18a0cf6c35e0c801678f12f444051c33e0390ce0efa91ec06a2aa5068b10c19e
   mariadb: '10.2'
+  postgresql: '9.6'

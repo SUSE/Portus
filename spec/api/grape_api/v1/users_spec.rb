@@ -39,35 +39,14 @@ describe API::V1::Users do
   end
 
   context "GET /api/v1/users/:id" do
-    before do
-      user = create :user
-      @user = user.attributes.slice(
-        "id",
-        "username",
-        "email",
-        "current_sign_in_at",
-        "last_sign_in_at",
-        "created_at",
-        "updated_at",
-        "admin",
-        "enabled",
-        "locked_at",
-        "namespace_id",
-        "display_name"
-      ).each_with_object({}) do |(key, val), h|
-        h[key] = if val.instance_of? ActiveSupport::TimeWithZone
-          val.strftime "%FT%T.000Z"
-        else
-          val
-        end
-        h
-      end
-    end
+    let(:user) { create(:user) }
 
     it "returns user by id" do
-      get "/api/v1/users/#{@user["id"]}", nil, @header
+      get "/api/v1/users/#{user["id"]}", nil, @header
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body)).to eq @user
+
+      data = JSON.parse(response.body)
+      expect(data["username"]).to eq user["username"]
     end
 
     it "authorization fails" do
@@ -78,9 +57,11 @@ describe API::V1::Users do
     end
 
     it "returns user by email" do
-      get "/api/v1/users/#{@user["email"]}", nil, @header
+      get "/api/v1/users/#{user["email"]}", nil, @header
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body)).to eq @user
+
+      data = JSON.parse(response.body)
+      expect(data["id"]).to eq user["id"]
     end
 
     it "returns status 404" do

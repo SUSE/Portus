@@ -1,5 +1,10 @@
 require "rails_helper"
 
+def find_tag_checkbox(name)
+  tag = find("div", text: /\A#{name}\z/)
+  tag.find(:xpath, "../..").find("input[type='checkbox']")
+end
+
 feature "Repositories support" do
   let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:user) { create(:admin) }
@@ -206,15 +211,16 @@ feature "Repositories support" do
       scenario "A user deletes a tag", js: true do
         ["lorem", "ipsum"].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
-          image_id: "Image", created_at: idx.hours.ago)
+          image_id: "Image", created_at: idx.hours.ago, updated_at: idx.hours.ago)
         end
 
         VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
           visit repository_path(repository)
 
           expect(page).to_not have_content("Delete tag")
-          find("tbody tr input[type='checkbox']", match: :first).click
+          find_tag_checkbox("tag0").click
           expect(page).to have_content("Delete tag")
+
           find(".tag-delete-btn").click
           expect(page).to have_content("tag0 successfully removed")
         end
@@ -223,15 +229,14 @@ feature "Repositories support" do
       scenario "A user deletes tags", js: true do
         ["lorem", "ipsum", "ipsum"].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
-          image_id: "Image", created_at: idx.hours.ago)
+          image_id: "Image", created_at: idx.hours.ago, updated_at: idx.hours.ago)
         end
 
         VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
           visit repository_path(repository)
 
           expect(page).to_not have_content("Delete tags")
-          find("tbody tr input[type='checkbox']", match: :first)
-          all("tbody tr input[type='checkbox']").last.click
+          find_tag_checkbox("tag1").click
           expect(page).to have_content("Delete tags")
           find(".tag-delete-btn").click
           expect(page).to have_content("tag1, tag2 successfully removed")
