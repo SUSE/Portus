@@ -113,7 +113,7 @@ unless packaging?
     gem "shoulda"
     gem "vcr"
     gem "webmock", "~> 2.3.2", require: false
-    gem "simplecov", "0.10.0", require: false
+    gem "simplecov", "0.15.1", require: false
     gem "capybara", "~> 2.14.3"
     gem "poltergeist", "~> 1.15.0", require: false
     gem "json-schema"
