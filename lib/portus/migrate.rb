@@ -14,29 +14,33 @@ module Portus
     #
     # TODO: (mssola) remove in the next version.
     def self.from_humanized_time(duration, default)
-      return duration.send(:minutes) if duration.is_a? Integer
+      return duration.minutes if duration.respond_to? :minutes
 
       # If it's not a String then just return the given default value.
-      return default.send(:minutes) unless duration.is_a? String
+      return default.minutes unless duration.is_a? String
 
-      # If it's a string containing just a number, then convert it and return
-      # it. Otherwise, if it has a bad (old) format, then just return the default.
-      splitted = duration.split(".")
-      if splitted.size == 1
-        val = splitted.first.to_i
-        return val.send(:minutes) unless val == 0
+      # If we got an empty String then return the default value.
+      return default.minutes if duration.empty?
+
+      raw_value, method = duration.split('.')
+      value = raw_value.to_i
+
+      # When we found a callable method, notify about deprecation
+      if !method.nil? && value.respond_to?(method)
+        Rails.logger.tagged("deprecated") do
+          Rails.logger.warn "The 'x.minutes' format is deprecated for configuration values such " \
+                            "as `jwt_expiration_time`. From now on these values are expected to " \
+                            "be integers representing minutes."
+        end
+        value.send(method)
+      elsif value > 0
+        # If it's a string containing a positive number, then convert it and return it. 
+        value.minutes
+      else
+        # Otherwise, if it has a bad (old) format, then just return the default.
+        Rails.logger.warn "Unsupported time format (#{duration}), fallback to default."
+        default.minutes
       end
-      return default.send(:minutes) if splitted.size != 2
-
-      Rails.logger.tagged("deprecated") do
-        Rails.logger.warn "The 'x.minutes' format is deprecated for configuration values such " \
-                          "as `jwt_expiration_time`. From now on these values are expected to " \
-                          "be integers representing minutes."
-      end
-
-      # rubocop:disable Security/Eval
-      eval(duration)
-      # rubocop:enable Security/Eval
     end
 
     # Provides a compatibility layer for Portus 2.1 for users that haven't
