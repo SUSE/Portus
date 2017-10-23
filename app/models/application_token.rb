@@ -23,11 +23,10 @@ class ApplicationToken < ActiveRecord::Base
 
   def limit_number_of_tokens_per_user
     max_reached = User.find(user_id).application_tokens.count >= User::APPLICATION_TOKENS_MAX
-    errors.add(
-      :base,
-      "Users cannot have more than #{User::APPLICATION_TOKENS_MAX} " \
-      "application tokens"
-    ) if max_reached
+    return unless max_reached
+
+    errors.add(:base, "Users cannot have more than #{User::APPLICATION_TOKENS_MAX} " \
+      "application tokens")
   end
 
   # Create the activity regarding this application token.

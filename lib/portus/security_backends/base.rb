@@ -16,7 +16,7 @@ module Portus
       # Returns true if the given backend has been enabled, false otherwise.
       def self.enabled?
         cfg = configuration
-        !cfg["server"].blank?
+        cfg["server"].present?
       end
 
       # Returns the configuration of the given backend.

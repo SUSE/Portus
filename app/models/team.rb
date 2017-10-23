@@ -31,9 +31,9 @@ class Team < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :owners, presence: true
-  has_many :namespaces
+  has_many :namespaces, dependent: :destroy
 
-  has_many :team_users
+  has_many :team_users, dependent: :destroy
   has_many :users, through: :team_users
   has_many :owners, -> { merge TeamUser.owner },
     through: :team_users, source: :user

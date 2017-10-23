@@ -92,11 +92,12 @@ module Portus
           return
         end
 
-        if res.code.to_i != 200 && res.code.to_i != 201
-          msg = error_message(JSON.parse(res.body))
-          Rails.logger.tagged("clair.post") do
-            Rails.logger.debug "Could not post '#{digest}': #{msg}"
-          end
+        code = res.code.to_i
+        return if code == 200 || code == 201
+
+        msg = error_message(JSON.parse(res.body))
+        Rails.logger.tagged("clair.post") do
+          Rails.logger.debug "Could not post '#{digest}': #{msg}"
         end
       end
 

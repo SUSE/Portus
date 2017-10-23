@@ -13,7 +13,7 @@ module Portus
       :missing
     rescue Mysql2::Error
       :down
-    rescue
+    rescue StandardError
       :unknown
     end
 

@@ -6,8 +6,8 @@
 # an environment variable. If this is not the case, then it raises an exception
 # with the proper message.
 def mandatory_secret!(env, value)
-  return unless value.blank?
-  return unless ENV["PORTUS_#{env}"].blank?
+  return if value.present?
+  return if ENV["PORTUS_#{env}"].present?
 
   raise "Environment variable `PORTUS_#{env}` has not been set! This variable is " \
         "mandatory in production because it's needed for the generation of secrets."

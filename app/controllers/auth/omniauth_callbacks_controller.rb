@@ -63,7 +63,7 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     when "github"
       github_member? conf
     when "gitlab"
-      unless conf["group"].blank?
+      if conf["group"].present?
         # Get user's groups.
         is_member = member_of("https://gitlab.com/api/v4/groups") do |g|
           g["name"] == conf["group"]
@@ -75,14 +75,14 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # Checks if the user member of github organization and team.
   def github_member?(conf)
-    if !conf["team"].blank?
+    if conf["team"].present?
       # Get user's teams.
       is_member = member_of("https://api.github.com/user/teams") do |t|
         t["name"] == conf["team"] &&
           t["organization"]["login"] == conf["organization"]
       end
       "The Github account isn't in allowed team." unless is_member
-    elsif !conf["organization"].blank?
+    elsif conf["organization"].present?
       # Get user's organizations.
       is_member = member_of("https://api.github.com/user/orgs") do |t|
         t["login"] == conf["organization"]

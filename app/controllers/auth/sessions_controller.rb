@@ -10,7 +10,7 @@ class Auth::SessionsController < Devise::SessionsController
     signup_allowed = !Portus::LDAP.enabled? && APP_CONFIG.enabled?("signup")
 
     if User.not_portus.any? || !signup_allowed
-      @errors_occurred = flash[:alert] && !flash[:alert].empty?
+      @errors_occurred = flash[:alert].present?
       super
     else
       # For some reason if we get here from the root path, we'll get a flashy

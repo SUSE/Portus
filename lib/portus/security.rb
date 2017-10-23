@@ -23,7 +23,7 @@ module Portus
 
     # Returns true if security scanning is enabled, false otherwise.
     def enabled?
-      !@backends.blank?
+      @backends.present?
     end
 
     # Returns a hash with the results from all the backends. The results are a

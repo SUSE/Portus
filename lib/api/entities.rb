@@ -139,7 +139,7 @@ module API
 
         # TODO: partially taken from TeamsHelper. Avoid duplication!
         team_user = team.team_users.find_by(user_id: user.id)
-        team_user.role.titleize if team_user
+        team_user&.role&.titleize
       end
       expose :users_count, documentation: {
         type: Integer,

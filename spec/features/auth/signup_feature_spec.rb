@@ -140,7 +140,7 @@ feature "Signup feature" do
     expect(page).to have_selector("#fixed-alert ul li", count: 2)
     expect(page).to have_selector("#fixed-alert ul li", text: "Email is invalid")
     expect(page).to have_selector("#fixed-alert ul li",
-                                  text: 'Password confirmation doesn\'t match Password')
+                                  text: "Password confirmation doesn't match Password")
   end
 
   scenario "If there are users on the system, and can move through sign_in and sign_up" do

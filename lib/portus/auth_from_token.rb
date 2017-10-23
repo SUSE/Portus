@@ -13,11 +13,10 @@ module Portus
       username, password = auth.split(":")
       user = User.find_by(username: username)
 
-      if user && user.application_token_valid?(password)
-        # Sign in when it included in controller.
-        sign_in(user, store: false) if respond_to? :sign_in
-        user
-      end
+      # Sign in when it included in controller.
+      return unless user&.application_token_valid?(password)
+      sign_in(user, store: false) if respond_to? :sign_in
+      user
     end
   end
 end

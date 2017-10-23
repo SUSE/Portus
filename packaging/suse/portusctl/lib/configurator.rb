@@ -1,3 +1,5 @@
+# :nocov:
+
 require_relative "registry"
 
 # Class taking care of configuring the system according to
@@ -119,6 +121,7 @@ class Configurator
     Runner.bundler_exec("rake", ["db:migrate"], env_variables)
 
     puts "Seeding database"
+    # rubocop:disable Lint/RescueWithoutErrorClass
     begin
       Runner.bundler_exec("rake", ["db:seed"], env_variables)
     rescue
@@ -126,6 +129,7 @@ class Configurator
       puts "Are you sure the database is empty?"
       puts "Ignoring error"
     end
+    # rubocop:enable Lint/RescueWithoutErrorClass
     FileUtils.chown_R("wwwrun", "www", "/srv/Portus/tmp")
   end
 
@@ -189,3 +193,5 @@ class Configurator
     @options["db-host"] == "localhost" || @options["db-host"] == HOSTNAME
   end
 end
+
+# :nocov:

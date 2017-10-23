@@ -37,7 +37,7 @@ class WebhookDelivery < ActiveRecord::Base
     args = {
       method:  webhook.request_method,
       headers: webhook.process_headers,
-      body:    JSON.generate(JSON.load(request_body)),
+      body:    JSON.generate(JSON.parse(request_body)),
       timeout: 60,
       userpwd: webhook.process_auth
     }

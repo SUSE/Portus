@@ -9,7 +9,7 @@ module Portus
     # The given resource was not found.
     class ResourceNotFound < StandardError; end
 
-    attr_accessor :resource, :actions, :resource_type, :resource_name
+    attr_accessor :actions, :resource_type, :resource_name
 
     def initialize(registry, scope_string)
       @scope_string = scope_string

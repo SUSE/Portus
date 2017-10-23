@@ -1,6 +1,6 @@
 # Adding the Portus user.
 
-if User.count > 0
+if User.any?
   Rails.logger.fatal "The DB is not empty! Only seed for kick-starting your DB"
   exit(-1)
 end
@@ -16,7 +16,7 @@ User.create!(
 # Adding a user and a registry for integration tests.
 if ENV["INTEGRATION_TESTS"]
   Rails.logger.info "Adding user username31"
-  if User.find_by_username("username31")
+  if User.find_by(username: "username31")
     Rails.logger.fatal "User already exists. Please drop the database first"
     exit(-1)
   end

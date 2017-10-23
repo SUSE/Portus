@@ -22,7 +22,7 @@
 # NOTE: currently only one Registry is allowed to exist in the database. This
 # might change in the future.
 class Registry < ActiveRecord::Base
-  has_many :namespaces
+  has_many :namespaces, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
   validates :hostname, presence: true, uniqueness: true
@@ -42,7 +42,7 @@ class Registry < ActiveRecord::Base
 
   # Finds the registry with the given hostname. It first looks for the
   # `hostname` column, and then it fallbacks to `external_hostname`.
-  def self.find_by_hostname(hostname)
+  def self.by_hostname_or_external(hostname)
     registry = Registry.find_by(hostname: hostname)
     if registry.nil?
       Rails.logger.debug("No hostname matching `#{hostname}', testing external_hostname")
@@ -150,7 +150,7 @@ class Registry < ActiveRecord::Base
   def get_tag_from_target(namespace, repo, target)
     # Since Docker Distribution 2.4 the registry finally sends the tag, so we
     # don't have to perform requests afterwards.
-    return target["tag"] unless target["tag"].blank?
+    return target["tag"] if target["tag"].present?
 
     # Tough luck, we should now perform requests to fetch the tag. Note that
     # depending on the Manifest version we have to do one thing or another
@@ -165,7 +165,6 @@ class Registry < ActiveRecord::Base
     else
       raise "unsupported media type \"#{target["mediaType"]}\""
     end
-
   rescue StandardError => e
     logger.info("Could not fetch the tag for target #{target}")
     logger.info("Reason: #{e.message}")

@@ -39,8 +39,7 @@ end
 
 # This class is used to access directly to the "fetch_link" protected method.
 class RegistryClientFetchLink < Portus::RegistryClient
-  def initialize
-  end
+  def initialize; end
 
   def fetch_link_test(header)
     fetch_link(header)

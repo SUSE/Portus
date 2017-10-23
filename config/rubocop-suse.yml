@@ -11,7 +11,7 @@
 # This file contains the rules with derive from this.
 
 Lint/EndAlignment:
-  AlignWith: variable
+  EnforcedStyleAlignWith: variable
 
 Metrics/AbcSize:
   Max: 30
@@ -25,20 +25,20 @@ Metrics/LineLength:
     - http
     - https
 
-Style/AlignHash:
+Layout/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
 
-Style/AlignParameters:
+Layout/AlignParameters:
   Enabled: false
 
 Style/CollectionMethods:
   Enabled: false
 
-Style/EmptyLinesAroundBlockBody:
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
 Style/StringLiterals:

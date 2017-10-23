@@ -17,7 +17,7 @@ describe "Updating namespaces from 2.0 to 2.1" do
   let!(:admin) { create(:admin, username: "miquelsabate", ldap_name: "miquel.sabate") }
 
   before :each do
-    load Rails.root.join("lib/tasks/migrate.rake")
+    load Rails.root.join("lib", "tasks", "migrate.rake")
     Rake::Task.define_task(:environment)
     APP_CONFIG["ldap"] = { "enabled" => true }
     ENV["PORTUS_FORCE_LDAP_NAME_UPDATE"] = "true"

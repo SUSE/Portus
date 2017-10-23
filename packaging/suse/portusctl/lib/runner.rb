@@ -1,12 +1,13 @@
+# :nocov:
+
 # Helper file used to run external commands
 class Runner
   # Run a simple external command. Keep in mind that this method will raise an
   # exception if the command fails.
   def self.exec(cmd, args = [])
     final_cmd = Runner.escape_command(cmd, args)
-    unless system(final_cmd)
-      raise "Something went wrong while invoking: #{final_cmd}"
-    end
+    return if system(final_cmd)
+    raise "Something went wrong while invoking: #{final_cmd}"
   end
 
   # Run a simple external command. This is equivalent to `Runner.exec`, but this
@@ -50,7 +51,7 @@ class Runner
   # of the different components.
   def self.produce_versions_file!
     File.open(File.join(PORTUS_ROOT, "log/versions.log"), "w+") do |file|
-      %w(docker docker-distribution-registry Portus).each do |package|
+      %w[docker docker-distribution-registry Portus].each do |package|
         rpm = `rpm -qi #{package}`
         file.puts("#{rpm}\n")
       end
@@ -78,3 +79,5 @@ class Runner
     puts "You can find your logs here: /tmp/portus_logs.tar.gz"
   end
 end
+
+# :nocov:

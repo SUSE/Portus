@@ -240,4 +240,20 @@ describe Registry, type: :model do
       expect(ret).to eq "0.1"
     end
   end
+
+  describe "#by_hostname_or_external" do
+    let!(:registry) { create(:registry, hostname: "a", external_hostname: "b") }
+
+    it "returns the given registry by hostname" do
+      expect(Registry.by_hostname_or_external("a")).to eq(registry)
+    end
+
+    it "returns the given registry by external hostname" do
+      expect(Registry.by_hostname_or_external("b")).to eq(registry)
+    end
+
+    it "returns nil if the given hostname cannot be found" do
+      expect(Registry.by_hostname_or_external("c")).to be_nil
+    end
+  end
 end

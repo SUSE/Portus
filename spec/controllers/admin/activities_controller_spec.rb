@@ -116,18 +116,18 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
         "Content-Type"        => "text/csv"
       )
 
-      csv = <<CSV
-Tracked item,Item,Event,Recipient,Triggered by,Time,Notes
-repository,registry.test.lan/sles11sp3:1.0.0,push tag,-,castiel,2015-10-01 00:00:00 UTC,-
-repository,patched_images/sles12:1.0.0,push tag,-,castiel,2015-09-01 00:00:00 UTC,-
-namespace,patched_images,change visibility,-,castiel,2015-08-01 00:00:00 UTC,is private
-namespace,patched_images,change visibility,-,castiel,2015-07-01 00:00:00 UTC,is protected
-namespace,patched_images,change visibility,-,castiel,2015-06-01 00:00:00 UTC,is public
-namespace,patched_images,create,-,castiel,2015-05-01 00:00:00 UTC,owned by team qa
-team,qa,change member role,dean,castiel,2015-04-01 00:00:00 UTC,from viewer to contributor
-team,qa,remove member,dean,castiel,2015-03-01 00:00:00 UTC,role viewer
-team,qa,add member,dean,castiel,2015-02-01 00:00:00 UTC,role viewer
-team,qa,create,-,castiel,2015-01-01 00:00:00 UTC,-
+      csv = <<~CSV
+        Tracked item,Item,Event,Recipient,Triggered by,Time,Notes
+        repository,registry.test.lan/sles11sp3:1.0.0,push tag,-,castiel,2015-10-01 00:00:00 UTC,-
+        repository,patched_images/sles12:1.0.0,push tag,-,castiel,2015-09-01 00:00:00 UTC,-
+        namespace,patched_images,change visibility,-,castiel,2015-08-01 00:00:00 UTC,is private
+        namespace,patched_images,change visibility,-,castiel,2015-07-01 00:00:00 UTC,is protected
+        namespace,patched_images,change visibility,-,castiel,2015-06-01 00:00:00 UTC,is public
+        namespace,patched_images,create,-,castiel,2015-05-01 00:00:00 UTC,owned by team qa
+        team,qa,change member role,dean,castiel,2015-04-01 00:00:00 UTC,from viewer to contributor
+        team,qa,remove member,dean,castiel,2015-03-01 00:00:00 UTC,role viewer
+        team,qa,add member,dean,castiel,2015-02-01 00:00:00 UTC,role viewer
+        team,qa,create,-,castiel,2015-01-01 00:00:00 UTC,-
 CSV
 
       expect(response.body).to eq(csv)

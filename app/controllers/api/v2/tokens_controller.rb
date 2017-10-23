@@ -12,7 +12,7 @@ class Api::V2::TokensController < Api::BaseController
   def attempt_authentication_against_application_tokens
     user = authenticate_with_http_basic do |username, password|
       user = User.find_by(username: username)
-      user if user && user.application_token_valid?(password)
+      user if user&.application_token_valid?(password)
     end
     sign_in(user, store: true) if user
   end
@@ -21,7 +21,7 @@ class Api::V2::TokensController < Api::BaseController
   # operation into the private registry.
   def show
     authenticate_user! if request.headers["Authorization"]
-    registry = Registry.find_by_hostname(params[:service])
+    registry = Registry.by_hostname_or_external(params[:service])
 
     auth_scopes = []
     auth_scopes = authorize_scopes(registry) unless registry.nil?

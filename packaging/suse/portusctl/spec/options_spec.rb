@@ -37,7 +37,7 @@ end
 describe Cli do
   it "matches with the options available in the config.yml file" do
     path = File.expand_path("../../../../../config/config.yml", __FILE__)
-    yml  = YAML.load(IO.read(path))
+    yml  = YAML.safe_load(IO.read(path))
 
     # Get the keys from the config and from the setup command. Then get the
     # difference between the config and the intersection of the config and the

@@ -20,7 +20,7 @@ if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
       def reconnect!(*args)
         reconnect_without_retry!(*args)
       rescue PG::ConnectionBad => e
-        raise e unless e.message =~ /connection is closed/i
+        raise e unless e.message.match?(/connection is closed/i)
 
         # We don't want to try to reconnect forever.
         portus_retries = portus_retries.nil? ? 0 : portus_retries + 1

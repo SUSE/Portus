@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
 
     username, password = auth.split(":")
     user = User.find_by(username: username)
-    sign_in(user, store: false) if user && user.application_token_valid?(password)
+    sign_in(user, store: false) if user&.application_token_valid?(password)
   end
 
   # Redirect users to their profile page if they haven't set up their email
@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
   # Redirect admin users to the registries#new page if no registry has been
   # setup yet.
   def force_registry_config!
-    return unless current_user && current_user.admin?
+    return unless current_user&.admin?
     return if Registry.any?
     return if protected_controllers?("admin/registries")
 

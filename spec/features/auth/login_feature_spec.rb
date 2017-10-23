@@ -40,9 +40,9 @@ feature "Login feature" do
     # Skipping validation for LDAP users is configured when the user model is first interpreted
     # Use a clean room to guard against side effects
     module CleanRoom
-      # rubocop:disable Lint/Eval
-      eval File.read(File.join(Rails.root, "app", "models", "user.rb"))
-      # rubocop:enable Lint/Eval
+      # rubocop:disable Security/Eval
+      eval File.read(Rails.root.join("app", "models", "user.rb"))
+      # rubocop:enable Security/Eval
     end
 
     ldap_user = CleanRoom::User.first

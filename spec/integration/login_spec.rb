@@ -94,16 +94,16 @@ integration "Login" do
       create_user(contributor, "test1@email.com", password)
       create_user(viewer, "test2@email.com", password)
 
-      rb = <<HERE
-team = Team.new(name: 'team')
-owner = User.find_by(username: '#{owner}')
-contributor = User.find_by(username: '#{contributor}')
-viewer = User.find_by(username: '#{viewer}')
-team.owners = [owner]
-team.contributors = [contributor]
-team.viewers = [viewer]
-team.save
-Namespace.create(team: team.reload, name: 'namespace', registry: Registry.get)
+      rb = <<~HERE
+        team = Team.new(name: 'team')
+        owner = User.find_by(username: '#{owner}')
+        contributor = User.find_by(username: '#{contributor}')
+        viewer = User.find_by(username: '#{viewer}')
+        team.owners = [owner]
+        team.contributors = [contributor]
+        team.viewers = [viewer]
+        team.save
+        Namespace.create(team: team.reload, name: 'namespace', registry: Registry.get)
 HERE
       docker_exec("integration_portus", "rails r \"#{rb}\"")
 

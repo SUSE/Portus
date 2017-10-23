@@ -17,14 +17,13 @@ module Registries
     end
 
     def check_reachability!
-      if only_params.nil? || only_params.include?("hostname")
-        reachable_msg = @registry.reachable?
+      return unless only_params.nil? || only_params.include?("hostname")
 
-        unless reachable_msg.blank?
-          @valid = false
-          @messages[:hostname] = (@messages[:hostname] || []).push(reachable_msg)
-        end
-      end
+      reachable_msg = @registry.reachable?
+      return if reachable_msg.blank?
+
+      @valid = false
+      @messages[:hostname] = (@messages[:hostname] || []).push(reachable_msg)
     end
   end
 end

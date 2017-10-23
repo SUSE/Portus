@@ -8,7 +8,7 @@ class CatchJsonParseErrors
   def call(env)
     @app.call(env)
   rescue ActionDispatch::ParamsParser::ParseError => error
-    raise error unless env["HTTP_ACCEPT"] =~ /application\/json/
+    raise error unless env["HTTP_ACCEPT"].match?(/application\/json/)
     error_output = "There was a problem in the JSON you submitted: #{error}"
     [
       400, { "Content-Type" => "application/json" },

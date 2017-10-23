@@ -76,7 +76,7 @@ describe API::V1::Users do
       it "creates new user" do
         post "/api/v1/users", { user: user_data }, @header
         expect(response).to have_http_status(:created)
-        expect(User.find_by_email(user_data[:email])).not_to be_nil
+        expect(User.find_by(email: user_data[:email])).not_to be_nil
       end
     end
 
@@ -110,7 +110,7 @@ describe API::V1::Users do
         user = create :user
         put "/api/v1/users/#{user.id}", { user: user_data }, @header
         expect(response).to have_http_status(:success)
-        expect(User.find_by_email(user_data[:email])).not_to be_nil
+        expect(User.find_by(email: user_data[:email])).not_to be_nil
       end
 
       it "updates user but not display_name" do

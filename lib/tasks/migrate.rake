@@ -29,13 +29,13 @@ namespace :migrate do
     puts "Users to be updated:"
     count = 0
     User.all.find_each do |u|
-      if !u.ldap_name.blank? && u.ldap_name != u.username
+      if u.ldap_name.present? && u.ldap_name != u.username
         puts "- username: #{u.username}\t<=>\tldapname: #{u.ldap_name}"
         count += 1
       end
     end
 
-    if count == 0
+    if count.zero?
       puts "None. Doing nothing..."
       exit 0
     end
@@ -48,7 +48,7 @@ namespace :migrate do
 
     ActiveRecord::Base.transaction do
       User.all.find_each do |u|
-        if !u.ldap_name.blank? && u.ldap_name != u.username
+        if u.ldap_name.present? && u.ldap_name != u.username
           u.update_attributes!(username: u.ldap_name)
         end
       end

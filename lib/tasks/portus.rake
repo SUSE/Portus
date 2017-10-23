@@ -45,7 +45,7 @@ namespace :portus do
       end
     end
 
-    if Registry.count > 0
+    if Registry.any?
       puts "There is already a registry configured!"
       exit(-1)
     end
@@ -79,11 +79,11 @@ namespace :portus do
     end
 
     unless Registry.any?
-      puts <<HERE
+      puts <<~HERE
 
-ERROR: There is no registry on the DB! You can either call the portus:create_registry
-task, or log in as an administrator into Portus and fill in the form that
-will be presented to you.
+        ERROR: There is no registry on the DB! You can either call the portus:create_registry
+        task, or log in as an administrator into Portus and fill in the form that
+        will be presented to you.
 HERE
       exit(-1)
     end
@@ -96,13 +96,13 @@ HERE
     )
 
     if u.username != u.namespace.name
-      puts <<HERE
+      puts <<~HERE
 
-NOTE: the user you just created contained characters that are not accepted for
-naming namespaces. Because of this, you've got the following:
+        NOTE: the user you just created contained characters that are not accepted for
+        naming namespaces. Because of this, you've got the following:
 
-  * User name: '#{u.username}'
-  * Personal namespace: '#{u.namespace.name}'
+          * User name: '#{u.username}'
+          * Personal namespace: '#{u.namespace.name}'
 HERE
     end
   end
@@ -116,7 +116,7 @@ HERE
       puts User.pluck(:username).to_s
       exit(-1)
     end
-    u = User.find_by_username(args[:username])
+    u = User.find_by(username: args[:username])
     if u.nil?
       puts "#{args[:username]} not found in database"
       puts "valid usernames are"
@@ -134,11 +134,11 @@ HERE
   desc "Update the manifest digest of tags"
   task :update_tags, [:update] => [:environment] do |_, args|
     # Warning
-    puts <<HERE
-This rake task may take a while depending on how many images have been stored
-in your private registry. If you are running this in production it's
-recommended that the registry is running in "readonly" mode, so there are no
-race conditions with concurrent accesses.
+    puts <<~HERE
+      This rake task may take a while depending on how many images have been stored
+      in your private registry. If you are running this in production it's
+      recommended that the registry is running in "readonly" mode, so there are no
+      race conditions with concurrent accesses.
 
 HERE
 

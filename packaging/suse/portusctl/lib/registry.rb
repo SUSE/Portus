@@ -1,3 +1,4 @@
+# :nocov:
 module Portusctl
   # Contains all the needed methods for configuring the registry. You should
   # only need to use the `registry` method.
@@ -85,3 +86,4 @@ module Portusctl
     end
   end
 end
+# :nocov:

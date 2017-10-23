@@ -36,7 +36,7 @@ module ApplicationHelper
 
   # Returns true if the login form should show the "first user admin" alert.
   def show_first_user_alert?
-    !User.not_portus.any? && APP_CONFIG.enabled?("first_user_admin") && Portus::LDAP.enabled?
+    User.not_portus.none? && APP_CONFIG.enabled?("first_user_admin") && Portus::LDAP.enabled?
   end
 
   # Render markdown to safe HTML.

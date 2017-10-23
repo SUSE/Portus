@@ -15,7 +15,7 @@ ActiveRecord::Migration.maintain_test_schema!
 
 # All the configuration that is specific for a gem (or set of related gems) has
 # been pushed into individual files inside the `spec/support` directory.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec", "support", "**", "*.rb")].each { |f| require f }
 
 # To avoid problems, the LDAP authenticatable is enabled always. Since this
 # means trouble for regular logins, we mock Portus::LDAP to implement a fake
