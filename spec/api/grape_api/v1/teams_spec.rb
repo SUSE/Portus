@@ -148,4 +148,42 @@ describe API::V1::Teams do
       expect(team_creation_activity.trackable).to eq(team)
     end
   end
+
+  context "PUT /api/v1/teams/:id" do
+    let(:team_data) do
+      {
+        name:        "team",
+        description: "description"
+      }
+    end
+
+    it "updates team" do
+      team = create :team, name: "somerandomone", description: "lala"
+
+      put "/api/v1/teams/#{team.id}", { team: team_data }, @header
+      expect(response).to have_http_status(:success)
+
+      t = Team.find(team.id)
+      expect(t.name).to eq(team_data[:name])
+      expect(t.description).to eq(team_data[:description])
+    end
+
+    it "returns duplicate team name" do
+      t = create :team
+      t2 = create :team
+
+      put "/api/v1/teams/#{t.id}", { team: { name: t2.name } }, @header
+      expect(response).to have_http_status(:bad_request)
+
+      data = JSON.parse(response.body)["errors"]
+      expect(data["name"]).to eq(["has already been taken"])
+    end
+
+    it "returns status not found" do
+      create :team
+      team_id = Team.maximum(:id) + 1
+      put "/api/v1/teams/#{team_id}", { team: team_data }, @header
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

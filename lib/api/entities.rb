@@ -1,3 +1,5 @@
+require "api/helpers"
+
 module API
   module Entities
     # General entities
@@ -124,9 +126,15 @@ module API
     # Teams & namespaces
 
     class Teams < Grape::Entity
+      include ::API::Helpers::Teams
+
       expose :id, documentation: { type: Integer, desc: "Repository ID" }
       expose :name, documentation: { type: String, desc: "Repository name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :description, documentation: {
+        type: String,
+        desc: "The description of the team"
+      }
       expose :hidden, :updated_at, documentation: {
         type: "Boolean",
         desc: "Whether the team is visible to the final user or not"
@@ -134,13 +142,7 @@ module API
       expose :role, documentation: {
         type: String,
         desc: "The role this of the current user within this team"
-      }, if: { type: :internal } do |team, options|
-        user = options[:current_user]
-
-        # TODO: partially taken from TeamsHelper. Avoid duplication!
-        team_user = team.team_users.find_by(user_id: user.id)
-        team_user.role.titleize if team_user
-      end
+      }, if: { type: :internal } { |team, options| role_within_team(options[:current_user], team) }
       expose :users_count, documentation: {
         type: Integer,
         desc: "The number of enabled users that belong to this team"
@@ -159,6 +161,9 @@ module API
         type: String,
         desc: "The description of the namespace"
       }
+      expose :team, documentation: {
+        desc: "The ID and the name of the team containing this namespace"
+      } { |namespace| namespace.team.slice("id", "name") }
       expose :team_name, documentation: {
       }, if: { type: :internal } { |n| n.team.name }
       expose :team_id, documentation: {

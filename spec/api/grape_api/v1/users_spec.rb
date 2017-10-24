@@ -123,7 +123,7 @@ describe API::V1::Users do
     end
 
     context "with invalid params" do
-      it "returns dublicate usernaeme errors" do
+      it "returns dublicate username errors" do
         user = create :user
         user2 = create :user
         put "/api/v1/users/#{user.id}", { user: { username: user2.username } },
