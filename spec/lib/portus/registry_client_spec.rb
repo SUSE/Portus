@@ -253,6 +253,47 @@ describe Portus::RegistryClient do
   end
 
   context "fetching Catalog from registry" do
+    it "raises an exception when the registry returns a 401" do
+      create(:registry)
+      create(:admin, username: "portus")
+
+      VCR.use_cassette("registry/get_registry_catalog_401", record: :none) do
+        registry = Portus::RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password
+        )
+
+        expect do
+          registry.catalog
+        end.to raise_error(Portus::HttpHelpers::AuthorizationError)
+      end
+    end
+
+    it "does not discard a repository if no tags where returned" do
+      create(:registry)
+      create(:admin, username: "portus")
+
+      catalog = []
+      VCR.use_cassette("registry/get_registry_catalog_401_tags", record: :none) do
+        registry = Portus::RegistryClient.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password
+        )
+
+        catalog = registry.catalog
+      end
+
+      busybox = catalog.find { |r| r["name"] == "busybox" }
+      another = catalog.find { |r| r["name"] == "another" }
+
+      expect(busybox["tags"]).to eq(["latest"])
+      expect(another["tags"]).to be_nil
+    end
+
     it "returns the available catalog" do
       create(:registry)
       create(:admin, username: "portus")
@@ -310,9 +351,10 @@ describe Portus::RegistryClient do
         )
 
         catalog = registry.catalog
-        expect(catalog.length).to be 1
-        expect(catalog[0]["name"]).to eq "busybox"
-        expect(catalog[0]["tags"]).to match_array(["latest"])
+        expect(catalog.length).to be 2
+
+        busybox = catalog.find { |r| r["name"] == "busybox" }
+        expect(busybox["tags"]).to match_array(["latest"])
       end
     end
 
