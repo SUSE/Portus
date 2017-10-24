@@ -1,0 +1,7 @@
+---
+:exit_on_warn: true
+:run_all_checks: true
+:ensure_latest: true
+:summary_only: :no_summary
+:min_confidence: 0
+:report_progress: false

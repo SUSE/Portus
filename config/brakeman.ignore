@@ -1,0 +1,25 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Request Forgery",
+      "warning_code": 7,
+      "fingerprint": "0d9919b75a4cc597f05a9391a08834be66f874349c2b1249364a88b3c7bd28ac",
+      "check_name": "ForgerySetting",
+      "message": "'protect_from_forgery' should be called in Api::BaseController",
+      "file": "app/controllers/api/base_controller.rb",
+      "line": 1,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
+      "code": null,
+      "render_path": null,
+      "location": {
+        "type": "controller",
+        "controller": "Api::BaseController"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "Forgery is already prottected with rack-cors on the API side"
+    }
+  ],
+  "updated": "2017-10-24 16:05:40 +0200",
+  "brakeman_version": "4.0.1"
+}

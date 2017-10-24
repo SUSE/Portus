@@ -50,7 +50,7 @@ script:
   # Style and security checks
   - bundle exec rubocop -V
   - bundle exec rubocop -F
-  - bundle exec brakeman -z -A -x CheckUnscopedFind,CheckRender
+  - bundle exec brakeman
 
   # Javascript style
   - yarn run eslint
