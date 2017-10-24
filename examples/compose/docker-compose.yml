@@ -11,7 +11,7 @@ services:
       PORTUS_PRODUCTION_HOST: db
       PORTUS_PRODUCTION_DATABASE: portus_production
       PORTUS_PRODUCTION_PASSWORD: ${DATABASE_PASSWORD}
-      PORTUS_DB_POOL=5
+      PORTUS_DB_POOL: 5
 
       # Secrets. It can possibly be handled better with Swarm's secrets.
       PORTUS_SECRET_KEY_BASE: ${SECRET_KEY_BASE}
@@ -43,7 +43,7 @@ services:
       PORTUS_PRODUCTION_HOST: db
       PORTUS_PRODUCTION_DATABASE: portus_production
       PORTUS_PRODUCTION_PASSWORD: ${DATABASE_PASSWORD}
-      PORTUS_DB_POOL=5
+      PORTUS_DB_POOL: 5
 
       # Secrets. It can possibly be handled better with Swarm's secrets.
       PORTUS_SECRET_KEY_BASE: ${SECRET_KEY_BASE}
