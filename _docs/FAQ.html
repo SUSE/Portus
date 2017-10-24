@@ -8,7 +8,7 @@ longtitle: Frequently asked questions
 <h1>Frequently Asked Questions</h1>
 
 <div class="panel-group" id="faq-accordion" role="tablist" aria-multiselectable="true">
-  {% assign faq = (site.faq | sort: 'order') %}
+  {% assign faq = site.faq | sort: 'order' %}
   {% for question in faq %}
     <div class="panel panel-default faq-panel">
       <div class="panel-heading faq-panel-heading">
