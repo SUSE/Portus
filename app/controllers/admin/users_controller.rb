@@ -26,8 +26,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   # GET /admin/user/1/edit
-  def edit
-  end
+  def edit; end
 
   # PATCH/PUT /admin/user/1
   def update

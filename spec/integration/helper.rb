@@ -107,7 +107,7 @@ end
 def ensure_distribution!(version)
   name = "portus_distribution_#{version.delete(".")}"
 
-  src  = File.expand_path(File.dirname(__FILE__)) + "/" + "fixtures"
+  src  = __dir__ + "/" + "fixtures"
   img  = "registry:#{version}"
   opts = {
     "Volumes"      => { src => { "/etc/docker/registry" => "ro,Z", "/registry_data" => "" } },
@@ -146,7 +146,7 @@ end
 def start_container!(image, name, ext = {})
   # Remove old containers.
   container = container_for(name)
-  container.delete(force: true) if container
+  container&.delete(force: true)
 
   opts = { "Image" => image }.merge(ext)
 
@@ -268,7 +268,7 @@ end
 def setup_templates!
   # Render the template
   @ip = ip
-  src = File.expand_path(File.dirname(__FILE__)) + "/" + "fixtures"
+  src = __dir__ + "/" + "fixtures"
   tpl = File.read(File.join(src, "config.yml.erb"))
   res = ERB.new(tpl, nil, "<>").result(binding)
 
@@ -380,7 +380,6 @@ def login(user, password, email)
     output = `docker login -u #{user} -e #{email} -p #{password} #{registry_hostname}`
     output.include? "Login Succeeded"
   end
-
 rescue ExpectError
   raise LoginError, "Login failed!"
 end
@@ -399,7 +398,7 @@ def rails_exec(cmd)
   end
 
   res = output.split("\n").last.strip
-  JSON.load(res)
+  JSON.parse(res)
 end
 
 # Capture the stdout of the given block.

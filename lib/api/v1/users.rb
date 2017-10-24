@@ -190,10 +190,10 @@ module API
           get do
             user = begin
               User.find params[:id]
-            rescue
+            rescue ActiveRecord::RecordNotFound
               nil
             end
-            user = User.find_by_email params[:id] unless user
+            user ||= User.find_by(email: params[:id])
             raise ActiveRecord::RecordNotFound unless user
             present user, with: API::Entities::Users
           end

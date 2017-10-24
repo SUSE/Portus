@@ -137,6 +137,6 @@ module RepositoriesHelper
   # Returns true if any vulnerability is found
   # Or false otherwise
   def vulnerable?(vulnerabilities)
-    !vulnerabilities.select { |_, vulns| !vulns.empty? }.empty?
+    !vulnerabilities.reject { |_, vulns| vulns.empty? }.empty?
   end
 end

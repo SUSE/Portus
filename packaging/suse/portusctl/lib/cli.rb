@@ -1,3 +1,5 @@
+# :nocov:
+
 # Class implementing the cli interface of portusctl
 class Cli < Thor
   check_unknown_options!
@@ -13,10 +15,10 @@ class Cli < Thor
   option "ssl-certs-dir",
     desc:      "Location of own certificates",
     default:   "",
-    long_desc: <<-LONGDESC
-Looks for the following required certificate files in the specified folder:
-   * `<custom dir>/<hostname>-ca.key`: the certificate key
-   * `<custom dir>/<hostname>-ca.crt`: the certificate file
+    long_desc: <<~LONGDESC
+      Looks for the following required certificate files in the specified folder:
+         * `<custom dir>/<hostname>-ca.key`: the certificate key
+         * `<custom dir>/<hostname>-ca.crt`: the certificate file
   LONGDESC
   option "ssl-organization",
     desc:    "SSL certificate: organization",
@@ -218,7 +220,7 @@ Looks for the following required certificate files in the specified folder:
 
   desc "make_admin USERNAME", "Give 'admin' role to a user"
   def make_admin(username)
-    if username.nil? || username.empty?
+    if username.blank?
       # This will print the list of usernames
       Runner.bundler_exec("rake", "portus:make_admin", {})
     else
@@ -260,3 +262,5 @@ Looks for the following required certificate files in the specified folder:
     Runner.tar_files("log/production.log", "log/crono.log", "log/versions.log")
   end
 end
+
+# :nocov:

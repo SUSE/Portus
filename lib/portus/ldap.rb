@@ -123,7 +123,7 @@ module Portus
       uid = APP_CONFIG["ldap"]["uid"]
       filter = Net::LDAP::Filter.equals(uid, username)
       provided = APP_CONFIG["ldap"]["filter"]
-      unless provided.blank?
+      if provided.present?
         provided_filter = Net::LDAP::Filter.construct(provided)
         filter = Net::LDAP::Filter.join(filter, provided_filter)
       end
@@ -175,7 +175,7 @@ module Portus
           username: username,
           email:    em,
           password: password,
-          admin:    !User.not_portus.any?
+          admin:    User.not_portus.none?
         )
         created = user.persisted?
       end
@@ -234,7 +234,7 @@ module Portus
     # Returns true if the params[:user] has been properly filled.
     def user_params_set?
       return false if params[:user].nil?
-      !params[:user][:username].blank? && !params[:user][:password].blank?
+      params[:user][:username].present? && params[:user][:password].present?
     end
   end
 end

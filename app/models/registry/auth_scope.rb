@@ -2,7 +2,7 @@
 # the "registry" type.
 class Registry::AuthScope < Portus::AuthScope
   def resource
-    reg = Registry.find_by_hostname(@registry.hostname)
+    reg = Registry.by_hostname_or_external(@registry.hostname)
     raise ResourceNotFound, "Could not find registry #{@registry.hostname}" if reg.nil?
     reg
   end

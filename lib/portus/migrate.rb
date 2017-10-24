@@ -34,9 +34,9 @@ module Portus
                           "be integers representing minutes."
       end
 
-      # rubocop:disable Lint/Eval
+      # rubocop:disable Security/Eval
       eval(duration)
-      # rubocop:enable Lint/Eval
+      # rubocop:enable Security/Eval
     end
 
     # Provides a compatibility layer for Portus 2.1 for users that haven't

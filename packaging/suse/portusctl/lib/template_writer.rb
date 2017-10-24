@@ -1,3 +1,5 @@
+# :nocov:
+
 # Class taking care of processing the template files used by
 # portusctl setup
 class TemplateWriter
@@ -26,3 +28,5 @@ class TemplateWriter
     File.read(t)
   end
 end
+
+# :nocov:

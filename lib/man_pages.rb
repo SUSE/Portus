@@ -1,3 +1,4 @@
+# :nocov:
 require "md2man/roff/engine"
 
 # Defines a set of methods regarding our man pages that might be re-used in
@@ -38,3 +39,4 @@ class ManPages
     end
   end
 end
+# :nocov:

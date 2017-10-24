@@ -115,16 +115,16 @@ end
 #
 
 if ARGV.size != 2
-  puts <<HERE
-usage: rails runner bin/generate_test_data.rb <hostname> <ssl>
+  puts <<~HERE
+    usage: rails runner bin/generate_test_data.rb <hostname> <ssl>
 
-Where <hostname> is the hostname of your private registry, and <ssl> is a
-boolean that determines whether the registry is using SSL or not.
+    Where <hostname> is the hostname of your private registry, and <ssl> is a
+    boolean that determines whether the registry is using SSL or not.
 
-Also, note that the Docker daemon must be accessible from this machine and that
-the user running this script must have the required privileges to interact with
-it. If the Docker daemon is not running locally, use the `DOCKER_HOST`
-environment variable.
+    Also, note that the Docker daemon must be accessible from this machine and that
+    the user running this script must have the required privileges to interact with
+    it. If the Docker daemon is not running locally, use the `DOCKER_HOST`
+    environment variable.
 HERE
   exit 1
 end

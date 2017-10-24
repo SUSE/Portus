@@ -1,3 +1,5 @@
+# :nocov:
+
 def check_setup_flags(options)
   if options["ssl-gen-self-signed-certs"] && \
       !options["ssl-certs-dir"].chomp.empty?
@@ -7,14 +9,14 @@ def check_setup_flags(options)
   end
 
   return unless options["ldap-enable"] && \
-      (options["ldap-hostname"].nil? || options["ldap-hostname"].empty?)
+      options["ldap-hostname"].blank?
 
   warn "LDAP support is enabled but you didn't specify a value for ldap-hostname"
   exit 1
 end
 
 def ensure_root
-  return if Process.uid == 0
+  return if Process.uid.zero?
 
   warn "Must run as root user"
   exit 1
@@ -42,3 +44,5 @@ def missing_file(filename, path = "")
   end
   exit 1
 end
+
+# :nocov:

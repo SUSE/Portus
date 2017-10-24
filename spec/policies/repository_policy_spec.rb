@@ -156,14 +156,14 @@ describe RepositoryPolicy do
     let!(:repository) { create(:repository, namespace: namespace, name: "repository") }
 
     it "finds the same repository regardless to how it has been written" do
-      %w(repository rep epo).each do |name|
+      %w[repository rep epo].each do |name|
         repo = Pundit.policy_scope(user, Repository).search(name)
         expect(repo.name).to eql "Repository"
       end
     end
 
     it "finds repos with the `repo:tag` syntax" do
-      %w(repository rep epo).each do |name|
+      %w[repository rep epo].each do |name|
         name = "#{name}:tag"
         repo = Pundit.policy_scope(user, Repository).search(name)
         expect(repo.name).to eql "Repository"

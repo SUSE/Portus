@@ -64,10 +64,10 @@ class User < ActiveRecord::Base
   before_destroy :update_tags!
 
   belongs_to :namespace
-  has_many :team_users
+  has_many :team_users, dependent: :destroy
   has_many :teams, through: :team_users
-  has_many :stars
-  has_many :application_tokens
+  has_many :stars, dependent: :destroy
+  has_many :application_tokens, dependent: :destroy
 
   scope :not_portus, -> { where.not username: "portus" }
   scope :enabled,    -> { not_portus.where enabled: true }
@@ -82,11 +82,8 @@ class User < ActiveRecord::Base
   # It adds an error if the username clashes with either a namespace or a team.
   def private_namespace_and_team_available
     ns = Namespace.make_valid(username)
-
-    if ns.nil?
-      errors.add(:username, "'#{username}' cannot be transformed into a " \
-        "valid namespace name")
-    end
+    return if ns
+    errors.add(:username, "'#{username}' cannot be transformed into a valid namespace name")
   end
 
   # Returns true if the current user is the Portus user.
@@ -233,15 +230,16 @@ class User < ActiveRecord::Base
   # If username exists then try variant username + "_nn".
   def suggest_username(data)
     self.username = extract_username data
-    if (user = User.find_by(username: username))
-      num = 1
-      while user && num < 999
-        suggest_username = "#{username}_#{num.to_s.rjust(2, "0")}"
-        user = User.find_by(username: suggest_username)
-        num += 1
-      end
-      self.username = suggest_username unless user
+    user = User.find_by(username: username)
+    return if user.nil?
+
+    num = 1
+    while user && num < 999
+      suggest_username = "#{username}_#{num.to_s.rjust(2, "0")}"
+      user = User.find_by(username: suggest_username)
+      num += 1
     end
+    self.username = suggest_username unless user
   end
 
   protected

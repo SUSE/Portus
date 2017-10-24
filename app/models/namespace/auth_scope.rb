@@ -1,6 +1,6 @@
 # Namespace::AuthScope parses the scope string for the "namespace" type.
 class Namespace::AuthScope < Portus::AuthScope
-  attr_accessor :resource, :actions, :resource_type, :resource_name
+  attr_accessor :actions, :resource_type, :resource_name
 
   def resource
     found_resource = if @namespace_name.blank?

@@ -25,7 +25,6 @@ Rails.application.routes.draw do
   resources :repositories, only: [:index, :show, :destroy] do
     post :toggle_star, on: :member
     resources :comments, only: [:create, :destroy]
-    resources :vulnerabilities, only: [:index]
   end
 
   resources :tags, only: [:show, :destroy]
@@ -79,7 +78,7 @@ Rails.application.routes.draw do
   end
 
   # Error pages.
-  %w(401 404 422 500).each do |code|
+  %w[401 404 422 500].each do |code|
     get "/#{code}", to: "errors#show", status: code
   end
 end

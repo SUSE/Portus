@@ -19,7 +19,6 @@ module Portus
         res     = get_response_token(uri, req)
         success = res.code.to_i == 200
         ["clair is#{success ? "" : " not"} reachable", success]
-
       rescue SocketError, Errno::ECONNREFUSED => e
         ["clair is not reachable: #{e.message}", false]
       end
@@ -28,8 +27,7 @@ module Portus
       # the health status.
       def self.health_endpoint(server)
         port = APP_CONFIG["security"]["clair"]["health_port"]
-
-        if server =~ /:(\d)+/
+        if server.match?(/:(\d)+/)
           server.gsub(/:(\d)+/, ":#{port}")
         else
           "#{server}:#{port}"

@@ -24,7 +24,7 @@ describe OmniAuth::Strategies::Bitbucket do
           [{ "email" => "test@mail.net", "is_primary" => true, "is_confirmed" => true }]
         )
         expect(access_token).to receive(:get).with("/api/2.0/user/emails")
-          .and_return(response_mails)
+                                             .and_return(response_mails)
         expect(subject.info).to eql info
       end
     end
@@ -58,9 +58,9 @@ describe OmniAuth::Strategies::Bitbucket do
       # let(:response_mails) { instance_double("Response", parsed: parsed_mails) }
       before :each do
         expect(parsed_response).to receive(:[]).with("values")
-          .and_return([{ "username" => "test-team" }])
+                                               .and_return([{ "username" => "test-team" }])
         expect(access_token).to receive(:get).with("/api/2.0/teams?role=member")
-          .and_return(response)
+                                             .and_return(response)
       end
 
       it "when team match, return access_token" do

@@ -37,8 +37,8 @@ class Namespace < ActiveRecord::Base
   # The maximum length of a namespace name.
   MAX_NAME_LENGTH = 255
 
-  has_many :webhooks
-  has_many :repositories
+  has_many :webhooks, dependent: :destroy
+  has_many :repositories, dependent: :destroy
   belongs_to :registry
   belongs_to :team
 

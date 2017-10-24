@@ -99,7 +99,9 @@ class Repository < ActiveRecord::Base
     repository = Repository.add_repo(event, namespace, repo_name, tag_name)
     return if repository.nil?
 
+    # rubocop:disable Style/SafeNavigation
     namespace.repositories << repository if namespace
+    # rubocop:enable Style/SafeNavigation
     repository
   end
 
@@ -154,7 +156,7 @@ class Repository < ActiveRecord::Base
     digest = event.try(:[], "target").try(:[], "digest")
     id = ""
 
-    unless digest.blank?
+    if digest.present?
       begin
         id, = Registry.get.client.manifest(repo, digest)
       rescue StandardError => e
@@ -233,12 +235,14 @@ class Repository < ActiveRecord::Base
 
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
+      # rubocop:disable Lint/RescueWithoutErrorClass
       begin
         id, digest, = client.manifest(repository.full_name, tag)
       rescue
         id = ""
         digest = ""
       end
+      # rubocop:enable Lint/RescueWithoutErrorClass
 
       t = Tag.create!(
         name:       tag,

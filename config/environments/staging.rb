@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -84,14 +85,16 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Run pending migrations
+  # rubocop:disable Lint/RescueWithoutErrorClass
   unless ENV["SKIP_MIGRATION"]
     config.after_initialize do
       begin
-        ActiveRecord::Migrator.migrate(Rails.root.join("db/migrate"), nil)
+        ActiveRecord::Migrator.migrate(Rails.root.join("db", "migrate"), nil)
       rescue
-        $stderr.puts "Error running migration! Please review database configuration"
+        warn "Error running migration! Please review database configuration"
       end
     end
   end
-
+  # rubocop:enable Lint/RescueWithoutErrorClass
 end
+# rubocop:enable Metrics/BlockLength

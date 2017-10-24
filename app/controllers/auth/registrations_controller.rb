@@ -100,8 +100,8 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   # to update the password of the user.
   def password_update?
     user = params[:user]
-    !user[:current_password].blank? || !user[:password].blank? ||
-      !user[:password_confirmation].blank?
+    user[:current_password].present? || user[:password].present? ||
+      user[:password_confirmation].present?
   end
 
   # Returns the required parameters and the permitted ones for updating a user.

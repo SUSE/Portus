@@ -56,7 +56,7 @@ describe ManPages do
 
     names(false).each do |n|
       sections =
-        if n == "portusctl-logs" || n == "portusctl-help" || n == "portusctl-make-admin"
+        if ["portusctl-logs", "portusctl-help", "portusctl-make-admin"].include?(n)
           common
         elsif n == "portusctl-setup"
           common + ["OPTIONS", "EXAMPLES"]
@@ -72,7 +72,7 @@ describe ManPages do
     Cli.commands.each do |command|
       path = md_path("portusctl-" + command.first.tr("_", "-"))
 
-      command.last["options"].keys.each do |opt|
+      command.last["options"].each_key do |opt|
         exists = File.read(path) =~ /\*\*--#{opt}\*\*/
         expect(exists).to be_truthy
       end

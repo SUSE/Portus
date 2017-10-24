@@ -78,19 +78,19 @@ class Admin::RegistriesController < Admin::BaseController
   # status if unreachable
   def check_reachability(action)
     msg = @registry.reachable?
-    unless msg.blank?
-      logger.info "\nRegistry not reachable:\n#{@registry.inspect}\n#{msg}\n"
-      flash[:alert] = "#{msg} You can skip this check by clicking on the
+    return if msg.blank?
+
+    logger.info "\nRegistry not reachable:\n#{@registry.inspect}\n#{msg}\n"
+    flash[:alert] = "#{msg} You can skip this check by clicking on the
       \"Skip remote checks\" checkbox."
-      render action, status: :unprocessable_entity
-      @unreachable = true
-    end
+    render action, status: :unprocessable_entity
+    @unreachable = true
   end
 
   # Raises a routing error if there is already a registry in place.
   # NOTE: (mssola) remove this once we support multiple registries.
   def registry_created
-    raise ActionController::RoutingError, "Not found" if Registry.count > 0
+    raise ActionController::RoutingError, "Not found" if Registry.any?
   end
 
   # The required/permitted parameters on the create method.

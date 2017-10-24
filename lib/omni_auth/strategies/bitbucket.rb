@@ -43,7 +43,7 @@ module OmniAuth
 
       def build_access_token_with_team_check
         access_token = build_access_token_without_team_check
-        unless options.team.blank?
+        if options.team.present?
           teams = access_token.get("/api/2.0/teams?role=member").parsed["values"]
           teams.select! { |el| el["username"] == options.team }
           raise CallbackError.new(:invalid_team, "Invalid team") if teams.blank?

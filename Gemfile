@@ -1,34 +1,36 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 4.2.8"
-gem "sass-rails", ">= 3.2"
-gem "bootstrap-sass", "~> 3.3.4"
-gem "slim", "~> 3.0.8"
-gem "pundit"
-gem "sprockets", "~> 2.12.3"
-gem "jwt"
-gem "base32"
-gem "devise"
-gem "gravatar_image_tag"
-gem "public_activity"
+ruby ">= 2.4"
+
 gem "active_record_union"
-gem "search_cop"
-gem "kaminari"
+gem "base32"
+gem "bootstrap-sass", "~> 3.3.4"
 gem "crono"
-gem "net-ldap"
-gem "redcarpet", "~> 3.4.0"
+gem "devise"
 gem "font-awesome-rails"
-gem "rails_stdout_logging", "~> 0.0.5", group: [:development, :staging, :production]
-gem "webpack-rails"
 gem "grape"
 gem "grape-entity"
 gem "grape-swagger"
 gem "grape-swagger-entity"
+gem "gravatar_image_tag"
 gem "hashie-forbidden_attributes"
-gem "omniauth-google-oauth2"
-gem "omniauth-openid"
+gem "jwt"
+gem "kaminari"
+gem "net-ldap"
 gem "omniauth-github"
 gem "omniauth-gitlab"
+gem "omniauth-google-oauth2"
+gem "omniauth-openid"
+gem "public_activity"
+gem "pundit"
+gem "rails", "~> 4.2.10"
+gem "rails_stdout_logging", "~> 0.0.5", group: %i[development staging production]
+gem "redcarpet", "~> 3.4.0"
+gem "sass-rails", ">= 3.2"
+gem "search_cop"
+gem "slim", "~> 3.0.8"
+gem "sprockets", "~> 2.12.3"
+gem "webpack-rails"
 
 gem "rack-cors", "~> 1.0.1"
 
@@ -79,46 +81,46 @@ gem "cconfig", "~> 1.2.0"
 unless packaging?
   group :development do
     gem "annotate"
-    gem "rails-erd"
-    gem "quiet_assets"
-    gem "pry-rails"
     gem "git-review", require: false
-    gem "rack-mini-profiler", require: false
     gem "guard", require: false
-    gem "guard-rubocop", require: false
     gem "guard-rspec", require: false
+    gem "guard-rubocop", require: false
+    gem "pry-rails"
+    gem "quiet_assets"
+    gem "rack-mini-profiler", require: false
+    gem "rails-erd"
   end
 
   group :development, :test do
     gem "rspec-core", "~> 3.7.0"
     gem "rspec-rails"
 
-    gem "byebug"
-    gem "web-console", "~> 2.1.3"
     gem "awesome_print"
-    gem "hirb"
-    gem "wirb"
-    gem "wirble"
+    gem "binman", "~>5.1.0"
+    gem "brakeman", require: false
+    gem "byebug"
+    gem "database_cleaner"
     gem "factory_girl_rails"
     gem "ffaker"
-    gem "rubocop", "~> 0.41.2", require: false
-    gem "brakeman", require: false
-    gem "database_cleaner"
-    gem "md2man", "~>5.1.1", require: false
-    gem "binman", "~>5.1.0"
     gem "grape-swagger-rails"
+    gem "hirb"
+    gem "md2man", "~>5.1.1", require: false
+    gem "rubocop", "~> 0.51.0", require: false
+    gem "web-console", "~> 2.1.3"
+    gem "wirb"
+    gem "wirble"
   end
 
   group :test do
-    gem "shoulda"
-    gem "vcr"
-    gem "webmock", "~> 2.3.2", require: false
-    gem "simplecov", "0.10.0", require: false
     gem "capybara", "~> 2.14.3"
-    gem "poltergeist", "~> 1.15.0", require: false
-    gem "json-schema"
-    gem "timecop"
     gem "codeclimate-test-reporter", group: :test, require: nil
     gem "docker-api", "~> 1.28.0"
+    gem "json-schema"
+    gem "poltergeist", "~> 1.15.0", require: false
+    gem "shoulda"
+    gem "simplecov", "0.15.1", require: false
+    gem "timecop"
+    gem "vcr"
+    gem "webmock", "~> 2.3.2", require: false
   end
 end

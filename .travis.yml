@@ -2,8 +2,7 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-  # Stable versions
-  - 2.3.4
+  # Stable supported version
   - 2.4.2
 
   # Future versions
@@ -51,7 +50,7 @@ script:
   # Style and security checks
   - bundle exec rubocop -V
   - bundle exec rubocop -F
-  - bundle exec brakeman -z -A -x CheckUnscopedFind,CheckRender
+  - bundle exec brakeman
 
   # Javascript style
   - yarn run eslint
