@@ -4,27 +4,27 @@ services:
   portus:
     image: opensuse/portus:head
     environment:
-      PORTUS_MACHINE_FQDN_VALUE: ${MACHINE_FQDN}
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
 
       # DB. The password for the database should definitely not be here. You are
       # probably better off with Docker Swarm secrets.
-      PORTUS_PRODUCTION_HOST: db
-      PORTUS_PRODUCTION_DATABASE: portus_production
-      PORTUS_PRODUCTION_PASSWORD: ${DATABASE_PASSWORD}
-      PORTUS_DB_POOL=5
+      - PORTUS_PRODUCTION_HOST=db
+      - PORTUS_PRODUCTION_DATABASE=portus_production
+      - PORTUS_PRODUCTION_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
 
       # Secrets. It can possibly be handled better with Swarm's secrets.
-      PORTUS_SECRET_KEY_BASE: ${SECRET_KEY_BASE}
-      PORTUS_KEY_PATH: /certificates/portus.key
-      PORTUS_PASSWORD: ${PORTUS_PASSWORD}
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
 
       # SSL
-      PORTUS_PUMA_TLS_KEY: /certificates/portus.key
-      PORTUS_PUMA_TLS_CERT: /certificates/portus.crt
+      - PORTUS_PUMA_TLS_KEY=/certificates/portus.key
+      - PORTUS_PUMA_TLS_CERT=/certificates/portus.crt
 
       # NGinx is serving the assets instead of Puma. If you want to change this,
       # uncomment this line.
-      #RAILS_SERVE_STATIC_FILES: 'true'
+      #- RAILS_SERVE_STATIC_FILES='true'
     ports:
       - 3000:3000
     links:
@@ -36,22 +36,22 @@ services:
   crono:
     image: opensuse/portus:head
     environment:
-      PORTUS_MACHINE_FQDN_VALUE: ${MACHINE_FQDN}
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
 
       # DB. The password for the database should definitely not be here. You are
       # probably better off with Docker Swarm secrets.
-      PORTUS_PRODUCTION_HOST: db
-      PORTUS_PRODUCTION_DATABASE: portus_production
-      PORTUS_PRODUCTION_PASSWORD: ${DATABASE_PASSWORD}
-      PORTUS_DB_POOL=5
+      - PORTUS_PRODUCTION_HOST=db
+      - PORTUS_PRODUCTION_DATABASE=portus_production
+      - PORTUS_PRODUCTION_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
 
       # Secrets. It can possibly be handled better with Swarm's secrets.
-      PORTUS_SECRET_KEY_BASE: ${SECRET_KEY_BASE}
-      PORTUS_KEY_PATH: /certificates/portus.key
-      PORTUS_PASSWORD: ${PORTUS_PASSWORD}
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
 
       # We want to execute crono, not portus
-      PORTUS_INIT_COMMAND: bin/crono
+      - PORTUS_INIT_COMMAND=bin/crono
     links:
       - db
     volumes:
@@ -60,10 +60,10 @@ services:
   db:
     image: library/mariadb:10.0.23
     environment:
-      MYSQL_DATABASE: portus_production
+      - MYSQL_DATABASE=portus_production
 
       # Again, the password shouldn't be handled like this.
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
     volumes:
       - /var/lib/portus/mariadb:/var/lib/mysql
 
