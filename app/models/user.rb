@@ -9,17 +9,17 @@
 #  reset_password_token   :string(255)
 #  reset_password_sent_at :datetime
 #  remember_created_at    :datetime
-#  sign_in_count          :integer          default("0"), not null
+#  sign_in_count          :integer          default(0), not null
 #  current_sign_in_at     :datetime
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string(255)
 #  last_sign_in_ip        :string(255)
 #  created_at             :datetime
 #  updated_at             :datetime
-#  admin                  :boolean          default("0")
-#  enabled                :boolean          default("1")
+#  admin                  :boolean          default(FALSE)
+#  enabled                :boolean          default(TRUE)
 #  ldap_name              :string(255)
-#  failed_attempts        :integer          default("0")
+#  failed_attempts        :integer          default(0)
 #  locked_at              :datetime
 #  namespace_id           :integer
 #  display_name           :string(255)

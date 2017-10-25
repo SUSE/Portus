@@ -11,7 +11,9 @@ host = APP_CONFIG["machine_fqdn"]["value"]
 ActionMailer::Base.default_url_options[:host]     = host
 ActionMailer::Base.default_url_options[:protocol] = protocol
 
-Rails.logger.tagged("Mailer config") do
-  Rails.logger.info "Host:     #{host}"
-  Rails.logger.info "Protocol: #{protocol}"
+if Rails.env.production?
+  Rails.logger.tagged("Mailer config") do
+    Rails.logger.info "Host:     #{host}"
+    Rails.logger.info "Protocol: #{protocol}"
+  end
 end

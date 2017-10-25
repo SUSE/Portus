@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: repositories
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)      default(""), not null
+#  namespace_id :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  marked       :boolean          default(FALSE)
+#
+# Indexes
+#
+#  index_repositories_on_name_and_namespace_id  (name,namespace_id) UNIQUE
+#  index_repositories_on_namespace_id           (namespace_id)
+#
+
 require "rails_helper"
 
 describe RepositoriesController, type: :controller do

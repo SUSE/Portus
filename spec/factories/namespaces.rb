@@ -8,7 +8,7 @@
 #  updated_at  :datetime         not null
 #  team_id     :integer
 #  registry_id :integer          not null
-#  global      :boolean          default("0")
+#  global      :boolean          default(FALSE)
 #  description :text(65535)
 #  visibility  :integer
 #

@@ -10,7 +10,7 @@
 #  user_id       :integer
 #  digest        :string(255)
 #  image_id      :string(255)      default("")
-#  marked        :boolean          default("0")
+#  marked        :boolean          default(FALSE)
 #  username      :string(255)
 #
 # Indexes
