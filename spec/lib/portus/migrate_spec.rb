@@ -19,11 +19,11 @@ describe Portus::Migrate do
       expect(val).to eq 2.minutes
     end
 
-    it "evals the given expression if it comes with a similar format than the old one" do
-      val = Portus::Migrate.from_humanized_time("3.minutes", 2)
-      expect(val).to eq 3.minutes
-      val = Portus::Migrate.from_humanized_time("3.seconds", 2)
-      expect(val).to eq 3.seconds
+    it "raises a deprecation error when an expression is given" do
+      expect { Portus::Migrate.from_humanized_time("3.minutes", 2) }.to \
+        raise_error(Portus::DeprecationError)
+      expect { Portus::Migrate.from_humanized_time("3.seconds", 2) }.to \
+        raise_error(Portus::DeprecationError)
     end
   end
 
@@ -43,7 +43,8 @@ describe Portus::Migrate do
       APP_CONFIG["registry"] = nil
       APP_CONFIG["jwt_expiration_time"] = { "value" => 5 }
 
-      expect(Portus::Migrate.registry_config("jwt_expiration_time")).to eq 5
+      expect { Portus::Migrate.registry_config("jwt_expiration_time") }.to \
+        raise_error(Portus::DeprecationError)
     end
   end
 end
