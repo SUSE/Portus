@@ -6,7 +6,7 @@
 #  name        :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  hidden      :boolean          default("0")
+#  hidden      :boolean          default(FALSE)
 #  description :text(65535)
 #
 # Indexes

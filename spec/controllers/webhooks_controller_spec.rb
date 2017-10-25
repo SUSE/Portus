@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: webhooks
+#
+#  id             :integer          not null, primary key
+#  namespace_id   :integer
+#  url            :string(255)
+#  username       :string(255)
+#  password       :string(255)
+#  request_method :integer
+#  content_type   :integer
+#  enabled        :boolean          default(FALSE)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#
+# Indexes
+#
+#  index_webhooks_on_namespace_id  (namespace_id)
+#
+
 require "rails_helper"
 
 RSpec.describe WebhooksController, type: :controller do

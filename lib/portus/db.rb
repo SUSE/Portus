@@ -23,5 +23,18 @@ module Portus
       ActiveRecord::Base.connection
       ActiveRecord::Base.connection.table_exists? "schema_migrations"
     end
+
+    # Returns true if the given configured adapter is MariaDB.
+    def self.mysql?
+      adapter.blank? || adapter == "mysql2"
+    end
+
+    # Returns the string of the currently configured backend, or nil if nothing
+    # was set.
+    def self.adapter
+      ENV["PORTUS_DB_ADAPTER"]
+    end
+
+    private_class_method :adapter
   end
 end

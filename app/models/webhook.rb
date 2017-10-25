@@ -9,7 +9,7 @@
 #  password       :string(255)
 #  request_method :integer
 #  content_type   :integer
-#  enabled        :boolean          default("0")
+#  enabled        :boolean          default(FALSE)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #

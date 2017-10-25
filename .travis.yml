@@ -51,6 +51,7 @@ script:
   - bundle exec rubocop -V
   - bundle exec rubocop -F
   - bundle exec brakeman
+  - bundle exec rake portus:annotate_and_exit
 
   # Javascript style
   - yarn run eslint
