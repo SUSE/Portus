@@ -13,6 +13,17 @@ def mandatory_secret!(env, value)
         "mandatory in production because it's needed for the generation of secrets."
 end
 
+# Database Environment Variables have changed.
+if ENV["PORTUS_PRODUCTION_HOST"].present? && ENV["PORTUS_DB_HOST"].blank? ||
+    ENV["PORTUS_PRODUCTION_USERNAME"].present? && ENV["PORTUS_DB_USERNAME"].blank? ||
+    ENV["PORTUS_PRODUCTION_PASSWORD"].present? && ENV["PORTUS_DB_PASSWORD"].blank? ||
+    ENV["PORTUS_PRODUCTION_DATABASE"].present? && ENV["PORTUS_DB_DATABASE"].blank?
+  raise Portus::DeprecationError, "The database configuration has been extended. With this " \
+  "extension the Environment Variable Names have been changed. Instead of starting with " \
+  "'PORTUS_PRODUCTION_' they now start with 'PORTUS_DB_'. Please consolidate " \
+  "config/database.yml for further details."
+end
+
 if Rails.env.production?
   # Mandatory environment variables for production.
   mandatory_secret!("SECRET_KEY_BASE", Rails.application.secrets.secret_key_base)
