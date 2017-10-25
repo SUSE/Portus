@@ -12,13 +12,13 @@ module Portus
     #
     # TODO: (mssola) remove in the next version.
     def self.from_humanized_time(duration, default)
-      return duration.minutes if duration.respond_to? :minutes
+      return duration.minutes.to_i if duration.respond_to? :minutes
 
       # If it's not a String then just return the given default value.
-      return default.minutes unless duration.is_a? String
+      return default.minutes.to_i unless duration.is_a? String
 
       # If we got an empty String then return the default value.
-      return default.minutes if duration.empty?
+      return default.minutes.to_i if duration.empty?
 
       raw_value, method = duration.split(".")
       value = raw_value.to_i
@@ -30,11 +30,11 @@ module Portus
                                 "expected to be integers representing minutes."
       elsif value > 0
         # If it's a string containing a positive number, then convert it and return it.
-        value.minutes
+        value.minutes.to_i
       else
         # Otherwise, if it has a bad (old) format, then just return the default.
         Rails.logger.warn "Unsupported time format (#{duration}), fallback to default."
-        default.minutes
+        default.minutes.to_i
       end
     end
 
