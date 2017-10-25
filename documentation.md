@@ -7,7 +7,7 @@ layout: post
 
 On this page you can find information about:
 
-{% assign docs = (site.docs | sort: 'order') %}
+{% assign docs = site.docs | sort: 'order' %}
 {% for d in docs %}
 - [{{ d.longtitle }}]({{ d.url }}).
 {% endfor %}

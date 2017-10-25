@@ -6,3 +6,7 @@ coverage
 log
 tmp
 .vagrant
+/node_modules
+/public
+/config
+/bin
