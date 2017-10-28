@@ -30,7 +30,6 @@ html
 
     javascript:
       window.API_ROOT_URL = '#{root_url}';
-    script src="//cdn.polyfill.io/v2/polyfill.js?features=Array.prototype.some,Array.prototype.findIndex,Array.from"
     = javascript_include_tag(*webpack_asset_paths("application"))
     = yield :js_header
 
