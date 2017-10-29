@@ -85,6 +85,14 @@ unless packaging?
     gem "guard", require: false
     gem "guard-rspec", require: false
     gem "guard-rubocop", require: false
+    gem "jquery"
+    gem "jquery-rails"
+    gem "peek"
+    gem "peek-gc"
+    gem "peek-git"
+    gem "peek-mysql2"
+    gem "peek-performance_bar"
+    gem "peek-pg"
     gem "pry-rails"
     gem "quiet_assets"
     gem "rack-mini-profiler", require: false
