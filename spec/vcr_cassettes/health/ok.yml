@@ -42,9 +42,12 @@ http_interactions:
       - 9eed8ef5-8c52-4673-af54-afb6534925b0
       X-Runtime:
       - '0.190492'
+      Docker-Distribution-Api-Version:
+      - 'registry/2.0'
+
     body:
       encoding: UTF-8
       string: '{"error":"You need to sign in or sign up before continuing."}'
-    http_version: 
+    http_version:
   recorded_at: Thu, 03 Aug 2017 15:36:22 GMT
 recorded_with: VCR 3.0.3

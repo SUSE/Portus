@@ -113,7 +113,8 @@ describe Registry, type: :model do
     end
 
     it "returns the proper message for each scenario" do
-      GOOD_RESPONSE = OpenStruct.new(code: 401)
+      GOOD_RESPONSE = OpenStruct.new(code: 401, header:
+        { "Docker-Distribution-Api-Version" => "registry/2.0" })
 
       [
         [nil, GOOD_RESPONSE, true, /^$/],

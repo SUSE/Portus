@@ -32,13 +32,16 @@ module Portus
     # Returns whether the registry is reachable with the given credentials or
     # not. This might raise a RequestError on failure.
     def reachable?
-      res = safe_request("", "get", false)
+      res = safe_request("/v2/", "get", false)
 
-      # If a 401 was retrieved, it means that at least the registry has been
-      # contacted. In order to get a 200, this registry should be created and
+      # The 'Docker-Distribution-Api-Version' header indicates that we are connected to a
+      # Docker Registry endpoint.
+      # 401 means that the registry requires authentication
+      # In order to get a 200, this registry should be created and
       # an authorization requested. The former can be inconvenient, because we
       # might want to test whether the registry is reachable.
-      !res.nil? && res.code.to_i == 401
+      !res.nil? && res.header.key?("Docker-Distribution-Api-Version") &&
+        (res.code.to_i == 401 || res.code.to_i == 200)
     end
 
     # Calls the `/:repository/manifests/:tag` endpoint from the registry. It
