@@ -15,6 +15,7 @@ import 'vendor/lifeitup_layout';
 
 import './bootstrap';
 import './vue-shared';
+import './polyfill';
 
 // modules
 import './modules/admin/registries';

@@ -20,6 +20,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
     "compression-webpack-plugin": "^0.3.2",
+    "core-js": "^2.5.1",
     "css-loader": "^0.28.1",
     "jquery": "^2.2.1",
     "jquery-ujs": "^1.2.1",
