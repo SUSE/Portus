@@ -51,7 +51,6 @@ module API
     mount ::API::V1::Teams
     mount ::API::V1::Users
 
-    schemes = ENV["PORTUS_CHECK_SSL_USAGE_ENABLED"] ? [:https] : [:http, :https]
     add_swagger_documentation \
       security_definitions: {
         api_key: {
@@ -66,7 +65,6 @@ module API
         description:   "Portus CRUD API",
         contact_name:  "Portus authors",
         contact_email: "portus-dev@googlegroups.com"
-      },
-      schemes:              schemes
+      }
   end
 end
