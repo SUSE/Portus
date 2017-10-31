@@ -22,11 +22,11 @@ class UsersProfileForm extends BaseComponent {
     const email = this.$email.val();
     const displayName = this.$displayName.val();
 
-    const emailInvalid = !email || email === this.originalEmail;
-    const displayNameInvalid = this.$displayName[0] &&
-      (!displayName || displayName === this.originalDisplayName);
+    const emailInvalid = !email;
+    const noChanges = email === this.originalEmail &&
+                      displayName === this.originalDisplayName;
 
-    if (emailInvalid || displayNameInvalid) {
+    if (emailInvalid || noChanges) {
       this.$submit.attr('disabled', 'disabled');
     } else {
       this.$submit.removeAttr('disabled');
