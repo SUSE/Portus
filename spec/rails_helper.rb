@@ -17,6 +17,9 @@ ActiveRecord::Migration.maintain_test_schema!
 # been pushed into individual files inside the `spec/support` directory.
 Dir[Rails.root.join("spec", "support", "**", "*.rb")].each { |f| require f }
 
+# Keep the original value of the PORTUS_DB_ADAPTER env. variable.
+CONFIGURED_DB_ADAPTER = ENV["PORTUS_DB_ADAPTER"]
+
 # To avoid problems, the LDAP authenticatable is enabled always. Since this
 # means trouble for regular logins, we mock Portus::LDAP to implement a fake
 # authenticate method. This method will be used by everyone. Tests that really

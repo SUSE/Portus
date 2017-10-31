@@ -139,7 +139,7 @@ class Repository < ActiveRecord::Base
       # Update digest if the given tag already exists.
       id, digest = Repository.id_and_digest_from_event(event, repository.full_name)
       tag = repository.tags.find_by(name: tag)
-      tag.update!(image_id: id, digest: digest, updated_at: Time.current)
+      tag.update_columns(image_id: id, digest: digest, updated_at: Time.current)
       repository.create_activity(:push, owner: actor, recipient: tag)
       return
     end
@@ -221,9 +221,8 @@ class Repository < ActiveRecord::Base
 
       # Let's update the tag, if it really changed,
       t = repository.tags.find_by(name: tag)
-      t.digest = digest
-      if t.changed.any?
-        t.save!
+      if t.digest != digest
+        t.update_column(:digest, digest)
         repository.create_activity(:push, owner: portus, recipient: t)
       end
     end

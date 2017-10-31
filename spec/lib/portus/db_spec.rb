@@ -28,7 +28,7 @@ describe Portus::DB do
     end
 
     after :each do
-      ENV["PORTUS_DB_ADAPTER"] = nil
+      ENV["PORTUS_DB_ADAPTER"] = CONFIGURED_DB_ADAPTER
     end
 
     it "returns true if the adapter is mysql" do
