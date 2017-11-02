@@ -15,9 +15,8 @@
 #
 # Indexes
 #
-#  index_tags_on_name_and_repository_id  (name,repository_id) UNIQUE
-#  index_tags_on_repository_id           (repository_id)
-#  index_tags_on_user_id                 (user_id)
+#  index_tags_on_repository_id  (repository_id)
+#  index_tags_on_user_id        (user_id)
 #
 
 # A tag as defined by Docker. It belongs to a repository and an author. The
@@ -29,7 +28,13 @@ class Tag < ActiveRecord::Base
 
   # We don't validate the tag, because we will fetch that from the registry,
   # and that's guaranteed to have a good format.
-  validates :name, uniqueness: { scope: "repository_id" }
+  #
+  # See https://github.com/SUSE/Portus/pull/1494 on why we didn't use the
+  # `uniqueness` constraint directly.
+  #
+  # NOTE: if we ever remove MySQL support, replace this with the proper
+  # validator.
+  validates :name, presence: true, unique_tag: true
 
   # Returns a string containing the username of the user that pushed this tag.
   def owner
@@ -92,7 +97,8 @@ class Tag < ActiveRecord::Base
   # initialized since it's provided by the event notification that created this
   # tag. However, it might happen that the digest column is left blank (e.g.
   # legacy Portus, unknown error, etc). In these cases, this method will fetch
-  # the manifest from the registry.
+  # the manifest from the registry and update the column directly (skipping
+  # validations).
   #
   # Returns a string containing the digest on success. Otherwise it returns
   # nil.
@@ -102,7 +108,7 @@ class Tag < ActiveRecord::Base
 
       begin
         _, dig, = client.manifest(repository.full_name, name)
-        update_attributes(digest: dig)
+        update_column(:digest, dig)
         dig
       rescue StandardError => e
         Rails.logger.error "Could not fetch manifest digest: #{e.message}"

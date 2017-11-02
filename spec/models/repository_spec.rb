@@ -83,7 +83,7 @@ describe Repository do
     end
 
     context "adding an existing repo/tag" do
-      it "adds a new activity when an already existing repo/tag already existed" do
+      it "adds a new activity when an already existing repo/tag already existed", focus: true do
         event = { "actor" => { "name" => user.username } }
 
         # First we create it, and make sure that it creates the activity.
@@ -104,7 +104,7 @@ describe Repository do
 
         # Making sure that the updated_at column is set in the past.
         tag = Repository.find_by(name: repository_name).tags.first
-        tag.update!(updated_at: 2.hours.ago)
+        tag.update_columns(updated_at: 2.hours.ago)
         ua = tag.updated_at
 
         event["target"]["digest"] = "bar"
@@ -122,7 +122,7 @@ describe Repository do
 
         # Making sure that the updated_at column is set in the past.
         tag = Repository.find_by(name: repository_name).tags.first
-        tag.update!(updated_at: 2.hours.ago)
+        tag.update_columns(updated_at: 2.hours.ago)
         ua = tag.updated_at
 
         allow(Repository).to receive(:id_and_digest_from_event).and_return(["id", "bar"])

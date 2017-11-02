@@ -15,9 +15,8 @@
 #
 # Indexes
 #
-#  index_tags_on_name_and_repository_id  (name,repository_id) UNIQUE
-#  index_tags_on_repository_id           (repository_id)
-#  index_tags_on_user_id                 (user_id)
+#  index_tags_on_repository_id  (repository_id)
+#  index_tags_on_user_id        (user_id)
 #
 
 require "rails_helper"
@@ -37,6 +36,33 @@ describe Tag do
 
   it { should belong_to(:repository) }
   it { should belong_to(:author) }
+
+  describe "creating tags" do
+    it "defaults to latest" do
+      t = Tag.create(repository: repository)
+      expect(t.name).to eq("latest")
+    end
+
+    it "does not accept nil names" do
+      expect do
+        Tag.create(name: nil, repository: repository)
+      end.to raise_error(ActiveRecord::StatementInvalid)
+    end
+
+    it "validates the uniqueness" do
+      create(:tag, name: "tag", repository: repository)
+      expect do
+        create(:tag, name: "tag", repository: repository)
+      end.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "case sensitive for tag names" do
+      create(:tag, name: "tag", repository: repository)
+      expect do
+        create(:tag, name: "TAG", repository: repository)
+      end.not_to raise_error
+    end
+  end
 
   describe "#delete_by_digest!" do
     let!(:tag)  { create(:tag, name: "tag1", repository: repository, digest: "1") }
