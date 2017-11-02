@@ -66,7 +66,7 @@ feature "Application tokens" do
 
       expect(page).to have_content("was created successfully")
       expect(page).to have_content("awesome-application")
-      expect(disabled?("#add_application_token_btn")).to be true
+      expect(page).to have_css("#add_application_token_btn[disabled]")
     end
 
     scenario "As an user I cannot create tokens once I reach my limit", js: true do
@@ -75,7 +75,7 @@ feature "Application tokens" do
       end
 
       visit edit_user_registration_path
-      expect(disabled?("#add_application_token_btn")).to be true
+      expect(page).to have_css("#add_application_token_btn[disabled]")
     end
   end
 

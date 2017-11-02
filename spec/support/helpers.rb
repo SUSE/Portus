@@ -12,12 +12,6 @@ module Helpers
     page.evaluate_script("document.activeElement.id")
   end
 
-  # Returns a boolean regarding whether the given selector matches an element
-  # that is currently disabled.
-  def disabled?(selector)
-    page.evaluate_script("$('#{selector}').attr('disabled')") == "disabled"
-  end
-
   def enable_security_vulns_module!
     APP_CONFIG["security"]["dummy"] = {
       "server" => "dummy"
@@ -28,6 +22,12 @@ module Helpers
     {
       "PORTUS-AUTH" => "#{token.user.username}:#{token.application}"
     }
+  end
+
+  # Clears a field value. `fill_in` also does the job but
+  # it doesn't trigger keyUp event, for example
+  def clear_field(field)
+    find_field(field).send_keys([:control, "a"], :backspace)
   end
 
   # Creates the Portus user. The Portus user cannot be created with neither the
