@@ -20,6 +20,10 @@ export default {
       type: String,
       default: 'true',
     },
+    prefix: {
+      type: String,
+      default: '',
+    },
   },
 
   data() {
