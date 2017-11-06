@@ -19,7 +19,11 @@ class ApplicationTokenPanel extends BaseComponent {
     this.$el.on('click', TOGGLE_LINK, e => this.onClick(e));
   }
 
-  onClick() {
+  onClick(e) {
+    if (this.$toggle.attr('disabled')) {
+      e.preventDefault();
+    }
+
     this.$form.toggle(400, 'swing', () => {
       const visible = this.$form.is(':visible');
 
