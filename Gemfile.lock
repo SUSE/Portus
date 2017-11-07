@@ -81,10 +81,8 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     columnize (0.9.0)
-    concurrent-ruby (1.0.4)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crass (1.0.2)
     crono (0.9.0)
       activerecord (~> 4.0)
       activesupport (~> 4.0)
@@ -129,8 +127,8 @@ GEM
       octokit (~> 2.0.0)
       yajl-ruby
     gli (2.8.1)
-    globalid (0.4.0)
-      activesupport (>= 4.2.0)
+    globalid (0.3.7)
+      activesupport (>= 4.1.0)
     grape (1.0.1)
       activesupport
       builder
@@ -172,10 +170,9 @@ GEM
       hashie (>= 3.0)
     hike (1.2.3)
     hirb (0.7.3)
-    i18n (0.9.1)
-      concurrent-ruby (~> 1.0)
+    i18n (0.8.0)
     ice_nine (0.11.1)
-    json (2.1.0)
+    json (1.8.6)
     json-schema (2.5.1)
       addressable (~> 2.3.7)
     jwt (1.5.0)
@@ -188,31 +185,32 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    loofah (2.1.1)
-      crass (~> 1.0.2)
+    loofah (2.0.3)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.12)
-    mail (2.6.3)
-      mime-types (>= 1.16, < 3)
+    mail (2.6.4)
+      mime-types (>= 1.16, < 4)
     md2man (5.1.1)
       binman (~> 5.0)
       redcarpet (~> 3.0)
       rouge (~> 1.0)
     method_source (0.9.0)
-    mime-types (2.99.3)
-    mini_portile2 (2.3.0)
+    mime-types (3.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2016.0521)
+    mini_portile2 (2.1.0)
     minitest (5.10.1)
     multi_json (1.12.1)
-    multi_xml (0.6.0)
+    multi_xml (0.5.5)
     multipart-post (2.0.0)
     mustermann (1.0.1)
     mustermann-grape (1.0.0)
       mustermann (~> 1.0.0)
     mysql2 (0.4.7)
     nenv (0.3.0)
-    net-ldap (0.16.0)
-    nokogiri (1.8.1)
-      mini_portile2 (~> 2.3.0)
+    net-ldap (0.11)
+    nokogiri (1.7.0.1)
+      mini_portile2 (~> 2.1.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -315,7 +313,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.2.2)
       rake
-    rake (12.2.1)
+    rake (12.0.0)
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -356,11 +354,7 @@ GEM
     ruby-progressbar (1.9.0)
     ruby_dep (1.5.0)
     safe_yaml (1.0.4)
-    sass (3.5.2)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
+    sass (3.4.13)
     sass-rails (5.0.3)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.1)
@@ -401,8 +395,9 @@ GEM
     thread_safe (0.3.5)
     tilt (1.4.1)
     timecop (0.7.4)
-    treetop (1.6.8)
-      polyglot (~> 0.3)
+    treetop (1.4.15)
+      polyglot
+      polyglot (>= 0.3.1)
     typhoeus (1.0.2)
       ethon (>= 0.9.0)
     tzinfo (1.2.2)
@@ -458,7 +453,6 @@ DEPENDENCIES
   capybara (~> 2.14.3)
   cconfig (~> 1.2.0)
   codeclimate-test-reporter
-  concurrent-ruby (= 1.0.4)
   crono
   database_cleaner
   devise
@@ -470,6 +464,7 @@ DEPENDENCIES
   ffi (= 1.9.10)
   font-awesome-rails (= 4.7.0.1)
   git-review
+  globalid (= 0.3.7)
   grape
   grape-entity
   grape-swagger
@@ -481,16 +476,22 @@ DEPENDENCIES
   guard-rubocop
   hashie-forbidden_attributes
   hirb
+  i18n (= 0.8.0)
   ice_nine (= 0.11.1)
+  json (= 1.8.6)
   json-schema
   jwt (= 1.5.0)
   kaminari
-  mail (= 2.6.3)
+  loofah (= 2.0.3)
+  mail (= 2.6.4)
   md2man (~> 5.1.1)
+  mime-types (= 3.1)
   minitest (= 5.10.1)
   multi_json (= 1.12.1)
+  multi_xml (= 0.5.5)
   mysql2 (= 0.4.7)
-  net-ldap
+  net-ldap (= 0.11)
+  nokogiri (= 1.7.0.1)
   omniauth-github
   omniauth-gitlab
   omniauth-google-oauth2
@@ -509,10 +510,12 @@ DEPENDENCIES
   rails (= 4.2.9)
   rails-erd
   rails_stdout_logging (~> 0.0.5)
+  rake (= 12.0.0)
   redcarpet (~> 3.4.0)
   rspec-core (~> 3.7.0)
   rspec-rails
   rubocop (~> 0.51.0)
+  sass (= 3.4.13)
   sass-rails (>= 3.2)
   search_cop
   shoulda
@@ -523,6 +526,7 @@ DEPENDENCIES
   thor (~> 0.19.4)
   thread_safe (= 0.3.5)
   timecop
+  treetop (= 1.4.15)
   typhoeus (~> 1.0.2)
   tzinfo (= 1.2.2)
   uglifier
