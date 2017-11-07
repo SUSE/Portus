@@ -1,35 +1,47 @@
 source "https://rubygems.org"
 
-ruby ">= 2.4"
+# ruby ">= 2.4"
 
 gem "active_record_union"
 gem "base32"
 gem "bootstrap-sass", "~> 3.3.4"
 gem "crono"
 gem "devise"
-gem "font-awesome-rails"
+# fix for sle12
+# gem "font-awesome-rails"
+gem "font-awesome-rails", "4.7.0.1"
+# end fix
 gem "grape"
 gem "grape-entity"
 gem "grape-swagger"
 gem "grape-swagger-entity"
 gem "gravatar_image_tag"
 gem "hashie-forbidden_attributes"
-gem "jwt"
+# fix for sle12
+gem "jwt", "1.5.0"
+# end fix
 gem "kaminari"
-gem "net-ldap"
+# fix for sle12
+# gem "net-ldap"
+gem "net-ldap", "0.11"
+# end fix
 gem "omniauth-github"
 gem "omniauth-gitlab"
 gem "omniauth-google-oauth2"
 gem "omniauth-openid"
 gem "public_activity"
 gem "pundit"
-gem "rails", "~> 4.2.10"
+gem "rails", "= 4.2.9"
 gem "rails_stdout_logging", "~> 0.0.5", group: %i[development staging production]
 gem "redcarpet", "~> 3.4.0"
 gem "sass-rails", ">= 3.2"
 gem "search_cop"
 gem "slim", "~> 3.0.8"
-gem "sprockets", "~> 2.12.3"
+# fix for sle12
+# gem "sprockets", "~> 2.12.3"
+gem "sprockets", "2.12.3"
+# end fix
+
 gem "webpack-rails"
 
 gem "rack-cors", "~> 1.0.1"
@@ -124,3 +136,28 @@ unless packaging?
     gem "webmock", "~> 2.3.2", require: false
   end
 end
+
+
+# fixes for sle12
+
+gem "faraday", "0.9.0"
+gem "ffi", "1.9.10"
+gem "globalid", "0.3.7"
+gem "ice_nine", "0.11.1"
+gem "mail", "2.6.4"
+gem "mime-types", "3.1"
+gem "minitest", "5.10.1"
+gem "multi_json", "1.12.1"
+gem "polyglot", "0.3.3"
+gem "rack", "1.6.4"
+gem "sprockets-rails", "2.3.1"
+gem "thread_safe", "0.3.5"
+gem "tzinfo", "1.2.2"
+gem "i18n", "0.8.0"
+gem "json", "1.8.6"
+gem "loofah", "2.0.3"
+gem "multi_xml", "0.5.5"
+gem "nokogiri", "1.7.0.1"
+gem "rake", "12.0.0"
+gem "sass", "3.4.13"
+gem "treetop", "1.4.15"
