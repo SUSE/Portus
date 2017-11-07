@@ -62,7 +62,7 @@ BuildRequires:  yarn
 %define rb_build_versions %{rb_default_ruby}
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
-BuildRequires:  %{rubygem bundler} >= 1.15.4
+BuildRequires:  %{rubygem bundler} >= 1.7.3
 
 __RUBYGEMS_BUILD_REQUIRES__
 
