@@ -93,6 +93,98 @@ module API
               authorize team, :member?
               present team.users, with: API::Entities::Users
             end
+
+            desc "Deletes a member from a team",
+                 entity:  API::Entities::TeamMembers,
+                 failure: [
+                   [400, "Unprocessable Entity", API::Entities::ApiErrors],
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."],
+                   [404, "Not found."],
+                   [422, "Unprocessable Entity", API::Entities::ApiErrors]
+                 ]
+
+            params do
+              requires :id, documentation: { desc: "Team id" }
+              requires :member_id, documentation: { desc: "Team member id" }
+            end
+
+            delete ":member_id" do
+              team_user = TeamUser.find_by!(id: params[:member_id], team_id: params[:id])
+              authorize team_user, :destroy?
+
+              svc = ::TeamUsers::DestroyService.new(current_user)
+              destroyed = svc.execute(team_user)
+
+              if destroyed
+                status 204
+              else
+                unprocessable_entity!(svc.message)
+              end
+            end
+
+            desc "Updates a member from a team",
+                 entity:  API::Entities::TeamMembers,
+                 failure: [
+                   [400, "Unprocessable Entity", API::Entities::ApiErrors],
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."],
+                   [404, "Not found."],
+                   [422, "Unprocessable Entity", API::Entities::ApiErrors]
+                 ]
+
+            params do
+              requires :id, documentation: { desc: "Team id" }
+              requires :member_id, type: Integer, documentation: { desc: "Team member id" }
+              requires :role, type: String, documentation: { desc: "Team member role" }
+            end
+
+            put ":member_id" do
+              team_user = TeamUser.find_by!(id: params[:member_id], team_id: params[:id])
+              authorize team_user, :update?
+
+              svc = ::TeamUsers::UpdateService.new(current_user, permitted_params)
+              updated = svc.execute(team_user)
+
+              if updated
+                present team_user,
+                        with:         API::Entities::TeamMembers,
+                        current_user: current_user,
+                        type:         current_type
+              else
+                unprocessable_entity!(svc.message)
+              end
+            end
+
+            desc "Adds a user as member in a team",
+                 entity:  API::Entities::TeamMembers,
+                 failure: [
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."],
+                   [404, "Not found."]
+                 ]
+
+            params do
+              requires :id, documentation: { desc: "Team id" }
+              requires :role, type: String, documentation: { desc: "Team member role" }
+              requires :user, type: String, documentation: { desc: "Team member username" }
+            end
+
+            post do
+              team_user = ::TeamUsers::BuildService.new(current_user, permitted_params).execute
+              authorize team_user, :create?
+
+              team_user = ::TeamUsers::CreateService.new(current_user, team_user).execute
+
+              if team_user.valid? && team_user.persisted?
+                present team_user,
+                        with:         API::Entities::TeamMembers,
+                        current_user: current_user,
+                        type:         current_type
+              else
+                unprocessable_entity!(team_user.errors)
+              end
+            end
           end
 
           desc "Show teams by id",

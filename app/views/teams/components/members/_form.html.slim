@@ -1,0 +1,20 @@
+#new-team-member-form ref="form" class="collapse"
+  = form_for :team_user, url: team_users_path, html: { class: "form-horizontal", role: "form", "@submit.prevent" => "onSubmit", novalidate: true } do |f|
+    .form-group
+      = f.label :role, { class: "control-label col-md-2" }
+      .col-md-7
+        = f.select(:role, TeamUser.roles.keys.map { |role| [role.titleize,role] }, {}, {class: "form-control", "v-model" => "member.role"})
+    .form-group.has-feedback :class=="{ 'has-error': $v.member.user.$error }"
+      = f.label :user, { class: "control-label col-md-2" }
+      .col-md-7
+        .remote
+          = f.text_field(:user, class: "form-control typeahead", required: true, placeholder: "Name", autofocus: true, "@input" => "$v.member.user.$touch()", "v-model.trim" => "member.user")
+        span.help-block
+          span v-if="!$v.member.user.required"
+            | User can't be blank
+            br
+          span v-if="!$v.member.user.available"
+            | Selected user does not exist or has already been added
+    .form-group
+      .col-md-offset-2.col-md-7
+        = f.submit('Add', class: "btn btn-primary", ":disabled" => "$v.$invalid")

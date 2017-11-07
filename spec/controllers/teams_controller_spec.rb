@@ -43,12 +43,6 @@ RSpec.describe TeamsController, type: :controller do
   let!(:registry) { create(:registry) }
 
   describe "GET #show" do
-    it "paginates team users" do
-      sign_in owner
-      get :show, id: team.id
-      expect(assigns(:team_users)).to respond_to(:total_pages)
-    end
-
     it "allows team members to view the page" do
       sign_in owner
       get :show, id: team.id
@@ -78,7 +72,7 @@ RSpec.describe TeamsController, type: :controller do
 
       expect(response.status).to eq 200
       expect(TeamUser.count).to be 6
-      expect(assigns(:team_users).count).to be 1
+      expect(assigns(:team_users_serialized).count).to be 1
     end
   end
 

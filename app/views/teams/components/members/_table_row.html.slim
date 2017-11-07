@@ -1,0 +1,33 @@
+tr :class="scopeClass"
+  td.table-icon
+    i class="fa fa-lg" :class="memberIcon"
+  td
+    | {{ member.display_name }}
+  td
+    .role v-if="!editing"
+      | {{ role }}
+    div v-if="editing"
+      form.form-inline @submit.prevent="update"
+        select.form-control :id="selectRoleId" v-model="selectedRole"
+          option v-for="r in availableRoles" :value="r.toLowerCase()"
+            | {{ r }}
+        button.btn.btn-primary.pull-right type="submit"
+          i.fa.fa-check
+          |  Save
+
+    td v-if="canManageMembers"
+      button.btn.btn-default.edit-member-btn @click.prevent="enterEditMode" v-if="!editing"
+        i.fa.fa-pencil.fa-lg
+      button.btn.btn-default.edit-member-btn @click.prevent="leaveEditMode" v-if="editing"
+        i.fa.fa-close.fa-lg
+    td v-if="canManageMembers"
+      a[class="btn btn-default delete-team-user-btn"
+        data-placement="left"
+        data-toggle="popover"
+        data-title="Please confirm"
+        data-content=="<p>Are you sure you want to remove this team member?</p><a class='btn btn-default'>No</a> <a class='btn btn-primary yes' rel='nofollow'>Yes</a>"
+        data-html="true"
+        tabindex="0"
+        role="button"
+      ]
+        i.fa.fa-trash.fa-lg
