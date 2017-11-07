@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby ">= 2.4"
+# ruby ">= 2.4"
 
 gem "active_record_union"
 gem "base32"
@@ -23,7 +23,7 @@ gem "omniauth-google-oauth2"
 gem "omniauth-openid"
 gem "public_activity"
 gem "pundit"
-gem "rails", "~> 4.2.10"
+gem "rails", "= 4.2.9"
 gem "rails_stdout_logging", "~> 0.0.5", group: %i[development staging production]
 gem "redcarpet", "~> 3.4.0"
 gem "sass-rails", ">= 3.2"
