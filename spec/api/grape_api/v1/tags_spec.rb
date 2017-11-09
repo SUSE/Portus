@@ -25,12 +25,13 @@ describe API::V1::Tags do
 
     it "returns list of tags" do
       create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
+      create(:tag, name: "another_tag", repository: repository, digest: "1", author: nil)
       create_list(:tag, 4, repository: repository, digest: "123123", author: admin)
       get "/api/v1/tags", nil, @header
 
       tags = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
-      expect(tags.length).to eq(5)
+      expect(tags.length).to eq(6)
     end
   end
 

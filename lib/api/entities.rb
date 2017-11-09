@@ -77,7 +77,7 @@ module API
       expose :author, documentation: {
         type: Integer,
         desc: "The ID of the user that pushed this tag"
-      } { |t| { id: t.author.id, name: t.author.username } }
+      } { |t| { id: t.author&.id, name: t.author&.username } }
       expose :digest, documentation: { type: String, desc: "The digest of the tag" }
       expose :image_id, documentation: { type: String, desc: "The internal image ID" }
       expose :created_at, :updated_at, documentation: { type: DateTime }

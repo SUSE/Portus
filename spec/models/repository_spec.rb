@@ -83,7 +83,7 @@ describe Repository do
     end
 
     context "adding an existing repo/tag" do
-      it "adds a new activity when an already existing repo/tag already existed", focus: true do
+      it "adds a new activity when an already existing repo/tag already existed" do
         event = { "actor" => { "name" => user.username } }
 
         # First we create it, and make sure that it creates the activity.
