@@ -1,7 +1,5 @@
 source "https://rubygems.org"
 
-ruby ">= 2.4"
-
 gem "active_record_union"
 gem "base32"
 gem "bootstrap-sass", "~> 3.3.4"
