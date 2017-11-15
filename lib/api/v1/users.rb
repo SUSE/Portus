@@ -103,7 +103,9 @@ module API
 
         post do
           user = User.create declared(params)[:user]
-          unless user.valid?
+          if user.valid?
+            user
+          else
             status 400
             { errors: user.errors }
           end
@@ -135,7 +137,9 @@ module API
         put ":id" do
           attrs = declared(params, include_missing: false)[:user]
           user = User.update(params[:id], attrs)
-          unless user.valid?
+          if user.valid?
+            user
+          else
             status 400
             { errors: user.errors }
           end
