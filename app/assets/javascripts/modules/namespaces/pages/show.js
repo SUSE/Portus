@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import ToggleLink from '~/shared/components/toggle-link';
-import EventBus from '~/utils/eventbus';
 
 import NamespaceInfo from '../components/info';
 import EditNamespaceForm from '../components/edit-form';
@@ -42,7 +41,7 @@ $(() => {
     },
 
     mounted() {
-      EventBus.$on('namespaceUpdated', namespace => this.onUpdate(namespace));
+      this.$bus.$on('namespaceUpdated', namespace => this.onUpdate(namespace));
     },
   });
 });

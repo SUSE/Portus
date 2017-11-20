@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import ToggleLink from '~/shared/components/toggle-link';
-import EventBus from '~/utils/eventbus';
 
 import NewTeamForm from '../components/new-form';
 import TeamsTable from '../components/table';
@@ -44,7 +43,7 @@ $(() => {
     },
 
     mounted() {
-      EventBus.$on('teamCreated', team => this.onCreate(team));
+      this.$bus.$on('teamCreated', team => this.onCreate(team));
     },
   });
 });

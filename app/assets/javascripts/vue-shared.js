@@ -2,8 +2,11 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import Vuelidate from 'vuelidate';
 
+import EventBus from './plugins/eventbus';
+
 Vue.use(Vuelidate);
 Vue.use(VueResource);
+Vue.use(EventBus);
 
 Vue.http.options.root = window.API_ROOT_URL;
 

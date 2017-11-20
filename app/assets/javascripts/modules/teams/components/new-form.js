@@ -2,7 +2,6 @@ import Vue from 'vue';
 
 import { required } from 'vuelidate/lib/validators';
 
-import EventBus from '~/utils/eventbus';
 import Alert from '~/shared/components/alert';
 import FormMixin from '~/shared/mixins/form';
 
@@ -38,7 +37,7 @@ export default {
         });
 
         Alert.show(`Team '${team.name}' was created successfully`);
-        EventBus.$emit('teamCreated', team);
+        this.$bus.$emit('teamCreated', team);
       }).catch((response) => {
         let errors = response.data;
 

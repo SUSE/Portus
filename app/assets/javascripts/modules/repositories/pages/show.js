@@ -2,7 +2,6 @@ import Vue from 'vue';
 
 import LoadingIcon from '~/shared/components/loading-icon';
 import Alert from '~/shared/components/alert';
-import EventBus from '~/utils/eventbus';
 
 import TagsTable from '../components/tags-table';
 import TagsNotLoaded from '../components/tags-not-loaded';
@@ -135,7 +134,7 @@ $(() => {
     mounted() {
       set(this, 'isLoading', true);
       this.loadData();
-      EventBus.$on('deleteTags', () => this.deleteTags());
+      this.$bus.$on('deleteTags', () => this.deleteTags());
       // eslint-disable-next-line no-new
       new CommentsPanel($('.comments-wrapper'));
     },

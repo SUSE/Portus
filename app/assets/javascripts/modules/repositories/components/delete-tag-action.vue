@@ -8,8 +8,6 @@
 </template>
 
 <script>
-  import EventBus from '~/utils/eventbus';
-
   export default {
     props: ['state'],
 
@@ -28,7 +26,7 @@
 
     methods: {
       deleteTags() {
-        EventBus.$emit('deleteTags');
+        this.$bus.$emit('deleteTags');
       },
     },
   };
