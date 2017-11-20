@@ -11,8 +11,6 @@
 </template>
 
 <script>
-  import Alert from '~/shared/components/alert';
-
   export default {
     props: ['tag', 'repository'],
 
@@ -35,7 +33,7 @@
         document.execCommand('copy');
         $temp.remove();
 
-        Alert.show('Copied pull command to clipboard');
+        this.$alert.$show('Copied pull command to clipboard');
       },
     },
   };

@@ -4,7 +4,6 @@ import { required } from 'vuelidate/lib/validators';
 
 import { setTypeahead } from '~/utils/typeahead';
 
-import Alert from '~/shared/components/alert';
 import FormMixin from '~/shared/mixins/form';
 
 import NamespacesService from '../services/namespaces';
@@ -48,8 +47,8 @@ export default {
           team: this.teamName || '',
         });
 
-        Alert.show(`Namespace '${namespace.name}' was created successfully`);
         this.$bus.$emit('namespaceCreated', namespace);
+        this.$alert.$show(`Namespace '${namespace.name}' was created successfully`);
       }).catch((response) => {
         let errors = response.data;
 
@@ -57,7 +56,7 @@ export default {
           errors = errors.join('<br />');
         }
 
-        Alert.show(errors);
+        this.$alert.$show(errors);
       });
     },
   },
