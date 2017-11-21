@@ -40,7 +40,7 @@ export default {
         Alert.show(`Team '${team.name}' was created successfully`);
         EventBus.$emit('teamCreated', team);
       }).catch((response) => {
-        let errors = response.data;
+        let errors = response.data.errors || response.data.error;
 
         if (Array.isArray(errors)) {
           errors = errors.join('<br />');
@@ -65,7 +65,7 @@ export default {
 
           return new Promise((resolve) => {
             const searchTeam = () => {
-              const promise = TeamsService.exists(value);
+              const promise = TeamsService.exists(value, { unscoped: true });
 
               promise.then((exists) => {
                 // leave it for the back-end

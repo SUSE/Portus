@@ -1,3 +1,4 @@
-require('core-js/fn/array/some');
-require('core-js/fn/array/from');
-require('core-js/fn/array/find-index');
+import 'core-js/fn/array/some';
+import 'core-js/fn/array/from';
+import 'core-js/fn/array/find-index';
+import 'core-js/fn/object/assign';
