@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import ToggleLink from '~/shared/components/toggle-link';
-import EventBus from '~/utils/eventbus';
 
 import NamespacesPanel from '../../namespaces/components/panel';
 import NewNamespaceForm from '../../namespaces/components/new-form';
@@ -49,7 +48,7 @@ $(() => {
     },
 
     mounted() {
-      EventBus.$on('namespaceCreated', namespace => this.onCreate(namespace));
+      this.$bus.$on('namespaceCreated', namespace => this.onCreate(namespace));
 
       // legacy
       const $teamDetails = $(this.$refs.details);

@@ -4,7 +4,6 @@ import { required } from 'vuelidate/lib/validators';
 
 import { setTypeahead } from '~/utils/typeahead';
 
-import EventBus from '~/utils/eventbus';
 import Alert from '~/shared/components/alert';
 
 import NamespacesService from '../services/namespaces';
@@ -38,7 +37,7 @@ export default {
         const namespace = response.data;
 
         Alert.show(`Namespace '${namespace.name}' was updated successfully`);
-        EventBus.$emit('namespaceUpdated', namespace);
+        this.$bus.$emit('namespaceUpdated', namespace);
       }).catch((response) => {
         let errors = response.data;
 

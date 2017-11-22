@@ -4,7 +4,6 @@ import { required } from 'vuelidate/lib/validators';
 
 import { setTypeahead } from '~/utils/typeahead';
 
-import EventBus from '~/utils/eventbus';
 import Alert from '~/shared/components/alert';
 import FormMixin from '~/shared/mixins/form';
 
@@ -50,7 +49,7 @@ export default {
         });
 
         Alert.show(`Namespace '${namespace.name}' was created successfully`);
-        EventBus.$emit('namespaceCreated', namespace);
+        this.$bus.$emit('namespaceCreated', namespace);
       }).catch((response) => {
         let errors = response.data;
 

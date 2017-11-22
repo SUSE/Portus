@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import ToggleLink from '~/shared/components/toggle-link';
-import EventBus from '~/utils/eventbus';
 
 import NamespacesPanel from '../components/panel';
 import NewNamespaceForm from '../components/new-form';
@@ -64,7 +63,7 @@ $(() => {
     mounted() {
       set(this.state, 'isLoading', true);
       this.loadData();
-      EventBus.$on('namespaceCreated', namespace => this.onCreate(namespace));
+      this.$bus.$on('namespaceCreated', namespace => this.onCreate(namespace));
     },
   });
 });
