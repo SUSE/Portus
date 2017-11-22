@@ -3,10 +3,12 @@ import VueResource from 'vue-resource';
 import Vuelidate from 'vuelidate';
 
 import EventBus from './plugins/eventbus';
+import Alert from './plugins/alert';
 
 Vue.use(Vuelidate);
 Vue.use(VueResource);
 Vue.use(EventBus);
+Vue.use(Alert);
 
 Vue.http.options.root = window.API_ROOT_URL;
 

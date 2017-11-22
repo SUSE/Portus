@@ -2,7 +2,7 @@ const ALERT_ELEMENT = '#float-alert';
 const TEXT_ALERT_ELEMENT = '#float-alert p';
 const HIDE_TIMEOUT = 5000;
 
-function show(text, autohide = true) {
+function $show(text, autohide = true) {
   $(TEXT_ALERT_ELEMENT).html(text);
   $(ALERT_ELEMENT).fadeIn();
 
@@ -12,5 +12,5 @@ function show(text, autohide = true) {
 }
 
 export default {
-  show,
+  $show,
 };

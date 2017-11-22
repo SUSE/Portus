@@ -4,8 +4,6 @@ import { required } from 'vuelidate/lib/validators';
 
 import { setTypeahead } from '~/utils/typeahead';
 
-import Alert from '~/shared/components/alert';
-
 import NamespacesService from '../services/namespaces';
 
 const TYPEAHEAD_INPUT = '.remote .typeahead';
@@ -36,8 +34,8 @@ export default {
       NamespacesService.update(this.namespace.id, this.model).then((response) => {
         const namespace = response.data;
 
-        Alert.show(`Namespace '${namespace.name}' was updated successfully`);
         this.$bus.$emit('namespaceUpdated', namespace);
+        this.$alert.$show(`Namespace '${namespace.name}' was updated successfully`);
       }).catch((response) => {
         let errors = response.data;
 
@@ -45,7 +43,7 @@ export default {
           errors = errors.join('<br />');
         }
 
-        Alert.show(errors);
+        this.$alert.$show(errors);
       });
     },
   },

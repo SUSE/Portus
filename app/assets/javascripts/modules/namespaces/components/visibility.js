@@ -1,7 +1,5 @@
 import Vue from 'vue';
 
-import Alert from '~/shared/components/alert';
-
 import NamespacesService from '../services/namespaces';
 
 const { set } = Vue;
@@ -63,9 +61,9 @@ export default {
 
       NamespacesService.changeVisibility(this.namespace.id, { visibility }).then(() => {
         set(this.namespace, 'visibility', visibility);
-        Alert.show(`Visibility of '${this.namespace.name}' namespace updated`);
+        this.$alert.$show(`Visibility of '${this.namespace.name}' namespace updated`);
       }).catch(() => {
-        Alert.show('An error happened while updating namespace visibility');
+        this.$alert.$show('An error happened while updating namespace visibility');
       }).finally(() => {
         set(this, 'onGoingRequest', false);
         set(this, 'newVisibility', null);

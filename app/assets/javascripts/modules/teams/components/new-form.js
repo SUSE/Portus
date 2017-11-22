@@ -2,7 +2,6 @@ import Vue from 'vue';
 
 import { required } from 'vuelidate/lib/validators';
 
-import Alert from '~/shared/components/alert';
 import FormMixin from '~/shared/mixins/form';
 
 import TeamsService from '../service';
@@ -36,8 +35,8 @@ export default {
           name: '',
         });
 
-        Alert.show(`Team '${team.name}' was created successfully`);
         this.$bus.$emit('teamCreated', team);
+        this.$alert.$show(`Team '${team.name}' was created successfully`);
       }).catch((response) => {
         let errors = response.data;
 
@@ -45,7 +44,7 @@ export default {
           errors = errors.join('<br />');
         }
 
-        Alert.show(errors);
+        this.$alert.$show(errors);
       });
     },
   },

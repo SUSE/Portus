@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 import LoadingIcon from '~/shared/components/loading-icon';
-import Alert from '~/shared/components/alert';
 
 import TagsTable from '../components/tags-table';
 import TagsNotLoaded from '../components/tags-not-loaded';
@@ -72,7 +71,7 @@ $(() => {
           }
 
           if (!this.isLoading && !this.unableToFetchBefore) {
-            Alert.show('Unable to fetch newer tags data');
+            this.$alert.$show('Unable to fetch newer tags data');
             set(this, 'unableToFetchBefore', true);
           }
         }).finally(() => {
@@ -110,7 +109,7 @@ $(() => {
               message += `<strong>${failure.join(', ')}</strong> unable to be removed.`;
             }
 
-            Alert.show(message);
+            this.$alert.$show(message);
 
             if (!this.tags.length) {
               const namespaceHref = this.$refs.repoLink.href;
