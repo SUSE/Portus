@@ -6,7 +6,7 @@ layout: blogpost
 
 One of the perks of working at SUSE are [hackweeks](https://en.opensuse.org/Portal:Hackweek). A hackweek is a period
 of 5 days in which every employee is free to work on whatever they want. Portus
-was born this way, as Flavio explained in his [blog post](http://flavio.castelli.name/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/), and we are happy
+was born this way, as Flavio explained in his [blog post](https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/), and we are happy
 to say that the feature announced today was also started this way.
 
 ## Adding security features into Portus
