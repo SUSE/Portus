@@ -11,10 +11,16 @@ module Portus
     # object, which is the event object as given by the registry.
     def self.process!(data, *handlers)
       data["events"].each do |event|
-        Rails.logger.debug "Incoming event:\n#{JSON.pretty_generate(event)}"
+        action = event["action"]
+        if action == "pull" && actor_is_crono?(event)
+          Rails.logger.tagged("crono", "catalog_pull") do
+            Rails.logger.debug event["target"]["url"]
+          end
+        else
+          Rails.logger.debug "Incoming event:\n#{JSON.pretty_generate(event)}"
+        end
 
         next unless should_handle?(event)
-        action = event["action"]
 
         # Only register pushes, since they are the conflicting actions since 2.5
         if action == "push"
@@ -29,6 +35,12 @@ module Portus
         Rails.logger.info "Handling '#{action}' event:\n#{JSON.pretty_generate(event)}"
         handlers.each { |handler| handler.send("handle_#{action}_event".to_sym, event) }
       end
+    end
+
+    # Check if crono created this event. This may potentially be truthy for events
+    # created by other custom tools which authenticate as the portus user.
+    def self.actor_is_crono?(event)
+      event["request"]["useragent"] == "Ruby" && event["actor"]["name"] == "portus"
     end
 
     # Returns true if the event should be handled by the according
