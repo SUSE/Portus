@@ -20,6 +20,12 @@ module Version
     `git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3 2>/dev/null`.chomp
   end
 
+  # Read the version from the file.
+  def self.from_file
+    version = Rails.root.join("VERSION")
+    File.read(version).chomp if File.exist?(version)
+  end
+
   # Version.value returns the app version
   # Priority: git tag > git branch/commit > VERSION file
   def self.value
@@ -32,8 +38,7 @@ module Version
         COMMIT.to_s
       end
     else
-      version = Rails.root.join("VERSION")
-      File.read(version).chomp if File.exist?(version)
+      Version.from_file
     end
   end
 end
