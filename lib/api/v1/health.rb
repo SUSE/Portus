@@ -5,6 +5,9 @@ module API
     class Health < Grape::API
       version "v1", using: :path
 
+      desc "Ping this API", tags: ["health"], detail: "Returns 200 as a status code"
+      get("_ping") { status 200 }
+
       resource :health do
         desc "Returns hash of metrics",
           tags:   ["health"],

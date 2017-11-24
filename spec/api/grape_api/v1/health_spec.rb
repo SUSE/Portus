@@ -10,6 +10,13 @@ def db_helper_msg
 end
 
 describe API::V1::Health do
+  describe "GET /_ping" do
+    it "gets an 200 response" do
+      get "/api/v1/_ping"
+      expect(response.status).to eq 200
+    end
+  end
+
   context "GET /health" do
     describe "Basic functionality" do
       it "has DB but no registry" do
