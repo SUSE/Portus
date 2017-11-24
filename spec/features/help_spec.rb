@@ -14,7 +14,7 @@ feature "Help page" do
       click_link("API Documentation")
 
       expect(page).to have_http_status(200)
-      expect(page).to have_current_path("/api/documentation")
+      expect(page).to have_current_path("/documentation")
     end
   end
 end

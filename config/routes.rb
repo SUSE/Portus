@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   end
 
   mount API::RootAPI => "/"
-  mount GrapeSwaggerRails::Engine, at: "/api/documentation" unless Rails.env.production?
+  mount GrapeSwaggerRails::Engine, at: "/documentation" unless Rails.env.production?
 
   get "users/oauth", to: "auth/omniauth_registrations#new"
   post "users/oauth", to: "auth/omniauth_registrations#create"
