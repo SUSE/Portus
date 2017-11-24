@@ -9,6 +9,7 @@ require "api/v1/repositories"
 require "api/v1/tags"
 require "api/v1/teams"
 require "api/v1/users"
+require "api/version"
 
 module API
   class RootAPI < Grape::API
@@ -52,6 +53,7 @@ module API
     mount ::API::V1::Tags
     mount ::API::V1::Teams
     mount ::API::V1::Users
+    mount ::API::Version
 
     route :any, "*path" do
       error!("Not found", 404)
