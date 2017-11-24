@@ -214,10 +214,10 @@ describe API::V1::Users do
     end
   end
 
-  it "DELETE /api/v1/users/:id/application_tokens/:id returns status 405" do
+  it "DELETE /api/v1/users/:id/application_tokens/:id returns status 404" do
     user = create :user
     token = create :application_token, user: user
     delete "/api/v1/users/#{user.id}/application_tokens/#{token.id}", nil, @header
-    expect(response).to have_http_status(:method_not_allowed)
+    expect(response).to have_http_status(:not_found)
   end
 end

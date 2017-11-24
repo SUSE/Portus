@@ -53,6 +53,10 @@ module API
     mount ::API::V1::Teams
     mount ::API::V1::Users
 
+    route :any, "*path" do
+      error!("Not found", 404)
+    end
+
     add_swagger_documentation \
       security_definitions: {
         api_key: {
