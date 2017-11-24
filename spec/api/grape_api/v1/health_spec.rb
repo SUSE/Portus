@@ -3,24 +3,24 @@ require "rails_helper"
 # Helper for the tests on the database that simply calls :health and returns the
 # JSON message for the database component.
 def db_helper_msg
-  get :health
+  get "/api/v1/health"
 
   data = JSON.parse(response.body)
   data["database"]["msg"]
 end
 
-RSpec.describe HealthController, type: :controller do
+describe API::V1::Health do
   describe "GET /_ping" do
     it "gets an 200 response" do
-      get :index
+      get "/api/v1/_ping"
       expect(response.status).to eq 200
     end
   end
 
-  describe "GET /_health" do
+  context "GET /health" do
     describe "Basic functionality" do
       it "has DB but no registry" do
-        get :health
+        get "/api/v1/health"
         expect(response.status).to eq 503
       end
 
@@ -28,7 +28,7 @@ RSpec.describe HealthController, type: :controller do
         create(:registry, hostname: "registry.mssola.cat", use_ssl: true)
 
         VCR.use_cassette("health/ok", record: :none) do
-          get :health
+          get "/api/v1/health"
           expect(response.status).to eq 200
         end
       end
@@ -69,7 +69,7 @@ RSpec.describe HealthController, type: :controller do
 
       it "handles a proper 200 response" do
         VCR.use_cassette("health/clair-ok", record: :none) do
-          get :health
+          get "/api/v1/health"
           expect(response.status).to eq 200
         end
       end
@@ -78,7 +78,7 @@ RSpec.describe HealthController, type: :controller do
         APP_CONFIG["security"]["clair"]["server"] = "http://registry.mssola.cat:6060"
 
         VCR.use_cassette("health/clair-ok", record: :none) do
-          get :health
+          get "/api/v1/health"
           expect(response.status).to eq 200
         end
       end
@@ -88,7 +88,7 @@ RSpec.describe HealthController, type: :controller do
         expect(::Portus::HealthChecks::Clair).to receive(:health_endpoint).and_raise(SocketError)
 
         VCR.use_cassette("health/clair-bad", record: :none) do
-          get :health
+          get "/api/v1/health"
           expect(response.status).to eq 503
         end
       end

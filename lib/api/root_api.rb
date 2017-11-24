@@ -2,6 +2,7 @@ require "grape-swagger"
 
 require "api/entities"
 require "api/helpers"
+require "api/v1/health"
 require "api/v1/namespaces"
 require "api/v1/registries"
 require "api/v1/repositories"
@@ -44,6 +45,7 @@ module API
     helpers Pundit
     helpers ::API::Helpers
 
+    mount ::API::V1::Health
     mount ::API::V1::Namespaces
     mount ::API::V1::Registries
     mount ::API::V1::Repositories
