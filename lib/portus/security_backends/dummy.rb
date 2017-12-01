@@ -1,3 +1,4 @@
+# :nocov:
 require "portus/security_backends/base"
 
 module Portus
@@ -21,6 +22,11 @@ module Portus
         path = Rails.root.join("lib", "portus", "security_backends", "fixtures", DUMMY_FIXTURE)
         JSON.parse(File.read(path))
       end
+
+      def self.config_key
+        "dummy"
+      end
     end
   end
 end
+# :nocov:

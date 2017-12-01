@@ -131,7 +131,7 @@ module RepositoriesHelper
 
   # Returns if any security module is enabled
   def security_vulns_enabled?
-    ::Portus::Security.new(nil, nil).enabled?
+    ::Portus::Security.enabled?
   end
 
   # Returns true if any vulnerability is found

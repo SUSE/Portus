@@ -2,16 +2,18 @@
 #
 # Table name: tags
 #
-#  id            :integer          not null, primary key
-#  name          :string(255)      default("latest"), not null
-#  repository_id :integer          not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  user_id       :integer
-#  digest        :string(255)
-#  image_id      :string(255)      default("")
-#  marked        :boolean          default(FALSE)
-#  username      :string(255)
+#  id              :integer          not null, primary key
+#  name            :string(255)      default("latest"), not null
+#  repository_id   :integer          not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_id         :integer
+#  digest          :string(255)
+#  image_id        :string(255)      default("")
+#  marked          :boolean          default(FALSE)
+#  username        :string(255)
+#  scanned         :integer          default(0)
+#  vulnerabilities :text(65535)
 #
 # Indexes
 #
@@ -199,6 +201,38 @@ describe Tag do
       expect(tag.owner).to eq "someone"
       tag.username = "user"
       expect(tag.owner).to eq "user"
+    end
+  end
+
+  describe "#fetch_vulnerabilities" do
+    let!(:tag) do
+      create(:tag, name: "tag", user_id: user.id, repository: repository,
+             digest: "1", vulnerabilities: "something")
+    end
+
+    it "returns nil if security scanning is not enabled" do
+      # Checking that even if scanning is done and there are vulnerabilities, it
+      # returns nil because security scanning is disabled.
+      tag.update_columns(scanned: Tag.statuses[:scan_done], vulnerabilities: "something")
+
+      expect(tag.fetch_vulnerabilities).to be_nil
+    end
+
+    it "returns nil if scan has not started" do
+      enable_security_vulns_module!
+      expect(tag.fetch_vulnerabilities).to be_nil
+    end
+
+    it "returns nil if scan is work in progress" do
+      enable_security_vulns_module!
+      tag.update_columns(scanned: Tag.statuses[:scan_working])
+      expect(tag.fetch_vulnerabilities).to be_nil
+    end
+
+    it "returns the vulnerabilities when scan is over" do
+      enable_security_vulns_module!
+      tag.update_columns(scanned: Tag.statuses[:scan_done], vulnerabilities: "something")
+      expect(tag.fetch_vulnerabilities).to eq "something"
     end
   end
 end

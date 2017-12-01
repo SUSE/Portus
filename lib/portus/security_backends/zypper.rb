@@ -1,3 +1,4 @@
+# :nocov:
 require "portus/security_backends/base"
 
 module Portus
@@ -27,6 +28,10 @@ module Portus
         end
       end
 
+      def self.config_key
+        "zypper"
+      end
+
       protected
 
       def consume_response(response)
@@ -46,3 +51,4 @@ module Portus
     end
   end
 end
+# :nocov:

@@ -2,16 +2,18 @@
 #
 # Table name: tags
 #
-#  id            :integer          not null, primary key
-#  name          :string(255)      default("latest"), not null
-#  repository_id :integer          not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  user_id       :integer
-#  digest        :string(255)
-#  image_id      :string(255)      default("")
-#  marked        :boolean          default(FALSE)
-#  username      :string(255)
+#  id              :integer          not null, primary key
+#  name            :string(255)      default("latest"), not null
+#  repository_id   :integer          not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_id         :integer
+#  digest          :string(255)
+#  image_id        :string(255)      default("")
+#  marked          :boolean          default(FALSE)
+#  username        :string(255)
+#  scanned         :integer          default(0)
+#  vulnerabilities :text(65535)
 #
 # Indexes
 #
@@ -23,6 +25,11 @@
 # name follows the format as defined in registry/api/v2/names.go from Docker's
 # Distribution project. The default name for a tag is "latest".
 class Tag < ActiveRecord::Base
+  serialize :vulnerabilities
+
+  # NOTE: as a Hash because in Rails 5 we'll be able to pass a proper prefix.
+  enum status: { scan_none: 0, scan_working: 1, scan_done: 2 }
+
   belongs_to :repository
   belongs_to :author, class_name: "User", foreign_key: "user_id"
 
@@ -86,9 +93,11 @@ class Tag < ActiveRecord::Base
     create_delete_activities!(actor)
   end
 
-  def vulnerabilities
-    sec = ::Portus::Security.new(repository.full_name, name)
-    sec.vulnerabilities
+  # Returns vulnerabilities if there are any available and security scanning is
+  # enabled.
+  def fetch_vulnerabilities
+    return unless ::Portus::Security.enabled?
+    vulnerabilities if scanned == Tag.statuses[:scan_done]
   end
 
   protected

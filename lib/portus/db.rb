@@ -21,7 +21,11 @@ module Portus
     # trivial, but this gives us a nice way to test this module.
     def self.migrations?
       ActiveRecord::Base.connection
-      ActiveRecord::Base.connection.table_exists? "schema_migrations"
+      return unless ActiveRecord::Base.connection.table_exists? "schema_migrations"
+
+      # If db:migrate:status does not return a migration as "down", then all
+      # migrations are up and ready.
+      !`bundle exec rake db:migrate:status`.include?("down")
     end
 
     # Returns true if the given configured adapter is MariaDB.
