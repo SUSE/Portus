@@ -37,7 +37,7 @@ describe ::Portus::Background::SecurityScanning do
     it "properly saves the vulnerabilities" do
       VCR.turn_on!
 
-      tag = create(:tag, name: "tag", repository: repository, digest: "1", author: admin)
+      tag = create(:tag, name: "tag", repository: repository, author: admin)
 
       VCR.use_cassette("background/clair", record: :none) do
         subject.execute!
@@ -80,6 +80,28 @@ describe ::Portus::Background::SecurityScanning do
 
       subject.execute!
       expect { tag.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "updates all tags with the same digest" do
+      tag   = create(:tag, name: "tag", repository: repository, digest: "1", author: admin)
+      tag1  = create(:tag, name: "tag1", repository: repository, digest: "1", author: admin)
+      count = 0
+
+      allow_any_instance_of(::Portus::Security).to receive(:vulnerabilities) do
+        count += 1
+
+        tag.reload
+        tag1.reload
+        expect(tag.scanned).to eq Tag.statuses[:scan_working]
+        expect(tag1.scanned).to eq Tag.statuses[:scan_working]
+        ["something"]
+      end
+
+      subject.execute!
+
+      expect(count).to eq 1
+      expect(Tag.all.all? { |t| t.scanned == Tag.statuses[:scan_done] }).to be_truthy
+      expect(Tag.all.all? { |t| t.vulnerabilities == ["something"] }).to be_truthy
     end
   end
 

@@ -39,7 +39,7 @@ describe TagsController, type: :controller do
       enable_security_vulns_module!
     end
 
-    it "assigns the requested tag as @tag", focus: true do
+    it "assigns the requested tag as @tag" do
       get :show, { id: tag.to_param }, valid_session
       expect(assigns(:tag)).to eq(tag)
       expect(response.status).to eq 200

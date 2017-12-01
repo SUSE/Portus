@@ -100,6 +100,17 @@ class Tag < ActiveRecord::Base
     vulnerabilities if scanned == Tag.statuses[:scan_done]
   end
 
+  # Updates the columns related to vulnerabilities with the given
+  # attributes. This will apply to only this tag, or all tags sharing the same
+  # digest (depending on whether the digest is known).
+  def update_vulnerabilities(attrs = {})
+    if digest.blank?
+      update_columns(attrs)
+    else
+      Tag.where(digest: digest).update_all(attrs)
+    end
+  end
+
   protected
 
   # Fetch the digest for this tag. Usually the digest should already be

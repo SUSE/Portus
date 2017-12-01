@@ -9,39 +9,65 @@ module Portus
         ::Portus::Security.enabled? && Tag.exists?(scanned: Tag.statuses[:scan_none])
       end
 
+      # execute! updates the vulnerabilities of all tags which have not been
+      # scanned yet. Note that this is done digest-wise, so tags which have
+      # already been scanned might be updated as a side-effect of a tag with the
+      # same digest that had not been scanned until then.
       def execute!
+        digests = []
+
         Tag.where(scanned: Tag.statuses[:scan_none]).find_each do |tag|
+          # This may happen when pushing multiple images with the same digest at
+          # once, while a previous one has already been scanned on a previous
+          # iteration.
+          next if tag.digest.present? && digests.include?(tag.digest)
+
           # Mark as work in progress. This is important in case there is a push in
           # progress.
-          tag.update_columns(scanned: Tag.statuses[:scan_working])
+          tag.update_vulnerabilities(scanned: Tag.statuses[:scan_working])
 
           # Fetch vulnerabilities.
           sec = ::Portus::Security.new(tag.repository.full_name, tag.name)
           vulns = sec.vulnerabilities
 
-          # Now it's time to update the columns and mark the scanning as done. That
-          # being said, it may have happened that during the scanning process a push
-          # or a delete action has been performed against this tag. For this reason,
-          # in a transaction we will reload it and check if any of these conditions
-          # changed. If not, then we will proceed with the change.
-          ActiveRecord::Base.transaction do
-            # If the tag no longer exists, then we need to raise a Rollback
-            # exception to leave early and cleanly from the transaction.
-            begin
-              tag = tag.reload
-            rescue ActiveRecord::RecordNotFound
-              raise ActiveRecord::Rollback
-            end
-
-            if tag&.scanned != Tag.statuses[:scan_none]
-              tag.update_columns(vulnerabilities: vulns, scanned: Tag.statuses[:scan_done])
-            end
-          end
+          # And now update the tag with the vulnerabilities.
+          dig = update_tag(tag, vulns)
+          digests << dig if dig
         end
       end
 
       def to_s
         "Security scanning"
+      end
+
+      protected
+
+      # update_tag will mark the scanning as done for the given tag and assign
+      # to it the given vulnerabilities. This action will also affect tags with
+      # the same digest. This is done in a transaction, while taking into
+      # consideration possible changes on the given tag that may have happened
+      # meanwhile.
+      #
+      # It returns the affected digest.
+      def update_tag(tag, vulns)
+        digest = nil
+
+        ActiveRecord::Base.transaction do
+          # If the tag no longer exists, then we need to raise a Rollback
+          # exception to leave early and cleanly from the transaction.
+          begin
+            tag = tag.reload
+          rescue ActiveRecord::RecordNotFound
+            raise ActiveRecord::Rollback
+          end
+
+          if tag&.scanned != Tag.statuses[:scan_none]
+            tag.update_vulnerabilities(vulnerabilities: vulns, scanned: Tag.statuses[:scan_done])
+            digest = tag.digest
+          end
+        end
+
+        digest
       end
     end
   end
