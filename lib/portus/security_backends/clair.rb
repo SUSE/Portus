@@ -76,6 +76,7 @@ module Portus
         # Parse the given response and return the result.
         if res.code.to_i == 200
           msg = JSON.parse(res.body)
+          Rails.logger.tagged("clair.get") { Rails.logger.debug msg }
           msg["Layer"]
         else
           handle_response(res, digest, "clair.get")
@@ -126,6 +127,7 @@ module Portus
       # finally `kind` is a string that identifies the kind of request.
       def handle_response(response, digest, kind)
         code = response.code.to_i
+        Rails.logger.tagged(kind) { Rails.logger.debug "Handling code: #{code}" }
         return if code == 200 || code == 201
 
         msg = code == 404 ? response.body : error_message(JSON.parse(response.body))

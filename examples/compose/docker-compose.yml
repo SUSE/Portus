@@ -4,6 +4,8 @@ services:
   portus:
     image: opensuse/portus:head
     environment:
+      # Theoretically not needed, but cconfig's been buggy on this...
+      - CCONFIG_PREFIX=PORTUS
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
 
       # DB. The password for the database should definitely not be here. You are
@@ -36,6 +38,8 @@ services:
   crono:
     image: opensuse/portus:head
     environment:
+      # Theoretically not needed, but cconfig's been buggy on this...
+      - CCONFIG_PREFIX=PORTUS
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
 
       # DB. The password for the database should definitely not be here. You are
