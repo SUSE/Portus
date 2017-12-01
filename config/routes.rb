@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Peek::Railtie => "/peek" if defined? Peek
+
   resources :errors, only: [:show]
   resources :teams, only: [:index, :show, :update] do
     member do
