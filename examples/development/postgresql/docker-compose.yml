@@ -6,8 +6,6 @@ services:
     image: opensuse/portus:development
     command: bash /srv/Portus/examples/development/compose/init
     environment:
-      # Theoretically not needed, but cconfig's been buggy on this...
-      - CCONFIG_PREFIX=PORTUS
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
       - PORTUS_PUMA_HOST=0.0.0.0:3000
 

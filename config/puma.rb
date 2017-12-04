@@ -1,5 +1,8 @@
 #!/usr/bin/env puma
 
+# Set CConfig straight.
+ENV["CCONFIG_PREFIX"] = "PORTUS"
+
 # Workers and connections.
 threads 1, ENV.fetch("PORTUS_PUMA_MAX_THREADS") { 4 }.to_i
 workers ENV.fetch("PORTUS_PUMA_WORKERS") { 2 }.to_i

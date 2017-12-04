@@ -14,9 +14,6 @@ services:
       - PORTUS_DB_PASSWORD=portus
       - PORTUS_DB_POOL=5
 
-      # Theoretically not needed, but cconfig's been buggy on this...
-      - CCONFIG_PREFIX=PORTUS
-
       - RAILS_SERVE_STATIC_FILES=true
     ports:
       - 3000:3000
@@ -77,6 +74,7 @@ services:
 
   clair:
     image: quay.io/coreos/clair:v2.0.1
+    restart: unless-stopped
     depends_on:
       - postgres
     links:
