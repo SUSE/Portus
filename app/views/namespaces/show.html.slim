@@ -1,4 +1,5 @@
-= render "namespaces/partials/details"
+<namespaces-show-page :can-manage-namespace="#{can_manage_namespace?(@namespace)}" namespace-json='#{raw @namespace_serialized}'>
+</namespaces-show-page>
 
 = render "namespaces/partials/repositories"
 
@@ -11,7 +12,3 @@
 
   script#js-namespace-team-link-tmpl type="text/x-template"
     = render "namespaces/components/team_link"
-
-- content_for :js_header do
-  javascript:
-    window.namespace = #{raw @namespace_serialized};

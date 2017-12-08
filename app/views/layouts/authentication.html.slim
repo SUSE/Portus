@@ -32,7 +32,7 @@ html
     = javascript_include_tag(*webpack_asset_paths("application"))
     = yield :js_header
 
-  body.login data-route="#{js_route}"
+  body.login data-controller="#{js_controller}" data-route="#{js_route}"
     .container-fluid.vue-root
       = yield
 
