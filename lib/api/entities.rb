@@ -81,6 +81,11 @@ module API
       expose :digest, documentation: { type: String, desc: "The digest of the tag" }
       expose :image_id, documentation: { type: String, desc: "The internal image ID" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :scanned, documentation: {
+        type: Integer,
+        desc: "Whether vulnerabilities have been scanned or not. The values available are: " \
+              "0 (not scanned), 1 (work in progress) and 2 (scanning done)."
+      }
       expose :vulnerabilities, documentation: {
         is_array: true,
         desc:     "An array of vulnerabilities for this tag, or null if the feature is not enabled"

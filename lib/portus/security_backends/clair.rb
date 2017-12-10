@@ -30,6 +30,10 @@ module Portus
         layer_vulnerabilities(@layers.last)
       end
 
+      def self.config_key
+        "clair"
+      end
+
       protected
 
       # Returns an array with all the vulnerabilities found by Clair for the
@@ -45,13 +49,15 @@ module Portus
           next if vulns.nil?
 
           vulns.each do |v|
-            if v && v["Name"] && !known.include?(v["Name"])
-              known << v["Name"]
-              res << v
-            end
+            name = Hash(v)["Name"]
+            next if name.blank? || known.include?(name)
+
+            known << v["Name"]
+            # Skipping some fields that we don't use and can be very long...
+            res << v.except("Metadata", "Description")
           end
         end
-        res
+        res.sort_by { |el| el["Name"] }
       end
 
       # Fetches the layer information from Clair for the given digest as a Hash.
@@ -59,6 +65,7 @@ module Portus
       def fetch_layer(digest)
         # Now we fetch the vulnerabilities discovered by clair on that layer.
         uri, req = get_request("/v1/layers/#{digest}?features=false&vulnerabilities=true", "get")
+        req["Accept"] = "application/json"
         begin
           res = get_response_token(uri, req)
         rescue SocketError, Errno::ECONNREFUSED => e
@@ -67,13 +74,12 @@ module Portus
         end
 
         # Parse the given response and return the result.
-        msg = JSON.parse(res.body)
         if res.code.to_i == 200
+          msg = JSON.parse(res.body)
+          Rails.logger.tagged("clair.get") { Rails.logger.debug msg }
           msg["Layer"]
         else
-          msg = error_message(msg)
-          Rails.logger.tagged("clair.get") { Rails.logger.debug "Error for '#{digest}': #{msg}" }
-          nil
+          handle_response(res, digest, "clair.get")
         end
       end
 
@@ -92,13 +98,7 @@ module Portus
           return
         end
 
-        code = res.code.to_i
-        return if code == 200 || code == 201
-
-        msg = error_message(JSON.parse(res.body))
-        Rails.logger.tagged("clair.post") do
-          Rails.logger.debug "Could not post '#{digest}': #{msg}"
-        end
+        handle_response(res, digest, "clair.post")
       end
 
       # Returns a hash that has to be used as the body of a POST request. This
@@ -120,6 +120,22 @@ module Portus
             "Features"         => []
           }
         }
+      end
+
+      # Handle a response from a Clair request. The first parameter is the HTTP
+      # response itself, the `digest` holds a string with the digest ID, and
+      # finally `kind` is a string that identifies the kind of request.
+      def handle_response(response, digest, kind)
+        code = response.code.to_i
+        Rails.logger.tagged(kind) { Rails.logger.debug "Handling code: #{code}" }
+        return if code == 200 || code == 201
+
+        msg = code == 404 ? response.body : error_message(JSON.parse(response.body))
+        Rails.logger.tagged(kind) do
+          Rails.logger.debug "Could not post '#{digest}': #{msg}"
+        end
+
+        nil
       end
 
       # Returns a proper error message for the given JSON response.

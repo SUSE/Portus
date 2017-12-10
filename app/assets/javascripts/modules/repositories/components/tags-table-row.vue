@@ -25,7 +25,9 @@
     <td>{{ tag[0].updated_at }}</td>
 
     <td v-if="securityEnabled">
-      <a :href="tagLink">
+      <span v-if="scanPending">Pending</span>
+      <span v-if="scanInProgress">In progress</span>
+      <a :href="tagLink" v-if="scanDone">
         {{ vulns }} vulnerabilities
       </a>
     </td>
@@ -36,6 +38,10 @@
   import Tag from './tag';
 
   import VulnerabilitiesParser from '../services/vulnerabilities-parser';
+
+  const NOT_SCANNED = 0;
+  const SCAN_DONE = 2;
+  const SCAN_IN_PROGRESS = 1;
 
   export default {
     props: {
@@ -58,6 +64,18 @@
     },
 
     computed: {
+      scanPending() {
+        return this.tag[0].scanned === NOT_SCANNED;
+      },
+
+      scanInProgress() {
+        return this.tag[0].scanned === SCAN_IN_PROGRESS;
+      },
+
+      scanDone() {
+        return this.tag[0].scanned === SCAN_DONE;
+      },
+
       prettyFormatID() {
         return `${this.prefixID}${this.tag[0].image_id}`;
       },

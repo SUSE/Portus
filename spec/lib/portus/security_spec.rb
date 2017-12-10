@@ -14,7 +14,8 @@ describe ::Portus::Security do
       }
 
       sec = ::Portus::Security.new("some", "tag")
-      expect(sec.enabled?).to be_falsey
+      expect(sec.available?).to be_falsey
+      expect(::Portus::Security.enabled?).to be_falsey
     end
 
     it "is enabled when at least one has been configured" do
@@ -29,7 +30,8 @@ describe ::Portus::Security do
       }
 
       sec = ::Portus::Security.new("some", "tag")
-      expect(sec.enabled?).to be_truthy
+      expect(sec.available?).to be_truthy
+      expect(::Portus::Security.enabled?).to be_truthy
     end
 
     it "is enabled when all has been configured" do
@@ -44,7 +46,8 @@ describe ::Portus::Security do
       }
 
       sec = ::Portus::Security.new("some", "tag")
-      expect(sec.enabled?).to be_truthy
+      expect(sec.available?).to be_truthy
+      expect(::Portus::Security.enabled?).to be_truthy
     end
   end
 end

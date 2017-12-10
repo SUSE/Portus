@@ -6,9 +6,7 @@ class TagsController < ApplicationController
     authorize @tag
 
     @names = Tag.where(digest: @tag.digest).sort.map(&:name)
-
-    sec = ::Portus::Security.new(@tag.repository.full_name, @tag.name)
-    @vulnerabilities = sec.vulnerabilities
+    @vulnerabilities = @tag.fetch_vulnerabilities
   end
 
   # Removes all tags that match the digest of the tag with the given ID.

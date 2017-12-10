@@ -8,6 +8,7 @@ services:
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
       - PORTUS_PUMA_HOST=0.0.0.0:3000
+      - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
 
       - PORTUS_DB_HOST=db
       - PORTUS_DB_PASSWORD=portus
@@ -16,6 +17,8 @@ services:
       - RAILS_SERVE_STATIC_FILES=true
     ports:
       - 3000:3000
+    depends_on:
+      - db
     links:
       - db
     volumes:
@@ -26,8 +29,33 @@ services:
     command: ./bin/crono
     depends_on:
       - portus
+      - db
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+
+      # Theoretically not needed, but cconfig's been buggy on this...
+      - CCONFIG_PREFIX=PORTUS
+
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_PASSWORD=portus
+      - PORTUS_DB_POOL=5
+    volumes:
+      - .:/srv/Portus
+    links:
+      - db
+
+  background:
+    image: opensuse/portus:development
+    entrypoint: bundle exec rails runner /srv/Portus/bin/background.rb
+    depends_on:
+      - portus
+      - db
+    environment:
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
+
+      # Theoretically not needed, but cconfig's been buggy on this...
+      - CCONFIG_PREFIX=PORTUS
 
       - PORTUS_DB_HOST=db
       - PORTUS_DB_PASSWORD=portus
@@ -44,10 +72,29 @@ services:
     volumes:
       - .:/srv/Portus
 
+  clair:
+    image: quay.io/coreos/clair:v2.0.1
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - "6060-6061:6060-6061"
+    volumes:
+      - /tmp:/tmp
+      - ./examples/development/compose/clair.yml:/clair.yml
+    command: [-config, /clair.yml]
+
   db:
     image: library/mariadb:10.0.23
     environment:
       MYSQL_ROOT_PASSWORD: portus
+
+  postgres:
+    image: library/postgres:10-alpine
+    environment:
+      POSTGRES_PASSWORD: portus
 
   registry:
     image: library/registry:2.3.1

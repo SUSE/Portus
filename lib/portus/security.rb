@@ -21,16 +21,23 @@ module Portus
       BACKENDS.each { |b| @backends << b.new(repo, tag) if b.enabled? }
     end
 
-    # Returns true if security scanning is enabled, false otherwise.
-    def enabled?
+    # Returns true if there is backends that work available, false otherwise.
+    def available?
       @backends.present?
+    end
+
+    # Returns true if security scanning is enabled, false otherwise.
+    def self.enabled?
+      ::Portus::Security::BACKENDS.any? do |b|
+        APP_CONFIG["security"][b.config_key]["server"].present?
+      end
     end
 
     # Returns a hash with the results from all the backends. The results are a
     # list of hashes. If security vulnerability checking is not enabled, then
     # nil is returned.
     def vulnerabilities
-      return unless enabled?
+      return unless available?
 
       # First get all the layers composing the given image.
       client = Registry.get.client

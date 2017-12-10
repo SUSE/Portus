@@ -172,6 +172,10 @@ RSpec.describe RepositoriesHelper, type: :helper do
       expect(helper.vulnerable?(vulnerabilities)).to be_truthy
     end
 
+    it "returns false if no vulnerabilities were found" do
+      expect(helper.vulnerable?(nil)).to be_falsey
+    end
+
     it "returns false if no security vulnerability server is configured" do
       vulnerabilities = {
         one: [],

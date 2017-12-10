@@ -2,16 +2,18 @@
 #
 # Table name: tags
 #
-#  id            :integer          not null, primary key
-#  name          :string(255)      default("latest"), not null
-#  repository_id :integer          not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  user_id       :integer
-#  digest        :string(255)
-#  image_id      :string(255)      default("")
-#  marked        :boolean          default(FALSE)
-#  username      :string(255)
+#  id              :integer          not null, primary key
+#  name            :string(255)      default("latest"), not null
+#  repository_id   :integer          not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_id         :integer
+#  digest          :string(255)
+#  image_id        :string(255)      default("")
+#  marked          :boolean          default(FALSE)
+#  username        :string(255)
+#  scanned         :integer          default(0)
+#  vulnerabilities :text(65535)
 #
 # Indexes
 #
@@ -38,15 +40,13 @@ describe TagsController, type: :controller do
     end
 
     it "assigns the requested tag as @tag" do
-      allow_any_instance_of(::Portus::Security).to receive(:vulnerabilities)
-        .and_return([])
       get :show, { id: tag.to_param }, valid_session
       expect(assigns(:tag)).to eq(tag)
       expect(response.status).to eq 200
     end
 
     it "assigns the tag's vulnerabilities as @vulnerabilities" do
-      allow_any_instance_of(::Portus::Security).to receive(:vulnerabilities)
+      allow_any_instance_of(Tag).to receive(:fetch_vulnerabilities)
         .and_return(["something"])
       get :show, { id: tag.to_param }, valid_session
       expect(assigns(:vulnerabilities)).to eq(["something"])
