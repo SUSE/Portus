@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RepositoryPolicy
   attr_reader :user, :repository
 
@@ -34,7 +36,7 @@ class RepositoryPolicy
         @scope
           .joins(namespace: { team: :users })
           .where("namespaces.visibility = :namespace_visibility",
-                  namespace_visibility: Namespace.visibilities[:visibility_public])
+                 namespace_visibility: Namespace.visibilities[:visibility_public])
           .distinct
       elsif user.admin?
         @scope.all
@@ -45,8 +47,8 @@ class RepositoryPolicy
           .joins(namespace: { team: :users })
           .where("namespaces.visibility = :namespace_visibility OR " \
                  "users.id = :user_id",
-                  namespace_visibility: Namespace.visibilities[:visibility_public],
-                  user_id:              @user.id)
+                 namespace_visibility: Namespace.visibilities[:visibility_public],
+                 user_id:              @user.id)
           .distinct
       end
     end

@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe PublicActivity::ActivityPolicy do
+  subject { described_class }
 
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
@@ -13,8 +16,6 @@ describe PublicActivity::ActivityPolicy do
   let(:repository) { create(:repository, namespace: namespace) }
   let(:tag) { create(:tag, repository: repository) }
   let(:webhook) { create(:webhook, namespace: namespace, url: "http://example.com") }
-
-  subject { described_class }
 
   describe "scope" do
     it "returns pertinent team activities" do
@@ -70,15 +71,15 @@ describe PublicActivity::ActivityPolicy do
       namespace2 = create(:namespace,
                           registry: registry,
                           team:     create(:team,
-                                       owners: [another_user]))
+                                           owners: [another_user]))
       private_tag = create(:tag, repository: create(:repository, namespace: namespace2))
 
       public_namespace = create(:namespace,
                                 registry:   registry,
                                 visibility: Namespace.visibilities[:visibility_public],
                                 team:       create(:team,
-                                             owners:     [another_user],
-                                             namespaces: [namespace2]))
+                                                   owners:     [another_user],
+                                                   namespaces: [namespace2]))
       public_tag = create(:tag, repository: create(:repository, namespace: public_namespace))
 
       activities = [

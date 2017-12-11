@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CommentsHelper
   # Return true if current_user has permission to destroy a comment
   # Returns false otherwise

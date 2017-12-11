@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe RegistryPolicy do
@@ -12,7 +14,7 @@ describe RegistryPolicy do
     end
 
     it "does not allow access to regular users" do
-      expect(subject).to_not permit(user, nil)
+      expect(subject).not_to permit(user, nil)
     end
   end
 end

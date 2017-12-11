@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: application_tokens
@@ -20,7 +22,7 @@ describe ApplicationTokensController do
   let(:application) { "test application" }
 
   describe "POST #create" do
-    before :each do
+    before do
       sign_in user
     end
 
@@ -48,11 +50,10 @@ describe ApplicationTokensController do
 
       expect(response.status).to be 422
     end
-
   end
 
   describe "DELETE #destroy" do
-    before :each do
+    before do
       sign_in user
     end
 

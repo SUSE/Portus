@@ -1,4 +1,6 @@
 
+# frozen_string_literal: true
+
 require "database_cleaner"
 
 # DatabaseCleaner has been configured like this:
@@ -21,7 +23,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.strategy = :transaction
   end
 
@@ -29,11 +31,11 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
   end
 end

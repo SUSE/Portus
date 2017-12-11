@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NamespacePolicy
   attr_reader :user, :namespace
 

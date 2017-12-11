@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "portus/security_backends/base"
 
 # Docker images contain quite some empty blobs, and trying to upload them will
 # fail.
-EMPTY_LAYER_SHA = "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4".freeze
+EMPTY_LAYER_SHA = "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
 
 module Portus
   module SecurityBackend
@@ -85,7 +87,7 @@ module Portus
 
       # Post the layer pointed by the given index to Clair.
       def post_layer(index)
-        parent = index > 0 ? @layers.fetch(index - 1) : ""
+        parent = index.positive? ? @layers.fetch(index - 1) : ""
         digest = @layers.fetch(index)
 
         uri, req = get_request("/v1/layers", "post")

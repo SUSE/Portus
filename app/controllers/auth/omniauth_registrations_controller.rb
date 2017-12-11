@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::OmniauthRegistrationsController < ApplicationController
   layout "authentication"
   skip_before_action :authenticate_user!

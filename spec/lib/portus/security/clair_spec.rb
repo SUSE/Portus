@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "portus/security"
 
@@ -11,7 +13,7 @@ def expect_cve_match(cves, given, expected)
 end
 
 describe ::Portus::SecurityBackend::Clair do
-  before :each do
+  before do
     APP_CONFIG["security"] = {
       "clair" => {
         "server" => "http://my.clair:6060"

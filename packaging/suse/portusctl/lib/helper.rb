@@ -1,15 +1,15 @@
+# frozen_string_literal: true
+
 # :nocov:
 
 def check_setup_flags(options)
-  if options["ssl-gen-self-signed-certs"] && \
-      !options["ssl-certs-dir"].chomp.empty?
+  if options["ssl-gen-self-signed-certs"] && !options["ssl-certs-dir"].chomp.empty?
     warn "cannot use both options --ssl-gen-self-signed-certs and " \
       "--ssl-certs-dir at the same time"
     exit 1
   end
 
-  return unless options["ldap-enable"] && \
-      options["ldap-hostname"].blank?
+  return unless options["ldap-enable"] && options["ldap-hostname"].blank?
 
   warn "LDAP support is enabled but you didn't specify a value for ldap-hostname"
   exit 1

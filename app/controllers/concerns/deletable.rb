@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Deletable redirects the user back if delete support is not enabled. A
 # `before_action` will be created for the :destroy method.
 module Deletable

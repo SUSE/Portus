@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::NamespacesController < Admin::BaseController
   def index
     @special_namespaces = Namespace.where(global: true)

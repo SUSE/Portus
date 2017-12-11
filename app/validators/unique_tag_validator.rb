@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "portus/db"
 
 # See https://github.com/SUSE/Portus/pull/1494 on why we didn't use the

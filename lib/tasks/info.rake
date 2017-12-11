@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :portus do
   desc "Get general info about the running instance"
   task info: :environment do

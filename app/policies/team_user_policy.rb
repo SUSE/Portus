@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Policy for team members. It does not authorize anything unless the author of
 # the action is an owner. An owner is either an admin of Portus or an owner of
 # the team itself.

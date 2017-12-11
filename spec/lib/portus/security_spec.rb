@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe ::Portus::Security do
@@ -13,9 +15,9 @@ describe ::Portus::Security do
         }
       }
 
-      sec = ::Portus::Security.new("some", "tag")
-      expect(sec.available?).to be_falsey
-      expect(::Portus::Security.enabled?).to be_falsey
+      sec = described_class.new("some", "tag")
+      expect(sec).not_to be_available
+      expect(described_class).not_to be_enabled
     end
 
     it "is enabled when at least one has been configured" do
@@ -29,9 +31,9 @@ describe ::Portus::Security do
         }
       }
 
-      sec = ::Portus::Security.new("some", "tag")
-      expect(sec.available?).to be_truthy
-      expect(::Portus::Security.enabled?).to be_truthy
+      sec = described_class.new("some", "tag")
+      expect(sec).to be_available
+      expect(described_class).to be_enabled
     end
 
     it "is enabled when all has been configured" do
@@ -45,9 +47,9 @@ describe ::Portus::Security do
         }
       }
 
-      sec = ::Portus::Security.new("some", "tag")
-      expect(sec.available?).to be_truthy
-      expect(::Portus::Security.enabled?).to be_truthy
+      sec = described_class.new("some", "tag")
+      expect(sec).to be_available
+      expect(described_class).to be_enabled
     end
   end
 end

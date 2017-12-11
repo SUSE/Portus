@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Namespaces
   class BuildService < ::BaseService
     def execute

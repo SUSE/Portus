@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 guard :rspec, all_on_start: false, cmd: "bundle exec rspec" do
   require "guard/rspec/dsl"
   dsl = Guard::RSpec::Dsl.new(self)
@@ -31,7 +33,7 @@ end
 
 guard :rubocop, all_on_start: true do
   watch(/.+\.rb\z/)
-  watch(/\Abin\/.+\z/)
+  watch(%r{\Abin/.+\z})
 
   watch(%r{(?:.+/)?\.rubocop\.yml$}) do |m|
     File.dirname(m[0])

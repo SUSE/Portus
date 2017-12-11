@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ChangeNameDescription
   extend ActiveSupport::Concern
 
@@ -19,15 +21,15 @@ module ChangeNameDescription
   # Create a PublicActivity for updating an attribute.
   def create_activity(object, symbol, old_value, new_value, activity_params)
     object.create_activity "change_#{symbol}".to_sym,
-                                  owner:      current_user,
-                                  recipient:  object,
-                                  parameters: activity_params.merge(old: old_value, new: new_value)
+                           owner:      current_user,
+                           recipient:  object,
+                           parameters: activity_params.merge(old: old_value, new: new_value)
   end
 
   # Change description and track activity if successful.
   def change_description(object, symbol, old_description, new_description, activity_params)
     return if new_description.nil? || old_description == new_description ||
-        !object.update(description: new_description)
+              !object.update(description: new_description)
     create_activity(object, "#{symbol}_description", old_description,
                     new_description, activity_params)
   end

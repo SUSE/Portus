@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: webhooks
@@ -34,7 +36,7 @@ require "uri"
 class Webhook < ActiveRecord::Base
   include PublicActivity::Common
 
-  enum request_method: ["GET", "POST"]
+  enum request_method: %w[GET POST]
   enum content_type: ["application/json", "application/x-www-form-urlencoded"]
 
   belongs_to :namespace

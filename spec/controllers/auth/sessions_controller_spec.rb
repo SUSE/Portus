@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Auth::SessionsController do
   describe "POST #create" do
-    before :each do
+    before do
       request.env["devise.mapping"] = Devise.mappings[:user]
       APP_CONFIG["signup"] = { "enabled" => true }
       APP_CONFIG["ldap"] = { "enabled" => true }

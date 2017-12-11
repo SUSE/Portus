@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe API::Version do
   let!(:admin) { create(:admin) }
   let!(:token) { create(:application_token, user: admin) }
 
-  before :each do
+  before do
     @header = build_token_header(token)
   end
 
@@ -17,7 +19,7 @@ describe API::Version do
       resp = JSON.parse(response.body)
       expect(resp["api-versions"]).to eq(["v1"])
       expect(resp["version"]).to eq(::Version.from_file)
-      expect(resp["git"]).to_not include("tag")
+      expect(resp["git"]).not_to include("tag")
     end
 
     it "returns the tag when present" do

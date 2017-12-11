@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Teams support" do
+describe "Teams support" do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:admin) }
   let!(:team) { create(:team, owners: [user]) }
@@ -10,7 +12,7 @@ feature "Teams support" do
   end
 
   describe "teams#index", js: true do
-    scenario "A user cannot create an empty team" do
+    it "A user cannot create an empty team" do
       visit teams_path
 
       find(".toggle-link-new-team").click
@@ -23,7 +25,7 @@ feature "Teams support" do
       expect(page).to have_button("Add", disabled: true)
     end
 
-    scenario "A team cannot be created if the name has already been picked" do
+    it "A team cannot be created if the name has already been picked" do
       visit teams_path
 
       find(".toggle-link-new-team").click
@@ -36,7 +38,7 @@ feature "Teams support" do
       expect(page).to have_button("Add", disabled: true)
     end
 
-    scenario "A team can be created from the index page" do
+    it "A team can be created from the index page" do
       teams_count = Team.count
 
       visit teams_path
@@ -55,25 +57,25 @@ feature "Teams support" do
       expect(Team.count).to eql(teams_count + 1)
     end
 
-    scenario 'The "Create new team" link has a toggle effect' do
+    it 'The "Create new team" link has a toggle effect' do
       visit teams_path
       expect(page).to have_css(".toggle-link-new-team i.fa-plus-circle")
-      expect(page).to_not have_css(".toggle-link-new-team i.fa-minus-circle")
+      expect(page).not_to have_css(".toggle-link-new-team i.fa-minus-circle")
 
       find(".toggle-link-new-team").click
       wait_for_effect_on("#new-team-form")
 
-      expect(page).to_not have_css(".toggle-link-new-team i.fa-plus-circle")
+      expect(page).not_to have_css(".toggle-link-new-team i.fa-plus-circle")
       expect(page).to have_css(".toggle-link-new-team i.fa-minus-circle")
 
       find(".toggle-link-new-team").click
       wait_for_effect_on("#new-team-form")
 
       expect(page).to have_css(".toggle-link-new-team i.fa-plus-circle")
-      expect(page).to_not have_css(".toggle-link-new-team i.fa-minus-circle")
+      expect(page).not_to have_css(".toggle-link-new-team i.fa-minus-circle")
     end
 
-    scenario "The name of each team is a link" do
+    it "The name of each team is a link" do
       visit teams_path
 
       expect(page).to have_link(team.name)
@@ -81,7 +83,7 @@ feature "Teams support" do
       expect(page).to have_current_path(team_path(team))
     end
 
-    scenario "Disabled users do not count" do
+    it "Disabled users do not count" do
       user = create(:user)
       team.viewers = [user]
       team.save!
@@ -94,12 +96,12 @@ feature "Teams support" do
       visit teams_path
 
       expect(page).to have_css("td:nth-child(4)", text: "1")
-      expect(page).to_not have_css("td:nth-child(4)", text: "2")
+      expect(page).not_to have_css("td:nth-child(4)", text: "2")
     end
   end
 
   describe "teams#update" do
-    scenario "Team name can be updated", js: true do
+    it "Team name can be updated", js: true do
       visit team_path(team)
 
       click_button "Edit team"
@@ -121,11 +123,11 @@ feature "Teams support" do
     let!(:another) { create(:user) }
     let!(:another_admin) { create(:admin) }
 
-    before :each do
+    before do
       visit team_path(team)
     end
 
-    scenario "A namespace can be created from the team page", js: true do
+    it "A namespace can be created from the team page", js: true do
       namespaces_count = Namespace.count
 
       # The form appears after clicking the "Add namespace" link.
@@ -154,7 +156,7 @@ feature "Teams support" do
       expect(page).to have_current_path(namespace_path(namespace))
     end
 
-    scenario "Namespace table sorting is reachable through url", js: true do
+    it "Namespace table sorting is reachable through url", js: true do
       # sort asc
       visit team_path(team, ns_sort_asc: true)
 
@@ -176,7 +178,7 @@ feature "Teams support" do
       expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
     end
 
-    scenario "URL is updated when namespaces column is sorted", js: true do
+    it "URL is updated when namespaces column is sorted", js: true do
       # sort asc & created_at
       find(".namespaces-panel th:nth-child(4)").click
 
@@ -192,7 +194,7 @@ feature "Teams support" do
       expect(page).to have_current_path(path)
     end
 
-    scenario "Namespace table pagination is reachable through url", js: true do
+    it "Namespace table pagination is reachable through url", js: true do
       create_list(:namespace, 15, team: team, registry: registry)
 
       # page 2
@@ -206,7 +208,7 @@ feature "Teams support" do
       expect(page).to have_css(".namespaces-panel .pagination li.active:nth-child(2)")
     end
 
-    scenario "URL is updated when page is changed", js: true do
+    it "URL is updated when page is changed", js: true do
       create_list(:namespace, 15, team: team, registry: registry)
 
       visit team_path(team)
@@ -226,7 +228,7 @@ feature "Teams support" do
       expect(page).to have_current_path(team_path(team, ns_page: 1))
     end
 
-    scenario "An user can be added as a team member", js: true do
+    it "An user can be added as a team member", js: true do
       find("#add_team_user_btn").click
       find("#team_user_role").select "Contributor"
       find("#team_user_user").set another.username
@@ -240,7 +242,7 @@ feature "Teams support" do
       expect(page).to have_css(".team-users-wrapper tbody tr:last-child .role", text: "Contributor")
     end
 
-    scenario "An admin can only be added as a team owner", js: true do
+    it "An admin can only be added as a team owner", js: true do
       find("#add_team_user_btn").click
       find("#team_user_role").select "Contributor"
       find("#team_user_user").set another_admin.username
@@ -257,7 +259,7 @@ feature "Teams support" do
       expect(page).to have_css(".team-users-wrapper tbody tr:last-child .role", text: "Owner")
     end
 
-    scenario "New team members have to exist on the system", js: true do
+    it "New team members have to exist on the system", js: true do
       find("#add_team_user_btn").click
       find("#team_user_role").select "Contributor"
       find("#team_user_user").set "grumpy"
@@ -270,7 +272,7 @@ feature "Teams support" do
       expect(page).to have_content("User cannot be found")
     end
 
-    scenario "A team member can be kicked out from a team", js: true do
+    it "A team member can be kicked out from a team", js: true do
       tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles["viewer"])
       visit team_path(team)
 
@@ -284,7 +286,7 @@ feature "Teams support" do
       expect(page).to have_content("User '#{another.username}' was removed from the team")
     end
 
-    scenario "The only member of a team cannot be removed", js: true do
+    it "The only member of a team cannot be removed", js: true do
       find("#team_users .delete-team-user-btn").click
       find(".popover-content .btn-primary").click
 

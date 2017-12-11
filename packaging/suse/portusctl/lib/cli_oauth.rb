@@ -1,15 +1,19 @@
+# frozen_string_literal: true
+
 module CliOAuth
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/BlockLength
   def self.included(thor)
     thor.class_eval do
       option "oauth-google-oauth2-enable",
-        desc:    "OAuth: Google OAuth2 enable",
-        type:    :boolean,
-        default: false
+             desc:    "OAuth: Google OAuth2 enable",
+             type:    :boolean,
+             default: false
       option "oauth-google-oauth2-id", desc: "OAuth: Google OAuth2 id"
       option "oauth-google-oauth2-secret", desc: "OAuth: Google OAuth2 secret"
       option "oauth-google-oauth2-domain", desc: "OAuth: Google OAuth2 email's domain restriction"
       option "oauth-google-oauth2-options-hd",
-        desc: "OAuth: Google OAuth2 group (GSute) restriction"
+             desc: "OAuth: Google OAuth2 group (GSute) restriction"
       option "oauth-open-id-enable", desc: "OAuth: Open ID enable", type: :boolean, default: false
       option "oauth-open-id-identifier", desc: "OAuth: Open ID identifier"
       option "oauth-open-id-domain", desc: "OAuth: Open ID email's domain restriction"
@@ -26,11 +30,13 @@ module CliOAuth
       option "oauth-gitlab-domain", desc: "OAuth: Gitlab email's domain restriction"
       option "oauth-gitlab-server", desc: "OAuth: Gitlab server"
       option "oauth-bitbucket-enable",
-        desc: "OAuth: Bitbucket enable", type: :boolean, default: false
+             desc: "OAuth: Bitbucket enable", type: :boolean, default: false
       option "oauth-bitbucket-key", desc: "OAuth: Bitbucket key"
       option "oauth-bitbucket-secret", desc: "OAuth: Bitbucket secret"
       option "oauth-bitbucket-domain", desc: "OAuth: Bitbucket domain restriction"
       option "oauth-bitbucket-options-team", desc: "OAuth: Bitbucket team restriction"
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/BlockLength
 end

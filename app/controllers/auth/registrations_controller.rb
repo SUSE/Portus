@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class Auth::RegistrationsController < Devise::RegistrationsController
   layout "authentication", except: :edit
 
   include CheckLDAP
   include SessionFlash
 
-  before_action :check_signup, only: [:new, :create]
-  before_action :check_admin, only: [:new, :create]
+  before_action :check_signup, only: %i[new create]
+  before_action :check_admin, only: %i[new create]
   before_action :configure_sign_up_params, only: [:create]
   before_action :authenticate_user!, only: [:disable]
 
@@ -26,7 +28,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
       respond_with resource, location: after_sign_up_path_for(resource), float: true
     else
       redirect_to new_user_registration_path,
-        alert: resource.errors.full_messages
+                  alert: resource.errors.full_messages
     end
   end
 
@@ -47,10 +49,10 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
     if success
       redirect_to edit_user_registration_path,
-        notice: "Profile updated successfully!", float: true
+                  notice: "Profile updated successfully!", float: true
     else
       redirect_to edit_user_registration_path,
-        alert: resource.errors.full_messages, float: true
+                  alert: resource.errors.full_messages, float: true
     end
   end
 

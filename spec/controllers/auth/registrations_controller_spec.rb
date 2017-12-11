@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Auth::RegistrationsController do
   let(:valid_session) { {} }
 
   describe "POST #create" do
-    before :each do
+    before do
       request.env["devise.mapping"] = Devise.mappings[:user]
       APP_CONFIG["signup"] = { "enabled" => true }
     end
@@ -44,10 +46,9 @@ describe Auth::RegistrationsController do
   end
 
   describe "PUT #update" do
-
     let!(:user) { create(:admin) }
 
-    before :each do
+    before do
       request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in user
     end
@@ -103,20 +104,19 @@ describe Auth::RegistrationsController do
       }
       expect(User.find(user.id).valid_password?("test-password")).to be true
     end
-
   end
 
   describe "DELETE #destroy" do
     let!(:user) { create(:admin) }
 
-    before :each do
+    before do
       request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in user
     end
 
     it "does not allow the removal of users" do
       delete :destroy, id: user.id
-      expect(User.find(user.id)).to_not be nil
+      expect(User.find(user.id)).not_to be nil
     end
   end
 
@@ -126,7 +126,7 @@ describe Auth::RegistrationsController do
     let!(:admin) { create(:admin) }
     let!(:user) { create(:user) }
 
-    before :each do
+    before do
       request.env["devise.mapping"] = Devise.mappings[:user]
     end
 

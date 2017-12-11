@@ -1,4 +1,5 @@
 #!/usr/bin/env puma
+# frozen_string_literal: true
 
 # Set CConfig straight.
 ENV["CCONFIG_PREFIX"] = "PORTUS"

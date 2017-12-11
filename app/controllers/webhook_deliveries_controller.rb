@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # WebhookDeliveriesController manages the updates of webhook deliveries.
 class WebhookDeliveriesController < ApplicationController
   respond_to :html, :js

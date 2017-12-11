@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "portus/security_backends/clair"
 require "portus/security_backends/dummy"
 require "portus/security_backends/zypper"

@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Admin::ActivitiesController, type: :controller do
   let(:admin) { create(:admin) }
 
-  before :each do
+  before do
     sign_in admin
   end
 
   describe "GET #index" do
-    before :each do
+    before do
       create(:registry)
     end
 
@@ -46,7 +48,7 @@ RSpec.describe Admin::ActivitiesController, type: :controller do
     let(:global_repository) { create(:repository, name: "sles11sp3", namespace: global_namespace) }
     let(:global_tag) { create(:tag, name: "1.0.0", repository: global_repository) }
 
-    before :each do
+    before do
       Timecop.travel(Time.gm(2015, 1, 1))
       create(:activity_team_create,
              trackable_id: team.id,
@@ -135,7 +137,7 @@ CSV
 
     it "generates an CSV file with all the entries" do
       # Create activities way beyond a single page.
-      Array.new(50) { rand(1000..10000) }.uniq.each do |nr|
+      Array.new(50) { rand(1000..10_000) }.uniq.each do |nr|
         team = Team.new(name: "team#{nr}")
         team.owners << user
         team.save

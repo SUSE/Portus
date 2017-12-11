@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe SearchController, type: :controller do
@@ -5,7 +7,7 @@ RSpec.describe SearchController, type: :controller do
   let(:user)        { create(:user) }
   let(:team)        { create(:team, owners: [user]) }
 
-  before :each do
+  before do
     sign_in user
 
     namespace = create(:namespace, team: team, registry: registry)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "Namespaces::CreateService" do
@@ -11,7 +13,7 @@ describe "Namespaces::CreateService" do
       it "builds a new namespace object" do
         namespace = service.execute
 
-        expect(namespace.persisted?).to be_falsey
+        expect(namespace).not_to be_persisted
       end
     end
 

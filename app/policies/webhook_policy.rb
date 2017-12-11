@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebhookPolicy < NamespacePolicy
   attr_reader :webhook
 
@@ -44,9 +46,9 @@ class WebhookPolicy < NamespacePolicy
                      .where(
                        "(namespaces.visibility = :public OR namespaces.visibility = :protected OR "\
                        "team_users.user_id = :user_id) AND namespaces.global = :global",
-            public: Namespace.visibilities[:visibility_public],
-            protected: Namespace.visibilities[:visibility_protected], user_id: user.id,
-            global: false
+                       public: Namespace.visibilities[:visibility_public],
+                       protected: Namespace.visibilities[:visibility_protected], user_id: user.id,
+                       global: false
                      )
                      .pluck(:id)
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # SessionFlash adds the `session_flash` method which deals with flashy messages
 # on signup/login, while notifying users about their personal namespace.
 module SessionFlash
@@ -24,10 +26,11 @@ module SessionFlash
     ns = user.namespace.name
     str = " Your personal namespace is '#{ns}'"
     str += if user.username == ns
-      "."
-    else
-      " (your username was not a valid Docker namespace, so we had to tweak it)."
-    end
-    flash[:notice] << str
+             "."
+           else
+             " (your username was not a valid Docker namespace, " \
+             "so we had to tweak it)."
+           end
+    flash[:notice] += str
   end
 end

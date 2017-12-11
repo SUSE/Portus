@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RegistryRawEvent
   attr_accessor :action, :target, :request, :actor
 

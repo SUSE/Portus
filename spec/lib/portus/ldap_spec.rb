@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 class LdapMockAdapter
@@ -106,24 +108,24 @@ describe Portus::LDAP do
     }
   end
 
-  before :each do
-    allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_call_original
+  before do
+    allow_any_instance_of(described_class).to receive(:authenticate!).and_call_original
   end
 
   it "sets self.enabled? accordingly" do
-    expect(Portus::LDAP.enabled?).to be_falsey
+    expect(described_class).not_to be_enabled
 
     APP_CONFIG["ldap"] = {}
-    expect(Portus::LDAP.enabled?).to be_falsey
+    expect(described_class).not_to be_enabled
 
     APP_CONFIG["ldap"] = { "enabled" => "lala" }
-    expect(Portus::LDAP.enabled?).to be_falsey
+    expect(described_class).not_to be_enabled
 
     APP_CONFIG["ldap"] = { "enabled" => false }
-    expect(Portus::LDAP.enabled?).to be_falsey
+    expect(described_class).not_to be_enabled
 
     APP_CONFIG["ldap"] = { "enabled" => true }
-    expect(Portus::LDAP.enabled?).to be true
+    expect(described_class.enabled?).to be true
   end
 
   # Let's make code coverage happy
@@ -156,7 +158,7 @@ describe Portus::LDAP do
     lm = LdapMock.new(username: "name", password: "1234")
     cfg = lm.load_configuration_test
 
-    expect(cfg).to_not be nil
+    expect(cfg).not_to be nil
     expect(cfg.opts[:host]).to eq "hostname"
     expect(cfg.opts[:port]).to eq 389
     expect(cfg.opts[:encryption]).to be nil
@@ -226,7 +228,7 @@ describe Portus::LDAP do
       ]
     end
 
-    before :each do
+    before do
       APP_CONFIG["ldap"] = { "enabled" => true }
     end
 
@@ -243,7 +245,7 @@ describe Portus::LDAP do
       _, created = lm.find_or_create_user_test!
 
       expect(User.count).to eq 1
-      expect(User.find_by(username: "name")).to_not be nil
+      expect(User.find_by(username: "name")).not_to be nil
       expect(created).to be_truthy
     end
 

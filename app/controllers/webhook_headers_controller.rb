@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # WebhookHeadersController manages the creation/removal of webhook headers.
 class WebhookHeadersController < ApplicationController
   respond_to :html, :js

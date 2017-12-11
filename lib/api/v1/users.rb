@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module API
   module V1
+    # Users implements all the endpoints regarding users and application tokens.
     class Users < Grape::API
       version "v1", using: :path
 
@@ -12,32 +15,32 @@ module API
           resource :application_tokens do
             # List application tokens beloged to user with given :id.
             desc "Returns list of user's tokens.",
-              params:   API::Entities::Users.documentation.slice(:id),
-              is_array: true,
-              entity:   API::Entities::ApplicationTokens,
-              failure:  [
-                [401, "Authentication fails."],
-                [403, "Authorization fails."],
-                [404, "Not found."]
-              ]
+                 params:   API::Entities::Users.documentation.slice(:id),
+                 is_array: true,
+                 entity:   API::Entities::ApplicationTokens,
+                 failure:  [
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."],
+                   [404, "Not found."]
+                 ]
 
             get do
               user = User.find params[:id]
               present user.application_tokens,
-                with: API::Entities::ApplicationTokens
+                      with: API::Entities::ApplicationTokens
             end
 
             # Create application token for user with given :id.
             desc "Create user's token.",
-              params:   API::Entities::Users.documentation.slice(:id),
-              success:  { code: 200 },
-              entity:   API::Entities::ApplicationTokens,
-              failure:  [
-                [400, "Bad request.", API::Entities::ApiErrors],
-                [401, "Authentication fails."],
-                [403, "Authorization fails."]
-              ],
-              consumes: ["application/x-www-form-urlencoded", "application/json"]
+                 params:   API::Entities::Users.documentation.slice(:id),
+                 success:  { code: 200 },
+                 entity:   API::Entities::ApplicationTokens,
+                 failure:  [
+                   [400, "Bad request.", API::Entities::ApiErrors],
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."]
+                 ],
+                 consumes: ["application/x-www-form-urlencoded", "application/json"]
 
             params do
               requires :application, documentation: { desc: "Application name" }
@@ -63,11 +66,11 @@ module API
 
         resource :application_tokens do
           desc "Delete application token.",
-            failure: [
-              [401, "Authentication fails."],
-              [403, "Authorization fails."],
-              [404, "Not found."]
-            ]
+               failure: [
+                 [401, "Authentication fails."],
+                 [403, "Authorization fails."],
+                 [404, "Not found."]
+               ]
 
           params do
             requires :id, documentation: { desc: "Token id" }
@@ -82,22 +85,22 @@ module API
         end
 
         desc "Create new user.",
-          failure:  [
-            [400, "Bad request.", API::Entities::ApiErrors],
-            [401, "Authentication fails."],
-            [403, "Authorization fails."]
-          ],
-          consumes: ["application/x-www-form-urlencoded", "application/json"]
+             failure:  [
+               [400, "Bad request.", API::Entities::ApiErrors],
+               [401, "Authentication fails."],
+               [403, "Authorization fails."]
+             ],
+             consumes: ["application/x-www-form-urlencoded", "application/json"]
 
         params do
           requires :user, type: Hash do
             requires :all,
-              only:  [:username, :email],
-              using: API::Entities::Users.documentation.slice(:username, :email)
+                     only:  %i[username email],
+                     using: API::Entities::Users.documentation.slice(:username, :email)
             requires :password, type: String
             optional :all,
-              only:  [:display_name],
-              using: API::Entities::Users.documentation.slice(:display_name)
+                     only:  [:display_name],
+                     using: API::Entities::Users.documentation.slice(:display_name)
           end
         end
 
@@ -113,24 +116,24 @@ module API
 
         # Update user with given :id.
         desc "Update user.",
-          params:   API::Entities::Users.documentation.slice(:id),
-          failure:  [
-            [400, "Bad request.", API::Entities::ApiErrors],
-            [401, "Authentication fails."],
-            [403, "Authorization fails."],
-            [404, "Not found."]
-          ],
-          consumes: ["application/x-www-form-urlencoded", "application/json"]
+             params:   API::Entities::Users.documentation.slice(:id),
+             failure:  [
+               [400, "Bad request.", API::Entities::ApiErrors],
+               [401, "Authentication fails."],
+               [403, "Authorization fails."],
+               [404, "Not found."]
+             ],
+             consumes: ["application/x-www-form-urlencoded", "application/json"]
 
         params do
           requires :user, type: Hash do
             optional :all,
-              only:  [:username, :email],
-              using: API::Entities::Users.documentation.slice(:username, :email)
+                     only:  %i[username email],
+                     using: API::Entities::Users.documentation.slice(:username, :email)
             optional :password, type: String, desc: "Password"
             optional :all,
-              only:  [:display_name],
-              using: API::Entities::Users.documentation.slice(:display_name)
+                     only:  [:display_name],
+                     using: API::Entities::Users.documentation.slice(:display_name)
           end
         end
 
@@ -147,12 +150,12 @@ module API
 
         # Delete user with given :id.
         desc "Delete user.",
-          params:  API::Entities::Users.documentation.slice(:id),
-          failure: [
-            [401, "Authentication fails."],
-            [403, "Authorization fails."],
-            [404, "Not found."]
-          ]
+             params:  API::Entities::Users.documentation.slice(:id),
+             failure: [
+               [401, "Authentication fails."],
+               [403, "Authorization fails."],
+               [404, "Not found."]
+             ]
 
         delete ":id" do
           user = User.find(params[:id])
@@ -162,14 +165,14 @@ module API
         end
 
         desc "Returns list of users.",
-          tags:     ["users"],
-          detail:   "This will expose all users.",
-          is_array: true,
-          entity:   API::Entities::Users,
-          failure:  [
-            [401, "Authentication fails."],
-            [403, "Authorization fails."]
-          ]
+             tags:     ["users"],
+             detail:   "This will expose all users.",
+             is_array: true,
+             entity:   API::Entities::Users,
+             failure:  [
+               [401, "Authentication fails."],
+               [403, "Authorization fails."]
+             ]
 
         get do
           users = User.all
@@ -177,15 +180,14 @@ module API
         end
 
         route_param :id, type: String, requirements: { id: /.*/ } do
-
           # Find user by id or email and return.
           desc "Show user by id or email.",
-            entity:  API::Entities::Users,
-            failure: [
-              [401, "Authentication fails."],
-              [403, "Authorization fails."],
-              [404, "Not found."]
-            ]
+               entity:  API::Entities::Users,
+               failure: [
+                 [401, "Authentication fails."],
+                 [403, "Authorization fails."],
+                 [404, "Not found."]
+               ]
 
           params do
             requires :id, type: String, documentation: { desc: "User id or email." }

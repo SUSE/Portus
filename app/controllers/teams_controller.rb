@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class TeamsController < ApplicationController
   include ChangeNameDescription
 
-  before_action :set_team, only: [:show, :update, :typeahead]
+  before_action :set_team, only: %i[show update typeahead]
   after_action :verify_policy_scoped, only: :index
   respond_to :js, :html
 

@@ -1,5 +1,10 @@
+# frozen_string_literal: true
+
 module API
   module V1
+    # Repositories implements all the endpoints regarding repositories and some
+    # endpoints regarding tags that might be convenient to use as a
+    # sub-resource.
     class Repositories < Grape::API
       version "v1", using: :path
 
@@ -9,14 +14,14 @@ module API
         end
 
         desc "Returns list of repositories.",
-          tags:     ["repositories"],
-          detail:   "This will expose all repositories.",
-          is_array: true,
-          entity:   API::Entities::Repositories,
-          failure:  [
-            [401, "Authentication fails."],
-            [403, "Authorization fails."]
-          ]
+             tags:     ["repositories"],
+             detail:   "This will expose all repositories.",
+             is_array: true,
+             entity:   API::Entities::Repositories,
+             failure:  [
+               [401, "Authentication fails."],
+               [403, "Authorization fails."]
+             ]
 
         get do
           present policy_scope(Repository), with: API::Entities::Repositories
@@ -25,14 +30,14 @@ module API
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :tags do
             desc "Returns the list of the tags for the given repository.",
-              params:   API::Entities::Repositories.documentation.slice(:id),
-              is_array: true,
-              entity:   API::Entities::Tags,
-              failure:  [
-                [401, "Authentication fails."],
-                [403, "Authorization fails."],
-                [404, "Not found."]
-              ]
+                 params:   API::Entities::Repositories.documentation.slice(:id),
+                 is_array: true,
+                 entity:   API::Entities::Tags,
+                 failure:  [
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."],
+                   [404, "Not found."]
+                 ]
 
             get do
               repo = Repository.find params[:id]
@@ -41,14 +46,14 @@ module API
             end
 
             desc "Returns the list of the tags for the given repository groupped by digest.",
-              params:   API::Entities::Repositories.documentation.slice(:id),
-              is_array: true,
-              entity:   API::Entities::Tags,
-              failure:  [
-                [401, "Authentication fails."],
-                [403, "Authorization fails."],
-                [404, "Not found."]
-              ]
+                 params:   API::Entities::Repositories.documentation.slice(:id),
+                 is_array: true,
+                 entity:   API::Entities::Tags,
+                 failure:  [
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."],
+                   [404, "Not found."]
+                 ]
 
             get "/grouped" do
               repo = Repository.find params[:id]
@@ -83,12 +88,12 @@ module API
           end
 
           desc "Show repositories by id.",
-            entity:  API::Entities::Repositories,
-            failure: [
-              [401, "Authentication fails."],
-              [403, "Authorization fails."],
-              [404, "Not found."]
-            ]
+               entity:  API::Entities::Repositories,
+               failure: [
+                 [401, "Authentication fails."],
+                 [403, "Authorization fails."],
+                 [404, "Not found."]
+               ]
 
           params do
             requires :id, type: String, documentation: { desc: "Repository ID." }

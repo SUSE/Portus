@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "integration/helper"
 require "portus/registry_client"
 
@@ -34,7 +36,7 @@ end
 integration "Client" do
   it "tells that a registry is reachable" do
     client = Portus::RegistryClient.new(registry_hostname)
-    expect(client.reachable?).to be_truthy
+    expect(client).to be_reachable
   end
 
   it "fetches the catalog of pushed repositories" do
@@ -60,8 +62,8 @@ integration "Client" do
     client = Portus::RegistryClient.new(registry_hostname)
     manifest = client.manifest("registre", "2.3.1")
 
-    expect(manifest[0]).to_not be_empty
-    expect(manifest[1]).to_not be_empty
+    expect(manifest[0]).not_to be_empty
+    expect(manifest[1]).not_to be_empty
     expect(manifest[2]["schemaVersion"]).to eq 2
   end
 

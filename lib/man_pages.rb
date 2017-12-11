@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # :nocov:
 require "md2man/roff/engine"
 
@@ -5,10 +7,10 @@ require "md2man/roff/engine"
 # different places.
 class ManPages
   # The path were the markdown files are being stored.
-  MARKDOWN_PATH = "packaging/suse/portusctl/man/markdown".freeze
+  MARKDOWN_PATH = "packaging/suse/portusctl/man/markdown"
 
   # The path were the resulting man pages are being stored.
-  MAN_PATH = "packaging/suse/portusctl/man/man1".freeze
+  MAN_PATH = "packaging/suse/portusctl/man/man1"
 
   def initialize
     @markdown_files = Dir.glob(Rails.root.join(MARKDOWN_PATH, "*.md"))
@@ -22,7 +24,7 @@ class ManPages
   # Returns the name and the path of the corresponding man page of the given
   # markdown file.
   def corresponding_man(file)
-    name = file.match(/\/([\w-]+)\.md/)[1]
+    name = file.match(%r{/([\w-]+)\.md})[1]
     path = Rails.root.join(MAN_PATH, "#{name}.1")
     [name, path]
   end

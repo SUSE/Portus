@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Auth::OmniauthCallbacksController do
@@ -14,16 +16,16 @@ describe Auth::OmniauthCallbacksController do
       it "redirect to /users/sign_in" do
         get :google_oauth2
         expect(response).to redirect_to new_user_session_url
-        expect(subject.current_user).to eql nil
+        expect(subject.current_user).to be nil
       end
     end
 
     context "when got data from provider," do
       before do
         OmniAuth.config.add_mock(:google_oauth2,
-                                provider: "google_oauth2",
-                                uid:      "12345",
-                                info:     { email: "test@mail.net" })
+                                 provider: "google_oauth2",
+                                 uid:      "12345",
+                                 info:     { email: "test@mail.net" })
         request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
       end
 
@@ -37,7 +39,7 @@ describe Auth::OmniauthCallbacksController do
           create :user, email: "test@mail.net"
           get :google_oauth2
           expect(response).to redirect_to authenticated_root_url
-          expect(subject.current_user).to_not eq(nil)
+          expect(subject.current_user).not_to eq(nil)
         end
       end
 
@@ -52,7 +54,7 @@ describe Auth::OmniauthCallbacksController do
           APP_CONFIG["oauth"]["google_oauth2"]["domain"] = "domain.net"
           get :google_oauth2
           expect(response).to redirect_to new_user_session_url
-          expect(subject.current_user).to eql nil
+          expect(subject.current_user).to be nil
         end
       end
     end
@@ -62,9 +64,9 @@ describe Auth::OmniauthCallbacksController do
     before do
       APP_CONFIG["oauth"] = { "open_id" => { "domain" => "" } }
       OmniAuth.config.add_mock(:open_id,
-        provider: "open_id",
-        uid:      "12345",
-        info:     { email: "test@mail.net" })
+                               provider: "open_id",
+                               uid:      "12345",
+                               info:     { email: "test@mail.net" })
       request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:open_id]
     end
 
@@ -72,7 +74,7 @@ describe Auth::OmniauthCallbacksController do
       create :user, email: "test@mail.net"
       get :open_id
       expect(response).to redirect_to authenticated_root_url
-      expect(subject.current_user).to_not eq(nil)
+      expect(subject.current_user).not_to eq(nil)
     end
   end
 
@@ -85,10 +87,10 @@ describe Auth::OmniauthCallbacksController do
       } }
 
       OmniAuth.config.add_mock(:github,
-        provider:    "github",
-        uid:         "12345",
-        credentials: { token: "1234567890" },
-        info:        { email: "test@mail.net" })
+                               provider:    "github",
+                               uid:         "12345",
+                               credentials: { token: "1234567890" },
+                               info:        { email: "test@mail.net" })
       request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:github]
       create :user, email: "test@mail.net"
     end
@@ -96,7 +98,7 @@ describe Auth::OmniauthCallbacksController do
     it "with team and organization aren't setted, sign in and redirect to /" do
       get :github
       expect(response).to redirect_to authenticated_root_url
-      expect(subject.current_user).to_not eql nil
+      expect(subject.current_user).not_to eql nil
     end
 
     context "with organization is setted and team isn't setted," do
@@ -106,7 +108,7 @@ describe Auth::OmniauthCallbacksController do
           get :github
         end
         expect(response).to redirect_to authenticated_root_url
-        expect(subject.current_user).to_not eql nil
+        expect(subject.current_user).not_to eql nil
       end
 
       it "when organization doesn't match, redirect to /users/sign_in" do
@@ -115,7 +117,7 @@ describe Auth::OmniauthCallbacksController do
           get :github
         end
         expect(response).to redirect_to new_user_session_url
-        expect(subject.current_user).to eql nil
+        expect(subject.current_user).to be nil
       end
     end
 
@@ -127,7 +129,7 @@ describe Auth::OmniauthCallbacksController do
           get :github
         end
         expect(response).to redirect_to authenticated_root_url
-        expect(subject.current_user).to_not eql nil
+        expect(subject.current_user).not_to eql nil
       end
 
       it "when organization matches but team doesn't match, redirect to /users/sign_in" do
@@ -137,7 +139,7 @@ describe Auth::OmniauthCallbacksController do
           get :github
         end
         expect(response).to redirect_to new_user_session_url
-        expect(subject.current_user).to eql nil
+        expect(subject.current_user).to be nil
       end
 
       it "when team matches but organization doen't match, redirect to /users/sign_in" do
@@ -147,7 +149,7 @@ describe Auth::OmniauthCallbacksController do
           get :github
         end
         expect(response).to redirect_to new_user_session_url
-        expect(subject.current_user).to eql nil
+        expect(subject.current_user).to be nil
       end
     end
   end
@@ -156,10 +158,10 @@ describe Auth::OmniauthCallbacksController do
     before do
       APP_CONFIG["oauth"] = { "gitlab" => { "domain" => "", "group" => "" } }
       OmniAuth.config.add_mock(:gitlab,
-        provider:    "gitlab",
-        uid:         "12345",
-        credentials: { token: "1234567890" },
-        info:        { email: "test@mail.net" })
+                               provider:    "gitlab",
+                               uid:         "12345",
+                               credentials: { token: "1234567890" },
+                               info:        { email: "test@mail.net" })
       request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:gitlab]
       create :user, email: "test@mail.net"
     end
@@ -171,7 +173,7 @@ describe Auth::OmniauthCallbacksController do
           get :gitlab
         end
         expect(response).to redirect_to authenticated_root_url
-        expect(subject.current_user).to_not eql nil
+        expect(subject.current_user).not_to eql nil
       end
 
       it "when group not match, redirect to /users/sign_in" do
@@ -180,14 +182,14 @@ describe Auth::OmniauthCallbacksController do
           get :gitlab
         end
         expect(response).to redirect_to new_user_session_url
-        expect(subject.current_user).to eql nil
+        expect(subject.current_user).to be nil
       end
     end
 
     it "when group isn't setted, sign in and redirect to /" do
       get :gitlab
       expect(response).to redirect_to authenticated_root_url
-      expect(subject.current_user).to_not eql nil
+      expect(subject.current_user).not_to eql nil
     end
   end
 
@@ -198,10 +200,10 @@ describe Auth::OmniauthCallbacksController do
         "team"   => ""
       } }
       OmniAuth.config.add_mock(:gitlab,
-        provider:    "bitbucket",
-        uid:         "12345",
-        credentials: { token: "1234567890" },
-        info:        { email: "test@mail.net" })
+                               provider:    "bitbucket",
+                               uid:         "12345",
+                               credentials: { token: "1234567890" },
+                               info:        { email: "test@mail.net" })
       request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:gitlab]
       create :user, email: "test@mail.net"
     end
@@ -211,7 +213,7 @@ describe Auth::OmniauthCallbacksController do
         APP_CONFIG["oauth"]["bitbucket"]["team"] = "atlant-service"
         get :bitbucket
         expect(response).to redirect_to authenticated_root_url
-        expect(subject.current_user).to_not eql nil
+        expect(subject.current_user).not_to eql nil
       end
     end
   end

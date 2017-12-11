@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class RepositoriesController < ApplicationController
   include Deletable
 
-  before_action :set_repository, only: [:show, :destroy, :toggle_star]
+  before_action :set_repository, only: %i[show destroy toggle_star]
 
   # GET /repositories
   # GET /repositories.json
@@ -50,7 +52,7 @@ class RepositoriesController < ApplicationController
     else
       @repository.delete_and_update!(current_user)
       redirect_to namespace_path(@repository.namespace),
-        notice: "Repository removed with all its tags", float: true
+                  notice: "Repository removed with all its tags", float: true
     end
   end
 

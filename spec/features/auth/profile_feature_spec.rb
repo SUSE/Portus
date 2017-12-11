@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Update password feature" do
+describe "Update password feature" do
   let!(:user) { create(:admin) }
 
   before do
@@ -10,7 +12,7 @@ feature "Update password feature" do
 
   # Changing the email
 
-  scenario "It enables the button if the user pressed a key", js: true do
+  it "enables the button if the user pressed a key", js: true do
     # Change the contents and see that it gets enabled.
     expect(page).to have_button("Update", disabled: true)
     fill_in "Email", with: "another@example.com"
@@ -23,19 +25,19 @@ feature "Update password feature" do
     expect(find("#user_email").value).to eq "another@example.com"
   end
 
-  scenario "It disables the 'Update' button if email becomes empty", js: true do
+  it "disables the 'Update' button if email becomes empty", js: true do
     expect(page).to have_button("Update", disabled: true)
     fill_in "Email", with: ""
     expect(page).to have_button("Update", disabled: true)
   end
 
-  scenario "It enables the 'Update' button if email != empty", js: true do
+  it "enables the 'Update' button if email != empty", js: true do
     expect(page).to have_button("Update", disabled: true)
     fill_in "Email", with: "email@email.com"
     expect(page).to have_button("Update")
   end
 
-  scenario "It disables the 'Update' button if email == original value", js: true do
+  it "disables the 'Update' button if email == original value", js: true do
     expect(page).to have_button("Update", disabled: true)
     fill_in "Email", with: "email@email.com"
     expect(page).to have_button("Update")
@@ -43,7 +45,7 @@ feature "Update password feature" do
     expect(page).to have_button("Update", disabled: true)
   end
 
-  scenario "It keeps the 'Update' button disabled if no changes", js: true do
+  it "keeps the 'Update' button disabled if no changes", js: true do
     expect(page).to have_button("Update", disabled: true)
   end
 
@@ -53,15 +55,15 @@ feature "Update password feature" do
       visit edit_user_registration_path
     end
 
-    scenario "It shows display name field", js: true do
+    it "shows display name field", js: true do
       expect(page).to have_content("Display name")
     end
 
-    scenario "It keeps the 'Update' button disabled if no changes", js: true do
+    it "keeps the 'Update' button disabled if no changes", js: true do
       expect(page).to have_button("Update", disabled: true)
     end
 
-    scenario "It enables the 'Update' button if display name != original value", js: true do
+    it "enables the 'Update' button if display name != original value", js: true do
       expect(page).to have_button("Update", disabled: true)
       fill_in "Display name", with: "name"
       expect(page).to have_button("Update")
@@ -78,7 +80,7 @@ feature "Update password feature" do
 
   # Changing the password
 
-  scenario "It enables/disables the submit button properly", js: true do
+  it "enables/disables the submit button properly", js: true do
     # By default it's disabled.
     expect(page).to have_button("Change", disabled: true)
 
@@ -103,7 +105,7 @@ feature "Update password feature" do
 
   # Disabling user
 
-  scenario "It disables the current user", js: true do
+  it "disables the current user", js: true do
     create(:admin)
     visit edit_user_registration_path
 
@@ -112,7 +114,7 @@ feature "Update password feature" do
     expect(page).to have_content("Login")
   end
 
-  scenario 'The "disable" pannel does not exists if it\'s the only admin' do
-    expect(page).to_not have_css("#disable-form")
+  it 'The "disable" pannel does not exists if it\'s the only admin' do
+    expect(page).not_to have_css("#disable-form")
   end
 end

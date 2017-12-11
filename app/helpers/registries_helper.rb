@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RegistriesHelper
   # Render registry status icon
   def registry_status_icon(registry)
@@ -5,7 +7,7 @@ module RegistriesHelper
     msg   = error.empty? ? "Reachable" : error
     time  = Time.now.getlocal.to_s(:rfc822)
     icon  = "chain"
-    icon << "-broken" unless error.empty?
+    icon += "-broken" unless error.empty?
 
     title = "#{msg} - Checked at #{time}"
 

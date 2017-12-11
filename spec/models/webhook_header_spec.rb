@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: webhook_headers
@@ -20,6 +22,6 @@ require "rails_helper"
 RSpec.describe WebhookHeader, type: :model do
   subject { create(:webhook_header, webhook: create(:webhook)) }
 
-  it { should belong_to(:webhook) }
-  it { should validate_uniqueness_of(:name).scoped_to(:webhook_id) }
+  it { is_expected.to belong_to(:webhook) }
+  it { is_expected.to validate_uniqueness_of(:name).scoped_to(:webhook_id) }
 end

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Help page" do
+describe "Help page" do
   describe "API documentation support" do
     let!(:registry) { create(:registry) }
     let!(:user)     { create(:admin)    }
@@ -9,7 +11,7 @@ feature "Help page" do
       login_as user, scope: :user
     end
 
-    scenario "A user can go to the API documentation", js: true do
+    it "A user can go to the API documentation", js: true do
       visit help_index_path
       click_link("API Documentation")
 

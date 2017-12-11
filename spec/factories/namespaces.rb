@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: namespaces
@@ -25,7 +27,7 @@ FactoryGirl.define do
       "namespace#{n}"
     end
 
-    visibility Namespace.visibilities[:visibility_private]
+    visibility { Namespace.visibilities[:visibility_private] }
     registry { association(:registry) }
   end
 end

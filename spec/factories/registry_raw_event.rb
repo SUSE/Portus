@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../support/models/registry_raw_event"
 
 # Docker Registry v2: Push Notifications

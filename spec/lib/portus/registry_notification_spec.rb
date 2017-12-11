@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Portus::RegistryNotification do
@@ -54,8 +56,10 @@ describe Portus::RegistryNotification do
   end
 
   # This is a real even notification as given by docker distribution v2.3
-  # rubocop:disable Metrics/LineLength
   let(:version23) do
+    sha = "sha256:b9c8a3839b2754e0fc4309e0f994f617d43814996805388e2f9d977db3fa7967"
+    ua  = "docker/1.9.1 go/go1.5.2 git-commit/a34a1d5 kernel/4.4.0-1-default os/linux arch/amd64"
+
     {
       "id"        => "7dc1c55c-dfe2-4699-ab0b-8f32e89882ce",
       "timestamp" => "2016-02-05T11:16:14.917994087+01:00",
@@ -66,14 +70,14 @@ describe Portus::RegistryNotification do
         "digest"     => "sha256:b9c8a3839b2754e0fc4309e0f994f617d43814996805388e2f9d977db3fa7967",
         "length"     => 2739,
         "repository" => "mssola/lala",
-        "url"        => "https://registry.mssola.cat:5000/v2/mssola/lala/manifests/sha256:b9c8a3839b2754e0fc4309e0f994f617d43814996805388e2f9d977db3fa7967"
+        "url"        => "https://registry.mssola.cat:5000/v2/mssola/lala/manifests/#{sha}"
       },
       "request"   => {
         "id"        => "e30471d8-39c3-41c0-abc2-775ed43e81c9",
         "addr"      => "127.0.0.1:54032",
         "host"      => "registry.mssola.cat:5000",
         "method"    => "PUT",
-        "useragent" => "docker/1.9.1 go/go1.5.2 git-commit/a34a1d5 kernel/4.4.0-1-default os/linux arch/amd64"
+        "useragent" => ua
       },
       "actor"     => {
         "name" => "mssola"
@@ -84,7 +88,6 @@ describe Portus::RegistryNotification do
       }
     }
   end
-  # rubocop:enable Metrics/LineLength
 
   it "processes all the relevant events" do
     body["events"] << relevant
@@ -93,21 +96,21 @@ describe Portus::RegistryNotification do
     expect(Repository).to receive(:handle_push_event).with(relevant)
     expect(Repository).to receive(:handle_delete_event).with(delete)
     expect(Repository).to receive(:handle_push_event).with(version23)
-    Portus::RegistryNotification.process!(body, Repository)
+    described_class.process!(body, Repository)
   end
 
   it "does not process the same event multiple times" do
     body["events"] = [version23]
     expect(Repository).to receive(:handle_push_event).with(version23)
-    Portus::RegistryNotification.process!(body, Repository)
+    described_class.process!(body, Repository)
 
     expect(RegistryEvent.count).to eq 1
     event = RegistryEvent.find_by(event_id: version23["id"])
     expect(event.event_id).to eq version23["id"]
     expect(event.repository).to eq version23["target"]["repository"]
 
-    expect(Repository).to_not receive(:handle_push_event).with(version23)
-    Portus::RegistryNotification.process!(body, Repository)
+    expect(Repository).not_to receive(:handle_push_event).with(version23)
+    described_class.process!(body, Repository)
 
     expect(RegistryEvent.count).to eq 1
   end

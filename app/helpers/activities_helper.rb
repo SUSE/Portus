@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Common methods for activities used in other helpers.
 module ActivitiesHelper
   # Returns a string containing the username of the owner of the activity.

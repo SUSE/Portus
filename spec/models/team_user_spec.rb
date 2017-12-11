@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: team_users
@@ -49,8 +51,8 @@ describe TeamUser do
   end
 
   it "checks whether it's the only owner or not" do
-    expect(team.team_users.first.only_owner?).to be_falsey
+    expect(team.team_users.first).not_to be_only_owner
     team1 = create(:team, owners: [user1])
-    expect(team1.team_users.first.only_owner?).to be_truthy
+    expect(team1.team_users.first).to be_only_owner
   end
 end

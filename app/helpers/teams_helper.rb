@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TeamsHelper
   def can_manage_team?(team)
     current_user.admin? || (team.owners.exists?(current_user.id) &&

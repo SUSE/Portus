@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 # Helper for the tests on the database that simply calls :health and returns the
@@ -61,7 +63,7 @@ describe API::V1::Health do
     end
 
     describe "Clair enabled" do
-      before :each do
+      before do
         APP_CONFIG["security"]["clair"]["server"] = "http://registry.mssola.cat"
         APP_CONFIG["security"]["clair"]["health_port"] = "6061"
         create(:registry, hostname: "registry.mssola.cat", use_ssl: true)

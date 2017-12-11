@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Concern which has methods dealing with headers that might be interesting for
 # controllers deriving directly from ActionController::Base.
 module Headers

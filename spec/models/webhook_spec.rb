@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: webhooks
@@ -22,19 +24,20 @@ require "rails_helper"
 
 RSpec.describe Webhook, type: :model do
   subject { create(:webhook, namespace: create(:namespace)) }
-  let!(:request_methods) { ["GET", "POST"] }
+
+  let!(:request_methods) { %w[GET POST] }
   let!(:content_types) { ["application/json", "application/x-www-form-urlencoded"] }
 
-  it { should have_many(:headers) }
-  it { should have_many(:deliveries) }
-  it { should belong_to(:namespace) }
+  it { is_expected.to have_many(:headers) }
+  it { is_expected.to have_many(:deliveries) }
+  it { is_expected.to belong_to(:namespace) }
 
-  it { should validate_presence_of(:url) }
-  it { should_not allow_value("won't work").for(:url) }
-  it { should define_enum_for(:request_method) }
-  it { should allow_value(*request_methods).for(:request_method) }
-  it { should define_enum_for(:content_type) }
-  it { should allow_value(*content_types).for(:content_type) }
+  it { is_expected.to validate_presence_of(:url) }
+  it { is_expected.not_to allow_value("won't work").for(:url) }
+  it { is_expected.to define_enum_for(:request_method) }
+  it { is_expected.to allow_value(*request_methods).for(:request_method) }
+  it { is_expected.to define_enum_for(:content_type) }
+  it { is_expected.to allow_value(*content_types).for(:content_type) }
 
   describe "push and delete events" do
     let!(:registry)  { create(:registry) }
@@ -49,7 +52,7 @@ RSpec.describe Webhook, type: :model do
       }
     end
 
-    before :each do
+    before do
       stub_request(:POST, "username:password@www.example.com")
         .to_return(status: 200)
       stub_request(:POST, "www.example.com").to_return(status: 200)
@@ -64,7 +67,7 @@ RSpec.describe Webhook, type: :model do
         create(:webhook_header, webhook: webhook_auth, name: "foo", value: "bar")
       end
 
-      it "should work when given user credentials" do
+      it "works when given user credentials" do
         Webhook.handle_push_event(event)
         delivery = WebhookDelivery.find_by(webhook: webhook_auth)
         expect(delivery.status).to eq 200
@@ -76,7 +79,7 @@ RSpec.describe Webhook, type: :model do
         expect(JSON.parse(delivery.request_body)).to eq event
       end
 
-      it "should work when providing no user credentials" do
+      it "works when providing no user credentials" do
         Webhook.handle_push_event(event)
         delivery = WebhookDelivery.find_by(webhook: webhook_noauth)
         expect(delivery.status).to eq 200
@@ -88,14 +91,14 @@ RSpec.describe Webhook, type: :model do
         expect(JSON.parse(delivery.request_body)).to eq event
       end
 
-      it "should fail in the given namespace cannot be found" do
+      it "fails in the given namespace cannot be found" do
         event["target"]["repository"] = "unknown_namespace/unknown_repo"
         expect(Webhook.handle_push_event(event)).to be nil
         expect(Webhook.handle_delete_event(event)).to be nil
       end
     end
 
-    it "should skip disabled webhooks" do
+    it "skips disabled webhooks" do
       Webhook.handle_push_event(event)
       expect(WebhookDelivery.all).to be_empty
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: registries
@@ -59,35 +61,6 @@ class RegistryMock < Registry
   end
 end
 
-# The mock client used by the RegistryReachable class.
-class RegistryReachableClient < Registry
-  def initialize(constant, result)
-    @constant = constant
-    @result   = result
-  end
-
-  def reachable?
-    raise @constant unless @constant.nil?
-    @result
-  end
-end
-
-# A Mock class for the Registry that provides a `client` method that returns an
-# object that handles the `reachable?` method.
-class RegistryReachable < Registry
-  attr_reader :use_ssl
-
-  def initialize(constant, result, ssl)
-    @constant = constant
-    @result   = result
-    @use_ssl  = ssl
-  end
-
-  def client
-    RegistryReachableClient.new(@constant, @result)
-  end
-end
-
 def create_empty_namespace
   owner = create(:user)
   team = create(:team, owners: [owner])
@@ -95,7 +68,7 @@ def create_empty_namespace
 end
 
 describe Registry, type: :model do
-  it { should have_many(:namespaces) }
+  it { is_expected.to have_many(:namespaces) }
 
   describe "after_create" do
     it "creates namespaces after_create" do
@@ -136,21 +109,31 @@ describe Registry, type: :model do
 
   # rubocop: disable Metrics/LineLength
   describe "#reachable" do
+    after :each do
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:perform_request).and_call_original
+    end
+
     it "returns the proper message for each scenario" do
+      GOOD_RESPONSE = OpenStruct.new(code: 401)
+
       [
-        [nil, true, true, /^$/],
-        [nil, false, true, /registry does not implement v2/],
-        [SocketError, true, true, /The given registry is not available/],
-        [Errno::ETIMEDOUT, true, true, /connection timed out/],
-        [Net::OpenTimeout, true, true, /connection timed out/],
-        [Net::HTTPBadResponse, true, true, /wrong with your SSL configuration/],
-        [Net::HTTPBadResponse, true, false, /Error: not using SSL/],
-        [OpenSSL::SSL::SSLError, true, true, /SSL error while communicating with the registry, check the server logs for more details./],
-        [OpenSSL::SSL::SSLError, true, false, /SSL error while communicating with the registry, check the server logs for more details./],
-        [StandardError, true, true, /something went wrong/]
+        [nil, GOOD_RESPONSE, true, /^$/],
+        [nil, nil, true, /registry does not implement v2/],
+        [SocketError, GOOD_RESPONSE, true, /connection refused/],
+        [Errno::ECONNREFUSED, GOOD_RESPONSE, true, /connection refused/],
+        [Errno::ETIMEDOUT, GOOD_RESPONSE, true, /connection timed out/],
+        [Net::OpenTimeout, GOOD_RESPONSE, true, /connection timed out/],
+        [Net::HTTPBadResponse, GOOD_RESPONSE, true, /wrong with your SSL config/],
+        [OpenSSL::SSL::SSLError, GOOD_RESPONSE, true, /SSL error while communicating with the registry/],
+        [OpenSSL::SSL::SSLError, GOOD_RESPONSE, false, /SSL error while communicating with the registry/],
+        [StandardError, GOOD_RESPONSE, true, /something went wrong/]
       ].each do |cs|
-        rr = RegistryReachable.new(cs.first, cs[1], cs[2])
-        expect(rr.reachable?).to match(cs.last)
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:perform_request) do
+          raise cs.first if cs.first
+          cs[1]
+        end
+        r = Registry.new(hostname: "something", name: "test", use_ssl: cs[2])
+        expect(r.reachable?).to match(cs.last)
       end
     end
   end
@@ -182,9 +165,9 @@ describe Registry, type: :model do
       # Differentiate between global & local namespace
 
       ret = mock.get_tag_from_target_test(create_empty_namespace,
-                                           "busybox",
-                                           "application/vnd.docker.distribution.manifest.v2+json",
-                                           "sha:1234")
+                                          "busybox",
+                                          "application/vnd.docker.distribution.manifest.v2+json",
+                                          "sha:1234")
       expect(ret).to eq "latest"
     end
 
@@ -216,9 +199,9 @@ describe Registry, type: :model do
       expect(Rails.logger).to receive(:info).with(/Reason: Some message/)
 
       ret = mock.get_tag_from_target_test(create_empty_namespace,
-                                           "busybox",
-                                           "application/vnd.docker.distribution.manifest.v2+json",
-                                           "sha:1234")
+                                          "busybox",
+                                          "application/vnd.docker.distribution.manifest.v2+json",
+                                          "sha:1234")
       expect(ret).to be_nil
     end
 

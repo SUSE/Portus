@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe API::V1::Namespaces do
@@ -25,7 +27,7 @@ describe API::V1::Namespaces do
            viewers:      [viewer])
   end
 
-  before :each do
+  before do
     @admin_header       = build_token_header(admin_token)
     @owner_header       = build_token_header(owner_token)
     @contributor_header = build_token_header(contributor_token)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 # The RegistryClient defaults to the "portus" user if no credentials were
@@ -7,18 +9,6 @@ class RegistryClientMissingCredentials < Portus::RegistryClient
     super(host)
     @username = nil
     @password = nil
-  end
-end
-
-# This class mocks a response object by providing the `code` method. This
-# method will return whatever has been passed in the initializer.
-class RegistryMockedStatusResponse
-  def initialize(status)
-    @status = status
-  end
-
-  def code
-    @status
   end
 end
 
@@ -33,7 +23,7 @@ class RegistryPerformRequest < Portus::RegistryClient
     # We don't care about the given parameters.
 
     return nil if @status.nil?
-    RegistryMockedStatusResponse.new(@status)
+    OpenStruct.new(code: @status)
   end
 end
 
@@ -56,7 +46,7 @@ describe Portus::RegistryClient do
       VCR.turned_off do
         WebMock.disable_net_connect!
         s = stub_request(:get, "https://#{registry_server}/v2/")
-        registry = Portus::RegistryClient.new(registry_server, true)
+        registry = described_class.new(registry_server, true)
         registry.perform_request("")
         expect(s).to have_been_requested
       end
@@ -80,7 +70,7 @@ describe Portus::RegistryClient do
     let(:path) { "" }
 
     it "can obtain an authentication token" do
-      registry = Portus::RegistryClient.new(
+      registry = described_class.new(
         registry_server,
         false,
         username,
@@ -94,7 +84,7 @@ describe Portus::RegistryClient do
     end
 
     it "raise an exception when the user credentials are wrong" do
-      registry = Portus::RegistryClient.new(
+      registry = described_class.new(
         registry_server,
         false,
         username,
@@ -109,7 +99,7 @@ describe Portus::RegistryClient do
     end
 
     it "raises an AuthorizationError when the credentials are always wrong" do
-      registry = Portus::RegistryClient.new(
+      registry = described_class.new(
         registry_server,
         false,
         username,
@@ -137,7 +127,7 @@ describe Portus::RegistryClient do
     end
 
     it "raises a NoBearerRealmException when the bearer realm is not found" do
-      registry = Portus::RegistryClient.new(
+      registry = described_class.new(
         registry_server,
         false,
         username,
@@ -160,7 +150,7 @@ describe Portus::RegistryClient do
     end
 
     it "raises a NoBearerRealmException when the bearer realm is not found" do
-      registry = Portus::RegistryClient.new(
+      registry = described_class.new(
         registry_server,
         false,
         username,
@@ -198,7 +188,7 @@ describe Portus::RegistryClient do
 
     it "authenticates and fetches the image manifest" do
       VCR.use_cassette("registry/get_image_manifest", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           username,
@@ -213,7 +203,7 @@ describe Portus::RegistryClient do
 
     it "fails if the image is not found" do
       VCR.use_cassette("registry/get_missing_image_manifest", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           username,
@@ -227,7 +217,7 @@ describe Portus::RegistryClient do
     end
 
     it "raises an exception when the return code is different from 200 or 401" do
-      registry = Portus::RegistryClient.new(
+      registry = described_class.new(
         registry_server,
         false,
         username,
@@ -243,7 +233,7 @@ describe Portus::RegistryClient do
 
           expect do
             registry.manifest(repository, tag)
-          end.to raise_error(RuntimeError)
+          end.to raise_error(::Portus::RegistryClient::ManifestError)
         end
       ensure
         WebMock.allow_net_connect!
@@ -257,7 +247,7 @@ describe Portus::RegistryClient do
       create(:admin, username: "portus")
 
       VCR.use_cassette("registry/get_registry_catalog", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",
@@ -284,7 +274,7 @@ describe Portus::RegistryClient do
             .to_return(body: "{\"name\": \"busybox#{i}\", \"tags\":[\"latest\"]} ", status: 200)
         end
 
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",
@@ -301,7 +291,7 @@ describe Portus::RegistryClient do
       create(:admin, username: "portus")
 
       VCR.use_cassette("registry/get_registry_one_fails", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",
@@ -317,7 +307,7 @@ describe Portus::RegistryClient do
 
     it "fails if this version of registry does not implement /v2/_catalog" do
       VCR.use_cassette("registry/get_missing_catalog_endpoint", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           username,
@@ -331,7 +321,7 @@ describe Portus::RegistryClient do
     end
 
     it "raises an exception when the return code is different from 200 or 401" do
-      registry = Portus::RegistryClient.new(
+      registry = described_class.new(
         registry_server,
         false,
         username,
@@ -367,7 +357,7 @@ describe Portus::RegistryClient do
       create(:admin, username: "portus")
 
       VCR.use_cassette("registry/catalog_lots_of_tags", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",
@@ -383,7 +373,7 @@ describe Portus::RegistryClient do
   context "deleting a blob from an image" do
     it "deleting a blob that does not exist" do
       VCR.use_cassette("registry/delete_missing_blob", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",
@@ -399,7 +389,7 @@ describe Portus::RegistryClient do
 
     it "deleting blobs is not enabled on the server" do
       VCR.use_cassette("registry/delete_disabled", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",
@@ -415,7 +405,7 @@ describe Portus::RegistryClient do
 
     it "allows the deletion of blobs" do
       VCR.use_cassette("registry/delete_blob", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",
@@ -430,7 +420,7 @@ describe Portus::RegistryClient do
 
     it "does what we expect on a Bad Request" do
       VCR.use_cassette("registry/invalid_delete_blob", record: :none) do
-        registry = Portus::RegistryClient.new(
+        registry = described_class.new(
           registry_server,
           false,
           "portus",

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe NamespacePolicy do
@@ -23,7 +25,7 @@ describe NamespacePolicy do
     )
   end
 
-  before :each do
+  before do
     @admin = create(:admin)
   end
 
@@ -41,7 +43,7 @@ describe NamespacePolicy do
     end
 
     it "disallows access to user who is not part of the team" do
-      expect(subject).to_not permit(user, namespace)
+      expect(subject).not_to permit(user, namespace)
     end
 
     it "allows access to any user if the namespace is public" do
@@ -86,7 +88,7 @@ describe NamespacePolicy do
 
   permissions :push? do
     it "disallow access to user with viewer role" do
-      expect(subject).to_not permit(viewer, namespace)
+      expect(subject).not_to permit(viewer, namespace)
     end
 
     it "allows access to user with contributor role" do
@@ -98,7 +100,7 @@ describe NamespacePolicy do
     end
 
     it "disallows access to user who is not part of the team" do
-      expect(subject).to_not permit(user, namespace)
+      expect(subject).not_to permit(user, namespace)
     end
 
     it "disallows access to user who is not logged in" do
@@ -120,7 +122,7 @@ describe NamespacePolicy do
 
   permissions :all? do
     it "disallow access to user with viewer role" do
-      expect(subject).to_not permit(viewer, namespace)
+      expect(subject).not_to permit(viewer, namespace)
     end
 
     it "allows access to user with contributor role" do
@@ -132,7 +134,7 @@ describe NamespacePolicy do
     end
 
     it "disallows access to user who is not part of the team" do
-      expect(subject).to_not permit(user, namespace)
+      expect(subject).not_to permit(user, namespace)
     end
 
     context "global namespace" do
@@ -152,15 +154,15 @@ describe NamespacePolicy do
     end
 
     it "disallows access to user who is not part of the team" do
-      expect(subject).to_not permit(user, namespace)
+      expect(subject).not_to permit(user, namespace)
     end
 
     it "disallow access to user with viewer role" do
-      expect(subject).to_not permit(viewer, namespace)
+      expect(subject).not_to permit(viewer, namespace)
     end
 
     it "disallow access to user with contributor role" do
-      expect(subject).to_not permit(contributor, namespace)
+      expect(subject).not_to permit(contributor, namespace)
     end
 
     it "disallows access to user who is not logged in" do
@@ -177,13 +179,13 @@ describe NamespacePolicy do
       end
 
       it "disallows access to everyone normal users" do
-        expect(subject).to_not permit(user, namespace)
+        expect(subject).not_to permit(user, namespace)
       end
     end
   end
 
   describe "scope" do
-    before :each do
+    before do
       # force creation of namespace
       namespace
     end

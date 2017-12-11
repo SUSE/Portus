@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe API::V1::Users do
@@ -10,7 +12,7 @@ describe API::V1::Users do
     }
   end
 
-  before :each do
+  before do
     admin = create :admin
     token = create :application_token, user: admin
     @header = build_token_header(token)
@@ -83,7 +85,7 @@ describe API::V1::Users do
     context "with invalid params" do
       it "returns errors" do
         post "/api/v1/users", { user: { username: "", email: "", password: "" } },
-          @header
+             @header
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)["errors"]).not_to be_nil
       end
@@ -116,7 +118,7 @@ describe API::V1::Users do
       it "updates user but not display_name" do
         user = create :user, display_name: "John Smith"
         put "/api/v1/users/#{user.id}", { user: user_data.except(:display_name) },
-          @header
+            @header
         expect(response).to have_http_status(:success)
         expect(User.find(user.id).display_name).to eq user.display_name
       end
@@ -127,7 +129,7 @@ describe API::V1::Users do
         user = create :user
         user2 = create :user
         put "/api/v1/users/#{user.id}", { user: { username: user2.username } },
-          @header
+            @header
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)["errors"]).not_to be_nil
       end
@@ -176,7 +178,7 @@ describe API::V1::Users do
     it "creates user's token" do
       user = create :user
       post "/api/v1/users/#{user.id}/application_tokens", \
-        { application: "test" }, @header
+           { application: "test" }, @header
       expect(response).to have_http_status(:success)
       expect(ApplicationToken.count).to eq 2
       expect(JSON.parse(response.body)).not_to be_nil
@@ -185,7 +187,7 @@ describe API::V1::Users do
     it "returns errors" do
       token = create :application_token
       post "/api/v1/users/#{token.user_id}/application_tokens", \
-        { application: token.application }, @header
+           { application: token.application }, @header
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["errors"]).not_to be_nil
     end
@@ -193,7 +195,7 @@ describe API::V1::Users do
     it "returns server error" do
       token = create :application_token
       post "/api/v1/users/#{token.user_id}/application_tokens",
-        { application: nil }, @header
+           { application: nil }, @header
       expect(response).to have_http_status(:internal_server_error)
     end
   end

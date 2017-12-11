@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: teams
@@ -17,9 +19,9 @@
 require "rails_helper"
 
 describe Team do
-  it { should validate_presence_of(:name) }
-  it { should validate_presence_of(:owners) }
-  it { should have_many(:namespaces) }
+  it { is_expected.to validate_presence_of(:name) }
+  it { is_expected.to validate_presence_of(:owners) }
+  it { is_expected.to have_many(:namespaces) }
 
   it "does not check whether the given name is downcased or not" do
     # Does not check name case because:
@@ -33,35 +35,35 @@ describe Team do
     # The registry does not count.
     # NOTE: the registry factory also creates a user.
     create(:registry)
-    expect(Team.all_non_special).to be_empty
-    expect(Team.count).to be(2)
+    expect(described_class.all_non_special).to be_empty
+    expect(described_class.count).to be(2)
 
     # Creating a proper team, this counts.
     create(:team, owners: [User.first])
-    expect(Team.all_non_special.count).to be(1)
-    expect(Team.count).to be(3)
+    expect(described_class.all_non_special.count).to be(1)
+    expect(described_class.count).to be(3)
 
     # Personal namespaces don't count.
     create(:user)
-    expect(Team.all_non_special.count).to be(1)
-    expect(Team.count).to be(4)
+    expect(described_class.all_non_special.count).to be(1)
+    expect(described_class.count).to be(4)
   end
 
   describe "make_valid" do
     it "does nothing if there's no team with the name" do
       name = "something"
 
-      expect(Team.make_valid(name)).to eq name
+      expect(described_class.make_valid(name)).to eq name
     end
 
     it "adds an increment if a team with the name already exists" do
       name = "something"
 
       create(:team, name: name)
-      expect(Team.make_valid(name)).to eq "#{name}0"
+      expect(described_class.make_valid(name)).to eq "#{name}0"
 
       create(:team, name: "#{name}0")
-      expect(Team.make_valid(name)).to eq "#{name}1"
+      expect(described_class.make_valid(name)).to eq "#{name}1"
     end
   end
 end

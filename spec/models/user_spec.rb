@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -40,9 +42,9 @@ require "rails_helper"
 describe User do
   subject { create(:user) }
 
-  it { should validate_uniqueness_of(:email) }
-  it { should validate_uniqueness_of(:username) }
-  it { should allow_value("test1", "1test").for(:username) }
+  it { is_expected.to validate_uniqueness_of(:email) }
+  it { is_expected.to validate_uniqueness_of(:username) }
+  it { is_expected.to allow_value("test1", "1test").for(:username) }
 
   describe "#private_namespace_and_team_available" do
     it "adds an error if the username cannot produce a valid namespace" do
@@ -81,7 +83,7 @@ describe User do
 
     user2 = create(:user, username: "test")
     namespace = Namespace.find_by(name: "test")
-    expect(namespace).to_not be nil
+    expect(namespace).not_to be nil
     expect(user2.namespace.id).to eq namespace.id
   end
 
@@ -91,13 +93,13 @@ describe User do
     it "find user by username" do
       APP_CONFIG["ldap"] = { "enabled" => false }
       event = { "actor" => { "name" => "username001" } }
-      expect(User.find_from_event(event)).not_to be_nil
+      expect(described_class.find_from_event(event)).not_to be_nil
     end
   end
 
   describe "#create_personal_namespace!" do
     context "no registry defined yet" do
-      before :each do
+      before do
         expect(Registry.count).to be(0)
       end
 
@@ -107,11 +109,10 @@ describe User do
         expect(Team.find_by(name: subject.username)).to be(nil)
         expect(Namespace.find_by(name: subject.username)).to be(nil)
       end
-
     end
 
     context "registry defined" do
-      before :each do
+      before do
         create(:admin)
         create(:registry)
       end
@@ -138,7 +139,7 @@ describe User do
     let!(:admin2) { create(:admin, enabled: false) }
 
     it "computes the right amount of admin users" do
-      admins = User.admins
+      admins = described_class.admins
       expect(admins.count).to be 1
       expect(admins.first.id).to be admin1.id
     end
@@ -150,7 +151,7 @@ describe User do
 
     it "Toggles the admin attribute" do
       # We have a registry and the admin user is the owner.
-      admin = User.where(admin: true).first
+      admin = described_class.where(admin: true).first
       owners = registry.global_namespace.team.owners
       expect(owners.count).to be(1)
       expect(owners.first.id).to be(admin.id)

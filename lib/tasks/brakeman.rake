@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if Rails.env.development?
   desc "Run Brakeman security checks"
   task :brakeman do

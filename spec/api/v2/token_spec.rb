@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "/v2/token" do
@@ -32,22 +34,23 @@ describe "/v2/token" do
           scope:   "repository:foo_namespace/me:push"
         }
       end
+
       before do
         create(:namespace, name: "foo_namespace", registry: registry)
       end
 
       it "denies access when the password is wrong" do
         get v2_token_url,
-          valid_request,
-          invalid_auth_header
+            valid_request,
+            invalid_auth_header
 
         expect(response.status).to eq 401
       end
 
       it "denies access when the user does not exist" do
         get v2_token_url,
-          valid_request,
-          nonexistent_auth_header
+            valid_request,
+            nonexistent_auth_header
 
         expect(response.status).to eq 401
       end
@@ -74,12 +77,12 @@ describe "/v2/token" do
         )
 
         get v2_token_url,
-          {
-            service: registry.hostname,
-            account: user.username,
-            scope:   "repository:#{user.username}/busybox:push,pull"
-          },
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, token_plain)
+            {
+              service: registry.hostname,
+              account: user.username,
+              scope:   "repository:#{user.username}/busybox:push,pull"
+            },
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, token_plain)
 
         expect(response.status).to eq 200
       end
@@ -93,12 +96,12 @@ describe "/v2/token" do
         )
 
         get v2_token_url,
-          {
-            service: registry.hostname,
-            account: user.username,
-            scope:   "repository:#{user.username}/busybox:push,pull"
-          },
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, "wrong")
+            {
+              service: registry.hostname,
+              account: user.username,
+              scope:   "repository:#{user.username}/busybox:push,pull"
+            },
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, "wrong")
 
         expect(response.status).to eq 401
       end
@@ -110,12 +113,12 @@ describe "/v2/token" do
       it "does not allow to pull a private namespace from another team" do
         # It works for the regular user
         get v2_token_url,
-          {
-            service: registry.hostname,
-            account: user.username,
-            scope:   "repository:#{user.username}/busybox:push,pull"
-          },
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+            {
+              service: registry.hostname,
+              account: user.username,
+              scope:   "repository:#{user.username}/busybox:push,pull"
+            },
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
 
         expect(response.status).to eq 200
         payload = parse_token response.body
@@ -123,12 +126,12 @@ describe "/v2/token" do
 
         # But not for another
         get v2_token_url,
-          {
-            service: registry.hostname,
-            account: another.username,
-            scope:   "repository:#{user.username}/busybox:push,pull"
-          },
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+            {
+              service: registry.hostname,
+              account: another.username,
+              scope:   "repository:#{user.username}/busybox:push,pull"
+            },
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
 
         expect(response.status).to eq 200
         payload = parse_token response.body
@@ -140,12 +143,12 @@ describe "/v2/token" do
 
         # It works for the regular user
         get v2_token_url,
-          {
-            service: registry.hostname,
-            account: user.username,
-            scope:   scope
-          },
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+            {
+              service: registry.hostname,
+              account: user.username,
+              scope:   scope
+            },
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
 
         expect(response.status).to eq 200
         payload = parse_token response.body
@@ -153,12 +156,12 @@ describe "/v2/token" do
 
         # But not for another
         get v2_token_url,
-          {
-            service: registry.hostname,
-            account: another.username,
-            scope:   scope
-          },
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+            {
+              service: registry.hostname,
+              account: another.username,
+              scope:   scope
+            },
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
 
         expect(response.status).to eq 200
         payload = parse_token response.body
@@ -167,7 +170,7 @@ describe "/v2/token" do
     end
 
     context "as LDAP user I can authenticate from Docker CLI" do
-      before :each do
+      before do
         APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
         allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_call_original
         allow_any_instance_of(Net::LDAP).to receive(:bind_as).and_return(true)
@@ -175,11 +178,11 @@ describe "/v2/token" do
 
       it "authenticates if the HTTP Basic Authentication was given" do
         get v2_token_url,
-          {
-            service: registry.hostname,
-            account: "ldapuser"
-          },
-          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("ldapuser", "12341234")
+            {
+              service: registry.hostname,
+              account: "ldapuser"
+            },
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("ldapuser", "12341234")
 
         expect(response.status).to eq 200
 
@@ -231,16 +234,15 @@ describe "/v2/token" do
 
         it "decoded payload should not contain access key" do
           payload = parse_token response.body
-          expect(payload).to_not have_key("access")
+          expect(payload).not_to have_key("access")
         end
-
       end
 
       context "unknown scope requested" do
         before do
           get v2_token_url,
-            { service: registry.hostname, account: "account", scope: "whale:foo,bar" },
-            valid_auth_header
+              { service: registry.hostname, account: "account", scope: "whale:foo,bar" },
+              valid_auth_header
         end
 
         it "respond with 401" do
@@ -257,12 +259,12 @@ describe "/v2/token" do
             .with(personal_namespace, :pull?)
 
           get v2_token_url,
-            {
-              service: registry.hostname,
-              account: user.username,
-              scope:   "repository:#{user.username}/busybox:push,pull"
-            },
-            valid_auth_header
+              {
+                service: registry.hostname,
+                account: user.username,
+                scope:   "repository:#{user.username}/busybox:push,pull"
+              },
+              valid_auth_header
         end
 
         it "allows to pull an image in which this user is just a viewer" do
@@ -271,9 +273,9 @@ describe "/v2/token" do
           allow_any_instance_of(NamespacePolicy).to receive(:pull?).and_return(true)
 
           get v2_token_url,
-            { service: registry.hostname, account: user.username,
-              scope: "repository:#{user.username}/busybox:push,pull" },
-            valid_auth_header
+              { service: registry.hostname, account: user.username,
+                scope: "repository:#{user.username}/busybox:push,pull" },
+              valid_auth_header
 
           expect(response.status).to eq 200
 
@@ -294,10 +296,9 @@ describe "/v2/token" do
         end
 
         let(:valid_portus_auth_header) do
+          pass = Rails.application.secrets.portus_password
           {
-            "HTTP_AUTHORIZATION" =>
-                                    auth_mech.encode_credentials("portus",
-                                         Rails.application.secrets.portus_password)
+            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("portus", pass)
           }
         end
 
@@ -348,8 +349,7 @@ describe "/v2/token" do
           expect(response.status).to eq 200
           payload = parse_token response.body
           expect(payload["access"].size).to eq(1)
-          expect(payload["access"][0]["actions"]).to eq(["push", "pull"])
-
+          expect(payload["access"][0]["actions"]).to eq(%w[push pull])
         end
       end
 
@@ -373,7 +373,7 @@ describe "/v2/token" do
         end
 
         context "reposity scope" do
-          it "it responds with 200 and no access" do
+          it "responds with 200 and no access" do
             # force creation of the namespace
             namespace = create(:namespace,
                                team:     Team.find_by(name: user.username),
@@ -395,9 +395,6 @@ describe "/v2/token" do
           end
         end
       end
-
     end
-
   end
-
 end

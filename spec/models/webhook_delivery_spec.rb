@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: webhook_deliveries
@@ -24,8 +26,8 @@ require "rails_helper"
 RSpec.describe WebhookDelivery, type: :model do
   subject { create(:webhook_delivery, webhook: create(:webhook)) }
 
-  it { should belong_to(:webhook) }
-  it { should validate_uniqueness_of(:uuid).scoped_to(:webhook_id) }
+  it { is_expected.to belong_to(:webhook) }
+  it { is_expected.to validate_uniqueness_of(:uuid).scoped_to(:webhook_id) }
 
   describe "success?" do
     let!(:registry)    { create(:registry) }
@@ -59,7 +61,7 @@ RSpec.describe WebhookDelivery, type: :model do
       create(:webhook_header, webhook: webhook_noauth, name: "foo", value: "bar")
     end
 
-    before :each do
+    before do
       stub_request(:POST, "username:password@www.example.com")
         .to_return(
           status:  200,
@@ -73,7 +75,7 @@ RSpec.describe WebhookDelivery, type: :model do
       )
     end
 
-    it "should resend HTTP requests" do
+    it "resends HTTP requests" do
       create :webhook_delivery, webhook: webhook_auth
       create :webhook_delivery, webhook: webhook_noauth
       WebhookDelivery.find_each do |delivery|

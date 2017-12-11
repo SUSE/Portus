@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # If SMTP was set, then use it as the delivery method and configure it with the
 # given config.
 

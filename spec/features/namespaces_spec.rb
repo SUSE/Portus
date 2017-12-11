@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Namespaces support" do
+describe "Namespaces support" do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:admin) }
   let!(:user2) { create(:user) }
@@ -13,7 +15,7 @@ feature "Namespaces support" do
   end
 
   describe "Namespaces#index" do
-    scenario "An user cannot submit with invalid form", js: true do
+    it "An user cannot submit with invalid form", js: true do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
@@ -22,7 +24,7 @@ feature "Namespaces support" do
       expect(page).to have_button("Create", disabled: true)
     end
 
-    scenario "A user cannot leave name field empty", js: true do
+    it "A user cannot leave name field empty", js: true do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
@@ -35,7 +37,7 @@ feature "Namespaces support" do
       expect(page).to have_button("Create", disabled: true)
     end
 
-    scenario "A user cannot fill field with an invalid name", js: true do
+    it "A user cannot fill field with an invalid name", js: true do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
@@ -47,7 +49,7 @@ feature "Namespaces support" do
       expect(page).to have_button("Create", disabled: true)
     end
 
-    scenario "An user cannot create a namespace that already exists", js: true do
+    it "An user cannot create a namespace that already exists", js: true do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
@@ -60,7 +62,7 @@ feature "Namespaces support" do
       expect(page).to have_button("Create", disabled: true)
     end
 
-    scenario "An user cannot create a namespace for a hidden team", js: true do
+    it "An user cannot create a namespace for a hidden team", js: true do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
@@ -74,7 +76,7 @@ feature "Namespaces support" do
       expect(page).to have_button("Create", disabled: true)
     end
 
-    scenario "A namespace can be created from the index page", js: true do
+    it "A namespace can be created from the index page", js: true do
       namespaces_count = Namespace.count
 
       visit namespaces_path
@@ -100,28 +102,28 @@ feature "Namespaces support" do
       expect(page).to have_current_path(namespace_path(namespace))
     end
 
-    scenario 'The "Create new namespace" link has a toggle effect', js: true do
+    it 'The "Create new namespace" link has a toggle effect', js: true do
       visit namespaces_path
       expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
+      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
       find(".toggle-link-new-namespace").click
       wait_for_effect_on("#new-namespace-form")
 
-      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-plus-circle")
       expect(page).to have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
       find(".toggle-link-new-namespace").click
       wait_for_effect_on("#new-namespace-form")
 
       expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
+      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
     end
 
-    scenario 'The "Create new namespace" keeps icon after add new namespace', js: true do
+    it 'The "Create new namespace" keeps icon after add new namespace', js: true do
       visit namespaces_path
       expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
+      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
       find(".toggle-link-new-namespace").click
       wait_for_effect_on("#new-namespace-form")
@@ -129,7 +131,7 @@ feature "Namespaces support" do
       fill_in "Name", with: "valid-namespace"
       fill_in "Team", with: namespace.team.name
 
-      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-plus-circle")
+      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-plus-circle")
       expect(page).to have_css(".toggle-link-new-namespace i.fa-minus-circle")
 
       click_button "Create"
@@ -137,10 +139,10 @@ feature "Namespaces support" do
       wait_for_effect_on("#new-namespace-form")
 
       expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).to_not have_css(".toggle-link-new-namespace i.fa-minus-circle")
+      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
     end
 
-    scenario "The namespace visibility can be changed", js: true do
+    it "The namespace visibility can be changed", js: true do
       visit namespaces_path
       id = namespace.id
 
@@ -162,7 +164,7 @@ feature "Namespaces support" do
       expect(namespace.visibility_public?).to be true
     end
 
-    scenario "Namespace table sorting is reachable through url", js: true do
+    it "Namespace table sorting is reachable through url", js: true do
       # sort asc
       visit namespaces_path(ns_sort_asc: true)
 
@@ -184,7 +186,7 @@ feature "Namespaces support" do
       expect(page).to have_css("th:nth-child(4) .fa-sort-amount-desc")
     end
 
-    scenario "URL is updated when namespaces column is sorted", js: true do
+    it "URL is updated when namespaces column is sorted", js: true do
       visit namespaces_path
 
       expect(page).to have_css(".namespaces-panel:last-of-type th:nth-child(4)")
@@ -204,7 +206,7 @@ feature "Namespaces support" do
       expect(page).to have_current_path(path)
     end
 
-    scenario "Namespace table pagination is reachable through url", js: true do
+    it "Namespace table pagination is reachable through url", js: true do
       create_list(:namespace, 15, team: team, registry: registry)
 
       # page 2
@@ -218,7 +220,7 @@ feature "Namespaces support" do
       expect(page).to have_css(".namespaces-panel .pagination li.active:nth-child(2)")
     end
 
-    scenario "URL is updated when page is changed", js: true do
+    it "URL is updated when page is changed", js: true do
       create_list(:namespace, 15, team: team, registry: registry)
 
       visit namespaces_path
@@ -240,7 +242,7 @@ feature "Namespaces support" do
   end
 
   describe "#update" do
-    scenario "user inputs a team does not exist", js: true do
+    it "user inputs a team does not exist", js: true do
       visit namespace_path(namespace.id)
       find(".toggle-link-edit-namespace").click
 
@@ -250,7 +252,7 @@ feature "Namespaces support" do
       expect(page).to have_content("Selected team does not exist")
     end
 
-    scenario "user removes the team", js: true do
+    it "user removes the team", js: true do
       visit namespace_path(namespace.id)
       find(".toggle-link-edit-namespace").click
 
@@ -259,7 +261,7 @@ feature "Namespaces support" do
       expect(page).to have_content("Team can't be blank")
     end
 
-    scenario "user updates namespace's team", js: true do
+    it "user updates namespace's team", js: true do
       new_team = create(:team, owners: [user])
 
       visit namespace_path(namespace.id)
@@ -277,7 +279,7 @@ feature "Namespaces support" do
       expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
     end
 
-    scenario "user updates namespace's description", js: true do
+    it "user updates namespace's description", js: true do
       visit namespace_path(namespace.id)
       find(".toggle-link-edit-namespace").click
 
@@ -309,7 +311,7 @@ feature "Namespaces support" do
       expect(page).to have_content("Pull Viewer")
     end
 
-    scenario "An user sees dropdown for 'Show webhooks'", js: true do
+    it "An user sees dropdown for 'Show webhooks'", js: true do
       visit namespace_path(namespace.id)
 
       expect(page).not_to have_content("Show webhooks")

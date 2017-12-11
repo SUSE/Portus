@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe PasswordsController do
-  before :each do
+  before do
     request.env["devise.mapping"] = Devise.mappings[:user]
     APP_CONFIG["email"] = {
       "name"     => "Portus",
@@ -38,7 +40,7 @@ describe PasswordsController do
   end
 
   describe "LDAP support is enabled" do
-    before :each do
+    before do
       APP_CONFIG["ldap"] = { "enabled" => true }
     end
 

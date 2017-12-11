@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # RegistryPolicy implements the authorization policy for methods inside the
 # "registry" type.
 class RegistryPolicy

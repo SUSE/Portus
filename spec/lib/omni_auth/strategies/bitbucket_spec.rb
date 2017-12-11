@@ -1,24 +1,26 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe OmniAuth::Strategies::Bitbucket do
+  subject { described_class.new({}) }
+
   let(:access_token) { instance_double("AccessToken", options: {}) }
   let(:parsed_response) { instance_double("ParsedResponse") }
   let(:response) { instance_double("Response", parsed: parsed_response) }
-
-  subject { OmniAuth::Strategies::Bitbucket.new({}) }
 
   context "get user data" do
     let(:parsed_mails) { instance_double("ParsedResponse") }
     let(:response_mails) { instance_double("Response", parsed: parsed_mails) }
     let(:info) { { name: "User", nickname: "user", email: "test@mail.net" } }
 
-    before :each do
+    before do
       expect(access_token).to receive(:get).with("/api/2.0/user").and_return(response)
       expect(subject).to receive(:access_token).and_return(access_token).at_least(:once)
     end
 
     context "#info" do
-      it "should return user info" do
+      it "returns user info" do
         expect(parsed_response).to receive(:[]).and_return("User", "user").twice
         expect(parsed_mails).to receive(:[]).and_return(
           [{ "email" => "test@mail.net", "is_primary" => true, "is_confirmed" => true }]
@@ -30,7 +32,7 @@ describe OmniAuth::Strategies::Bitbucket do
     end
 
     context "#extra" do
-      it "should return extra user info" do
+      it "returns extra user info" do
         expect(subject.extra[:raw_info]).to eql parsed_response
       end
     end
@@ -45,7 +47,7 @@ describe OmniAuth::Strategies::Bitbucket do
   end
 
   context "#build_access_token_with_team_check" do
-    before :each do
+    before do
       expect(subject).to receive(:build_access_token_without_team_check).and_return(access_token)
     end
 
@@ -56,7 +58,7 @@ describe OmniAuth::Strategies::Bitbucket do
     context "with team setting" do
       # let(:parsed_response) { instance_double("ParsedResponse") }
       # let(:response_mails) { instance_double("Response", parsed: parsed_mails) }
-      before :each do
+      before do
         expect(parsed_response).to receive(:[]).with("values")
                                                .and_return([{ "username" => "test-team" }])
         expect(access_token).to receive(:get).with("/api/2.0/teams?role=member")

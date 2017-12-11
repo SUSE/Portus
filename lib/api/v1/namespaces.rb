@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module API
   module V1
+    # Namespaces implements all the endpoints regarding namespaces.
     class Namespaces < Grape::API
       version "v1", using: :path
 
@@ -11,14 +14,14 @@ module API
         helpers ::API::Helpers::Namespaces
 
         desc "Returns a list of namespaces.",
-          tags:     ["namespaces"],
-          detail:   "This will expose all accessible namespaces.",
-          is_array: true,
-          entity:   API::Entities::Namespaces,
-          failure:  [
-            [401, "Authentication fails."],
-            [403, "Authorization fails."]
-          ]
+             tags:     ["namespaces"],
+             detail:   "This will expose all accessible namespaces.",
+             is_array: true,
+             entity:   API::Entities::Namespaces,
+             failure:  [
+               [401, "Authentication fails."],
+               [403, "Authorization fails."]
+             ]
 
         get do
           present accessible_namespaces,
@@ -48,11 +51,11 @@ module API
         end
 
         desc "Create a namespace",
-          entity:  API::Entities::Teams,
-          failure: [
-            [401, "Authentication fails."],
-            [403, "Authorization fails."]
-          ]
+             entity:  API::Entities::Teams,
+             failure: [
+               [401, "Authentication fails."],
+               [403, "Authorization fails."]
+             ]
 
         params do
           requires :name, type: String, documentation: { desc: "Namespace name." }
@@ -79,14 +82,14 @@ module API
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :repositories do
             desc "Returns the list of the repositories for the given namespace.",
-              params:   API::Entities::Namespaces.documentation.slice(:id),
-              is_array: true,
-              entity:   API::Entities::Repositories,
-              failure:  [
-                [401, "Authentication fails."],
-                [403, "Authorization fails."],
-                [404, "Not found."]
-              ]
+                 params:   API::Entities::Namespaces.documentation.slice(:id),
+                 is_array: true,
+                 entity:   API::Entities::Repositories,
+                 failure:  [
+                   [401, "Authentication fails."],
+                   [403, "Authorization fails."],
+                   [404, "Not found."]
+                 ]
 
             get do
               namespace = Namespace.find params[:id]
@@ -98,12 +101,12 @@ module API
           end
 
           desc "Show namespaces by id.",
-            entity:  API::Entities::Namespaces,
-            failure: [
-              [401, "Authentication fails."],
-              [403, "Authorization fails."],
-              [404, "Not found."]
-            ]
+               entity:  API::Entities::Namespaces,
+               failure: [
+                 [401, "Authentication fails."],
+                 [403, "Authorization fails."],
+                 [404, "Not found."]
+               ]
 
           params do
             requires :id, type: String, documentation: { desc: "Namespace ID." }

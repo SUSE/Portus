@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -15,7 +17,7 @@ Vagrant.configure("2") do |config|
     node.vm.box_check_update = true
     node.vm.hostname = "registry.test.lan"
     node.vm.network :private_network, ip: "192.168.1.2", virtualbox__intnet: true
-    node.vm.network :forwarded_port, host: 44242, guest: 80
+    node.vm.network :forwarded_port, host: 44_242, guest: 80
 
     node.vm.provision(
       "shell",

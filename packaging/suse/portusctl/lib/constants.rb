@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Some useful constants used by portus
 
 # Checks whether it's running inside of a Docker container or not
@@ -9,4 +11,4 @@ end
 # See packaging/suse/bin/portusctl
 BUNDLER_BIN = ENV["BUNDLER_BIN"]
 HOSTNAME    = (dockerized? || ENV["TRAVIS"] ? `hostname -f` : `hostnamectl --static status`).chomp
-PORTUS_ROOT = "/srv/Portus".freeze
+PORTUS_ROOT = "/srv/Portus"

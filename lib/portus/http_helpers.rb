@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 require "net/http"
+require "portus/errors"
+require "portus/request_error"
 
 module Portus
   # Implements all the methods and classes that are needed by the RegistryClient.
@@ -6,20 +10,7 @@ module Portus
   # the authentication process. The RegistryClient class will just deal with each
   # endpoint of the API.
   module HttpHelpers
-    # As specified in the token specification of distribution, the client will
-    # get a 401 on the first attempt of logging in, but in there should be the
-    # "WWW-Authenticate" header. This exception will be raised when there's no
-    # authentication token bearer.
-    class NoBearerRealmException < RuntimeError; end
-
-    # Raised when the authorization token could not be fetched.
-    class AuthorizationError < RuntimeError; end
-
-    # Used when a resource was not found for the given endpoint.
-    class NotFoundError < RuntimeError; end
-
-    # Raised if this client does not have the credentials to perform an API call.
-    class CredentialsMissingError < RuntimeError; end
+    include ::Portus::Errors
 
     # Returns an URI object and a request object for the given path & method
     # pair.
@@ -63,6 +54,26 @@ module Portus
         end
       end
       res
+    end
+
+    # safe_quest simply calls perform_request and wraps any kind of exception
+    # into a RequestError. This way, callers don't have to check for the myriad
+    # of exceptions that an HTTP request might entail.
+    def safe_request(path, method = "get", request_auth_token = true)
+      perform_request(path, method, request_auth_token)
+    rescue Errno::ECONNREFUSED, SocketError => e
+      raise ::Portus::RequestError.new(exception: e, message: "connection refused")
+    rescue Errno::ETIMEDOUT, Net::OpenTimeout => e
+      raise ::Portus::RequestError.new(exception: e, message: "connection timed out")
+    rescue Net::HTTPBadResponse => e
+      raise ::Portus::RequestError.new(exception: e,
+                                       message:   "there's something wrong with your SSL config")
+    rescue OpenSSL::SSL::SSLError => e
+      raise ::Portus::RequestError.new(exception: e,
+                                       message:   "SSL error while communicating with the registry")
+    rescue StandardError => e
+      raise ::Portus::RequestError.new(exception: e,
+                                       message:   "something went wrong. Check your configuration")
     end
 
     # Handle a known error from Docker distribution. Typically these are

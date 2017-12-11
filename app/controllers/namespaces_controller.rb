@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class NamespacesController < ApplicationController
   include ChangeNameDescription
 
-  before_action :set_namespace, only: [:change_visibility, :show, :update]
+  before_action :set_namespace, only: %i[change_visibility show update]
 
-  after_action :verify_authorized, except: [:index, :typeahead]
+  after_action :verify_authorized, except: %i[index typeahead]
   after_action :verify_policy_scoped, only: :index
 
   # GET /namespaces
@@ -73,8 +75,8 @@ class NamespacesController < ApplicationController
     return unless @namespace.update_attributes(visibility: visibility_param)
 
     @namespace.create_activity :change_visibility,
-      owner:      current_user,
-      parameters: { visibility: @namespace.visibility }
+                               owner:      current_user,
+                               parameters: { visibility: @namespace.visibility }
 
     respond_to do |format|
       format.js { render :change_visibility }
@@ -94,8 +96,8 @@ class NamespacesController < ApplicationController
       @namespace.errors[:team_id] << "'#{p[:team]}' unknown."
     else
       @namespace.create_activity :change_team,
-        owner:      current_user,
-        parameters: { old: @namespace.team.id, new: @team.id }
+                                 owner:      current_user,
+                                 parameters: { old: @namespace.team.id, new: @team.id }
       @namespace.update_attributes(team: @team)
     end
   end

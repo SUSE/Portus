@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # :nocov:
 
 require_relative "registry"
@@ -36,6 +38,7 @@ class Configurator
   #   * create the ssl certificates if specified
   #   * check the presence of the required files
   #   * copy the certificates to the right locations
+  # rubocop:disable Metrics/MethodLength
   def ssl
     if @options["ssl-gen-self-signed-certs"]
       puts "Generating private key and certificate"
@@ -87,6 +90,7 @@ class Configurator
     )
     Runner.exec("update-ca-certificates")
   end
+  # rubocop:enable Metrics/MethodLength
 
   # Creates the database.yml file required by Rails. Note that this method will
   # wipe out any previous contents.
@@ -101,6 +105,7 @@ class Configurator
   end
 
   # Creates the database and performs the migrations
+  # rubocop:disable Metrics/MethodLength
   def create_database
     if dockerized?
       puts "Running inside of a docker container"
@@ -132,6 +137,7 @@ class Configurator
     # rubocop:enable Lint/RescueWithoutErrorClass
     FileUtils.chown_R("wwwrun", "www", "/srv/Portus/tmp")
   end
+  # rubocop:enable Metrics/MethodLength
 
   # Creates the config-local.yml file used by Portus
   def config_local

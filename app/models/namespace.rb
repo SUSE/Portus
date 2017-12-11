@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: namespaces
@@ -43,7 +45,7 @@ class Namespace < ActiveRecord::Base
   belongs_to :registry
   belongs_to :team
 
-  enum visibility: [:visibility_private, :visibility_protected, :visibility_public]
+  enum visibility: %i[visibility_private visibility_protected visibility_public]
 
   validate :global_namespace_cannot_be_private
   validates :name,
@@ -79,16 +81,16 @@ class Namespace < ActiveRecord::Base
     if name.include?("/")
       namespace, name = name.split("/", 2)
       namespace = if registry.nil?
-        Namespace.find_by(name: namespace)
-      else
-        registry.namespaces.find_by(name: namespace)
-      end
+                    Namespace.find_by(name: namespace)
+                  else
+                    registry.namespaces.find_by(name: namespace)
+                  end
     else
       namespace = if registry.nil?
-        Namespace.find_by(global: true)
-      else
-        Namespace.find_by(registry: registry, global: true)
-      end
+                    Namespace.find_by(global: true)
+                  else
+                    Namespace.find_by(registry: registry, global: true)
+                  end
     end
     [namespace, name, registry]
   end

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Forgotten password support" do
+describe "Forgotten password support" do
   let!(:user) { create(:admin) }
 
-  before :each do
+  before do
     APP_CONFIG["signup"] = { "enabled" => true }
     APP_CONFIG["email"]  = {
       "from"     => "test@example.com",
@@ -13,12 +15,12 @@ feature "Forgotten password support" do
     ActionMailer::Base.deliveries.clear
   end
 
-  scenario "gives the user a link to reset their password" do
+  it "gives the user a link to reset their password" do
     visit new_user_session_path
     expect(page).to have_content("I forgot my password")
   end
 
-  scenario "sends the reset email when appropiate" do
+  it "sends the reset email when appropiate" do
     visit new_user_password_path
 
     fill_in "Email", with: "random@example.com"

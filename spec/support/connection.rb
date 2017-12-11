@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # HACK: PostgreSQL has exactly one test failing randomly because of a
 # `PG::ConnectionBad` exception. We've tried several alternatives but none of
 # them worked. So, instead, this piece of code will try the connection up again
@@ -10,10 +12,9 @@
 
 if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
   module ActiveRecord::ConnectionAdapters
+    # Re-opening PostgreSQLAdapter to add the new reconnect! method.
     class PostgreSQLAdapter
-      # rubocop:disable Style/Alias
-      alias_method :reconnect_without_retry!, :reconnect!
-      # rubocop:enable Style/Alias
+      alias reconnect_without_retry! reconnect!
 
       attr_accessor :portus_retries
 
@@ -36,4 +37,5 @@ if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
       end
     end
   end
+  # rubocop:enable Style/ClassAndModuleChildren
 end

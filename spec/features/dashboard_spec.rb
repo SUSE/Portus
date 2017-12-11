@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Dashboard page" do
+describe "Dashboard page" do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:admin, display_name: "docker-gangsta") }
   let!(:team) { create(:team, owners: [user]) }
@@ -32,7 +34,7 @@ feature "Dashboard page" do
   end
 
   describe "Repositories sidebar" do
-    scenario "Show all the repositories user has access to" do
+    it "Show all the repositories user has access to" do
       visit authenticated_root_path
       expect(page).to have_content("#{personal_namespace.name}/#{personal_repository.name}")
       expect(page).to have_content("#{namespace.name}/#{repository.name}")
@@ -41,7 +43,7 @@ feature "Dashboard page" do
       expect(page).to have_content("#{protected_namespace.name}/#{protected_repository.name}")
     end
 
-    scenario "Show personal repositories", js: true do
+    it "Show personal repositories", js: true do
       visit authenticated_root_path
       click_link("Personal")
 
@@ -52,7 +54,7 @@ feature "Dashboard page" do
       expect(page).not_to have_content("#{protected_namespace.name}/#{protected_repository.name}")
     end
 
-    scenario "Show personal repositories", js: true do
+    it "Show personal repositories", js: true do
       visit authenticated_root_path
       click_link("Starred")
 
@@ -65,7 +67,7 @@ feature "Dashboard page" do
   end
 
   describe "Display name" do
-    scenario "Shows the display name of the user when needed" do
+    it "Shows the display name of the user when needed" do
       visit authenticated_root_path
       expect(page).not_to have_content("docker-gangsta")
       APP_CONFIG["display_name"] = { "enabled" => true }

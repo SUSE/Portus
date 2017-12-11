@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Version module
 # Makes the app version available to the application itself
 # Needs the git executable for all git operations
@@ -17,8 +19,8 @@ module Version
   COMMIT = Version.git? ? `git log --pretty=format:'%h' -n 1 2>/dev/null`.chomp : nil
   TAG    = Version.git? ? `git tag --points-at $(git rev-parse HEAD) 2>/dev/null`.chomp : nil
   BRANCH = if Version.git?
-    `git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3 2>/dev/null`.chomp
-  end
+             `git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3 2>/dev/null`.chomp
+           end
 
   # Read the version from the file.
   def self.from_file

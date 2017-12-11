@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 # Just opens up protected methods so they can be used in the test suite.
@@ -23,7 +25,7 @@ describe CatalogJob do
       # Global repos.
       ns = Namespace.where(global: true)
       repos = Repository.where(namespace: ns)
-      expect(repos.map(&:name).sort).to match_array(["alpine", "busybox"])
+      expect(repos.map(&:name).sort).to match_array(%w[alpine busybox])
       tags = Repository.find_by(name: "busybox").tags
       expect(tags.map(&:name)).to match_array(["0.1", "latest"])
       tags = Repository.find_by(name: "alpine", namespace: ns).tags
@@ -38,7 +40,7 @@ describe CatalogJob do
 
     it "does nothing if there is no registry" do
       job = CatalogJobMock.new
-      expect { job.perform }.to_not raise_error
+      expect { job.perform }.not_to raise_error
     end
 
     it "raises an exception when there has been a problem in /v2/_catalog" do
@@ -90,7 +92,6 @@ describe CatalogJob do
       tags = repo.tags
       expect(tags.map(&:name)).to match_array(["latest"])
     end
-
   end
 
   describe "Database already filled with repos" do
@@ -107,9 +108,9 @@ describe CatalogJob do
       job = CatalogJobMock.new
       job.update_registry!([
                              { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
-                             { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"]         },
-                             { "name" => "#{namespace.name}/repo2",  "tags" => ["latest", "tag2"] },
-                             { "name" => "#{namespace.name}/alpine", "tags" => ["latest"]         }
+                             { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"] },
+                             { "name" => "#{namespace.name}/repo2",  "tags" => %w[latest tag2] },
+                             { "name" => "#{namespace.name}/alpine", "tags" => ["latest"] }
                            ])
 
       # Global repos
@@ -121,13 +122,13 @@ describe CatalogJob do
 
       # User namespaces.
       repos = Repository.where(namespace: namespace)
-      expect(repos.map(&:name).sort).to match_array(["alpine", "repo1", "repo2"])
+      expect(repos.map(&:name).sort).to match_array(%w[alpine repo1 repo2])
       tags = Repository.find_by(name: "alpine").tags
       expect(tags.map(&:name)).to match_array(["latest"])
       tags = Repository.find_by(name: "repo1").tags
       expect(tags.map(&:name)).to match_array(["latest"])
       tags = Repository.find_by(name: "repo2").tags
-      expect(tags.map(&:name)).to match_array(["latest", "tag2"])
+      expect(tags.map(&:name)).to match_array(%w[latest tag2])
     end
   end
 
