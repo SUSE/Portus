@@ -5,7 +5,7 @@
       strong
         = @registry.name
   .panel-body
-    <registry-form :can-change-hostname="#{@can_change_hostname}" :edit="true"></registry-form>
+    <registry-form :can-change-hostname="#{@can_change_hostname}"></registry-form>
 
 - content_for :js_body do
   script#js-registry-form-tmpl type="text/x-template"

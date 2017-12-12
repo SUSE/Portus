@@ -40,7 +40,7 @@
             hostname above, for example if it is behind a reverse proxy.
             This field must be set to prevent Portus from ignoring registry
             events originating from this external hostname.
-  .form-group.has-error v-if="display.force && !edit"
+  .form-group.has-error v-if="display.force && canChangeHostname"
     = label_tag :force, "Skip remote checks", {class: 'control-label col-md-2', title: "Force the creation of the registry, even if it's not reachable."}
     .col-md-7
       = check_box_tag(:force, true, false, { "v-model" => "registry.force" })
