@@ -18,7 +18,8 @@ through the following values:
 
 ```yaml
 security:
-  # CoreOS Clair support (https://github.com/coreos/clair).
+  # CoreOS Clair support (https://github.com/coreos/clair). This is only
+  # guaranteed to work for v2.0.x releases of Clair.
   clair:
     server: ""
 
@@ -45,10 +46,15 @@ Portus supports having multiple scanners enabled at the same time.
 
 ## CoreOS Clair
 
-[CoreOS Clair](https://coreos.com/clair/docs/latest/) is an open source project for the static analysis of
-vulnerabilities in appc and docker containers. Portus only supports the analysis
-of docker images. In order to enable this backend, you have to pass the URL of
-your Clair server. For example (or simply with the
+<div class="alert alert-info">
+  Clair support is only guaranteed to work for <strong>v2.0.x</strong> releases
+  of Clair.
+</div>
+
+[CoreOS Clair](https://coreos.com/clair/docs/latest/) is an open source project
+for the static analysis of vulnerabilities in appc and docker containers. Portus
+only supports the analysis of docker images. In order to enable this backend,
+you have to pass the URL of your Clair server. For example (or simply with the
 `PORTUS_SECURITY_CLAIR_SERVER` environment variable):
 
 ```yaml
