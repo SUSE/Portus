@@ -1,9 +1,0 @@
-<new-namespace-form :state="state" form-state="newFormVisible"></new-namespace-form>
-<namespaces-panel :namespaces="normalNamespaces" namespaces-path="#{namespaces_path}" webhooks-path="webhooks" :table-sortable="true">
-  h5 slot="name"
-    ' Namespaces you have access to
-
-  - if Registry.any? && can_create_namespace?
-    div slot="actions"
-      <toggle-link text="Create new namespace" :state="state" state-key="newFormVisible" class="toggle-link-new-namespace"></toggle-link>
-</namespaces-panel>

@@ -21,7 +21,7 @@
           .clearfix
             h6.label.label-info
               | <span>Belongs to: </span>
-                <team-link teams-path="#{teams_path}" :namespace="namespace"></team-link>
+                <team-link teams-path="#{teams_path}" team-name="#{@namespace.team.name}" team-id="#{@namespace.team.id}"></team-link>
       .col-xs-6.text-right
         - if can_push?(@namespace)
           .circle-label.permissions-label.circle-label-sm[data-placement="left"

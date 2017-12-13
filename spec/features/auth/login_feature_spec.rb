@@ -88,7 +88,7 @@ describe "Login feature" do
     expect(page).to have_current_path(root_path)
   end
 
-  it "Successful login when trying to access a page redirects back the guest" do
+  it "Successful login when trying to access a page redirects back the guest", js: true do
     visit namespaces_path
     expect(page).to have_content("You need to sign in or sign up before continuing.")
     fill_in "user_username", with: user.username
