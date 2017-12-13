@@ -54,7 +54,8 @@ class TeamsController < ApplicationController
   # GET /teams/typeahead/%QUERY
   def all_with_query
     query = "#{params[:query]}%"
-    teams = policy_scope(Team).where("name LIKE ?", query).pluck(:name)
+    teams = params[:unscoped] == "true" ? Team.all : policy_scope(Team)
+    teams = teams.where("name LIKE ?", query).pluck(:name)
     matches = teams.map { |t| { name: ActionController::Base.helpers.sanitize(t) } }
     respond_to do |format|
       format.json { render json: matches.to_json }

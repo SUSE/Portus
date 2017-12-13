@@ -34,7 +34,7 @@ describe "Teams support" do
       fill_in "Name", with: Team.last.name
       wait_for_ajax
 
-      expect(page).to have_content("Name has already been taken")
+      expect(page).to have_content("Name is reserved or has already been taken")
       expect(page).to have_button("Add", disabled: true)
     end
 

@@ -10,7 +10,7 @@ const customActions = {
   },
 };
 
-const resource = Vue.resource('api/v1/teams{/id}', {}, customActions);
+const resource = Vue.resource('api/v1/teams{/id}{?hidden}', {}, customActions);
 
 function all(params = {}) {
   return resource.get({}, params);
@@ -24,12 +24,14 @@ function save(team) {
   return resource.save({}, team);
 }
 
-function searchTeam(teamName) {
-  return resource.teamTypeahead({ teamName });
+function searchTeam(teamName, options = {}) {
+  const params = Object.assign({ teamName }, options);
+
+  return resource.teamTypeahead(params);
 }
 
-function exists(value) {
-  return searchTeam(value)
+function exists(value, options) {
+  return searchTeam(value, options)
     .then((response) => {
       const collection = response.data;
 
