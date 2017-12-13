@@ -244,7 +244,8 @@ user_permission:
 # altogether. Enabling multiple drivers will simply aggregate the information
 # provided by each driver.
 security:
-  # CoreOS Clair support (https://github.com/coreos/clair).
+  # CoreOS Clair support (https://github.com/coreos/clair). This is only
+  # guaranteed to work for v2.0.x releases of Clair.
   clair:
     server: ""
 
