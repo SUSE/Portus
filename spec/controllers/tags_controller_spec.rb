@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: tags
@@ -32,7 +34,7 @@ describe TagsController, type: :controller do
     let!(:repository) { create(:repository, namespace: registry.global_namespace, name: "repo") }
     let!(:tag)        { create(:tag, name: "tag0", repository: repository) }
 
-    before :each do
+    before do
       sign_in user
       request.env["HTTP_REFERER"] = "/"
 
@@ -60,7 +62,7 @@ describe TagsController, type: :controller do
     let!(:repository) { create(:repository, namespace: registry.global_namespace, name: "repo") }
     let!(:tag)        { create(:tag, name: "tag", repository: repository) }
 
-    before :each do
+    before do
       sign_in user
       request.env["HTTP_REFERER"] = "/"
       APP_CONFIG["delete"] = { "enabled" => true }

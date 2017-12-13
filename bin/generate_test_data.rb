@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "set"
 require "pty"
 
@@ -8,20 +10,20 @@ module Portus
     NUSERS = 100
 
     # Name of the only user that is not created with a random name.
-    SPECIAL_USER = "admin".freeze
+    SPECIAL_USER = "admin"
 
     # Teams to be created.
-    TEAM_NAMES = [
-      "bigdata",
-      "containers",
-      "dev",
-      "hardware",
-      "networking",
-      "ops",
-      "qa",
-      "security",
-      "sitereliability",
-      "ui"
+    TEAM_NAMES = %w[
+      bigdata
+      containers
+      dev
+      hardware
+      networking
+      ops
+      qa
+      security
+      sitereliability
+      ui
     ].freeze
 
     # Create some random users + the admin.

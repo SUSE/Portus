@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # Allows the creation of exactly one registry. It also allows updating the
 # "use_ssl" attribute of a given registry. Doing all this is safe because only
 # admin users will be able to reach this controller.
 class Admin::RegistriesController < Admin::BaseController
-  before_action :registry_created, only: [:new, :create]
+  before_action :registry_created, only: %i[new create]
 
   # GET /admin/registries/
   def index

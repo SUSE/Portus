@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ExploreController exposes a search interface for non-logged in (anonymous)
 # users. It allows these users to search for public repositories.
 class ExploreController < ActionController::Base

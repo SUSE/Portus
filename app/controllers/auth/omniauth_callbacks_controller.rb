@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token
   before_action :check_user, except: [:failure]
@@ -49,7 +51,7 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       true
     else
       redirect_to new_user_session_url,
-        alert: "Email addresses on the domain #{d} aren't allowed."
+                  alert: "Email addresses on the domain #{d} aren't allowed."
       false
     end
   end

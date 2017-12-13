@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # PasswordsController is a Devise controller that takes care of the "password
 # forgotten" mechanism.
 class PasswordsController < Devise::PasswordsController
@@ -27,7 +29,7 @@ class PasswordsController < Devise::PasswordsController
     else
       token = params[:user][:reset_password_token]
       redirect_to "/users/password/edit?reset_password_token=#{token}",
-        alert: resource.errors.full_messages, float: true
+                  alert: resource.errors.full_messages, float: true
     end
   end
 

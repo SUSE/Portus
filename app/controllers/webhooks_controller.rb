@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 # WebhooksController manages the creation/removal/update of webhooks.
 # Also, it manages their state, i.e. enabled/disabled.
 class WebhooksController < ApplicationController
   respond_to :html, :js
 
   before_action :set_namespace
-  before_action :set_webhook, only: [:update, :show, :destroy, :toggle_enabled]
+  before_action :set_webhook, only: %i[update show destroy toggle_enabled]
 
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: :index

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 unless Rails.env.production?
   protocol = ::APP_CONFIG.enabled?("check_ssl_usage") ? "https://" : "http://"
 

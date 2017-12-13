@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: namespaces
@@ -44,14 +46,14 @@ describe NamespacesController, type: :controller do
     )
   end
 
-  before :each do
+  before do
     # trigger creation of registry
     registry
     sign_in user
   end
 
   describe "GET #index" do
-    it "should render index template successfully [html]" do
+    it "renders index template successfully [html]" do
       get :index, valid_session
 
       expect(response).to render_template(:index)
@@ -62,7 +64,7 @@ describe NamespacesController, type: :controller do
   describe "GET #show" do
     let!(:portus) { create(:admin, username: "portus") }
 
-    it "should paginate repositories" do
+    it "paginates repositories" do
       sign_in owner
       get :show, id: namespace.id
 
@@ -103,9 +105,9 @@ describe NamespacesController, type: :controller do
       it "allows the user to change the visibility attribute" do
         sign_in owner
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :js
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :js
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_public")
@@ -115,9 +117,9 @@ describe NamespacesController, type: :controller do
       it "allows the user to change the visibility attribute [json]" do
         sign_in owner
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :json
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :json
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_public")
@@ -127,16 +129,16 @@ describe NamespacesController, type: :controller do
 
     # only admins may change the visibility of a user's personal namespace
     context "when option user_permission.change_visibility is disabled" do
-      before :each do
+      before do
         APP_CONFIG["user_permission"]["change_visibility"]["enabled"] = false
       end
 
       it "prohibits the user from changing the visibility attribute" do
         sign_in owner
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :js
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :js
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_private")
@@ -146,9 +148,9 @@ describe NamespacesController, type: :controller do
       it "prohibits the user from changing the visibility attribute [json]" do
         sign_in owner
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :json
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :json
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_private")
@@ -158,9 +160,9 @@ describe NamespacesController, type: :controller do
       it "allows an admin to change the visibility attribute" do
         sign_in admin
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :js
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :js
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_public")
@@ -170,9 +172,9 @@ describe NamespacesController, type: :controller do
       it "allows an admin to change the visibility attribute [json]" do
         sign_in admin
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :json
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :json
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_public")
@@ -182,9 +184,9 @@ describe NamespacesController, type: :controller do
       it "allows an admin to change the visibility attribute" do
         sign_in admin
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :js
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :js
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_public")
@@ -194,9 +196,9 @@ describe NamespacesController, type: :controller do
       it "allows an admin to change the visibility attribute [json]" do
         sign_in admin
         put :change_visibility,
-          id:         owner.namespace.id,
-          visibility: "visibility_public",
-          format:     :json
+            id:         owner.namespace.id,
+            visibility: "visibility_public",
+            format:     :json
 
         owner.namespace.reload
         expect(owner.namespace.visibility).to eq("visibility_public")
@@ -207,9 +209,9 @@ describe NamespacesController, type: :controller do
     it "allows the owner of the team to change the visibility attribute" do
       sign_in owner
       put :change_visibility,
-        id:         namespace.id,
-        visibility: "visibility_public",
-        format:     :js
+          id:         namespace.id,
+          visibility: "visibility_public",
+          format:     :js
 
       namespace.reload
       expect(namespace.visibility).to eq("visibility_public")
@@ -219,9 +221,9 @@ describe NamespacesController, type: :controller do
     it "blocks users that are not part of the team" do
       sign_in create(:user)
       put :change_visibility,
-        id:         namespace.id,
-        visibility: "visibility_public",
-        format:     :js
+          id:         namespace.id,
+          visibility: "visibility_public",
+          format:     :js
 
       expect(response.status).to eq 401
     end
@@ -256,7 +258,7 @@ describe NamespacesController, type: :controller do
     end
 
     context "non-admins are not allowed to update namespaces" do
-      before :each do
+      before do
         APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
       end
 
@@ -327,7 +329,7 @@ describe NamespacesController, type: :controller do
   end
 
   describe "activity tracking" do
-    before :each do
+    before do
       sign_in owner
     end
 
@@ -415,7 +417,7 @@ describe NamespacesController, type: :controller do
     end
 
     context "non-admins are not allowed to update namespaces" do
-      before :each do
+      before do
         APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
       end
 

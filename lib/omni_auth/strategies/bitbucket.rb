@@ -1,13 +1,16 @@
+# frozen_string_literal: true
+
 require "omniauth-oauth2"
 
 module OmniAuth
   module Strategies
+    # Bitbucket implements the OAuth2 protocol for bitbucket.
     class Bitbucket < OmniAuth::Strategies::OAuth2
       option :name, "bitbucket"
       option :client_options,
-        site:          "https://bitbucket.org",
-        authorize_url: "https://bitbucket.org/site/oauth2/authorize",
-        token_url:     "https://bitbucket.org/site/oauth2/access_token"
+             site:          "https://bitbucket.org",
+             authorize_url: "https://bitbucket.org/site/oauth2/authorize",
+             token_url:     "https://bitbucket.org/site/oauth2/access_token"
 
       uid { raw_info["uuid"].to_s }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # :nocov:
 require "portus/security_backends/base"
 
@@ -7,7 +9,7 @@ module Portus
     # is meant to be used only for development/testing purposes.
     class Dummy < ::Portus::SecurityBackend::Base
       # Files stored in `lib/portus/security_backends/fixtures`.
-      DUMMY_FIXTURE = "dummy.json".freeze
+      DUMMY_FIXTURE = "dummy.json"
 
       # Whether the response from the `vulnerabilities` method should be as
       # "Working in Progress".

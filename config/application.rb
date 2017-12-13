@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../boot", __FILE__)
 
 require "rails/all"
@@ -7,6 +9,7 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 module Portus
+  # Application implements the Rails application base for Portus.
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -44,22 +47,22 @@ module Portus
       allow do
         origins APP_CONFIG["machine_fqdn"]["value"]
         resource "/api/*",
-          credentials: true,
-          headers:     :any,
-          methods:     :any,
-          expose:      ["Link", "X-Total", "X-Total-Pages", "X-Per-Page",
-                        "X-Page", "X-Next-Page", "X-Prev-Page"]
+                 credentials: true,
+                 headers:     :any,
+                 methods:     :any,
+                 expose:      ["Link", "X-Total", "X-Total-Pages", "X-Per-Page",
+                               "X-Page", "X-Next-Page", "X-Prev-Page"]
       end
 
       # Cross-origin requests must not have the session cookie available
       allow do
         origins "*"
         resource "/api/*",
-          credentials: false, # See the `credentials` in https://github.com/cyu/rack-cors#origin
-          headers:     :any,
-          methods:     :any,
-          expose:      ["Link", "X-Total", "X-Total-Pages", "X-Per-Page",
-                        "X-Page", "X-Next-Page", "X-Prev-Page"]
+                 credentials: false, # See the `credentials` in https://github.com/cyu/rack-cors#origin
+                 headers:     :any,
+                 methods:     :any,
+                 expose:      ["Link", "X-Total", "X-Total-Pages", "X-Per-Page",
+                               "X-Page", "X-Next-Page", "X-Prev-Page"]
       end
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe ErrorsController do
@@ -11,7 +13,7 @@ describe ErrorsController do
         @secret_portus_password = secrets.portus_password
       end
 
-      before :each do
+      before do
         secrets = Rails.application.secrets
         secrets.secret_key_base = @secret_key_base
         secrets.machine_fqdn = @secret_machine_fqdn
@@ -57,7 +59,7 @@ describe ErrorsController do
         Rails.env = ActiveSupport::StringInquirer.new("test")
       end
 
-      before :each do
+      before do
         Rails.env = ActiveSupport::StringInquirer.new("production")
       end
 

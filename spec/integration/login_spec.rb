@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "integration/helper"
 
 integration "Login" do
@@ -5,7 +7,7 @@ integration "Login" do
   let(:email)     { "john@example.com" }
   let(:password)  { "12341234" }
 
-  after :each do
+  after do
     `docker logout #{registry_hostname}`
   end
 
@@ -23,7 +25,6 @@ integration "Login" do
 
     create_user("mc!", email, password, true)
     expect { login(name, password, email) }.not_to raise_error
-
   end
 
   it "allows users to push images with multiple tags" do

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Portus
   # Handle an event as given by the Registry and processes it so it can be
   # consumed later on.
   class RegistryNotification
     # An array with the events that a handler has to support.
-    HANDLED_EVENTS = ["push", "delete"].freeze
+    HANDLED_EVENTS = %w[push delete].freeze
 
     # Processes the notification data with the given handlers. The data is the
     # parsed JSON body as given by the registry. A handler is a class that can

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Login feature" do
+describe "Login feature" do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:user) }
 
@@ -8,20 +10,20 @@ feature "Login feature" do
     visit new_user_session_path
   end
 
-  scenario "It does not show any flash when accessing for the first time" do
+  it "does not show any flash when accessing for the first time" do
     visit root_path
-    expect(page).to_not have_content("You need to sign in or sign up before continuing.")
+    expect(page).not_to have_content("You need to sign in or sign up before continuing.")
   end
 
-  scenario "It does show a warning for the admin creation in LDAP support" do
+  it "does show a warning for the admin creation in LDAP support" do
     User.delete_all
     APP_CONFIG["first_user_admin"] = { "enabled" => false }
     APP_CONFIG["ldap"] = { "enabled" => true }
     visit new_user_session_path
 
-    expect(page).to_not have_content("The first user to be created will have admin permissions !")
-    expect(page).to_not have_content("Create a new account")
-    expect(page).to_not have_content("I forgot my password")
+    expect(page).not_to have_content("The first user to be created will have admin permissions !")
+    expect(page).not_to have_content("Create a new account")
+    expect(page).not_to have_content("I forgot my password")
 
     APP_CONFIG["first_user_admin"] = { "enabled" => true }
     visit new_user_session_path
@@ -31,10 +33,10 @@ feature "Login feature" do
     create(:admin)
 
     visit new_user_session_path
-    expect(page).to_not have_content("The first user to be created will have admin permissions !")
+    expect(page).not_to have_content("The first user to be created will have admin permissions !")
   end
 
-  scenario "Skips validation of minimum password length when authenticating via LDAP" do
+  it "Skips validation of minimum password length when authenticating via LDAP" do
     APP_CONFIG["ldap"] = { "enabled" => true }
 
     # Skipping validation for LDAP users is configured when the user model is first interpreted
@@ -47,7 +49,7 @@ feature "Login feature" do
 
     ldap_user = CleanRoom::User.first
     ldap_user.password = "short"
-    expect(ldap_user.save).to eql(true)
+    expect(ldap_user.save).to be(true)
 
     fill_in "user_username", with: ldap_user.username
     fill_in "user_password", with: ldap_user.password
@@ -57,8 +59,8 @@ feature "Login feature" do
     expect(page).to have_content("Repositories")
   end
 
-  scenario "Existing user is able using his login and password to login into Portus" do
-    expect(page).to_not have_content("Invalid username or password")
+  it "Existing user is able using his login and password to login into Portus" do
+    expect(page).not_to have_content("Invalid username or password")
 
     # We don't use Capybara's `login_as` method on purpose, because we are
     # testing the UI for logging in.
@@ -68,10 +70,10 @@ feature "Login feature" do
 
     expect(page).to have_content("Recent activities")
     expect(page).to have_content("Repositories")
-    expect(page).to_not have_content("Signed in")
+    expect(page).not_to have_content("Signed in")
   end
 
-  scenario "Wrong password results in an error message" do
+  it "Wrong password results in an error message" do
     fill_in "user_username", with: "foo"
     fill_in "user_password", with: "bar"
     find("#login-btn").click
@@ -80,13 +82,13 @@ feature "Login feature" do
     expect(page).to have_content("Invalid username or password")
   end
 
-  scenario "When guest tries to access dashboard - he is redirected to the login page" do
+  it "When guest tries to access dashboard - he is redirected to the login page" do
     visit root_path
     expect(page).to have_content("Login")
     expect(page).to have_current_path(root_path)
   end
 
-  scenario "Successful login when trying to access a page redirects back the guest" do
+  it "Successful login when trying to access a page redirects back the guest" do
     visit namespaces_path
     expect(page).to have_content("You need to sign in or sign up before continuing.")
     fill_in "user_username", with: user.username
@@ -96,7 +98,7 @@ feature "Login feature" do
     expect(page).to have_content("Namespaces you have access to")
   end
 
-  scenario "A disabled user cannot login" do
+  it "A disabled user cannot login" do
     user.update_attributes(enabled: false)
     fill_in "user_username", with: user.username
     fill_in "user_password", with: user.password
@@ -107,7 +109,7 @@ feature "Login feature" do
     expect(page).to have_current_path(new_user_session_path)
   end
 
-  scenario "Sign up is disabled" do
+  it "Sign up is disabled" do
     APP_CONFIG["signup"] = { "enabled" => true }
 
     visit root_path
@@ -119,21 +121,21 @@ feature "Login feature" do
     visit root_path
     expect(page).to have_current_path(root_path)
     expect(page).to have_content("I forgot my password")
-    expect(page).to_not have_content("Create a new account")
+    expect(page).not_to have_content("Create a new account")
   end
 
   describe "User is lockable" do
-    before :each do
+    before do
       @attempts  = Devise.maximum_attempts
       @unlock_in = Devise.unlock_in
     end
 
-    after :each do
+    after do
       Devise.maximum_attempts = @attempts
       Devise.unlock_in        = @unlock_in
     end
 
-    scenario "locks the user when too many attempts have been made" do
+    it "locks the user when too many attempts have been made" do
       # Let's be fast and lock on the first attempt.
       Devise.maximum_attempts = 1
 
@@ -144,7 +146,7 @@ feature "Login feature" do
 
       expect(page).to have_content("Your account is locked.")
       user.reload
-      expect(user.access_locked?).to be_truthy
+      expect(user).to be_access_locked
 
       # The account is locked, regardless that we provide the proper password
       # now.
@@ -154,7 +156,7 @@ feature "Login feature" do
 
       expect(page).to have_content("Your account is locked.")
       user.reload
-      expect(user.access_locked?).to be_truthy
+      expect(user).to be_access_locked
 
       # Unlock the account, the locking time has expired.
       Devise.unlock_in = 1.second

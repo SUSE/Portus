@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Defines the policy for the tag object.
 class TagPolicy
   attr_reader :user, :tag

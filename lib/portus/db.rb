@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Portus
   # The DB module has useful methods for DB purposes.
   module DB

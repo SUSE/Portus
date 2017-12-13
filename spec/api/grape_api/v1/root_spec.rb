@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
+# TestAPI implements a MethodNotAllowed endpoint.
 class TestAPI < Grape::API
   version "v1", using: :path
 
@@ -8,9 +11,11 @@ class TestAPI < Grape::API
   end
 end
 
+# Re-opening ::API::RootAPI to mount the TestAPI endpoints.
 class ::API::RootAPI
   mount ::TestAPI
 end
+# rubocop:enable Style/ClassAndModuleChildren
 
 describe API::RootAPI do
   it "handles unknown routes" do

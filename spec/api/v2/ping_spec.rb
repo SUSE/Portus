@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "/v2 ping" do
-
   let(:auth_mech) { ActionController::HttpAuthentication::Basic }
   let(:password) { "this is a test" }
   let(:user) { create(:user, password: password) }
@@ -22,5 +23,4 @@ describe "/v2 ping" do
     get v2_ping_url, { service: "test", account: "account" }, invalid_auth_header
     expect(response.status).to eq 401
   end
-
 end

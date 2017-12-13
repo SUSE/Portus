@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "portus/auth_from_token"
 
 class ApplicationController < ActionController::Base

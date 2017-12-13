@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe DashboardController, type: :controller do
   let(:user) { create(:user) }
 
-  before :each do
+  before do
     create(:registry)
     sign_in user
   end

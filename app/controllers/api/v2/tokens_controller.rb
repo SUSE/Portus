@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TokensController is used to deliver the token that the docker client should
 # use in order to perform operation into the registry. This is the last step in
 # the authentication process for Portus' point of view.
@@ -49,27 +51,11 @@ class Api::V2::TokensController < Api::BaseController
     scopes.each do |scope|
       auth_scope, actions = scope_handler(registry, scope)
 
-      actions.each do |action|
-        # It will try to check if the current user is authorized to access the
-        # scope given in this iteration. If everything is fine, then nothing will
-        # happen, otherwise there are two possible exceptions that can be raised:
-        #
-        #   - NoMethodError: the targeted resource does not handle the scope that
-        #     is being checked. It will raise a ScopeNotHandled.
-        #   - Pundit::NotAuthorizedError: the targeted resource unauthorized the
-        #     given user for the scope that is being checked. In this case this
-        #     scope gets removed from `auth_scope.actions`.
-        begin
-          authorize auth_scope.resource, "#{action}?".to_sym
-        rescue NoMethodError, Pundit::NotAuthorizedError, Portus::AuthScope::ResourceNotFound
-          logger.debug "action #{action} not handled/authorized, removing from actions"
-          auth_scope.actions.delete_if { |a| match_action(action, a) }
-        end
-      end
-
+      actions.each { |action| triage_action!(auth_scope, action) }
       next if auth_scope.actions.empty?
-      # if there is already a similar scope (type and resource name),
-      # we combine them into one:
+
+      # If there is already a similar scope (type and resource name), we combine
+      # them into one:
       # e.g. scope=repository:busybox:push&scope=repository:busybox:pull
       #      -> access=>[{:type=>"repository", :name=>"busybox", :actions=>["push", "pull"]}
       k = [auth_scope.resource_type, auth_scope.resource_name]
@@ -80,6 +66,22 @@ class Api::V2::TokensController < Api::BaseController
       end
     end
     auth_scopes.values
+  end
+
+  # It will try to check if the current user is authorized to access the
+  # scope given in this iteration. If everything is fine, then nothing will
+  # happen, otherwise there are two possible exceptions that can be raised:
+  #
+  #   - NoMethodError: the targeted resource does not handle the scope that
+  #     is being checked. It will raise a ScopeNotHandled.
+  #   - Pundit::NotAuthorizedError: the targeted resource unauthorized the
+  #     given user for the scope that is being checked. In this case this
+  #     scope gets removed from `auth_scope.actions`.
+  def triage_action!(auth_scope, action)
+    authorize auth_scope.resource, "#{action}?".to_sym
+  rescue NoMethodError, Pundit::NotAuthorizedError, Portus::AuthScope::ResourceNotFound
+    logger.debug "action #{action} not handled/authorized, removing from actions"
+    auth_scope.actions.delete_if { |a| match_action(action, a) }
   end
 
   # Returns true if the given item matches the given action.

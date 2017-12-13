@@ -1,21 +1,21 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe TeamPolicy do
-
   subject { described_class }
 
   let(:member) { create(:user) }
   let(:team) { create(:team, owners: [member]) }
 
-  before :each do
+  before do
     @admin = create(:admin)
     create(:registry)
   end
 
   permissions :member? do
-
     it "denies access to a user who is not part of the team" do
-      expect(subject).to_not permit(create(:user), team)
+      expect(subject).not_to permit(create(:user), team)
     end
 
     it "allows access to a member of the team" do
@@ -25,7 +25,6 @@ describe TeamPolicy do
     it "allows access to an admin even if he is not part of the team" do
       expect(subject).to permit(@admin, team)
     end
-
   end
 
   describe "scope" do
@@ -43,5 +42,4 @@ describe TeamPolicy do
       expect(Pundit.policy_scope(user, Team).to_a).to be_empty
     end
   end
-
 end

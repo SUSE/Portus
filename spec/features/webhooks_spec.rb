@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Webhooks support" do
+describe "Webhooks support" do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:admin) }
   let!(:user2) { create(:user) }
@@ -20,7 +22,7 @@ feature "Webhooks support" do
   end
 
   describe "#index" do
-    scenario "A user cannot create an empty webhook", js: true do
+    it "A user cannot create an empty webhook", js: true do
       webhooks_count = namespace.webhooks.count
 
       visit namespace_webhooks_path(namespace)
@@ -33,7 +35,7 @@ feature "Webhooks support" do
       expect(page).to have_current_path(namespace_webhooks_path(namespace))
     end
 
-    scenario "A user can create a webhook from namespace's webhooks page", js: true do
+    it "A user can create a webhook from namespace's webhooks page", js: true do
       webhooks_count = namespace.webhooks.count
 
       visit namespace_webhooks_path(namespace)
@@ -58,24 +60,24 @@ feature "Webhooks support" do
       expect(page).to have_current_path(namespace_webhook_path(namespace, webhook))
     end
 
-    scenario 'The "Create new webhook" link has a toggle effect', js: true do
+    it 'The "Create new webhook" link has a toggle effect', js: true do
       visit namespace_webhooks_path(namespace)
 
       expect(page).to have_css("#add_webhook_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_webhook_btn i.fa-minus-circle")
+      expect(page).not_to have_css("#add_webhook_btn i.fa-minus-circle")
 
       find("#add_webhook_btn").click
 
-      expect(page).to_not have_css("#add_webhook_btn i.fa-plus-circle")
+      expect(page).not_to have_css("#add_webhook_btn i.fa-plus-circle")
       expect(page).to have_css("#add_webhook_btn i.fa-minus-circle")
 
       find("#add_webhook_btn").click
 
       expect(page).to have_css("#add_webhook_btn i.fa-plus-circle")
-      expect(page).to_not have_css("#add_webhook_btn i.fa-minus-circle")
+      expect(page).not_to have_css("#add_webhook_btn i.fa-minus-circle")
     end
 
-    scenario "A user enables/disables webhook", js: true do
+    it "A user enables/disables webhook", js: true do
       visit namespace_webhooks_path(namespace)
       id = webhook.id
 
@@ -93,7 +95,7 @@ feature "Webhooks support" do
       expect(page).to have_content("Webhook '#{webhook.url}' is now enabled")
     end
 
-    scenario "A user deletes a webhook", js: true do
+    it "A user deletes a webhook", js: true do
       visit namespace_webhooks_path(namespace)
       id = webhook.id
 
@@ -109,7 +111,7 @@ feature "Webhooks support" do
   end
 
   describe "#show" do
-    scenario "A user updates webhooks info", js: true do
+    it "A user updates webhooks info", js: true do
       visit namespace_webhook_path(namespace, webhook)
 
       find(".edit-webhook-link").click
@@ -125,11 +127,11 @@ feature "Webhooks support" do
       expect(page).to have_content("Webhook 'new-webhook-url' has been updated successfully")
     end
 
-    scenario 'The "Edit webhook" link has a toggle effect', js: true do
+    it 'The "Edit webhook" link has a toggle effect', js: true do
       visit namespace_webhook_path(namespace, webhook)
 
       expect(page).to have_css(".edit-webhook-link .fa-pencil")
-      expect(page).to_not have_css(".edit-webhook-link .fa-close")
+      expect(page).not_to have_css(".edit-webhook-link .fa-close")
 
       find(".edit-webhook-link").click
 
@@ -139,11 +141,11 @@ feature "Webhooks support" do
       find(".edit-webhook-link").click
 
       expect(page).to have_css(".edit-webhook-link .fa-pencil")
-      expect(page).to_not have_css(".edit-webhook-link .fa-close")
+      expect(page).not_to have_css(".edit-webhook-link .fa-close")
     end
 
     describe "webhook_header" do
-      scenario "A user can create a header from webhook's page", js: true do
+      it "A user can create a header from webhook's page", js: true do
         webhook_headers_count = webhook.headers.count
 
         visit namespace_webhook_path(namespace, webhook)
@@ -165,7 +167,7 @@ feature "Webhooks support" do
         expect(webhook.headers.count).to eql webhook_headers_count + 1
       end
 
-      scenario "A user cannot create a header that already exists", js: true do
+      it "A user cannot create a header that already exists", js: true do
         webhook_headers_count = webhook.headers.count
 
         visit namespace_webhook_path(namespace, webhook)
@@ -185,7 +187,7 @@ feature "Webhooks support" do
         expect(webhook.headers.count).to eql webhook_headers_count
       end
 
-      scenario "A user deletes a webhook header", js: true do
+      it "A user deletes a webhook header", js: true do
         visit namespace_webhook_path(namespace, webhook)
         id = webhook_header.id
 
@@ -204,21 +206,21 @@ feature "Webhooks support" do
         expect(page).not_to have_content(webhook_header.value)
       end
 
-      scenario 'The "Create new header" link has a toggle effect', js: true do
+      it 'The "Create new header" link has a toggle effect', js: true do
         visit namespace_webhook_path(namespace, webhook)
 
         expect(page).to have_css("#add_webhook_header_btn i.fa-plus-circle")
-        expect(page).to_not have_css("#add_webhook_header_btn i.fa-minus-circle")
+        expect(page).not_to have_css("#add_webhook_header_btn i.fa-minus-circle")
 
         find("#add_webhook_header_btn").click
 
-        expect(page).to_not have_css("#add_webhook_header_btn i.fa-plus-circle")
+        expect(page).not_to have_css("#add_webhook_header_btn i.fa-plus-circle")
         expect(page).to have_css("#add_webhook_header_btn i.fa-minus-circle")
 
         find("#add_webhook_header_btn").click
 
         expect(page).to have_css("#add_webhook_header_btn i.fa-plus-circle")
-        expect(page).to_not have_css("#add_webhook_header_btn i.fa-minus-circle")
+        expect(page).not_to have_css("#add_webhook_header_btn i.fa-minus-circle")
       end
     end
   end

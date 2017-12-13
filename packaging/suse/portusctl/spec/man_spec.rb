@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "spec_helper"
 require "man_pages"
 
@@ -25,9 +27,10 @@ def names(main = true)
   files << "portusctl"
 end
 
+# rubocop:disable Metrics/BlockLength
 describe ManPages do
   it "describes all the available commands" do
-    names.each { |c| expect(File.exist?(md_path(c))).to be_truthy }
+    names.each { |c| expect(File).to be_exist(md_path(c)) }
   end
 
   it "contains the right header/footer" do
@@ -36,7 +39,7 @@ describe ManPages do
   end
 
   it "is up-to-date md to man" do
-    mp = ManPages.new
+    mp = described_class.new
 
     names.each do |n|
       got = mp.render_markdown(md_path(n))
@@ -48,9 +51,9 @@ describe ManPages do
   end
 
   it "contains all the required sections" do
-    common = ["NAME", "SYNOPSIS", "DESCRIPTION", "HISTORY"]
+    common = %w[NAME SYNOPSIS DESCRIPTION HISTORY]
 
-    (common + ["COMMANDS", "EXAMPLES"]).each do |section|
+    (common + %w[COMMANDS EXAMPLES]).each do |section|
       expect(section_in_file(section, "portusctl")).to be_truthy
     end
 
@@ -59,7 +62,7 @@ describe ManPages do
         if ["portusctl-logs", "portusctl-help", "portusctl-make-admin"].include?(n)
           common
         elsif n == "portusctl-setup"
-          common + ["OPTIONS", "EXAMPLES"]
+          common + %w[OPTIONS EXAMPLES]
         else
           common + ["EXAMPLES"]
         end
@@ -79,3 +82,4 @@ describe ManPages do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

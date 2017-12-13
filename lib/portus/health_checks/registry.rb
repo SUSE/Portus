@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Portus
   module HealthChecks
     # Registry offers health check support for the configured Docker

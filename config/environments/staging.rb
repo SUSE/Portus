@@ -1,4 +1,5 @@
-# rubocop:disable Metrics/BlockLength
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -50,10 +51,10 @@ Rails.application.configure do
   # when problems arise by default. Otherwise, the user might specify its own
   # log level through the `PORTUS_LOG_LEVEL` environment variable.
   config.log_level = if ENV["PORTUS_LOG_LEVEL"]
-    ENV["PORTUS_LOG_LEVEL"].to_sym
-  else
-    :info
-  end
+                       ENV["PORTUS_LOG_LEVEL"].to_sym
+                     else
+                       :info
+                     end
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [:subdomain, :uuid]
@@ -85,16 +86,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Run pending migrations
-  # rubocop:disable Lint/RescueWithoutErrorClass
-  unless ENV["SKIP_MIGRATION"]
-    config.after_initialize do
-      begin
-        ActiveRecord::Migrator.migrate(Rails.root.join("db", "migrate"), nil)
-      rescue
-        warn "Error running migration! Please review database configuration"
-      end
-    end
-  end
-  # rubocop:enable Lint/RescueWithoutErrorClass
+  require_relative "helpers/migrate"
+  run_migration!(config)
 end
-# rubocop:enable Metrics/BlockLength

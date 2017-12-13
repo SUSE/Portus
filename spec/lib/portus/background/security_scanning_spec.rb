@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "portus/background/security_scanning"
 
@@ -7,7 +9,7 @@ describe ::Portus::Background::SecurityScanning do
   let!(:registry)   { create(:registry, hostname: "my.registry:5000", use_ssl: true) }
   let!(:repository) { create(:repository, name: "repo", namespace: registry.global_namespace) }
 
-  before :each do
+  before do
     APP_CONFIG["security"] = {
       "clair"  => { "server" => "http://localhost:6060" },
       "zypper" => { "server" => "" },
@@ -18,18 +20,18 @@ describe ::Portus::Background::SecurityScanning do
   describe "#work?" do
     it "returns false if security scanning is not enabled" do
       APP_CONFIG["security"]["clair"]["server"] = ""
-      expect(subject.work?).to be_falsey
+      expect(subject).not_to be_work
     end
 
     it "returns true if there are tags to be scanned" do
       create(:tag, name: "tag", repository: repository, digest: "1", author: admin)
-      expect(subject.work?).to be_truthy
+      expect(subject).to be_work
     end
 
     it "returns false if no tags are to be scanned" do
       create(:tag, name: "tag", repository: repository, digest: "1",
              author: admin, scanned: Tag.statuses[:scan_done])
-      expect(subject.work?).to be_falsey
+      expect(subject).not_to be_work
     end
   end
 
@@ -45,7 +47,7 @@ describe ::Portus::Background::SecurityScanning do
 
       tag.reload
       expect(tag.scanned).to eq Tag.statuses[:scan_done]
-      expect(tag.vulnerabilities).to_not be_empty
+      expect(tag.vulnerabilities).not_to be_empty
     end
 
     it "ignores it when a push has happened while fetching vulnerabilities" do
@@ -100,8 +102,8 @@ describe ::Portus::Background::SecurityScanning do
       subject.execute!
 
       expect(count).to eq 1
-      expect(Tag.all.all? { |t| t.scanned == Tag.statuses[:scan_done] }).to be_truthy
-      expect(Tag.all.all? { |t| t.vulnerabilities == ["something"] }).to be_truthy
+      expect(Tag.all).to(be_all { |t| t.scanned == Tag.statuses[:scan_done] })
+      expect(Tag.all).to(be_all { |t| t.vulnerabilities == ["something"] })
     end
   end
 

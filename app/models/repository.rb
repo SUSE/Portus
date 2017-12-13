@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: repositories
@@ -99,9 +101,7 @@ class Repository < ActiveRecord::Base
     repository = Repository.add_repo(event, namespace, repo_name, tag_name)
     return if repository.nil?
 
-    # rubocop:disable Style/SafeNavigation
-    namespace.repositories << repository if namespace
-    # rubocop:enable Style/SafeNavigation
+    namespace&.repositories&.push(repository)
     repository
   end
 
@@ -237,14 +237,13 @@ class Repository < ActiveRecord::Base
 
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
-      # rubocop:disable Lint/RescueWithoutErrorClass
       begin
         id, digest, = client.manifest(repository.full_name, tag)
-      rescue
+      rescue ::Portus::RegistryClient::ManifestError, ::Portus::RequestError => e
+        Rails.logger.info e.to_s
         id = ""
         digest = ""
       end
-      # rubocop:enable Lint/RescueWithoutErrorClass
 
       t = Tag.create!(
         name:       tag,

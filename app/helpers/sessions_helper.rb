@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Renders the social login buttons if one of the `oauth` configuration has been enabled.
 #

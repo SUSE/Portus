@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Portus
   # Performs some checks on runtime to validate that some settings from Portus
   # are properly set.

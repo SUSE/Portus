@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe API::V1::Registries do
-  before :each do
+  before do
     admin = create :admin
     token = create :application_token, user: admin
     @header = build_token_header(token)

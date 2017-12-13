@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe HelpController, type: :controller do
@@ -5,7 +7,7 @@ describe HelpController, type: :controller do
     let!(:registry)   { create(:registry, hostname: "registry.test.lan") }
     let!(:user)       { create(:admin) }
 
-    before :each do
+    before do
       sign_in user
       request.env["HTTP_REFERER"] = "/"
     end

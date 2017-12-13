@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # We use our own error routes because we need to display pages for bad server
 # configurations too. Moreover, this way we get richer pages while sharing as
 # much code as possible.

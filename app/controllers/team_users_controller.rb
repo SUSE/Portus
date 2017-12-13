@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # TeamUsersController manages the creation/removal/update of members of a team.
 class TeamUsersController < ApplicationController
   before_action :set_team_user
-  before_action :promoted_owner, only: [:create, :update]
-  before_action :only_owner, only: [:update, :destroy]
+  before_action :promoted_owner, only: %i[create update]
+  before_action :only_owner, only: %i[update destroy]
   after_action :verify_authorized
 
   respond_to :js

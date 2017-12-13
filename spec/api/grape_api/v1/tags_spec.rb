@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe API::V1::Tags do
@@ -10,7 +12,7 @@ describe API::V1::Tags do
   end
   let!(:repository) { create(:repository, namespace: public_namespace) }
 
-  before :each do
+  before do
     @header = build_token_header(token)
   end
 

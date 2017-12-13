@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Explore feature" do
+describe "Explore feature" do
   let!(:registry) { create(:registry) }
   let!(:user)     { create(:user) }
 

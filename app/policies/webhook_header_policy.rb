@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebhookHeaderPolicy < WebhookPolicy
   attr_reader :webhook_header
 

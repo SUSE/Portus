@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "portus/migrate"
 
 env = ENV["CATALOG_CRON"] || 10

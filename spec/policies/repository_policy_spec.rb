@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe RepositoryPolicy do
@@ -10,7 +12,7 @@ describe RepositoryPolicy do
   let(:team2)       { create(:team, owners: [user2]) }
 
   permissions :show? do
-    before :each do
+    before do
       public_namespace = create(
         :namespace,
         team:       team2,
@@ -54,7 +56,7 @@ describe RepositoryPolicy do
     end
 
     it "denies access if repository is private and the user is no team member or an admin" do
-      expect(subject).to_not permit(user, @private_repository)
+      expect(subject).not_to permit(user, @private_repository)
     end
 
     context "Anonymous users" do
@@ -63,13 +65,13 @@ describe RepositoryPolicy do
       end
 
       it "does not grant access if the namespace is private and the user is anonymous" do
-        expect(subject).to_not permit(nil, @private_repository)
+        expect(subject).not_to permit(nil, @private_repository)
       end
     end
   end
 
   permissions :destroy? do
-    before :each do
+    before do
       public_namespace = create(
         :namespace,
         team:       team2,
@@ -99,28 +101,28 @@ describe RepositoryPolicy do
     end
 
     it "denies access if the namespace is public" do
-      expect(subject).to_not permit(user, @public_repository)
+      expect(subject).not_to permit(user, @public_repository)
     end
 
     it "denies access if the namespace is protected" do
-      expect(subject).to_not permit(user, @protected_repository)
+      expect(subject).not_to permit(user, @protected_repository)
     end
 
     it "grants access if the repository belongs to a namespace of a team member" do
       user3 = create(:user)
       TeamUser.create(team: team2, user: user3, role: TeamUser.roles["viewer"])
-      expect(subject).to_not permit(user3, @private_repository)
+      expect(subject).not_to permit(user3, @private_repository)
       TeamUser.find_by(team: team2, user: user3).update_attributes(role: TeamUser.roles["owner"])
       expect(subject).to permit(user3, @private_repository)
     end
 
     it "denies access if repository is private and the user is no team member or an admin" do
-      expect(subject).to_not permit(user, @private_repository)
+      expect(subject).not_to permit(user, @private_repository)
     end
   end
 
   describe "scope" do
-    before :each do
+    before do
       public_namespace = create(
         :namespace,
         team:       team2,

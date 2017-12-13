@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -41,12 +43,12 @@ class User < ActiveRecord::Base
   enabled_devise_modules = [:database_authenticatable, :registerable, :lockable,
                             :recoverable, :rememberable, :trackable, :validatable,
                             :omniauthable,
-                            omniauth_providers:  [
-                              :google_oauth2,
-                              :open_id,
-                              :github,
-                              :gitlab,
-                              :bitbucket
+                            omniauth_providers:  %i[
+                              google_oauth2
+                              open_id
+                              github
+                              gitlab
+                              bitbucket
                             ],
                             authentication_keys: [:username]]
 

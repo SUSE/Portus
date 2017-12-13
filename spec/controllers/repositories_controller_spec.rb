@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: repositories
@@ -33,7 +35,7 @@ describe RepositoriesController, type: :controller do
   end
   let!(:invisible_repository) { create(:repository, namespace: private_namespace) }
 
-  before :each do
+  before do
     sign_in user
   end
 
@@ -79,7 +81,7 @@ describe RepositoriesController, type: :controller do
     let!(:tag3)       { create(:tag, name: "tag3", repository: repository, digest: "2") }
     let!(:tag4)       { create(:tag, name: "tag4", repository: repo, digest: "3") }
 
-    before :each do
+    before do
       sign_in user
       request.env["HTTP_REFERER"] = "/"
       APP_CONFIG["delete"] = { "enabled" => true }

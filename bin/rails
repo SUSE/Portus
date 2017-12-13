@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-# rubocop:disable Lint/HandleExceptions
 begin
   load File.expand_path("../spring", __FILE__)
-rescue LoadError
+rescue LoadError => e
+  raise unless e.message.include?("spring")
 end
-# rubocop:enable Lint/HandleExceptions
 
 APP_PATH = File.expand_path("../../config/application", __FILE__)
 require_relative "../config/boot"

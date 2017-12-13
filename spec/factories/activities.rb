@@ -1,5 +1,6 @@
-FactoryGirl.define do
+# frozen_string_literal: true
 
+FactoryGirl.define do
   factory :activity_team_create, class: PublicActivity::Activity do
     owner_type "User"
     key "team.create"
@@ -50,14 +51,14 @@ FactoryGirl.define do
     trackable_type "ApplicationToken"
     owner_type "User"
     key "application_token.created"
-    parameters Hash.new(application: "test application")
+    parameters { Hash.new(application: "test application") }
   end
 
   factory :activity_application_token_destroyed, class: PublicActivity::Activity do
     trackable_type "ApplicationToken"
     owner_type "User"
     key "application_token.destroyed"
-    parameters Hash.new(application: "test application")
+    parameters { Hash.new(application: "test application") }
   end
 
   factory :activity_webhook_create, class: PublicActivity::Activity do

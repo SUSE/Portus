@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Adding the Portus user.
 
 if User.any?

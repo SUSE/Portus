@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module API
+  # Entities is a module that groups all the classes to be used as Grape
+  # entities.
   module Entities
     # General entities
 
@@ -95,11 +99,7 @@ module API
     class Repositories < Grape::Entity
       expose :id, documentation: { type: Integer, desc: "Repository ID" }
       expose :name, documentation: { type: String, desc: "Repository name" }
-      # rubocop:disable Style/SymbolProc
-      expose :full_name, documentation: { type: String, desc: "Repository full name" } do |r|
-        r.full_name
-      end
-      # rubocop:enable Style/SymbolProc
+      expose :full_name, documentation: { type: String, desc: "Repository full name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
       expose :namespace, documentation: {
         desc: "The ID of the namespace containing this repository"

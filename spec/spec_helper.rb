@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
@@ -34,7 +36,7 @@ RSpec.configure do |config|
 
   # Some tests use Timecop, just make sure that everything is as expected
   # after returning from it.
-  config.before :each do
+  config.before do
     Timecop.return
 
     # Clear the global config before each test.

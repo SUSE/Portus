@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: application_tokens
@@ -22,7 +24,7 @@ describe ApplicationToken do
     it "checks for the uniqueness of application" do
       create(:application_token, application: "test", user: user)
       expect do
-        ApplicationToken.create!(
+        described_class.create!(
           application: "test",
           token_hash:  "hash",
           token_salt:  "salt",
@@ -36,7 +38,7 @@ describe ApplicationToken do
 
       user2 = create(:user)
       expect do
-        ApplicationToken.create!(
+        described_class.create!(
           application: "test",
           token_hash:  "hash",
           token_salt:  "salt",
@@ -51,7 +53,7 @@ describe ApplicationToken do
       end
 
       expect do
-        ApplicationToken.create!(
+        described_class.create!(
           application: "test",
           token_hash:  "hash",
           token_salt:  "salt",

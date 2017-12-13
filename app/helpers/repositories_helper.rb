@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Rendering push activities can be tricky, since tags can come on go, and with
 # them, dangling repositories that used to contain them. Because of this, this
 # helper renders the proper HTML for push activities, while being safe at it.
@@ -33,6 +35,18 @@ module RepositoriesHelper
   def can_destroy?(repository)
     APP_CONFIG.enabled?("delete") &&
       RepositoryPolicy.new(current_user, repository).destroy?
+  end
+
+  # Returns if any security module is enabled
+  def security_vulns_enabled?
+    ::Portus::Security.enabled?
+  end
+
+  # Returns true if any vulnerability is found
+  # Or false otherwise
+  def vulnerable?(vulnerabilities)
+    return if vulnerabilities.blank?
+    !vulnerabilities.reject { |_, vulns| vulns.empty? }.empty?
   end
 
   protected
@@ -127,17 +141,5 @@ module RepositoriesHelper
   # Namespace or not.
   def name_and_link(tr, activity)
     tr.is_a?(Namespace) ? [repo_name(activity), nil] : [tr.name, tr]
-  end
-
-  # Returns if any security module is enabled
-  def security_vulns_enabled?
-    ::Portus::Security.enabled?
-  end
-
-  # Returns true if any vulnerability is found
-  # Or false otherwise
-  def vulnerable?(vulnerabilities)
-    return if vulnerabilities.blank?
-    !vulnerabilities.reject { |_, vulns| vulns.empty? }.empty?
   end
 end

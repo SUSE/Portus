@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Portus
   # This is the base class for AuthScope classes. An AuthScope class retrieves
   # the information that can be extracted from a Docker scope string for the

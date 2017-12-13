@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Registries
   class ValidateService < ::BaseValidateService
     def execute

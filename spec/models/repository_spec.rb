@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: repositories
@@ -23,9 +25,9 @@ def get_url(repo, tag)
 end
 
 describe Repository do
-  it { should belong_to(:namespace) }
-  it { should have_many(:tags) }
-  it { should have_many(:stars) }
+  it { is_expected.to belong_to(:namespace) }
+  it { is_expected.to have_many(:tags) }
+  it { is_expected.to have_many(:stars) }
 
   describe "starrable behaviour" do
     let(:user) { create(:user) }
@@ -33,18 +35,18 @@ describe Repository do
     let(:star) { create(:star, user: user, repository: repository) }
     let(:other_user) { create(:user) }
 
-    it "should identify if it is already starred by a user" do
+    it "identifies if it is already starred by a user" do
       expect(star.repository.starred_by?(user)).to be true
       expect(star.repository.starred_by?(other_user)).to be false
     end
 
-    it "should be starrable by a user" do
+    it "is starrable by a user" do
       repository.toggle_star(user)
       expect(repository.starred_by?(user)).to be true
       expect(repository.starred_by?(other_user)).to be false
     end
 
-    it "should be unstarrable by a user" do
+    it "is unstarrable by a user" do
       repository = star.repository
       repository.toggle_star(user)
       expect(repository.starred_by?(user)).to be false
@@ -78,7 +80,7 @@ describe Repository do
     end
     let(:user) { create(:user) }
 
-    before :each do
+    before do
       VCR.turn_on!
     end
 
@@ -88,49 +90,49 @@ describe Repository do
 
         # First we create it, and make sure that it creates the activity.
         expect do
-          Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+          described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
         end.to change(PublicActivity::Activity, :count).by(1)
 
         # And now it should create another activities.
         expect do
-          Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+          described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
         end.to change(PublicActivity::Activity, :count).by(1)
       end
 
       it "updates the digest of an already existing tag" do
         event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
-        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("foo")
+        described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        expect(described_class.find_by(name: repository_name).tags.first.digest).to eq("foo")
 
         # Making sure that the updated_at column is set in the past.
-        tag = Repository.find_by(name: repository_name).tags.first
+        tag = described_class.find_by(name: repository_name).tags.first
         tag.update_columns(updated_at: 2.hours.ago)
         ua = tag.updated_at
 
         event["target"]["digest"] = "bar"
-        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        tag = Repository.find_by(name: repository_name).tags.first
+        described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        tag = described_class.find_by(name: repository_name).tags.first
         expect(tag.digest).to eq("bar")
-        expect(tag.updated_at).to_not eq(ua)
+        expect(tag.updated_at).not_to eq(ua)
       end
 
       it "updates the image id of an already existing tag" do
-        allow(Repository).to receive(:id_and_digest_from_event).and_return(["image_id", "foo"])
+        allow(described_class).to receive(:id_and_digest_from_event).and_return(%w[image_id foo])
         event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
-        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        expect(Repository.find_by(name: repository_name).tags.first.digest).to eq("foo")
+        described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        expect(described_class.find_by(name: repository_name).tags.first.digest).to eq("foo")
 
         # Making sure that the updated_at column is set in the past.
-        tag = Repository.find_by(name: repository_name).tags.first
+        tag = described_class.find_by(name: repository_name).tags.first
         tag.update_columns(updated_at: 2.hours.ago)
         ua = tag.updated_at
 
-        allow(Repository).to receive(:id_and_digest_from_event).and_return(["id", "bar"])
-        Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
-        tag = Repository.find_by(name: repository_name).tags.first
+        allow(described_class).to receive(:id_and_digest_from_event).and_return(%w[id bar])
+        described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        tag = described_class.find_by(name: repository_name).tags.first
         expect(tag.image_id).to eq("id")
         expect(tag.digest).to eq("bar")
-        expect(tag.updated_at).to_not eq(ua)
+        expect(tag.updated_at).not_to eq(ua)
       end
     end
 
@@ -146,14 +148,14 @@ describe Repository do
       it "sends event to logger" do
         VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
           expect do
-            Repository.handle_push_event(event)
-          end.to change(Repository, :count).by(0)
+            described_class.handle_push_event(event)
+          end.to change(described_class, :count).by(0)
         end
       end
     end
 
     context "event comes from an internally named registry" do
-      before :each do
+      before do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, tag_name)
@@ -165,8 +167,8 @@ describe Repository do
       it "sends event to logger" do
         expect(Rails.logger).to receive(:info)
         expect do
-          Repository.handle_push_event(@event)
-        end.to change(Repository, :count).by(0)
+          described_class.handle_push_event(@event)
+        end.to change(described_class, :count).by(0)
       end
 
       it "finds an internal registry" do
@@ -181,7 +183,7 @@ describe Repository do
     end
 
     context "event comes from an externally named registry" do
-      before :each do
+      before do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, tag_name)
@@ -193,8 +195,8 @@ describe Repository do
       it "sends event to logger" do
         expect(Rails.logger).to receive(:info)
         expect do
-          Repository.handle_push_event(@event)
-        end.to change(Repository, :count).by(0)
+          described_class.handle_push_event(@event)
+        end.to change(described_class, :count).by(0)
       end
 
       it "finds an external registry" do
@@ -209,7 +211,7 @@ describe Repository do
     end
 
     context "event comes from an unknown registry" do
-      before :each do
+      before do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, tag_name)
@@ -221,8 +223,8 @@ describe Repository do
       it "sends event to logger" do
         expect(Rails.logger).to receive(:info)
         expect do
-          Repository.handle_push_event(@event)
-        end.to change(Repository, :count).by(0)
+          described_class.handle_push_event(@event)
+        end.to change(described_class, :count).by(0)
       end
 
       it "doesn't find any registry" do
@@ -234,7 +236,7 @@ describe Repository do
     end
 
     context "event comes from an unknown user" do
-      before :each do
+      before do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, tag_name)
@@ -245,14 +247,13 @@ describe Repository do
 
       it "sends event to logger" do
         expect do
-          Repository.handle_push_event(@event)
-        end.to change(Repository, :count).by(0)
+          described_class.handle_push_event(@event)
+        end.to change(described_class, :count).by(0)
       end
-
     end
 
     context "when dealing with a top level repository" do
-      before :each do
+      before do
         @event = build(:raw_push_manifest_event).to_test_hash
         @event["target"]["repository"] = repository_name
         @event["target"]["url"] = get_url(repository_name, "digest")
@@ -263,16 +264,16 @@ describe Repository do
       end
 
       context "when the repository is not known by Portus" do
-        it "should create repository and tag objects" do
+        it "creates repository and tag objects" do
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
-              repository = Repository.handle_push_event(@event)
+              repository = described_class.handle_push_event(@event)
             end.to change(Namespace, :count).by(0)
           end
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 1
+          expect(described_class.count).to eq 1
           expect(Tag.count).to eq 1
 
           expect(repository.namespace).to eq(registry.global_namespace)
@@ -288,12 +289,12 @@ describe Repository do
 
           VCR.use_cassette("registry/get_tags_list_webhook", record: :none) do
             expect do
-              repository = Repository.handle_push_event(@event)
+              repository = described_class.handle_push_event(@event)
             end.to change(Namespace, :count).by(0)
           end
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 1
+          expect(described_class.count).to eq 1
           expect(Tag.count).to eq 1
 
           expect(repository.namespace).to eq(registry.global_namespace)
@@ -307,7 +308,7 @@ describe Repository do
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
-              repository = Repository.handle_push_event(@event)
+              repository = described_class.handle_push_event(@event)
             end.to change(PublicActivity::Activity, :count).by(1)
           end
 
@@ -321,22 +322,22 @@ describe Repository do
       end
 
       context "when a new version of an already known repository" do
-        before :each do
+        before do
           repository = create(:repository, name:      repository_name,
                                            namespace: registry.global_namespace)
           repository.tags << Tag.new(name: "1.0.0")
         end
 
-        it "should create a new tag" do
+        it "creates a new tag" do
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
-              repository = Repository.handle_push_event(@event)
+              repository = described_class.handle_push_event(@event)
             end.to change(Namespace, :count).by(0)
           end
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 1
+          expect(described_class.count).to eq 1
           expect(Tag.count).to eq 2
 
           expect(repository.namespace).to eq(registry.global_namespace)
@@ -350,7 +351,7 @@ describe Repository do
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
-              repository = Repository.handle_push_event(@event)
+              repository = described_class.handle_push_event(@event)
             end.to change(PublicActivity::Activity, :count).by(1)
           end
 
@@ -367,7 +368,7 @@ describe Repository do
         let(:repository_namespaced_name) { "portus/busybox" }
         let(:admin) { create(:admin) }
 
-        before :each do
+        before do
           team_user = create(:team, owners: [admin])
           @ns = create(:namespace, name: "portus", team: team_user, registry: registry)
           create(:repository, name: "busybox", namespace: registry.global_namespace)
@@ -378,10 +379,10 @@ describe Repository do
           event["target"]["repository"] = repository_namespaced_name
           event["target"]["url"] = get_url(repository_namespaced_name, tag_name)
           VCR.use_cassette("registry/get_image_manifest_another_webhook", record: :none) do
-            Repository.handle_push_event(event)
+            described_class.handle_push_event(event)
           end
 
-          repos = Repository.all.order(id: :asc)
+          repos = described_class.all.order(id: :asc)
           expect(repos.count).to be(2)
           expect(repos.first.namespace.id).to be(registry.global_namespace.id)
           expect(repos.last.namespace.id).to be(@ns.id)
@@ -393,7 +394,7 @@ describe Repository do
       let(:namespace_name) { "suse" }
       let(:digest) { "digest" }
 
-      before :each do
+      before do
         name = "#{namespace_name}/#{repository_name}"
 
         @event = build(:raw_push_manifest_event).to_test_hash
@@ -407,25 +408,25 @@ describe Repository do
 
       context "when the namespace is not known by Portus" do
         it "does not create the namespace" do
-          repository = Repository.handle_push_event(@event)
+          repository = described_class.handle_push_event(@event)
           expect(repository).to be_nil
         end
       end
 
       context "when the namespace is known by Portus" do
-        before :each do
+        before do
           @namespace = create(:namespace, name: namespace_name, registry: registry)
         end
 
-        it "should create repository and tag objects when the repository is unknown to portus" do
+        it "creates repository and tag objects when the repository is unknown to portus" do
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_namespaced_webhook", record: :none) do
-            repository = Repository.handle_push_event(@event)
+            repository = described_class.handle_push_event(@event)
           end
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 1
-          expect(Repository.count).to eq 1
+          expect(described_class.count).to eq 1
+          expect(described_class.count).to eq 1
           expect(Tag.count).to eq 1
 
           expect(repository.namespace.name).to eq(namespace_name)
@@ -436,17 +437,17 @@ describe Repository do
           expect(repository.tags.find_by(name: tag_name).author).to eq(user)
         end
 
-        it "should create a new tag when the repository is already known to portus" do
+        it "creates a new tag when the repository is already known to portus" do
           repository = create(:repository, name: repository_name, namespace: @namespace)
           repository.tags << Tag.new(name: "1.0.0")
 
           VCR.use_cassette("registry/get_image_manifest_namespaced_webhook", record: :none) do
-            repository = Repository.handle_push_event(@event)
+            repository = described_class.handle_push_event(@event)
           end
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 1
-          expect(Repository.count).to eq 1
+          expect(described_class.count).to eq 1
+          expect(described_class.count).to eq 1
           expect(Tag.count).to eq 2
 
           expect(repository.namespace.name).to eq(namespace_name)
@@ -462,13 +463,13 @@ describe Repository do
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_namespaced_webhook_v2", record: :none) do
             expect do
-              repository = Repository.handle_push_event(@event)
-            end.to change(Repository, :count).by(1)
+              repository = described_class.handle_push_event(@event)
+            end.to change(described_class, :count).by(1)
           end
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 1
-          expect(Repository.count).to eq 1
+          expect(described_class.count).to eq 1
+          expect(described_class.count).to eq 1
           expect(Tag.count).to eq 1
 
           expect(repository.namespace.name).to eq(namespace_name)
@@ -485,12 +486,12 @@ describe Repository do
           repository.tags << Tag.new(name: "1.0.0")
 
           VCR.use_cassette("registry/get_image_manifest_namespaced_webhook_v2", record: :none) do
-            repository = Repository.handle_push_event(@event)
+            repository = described_class.handle_push_event(@event)
           end
 
           expect(repository).not_to be_nil
-          expect(Repository.count).to eq 1
-          expect(Repository.count).to eq 1
+          expect(described_class.count).to eq 1
+          expect(described_class.count).to eq 1
           expect(Tag.count).to eq 2
 
           expect(repository.namespace.name).to eq(namespace_name)
@@ -515,35 +516,35 @@ describe Repository do
     let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
-    before :each do
+    before do
       # Even if the returned value is dummy, we want to make sure that the
       # given arguments are set accordingly. The checked values are basically
       # hardcoded, which shouldn't be a problem since there are not a lot of
       # tests anyways.
       allow_any_instance_of(Portus::RegistryClient).to receive(:manifest) do |_, *args|
         if args.first != "busybox" && !args.first.include?("/")
-          raise "Should be included inside of a namespace"
+          raise ::Portus::RegistryClient::ManifestError, "Should be included inside of a namespace"
         end
         if args.last != "latest" && args.last != "0.1" && args.last != "tag1"
-          raise "Using an unknown tag"
+          raise ::Portus::RegistryClient::ManifestError, "Using an unknown tag"
         end
 
         ["id", "digest", ""]
       end
 
-      allow(Repository).to receive(:id_and_digest_from_event).and_return(["id", "digest"])
+      allow(described_class).to receive(:id_and_digest_from_event).and_return(%w[id digest])
     end
 
     it "adds and deletes tags accordingly" do
       # Update existing tag's digest
       repo = { "name" => "#{namespace.name}/repo1", "tags" => ["tag1"] }
-      repo = Repository.create_or_update!(repo)
+      repo = described_class.create_or_update!(repo)
       expect(repo.id).to eq repo1.id
       expect(repo.tags.find_by(name: "tag1").digest).to match("digest")
 
       # Removes the existing tag and adds two.
       repo = { "name" => "#{namespace.name}/repo1", "tags" => ["latest", "0.1"] }
-      repo = Repository.create_or_update!(repo)
+      repo = described_class.create_or_update!(repo)
       expect(repo.id).to eq repo1.id
       expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
 
@@ -555,33 +556,33 @@ describe Repository do
       # Just adds a new tag.
       repo = { "name" => "#{namespace.name}/repo2",
                "tags" => ["latest", tag2.name, tag3.name] }
-      repo = Repository.create_or_update!(repo)
+      repo = described_class.create_or_update!(repo)
       expect(repo.id).to eq repo2.id
       ary = [tag2.name, tag3.name, "latest"].sort
       expect(repo.tags.map(&:name).sort).to match_array(ary)
 
       # Create repo and tags.
       repo = { "name" => "busybox", "tags" => ["latest", "0.1"] }
-      repo = Repository.create_or_update!(repo)
+      repo = described_class.create_or_update!(repo)
       expect(repo.name).to eq "busybox"
       expect(repo.tags.map(&:name).sort).to match_array(["0.1", "latest"])
       expect(repo.tags.map(&:digest).uniq).to match_array(["digest"])
 
       # Trying to create a repo into an unknown namespace.
       repo = { "name" => "unknown/repo1", "tags" => ["latest", "0.1"] }
-      expect(Repository.create_or_update!(repo)).to be_nil
+      expect(described_class.create_or_update!(repo)).to be_nil
     end
 
     it "doesn't remove tags of same name for different repo" do
       # create "latest" for repo1 and repo2
       event_one = { "name" => "#{namespace.name}/repo1", "tags" => ["latest"] }
-      Repository.create_or_update!(event_one)
+      described_class.create_or_update!(event_one)
       event_two = { "name" => "#{namespace.name}/repo2", "tags" => ["latest"] }
-      Repository.create_or_update!(event_two)
+      described_class.create_or_update!(event_two)
 
       # remove "latest" for repo2
       event_three = { "name" => "#{namespace.name}/repo2", "tags" => ["other"] }
-      Repository.create_or_update!(event_three)
+      described_class.create_or_update!(event_three)
 
       expect(repo1.tags.pluck(:name)).to include("latest")
       expect(repo2.tags.pluck(:name)).not_to include("latest")
@@ -651,8 +652,8 @@ describe Repository do
     end
 
     it "doesn't do anything for a non-existing tag" do
-      Repository.handle_delete_event(event)
-      expect(Repository.count).to eq 1
+      described_class.handle_delete_event(event)
+      expect(described_class.count).to eq 1
       expect(Tag.count).to eq 3
     end
 
@@ -662,8 +663,8 @@ describe Repository do
       another["target"]["digest"] = tag1.digest
       another["target"]["repository"] = "unknown"
 
-      Repository.handle_delete_event(another)
-      expect(Repository.count).to eq 1
+      described_class.handle_delete_event(another)
+      expect(described_class.count).to eq 1
       expect(Tag.count).to eq 3
     end
 
@@ -671,14 +672,14 @@ describe Repository do
       another = event.dup
       another["target"]["digest"] = tag1.digest
 
-      Repository.handle_delete_event(another)
-      expect(Repository.count).to eq 1
+      described_class.handle_delete_event(another)
+      expect(described_class.count).to eq 1
       expect(Tag.count).to eq 1 # 2 were deleted because there was a re-tag
 
       another["target"]["digest"] = tag3.digest
 
-      Repository.handle_delete_event(another)
-      expect(Repository.count).to eq 0
+      described_class.handle_delete_event(another)
+      expect(described_class.count).to eq 0
       expect(Tag.count).to eq 0
     end
   end
@@ -695,12 +696,12 @@ describe Repository do
       # First we create it, and make sure that it creates the activity.
       repo = nil
       expect do
-        repo = Repository.add_repo(event, registry.global_namespace, repository_name, tag_name)
+        repo = described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.first
       expect(activity.trackable_type).to eq "Repository"
-      expect(activity.trackable_id).to eq Repository.first.id
+      expect(activity.trackable_id).to eq described_class.first.id
       expect(activity.key).to eq "repository.push"
       expect(activity.owner_id).to eq user.id
       expect(activity.parameters).to be_empty
@@ -729,7 +730,7 @@ describe Repository do
                                         namespace_name:  registry.global_namespace.clean_name)
 
       # Of course, the repo should be removed
-      expect(Repository.count).to eq 0
+      expect(described_class.count).to eq 0
     end
   end
 end

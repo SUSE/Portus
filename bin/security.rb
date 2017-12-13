@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "portus/security"
 
 if ARGV.size != 2

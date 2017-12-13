@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "spec_helper"
 
 class Klass
@@ -27,10 +29,11 @@ class Runner
   end
 end
 
+# rubocop:disable Metrics/BlockLength
 describe Portusctl::Registry do
   let(:klass) { Klass.new }
 
-  before :each do
+  before do
     ENV["TEST_CONFIRM"] = nil
     ENV["TEST_EXIT_STATUS"] = nil
     ENV["PORTUSCTL_FORCE"] = nil
@@ -41,7 +44,7 @@ describe Portusctl::Registry do
   context "PORTUSCTL_FORCE has been set" do
     it "returns true if the package already exists" do
       ENV["PORTUSCTL_FORCE"] = "t"
-      expect(klass.registry_local_test?).to be_truthy
+      expect(klass).to be_registry_local_test
     end
 
     it "installs the RPM" do
@@ -55,25 +58,24 @@ describe Portusctl::Registry do
 
   context "Manual execution" do
     it "returns true if the package exists and the user wants to overwrite the config" do
-
       ENV["TEST_CONFIRM"] = "y"
-      expect(klass.registry_local_test?).to be_truthy
+      expect(klass).to be_registry_local_test
 
       ENV["TEST_CONFIRM"] = "n"
-      expect(klass.registry_local_test?).to be_falsey
+      expect(klass).not_to be_registry_local_test
     end
 
     it "returns false if `zypper se` failed for an unknown reason" do
       ENV["TEST_EXIT_STATUS"] = "1"
 
-      expect(klass.registry_local_test?).to be_falsey
+      expect(klass).not_to be_registry_local_test
     end
 
     it "calls `registry_safe_install!` if the package has not been installed" do
       ENV["TEST_EXIT_STATUS"] = "104"
       allow_any_instance_of(Klass).to receive(:registry_safe_install!).and_return(true)
 
-      expect(klass.registry_local_test?).to be_truthy
+      expect(klass).to be_registry_local_test
     end
 
     it "installs the rpm if confirmation was given" do
@@ -95,3 +97,4 @@ describe Portusctl::Registry do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # :nocov:
 require "portus/security_backends/base"
 
@@ -36,7 +38,7 @@ module Portus
 
       def consume_response(response)
         security = response["Security"]
-        return [] if security.nil? || security.to_i == 0
+        return [] if security.nil? || security.to_i.zero?
 
         res = []
         response["List"].each do |issue|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 def find_tag_checkbox(name)
@@ -5,7 +7,7 @@ def find_tag_checkbox(name)
   tag.find(:xpath, "../..").find("input[type='checkbox']")
 end
 
-feature "Repositories support" do
+describe "Repositories support" do
   let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:user) { create(:admin) }
   let!(:user2) { create(:user) }
@@ -25,7 +27,7 @@ feature "Repositories support" do
       create_list(:repository, 15, namespace: namespace)
     end
 
-    scenario "Repositories table sorting is reachable through url" do
+    it "Repositories table sorting is reachable through url" do
       # sort asc
       visit repositories_path(sort_asc: true)
 
@@ -47,7 +49,7 @@ feature "Repositories support" do
       expect(page).to have_css("th:nth-child(2) .fa-sort-amount-desc")
     end
 
-    scenario "URL is updated when repositories column is sorted" do
+    it "URL is updated when repositories column is sorted" do
       visit repositories_path
 
       expect(page).to have_css(".repositories-panel:last-of-type th:nth-child(2)")
@@ -67,7 +69,7 @@ feature "Repositories support" do
       expect(page).to have_current_path(path)
     end
 
-    scenario "Repositories table pagination is reachable through url" do
+    it "Repositories table pagination is reachable through url" do
       # page 2
       visit repositories_path(page: 2)
 
@@ -79,7 +81,7 @@ feature "Repositories support" do
       expect(page).to have_css(".repositories-panel .pagination li.active:nth-child(2)")
     end
 
-    scenario "URL is updated when page is changed" do
+    it "URL is updated when page is changed" do
       visit repositories_path
 
       expect(page).to have_css(".repositories-panel:last-of-type .pagination li:nth-child(3)")
@@ -101,14 +103,14 @@ feature "Repositories support" do
   end
 
   describe "repository#show" do
-    scenario "Visual aid for each role is shown properly" do
+    it "Visual aid for each role is shown properly" do
       visit repository_path(repository)
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are an owner of this repository")
-      expect(info).to_not have_content("You are a contributor in this repository")
-      expect(info).to_not have_content("You are a viewer in this repository")
+      expect(info).not_to have_content("You are a contributor in this repository")
+      expect(info).not_to have_content("You are a viewer in this repository")
 
       login_as user2, scope: :user
       visit repository_path(repository)
@@ -116,20 +118,20 @@ feature "Repositories support" do
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are a contributor in this repository")
-      expect(info).to_not have_content("You are an owner of this repository")
-      expect(info).to_not have_content("You are a viewer in this repository")
+      expect(info).not_to have_content("You are an owner of this repository")
+      expect(info).not_to have_content("You are a viewer in this repository")
 
       login_as user3, scope: :user
       visit repository_path(repository)
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are a viewer in this repository")
-      expect(info).to_not have_content("You can push images")
-      expect(info).to_not have_content("You are an owner of this repository")
-      expect(info).to_not have_content("You are a contributor in this repository")
+      expect(info).not_to have_content("You can push images")
+      expect(info).not_to have_content("You are an owner of this repository")
+      expect(info).not_to have_content("You are a contributor in this repository")
     end
 
-    scenario "A user can star a repository", js: true do
+    it "A user can star a repository", js: true do
       visit repository_path(repository)
       expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
@@ -142,7 +144,7 @@ feature "Repositories support" do
       expect(repo.stars.count).to be 1
     end
 
-    scenario "A user can unstar a repository", js: true do
+    it "A user can unstar a repository", js: true do
       visit repository_path(starred_repo)
       expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
@@ -155,27 +157,27 @@ feature "Repositories support" do
       expect(repo.stars.count).to be 0
     end
 
-    scenario "Groupped tags are handled properly" do
+    it "Groupped tags are handled properly" do
       ["", "", "same", "same", "another", "yet-another"].each_with_index do |digest, idx|
         create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
                image_id: "Image", created_at: idx.hours.ago)
       end
 
-      expectations = [["tag0"], ["tag1"], ["tag2", "tag3"], ["tag4"], ["tag5"]]
+      expectations = [["tag0"], ["tag1"], %w[tag2 tag3], ["tag4"], ["tag5"]]
 
       visit repository_path(repository)
 
       page.all(".tags tr").each_with_index do |row, idx|
-        expect(row.text.include?("Image")).to be_truthy
+        expect(row.text).to include("Image")
 
         # Skip the header.
         next if idx == 0
 
-        expectations[idx - 1].each { |tag| expect(row.text.include?(tag)).to be_truthy }
+        expectations[idx - 1].each { |tag| expect(row.text).to include(tag) }
       end
     end
 
-    scenario "it works if both the digest and the image_id are blank" do
+    it "works if both the digest and the image_id are blank" do
       create(:tag, author: user, repository: repository, digest: nil, image_id: nil)
       create(:tag, author: user, repository: repository, digest: "nonblank", image_id: nil)
 
@@ -189,16 +191,16 @@ feature "Repositories support" do
         enable_security_vulns_module!
       end
 
-      scenario "The delete feature is available only for allowed users" do
+      it "The delete feature is available only for allowed users" do
         visit repository_path(repository)
         expect(page).to have_content("Delete repository")
 
         login_as user2, scope: :user
         visit repository_path(repository)
-        expect(page).to_not have_content("Delete repository")
+        expect(page).not_to have_content("Delete repository")
       end
 
-      scenario "A user can delete a repository", js: true do
+      it "A user can delete a repository", js: true do
         visit repository_path(repository)
 
         repository_count = Repository.count
@@ -208,8 +210,8 @@ feature "Repositories support" do
         expect(page).to have_content("Repository removed with all its tags")
       end
 
-      scenario "A user deletes a tag", js: true do
-        ["lorem", "ipsum"].each_with_index do |digest, idx|
+      it "A user deletes a tag", js: true do
+        %w[lorem ipsum].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
           image_id: "Image", created_at: idx.hours.ago, updated_at: idx.hours.ago)
         end
@@ -217,7 +219,7 @@ feature "Repositories support" do
         VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
           visit repository_path(repository)
 
-          expect(page).to_not have_content("Delete tag")
+          expect(page).not_to have_content("Delete tag")
           find_tag_checkbox("tag0").click
           expect(page).to have_content("Delete tag")
 
@@ -226,8 +228,8 @@ feature "Repositories support" do
         end
       end
 
-      scenario "A user deletes tags", js: true do
-        ["lorem", "ipsum", "ipsum"].each_with_index do |digest, idx|
+      it "A user deletes tags", js: true do
+        %w[lorem ipsum ipsum].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
           image_id: "Image", created_at: idx.hours.ago, updated_at: idx.hours.ago)
         end
@@ -235,7 +237,7 @@ feature "Repositories support" do
         VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
           visit repository_path(repository)
 
-          expect(page).to_not have_content("Delete tags")
+          expect(page).not_to have_content("Delete tags")
           find_tag_checkbox("tag1").click
           expect(page).to have_content("Delete tags")
           find(".tag-delete-btn").click
@@ -243,8 +245,8 @@ feature "Repositories support" do
         end
       end
 
-      scenario "A user deletes a repository by deleting all tags", js: true do
-        ["lorem", "ipsum"].each_with_index do |digest, idx|
+      it "A user deletes a repository by deleting all tags", js: true do
+        %w[lorem ipsum].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
           image_id: "Image", created_at: idx.hours.ago)
         end
@@ -252,7 +254,7 @@ feature "Repositories support" do
         VCR.use_cassette("registry/get_image_manifest_tags", record: :none) do
           visit repository_path(repository)
 
-          expect(page).to_not have_content("Delete tags")
+          expect(page).not_to have_content("Delete tags")
           find("tbody tr input[type='checkbox']", match: :first)
           all("tbody tr input[type='checkbox']").each(&:click)
           expect(page).to have_content("Delete tags")

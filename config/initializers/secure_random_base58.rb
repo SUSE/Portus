@@ -1,7 +1,10 @@
-# TODO: remove me when new minor rails version released
-# https://github.com/rails/rails/blob/master/activesupport/lib/active_support/core_ext/securerandom.rb
+# frozen_string_literal: true
+
 require "securerandom"
 
+# SecureRandom is a module that implements a feature available in Rails 5.0.
+# TODO: remove me when we upgrade to Rails 5.0
+# https://github.com/rails/rails/blob/master/activesupport/lib/active_support/core_ext/securerandom.rb
 module SecureRandom
   BASE58_ALPHABET = ("0".."9").to_a + ("A".."Z").to_a + ("a".."z").to_a - %w[0 O I l]
 

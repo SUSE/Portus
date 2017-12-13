@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: teams
@@ -36,11 +38,11 @@ class Team < ActiveRecord::Base
   has_many :team_users, dependent: :destroy
   has_many :users, through: :team_users
   has_many :owners, -> { merge TeamUser.owner },
-    through: :team_users, source: :user
+           through: :team_users, source: :user
   has_many :contributors, -> { merge TeamUser.contributor },
-    through: :team_users, source: :user
+           through: :team_users, source: :user
   has_many :viewers, -> { merge TeamUser.viewer },
-    through: :team_users, source: :user
+           through: :team_users, source: :user
 
   # Returns all the member-IDs
   def member_ids

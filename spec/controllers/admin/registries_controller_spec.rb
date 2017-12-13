@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Admin::RegistriesController, type: :controller do
   let(:admin) { create(:admin) }
 
-  before :each do
+  before do
     sign_in admin
   end
 

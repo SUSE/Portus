@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 class CatalogJobMock < CatalogJob
@@ -17,9 +19,9 @@ RSpec.describe RepositoriesHelper, type: :helper do
     let(:contributor) { create(:user) }
     let(:team) do
       create(:team,
-            owners:       [owner],
-            contributors: [contributor],
-            viewers:      [viewer])
+             owners:       [owner],
+             contributors: [contributor],
+             viewers:      [viewer])
     end
     let(:namespace) { create(:namespace, team: team) }
     let(:repo)      { create(:repository, namespace: namespace) }
@@ -154,11 +156,11 @@ RSpec.describe RepositoriesHelper, type: :helper do
     it "returns true if any security vulnerability server is configured" do
       enable_security_vulns_module!
 
-      expect(helper.security_vulns_enabled?).to be_truthy
+      expect(helper).to be_security_vulns_enabled
     end
 
     it "returns false if no security vulnerability server is configured" do
-      expect(helper.security_vulns_enabled?).to be_falsy
+      expect(helper).not_to be_security_vulns_enabled
     end
   end
 
@@ -169,11 +171,11 @@ RSpec.describe RepositoriesHelper, type: :helper do
         two: []
       }
 
-      expect(helper.vulnerable?(vulnerabilities)).to be_truthy
+      expect(helper).to be_vulnerable(vulnerabilities)
     end
 
     it "returns false if no vulnerabilities were found" do
-      expect(helper.vulnerable?(nil)).to be_falsey
+      expect(helper).not_to be_vulnerable(nil)
     end
 
     it "returns false if no security vulnerability server is configured" do
@@ -182,7 +184,7 @@ RSpec.describe RepositoriesHelper, type: :helper do
         two: []
       }
 
-      expect(helper.vulnerable?(vulnerabilities)).to be_falsy
+      expect(helper).not_to be_vulnerable(vulnerabilities)
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NamespacesHelper
   def can_manage_namespace?(namespace)
     current_user.admin? || (owner?(namespace) &&

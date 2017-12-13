@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   include ActivitiesHelper
 
@@ -59,8 +61,6 @@ module ApplicationHelper
     renderer = Redcarpet::Render::HTML.new(render_options)
     m = Redcarpet::Markdown.new(renderer, extensions)
 
-    # rubocop:disable Rails/OutputSafety
-    m.render(text).html_safe
-    # rubocop:enable Rails/OutputSafety
+    sanitize(m.render(text))
   end
 end

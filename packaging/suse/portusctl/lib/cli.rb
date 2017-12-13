@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # :nocov:
 
 # Class implementing the cli interface of portusctl
@@ -9,35 +11,35 @@ class Cli < Thor
 
   # SSL certificate options
   option "ssl-gen-self-signed-certs",
-    desc:    "Generate self-signed certificates",
-    type:    :boolean,
-    default: false
+         desc:    "Generate self-signed certificates",
+         type:    :boolean,
+         default: false
   option "ssl-certs-dir",
-    desc:      "Location of own certificates",
-    default:   "",
-    long_desc: <<~LONGDESC
-      Looks for the following required certificate files in the specified folder:
-         * `<custom dir>/<hostname>-ca.key`: the certificate key
-         * `<custom dir>/<hostname>-ca.crt`: the certificate file
+         desc:      "Location of own certificates",
+         default:   "",
+         long_desc: <<~LONGDESC
+           Looks for the following required certificate files in the specified folder:
+              * `<custom dir>/<hostname>-ca.key`: the certificate key
+              * `<custom dir>/<hostname>-ca.crt`: the certificate file
   LONGDESC
   option "ssl-organization",
-    desc:    "SSL certificate: organization",
-    default: "SUSE Linux GmbH" # gensslcert -o
+         desc:    "SSL certificate: organization",
+         default: "SUSE Linux GmbH" # gensslcert -o
   option "ssl-organization-unit",
-    desc:    "SSL certificate: organizational unit",
-    default: "SUSE Portus example" # gensslcert -u
+         desc:    "SSL certificate: organizational unit",
+         default: "SUSE Portus example" # gensslcert -u
   option "ssl-email",
-    desc:    "SSL certificate: email address of webmaster",
-    default: "kontact-de@novell.com" # gensslcert -e
+         desc:    "SSL certificate: email address of webmaster",
+         default: "kontact-de@novell.com" # gensslcert -e
   option "ssl-country",
-    desc:    "SSL certificate: country (two letters)",
-    default: "DE" # gensslcert -c
+         desc:    "SSL certificate: country (two letters)",
+         default: "DE" # gensslcert -c
   option "ssl-city",
-    desc:    "SSL certificate: city",
-    default: "Nuernberg" # gensslcert -l
+         desc:    "SSL certificate: city",
+         default: "Nuernberg" # gensslcert -l
   option "ssl-state",
-    desc:    "SSL certificate: state",
-    default: "Bayern" # gensslcert -s
+         desc:    "SSL certificate: state",
+         default: "Bayern" # gensslcert -s
 
   # DB options
   option "db-host", desc: "Database: host", default: "localhost"
@@ -54,23 +56,23 @@ class Cli < Thor
   option "ldap-hostname", desc: "LDAP: server hostname"
   option "ldap-port", desc: "LDAP: server port", default: "389"
   option "ldap-method",
-    desc:    "LDAP: encryption method (recommended: starttls)",
-    default: "plain"
+         desc:    "LDAP: encryption method (recommended: starttls)",
+         default: "plain"
   option "ldap-base", desc: "LDAP: base", default: "ou=users, dc=example, dc=com"
   option "ldap-filter", desc: "LDAP: filter users"
   option "ldap-uid", desc: "LDAP: uid", default: "uid"
   option "ldap-authentication-enable",
-    desc:    "LDAP: enable LDAP credentials for user lookup",
-    type:    :boolean,
-    default: false
+         desc:    "LDAP: enable LDAP credentials for user lookup",
+         type:    :boolean,
+         default: false
   option "ldap-authentication-bind-dn", desc: "LDAP: bind DN for authentication"
   option "ldap-authentication-password", desc: "LDAP: password for authentication"
   option "ldap-guess-email-enable",
-    desc:    "LDAP: guess email address",
-    type:    :boolean,
-    default: false
+         desc:    "LDAP: guess email address",
+         type:    :boolean,
+         default: false
   option "ldap-guess-email-attr",
-    desc: "LDAP: attribute to use when guessing email address"
+         desc: "LDAP: attribute to use when guessing email address"
 
   # OAuth
   require_relative "cli_oauth"
@@ -78,124 +80,124 @@ class Cli < Thor
 
   # MAILER
   option "email-from",
-    desc:    "MAIL: sender address",
-    default: "portus@#{HOSTNAME}"
+         desc:    "MAIL: sender address",
+         default: "portus@#{HOSTNAME}"
   option "email-name", desc: "MAIL: sender name", default: "Portus"
   option "email-reply-to",
-    desc:    "MAIL: reply to address",
-    default: "no-reply@#{HOSTNAME}"
+         desc:    "MAIL: reply to address",
+         default: "no-reply@#{HOSTNAME}"
   option "email-smtp-enable",
-    desc:    "MAIL: use SMTP as the delivery method",
-    type:    :boolean,
-    default: false
+         desc:    "MAIL: use SMTP as the delivery method",
+         type:    :boolean,
+         default: false
   option "email-smtp-address",
-    desc:    "MAIL: the address to the SMTP server",
-    default: "smtp.example.com"
+         desc:    "MAIL: the address to the SMTP server",
+         default: "smtp.example.com"
   option "email-smtp-port", desc: "MAIL: SMTP server port", default: "587"
   option "email-smtp-username",
-    desc:    "MAIL: the user name to be used for logging in the SMTP server",
-    default: "username@example.com"
+         desc:    "MAIL: the user name to be used for logging in the SMTP server",
+         default: "username@example.com"
   option "email-smtp-password",
-    desc:    "MAIL: the password to be used for logging in the SMTP server",
-    default: "password"
+         desc:    "MAIL: the password to be used for logging in the SMTP server",
+         default: "password"
   option "email-smtp-domain",
-    desc:    "MAIL: the domain of the SMTP server",
-    default: "example.com"
+         desc:    "MAIL: the domain of the SMTP server",
+         default: "example.com"
 
   # SIGNUP
   option "signup-enable",
-    desc:    "Enable user signup",
-    type:    :boolean,
-    default: true
+         desc:    "Enable user signup",
+         type:    :boolean,
+         default: true
 
   # GRAVATAR
   option "gravatar-enable",
-    desc:    "Enable Gravatar usage",
-    type:    :boolean,
-    default: true
+         desc:    "Enable Gravatar usage",
+         type:    :boolean,
+         default: true
 
   # JWT EXPIRATION TIME
   option "jwt-expiration-time",
-    desc:    "Expiration time for the JWT token used by Portus",
-    type:    :numeric,
-    default: 5
+         desc:    "Expiration time for the JWT token used by Portus",
+         type:    :numeric,
+         default: 5
 
   # Catalog pagination
   option "catalog-page",
-    desc:    "Pagination value for API calls to the registry",
-    type:    :numeric,
-    default: 100
+         desc:    "Pagination value for API calls to the registry",
+         type:    :numeric,
+         default: 100
 
   option "registry-timeout-value",
-    desc:    "Timeout value for API calls to the registry",
-    type:    :numeric,
-    default: 10
+         desc:    "Timeout value for API calls to the registry",
+         type:    :numeric,
+         default: 10
 
   # FIRST USER
   option "first-user-admin-enable",
-    desc:    "Make the first registered user an admin",
-    type:    :boolean,
-    default: true
+         desc:    "Make the first registered user an admin",
+         type:    :boolean,
+         default: true
 
   # Display name
   option "display-name-enable",
-    desc:    "Enable users to set a display name",
-    type:    :boolean,
-    default: false
+         desc:    "Enable users to set a display name",
+         type:    :boolean,
+         default: false
 
   option "delete-enable",
-    desc:    "Enable delete support. Only do this if your registry is 2.4 or higher",
-    type:    :boolean,
-    default: false
+         desc:    "Enable delete support. Only do this if your registry is 2.4 or higher",
+         type:    :boolean,
+         default: false
 
   option "change-visibility-enable",
-    desc:    "Allow users to change the visibility of their namespaces",
-    type:    :boolean,
-    default: true
+         desc:    "Allow users to change the visibility of their namespaces",
+         type:    :boolean,
+         default: true
 
   option "manage-namespace-enable",
-    desc:    "Allow users to modify their namespaces",
-    type:    :boolean,
-    default: true
+         desc:    "Allow users to modify their namespaces",
+         type:    :boolean,
+         default: true
 
   option "create-namespace-enable",
-    desc:    "Allow users to modify new namespaces",
-    type:    :boolean,
-    default: true
+         desc:    "Allow users to modify new namespaces",
+         type:    :boolean,
+         default: true
 
   option "manage-team-enable",
-    desc:    "Allow users to modify their teams",
-    type:    :boolean,
-    default: true
+         desc:    "Allow users to modify their teams",
+         type:    :boolean,
+         default: true
 
   option "create-team-enable",
-    desc:    "Allow users to create new teams",
-    type:    :boolean,
-    default: true
+         desc:    "Allow users to create new teams",
+         type:    :boolean,
+         default: true
 
   # Security scanning
   option "security-clair-server",
-    desc:    "The URL allowing Portus to access your CoreOS Clair server",
-    default: ""
+         desc:    "The URL allowing Portus to access your CoreOS Clair server",
+         default: ""
 
   option "security-clair-health-port",
-    desc:    "The port in which Clair exposes the /health endpoint",
-    type:    :numeric,
-    default: 6061
+         desc:    "The port in which Clair exposes the /health endpoint",
+         type:    :numeric,
+         default: 6061
 
   option "security-zypper-server",
-    desc:    "The URL allowing Portus to access your zypper-docker server",
-    default: ""
+         desc:    "The URL allowing Portus to access your zypper-docker server",
+         default: ""
 
   option "security-dummy-server",
-    desc:    "If non-empty, then Portus will fake a 'dummy' server (only for development)",
-    default: ""
+         desc:    "If non-empty, then Portus will fake a 'dummy' server (only for development)",
+         default: ""
 
   # Anonymous browsing
   option "anonymous-browsing-enable",
-    desc:    "Allow anonymous users to explore public repositories",
-    type:    :boolean,
-    default: true
+         desc:    "Allow anonymous users to explore public repositories",
+         type:    :boolean,
+         default: true
 
   def setup
     ensure_root

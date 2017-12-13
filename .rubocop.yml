@@ -1,65 +1,3 @@
-
-inherit_from:
-  - ./config/rubocop-suse.yml
-
-# TODO: (mssola) only the LDAP class and portusctl require this.
-Metrics/ClassLength:
-  Max: 210
-
-# TODO: (mssola) Some methods are offending this cop. In the SUSE's style guide
-# the approach is to use Rubocop's default value. In the near future I will
-# fix this.
-Metrics/MethodLength:
-  Max: 252
-
-# Of course this will fail in spec blocks... Just skip it.
-Metrics/BlockLength:
-  Max: 200
-  Exclude:
-    - spec/**/*
-
-# It's convenient to mix both. This is something that SUSE's style guide does
-# not specify, so we take the approach that we were following already.
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-# NOTE: (mssola) This would be nice, but there are too many errors on this for
-# now and it's not urgent. I will fix this in the near future.
-Style/Documentation:
-  Enabled: false
-
-# This forces us to create a new object for no real reason.
-Style/MultipleComparison:
-  Enabled: false
-
-# Doesn't feel right ...
-Style/NumericPredicate:
-  Enabled: false
-
-# TODO: remove this on Rails 5.
-Style/InverseMethods:
-  Enabled: false
-
-# NOTE: (mssola) In versions of Ruby higher than 2.1.x, we get
-# Lint/ShadowedException in some cases where in 2.1.x it complains if we remove
-# such guards. Therefore, we have to disable this cop until we update the
-# version of Ruby to be officially supported.
-Lint/UnneededDisable:
-  Enabled: false
-
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-# TODO: move to SUSE's style guide ?
-Style/SymbolArray:
-  Enabled: false
-
-Rails:
-  Enabled: true
-
-Rails/SkipsModelValidations:
-  Enabled: false
-
 AllCops:
   TargetRubyVersion: 2.4
   TargetRailsVersion: 4.2
@@ -73,3 +11,90 @@ AllCops:
     - db/schema.rb
     - db/migrate/*
     - vendor/**/*
+
+#
+# Layout
+#
+
+# This is a remnant of old SUSE-style alignment for hashes, The table format
+# looks more human readable.
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+#
+# Metrics
+#
+
+# The default is just too small.
+Metrics/AbcSize:
+  Max: 30
+
+# We will skip it for tests and the Grape API.
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+    - lib/api/**/*
+
+# NOTE: this could be further trimmed down but the following refactorings are
+# needed:
+#   1. The Grape API classes should be further modularized (probably in helper
+#      modules).
+#   2. The models regarding the registry have to be modularized.
+#   3. LDAP has to be refactored.
+Metrics/ClassLength:
+  Max: 210
+
+# The default is just too small. A limit of 100 looks reasonable and many other
+# projects (including inside of SUSE) are also using this value.
+Metrics/LineLength:
+  Max: 100
+
+# NOTE: this could be further trimmed down but some refactorings will have to be
+# done.
+Metrics/MethodLength:
+  Max: 20
+
+#
+# Rails
+#
+
+Rails:
+  Enabled: true
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+#
+# Style
+#
+
+# It's not needed to add documentation for obvious modules or classes. The main
+# idea is that documentation will be asked during the review process if needed.
+Style/Documentation:
+  Enabled: false
+
+# NOTE: this is giving false positives because it assumes some Rails 5 methods
+# are available.
+Style/InverseMethods:
+  Enabled: false
+
+# This forces us to create a new object for no real reason.
+Style/MultipleComparison:
+  Enabled: false
+
+# This is a common SUSE configuration value: the performance difference between
+# single and double quotes is no longer there, and so it's better to be
+# consistent and force only double quotes.
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# Same as Style/StringLiterals.
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+# There are some false positives (e.g. "module ::Module", in which we want to
+# make sure there are no clashes or misunderstandings). Therefore, we just
+# disable this cop.
+Style/ClassAndModuleChildren:
+  Enabled: false

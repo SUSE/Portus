@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: team_users
@@ -23,7 +25,7 @@ describe TeamUsersController do
   let(:team)        { create(:team, owners: [owner], contributors: [contributor]) }
 
   describe "as an owner of the team" do
-    before :each do
+    before do
       sign_in owner
     end
 
@@ -133,11 +135,10 @@ describe TeamUsersController do
         expect(response.status).to eq 422
       end
     end
-
   end
 
   describe "as an unprivileged member of the team" do
-    before :each do
+    before do
       sign_in contributor
     end
 
@@ -168,7 +169,7 @@ describe TeamUsersController do
   end
 
   describe "activity tracking" do
-    before :each do
+    before do
       sign_in owner
     end
 

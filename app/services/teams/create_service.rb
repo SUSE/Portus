@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Teams
   class CreateService < ::BaseService
     def execute

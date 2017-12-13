@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: registries
@@ -111,37 +113,14 @@ class Registry < ActiveRecord::Base
   # is returned. Otherwise a string will be returned containing the reasoning
   # of the reachability failure.
   def reachable?
-    msg = ""
+    r = client.reachable?
 
-    # rubocop:disable Lint/ShadowedException:
-    begin
-      r = client.reachable?
-
-      # At this point, !r is only possible if the returned code is 404, which
-      # according to the documentation we have to assume that the registry is
-      # not implementing the v2 of the API.
-      return "Error: registry does not implement v2 of the API." unless r
-    rescue Errno::ECONNREFUSED, SocketError
-      msg = "Error: connection refused. The given registry is not available!"
-    rescue Errno::ETIMEDOUT, Net::OpenTimeout
-      msg = "Error: connection timed out. The given registry is not available!"
-    rescue Net::HTTPBadResponse
-      msg = if use_ssl
-        "Error: there's something wrong with your SSL configuration."
-      else
-        "Error: not using SSL, but the given registry does use SSL."
-      end
-    rescue OpenSSL::SSL::SSLError => e
-      msg = "SSL error while communicating with the registry, check the server " \
-        "logs for more details."
-      logger.error(e)
-    rescue StandardError => e
-      # We don't know what went wrong :/
-      logger.info "Registry not reachable: #{e.inspect}"
-      msg = "Error: something went wrong. Check your configuration."
-    end
-    # rubocop:enable Lint/ShadowedException:
-    msg
+    # All possible errors are already handled by the `reachable` method through
+    # the `::Portus::Request` exception. If we are still facing an issue, the
+    # assumption is that the given registry does not implement v2.
+    r ? "" : "Error: registry does not implement v2 of the API."
+  rescue ::Portus::RequestError => e
+    e.message
   end
 
   protected

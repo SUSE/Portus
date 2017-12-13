@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe WebhookPolicy do
@@ -23,7 +25,7 @@ describe WebhookPolicy do
   end
   let(:webhook) { create(:webhook, namespace: namespace) }
 
-  before :each do
+  before do
     @admin = create(:admin)
     @registry = create(:registry)
   end
@@ -38,20 +40,20 @@ describe WebhookPolicy do
     end
 
     it "disallows contributor to change it" do
-      expect(subject).to_not permit(contributor, webhook)
+      expect(subject).not_to permit(contributor, webhook)
     end
 
     it "disallows user to change it" do
-      expect(subject).to_not permit(user, webhook)
+      expect(subject).not_to permit(user, webhook)
     end
 
     it "disallows viewer to change it" do
-      expect(subject).to_not permit(viewer, webhook)
+      expect(subject).not_to permit(viewer, webhook)
     end
   end
 
   describe "scope" do
-    before :each do
+    before do
       webhook
     end
 
@@ -78,7 +80,7 @@ describe WebhookPolicy do
     it "does show webhooks to user when appropiate" do
       expect(Pundit.policy_scope(user, Webhook).to_a).to be_empty
       create(:webhook, namespace: user.namespace)
-      expect(Pundit.policy_scope(user, Webhook).to_a).to_not be_empty
+      expect(Pundit.policy_scope(user, Webhook).to_a).not_to be_empty
     end
   end
 end

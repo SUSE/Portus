@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is a rails runner that will print the status of Portus' database.
 # Possible outcomes:
 #
@@ -23,4 +25,4 @@ puts case Portus::DB.ping
        "DB_DOWN"
      else
        "DB_UNKNOWN"
-end
+     end

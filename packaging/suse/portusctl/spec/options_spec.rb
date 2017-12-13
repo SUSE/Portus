@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "spec_helper"
 require "yaml"
 
@@ -44,7 +46,7 @@ describe Cli do
     # setup command.
     config_keys = get_keys(yml).map { |k| format_key(k) }
     config_keys.delete("machine-fqdn-value")
-    setup_keys  = Cli.commands["setup"].options.keys
+    setup_keys  = described_class.commands["setup"].options.keys
     diff        = config_keys - (config_keys & setup_keys)
 
     raw = "The following keys are available in the config but not in the setup command: "
@@ -54,6 +56,6 @@ describe Cli do
 
   it "returns the proper name of the given flag" do
     argv = ["--flag"]
-    expect { Cli.start(argv) }.to output("Unknown switches '--flag'\n").to_stderr
+    expect { described_class.start(argv) }.to output("Unknown switches '--flag'\n").to_stderr
   end
 end

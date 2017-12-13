@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe API::V1::Teams do
@@ -11,7 +13,7 @@ describe API::V1::Teams do
            hidden: true)
   end
 
-  before :each do
+  before do
     @header = build_token_header(token)
     @user_header = build_token_header(user_token)
   end

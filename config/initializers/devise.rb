@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
-# rubocop:disable Metrics/BlockLength
 Devise.setup do |config|
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
@@ -231,49 +232,8 @@ Devise.setup do |config|
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
 
-  # ==> OmniAuth
-  # Add a new OmniAuth provider. Check the wiki for more information on setting
-  # up on your models and hooks.
-  # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  if APP_CONFIG.enabled? "oauth.google_oauth2"
-    # Use only setted options.
-    options = APP_CONFIG["oauth"]["google_oauth2"]["options"].reject { |_k, v| v.blank? }
-    options[:skip_jwt] = true
-    config.omniauth :google_oauth2, APP_CONFIG["oauth"]["google_oauth2"]["id"],
-      APP_CONFIG["oauth"]["google_oauth2"]["secret"], options
-  end
-
-  if APP_CONFIG.enabled? "oauth.open_id"
-    require "openid/store/filesystem"
-    options = { store: OpenID::Store::Filesystem.new("/tmp") }
-    if APP_CONFIG["oauth"]["open_id"]["identifier"].present?
-      options[:identifier] = APP_CONFIG["oauth"]["open_id"]["identifier"]
-    end
-    config.omniauth :open_id, options
-  end
-
-  if APP_CONFIG.enabled? "oauth.github"
-    config.omniauth :github, APP_CONFIG["oauth"]["github"]["client_id"],
-      APP_CONFIG["oauth"]["github"]["client_secret"], scope: "user,read:org"
-  end
-
-  if APP_CONFIG.enabled? "oauth.gitlab"
-    site = if APP_CONFIG["oauth"]["gitlab"]["server"].blank?
-      "https://gitlab.com"
-    else
-      APP_CONFIG["oauth"]["gitlab"]["server"]
-    end
-
-    config.omniauth :gitlab, APP_CONFIG["oauth"]["gitlab"]["application_id"],
-      APP_CONFIG["oauth"]["gitlab"]["secret"], client_options: { site: site }
-  end
-
-  if APP_CONFIG.enabled? "oauth.bitbucket"
-    require "omni_auth/strategies/bitbucket"
-    options = APP_CONFIG["oauth"]["bitbucket"]["options"].reject { |_k, v| v.blank? }
-    config.omniauth :bitbucket, APP_CONFIG["oauth"]["bitbucket"]["key"],
-                    APP_CONFIG["oauth"]["bitbucket"]["secret"], options
-  end
+  require_relative "devise/oauth"
+  configure_oauth!(config)
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
@@ -310,4 +270,3 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 end
-# rubocop:enable Metrics/BlockLength

@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Admin::TeamsController, type: :controller do
-
   let(:admin) { create(:admin) }
   let(:user) { create(:user) }
 
   context "as admin user" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
@@ -34,7 +35,7 @@ RSpec.describe Admin::TeamsController, type: :controller do
   end
 
   context "as normal user" do
-    before :each do
+    before do
       sign_in user
     end
 
@@ -45,5 +46,4 @@ RSpec.describe Admin::TeamsController, type: :controller do
       end
     end
   end
-
 end

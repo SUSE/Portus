@@ -15,10 +15,6 @@ export default {
     canChangeHostname: {
       type: Boolean,
     },
-    edit: {
-      type: Boolean,
-      default: false,
-    },
   },
 
   data() {
@@ -74,8 +70,10 @@ export default {
 
   methods: {
     isReachableError(error) {
-      return error.indexOf('Error: ') === 0 ||
-             error.indexOf('SSL ') === 0;
+      return error.indexOf('Error: ') !== -1 ||
+             error.indexOf('SSLError') !== -1 ||
+             error.indexOf('OpenTimeout') !== -1 ||
+             error.indexOf('SSLError') !== -1;
     },
 
     hasReachableError() {

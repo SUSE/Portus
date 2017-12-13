@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: team_users
@@ -22,7 +24,7 @@
 #   * contributor: has RW access to the namespaces associated with the team
 #   * owner: like contributor, but can also manage the team
 class TeamUser < ActiveRecord::Base
-  enum role: [:viewer, :contributor, :owner]
+  enum role: %i[viewer contributor owner]
 
   scope :enabled, -> { joins(:user).merge(User.enabled).distinct }
   scope :owner, -> { where(role: roles[:owner]) }

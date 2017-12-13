@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe ApplicationHelper, type: :helper do
@@ -63,7 +65,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it "filters html" do
       html_tag = "<script>alert('foo');</script>"
-      expect(markdown(html_tag)).to eq "<p>alert(&#39;foo&#39;);</p>\n"
+      expect(markdown(html_tag)).to eq "<p>alert('foo');</p>\n"
     end
   end
 
@@ -108,19 +110,19 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   describe "#js_route" do
     # controller.class === ActionView::TestCase::TestController
-    it "should return controller_name/action_name format" do
+    it "returns controller_name/action_name format" do
       allow(controller).to receive(:action_name) { "action" }
 
       expect(js_route).to eq("action_view/test_case/test/action")
     end
 
-    it "should alias update as edit action name" do
+    it "aliases update as edit action name" do
       allow(controller).to receive(:action_name) { "update" }
 
       expect(js_route).to eq("action_view/test_case/test/edit")
     end
 
-    it "should alias create as new action name" do
+    it "aliases create as new action name" do
       allow(controller).to receive(:action_name) { "create" }
 
       expect(js_route).to eq("action_view/test_case/test/new")

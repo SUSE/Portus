@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Global application" do
+describe "Global application" do
   let!(:registry) { create(:registry) }
   let!(:user)     { create(:admin) }
 

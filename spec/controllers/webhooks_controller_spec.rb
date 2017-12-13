@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: webhooks
@@ -50,7 +52,7 @@ RSpec.describe WebhooksController, type: :controller do
   let!(:webhook_header) { create(:webhook_header, webhook: webhook) }
   let!(:webhook_delivery) { create(:webhook_delivery, webhook: webhook) }
 
-  before :each do
+  before do
     sign_in user
   end
 
@@ -69,7 +71,7 @@ RSpec.describe WebhooksController, type: :controller do
   end
 
   describe "GET #show" do
-    it "should paginate webhook deliveries" do
+    it "paginates webhook deliveries" do
       sign_in owner
       get :show, namespace_id: namespace.id, id: webhook.id
 
@@ -134,7 +136,7 @@ RSpec.describe WebhooksController, type: :controller do
       end
     end
 
-    it "should delete a webhook" do
+    it "deletes a webhook" do
       sign_in owner
       delete :destroy, namespace_id: namespace.id, id: webhook.id
       expect(response.status).to eq 302
@@ -147,7 +149,7 @@ RSpec.describe WebhooksController, type: :controller do
       put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :js
 
       webhook.reload
-      expect(webhook).to_not be_enabled
+      expect(webhook).not_to be_enabled
       expect(response.status).to eq 200
     end
 
@@ -230,7 +232,7 @@ RSpec.describe WebhooksController, type: :controller do
     end
 
     context "with valid params" do
-      before :each do
+      before do
         sign_in owner
         @post_params = {
           webhook:      valid_attributes,
@@ -296,7 +298,7 @@ RSpec.describe WebhooksController, type: :controller do
     end
 
     context "with invalid params" do
-      before :each do
+      before do
         sign_in owner
       end
 
@@ -411,7 +413,7 @@ RSpec.describe WebhooksController, type: :controller do
   end
 
   describe "activity tracking" do
-    before :each do
+    before do
       sign_in owner
     end
 
@@ -461,20 +463,20 @@ RSpec.describe WebhooksController, type: :controller do
     it "tracks updates to the webhook" do
       expect do
         patch :update,
-          id:           webhook.id,
-          namespace_id: namespace.id,
-          webhook:      { url: "port.us" },
-          format:       "js"
+              id:           webhook.id,
+              namespace_id: namespace.id,
+              webhook:      { url: "port.us" },
+              format:       "js"
       end.to change(PublicActivity::Activity, :count).by(1)
     end
 
     it "tracks removal of the webhook" do
       expect do
         delete :destroy,
-          id:           webhook.id,
-          namespace_id: namespace.id,
-          webhook:      { url: "port.us" },
-          format:       "js"
+               id:           webhook.id,
+               namespace_id: namespace.id,
+               webhook:      { url: "port.us" },
+               format:       "js"
       end.to change(PublicActivity::Activity, :count).by(1)
     end
   end

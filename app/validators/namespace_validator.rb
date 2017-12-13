@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Validates the name of the namespace as specified by Docker Distribution.
 class NamespaceValidator < ActiveModel::EachValidator
   NAME_REGEXP = /\A[a-z0-9]+(?:[._\\-][a-z0-9]+)*\Z/

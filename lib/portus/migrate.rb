@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/CyclomaticComplexity
 # rubocop:disable Metrics/PerceivedComplexity
 module Portus
@@ -28,7 +30,7 @@ module Portus
         raise DeprecationError, "The 'x.minutes' format is deprecated for configuration values " \
                                 "such as `jwt_expiration_time`. From now on these values are " \
                                 "expected to be integers representing minutes."
-      elsif value > 0
+      elsif value.positive?
         # If it's a string containing a positive number, then convert it and return it.
         value.minutes
       else
@@ -50,5 +52,6 @@ module Portus
     end
   end
 end
-# rubocop:enable Metrics/PerceivedComplexity
+
 # rubocop:enable Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/PerceivedComplexity

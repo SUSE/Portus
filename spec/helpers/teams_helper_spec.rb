@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe TeamsHelper, type: :helper do
-
   let(:admin)       { create(:admin) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
@@ -71,7 +72,7 @@ RSpec.describe TeamsHelper, type: :helper do
   end
 
   describe "team_user_role_icon" do
-    before(:each) do
+    before do
       team
     end
 
@@ -95,7 +96,7 @@ RSpec.describe TeamsHelper, type: :helper do
   end
 
   describe "role_icon_class" do
-    before(:each) do
+    before do
       team
     end
 

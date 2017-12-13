@@ -1,4 +1,6 @@
 
+# frozen_string_literal: true
+
 ENV["RAILS_ENV"] ||= "test"
 ENV["NODE_ENV"]  ||= "test"
 
@@ -46,7 +48,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
 
   # By default, LDAP will be faked away.
-  config.before :each do
+  config.before do
     allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_return(:fake_authenticate!)
   end
 end

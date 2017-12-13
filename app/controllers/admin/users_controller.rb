@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Admin::UsersController < Admin::BaseController
   respond_to :html, :js
-  before_action :another_user_access, only: [:edit, :update, :destroy]
+  before_action :another_user_access, only: %i[edit update destroy]
 
   def index
     @users = User.not_portus.order(:username).page(params[:page])
@@ -32,7 +34,7 @@ class Admin::UsersController < Admin::BaseController
   def update
     return if @user.nil?
 
-    attr = params.require(:user).permit([:email, :display_name])
+    attr = params.require(:user).permit(%i[email display_name])
 
     if @user.update_attributes(attr)
       redirect_to admin_users_path,
@@ -72,7 +74,7 @@ class Admin::UsersController < Admin::BaseController
   private
 
   def user_create_params
-    permitted = [:username, :email, :password, :password_confirmation]
+    permitted = %i[username email password password_confirmation]
     params.require(:user).permit(permitted)
   end
 

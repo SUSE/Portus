@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe API::V1::Repositories do
@@ -9,7 +11,7 @@ describe API::V1::Repositories do
            team:       create(:team))
   end
 
-  before :each do
+  before do
     @header = build_token_header(token)
   end
 

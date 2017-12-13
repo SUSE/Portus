@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Portus
   # AuthFromToken includes methods for authenticating users through an
   # application token. This may apply to either controllers or the Rest API, and

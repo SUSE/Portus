@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Admin - Registries panel" do
+describe "Admin - Registries panel" do
   let!(:admin) { create(:admin) }
 
   before do
@@ -38,7 +40,7 @@ feature "Admin - Registries panel" do
     it "shows an error if hostname is not reachable" do
       visit new_admin_registry_path
 
-      expect(page).to_not have_content("Skip remote checks")
+      expect(page).not_to have_content("Skip remote checks")
 
       fill_in "registry_name", with: "registry"
       fill_in "registry_hostname", with: "url_not_known:1234"
@@ -71,7 +73,7 @@ feature "Admin - Registries panel" do
 
       expect(page).to have_current_path(admin_registries_path)
       expect(page).to have_content("Registry was successfully created.")
-      expect(Registry.any?).to be_truthy
+      expect(Registry).to be_any
     end
 
     it "shows advanced options when clicking on Show Advanced", js: true do
@@ -106,7 +108,7 @@ feature "Admin - Registries panel" do
   describe "update", js: true do
     let!(:registry) { create(:registry) }
 
-    before :each do
+    before do
       visit edit_admin_registry_path(registry.id)
     end
 
@@ -116,7 +118,7 @@ feature "Admin - Registries panel" do
       create(:repository)
       visit edit_admin_registry_path(registry.id)
 
-      expect(page).to_not have_css("#registry_hostname")
+      expect(page).not_to have_css("#registry_hostname")
     end
 
     it "shows an error if hostname is not reachable" do

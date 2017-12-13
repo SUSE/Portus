@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # CatalogJob is a job that synchronizes the contents of the database with the
 # contents of the registries. This is done by using the Catalog API.
 class CatalogJob < ActiveJob::Base
@@ -14,6 +16,7 @@ class CatalogJob < ActiveJob::Base
         # the DB in an unknown state because of an update failure.
         ActiveRecord::Base.transaction { update_registry!(cat) }
       rescue StandardError => e
+        # TODO: let's not rescue everything
         Rails.logger.warn "Exception: #{e.message}"
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ApplicationTokensController manages the creation/removal of application tokens
 class ApplicationTokensController < ApplicationController
   respond_to :js

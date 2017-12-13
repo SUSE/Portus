@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Portus
   # RegistryClient is a a layer between Portus and the Registry. Given a set of
   # credentials, it's able to call to any endpoint in the registry API. Moreover,
@@ -8,6 +10,10 @@ module Portus
     attr_reader   :base_url
 
     include HttpHelpers
+
+    # ManifestError is the exception that it will be raised when a manifest
+    # fetch has given a bad HTTP status code.
+    class ManifestError < StandardError; end
 
     # Exception being raised when we get an error from the Registry API that we
     # don't know how to handle.
@@ -24,9 +30,9 @@ module Portus
     end
 
     # Returns whether the registry is reachable with the given credentials or
-    # not.
+    # not. This might raise a RequestError on failure.
     def reachable?
-      res = perform_request("", "get", false)
+      res = safe_request("", "get", false)
 
       # If a 401 was retrieved, it means that at least the registry has been
       # contacted. In order to get a 200, this registry should be created and
@@ -46,7 +52,7 @@ module Portus
     # It will raise either a ManifestNotFoundError or a RuntimeError if
     # something goes wrong.
     def manifest(repository, tag = "latest")
-      res = perform_request("#{repository}/manifests/#{tag}", "get")
+      res = safe_request("#{repository}/manifests/#{tag}", "get")
 
       if res.code.to_i == 200
         mf = JSON.parse(res.body)
@@ -57,8 +63,9 @@ module Portus
       elsif res.code.to_i == 404
         handle_error res, repository: repository, tag: tag
       else
-        raise "Something went wrong while fetching manifest for " \
-          "#{repository}:#{tag}:[#{res.code}] - #{res.body}"
+        raise ::Portus::RegistryClient::ManifestError,
+              "Something went wrong while fetching manifest for " \
+              "#{repository}:#{tag}:[#{res.code}] - #{res.body}"
       end
     end
 
@@ -90,8 +97,8 @@ module Portus
         handle_error res, name: name, digest: digest
       else
         raise ::Portus::RegistryClient::RegistryError,
-          "Something went wrong while deleting blob: " \
-          "[#{res.code}] - #{res.body}"
+              "Something went wrong while deleting blob: " \
+              "[#{res.code}] - #{res.body}"
       end
     end
 
@@ -125,8 +132,8 @@ module Portus
         handle_error res
       else
         raise ::Portus::RegistryClient::RegistryError,
-          "Something went wrong while fetching the catalog " \
-          "Response: [#{res.code}] - #{res.body}"
+              "Something went wrong while fetching the catalog " \
+              "Response: [#{res.code}] - #{res.body}"
       end
     end
 

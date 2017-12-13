@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "Repositories comments support" do
+describe "Repositories comments support" do
   let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:admin) { create(:admin) }
   let!(:owner) { create(:user) }
@@ -34,7 +36,7 @@ feature "Repositories comments support" do
   end
 
   describe "comment#create" do
-    scenario "An user comments on a repository under a public namespace", js: true do
+    it "An user comments on a repository under a public namespace", js: true do
       visit repository_path(visible_repository)
 
       expect(page).to have_content("Nobody has left a comment")
@@ -50,7 +52,7 @@ feature "Repositories comments support" do
       expect(page).not_to have_content("Nobody has left a comment")
     end
 
-    scenario "An user comments on a repository under a protected namespace", js: true do
+    it "An user comments on a repository under a protected namespace", js: true do
       visit repository_path(protected_repository)
 
       expect(page).to have_content("Nobody has left a comment")
@@ -66,7 +68,7 @@ feature "Repositories comments support" do
       expect(page).not_to have_content("Nobody has left a comment")
     end
 
-    scenario "An admin comments on any repository", js: true do
+    it "An admin comments on any repository", js: true do
       login_as admin, scope: :user
       visit repository_path(invisible_repository)
 
@@ -83,13 +85,13 @@ feature "Repositories comments support" do
       expect(page).not_to have_content("Nobody has left a comment")
     end
 
-    scenario "An user cannot comment on a repository without access", js: true do
+    it "An user cannot comment on a repository without access", js: true do
       visit repository_path(invisible_repository)
 
       expect(page).to have_content("You are not authorized to access this page")
     end
 
-    scenario "An user cannot comment an empty text", js: true do
+    it "An user cannot comment an empty text", js: true do
       visit repository_path(visible_repository)
 
       find(".add-comment").click
@@ -104,7 +106,7 @@ feature "Repositories comments support" do
   end
 
   describe "comment#delete" do
-    scenario "An user deletes his own comment", js: true do
+    it "An user deletes his own comment", js: true do
       login_as owner, scope: :user
       visit repository_path(commented_repository)
 
@@ -117,7 +119,7 @@ feature "Repositories comments support" do
       expect(page).not_to have_content(comment.body)
     end
 
-    scenario "An user cannot delete other users' comment", js: true do
+    it "An user cannot delete other users' comment", js: true do
       visit repository_path(commented_repository)
 
       expect(page).to have_content(comment.body)
@@ -125,7 +127,7 @@ feature "Repositories comments support" do
       expect(page).not_to have_content("Delete comment")
     end
 
-    scenario "An admin deletes any comment", js: true do
+    it "An admin deletes any comment", js: true do
       login_as admin, scope: :user
       visit repository_path(commented_repository)
 

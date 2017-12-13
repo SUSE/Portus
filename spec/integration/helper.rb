@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "docker"
 require "pty"
 require "spec_helper"
@@ -30,6 +32,7 @@ def integration(name, tags = {}, &blk)
 end
 
 # Setup the describe block for the given parameters.
+# rubocop:disable Metrics/MethodLength
 def setup_describe(name, version, rebuild, tags, &blk)
   describe "#{name} (distribution: #{version}) (LDAP: #{ldap?})", tags do
     before :all do
@@ -51,7 +54,7 @@ def setup_describe(name, version, rebuild, tags, &blk)
       WebMock.disable_net_connect!
     end
 
-    before :each do
+    before do
       WebMock.allow_net_connect!
       VCR.turn_off!
 
@@ -59,7 +62,7 @@ def setup_describe(name, version, rebuild, tags, &blk)
       `docker restart integration_portus`
     end
 
-    after :each do
+    after do
       VCR.turn_on!
       WebMock.disable_net_connect!
     end
@@ -67,6 +70,7 @@ def setup_describe(name, version, rebuild, tags, &blk)
     instance_eval(&blk)
   end
 end
+# rubocop:enable Metrics/MethodLength
 
 # Fetch some needed parameters from the given tags. It returns a two-sized
 # array where the first item is an array of the docker distribution versions,
@@ -77,10 +81,10 @@ def parameters_from_tags(tags)
   versions = SUPPORTED_DISTRIBUTION_VERSIONS
   if tags.key?(:distribution)
     filter = if tags[:distribution].is_a? Array
-      tags[:distribution]
-    else
-      [tags[:distribution]]
-    end
+               tags[:distribution]
+             else
+               [tags[:distribution]]
+             end
     versions &= filter
   end
 
@@ -224,6 +228,7 @@ end
 #   - rebuild: whether the image has to be rebuilt or not.
 #   - env: a list of additional environment variables to be passed.
 #   - ip: the IP that the Portus container should have.
+# rubocop:disable Metrics/MethodLength
 def setup_portus!(rebuild = true, env = [], address = nil)
   dir = File.expand_path(File.dirname(__FILE__) + "../../../")
 
@@ -264,6 +269,7 @@ def setup_portus!(rebuild = true, env = [], address = nil)
     start_container!("integration_portus:latest", "integration_portus", opts)
   end
 end
+# rubocop:enable Metrics/MethodLength
 
 def setup_templates!
   # Render the template
@@ -426,7 +432,7 @@ end
 
 # Cleanup all the containers that might be running.
 def cleanup!
-  ["integration_db", "integration_portus", "integration_ldap"].each do |container|
+  %w[integration_db integration_portus integration_ldap].each do |container|
     cleanup_container!(container)
   end
   cleanup_distribution!

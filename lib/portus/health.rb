@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "portus/health_checks/db"
 require "portus/health_checks/registry"
 require "portus/health_checks/clair"

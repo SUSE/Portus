@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: teams
@@ -81,7 +83,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "as a portus user" do
-    before :each do
+    before do
       sign_in owner
     end
 
@@ -103,7 +105,7 @@ RSpec.describe TeamsController, type: :controller do
 
   describe "PATCH #update" do
     it "does not allow to change the description or the team name by viewers and contributers" do
-      disallowed_roles = ["viewer", "contributer"]
+      disallowed_roles = %w[viewer contributer]
       disallowed_roles.each do |role|
         user = create(:user)
         TeamUser.create(team: team, user: user, role: TeamUser.roles[role])
@@ -124,7 +126,7 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     context "non-admins are not allowed to update teams" do
-      before :each do
+      before do
         APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
       end
 
@@ -172,7 +174,7 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     it "does not allow to search by contributors or viewers" do
-      disallowed_roles = ["viewer", "contributer"]
+      disallowed_roles = %w[viewer contributer]
       disallowed_roles.each do |role|
         user = create(:user)
         TeamUser.create(team: team, user: user, role: TeamUser.roles[role])
@@ -209,7 +211,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "activity tracking" do
-    before :each do
+    before do
       sign_in owner
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BaseValidateService
   attr_accessor :params
 

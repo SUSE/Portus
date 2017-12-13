@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 # Namespace::AuthScope parses the scope string for the "namespace" type.
 class Namespace::AuthScope < Portus::AuthScope
   attr_accessor :actions, :resource_type, :resource_name
 
   def resource
     found_resource = if @namespace_name.blank?
-      @registry.namespaces.find_by(global: true)
-    else
-      @registry.namespaces.find_by(name: @namespace_name)
-    end
+                       @registry.namespaces.find_by(global: true)
+                     else
+                       @registry.namespaces.find_by(name: @namespace_name)
+                     end
 
     raise ResourceNotFound, "Cannot find namespace #{@namespace_name}" if found_resource.nil?
 

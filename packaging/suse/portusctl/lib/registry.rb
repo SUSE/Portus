@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # :nocov:
 module Portusctl
   # Contains all the needed methods for configuring the registry. You should
@@ -28,7 +30,7 @@ module Portusctl
 
     protected
 
-    REGISTRY_RPM         = "docker-distribution-registry".freeze
+    REGISTRY_RPM         = "docker-distribution-registry"
     ZYPPER_NOT_INSTALLED = 104 # ZYPPER_EXIT_INF_CAP_NOT_FOUND
 
     # Checks whether the Docker Distribution package is already installed in the

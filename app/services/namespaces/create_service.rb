@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Namespaces
   class CreateService < ::BaseService
     attr_accessor :namespace

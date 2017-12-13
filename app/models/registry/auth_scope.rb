@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Registry::AuthScope parses the scope string so it can be used afterwards for
 # the "registry" type.
 class Registry::AuthScope < Portus::AuthScope

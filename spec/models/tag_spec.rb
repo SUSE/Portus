@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: tags
@@ -36,18 +38,18 @@ describe Tag do
   let!(:user)       { create(:admin) }
   let!(:repository) { create(:repository, namespace: registry.global_namespace, name: "repo") }
 
-  it { should belong_to(:repository) }
-  it { should belong_to(:author) }
+  it { is_expected.to belong_to(:repository) }
+  it { is_expected.to belong_to(:author) }
 
   describe "creating tags" do
     it "defaults to latest" do
-      t = Tag.create(repository: repository)
+      t = described_class.create(repository: repository)
       expect(t.name).to eq("latest")
     end
 
     it "does not accept nil names" do
       expect do
-        Tag.create(name: nil, repository: repository)
+        described_class.create(name: nil, repository: repository)
       end.to raise_error(ActiveRecord::StatementInvalid)
     end
 
@@ -71,7 +73,7 @@ describe Tag do
     let!(:tag2) { create(:tag, name: "tag2", repository: repository, digest: "2") }
 
     it "returns false if there is no digest" do
-      allow_any_instance_of(Tag).to receive(:fetch_digest).and_return(nil)
+      allow_any_instance_of(described_class).to receive(:fetch_digest).and_return(nil)
       expect(tag.delete_by_digest!(user)).to be_falsey
     end
 
@@ -82,7 +84,7 @@ describe Tag do
 
       # That being said, the tag should be "marked".
       expect(tag.delete_by_digest!(user)).to be_falsey
-      expect(tag.reload.marked?).to be_truthy
+      expect(tag.reload).to be_marked
     end
 
     it "deletes the tag and updates corresponding activities" do
@@ -147,7 +149,7 @@ describe Tag do
 
       tag.delete_by_digest!(user)
 
-      expect(Tag.find_by(name: "t")).to be_nil
+      expect(described_class.find_by(name: "t")).to be_nil
     end
   end
 
@@ -156,7 +158,7 @@ describe Tag do
   describe "#delete_and_update!" do
     let!(:tag) { create(:tag, name: "tag1", repository: repository, digest: "1") }
 
-    before :each do
+    before do
       tag.destroy
     end
 
@@ -213,7 +215,8 @@ describe Tag do
     it "returns nil if security scanning is not enabled" do
       # Checking that even if scanning is done and there are vulnerabilities, it
       # returns nil because security scanning is disabled.
-      tag.update_columns(scanned: Tag.statuses[:scan_done], vulnerabilities: "something")
+      tag.update_columns(scanned:         described_class.statuses[:scan_done],
+                         vulnerabilities: "something")
 
       expect(tag.fetch_vulnerabilities).to be_nil
     end
@@ -225,13 +228,14 @@ describe Tag do
 
     it "returns nil if scan is work in progress" do
       enable_security_vulns_module!
-      tag.update_columns(scanned: Tag.statuses[:scan_working])
+      tag.update_columns(scanned: described_class.statuses[:scan_working])
       expect(tag.fetch_vulnerabilities).to be_nil
     end
 
     it "returns the vulnerabilities when scan is over" do
       enable_security_vulns_module!
-      tag.update_columns(scanned: Tag.statuses[:scan_done], vulnerabilities: "something")
+      tag.update_columns(scanned:         described_class.statuses[:scan_done],
+                         vulnerabilities: "something")
       expect(tag.fetch_vulnerabilities).to eq "something"
     end
   end

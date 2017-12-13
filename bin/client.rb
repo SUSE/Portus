@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This script has to be used inside of the `rails runner` command. So, for
 # example, to get the results from the manifest:
 #

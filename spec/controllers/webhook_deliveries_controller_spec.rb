@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: webhook_deliveries
@@ -31,12 +33,12 @@ RSpec.describe WebhookDeliveriesController, type: :controller do
   let!(:webhook)          { create(:webhook, namespace: namespace) }
   let!(:webhook_delivery) { create(:webhook_delivery, webhook: webhook) }
 
-  before :each do
+  before do
     sign_in owner
   end
 
   describe "#update" do
-    before :each do
+    before do
       allow_any_instance_of(WebhookDelivery).to receive(:retrigger).and_return(true)
     end
 

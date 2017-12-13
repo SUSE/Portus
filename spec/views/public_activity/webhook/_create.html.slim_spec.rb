@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "public_activity/webhook/_create" do
@@ -6,7 +8,7 @@ describe "public_activity/webhook/_create" do
   let!(:registry) { create(:registry) }
   let!(:user)     { create(:admin) }
 
-  before :each do
+  before do
     user.create_personal_namespace!
     @webhook  = create(:webhook, namespace: user.namespace)
     @activity = @webhook.create_activity :created, owner: user

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 # Let's open up some instance variables for testing purposes.
 Portus::JwtToken.class_eval { attr_reader :account, :service }
 
 describe Portus::JwtToken do
-  let(:mock)     { Portus::JwtToken.new("", "", nil) }
+  let(:mock)     { described_class.new("", "", nil) }
   let(:registry) { create(:registry) }
   let(:scope)    { Namespace::AuthScope.new(registry, "repository:samalba/my-app:push") }
 
@@ -15,7 +17,7 @@ describe Portus::JwtToken do
   describe ".jwt_kid" do
     # TODO: @eotchi add more keys to test against
     it "returns known by libtrust kid of a given key" do
-      kid = Portus::JwtToken.kid(mock.private_key)
+      kid = described_class.kid(mock.private_key)
       expect(kid).to eq "PTWT:FNJE:7TW7:ULI7:DZQA:JJJI:RDJQ:2M76:HD6G:ZRSC:VPIF:O5BU"
     end
   end

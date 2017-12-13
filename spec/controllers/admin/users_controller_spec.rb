@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Admin::UsersController, type: :controller do
@@ -5,7 +7,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   let(:user) { create(:user) }
 
   context "as admin user" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
@@ -33,7 +35,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   context "as normal user" do
-    before :each do
+    before do
       sign_in user
     end
 
@@ -46,7 +48,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   context "PUT toggle admin" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
@@ -69,7 +71,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   describe "GET #new" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
@@ -81,7 +83,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   describe "POST #create" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
@@ -110,7 +112,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   describe "GET #edit" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
@@ -127,7 +129,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   describe "PUT/PATCH #update" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
@@ -157,7 +159,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    before :each do
+    before do
       create(:registry)
       sign_in admin
     end
