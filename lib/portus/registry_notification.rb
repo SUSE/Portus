@@ -7,29 +7,23 @@ module Portus
     # An array with the events that a handler has to support.
     HANDLED_EVENTS = %w[push delete].freeze
 
-    # Processes the notification data with the given handlers. The data is the
-    # parsed JSON body as given by the registry. A handler is a class that can
-    # call the `handle_#{event}_event` method. This method receives an `event`
-    # object, which is the event object as given by the registry.
-    def self.process!(data, *handlers)
+    # It filters the event from the registry so the background job can actually
+    # handle this request.
+    def self.process!(data)
       data["events"].each do |event|
-        Rails.logger.debug "Incoming event:\n#{JSON.pretty_generate(event)}"
+        Rails.logger.debug "Filtering event:\n#{JSON.pretty_generate(event)}"
 
+        # Skip irrelevant or already-handled events.
         next unless should_handle?(event)
-        action = event["action"]
 
-        # Only register pushes, since they are the conflicting actions since 2.5
-        if action == "push"
-          RegistryEvent.create!(
-            event_id:   event["id"],
-            repository: event["target"]["repository"],
-            tag:        event["target"]["tag"]
-          )
-        end
-
-        # Now it's time to delegate the handling to the proper handler.
-        Rails.logger.info "Handling '#{action}' event:\n#{JSON.pretty_generate(event)}"
-        handlers.each { |handler| handler.send("handle_#{action}_event".to_sym, event) }
+        # At this point, events will be handled by
+        # ::Portus::Background::RegistryEvent. So just create the event on the
+        # DB and let the background process fetch this.
+        RegistryEvent.create!(
+          event_id: event["id"],
+          data:     event.to_json,
+          status:   RegistryEvent.statuses[:fresh]
+        )
       end
     end
 

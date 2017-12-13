@@ -12,11 +12,13 @@ TIMEOUT = 90
 
 while ::Portus::DB.ping != :ready
   if count >= TIMEOUT
-    puts "Timeout reached, exiting with error. Check the logs..."
+    Rails.logger.tagged("Database") do
+      Rails.logger.error "Timeout reached, exiting with error. Check the logs..."
+    end
     exit 1
   end
 
-  puts "Waiting for DB to be ready"
+  Rails.logger.tagged("Database") { Rails.logger.error "Not ready yet. Waiting..." }
   sleep 5
   count += 5
 end
@@ -25,25 +27,52 @@ end
 # The DB is up, now let's define the different background jobs as classes.
 #
 
+require "portus/background/registry"
 require "portus/background/security_scanning"
 
-they = [::Portus::Background::SecurityScanning.new]
+they = [::Portus::Background::Registry.new, ::Portus::Background::SecurityScanning.new]
 values = they.map { |v| "'#{v}'" }.join(", ")
-Rails.logger.info "Running: #{values}"
+Rails.logger.tagged("Initialization") { Rails.logger.info "Running: #{values}" }
+
+#
+# Between each iteration of the main loop there's going to be a sleep time. This
+# sleep time is determined by the amount expected by each backend. The following
+# block defines the sleep time and the maximum value. They all have to be
+# divisible.
+#
+
+SLEEP_VALUE, TOP_SLEEP_VALUE = they.minmax_by(&:sleep_value).map(&:sleep_value)
+they.each do |v|
+  value = v.sleep_value
+  next unless value % SLEEP_VALUE != 0
+
+  Rails.logger.tagged "Initialization" do
+    Rails.logger.error "Encountered '#{value}', which is not divisible by '#{SLEEP_VALUE}'"
+  end
+  exit 1
+end
+slept = 0
 
 #
 # Finally, we will loop infinitely like this:
-#   1. Each background job will execute its task.
-#   2. Then we will sleep until there's more work to be done.
+#   1. Each background job will execute its task if needed (given the sleep time
+#      and the `work?` method.
+#   2. Then we will go to sleep for `SLEEP_VALUE` seconds.
 #
 
-SLEEP_VALUE = 10
-
-# Loop forever executing the given tasks. It will go to sleep for spans of
-# `SLEEP_VALUE` seconds, if there's nothing else to be done.
 loop do
-  they.each { |t| t.execute! if t.work? }
-  sleep SLEEP_VALUE until they.any?(&:work?)
+  they.each do |t|
+    next if slept % t.sleep_value != 0
+    t.execute! if t.work?
+  end
+
+  break if ARGV.first == "--one-shot"
+  sleep SLEEP_VALUE
+
+  # Increase the sleep value by SLEEP_VALUE. If it turns out we reached out the
+  # maximum value, reset it to zero, so the number gets too big.
+  slept += SLEEP_VALUE
+  slept = 0 if (slept % TOP_SLEEP_VALUE).zero?
 end
 
 exit 0

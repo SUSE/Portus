@@ -7,6 +7,12 @@ module Portus
     # SecurityScanning represents a task for checking vulnerabilities of tags that
     # have not been scanned yet.
     class SecurityScanning
+      # Returns how many seconds has to pass between each loop for this
+      # background service.
+      def sleep_value
+        10
+      end
+
       def work?
         ::Portus::Security.enabled? && Tag.exists?(scanned: Tag.statuses[:scan_none])
       end
