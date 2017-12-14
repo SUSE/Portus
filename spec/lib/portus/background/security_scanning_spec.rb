@@ -17,6 +17,12 @@ describe ::Portus::Background::SecurityScanning do
     }
   end
 
+  describe "#sleep_value" do
+    it "returns always 10" do
+      expect(subject.sleep_value).to eq 10
+    end
+  end
+
   describe "#work?" do
     it "returns false if security scanning is not enabled" do
       APP_CONFIG["security"]["clair"]["server"] = ""

@@ -5,7 +5,7 @@ class Api::V2::EventsController < Api::BaseController
   # A new notification is coming, register it if valid.
   def create
     body = JSON.parse(request.body.read)
-    Portus::RegistryNotification.process!(body, Repository, Webhook)
+    Portus::RegistryNotification.process!(body)
     head status: :accepted
   end
 end
