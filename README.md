@@ -50,7 +50,7 @@ Some highlights:
 
 - [Synchronization with your private registry in order to fetch which images and tags are available](http://port.us.org/features/1_Synchronizing-the-Registry-and-Portus.html).
 - [LDAP user authentication](http://port.us.org/features/2_LDAP-support.html).
-- OAuth and OpenID-Connect authentication 
+- OAuth and OpenID-Connect authentication
 - [Monitoring of all the activities performed onto your private registry and Portus itself](http://port.us.org/features/4_audit.html).
 - [Search for repositories and tags inside of your private registry](http://port.us.org/features/5_search.html).
 - [Star your favorite repositories](http://port.us.org/features/6_starring.html).
@@ -59,6 +59,49 @@ Some highlights:
 
 Take a tour by our [documentation](http://port.us.org/features.html) site to
 read more about this.
+
+## Deploying
+
+### Containerized
+
+In the `examples` directory you can find different containerized deployment
+examples. All these examples are using the `opensuse/portus` image, which can be
+found on Docker Hub, and they are defined in
+[opensuse/docker-containers](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus). We
+have the following tags:
+
+- `head`: Portus' master branch packaged and curated as if it was
+  production-ready. This is convenient for people that want to be on the
+  bleeding edge and want to test the latest features.
+- `latest`: the latest stable release.
+- Version-specific tags (e.g. `2.3`). We recommend using these tags for
+  production clusters.
+
+Moreover, there is also available a [Helm
+Chart](https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/portus)
+that you can use for Kubernetes' clusters.
+
+### Bare metal
+
+Portus is a Ruby on Rails application and as such you can follow the usual steps
+to deploy such an application. If you need inspiration you may want to read an
+example with [NGinx and
+Puma](http://port.us.org/docs/setups/3_nginx_bare_metal.html).
+
+### Development
+
+If you simply want to explore Portus and play with it, using the development
+environment might be a good fit. A quick way to start a development version of
+Portus is to perform the following:
+
+```
+$ docker-compose up
+```
+
+For more information on development environments, check our
+[wiki](https://github.com/SUSE/Portus/wiki#developmentplayground-environments). Otherwise,
+feel free to explore the `examples` directory for a variety of ways in which you
+can deploy Portus.
 
 ## Supported versions
 
@@ -84,28 +127,6 @@ Let's detail some of the version being specified:
 - Docker Distribution `2.3` supports both Manifest versions, but some changes
   had to be made in order to offer backwards compatibility. This is not
   supported neither for Portus `2.0.0` nor `2.0.1`.
-
-# Deploying
-
-You can deploy Portus in a wide variety of ways. Most commonly:
-
-- Using **containers**: in the `examples` directory you can find different
-  containerized deployment examples (e.g. with Kubernetes).
-- A **bare metal** setup: you can either do it by
-  [installing the RPM](http://port.us.org/docs/setups/1_rpm_packages.html) or
-  installing [everything yourself with NGinx and Puma](http://port.us.org/docs/setups/3_nginx_bare_metal.html).
-
-A quick way to start a development version of Portus is to perform the
-following:
-
-```
-$ docker-compose up
-```
-
-For more information on development environments, check our
-[wiki](https://github.com/SUSE/Portus/wiki#developmentplayground-environments). Otherwise,
-feel free to explore the `examples` directory for a variety of ways in which you
-can deploy Portus.
 
 # Contributing
 
