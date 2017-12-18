@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+def check_email!(key)
+  value = APP_CONFIG["email"][key]
+  return if value.match?(Devise.email_regexp)
+  raise "Mail: bad config value for '#{key}'. '#{value}' is not a proper email..."
+end
+
+check_email!("from")
+check_email!("reply_to")
+
 # If SMTP was set, then use it as the delivery method and configure it with the
 # given config.
 
