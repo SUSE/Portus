@@ -8,7 +8,7 @@ describe Portus::RegistryNotification do
   let(:delete)    { ::Portus::Fixtures::RegistryEvent::DELETE.dup }
   let(:version23) { ::Portus::Fixtures::RegistryEvent::VERSION23.dup }
 
-  it "processes all the relevant events", focus: true do
+  it "processes all the relevant events" do
     evaluated_events = [relevant, delete, version23]
     evaluated_events.each { |e| body["events"] << e }
 

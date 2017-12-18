@@ -39,6 +39,12 @@ describe PasswordsController do
     expect(@user.valid_password?("12341234")).to be false
   end
 
+  it "redirects on socket error and such" do
+    allow(User).to receive(:send_reset_password_instructions) { raise SocketError, "error" }
+    post :create, "user" => { "email" => @user.email }
+    expect(response.status).to eq 302
+  end
+
   describe "LDAP support is enabled" do
     before do
       APP_CONFIG["ldap"] = { "enabled" => true }

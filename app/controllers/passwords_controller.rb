@@ -17,6 +17,11 @@ class PasswordsController < Devise::PasswordsController
     else
       redirect_to new_user_password_path, alert: resource.errors.full_messages, float: true
     end
+  rescue SocketError, Errno::ECONNREFUSED => e
+    Rails.logger.tagged("Mailer") { Rails.logger.info "Exception: #{e.message}" }
+    redirect_to new_user_password_path,
+                alert: "Something went wrong. Check the configuration of Portus",
+                float: true
   end
 
   # Re-implemented from Devise to respond with a proper message on error.
