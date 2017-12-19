@@ -70,7 +70,8 @@ export default {
 
   methods: {
     isReachableError(error) {
-      return error.indexOf('Error: ') !== -1 ||
+      return error.indexOf('Error') !== -1 ||
+             error.indexOf('connection') !== -1 ||
              error.indexOf('SSLError') !== -1 ||
              error.indexOf('OpenTimeout') !== -1 ||
              error.indexOf('SSLError') !== -1;

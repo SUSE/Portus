@@ -10,7 +10,8 @@ describe "Forgotten password support" do
     APP_CONFIG["email"]  = {
       "from"     => "test@example.com",
       "name"     => "Portus",
-      "reply_to" => "no-reply@example.com"
+      "reply_to" => "no-reply@example.com",
+      "smtp"     => { "enabled" => false }
     }
     ActionMailer::Base.deliveries.clear
   end

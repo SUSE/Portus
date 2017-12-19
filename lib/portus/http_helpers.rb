@@ -61,19 +61,9 @@ module Portus
     # of exceptions that an HTTP request might entail.
     def safe_request(path, method = "get", request_auth_token = true)
       perform_request(path, method, request_auth_token)
-    rescue Errno::ECONNREFUSED, SocketError => e
-      raise ::Portus::RequestError.new(exception: e, message: "connection refused")
-    rescue Errno::ETIMEDOUT, Net::OpenTimeout => e
-      raise ::Portus::RequestError.new(exception: e, message: "connection timed out")
-    rescue Net::HTTPBadResponse => e
-      raise ::Portus::RequestError.new(exception: e,
-                                       message:   "there's something wrong with your SSL config")
-    rescue OpenSSL::SSL::SSLError => e
-      raise ::Portus::RequestError.new(exception: e,
-                                       message:   "SSL error while communicating with the registry")
-    rescue StandardError => e
-      raise ::Portus::RequestError.new(exception: e,
-                                       message:   "something went wrong. Check your configuration")
+    rescue *::Portus::Errors::NET => e
+      message = ::Portus::Errors.message_from_exception(e)
+      raise ::Portus::RequestError.new(exception: e, message: message)
     end
 
     # Handle a known error from Docker distribution. Typically these are
