@@ -33,8 +33,12 @@ services:
       - ./secrets:/certificates:ro
       - static:/srv/Portus/public
 
-  crono:
+  background:
     image: opensuse/portus:head
+    entrypoint: bundle exec rails runner /srv/Portus/bin/background.rb
+    depends_on:
+      - portus
+      - db
     environment:
       # Theoretically not needed, but cconfig's been buggy on this...
       - CCONFIG_PREFIX=PORTUS
@@ -51,9 +55,6 @@ services:
       - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
       - PORTUS_KEY_PATH=/certificates/portus.key
       - PORTUS_PASSWORD=${PORTUS_PASSWORD}
-
-      # We want to execute crono, not portus
-      - PORTUS_INIT_COMMAND=bin/crono
     links:
       - db
     volumes:

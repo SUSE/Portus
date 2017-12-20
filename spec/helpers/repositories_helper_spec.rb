@@ -2,7 +2,8 @@
 
 require "rails_helper"
 
-class CatalogJobMock < CatalogJob
+# Just opens up protected methods so they can be used in the test suite.
+class SyncMock < ::Portus::Background::Sync
   def update_registry!(catalog)
     super
   end
@@ -106,8 +107,8 @@ RSpec.describe RepositoriesHelper, type: :helper do
       end
 
       # And now the catalog job sweeps in.
-      job = CatalogJobMock.new
-      job.update_registry!([{ "name" => "repo", "tags" => ["0.1"] }])
+      sync = SyncMock.new
+      sync.update_registry!([{ "name" => "repo", "tags" => ["0.1"] }])
 
       # Let's remove the other namespace, to force another case.
       namespace.destroy

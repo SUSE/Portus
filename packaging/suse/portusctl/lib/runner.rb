@@ -60,15 +60,6 @@ class Runner
     end
   end
 
-  # Creates a new file called "crono.log" with the logs stored by systemd about
-  # crono.
-  def self.produce_crono_log_file!
-    File.open(File.join(PORTUS_ROOT, "log/crono.log"), "w+") do |file|
-      cmd = Runner.escape_command("journalctl", ["--no-pager", "-u", "portus_crono"])
-      file.puts(`#{cmd}`)
-    end
-  end
-
   # Tar and compress the given files into the /tmp directory. It's assumed that
   # these files are located inside of PORTUS_ROOT.
   def self.tar_files(*files)

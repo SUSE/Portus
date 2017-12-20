@@ -82,9 +82,6 @@ GEM
     concurrent-ruby (1.0.4)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    crono (0.9.0)
-      activerecord (~> 4.0)
-      activesupport (~> 4.0)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
     descendants_tracker (0.0.4)
@@ -449,7 +446,6 @@ DEPENDENCIES
   cconfig (~> 1.2.0)
   codeclimate-test-reporter
   concurrent-ruby (= 1.0.4)
-  crono
   database_cleaner
   devise
   docker-api (~> 1.28.0)

@@ -182,10 +182,7 @@ class Configurator
     FileUtils.chown_R("root", "www", "/srv/Portus/log/production.log")
     FileUtils.chmod_R(0o664, "/srv/Portus/log/production.log")
 
-    services = [
-      ["portus_crono", false],
-      ["apache2", true]
-    ]
+    services = [["apache2", true]]
     services << ["mysql", false] if database_local?
     services << ["registry", true] if @options["local-registry"]
     services.each do |service|
