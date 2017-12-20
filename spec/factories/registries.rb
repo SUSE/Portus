@@ -23,7 +23,7 @@ FactoryGirl.define do
     before(:create) { create(:admin) }
 
     sequence :hostname do |n|
-      "registry hostname #{n}"
+      "registry.hostname:#{n}"
     end
 
     sequence :name do |n|

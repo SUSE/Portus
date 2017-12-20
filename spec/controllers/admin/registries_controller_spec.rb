@@ -39,6 +39,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
     context "not using the Force" do
       it "renders 'new' with unprocessable entity status (422)
           when there's something wrong with the reachability of the registry" do
+        allow_any_instance_of(Registry).to receive(:reachable?).and_return("Error")
         expect do
           post :create, registry: attributes_for(:registry)
         end.to change(Registry, :count).by(0)
@@ -109,6 +110,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
 
     it "renders 'edit' with unprocessable entity status (422)
         when there's something wrong with the reachability of the registry" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return("Error")
       expect do
         put :update, id: registry.id, registry: { hostname: "lala" }
       end.to change(Registry, :count).by(0)
@@ -126,12 +128,14 @@ RSpec.describe Admin::RegistriesController, type: :controller do
 
     it "does not allow to update hostname if there are repos" do
       create(:repository)
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
       old = registry.hostname
       put :update, id: registry.id, registry: { hostname: "lala" }
       expect(Registry.first.hostname).to eq old
     end
 
     it "does not allow to update name if empty" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
       put :update, id: registry.id, registry: { name: "" }
       expect(response).to have_http_status(:unprocessable_entity)
     end

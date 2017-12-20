@@ -70,7 +70,7 @@ module Portus
         req["Accept"] = "application/json"
         begin
           res = get_response_token(uri, req)
-        rescue SocketError, Errno::ECONNREFUSED => e
+        rescue *::Portus::Errors::NET => e
           Rails.logger.tagged("clair.get") { Rails.logger.debug e.message }
           return
         end

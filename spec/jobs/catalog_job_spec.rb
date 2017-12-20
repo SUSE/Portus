@@ -12,6 +12,8 @@ end
 describe CatalogJob do
   describe "Empty database" do
     it "updates the registry" do
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+
       registry  = create(:registry)
       namespace = create(:namespace, registry: registry)
 
@@ -58,6 +60,7 @@ describe CatalogJob do
     it "performs the job as expected" do
       VCR.turn_on!
 
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
       registry = create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_registry_catalog", record: :none) do
@@ -66,7 +69,7 @@ describe CatalogJob do
       end
 
       repos = Repository.all
-      expect(repos.count).to be 1
+      expect(repos.count).to eq 1
       repo = repos[0]
       expect(repo.name).to eq "busybox"
       expect(repo.namespace.id).to eq registry.namespaces.first.id
@@ -77,6 +80,7 @@ describe CatalogJob do
     it "handles registries even if there some namespaces missing" do
       VCR.turn_on!
 
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
       registry = create(:registry, "hostname" => "registry.test.lan")
 
       VCR.use_cassette("registry/get_registry_catalog_namespace_missing", record: :none) do
@@ -85,7 +89,7 @@ describe CatalogJob do
       end
 
       repos = Repository.all
-      expect(repos.count).to be 1
+      expect(repos.count).to eq 1
       repo = repos[0]
       expect(repo.name).to eq "busybox"
       expect(repo.namespace.id).to eq registry.namespaces.first.id
@@ -105,6 +109,8 @@ describe CatalogJob do
     let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
 
     it "updates the registry" do
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+
       job = CatalogJobMock.new
       job.update_registry!([
                              { "name" => "busybox",                  "tags" => ["latest", "0.1"] },
@@ -151,6 +157,8 @@ describe CatalogJob do
     let!(:tag)        { create(:tag, name: "latest", author: owner, repository: repo) }
 
     it "removes activities from dangling tags" do
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+
       repo.create_activity(:push, owner: owner, recipient: tag)
 
       activities = PublicActivity::Activity.order(:updated_at)

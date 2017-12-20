@@ -6,6 +6,6 @@ describe ::Portus::RequestError do
 
     expect do
       raise ::Portus::RequestError.new(exception: e, message: "something")
-    end.to raise_error(::Portus::RequestError, "StandardError: something")
+    end.to raise_error(::Portus::RequestError, "StandardError: something.")
   end
 end

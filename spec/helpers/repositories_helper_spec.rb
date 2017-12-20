@@ -72,6 +72,8 @@ RSpec.describe RepositoriesHelper, type: :helper do
     let!(:tag4)       { create(:tag, name: "0.4", author: owner, repository: repo3) }
 
     it "creates the proper HTML for each kind of activity" do
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+
       repo.create_activity(:push, owner: owner, recipient: tag, created_at: 1.hour.ago)
       repo.create_activity(:push, owner: owner, recipient: tag1, created_at: 2.hours.ago)
       repo1.create_activity(:push, owner: owner, recipient: tag2, created_at: 3.hours.ago)

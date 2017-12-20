@@ -107,7 +107,6 @@ describe Registry, type: :model do
     end
   end
 
-  # rubocop: disable Metrics/LineLength
   describe "#reachable" do
     after :each do
       allow_any_instance_of(::Portus::RegistryClient).to receive(:perform_request).and_call_original
@@ -123,10 +122,10 @@ describe Registry, type: :model do
         [Errno::ECONNREFUSED, GOOD_RESPONSE, true, /connection refused/],
         [Errno::ETIMEDOUT, GOOD_RESPONSE, true, /connection timed out/],
         [Net::OpenTimeout, GOOD_RESPONSE, true, /connection timed out/],
-        [Net::HTTPBadResponse, GOOD_RESPONSE, true, /wrong with your SSL config/],
-        [OpenSSL::SSL::SSLError, GOOD_RESPONSE, true, /SSL error while communicating with the registry/],
-        [OpenSSL::SSL::SSLError, GOOD_RESPONSE, false, /SSL error while communicating with the registry/],
-        [StandardError, GOOD_RESPONSE, true, /something went wrong/]
+        [Net::HTTPBadResponse, GOOD_RESPONSE, true, /could not stablish connection: SSL error/],
+        [OpenSSL::SSL::SSLError, GOOD_RESPONSE, true, /could not stablish connection: SSL error/],
+        [OpenSSL::SSL::SSLError, GOOD_RESPONSE, false, /could not stablish connection: SSL error/],
+        [Errno::ECONNRESET, GOOD_RESPONSE, false, /connection reset/]
       ].each do |cs|
         allow_any_instance_of(::Portus::RegistryClient).to receive(:perform_request) do
           raise cs.first if cs.first
@@ -137,7 +136,6 @@ describe Registry, type: :model do
       end
     end
   end
-  # rubocop: enable Metrics/LineLength
 
   describe "#get_tag_from_manifest" do
     it "returns a tag on success" do

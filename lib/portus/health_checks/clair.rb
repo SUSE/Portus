@@ -21,7 +21,7 @@ module Portus
         res     = get_response_token(uri, req)
         success = res.code.to_i == 200
         ["clair is#{success ? "" : " not"} reachable", success]
-      rescue SocketError, Errno::ECONNREFUSED => e
+      rescue *::Portus::Errors::NET => e
         ["clair is not reachable: #{e.message}", false]
       end
 

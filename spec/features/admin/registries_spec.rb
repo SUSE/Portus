@@ -38,6 +38,8 @@ describe "Admin - Registries panel" do
     end
 
     it "shows an error if hostname is not reachable" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return("connection refused")
+
       visit new_admin_registry_path
 
       expect(page).not_to have_content("Skip remote checks")
@@ -46,11 +48,13 @@ describe "Admin - Registries panel" do
       fill_in "registry_hostname", with: "url_not_known:1234"
 
       expect(page).to have_content("Skip remote checks")
-      expect(page).to have_content("something went wrong")
+      expect(page).to have_content("connection refused")
       expect(page).to have_button("Create", disabled: true)
     end
 
     it "shows an error (hostname), but you can force it afterwards" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return("Error")
+
       visit new_admin_registry_path
 
       fill_in "registry_name", with: "registry"
@@ -122,11 +126,13 @@ describe "Admin - Registries panel" do
     end
 
     it "shows an error if hostname is not reachable" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return("connection refused")
+
       fill_in "registry_name", with: "registry"
       fill_in "registry_hostname", with: "url_not_known:1234"
 
       expect(page).to have_content("Skip remote checks")
-      expect(page).to have_content("something went wrong")
+      expect(page).to have_content("connection refused")
       expect(page).to have_button("Update", disabled: true)
     end
 
