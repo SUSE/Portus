@@ -7,7 +7,7 @@ gem "base32"
 gem "bootstrap-sass", "~> 3.3.4"
 gem "crono"
 gem "devise"
-gem "font-awesome-rails"
+gem "font-awesome-rails", "= 4.7.0.1"
 gem "grape"
 gem "grape-entity"
 gem "grape-swagger"
@@ -26,10 +26,10 @@ gem "pundit"
 gem "rails", "~> 4.2.10"
 gem "rails_stdout_logging", "~> 0.0.5", group: %i[development staging production]
 gem "redcarpet", "~> 3.4.0"
-gem "sass-rails", ">= 3.2"
+gem "sass", "~> 3.4.23"
+gem "sass-rails", "~> 5.0.6"
 gem "search_cop"
 gem "slim", "~> 3.0.8"
-gem "sprockets", "~> 2.12.3"
 gem "webpack-rails"
 
 gem "rack-cors", "~> 1.0.1"
@@ -71,6 +71,17 @@ gem "puma", "~> 3.10.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
 
 # Configuration management
 gem "cconfig", "~> 1.2.0"
+
+# Pinning some versions
+gem "concurrent-ruby", "= 1.0.4"
+gem "i18n", "= 0.8.0"
+gem "ice_nine", "= 0.11.1"
+gem "loofah", "= 2.0.3"
+gem "minitest", "= 5.10.1"
+gem "multi_json", "= 1.12.1"
+gem "sprockets", "= 3.7.1"
+gem "sprockets-rails", "= 3.2.0"
+gem "temple", "= 0.7.7"
 
 # In order to create the Gemfile.lock required for packaging
 # meaning that it should contain only the production packages
