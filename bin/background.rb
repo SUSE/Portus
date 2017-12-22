@@ -29,8 +29,13 @@ end
 
 require "portus/background/registry"
 require "portus/background/security_scanning"
+require "portus/background/sync"
 
-they = [::Portus::Background::Registry.new, ::Portus::Background::SecurityScanning.new]
+they = [
+  ::Portus::Background::Registry.new,
+  ::Portus::Background::SecurityScanning.new,
+  ::Portus::Background::Sync.new
+]
 values = they.map { |v| "'#{v}'" }.join(", ")
 Rails.logger.tagged("Initialization") { Rails.logger.info "Running: #{values}" }
 
