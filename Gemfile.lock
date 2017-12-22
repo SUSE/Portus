@@ -166,7 +166,7 @@ GEM
       hashie (>= 3.0)
     hirb (0.7.3)
     i18n (0.8.0)
-    ice_nine (0.11.1)
+    ice_nine (0.11.2)
     json (2.1.0)
     json-schema (2.5.1)
       addressable (~> 2.3.7)
@@ -203,7 +203,7 @@ GEM
       mustermann (~> 1.0.0)
     mysql2 (0.4.7)
     nenv (0.3.0)
-    net-ldap (0.16.0)
+    net-ldap (0.16.1)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     notiffany (0.1.1)
@@ -289,8 +289,8 @@ GEM
       sprockets-rails
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
-    rails-dom-testing (1.0.9)
-      activesupport (>= 4.2.0, < 5.0)
+    rails-dom-testing (1.0.8)
+      activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6)
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-erd (1.4.6)
@@ -466,7 +466,7 @@ DEPENDENCIES
   hashie-forbidden_attributes
   hirb
   i18n (= 0.8.0)
-  ice_nine (= 0.11.1)
+  ice_nine (~> 0.11.2)
   json-schema
   jwt
   kaminari
@@ -475,7 +475,7 @@ DEPENDENCIES
   minitest (= 5.10.1)
   multi_json (= 1.12.1)
   mysql2 (= 0.4.7)
-  net-ldap
+  net-ldap (~> 0.16.1)
   omniauth-github
   omniauth-gitlab
   omniauth-google-oauth2
@@ -490,6 +490,7 @@ DEPENDENCIES
   rack-cors (~> 1.0.1)
   rack-mini-profiler
   rails (~> 4.2.10)
+  rails-dom-testing (= 1.0.8)
   rails-erd
   rails_stdout_logging (~> 0.0.5)
   redcarpet (~> 3.4.0)
