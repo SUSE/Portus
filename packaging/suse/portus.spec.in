@@ -59,7 +59,7 @@ Obsoletes:      Portus = 20151120162040
 BuildRequires:  nodejs6
 BuildRequires:  yarn
 
-%define rb_build_versions 2.4
+%define rb_build_versions ruby24
 %define rb_ver 2.4.0
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
