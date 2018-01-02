@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "annotate"
-require "portus/db"
-
 if Rails.env.development? || Rails.env.test?
+  require "annotate"
+  require "portus/db"
+
   if Portus::DB.mysql?
     task :set_annotation_options do
       ::Annotate.set_defaults(

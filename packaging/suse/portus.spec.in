@@ -60,6 +60,7 @@ BuildRequires:  nodejs6
 BuildRequires:  yarn
 
 %define rb_build_versions %{rb_default_ruby}
+%define rb_ver 2.4.0
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
 BuildRequires:  %{rubygem bundler} >= 1.15.4
