@@ -1,4 +1,36 @@
 #!/bin/bash
+
+##
+# Requirements
+
+BUNDLER_VERSION="1.15.4"
+
+##
+# Helper functions
+
+log()   { (>&2 echo ">>> [make_spec] $@") ; }
+debug() { log "DEBUG: $@" ; }
+error() { log "ERROR: $@" ; exit 1 ; }
+
+# Depending on the given gem, it will append its native build requirements.
+additional_native_build_requirements() {
+  # NOTE: all echo'ed strings must start with a "\n" character.
+  if [ $1 == "nokogiri" ];then
+    echo "\nBuildRequires: libxml2-devel libxslt-devel"
+  elif [ $1 == "mysql2" ];then
+    echo "\n%if 0%{?suse_version} <= 1320\nBuildRequires: libmysqlclient-devel < 10.1\nRequires: libmysqlclient18 < 10.1\n%else\nBuildRequires: libmysqlclient-devel\nRequires: libmysqlclient18\n%endif\nRecommends: mariadb"
+  elif [ $1 == "ethon" ];then
+    echo "\nBuildRequires: libcurl-devel\nRequires: libcurl4"
+  elif [ $1 == "ffi" ];then
+    echo "\nBuildRequires: libffi-devel"
+  elif [ $1 == "pg" ];then
+    echo "\nBuildRequires: postgresql-devel\nRequires: postgresql-devel"
+  fi
+}
+
+##
+# Initialization
+
 if [ -z "$1" ]; then
   cat <<EOF
 usage:
@@ -9,11 +41,11 @@ fi
 
 packagename=$1
 
-bundle version 2>/dev/null
-if [ $? != 0 ];then
-  echo "bundler is not installed. Please install it."
-  exit -1
+bundler_version=$(bundle version 2>/dev/null | awk '{ print $3 }')
+if [ "$bundler_version" != "$BUNDLER_VERSION" ];then
+  error "Bundler $BUNDLER_VERSION required!"
 fi
+
 cd $(dirname $0)
 
 if [ $TRAVIS_BRANCH ];then
@@ -31,68 +63,66 @@ version="$version+git$commit"
 date=$(date --rfc-2822)
 year=$(date +%Y)
 
-# clean
-[ ! -d build ] || rm -rf build
+##
+# Creating build environment
 
-additional_native_build_requirements() {
-  if [ $1 == "nokogiri" ];then
-    echo "BuildRequires: libxml2-devel libxslt-devel\n"
-  elif [ $1 == "mysql2" ];then
-    echo "%if 0%{?suse_version} <= 1320\nBuildRequires: libmysqlclient-devel < 10.1\nRequires: libmysqlclient18 < 10.1\n%else\nBuildRequires: libmysqlclient-devel\nRequires: libmysqlclient18\n%endif\nRecommends: mariadb\n"
-  elif [ $1 == "ethon" ];then
-    echo "BuildRequires: libcurl-devel\nRequires: libcurl4\n"
-  elif [ $1 == "ffi" ];then
-    echo "BuildRequires: libffi-devel\n"
-  fi
-}
+# Clean
+[ ! -d build ] || rm -rf build
 
 mkdir -p build/$packagename-$branch
 cp -v ../../Gemfile* build/$packagename-$branch
-cp -v patches/*.patch build/$packagename-$branch
+if ls patches/*.patch >/dev/null 2>&1 ;then
+    cp -v patches/*.patch build/$packagename-$branch
+fi
+
+##
+# Generating spec file
 
 pushd build/$packagename-$branch/
-  echo "DEBUG: Gemfile"
-  cat Gemfile
-  echo "DEBUG: Gemfile.lock"
-  cat Gemfile.lock
-  echo "apply patches if needed"
+  debug "Apply patches if needed"
   if ls *.patch >/dev/null 2>&1 ;then
+      patchsources="\n# Dynamically defined patches."
       for p in *.patch;do
           number=$(echo "$p" | cut -d"_" -f1)
           patchsources="$patchsources\nPatch$number: $p\n"
           patchexecs="$patchexecs\n%patch$number -p1\n"
           # skip applying rpm patches
           [[ $p =~ .rpm\.patch$ ]] && continue
-          echo "applying patch $p"
+          debug "Applying patch $p"
           echo "DEBUG"
           cat $p
           patch -p1 < $p || exit -1
       done
   fi
-  echo "generate the Gemfile.lock for packaging"
+
+  # Generate the Gemfile.lock file while ignoring some unnecessary groups.
+  debug "Generate the Gemfile.lock for packaging"
   export BUNDLE_GEMFILE=$PWD/Gemfile
   cp Gemfile.lock Gemfile.lock.orig
   bundle config build.nokogiri --use-system-libraries
-  export PORTUS_PUMA_DEPLOYMENT=yes
-  PACKAGING=yes bundle install --retry=3 --no-deployment
-  grep "git-review" Gemfile.lock
-  if [ $? == 0 ];then
-    echo "DEBUG: ohoh something went wrong and you have devel packages"
-    diff Gemfile.lock Gemfile.lock.orig
-    exit -1
-  fi
-  echo "get requirements from Gemfile.lock"
+  bundle install --retry=3 --deployment --without assets test development
+
+  debug "Diff of old and new Gemfile.lock file"
+  diff Gemfile.lock Gemfile.lock.orig
+
+  debug "Getting requirements from Gemfile.lock"
   IFS=$'\n' # do not split on spaces
-  build_requires=""
-  for gem in $(cat Gemfile.lock | grep "    "  | grep "     " -v | sort | uniq);do
-    gem_name=$(echo $gem | cut -d" " -f5)
-    gem_version=$(echo $gem | cut -d "(" -f2 | cut -d ")" -f1)
+  build_requires="# Dependencies extracted from the defined Gemfile."
+
+  # Bundle's show command will list you the installed gems (the real ones, not
+  # the ones installed on the Gemfile.lock). We use tail to skip the first line,
+  # which is irrelevant. Then, with awk, we model the output to be "$gem
+  # $version", but this $version is inside of parenthesis, so we remove them
+  # with tr. This way, fetching the name and version is as easy as awk'ing again.
+  for gem in $(bundle show | tail -n +2 | awk '{ print $2 " " $3 }' | tr -d '()');do
+    gem_name=$(echo $gem | awk '{ print $1 }')
+    gem_version=$(echo $gem | awk '{ print $2 }')
     build_requires="$build_requires\nBuildRequires: %{rubygem $gem_name} = $gem_version"
-    build_requires="$build_requires\n$(additional_native_build_requirements $gem_name)"
+    build_requires="$build_requires$(additional_native_build_requirements $gem_name)"
   done
 popd
 
-echo "create ${packagename}.spec based on ${packagename}.spec.in"
+debug "Creating ${packagename}.spec based on ${packagename}.spec.in"
 cp ${packagename}.spec.in ${packagename}.spec
 sed -e "s/__BRANCH__/$branch/g" -i ${packagename}.spec
 sed -e "s/__RUBYGEMS_BUILD_REQUIRES__/$build_requires/g" -i ${packagename}.spec
@@ -107,6 +137,5 @@ if [ -f ${packagename}.spec ];then
   echo "Done!"
   exit 0
 else
-  echo "A problem occured creating the spec file."
-  exit -1
+  error "A problem occured creating the spec file."
 fi
