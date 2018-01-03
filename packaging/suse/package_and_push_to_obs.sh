@@ -15,11 +15,16 @@ if [ $TRAVIS_PULL_REQUEST == "false" ] && [ $OBS_BRANCH ] && [ $TRAVIS_COMMIT ] 
   rm -r *.orig
   git checkout -- .
 
+  # Generate the spec file and submit it.
   packaging/suse/make_spec.sh portus
   curl -X PUT -T packaging/suse/portus.spec -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/portus.spec?comment=update_portus.spec\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
-  for p in packaging/suse/patches/*.patch;do
-      curl -X PUT -T $p -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/$(basename $p)?comment=update_patches\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
-  done
+
+  # Submit patches if they exist.
+  if ls packaging/suse/patches/*.patch >/dev/null 2>&1 ;then
+      for p in packaging/suse/patches/*.patch;do
+          curl -X PUT -T $p -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/$(basename $p)?comment=update_patches\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
+      done
+  fi
 
   # Get the yarn.lock file from OBS and compare it. If they differ, then push a
   # new node_modules.tar.gz file.
