@@ -47,26 +47,8 @@ gem "bcrypt"
 # This is already a Rails dependency, but we use it to run portusctl
 gem "thor", "~> 0.19.4"
 
-# Assets group.
-#
-# Do not set it or set it to no when precompiling the assets.
-#
-# IGNORE_ASSETS="no" RAILS_ENV=production bundle exec rake assets:precompile
-#
-# Set IGNORE_ASSETS to YES when creating the Gemfile.lock for
-# production after having precompiled the assets
-# run:
-#
-# IGNORE_ASSETS=yes bundle list
-gem "uglifier" unless ENV["IGNORE_ASSETS"] == "yes"
-
-# Returns true if the bundle is targeted towards building a package.
-def packaging?
-  ENV["PACKAGING"] == "yes"
-end
-
 # If the deployment is done through Puma, include it in the bundle.
-gem "puma", "~> 3.10.0" if ENV["PORTUS_PUMA_DEPLOYMENT"] == "yes" || !packaging?
+gem "puma", "~> 3.10.0"
 
 # Configuration management
 gem "cconfig", "~> 1.2.0"
@@ -83,55 +65,54 @@ gem "sprockets", "= 3.7.1"
 gem "sprockets-rails", "= 3.2.0"
 gem "temple", "= 0.7.7"
 
-# In order to create the Gemfile.lock required for packaging
-# meaning that it should contain only the production packages
-# run:
-#
-# PACKAGING=yes bundle list
+##
+# The following groups will *not* be included on the production installation.
 
-unless packaging?
-  group :development do
-    gem "annotate"
-    gem "git-review", require: false
-    gem "guard", require: false
-    gem "guard-rspec", require: false
-    gem "guard-rubocop", require: false
-    gem "pry-rails"
-    gem "quiet_assets"
-    gem "rack-mini-profiler", require: false
-    gem "rails-erd"
-  end
+group :assets do
+  gem "uglifier"
+end
 
-  group :development, :test do
-    gem "rspec-core", "~> 3.7.0"
-    gem "rspec-rails"
+group :development do
+  gem "annotate"
+  gem "git-review", require: false
+  gem "guard", require: false
+  gem "guard-rspec", require: false
+  gem "guard-rubocop", require: false
+  gem "pry-rails"
+  gem "quiet_assets"
+  gem "rack-mini-profiler", require: false
+  gem "rails-erd"
+end
 
-    gem "awesome_print"
-    gem "binman", "~>5.1.0"
-    gem "brakeman", require: false
-    gem "byebug"
-    gem "database_cleaner"
-    gem "factory_girl_rails"
-    gem "ffaker"
-    gem "grape-swagger-rails"
-    gem "hirb"
-    gem "md2man", "~>5.1.1", require: false
-    gem "rubocop", "~> 0.51.0", require: false
-    gem "web-console", "~> 2.1.3"
-    gem "wirb"
-    gem "wirble"
-  end
+group :development, :test do
+  gem "rspec-core", "~> 3.7.0"
+  gem "rspec-rails"
 
-  group :test do
-    gem "capybara", "~> 2.14.3"
-    gem "codeclimate-test-reporter", group: :test, require: nil
-    gem "docker-api", "~> 1.28.0"
-    gem "json-schema"
-    gem "poltergeist", "~> 1.15.0", require: false
-    gem "shoulda"
-    gem "simplecov", "0.15.1", require: false
-    gem "timecop"
-    gem "vcr"
-    gem "webmock", "~> 2.3.2", require: false
-  end
+  gem "awesome_print"
+  gem "binman", "~>5.1.0"
+  gem "brakeman", require: false
+  gem "byebug"
+  gem "database_cleaner"
+  gem "factory_girl_rails"
+  gem "ffaker"
+  gem "grape-swagger-rails"
+  gem "hirb"
+  gem "md2man", "~>5.1.1", require: false
+  gem "rubocop", "~> 0.51.0", require: false
+  gem "web-console", "~> 2.1.3"
+  gem "wirb"
+  gem "wirble"
+end
+
+group :test do
+  gem "capybara", "~> 2.14.3"
+  gem "codeclimate-test-reporter", group: :test, require: nil
+  gem "docker-api", "~> 1.28.0"
+  gem "json-schema"
+  gem "poltergeist", "~> 1.15.0", require: false
+  gem "shoulda"
+  gem "simplecov", "0.15.1", require: false
+  gem "timecop"
+  gem "vcr"
+  gem "webmock", "~> 2.3.2", require: false
 end
