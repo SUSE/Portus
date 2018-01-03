@@ -11,8 +11,7 @@
 
 if [ $TRAVIS_PULL_REQUEST == "false" ] && [ $OBS_BRANCH ] && [ $TRAVIS_COMMIT ] && [ $OSC_CREDENTIALS ] && [ $OBS_REPO ] && [ $TRAVIS_BRANCH == $OBS_BRANCH ];then
   # Clean up the environment
-  rm -r build
-  rm -r *.orig
+  rm -rf build *.orig
   git checkout -- .
 
   # Generate the spec file and submit it.

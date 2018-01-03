@@ -13,11 +13,17 @@ matrix:
     - rvm: ruby-head
 
 cache:
-  bundler: true
   directories:
     - $PWD/travis_phantomjs
 
 before_install:
+  # Remove the default bundler and install the expected one.
+  - rvm @global do gem uninstall bundler --all --executables
+  - gem uninstall bundler --all --executables
+  - gem install bundler --version '1.15.4'
+  - rvm reload
+  - bundle --version
+
   - phantomjs --version
   - export PATH=$PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64/bin:$PATH
   - if [ $(phantomjs --version) != '2.1.1' ]; then rm -rf $PWD/travis_phantomjs; mkdir -p $PWD/travis_phantomjs; fi
