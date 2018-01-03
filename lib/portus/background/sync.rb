@@ -29,7 +29,7 @@ module Portus
             # Update the registry in a transaction, since we don't want to leave
             # the DB in an unknown state because of an update failure.
             ActiveRecord::Base.transaction { update_registry!(cat) }
-          rescue *::Portus::Errors::NET,
+          rescue EOFError, *::Portus::Errors::NET,
                  ::Portus::Errors::NoBearerRealmException, ::Portus::Errors::AuthorizationError,
                  ::Portus::Errors::NotFoundError, ::Portus::Errors::CredentialsMissingError => e
             Rails.logger.warn "Exception: #{e.message}"
