@@ -32,7 +32,6 @@ Source0:        %{branch}.tar.gz
 Source1:        node_modules.tar.gz
 __PATCHSOURCES__
 
-Requires:       ruby >= 2.4
 Requires:       timezone
 Requires:       net-tools
 %if 0%{?suse_version} >= 1210
@@ -53,7 +52,9 @@ BuildRequires:  yarn
 
 # Base ruby engine.
 %define rb_build_versions ruby24
-%define rb_ver 2.4.0
+%define rb_build_abi      ruby:2.4.0
+%define rb_suffix         ruby2.4
+%define rb_ver            2.4.0
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
 
