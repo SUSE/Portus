@@ -121,7 +121,6 @@ for i in "${ary[@]}"; do
 done
 
 # Remove directories and empty files.
-find . -name ".bundle" -type d -exec rm -rv {} +
 find . -name ".github" -type d -exec rm -rv {} +
 find . -name ".empty_directory" -type d -delete
 find . -size 0 -delete
