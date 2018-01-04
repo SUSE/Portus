@@ -35,7 +35,6 @@ services:
 
   background:
     image: opensuse/portus:head
-    entrypoint: bundle exec rails runner /srv/Portus/bin/background.rb
     depends_on:
       - portus
       - db
@@ -55,6 +54,8 @@ services:
       - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
       - PORTUS_KEY_PATH=/certificates/portus.key
       - PORTUS_PASSWORD=${PORTUS_PASSWORD}
+
+      - PORTUS_INIT_COMMAND=bin/background
     links:
       - db
     volumes:
