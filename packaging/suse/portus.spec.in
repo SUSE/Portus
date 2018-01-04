@@ -100,6 +100,9 @@ SKIP_MIGRATION="yes" \
 APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
 cp $APPLICATION_CSS public/landing.css
 
+# Save the commit so it can later be used by Portus.
+echo "__COMMIT__" >> .gitcommit
+
 # Remove unneeded directories/files
 rm -rf \
    vendor/cache \
@@ -121,7 +124,6 @@ for i in "${ary[@]}"; do
 done
 
 # Remove directories and empty files.
-find . -name ".bundle" -type d -exec rm -rv {} +
 find . -name ".github" -type d -exec rm -rv {} +
 find . -name ".empty_directory" -type d -delete
 find . -size 0 -delete
