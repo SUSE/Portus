@@ -24,12 +24,23 @@ module Version
 
   # Read the version from the file.
   def self.from_file
-    version = Rails.root.join("VERSION")
-    File.read(version).chomp if File.exist?(version)
+    Version.read_from_root("VERSION")
+  end
+
+  # Read the commit from a hidden file stored by the RPM.
+  def self.from_hidden
+    Version.read_from_root(".gitcommit")
+  end
+
+  # Reads the given file and returns its contents of possible, otherwise it
+  # returns nil
+  def self.read_from_root(filename)
+    file = Rails.root.join(filename)
+    File.read(file).chomp if File.exist?(file)
   end
 
   # Version.value returns the app version
-  # Priority: git tag > git branch/commit > VERSION file
+  # Priority: git tag > git branch/commit > VERSION/.gitcommit file
   def self.value
     if TAG.present?
       TAG.to_s
@@ -37,10 +48,12 @@ module Version
       if BRANCH.present?
         "#{BRANCH}@#{COMMIT}"
       else
-        COMMIT.to_s
+        "#{Version.from_file}@#{COMMIT}"
       end
     else
-      Version.from_file
+      commit = Version.from_hidden
+      file   = Version.from_file
+      commit.present? ? "#{file}@#{commit}" : file
     end
   end
 end
