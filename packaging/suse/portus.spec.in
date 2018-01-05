@@ -117,7 +117,7 @@ declare -a ary=(
   ".gitignore" ".travis.yml" ".pelusa.yml" ".keep" ".rspec" ".codeclimate.yml"
   ".yardopts" ".ruby-gemset" ".rubocop.yml" ".document" ".eslintrc"
   ".eslintignore" ".env" ".dockerignore" ".editorconfig" ".erdconfig"
-  ".ruby-version" "*.pem" ".rubocop_todo.yml" ".concourse.yml"
+  "*.pem" ".rubocop_todo.yml" ".concourse.yml"
 )
 for i in "${ary[@]}"; do
   find . -name "$i" -type f -delete
