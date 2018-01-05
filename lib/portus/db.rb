@@ -3,6 +3,9 @@
 module Portus
   # The DB module has useful methods for DB purposes.
   module DB
+    WAIT_TIMEOUT  = 90
+    WAIT_INTERVAL = 5
+
     # Pings the DB and returns a proper symbol depending on the situation:
     #   * ready: the database has been created and initialized.
     #   * empty: the database has been created but has not been initialized.
@@ -17,6 +20,32 @@ module Portus
       :down
     rescue StandardError
       :unknown
+    end
+
+    # Waits until the passed status is reached. Every `WAIT_INTERVAL` seconds
+    # it notifies the given block with the current status at the moment. After
+    # `WAIT_TIMEOUT` seconds, it raises a `TimeoutReachedError` exception.
+    #
+    # The possible status that can be passed are listed in the `self.ping`
+    # function description.
+    def self.wait_until(status)
+      count = 0
+
+      while (current_status = ::Portus::DB.ping) != status
+        if count >= WAIT_TIMEOUT
+          Rails.logger.tagged("Database") do
+            Rails.logger.error "Timeout reached, exiting with error. Check the logs..."
+          end
+
+          raise ::Portus::DB::TimeoutReachedError, "Timeout reached for '#{status}' status"
+        end
+
+        Rails.logger.tagged("Database") { Rails.logger.error "Not ready yet. Waiting..." }
+        sleep WAIT_INTERVAL
+        count += 5
+
+        yield current_status if block_given?
+      end
     end
 
     # Returns true if the migrations have been run. The implementation is pretty
@@ -42,5 +71,8 @@ module Portus
     end
 
     private_class_method :adapter
+
+    # Raised if any timeout reached
+    class TimeoutReachedError < RuntimeError; end
   end
 end

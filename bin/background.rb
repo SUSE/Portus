@@ -1,27 +1,11 @@
 # frozen_string_literal: true
 
-require "portus/db"
-
 #
 # First of all, wait until the database is up and running. This is useful in
 # containerized scenarios.
 #
 
-count = 0
-TIMEOUT = 90
-
-while ::Portus::DB.ping != :ready
-  if count >= TIMEOUT
-    Rails.logger.tagged("Database") do
-      Rails.logger.error "Timeout reached, exiting with error. Check the logs..."
-    end
-    exit 1
-  end
-
-  Rails.logger.tagged("Database") { Rails.logger.error "Not ready yet. Waiting..." }
-  sleep 5
-  count += 5
-end
+::Portus::DB.wait_until(:ready)
 
 #
 # The DB is up, now let's define the different background jobs as classes.

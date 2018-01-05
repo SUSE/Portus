@@ -24,6 +24,36 @@ describe Portus::DB do
     end
   end
 
+  describe "wait_until" do
+    before do
+      # Avoid warning when changing constant value
+      ::Portus::DB.send(:remove_const, "WAIT_TIMEOUT")
+      ::Portus::DB.send(:remove_const, "WAIT_INTERVAL")
+      # Optimizes duration of the tests
+      ::Portus::DB::WAIT_TIMEOUT  = 1
+      ::Portus::DB::WAIT_INTERVAL = 1
+    end
+
+    it "doesn't the given block if status is reached right away" do
+      described_class.wait_until(:ready) do |_|
+        raise "block should not be called"
+      end
+    end
+
+    it "calls the given block with current status until it reaches the expected status" do
+      allow(::Portus::DB).to receive(:migrations?).and_return(false, true)
+
+      described_class.wait_until(:ready) do |status|
+        expect(status).to eq(:empty)
+      end
+    end
+
+    it "raises an exception if timeout has been reached" do
+      error = ::Portus::DB::TimeoutReachedError
+      expect { described_class.wait_until(:inexistent) }.to raise_error(error)
+    end
+  end
+
   describe "mysql?" do
     before do
       ENV["PORTUS_DB_ADAPTER"] = nil

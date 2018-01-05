@@ -4,12 +4,12 @@ services:
   portus:
     build: .
     image: opensuse/portus:development
-    command: bash /srv/Portus/examples/development/compose/init
+    command: bundle exec rails runner /srv/Portus/examples/development/compose/init.rb
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
       - PORTUS_PUMA_HOST=0.0.0.0:3000
       - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
-      
+
       - CCONFIG_PREFIX=PORTUS
 
       - PORTUS_DB_HOST=db
