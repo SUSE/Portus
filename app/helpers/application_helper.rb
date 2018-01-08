@@ -8,6 +8,10 @@ module ApplicationHelper
     "create" => "new"
   }.freeze
 
+  def app_host
+    request.env["HTTP_HOST"]
+  end
+
   def js_route
     action_name = ACTION_ALIASES[controller.action_name] || controller.action_name
 
