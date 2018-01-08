@@ -9,31 +9,41 @@ order: 1
 
 The most basic way in which Portus synchronizes the contents of the Registry
 with its database is by listening the
-[notifications](https://docs.docker.com/registry/notifications/)
-sent by the Registry itself. That is, on each push Portus will get a
-notification from the Docker registry with all the information about the event.
+[notifications](https://docs.docker.com/registry/notifications/) sent by the
+Registry itself. That is, on each push Portus will get a notification from the
+Docker registry with all the information about the event.
 
-This is convenient because this way the database can be updated on real time, when images and tags are actually pushed to the registry. One downside of this approach is that the database might become inconsistent over time. This can happen for example in this situation:
+This is convenient because this way the database can be updated on real time,
+when images and tags are actually pushed to the registry. One downside of this
+approach is that the database might become inconsistent over time. This can
+happen for example in this situation:
 
 - The user pushes a new tag for an image.
-- The Docker registry sends a notification, but in that very moment Portus was unreachable.
-- Portus is reachable again, but it has missed the notification, therefore this new tag is not added to the database.
+- The Docker registry sends a notification, but in that very moment Portus was
+  unreachable.
+- Portus is reachable again, but it has missed the notification, therefore this
+  new tag is not added to the database.
 
-To fix this situation and others, we make use of the Catalog API that is provided by the registry itself, since the version 2.1.0 of the Docker registry. This is explained in the following section.
+To fix this situation and others, we make use of the Catalog API that is
+provided by the registry itself, since the version 2.1.0 of the Docker
+registry. This is explained in the following section.
 
 ## The Catalog API
 
-The Docker distribution project exposes a [Catalog API](https://github.com/docker/distribution/blob/master/docs/spec/api.md#listing-repositories) since version 2.1.0. By exposing this API, it's possible for Portus to check the consistency of the database with the registry. This is done in a job that periodically performs a synchronization operation.
+The Docker distribution project exposes a [Catalog
+API](https://github.com/docker/distribution/blob/master/docs/spec/api.md#listing-repositories)
+since version 2.1.0. By exposing this API, it's possible for Portus to check the
+consistency of the database with the registry.
 
-This is done with the `crono` gem. In order to run this job periodically you should run the following command:
+This is one of the main tasks of the [background process](/docs/background) that
+should be running on any production-ready deployment. This process will
+continuously check for the consistency of the DB against the registry, and
+update the DB when needed.
 
-    $ bundle exec crono
-
-Also note that this can come in handy if you are migrating an already existing registry to Portus, since it will sync everything from the registry to Portus automatically. This job is set to execute every 10 minutes, but this can be changed with the `CATALOG_CRON` environment variable. The value of this environment value has to be formatted as \<number\>.\<hours/minutes/seconds\>. For example: "2.minutes", "10.seconds", "1.hours". A customized example:
-
-    $ RAILS_ENV=production CATALOG_CRON="2.minutes" bundle exec crono
-
-Note though, that you should only do this if you are installing Portus manually. If you are using either the Vagrant or the Docker setups, you will not have to deal this. A [systemd service](https://github.com/SUSE/Portus/blob/master/packaging/suse/conf/portus_crono.service) file has been provided for this.
+**Note**: before the 2.3 release this was done by another process called
+*crono*. For users coming from previous releases, you should know that this
+crono process has been integrated into this new process called background (which
+is capable of performing other tasks as well).
 
 ## Synchronizing clocks between the Registry and Portus
 
