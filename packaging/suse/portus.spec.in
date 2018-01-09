@@ -32,6 +32,7 @@ Source0:        %{branch}.tar.gz
 Source1:        node_modules.tar.gz
 __PATCHSOURCES__
 
+Requires:       ruby >= 2.4.0
 Requires:       timezone
 Requires:       net-tools
 %if 0%{?suse_version} >= 1210
