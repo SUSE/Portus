@@ -71,6 +71,7 @@ year=$(date +%Y)
 
 mkdir -p build/$packagename-$branch
 cp -v ../../Gemfile* build/$packagename-$branch
+cp -v ../../yarn.lock build/$packagename-$branch
 if ls patches/*.patch >/dev/null 2>&1 ;then
     cp -v patches/*.patch build/$packagename-$branch
 fi
@@ -120,12 +121,23 @@ pushd build/$packagename-$branch/
     build_requires="$build_requires\nBuildRequires: %{rubygem $gem_name} = $gem_version"
     build_requires="$build_requires$(additional_native_build_requirements $gem_name)"
   done
+
+  # Extract the JS dependencies. Yarn will list dependencies in the following
+  # format (when in depth=0): "├─ NAME@VERSION". So, we have to replace @ by an
+  # empty space, and this way we'll be able to awk it away.
+  js_provides="# Provides extracted from the yarn.lock file."
+  for js in $(NODE_ENV=production yarn -s list --depth=0 | tr "@" " "); do
+    js_name=$(echo $js | awk '{ print $2 }')
+    js_version=$(echo $js | awk '{ print $3 }')
+    js_provides="$js_provides\nProvides: bundled($js_name) = $js_version"
+  done
 popd
 
 debug "Creating ${packagename}.spec based on ${packagename}.spec.in"
 cp ${packagename}.spec.in ${packagename}.spec
 sed -e "s/__BRANCH__/$branch/g" -i ${packagename}.spec
 sed -e "s/__RUBYGEMS_BUILD_REQUIRES__/$build_requires/g" -i ${packagename}.spec
+sed -e "s/__NODEJS_BUILD_PROVIDES__/$js_provides/g" -i ${packagename}.spec
 sed -e "s/__DATE__/$date/g" -i ${packagename}.spec
 sed -e "s/__COMMIT__/$commit/g" -i ${packagename}.spec
 sed -e "s/__VERSION__/$version/g" -i ${packagename}.spec
