@@ -60,6 +60,8 @@ BuildRequires:  %{rubygem gem2rpm}
 
 __RUBYGEMS_BUILD_REQUIRES__
 
+__NODEJS_BUILD_PROVIDES__
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
