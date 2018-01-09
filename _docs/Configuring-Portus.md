@@ -211,6 +211,68 @@ check_ssl_usage:
   enabled: true
 {% endhighlight %}
 
+### OAuth support
+
+**Note**: this is only available in Portus 2.3 or later.
+
+Portus provides OAuth support: you can configure it to support authentication
+from one of the supported platforms. Here is the full list:
+
+{% highlight yaml %}
+oauth:
+  google_oauth2:
+    enabled: false
+    id: ""
+    secret: ""
+    domain: ""
+    options:
+      # G Suite domain. If set, then only members of the domain can sign in/up.
+      # If it's empty then any google users con sign in/up.
+      hd: ""
+
+  open_id:
+    enabled: false
+    identifier: ""
+    domain: ""
+
+  github:
+    enabled: false
+    client_id: ""
+    client_secret: ""
+    organization: ""
+    team: ""
+    domain: ""
+
+  gitlab:
+    enabled: false
+    application_id: ""
+    secret: ""
+    group: ""
+    domain: ""
+    server: ""
+
+  bitbucket:
+    enabled: false
+    key: ""
+    secret: ""
+    domain: ""
+    options:
+      team: ""
+{% endhighlight %}
+
+All supported platforms have their own settings, but there are some common
+attributes that might not be evident:
+
+- *domain*: if a domain (e.g. mycompany.com) is set, then only signups with
+  emails from this domain are allowed.
+- *organization*, *group* and *team*: this is used by providers like Github,
+  Gitlab or Bitbucket. With this you can restrict the team or organization where
+  the given user belongs.
+- OpenID's *identifier* and Gitlab's *server*: these attributes enable Portus to
+  fetch the proper source. That is, you can specify the Gitlab server (by
+  default gitlab.com), or the OpenID provider (by default you'll be prompted
+  with a form asking for this information).
+
 ### Advanced registry options
 
 **Note**: this is only available in Portus 2.1 or later.
@@ -224,6 +286,9 @@ registry:
 
   catalog_page:
     value: 100
+
+  timeout:
+    value: 2
 {% endhighlight %}
 
 The JWT token is one of the main keys in the authentication process between
@@ -236,6 +301,9 @@ in the issue [SUSE/Portus#510](https://github.com/SUSE/Portus/issues/510).
 To workaround this, we allow the admin of Portus to raise the expiration time
 as required through the `jwt_expiration_time` configurable value. This value is
 set in minutes, but we still allow the syntax as allowed before the 2.1 release.
+
+Moreover, the registry might be slow or the network connection flaky. For this,
+you can also use the `timeout` value. This has been added in Portus 2.3.
 
 Finally, another option is the `catalog_page`. This tweaks the page size for
 each catalog request performed by Portus. The default value for this should be
@@ -330,7 +398,13 @@ user_permission:
   change_visibility:
     enabled: true
 
+  create_team:
+    enabled: true
+
   manage_team:
+    enabled: true
+
+  create_namespace:
     enabled: true
 
   manage_namespace:
@@ -340,12 +414,12 @@ user_permission:
 - **change_visibility**: allow users to change the visibility or their personal
   namespace. If this is disabled, only an admin will be able to change this. It
   defaults to true.
-- **manage_team**: allow users to create/modify teams if they are an owner of
-  it. If this is disabled only an admin will be able to do this. This defaults
-  to true.
-- **manage_namespace**: allow users to create/modify namespaces if they are an
-  owner of it. If this is disabled, only an admin will be able to do this. This
+- **create/manage_team**: allow users to create/modify teams if they are an
+  owner of it. If this is disabled, only an admin will be able to do this. It
   defaults to true.
+- **create/manage_namespace**: allow users to create/modify namespaces if they
+  are an owner of it. If this is disabled, only an admin will be able to do
+  this. It defaults to true.
 
 ## Deploying Portus in a Sub-URI
 
