@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171220095321) do
+ActiveRecord::Schema.define(version: 20180109114124) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -213,6 +213,7 @@ ActiveRecord::Schema.define(version: 20171220095321) do
     t.boolean  "enabled",                    default: false
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+    t.string   "name",           limit: 255
   end
 
   add_index "webhooks", ["namespace_id"], name: "index_webhooks_on_namespace_id", using: :btree

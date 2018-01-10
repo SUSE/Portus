@@ -1,4 +1,5 @@
 tr id="webhook_#{webhook.id}"
+  td= webhook.name
   td= link_to webhook.url, [namespace, webhook]
   td= webhook.request_method
   td= webhook.content_type

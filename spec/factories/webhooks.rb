@@ -14,6 +14,7 @@
 #  enabled        :boolean          default(FALSE)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  name           :string(255)
 #
 # Indexes
 #
@@ -22,6 +23,7 @@
 
 FactoryGirl.define do
   factory :webhook do
+    name "webhook"
     url "http://www.example.com"
     request_method "POST"
     content_type "application/json"

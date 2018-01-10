@@ -42,14 +42,15 @@ describe "Webhooks support" do
       find("#add_webhook_btn").click
       wait_for_effect_on("#add_webhook_form")
 
-      fill_in "Url", with: "url-here"
+      fill_in "Name", with: "name"
+      fill_in "Url", with: "http://url-here"
       click_button "Create"
 
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
-      expect(page).to have_content("Webhook 'url-here' has been created successfully")
+      expect(page).to have_content("Webhook 'name' has been created successfully")
 
       # Check that it created a link to it and that it's accessible.
       expect(namespace.webhooks.count).to eql webhooks_count + 1
@@ -115,12 +116,14 @@ describe "Webhooks support" do
       visit namespace_webhook_path(namespace, webhook)
 
       find(".edit-webhook-link").click
+      fill_in "Name", with: "new_name"
       fill_in "webhook_url", with: "http://new-webhook-url"
       fill_in "Username", with: "new-username"
       fill_in "Password", with: "password"
       click_button "Save"
       wait_for_ajax
 
+      expect(page).to have_content("new_name")
       expect(page).to have_content("new-webhook-url webhook")
       expect(page).to have_content("new-username")
       expect(page).to have_content("***********")

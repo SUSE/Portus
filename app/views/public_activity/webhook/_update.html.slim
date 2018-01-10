@@ -9,7 +9,7 @@ li
         strong
           = "#{activity.owner.username} updated webhook "
         - if activity.trackable
-          = link_to activity.trackable.host, [activity.trackable.namespace, activity.trackable]
+          = link_to activity.trackable.name, [activity.trackable.namespace, activity.trackable]
         - else
           = activity.parameters[:webhook_host]
         = " under the "

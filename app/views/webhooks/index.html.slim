@@ -2,6 +2,10 @@
   #add_webhook_form.collapse
     = form_for :webhook, url: namespace_webhooks_path(@namespace), remote: true, html: {id: 'new-webhook-form', class: 'form-horizontal', role: 'form'} do |f|
         .form-group
+          = f.label :name, {class: 'control-label col-md-2'}
+          .col-md-7
+            = f.text_field(:name, class: 'form-control', required: true, placeholder: "Name of the Webhook")
+        .form-group
           = f.label :url, {class: 'control-label col-md-2'}
           .col-md-7
             = f.text_field(:url, class: 'form-control', required: true, placeholder: "URL")
@@ -63,6 +67,7 @@
             col.col-20
           thead
             tr
+              th Name
               th URL
               th Request method
               th Content type
