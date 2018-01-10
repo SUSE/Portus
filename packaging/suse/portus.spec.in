@@ -32,7 +32,7 @@ Source0:        %{branch}.tar.gz
 Source1:        node_modules.tar.gz
 __PATCHSOURCES__
 
-Requires:       ruby >= 2.4.0
+Requires:       rubygem(%{rb_default_ruby_abi}:gem2rpm)
 Requires:       timezone
 Requires:       net-tools
 %if 0%{?suse_version} >= 1210
@@ -58,6 +58,7 @@ BuildRequires:  yarn
 %define rb_ver            2.4.0
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
+Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi} 
 
 __RUBYGEMS_BUILD_REQUIRES__
 
