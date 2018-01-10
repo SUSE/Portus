@@ -23,7 +23,7 @@ class RegistryPerformRequest < Portus::RegistryClient
     # We don't care about the given parameters.
 
     return nil if @status.nil?
-    OpenStruct.new(code: @status)
+    OpenStruct.new(code: @status, header: { "Docker-Distribution-Api-Version" => "registry/2.0" })
   end
 end
 
@@ -175,7 +175,7 @@ describe Portus::RegistryClient do
 
   context "is reachable or not" do
     it "returns the proper thing in all the scenarios" do
-      [[nil, false], [200, false], [401, true]].each do |cs|
+      [[nil, false], [404, false], [200, true], [401, true]].each do |cs|
         r = RegistryPerformRequest.new(cs.first)
         expect(r.reachable?).to be cs.last
       end
