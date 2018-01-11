@@ -78,4 +78,10 @@ describe Portus::DB do
       expect(described_class).not_to be_mysql
     end
   end
+
+  describe "bundle" do
+    it "returns 'bundle' if the executable exists" do
+      expect(described_class.bundle).to eq "bundle"
+    end
+  end
 end

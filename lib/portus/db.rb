@@ -56,7 +56,23 @@ module Portus
 
       # If db:migrate:status does not return a migration as "down", then all
       # migrations are up and ready.
-      !`bundle exec rake db:migrate:status`.include?("down")
+      !`#{bundle} exec rake db:migrate:status`.include?("down")
+    end
+
+    # Returns the proper bundle command. This is important because is some cases
+    # (e.g. RPM or containerized production deployment), the `bundle` command
+    # might not be in an executable path.
+    def self.bundle
+      exec = nil
+      ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
+        x = File.join(path, "bundle")
+        if File.executable?(x) && !File.directory?(x)
+          exec = x
+          break
+        end
+      end
+
+      exec ? "bundle" : "portusctl"
     end
 
     # Returns true if the given configured adapter is MariaDB.
