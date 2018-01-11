@@ -58,7 +58,7 @@ BuildRequires:  yarn
 %define rb_ver            2.4.0
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
-Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi} 
+Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi}
 
 __RUBYGEMS_BUILD_REQUIRES__
 
@@ -121,16 +121,20 @@ declare -a ary=(
   ".gitignore" ".travis.yml" ".pelusa.yml" ".keep" ".rspec" ".codeclimate.yml"
   ".yardopts" ".ruby-gemset" ".rubocop.yml" ".document" ".eslintrc"
   ".eslintignore" ".env" ".dockerignore" ".editorconfig" ".erdconfig"
-  "*.pem" ".rubocop_todo.yml" ".concourse.yml"
+  "*.pem" ".rubocop_todo.yml" ".concourse.yml" "Dockerfile" "Vagrantfile"
+  "node_modules.tar.gz"
 )
 for i in "${ary[@]}"; do
   find . -name "$i" -type f -delete
 done
 
-# Remove directories and empty files.
+# Remove directories.
+find . -name "spec" -type d -exec rm -rv {} +
 find . -name ".github" -type d -exec rm -rv {} +
 find . -name ".empty_directory" -type d -delete
-find . -size 0 -delete
+
+# Remove empty files which are not important.
+find . -size 0 ! -path "*gem.build_complete" -delete
 
 %install
 install -d %{buildroot}/%{portusdir}
@@ -154,9 +158,6 @@ install -p -m 644 packaging/suse/portusctl/man/man1/*.1 %{buildroot}%{_mandir}/m
 %files
 %defattr(-,root,root)
 %{portusdir}
-%exclude %{portusdir}/spec
-%exclude %{portusdir}/Vagrantfile
-%exclude %{portusdir}/Dockerfile
 %exclude %{portusdir}/lib/man_pages.rb
 %exclude %{portusdir}/lib/tasks/man.rake
 %exclude %{portusdir}/packaging/suse/.gitignore
