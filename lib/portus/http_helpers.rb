@@ -152,7 +152,8 @@ module Portus
     def get_response_token(uri, req)
       options = {
         use_ssl:      uri.scheme == "https",
-        open_timeout: APP_CONFIG["registry"]["timeout"]["value"].to_i
+        open_timeout: APP_CONFIG["registry"]["timeout"]["value"].to_i,
+        read_timeout: APP_CONFIG["registry"]["read_timeout"]["value"].to_i
       }
 
       Net::HTTP.start(uri.hostname, uri.port, options) do |http|
