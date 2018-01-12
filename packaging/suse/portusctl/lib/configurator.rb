@@ -116,7 +116,6 @@ class Configurator
     Runner.activate_service("mysql") if database_local?
 
     env_variables = {
-      "SKIP_MIGRATION"  => "yes",
       "PORTUS_PASSWORD" => @portus_password
     }
     puts "Creating Portus' database"

@@ -95,8 +95,7 @@ bundle install --retry=3 --local --deployment --without assets test development
 gem.ruby2.4 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
 
 # Compile assets
-SKIP_MIGRATION="yes" \
-  PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
+PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
   RAILS_ENV=production NODE_ENV=production \
   bundle exec rake portus:assets:compile
 
