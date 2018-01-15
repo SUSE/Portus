@@ -202,6 +202,10 @@ registry:
   timeout:
     value: 2
 
+  #Set timeout in seconds for read response from registry.
+  read_timeout:
+    value: 120
+
 # The FQDN of the machine where Portus is being deployed.
 machine_fqdn:
   value: "portus.test.lan"
