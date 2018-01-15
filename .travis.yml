@@ -3,7 +3,7 @@ sudo: required
 dist: trusty
 rvm:
   # Stable supported version
-  - 2.4.2
+  - 2.5.0
 
   # Future versions
   - ruby-head
