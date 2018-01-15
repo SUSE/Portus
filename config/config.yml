@@ -201,7 +201,6 @@ registry:
   # connection to your private Docker registry.
   timeout:
     value: 2
-  
 
   #Set timeout in seconds for read response from registry.
   read_timeout:
