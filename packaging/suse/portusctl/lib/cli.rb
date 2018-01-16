@@ -133,6 +133,11 @@ class Cli < Thor
          type:    :numeric,
          default: 10
 
+  option "registry-read-timeout-value",
+         desc:    "Read timeout value for API calls to the registry",
+         type:    :numeric,
+         default: 10
+
   # FIRST USER
   option "first-user-admin-enable",
          desc:    "Make the first registered user an admin",

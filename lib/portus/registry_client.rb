@@ -156,12 +156,10 @@ module Portus
 
       result = []
       repositories.each do |repo|
-        begin
-          ts = tags(repo)
-          result << { "name" => repo, "tags" => ts } if ts.present?
-        rescue StandardError => e
-          Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
-        end
+        ts = tags(repo)
+        result << { "name" => repo, "tags" => ts } if ts.present?
+      rescue StandardError => e
+        Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
       end
       result
     end

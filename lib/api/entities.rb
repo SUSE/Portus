@@ -81,7 +81,9 @@ module API
       expose :author, documentation: {
         type: Integer,
         desc: "The ID of the user that pushed this tag"
-      } { |t| { id: t.author&.id, name: t.author&.username } }
+      } do |t|
+        { id: t.author&.id, name: t.author&.username }
+      end
       expose :digest, documentation: { type: String, desc: "The digest of the tag" }
       expose :image_id, documentation: { type: String, desc: "The internal image ID" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
@@ -103,19 +105,27 @@ module API
       expose :created_at, :updated_at, documentation: { type: DateTime }
       expose :namespace, documentation: {
         desc: "The ID of the namespace containing this repository"
-      } { |r| { id: r.namespace.id, name: r.namespace.name } }
+      } do |r|
+        { id: r.namespace.id, name: r.namespace.name }
+      end
       expose :registry_hostname, documentation: {
         type: Integer,
         desc: "The repository's registry hostname"
-      }, if: { type: :internal } { |repository| repository.registry.hostname }
+      }, if: { type: :internal } do |repository|
+        repository.registry.hostname
+      end
       expose :stars, documentation: {
         type: Integer,
         desc: "The number of stars for this repository"
-      } { |repository| repository.stars.count }
+      } do |repository|
+        repository.stars.count
+      end
       expose :tags_count, documentation: {
         type: Integer,
         desc: "The number of tags for this repository"
-      } { |repository| repository.tags.count }
+      } do |repository|
+        repository.tags.count
+      end
       expose :tags, documentation: {
         is_array: true,
         desc:     "The repository's tags grouped by digest"
@@ -149,11 +159,15 @@ module API
       expose :users_count, documentation: {
         type: Integer,
         desc: "The number of enabled users that belong to this team"
-      }, if: { type: :internal } { |t| t.users.enabled.count }
+      }, if: { type: :internal } do |t|
+        t.users.enabled.count
+      end
       expose :namespaces_count, documentation: {
         type: Integer,
         desc: "The number of namespaces that belong to this team"
-      }, if: { type: :internal } { |t| t.namespaces.count }
+      }, if: { type: :internal } do |t|
+        t.namespaces.count
+      end
     end
 
     class Namespaces < Grape::Entity
@@ -164,8 +178,9 @@ module API
         type: String,
         desc: "The description of the namespace"
       }
-      expose :team_name, documentation: {
-      }, if: { type: :internal } { |n| n.team.name }
+      expose :team_name, documentation: {}, if: { type: :internal } do |n|
+        n.team.name
+      end
       expose :team_id, documentation: {
         type: Integer,
         desc: "The ID of the team containing this namespace"
@@ -173,11 +188,15 @@ module API
       expose :repositories_count, documentation: {
         type: Integer,
         desc: "The number of repositories that belong to this namespace"
-      }, if: { type: :internal } { |n| n.repositories.count }
+      }, if: { type: :internal } do |n|
+        n.repositories.count
+      end
       expose :webhooks_count, documentation: {
         type: Integer,
         desc: "The number of webooks that belong to this namespace"
-      }, if: { type: :internal } { |n| n.webhooks.count }
+      }, if: { type: :internal } do |n|
+        n.webhooks.count
+      end
       expose :visibility, documentation: {
         type: String,
         desc: "The visibility of namespaces by other people"

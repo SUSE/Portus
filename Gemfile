@@ -34,7 +34,7 @@ gem "webpack-rails"
 gem "rack-cors", "~> 1.0.1"
 
 # Supported DBs
-gem "mysql2", "= 0.4.7", group: :mysql
+gem "mysql2", "= 0.4.10", group: :mysql
 gem "pg", "~> 0.20.0", group: :postgres
 
 # Pinning these specific versions because that's what we have on OBS.
@@ -98,7 +98,7 @@ group :development, :test do
   gem "grape-swagger-rails"
   gem "hirb"
   gem "md2man", "~>5.1.1", require: false
-  gem "rubocop", "~> 0.51.0", require: false
+  gem "rubocop", "~> 0.52.0", require: false
   gem "web-console", "~> 2.1.3"
   gem "wirb"
   gem "wirble"

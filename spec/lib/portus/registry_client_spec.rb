@@ -42,17 +42,15 @@ describe Portus::RegistryClient do
   let(:password) { "this is a test" }
 
   it "handle ssl" do
-    begin
-      VCR.turned_off do
-        WebMock.disable_net_connect!
-        s = stub_request(:get, "https://#{registry_server}/v2/")
-        registry = described_class.new(registry_server, true)
-        registry.perform_request("")
-        expect(s).to have_been_requested
-      end
-    ensure
-      WebMock.allow_net_connect!
+    VCR.turned_off do
+      WebMock.disable_net_connect!
+      s = stub_request(:get, "https://#{registry_server}/v2/")
+      registry = described_class.new(registry_server, true)
+      registry.perform_request("")
+      expect(s).to have_been_requested
     end
+  ensure
+    WebMock.allow_net_connect!
   end
 
   it "fails if the registry has authentication enabled and no credentials are set" do

@@ -247,6 +247,9 @@ first time.
 **--registry-timeout-value**
   Timeout value for API calls to the registry.
 
+**--registry-read-timeout-value**
+  Read timeout value for API calls to the registry.
+
 **--first-user-admin-enable**
   When enabled, the first user to register into Portus will become an
   administrator. It's enabled by default.

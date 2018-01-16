@@ -110,9 +110,7 @@ class PublicActivity::ActivityPolicy
         .limit(count)
         .distinct.find_each do |webhook|
           unless webhook.parameters.empty?
-            if user_namespaces.include? webhook.parameters[:namespace_id]
-              activities << webhook
-            end
+            activities << webhook if user_namespaces.include? webhook.parameters[:namespace_id]
           end
         end
 

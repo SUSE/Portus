@@ -14,5 +14,6 @@ if current > supported
     Rails.logger.warn "Using #{RUBY_VERSION}, but we recommend #{supported}."
   end
 elsif current < supported
-  raise StandardError, "Please, use Ruby 2.4"
+  two = supported.to_s.split(".")[0..1].join(".")
+  raise StandardError, "Please, use Ruby #{two}"
 end

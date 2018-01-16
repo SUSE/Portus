@@ -9,7 +9,10 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   before_action :check_signup, only: %i[new create]
   before_action :check_admin, only: %i[new create]
   before_action :configure_sign_up_params, only: [:create]
+
+  # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :authenticate_user!, only: [:disable]
+  # rubocop:enable Rails/LexicallyScopedActionFilter
 
   # Re-implemented so the template has the auxiliary variables regarding if
   # there are more users on the system or this is the first user to be created.
@@ -22,13 +25,13 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     build_resource(sign_up_params)
 
     resource.save
+    yield resource if block_given?
     if resource.persisted?
-      session_flash(resource, :signed_up)
-      sign_up(resource_name, resource)
-      respond_with resource, location: after_sign_up_path_for(resource), float: true
+      resource_persisted_response!
     else
-      redirect_to new_user_registration_path,
-                  alert: resource.errors.full_messages
+      clean_up_passwords resource
+      set_minimum_password_length
+      redirect_to new_user_registration_path, alert: resource.errors.full_messages
     end
   end
 
@@ -41,7 +44,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     success =
       if password_update?
         succ = current_user.update_with_password(user_params)
-        sign_in(current_user, bypass: true) if succ
+        bypass_sign_in(current_user) if succ
         succ
       else
         current_user.update_without_password(params.require(:user).permit(:email, :display_name))
@@ -91,12 +94,26 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   end
 
   def configure_sign_up_params
-    devise_parameter_sanitizer.for(:sign_up) << :email
-    return if User.admins.any?
-    devise_parameter_sanitizer.for(:sign_up) << :admin
+    keys = User.admins.any? ? %i[email] : %i[email admin]
+    devise_parameter_sanitizer.permit(:sign_up, keys: keys)
   end
 
   protected
+
+  # Performs the response in the case of a registration success.
+  def resource_persisted_response!
+    if resource.active_for_authentication?
+      session_flash(resource, :signed_up)
+      sign_up(resource_name, resource)
+      respond_with resource, location: after_sign_up_path_for(resource), float: true
+    else
+      # :nocov:
+      session_flash(resource, :"signed_up_but_#{resource.inactive_message}")
+      expire_data_after_sign_in!
+      respond_with resource, location: after_inactive_sign_up_path_for(resource), float: true
+      # :nocov:
+    end
+  end
 
   # Returns true if the contents of the `params` hash contains the needed keys
   # to update the password of the user.

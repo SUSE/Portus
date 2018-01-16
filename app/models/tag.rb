@@ -33,7 +33,7 @@ class Tag < ActiveRecord::Base
   enum status: { scan_none: 0, scan_working: 1, scan_done: 2 }
 
   belongs_to :repository
-  belongs_to :author, class_name: "User", foreign_key: "user_id"
+  belongs_to :author, class_name: "User", foreign_key: "user_id", inverse_of: "tags"
 
   # We don't validate the tag, because we will fetch that from the registry,
   # and that's guaranteed to have a good format.
@@ -47,13 +47,8 @@ class Tag < ActiveRecord::Base
 
   # Returns a string containing the username of the user that pushed this tag.
   def owner
-    if author
-      author.display_username
-    elsif username.blank?
-      "someone"
-    else
-      username
-    end
+    return author.display_username if author
+    username.presence || "someone"
   end
 
   # Delete all the tags that match the given digest. Call this method if you
