@@ -19,7 +19,7 @@ if [ $1 == "-h" ];then
 fi
 if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]];then
  usage_and_exit
-fi 
+fi
 
 RELEASE=$1
 VERSION_2D=$(echo $RELEASE | rev | cut -d. -f1 --complement | rev)
@@ -43,6 +43,7 @@ create_subproject() {
 
   echo "Creating new subproject $DEST_PROJECT"
   $OSC meta prj $DEST_PROJECT --file=project.xml
+  $OSC meta prjconf $DEST_PROJECT --file=projectconfig.txt
 
   echo "Copying packages to the new project"
   for package in $($OSC ls $ORIG_PROJECT );do $OSC copypac -e $ORIG_PROJECT $package $DEST_PROJECT; done
@@ -112,6 +113,3 @@ create_subproject
 update_package
 commit_all
 clean
-
-
-
