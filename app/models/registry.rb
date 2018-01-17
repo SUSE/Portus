@@ -72,9 +72,7 @@ class Registry < ActiveRecord::Base
       logger.debug("No hostname matching #{request_hostname}, testing external_hostname")
       registry = Registry.find_by(external_hostname: request_hostname)
     end
-    if registry.nil?
-      logger.info("Ignoring event coming from unknown registry #{request_hostname}")
-    end
+    logger.info("Ignoring event coming from unknown registry #{request_hostname}") if registry.nil?
     registry
   end
 

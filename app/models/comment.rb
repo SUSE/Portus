@@ -20,7 +20,7 @@
 class Comment < ActiveRecord::Base
   include PublicActivity::Common
   belongs_to :repository
-  belongs_to :author, class_name: "User", foreign_key: "user_id"
+  belongs_to :author, class_name: "User", foreign_key: "user_id", inverse_of: "comments"
 
   validates :body, presence: true
 

@@ -55,9 +55,7 @@ class ApplicationToken < ActiveRecord::Base
         plain_token,
         application_token.token_salt
       )
-      if application_token.save
-        application_token.create_activity!(:create, current_user)
-      end
+      application_token.create_activity!(:create, current_user) if application_token.save
 
       [application_token, plain_token]
     end

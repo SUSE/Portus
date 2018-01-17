@@ -34,11 +34,7 @@ def github_fetch_options
 end
 
 def gitlab_fetch_options
-  site = if APP_CONFIG["oauth"]["gitlab"]["server"].blank?
-           "https://gitlab.com"
-         else
-           APP_CONFIG["oauth"]["gitlab"]["server"]
-         end
+  site = APP_CONFIG["oauth"]["gitlab"]["server"].presence || "https://gitlab.com"
 
   { client_options: { site: site } }
 end

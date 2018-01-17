@@ -35,12 +35,7 @@ module ActivitiesHelper
   # `:owner_name`). If that doesn't work either, then the given `empty_user`
   # parameter is returned as-is.
   def activity_user(activity, method, param, empty_user)
-    if activity.send(method)
-      activity.send(method).display_username
-    elsif activity.parameters[param].blank?
-      empty_user
-    else
-      activity.parameters[param]
-    end
+    return activity.send(method).display_username if activity.send(method)
+    activity.parameters[param].presence || empty_user
   end
 end

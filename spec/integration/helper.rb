@@ -240,11 +240,11 @@ def setup_portus!(rebuild = true, env = [], address = nil)
       puts "Building Portus from directory: #{dir}"
       PTY.spawn("docker build -t integration_portus:latest .") do |stdout, _, _|
         # rubocop:disable Lint/HandleExceptions
-        begin
-          stdout.each { |line| print line }
-        rescue Errno::EIO
-          # End of output
-        end
+
+        stdout.each { |line| print line }
+      rescue Errno::EIO
+        # End of output
+
         # rubocop:enable Lint/HandleExceptions
       end
     end

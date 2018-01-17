@@ -2,11 +2,7 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-  # Stable supported version
-  - 2.4.2
-
-  # Future versions
-  - ruby-head
+  - 2.5.0
 
 matrix:
   allow_failures:
@@ -56,7 +52,11 @@ script:
   # Style and security checks
   - bundle exec rubocop -V
   - bundle exec rubocop -F
-  - bundle exec brakeman
+
+  # Note: it ignores a couple of files which use ruby 2.5 syntax which brakeman
+  # does not know how to handle...
+  - bundle exec brakeman --skip-files lib/portus/background/sync.rb,lib/portus/registry_client.rb
+
   - bundle exec rake portus:annotate_and_exit
 
   # Javascript style

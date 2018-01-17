@@ -125,10 +125,9 @@ class Configurator
     Runner.bundler_exec("rake", ["db:migrate"], env_variables)
 
     puts "Seeding database"
-    # rubocop:disable Lint/RescueWithoutErrorClass
     begin
       Runner.bundler_exec("rake", ["db:seed"], env_variables)
-    rescue
+    rescue StandardError
       puts "Something went wrong while seedeing the database"
       puts "Are you sure the database is empty?"
       puts "Ignoring error"

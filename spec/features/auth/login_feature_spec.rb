@@ -79,7 +79,7 @@ describe "Login feature" do
     find("#login-btn").click
 
     expect(page).to have_current_path(new_user_session_path)
-    expect(page).to have_content("Invalid username or password")
+    expect(page).to have_content("Invalid Username or password")
   end
 
   it "When guest tries to access dashboard - he is redirected to the login page" do

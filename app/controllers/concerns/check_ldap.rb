@@ -7,7 +7,9 @@ module CheckLDAP
   extend ActiveSupport::Concern
 
   included do
+    # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :check_ldap, only: %i[new create]
+    # rubocop:enable Rails/LexicallyScopedActionFilter
   end
 
   # Redirect to the login page if LDAP is enabled.

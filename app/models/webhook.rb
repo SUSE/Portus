@@ -41,8 +41,8 @@ class Webhook < ActiveRecord::Base
 
   belongs_to :namespace
 
-  has_many :deliveries, class_name: "WebhookDelivery", dependent: :destroy
-  has_many :headers, class_name: "WebhookHeader", dependent: :destroy
+  has_many :deliveries, class_name: "WebhookDelivery", dependent: :destroy, inverse_of: "webhook"
+  has_many :headers, class_name: "WebhookHeader", dependent: :destroy, inverse_of: "webhook"
 
   validates :url, presence: true, url: true
 

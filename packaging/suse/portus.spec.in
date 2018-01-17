@@ -52,10 +52,10 @@ BuildRequires:  nodejs6
 BuildRequires:  yarn
 
 # Base ruby engine.
-%define rb_build_versions ruby24
-%define rb_build_abi      ruby:2.4.0
-%define rb_suffix         ruby2.4
-%define rb_ver            2.4.0
+%define rb_build_versions ruby25
+%define rb_build_abi      ruby:2.5.0
+%define rb_suffix         ruby2.5
+%define rb_ver            2.5.0
 BuildRequires:  %{rubydevel}
 BuildRequires:  %{rubygem gem2rpm}
 Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi}
@@ -92,7 +92,7 @@ bundle config build.nokogiri --use-system-libraries
 bundle install --retry=3 --local --deployment --without assets test development
 
 # Install bundler
-gem.ruby2.4 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+gem.ruby2.5 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
 
 # Compile assets
 PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \

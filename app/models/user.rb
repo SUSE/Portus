@@ -70,6 +70,8 @@ class User < ActiveRecord::Base
   has_many :teams, through: :team_users
   has_many :stars, dependent: :destroy
   has_many :application_tokens, dependent: :destroy
+  has_many :tags, dependent: :nullify
+  has_many :comments, dependent: :destroy
 
   scope :not_portus, -> { where.not username: "portus" }
   scope :enabled,    -> { not_portus.where enabled: true }
@@ -96,7 +98,7 @@ class User < ActiveRecord::Base
   # Returns the username to be displayed.
   def display_username
     return username unless APP_CONFIG.enabled?("display_name")
-    display_name.blank? ? username : display_name
+    display_name.presence || username
   end
 
   # This method will be called automatically once a user is created. It will
@@ -182,9 +184,7 @@ class User < ActiveRecord::Base
   # Return true if there's an application token matching it, false otherwise
   def application_token_valid?(plain_token)
     application_tokens.each do |t|
-      if t.token_hash == BCrypt::Engine.hash_secret(plain_token, t.token_salt)
-        return true
-      end
+      return true if t.token_hash == BCrypt::Engine.hash_secret(plain_token, t.token_salt)
     end
 
     false

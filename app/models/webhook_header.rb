@@ -20,7 +20,7 @@
 # A WebhookHeader is a key value pair, and describes a HTTP header which is
 # to be included in a webhook request.
 class WebhookHeader < ActiveRecord::Base
-  belongs_to :webhook
+  belongs_to :webhook, inverse_of: "headers"
 
   validates :name, uniqueness: { scope: :webhook_id }
 end

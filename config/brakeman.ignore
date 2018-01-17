@@ -7,8 +7,8 @@
       "check_name": "ForgerySetting",
       "message": "'protect_from_forgery' should be called in Api::BaseController",
       "file": "app/controllers/api/base_controller.rb",
-      "line": 1,
-      "link": "http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
+      "line": 3,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
       "code": null,
       "render_path": null,
       "location": {
@@ -17,9 +17,9 @@
       },
       "user_input": null,
       "confidence": "High",
-      "note": "Forgery is already prottected with rack-cors on the API side"
+      "note": ""
     }
   ],
-  "updated": "2017-10-24 16:05:40 +0200",
-  "brakeman_version": "4.0.1"
+  "updated": "2018-01-16 12:59:54 +0100",
+  "brakeman_version": "4.1.1"
 }

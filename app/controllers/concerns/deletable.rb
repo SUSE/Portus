@@ -6,7 +6,9 @@ module Deletable
   extend ActiveSupport::Concern
 
   included do
+    # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action :delete_enabled?, only: [:destroy]
+    # rubocop:enable Rails/LexicallyScopedActionFilter
   end
 
   # Returns true if users can delete images/tags.
