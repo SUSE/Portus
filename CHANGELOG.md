@@ -1,9 +1,380 @@
 ## Upcoming Version
 
+Under development
+
+## 2.3.0
+
+### Highlight
+
+#### Security scanning
+
+Portus is now able to scan security vulnerabilities on your Docker images. This
+is done with different backends, where the stable one is [CoreOS
+Clair](https://github.com/coreos/clair). You have to enable the desired backends
+and then Portus will use them to fetch known security vulnerabilities for your
+images.
+
+**Note**: this version of Portus supports Clair v2 specifically (current
+`master` branch is not supported).
+
+You can read the [blog
+post](http://port.us.org/2017/07/19/security-scanning.html) for more info.
+
+Commits: [4cd875c2aa9f](https://github.com/SUSE/Portus/commit/4cd875c2aa9f6a5324745f98028d46a868b63e09),
+[d3454cfb84f3](https://github.com/SUSE/Portus/commit/d3454cfb84f38ad4b63a729d7073108638c50341),
+[f19094b98737](https://github.com/SUSE/Portus/commit/f19094b987372cca9a9247c84f11fca4131d9758).
+
+#### Background process
+
+One of the main issues for Portus was that sometimes it took too long to
+complete certain critical tasks. For this release we have moved these tasks
+into a separate *background* process. This background process resides in the
+`bin/background.rb` file, and it can be enabled for containerized deployments
+by setting the `PORTUS_BACKGROUND` environment variable to true.
+
+The following tasks have been moved into this new process:
+
+- *Security scanning*: after testing security scanning more in depth, we noticed
+  that sometimes it could block Portus when showing the main page for
+  repositories. This was the first task moved into this new process. Commit:
+  [e0f7d53cb2b2](https://github.com/SUSE/Portus/commit/e0f7d53cb2b2cfbb4628fceb36616607d9d7dd6c).
+- *Registry events*: before creating this process, we dealt with incoming
+  registry events in the main Portus process. The problem with this was that
+  after getting a *push* event, for example, Portus had to fetch manifests,
+  which could take quite some time. This meant that Portus got blocked in some
+  deployments. Now Portus will simply log the event, and then the background
+  process will process it right away (by default this process will check for
+  events every 2 seconds). Commit:
+  [6a4f7d7dca60](https://github.com/SUSE/Portus/commit/6a4f7d7dca60cd6afb59b51d951b20e808690bbb).
+- *Registry synchronization*: we have removed the *crono* process in favor of
+  this new process. Hence, the code that was executed in previous releases by
+  crono has been merged as another task of this new process. Commit:
+  [ced9b46a9064](https://github.com/SUSE/Portus/commit/ced9b46a9064a7c3e4374e427f3201a200db8c0a).
+
+**Note** on deployment: this new background process has to have access to the
+same database as the main Portus process.
+
+#### Anonymous browsing
+
+Portus will now allow anonymous users to search for public images. This is a
+configurable option which is enabled by default. You can read more about this
+[in the documentation](http://port.us.org/features/anonymous_browsing.html).
+
+Commits:
+[274c0908a83c](https://github.com/SUSE/Portus/commit/274c0908a83c2e4da77db191384a267a29188418),
+[9d6cc25fd0b4](https://github.com/SUSE/Portus/commit/9d6cc25fd0b4478933becdf94c59386bc491c32e).
+
+#### OAuth & OpenID Connect support
+
+Portus' authentication logic has been extended to allow OAuth & OpenID
+Connect. For OAuth you are allowed to login through the following adapters:
+Google, Github, Gitlab and Bitbucket. Check the `config/config.yml` file for
+more info on the exact configurable options.
+
+Commit:
+[0a5fefdd14d9](https://github.com/SUSE/Portus/commit/0a5fefdd14d99397c39c74f8900c01485135fcd4).
+
+**Thanks a lot** to Vadim Bauer ([@Vad1mo](https://github.com/Vad1mo)) and
+Andrei Kislichenko ([@andrew2net](https://github.com/andrew2net)) for working on
+this!
+
+#### API
+
+An effort to design and implement an API for Portus has been started. This is
+useful for CLI tools like [portusctl](https://github.com/openSUSE/portusctl)
+among other user cases. We do not consider the API to be in a stable state, but
+it is useful already. We will continue this effort in forthcoming
+releases. Commits:
+[2129833f27f0](https://github.com/SUSE/Portus/commit/2129833f27f05dc7a86e9783c63a4d600a7ebca5),
+[28f77d3352ea](https://github.com/SUSE/Portus/commit/28f77d3352ea9e2a50716f9dba872a90fc89e1bb),
+[5a9437bba42d](https://github.com/SUSE/Portus/commit/5a9437bba42d446464066fbfe187bab1d3145d3c),
+[451e508bd86a](https://github.com/SUSE/Portus/commit/451e508bd86a4218d440c594398f592abafc0b4c),
+[185f18e98638](https://github.com/SUSE/Portus/commit/185f18e9863819e111fcb4af4f162198462d7bd3),
+[a9bdab58d150](https://github.com/SUSE/Portus/commit/a9bdab58d150d3b547f31bcee175b8c048ae10b8),
+[8b42887f83a5](https://github.com/SUSE/Portus/commit/8b42887f83a5825e1101c8e47613927027b3c755),
+[fbe7e8d4ef53](https://github.com/SUSE/Portus/commit/fbe7e8d4ef5370d0be8f6ba4b07a45a0b52de0a8),
+[4a79f222f93b](https://github.com/SUSE/Portus/commit/4a79f222f93bbea7e42aa4f5f3c70adbe2d709c3),
+[fbe7e8d4ef53](https://github.com/SUSE/Portus/commit/fbe7e8d4ef5370d0be8f6ba4b07a45a0b52de0a8).
+
+**Thanks a lot** to Vadim Bauer ([@Vad1mo](https://github.com/Vad1mo)) and
+Andrei Kislichenko ([@andrew2net](https://github.com/andrew2net)) for working on
+this!
+
+#### Puma
+
+The deployment of Portus has been simplified as much as possible. For this
+reason we have removed a *lot* of clutter on our official Docker image, and we
+have embraced best practices for deploying Ruby on Rails applications. For this
+reason we have set Puma as the web server for Portus.
+
+Commits: [09b722f56221](https://github.com/SUSE/Portus/commit/09b722f5622196f7f1362990950218d20cda7061),
+[9fd61ba7bae0](https://github.com/SUSE/Portus/commit/9fd61ba7bae0f8343961adb99000527d7a1d23fc),
+[6a3b8ca74edb](https://github.com/SUSE/Portus/commit/6a3b8ca74edb79dc8e9ffdd5be45195de4ef9991),
+[2488791f8f54](https://github.com/SUSE/Portus/commit/2488791f8f54293cdaa282494070c81c8f320ae7).
+
+#### Production deployment examples
+
+We provide in the source code examples that illustrate how Portus is intended to
+be deployed on production. These examples reside in the `examples`
+directory. Some observations:
+
+- As stated above, set the `PORTUS_BACKGROUND` environment variable to true for
+  the background process.
+- You can set `RAILS_SERVE_STATIC_FILES` to true if you want Portus to serve the
+  assets directly (e.g. if you don't want a load-balancer like NGinx or HAproxy
+  to do this).
+- Use the new `PORTUS_DB_` environment variable prefix instead of the old
+  `PORTUS_PRODUCTION_` one for database options. Moreover, in the database you
+  can now specify more options like `PORTUS_DB_POOL` for stating the DB pool.
+- Portus will complain if you provide old environment variables like
+  `PORTUS_PRODUCTION_DATABASE`, or if you forgot to specify some relevant
+  environment variables for production like `PORTUS_MACHINE_FQDN_VALUE`. Commit:
+  [06a405c4f5fd](https://github.com/SUSE/Portus/commit/06a405c4f5fdfbdd1d327061fa2a187ae4f6f396).
+
+Commit:
+[ba7b15ed42d0](https://github.com/SUSE/Portus/commit/ba7b15ed42d085a99856b623ec29b500c1fb7ba3).
+
+#### Helm Chart
+
+An official [Helm
+Chart](https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/portus)
+for deploying Portus in a Kubernetes cluster is being developed. It is expected
+to be released soon after this release.
+
+#### PostgreSQL support
+
+Some tools like CoreOS Clair require PostgreSQL as their database. When
+developing support for security scanning we noticed that it was quite redundant
+to have two different databases running. For this reason, we have added
+PostgreSQL support, so you can use PostgreSQL for both Portus and Clair.
+
+Commit: [af1b8b6ca725](https://github.com/SUSE/Portus/commit/af1b8b6ca725e094ab26230126f271c59a0e8343).
+
+#### Upgrade to Ruby 2.5
+
+Some features required an upgrade of Ruby. Since SLE 15 and Tumbleweed will most
+likely have Ruby 2.5 as their default version, we have anticipated this
+move. So, now Portus is supported for Ruby 2.5. If you try to run Portus on
+previous versions, it will error out during initialization (commit:
+[ea02cab5c822](https://github.com/SUSE/Portus/commit/ea02cab5c8228c80a20212e39855c50d6f6ba523)).
+
+Commits: [a2407506ff5c](https://github.com/SUSE/Portus/commit/a2407506ff5cd3dc6553378c96c972d766d9ab62),
+[d86d46c9313c](https://github.com/SUSE/Portus/commit/d86d46c9313c887bb3c17df314d9aaaae390f245),
+[46a5a34fda40](https://github.com/SUSE/Portus/commit/46a5a34fda402371f6082ea85e8c07e439d53800).
+
 ### Improvements and small features
 
+- Sort tags by updated\_at date not by created\_at. Commit:
+  [90ad00a32f49](https://github.com/SUSE/Portus/commit/90ad00a32f490d0aa921fe28becc7cb90341fe5d).
+- Copy `docker pull` command to clipboard when clicking a tag:
+  [acad5b6f442d](https://github.com/SUSE/Portus/commit/acad5b6f442d37f390f09acb7bc7ed486c346ada).
+- Lots of small improvements on the UI. Commits (among others):
+  [097e782ec1a3](https://github.com/SUSE/Portus/commit/097e782ec1a326f8c57bc4bef600ff5365f80266),
+  [bd4d9d8db5ad](https://github.com/SUSE/Portus/commit/bd4d9d8db5ad2d6226e85df3dacaa922db554150),
+  [0ae8f5e2fae6](https://github.com/SUSE/Portus/commit/0ae8f5e2fae645d7e9420701504f757d8a0b2474),
+  [c891792742c0](https://github.com/SUSE/Portus/commit/c891792742c0d91d64fb49019af6446e1684ca73),
+  [50d61606caa7](https://github.com/SUSE/Portus/commit/50d61606caa7b2538c877d6a924b84082524982f).
+- Properly check when the DB is ready, useful for containerized
+  deployments. Commit:
+  [564c3cb5d35c](https://github.com/SUSE/Portus/commit/564c3cb5d35ce0e1b882c60f137fcbf8dedc1ee4).
+- Make the log level configurable on production. Useful for temporarily
+  debugging a production deployment. Commit:
+  [db2403fd3311](https://github.com/SUSE/Portus/commit/db2403fd3311a8078bc5418f5fd635a4ec5668dc).
+- Added rack-cors to prevent AJAX CORS attacks. Commit:
+  [5a0402098428](https://github.com/SUSE/Portus/commit/5a04020984280e70ba79b8be5753632fe809ac13).
+- Adding the X-UA-Compatible header so it works well for IE with compatibility
+  mode on. Commit:
+  [146076d543e8](https://github.com/SUSE/Portus/commit/146076d543e8f1618f837dd7466c5f0fdc26438d).
+- Implemented timeout for requests targetting the registry. Commit:
+  [9296f1eaa5bb](https://github.com/SUSE/Portus/commit/9296f1eaa5bbe796cf6891da792f9fb85f1a0ace),
+  [56d2886e7f65](https://github.com/SUSE/Portus/commit/56d2886e7f651816c7acd346eb1c81fff0946980).
+- Added registry validation and status. Commits:
+  [a30c27071650](https://github.com/SUSE/Portus/commit/a30c27071650e5c96f5b8159622fb97fd39e2d3a),
+  [d0dd2f4aeba0](https://github.com/SUSE/Portus/commit/d0dd2f4aeba06a4c4df1b37fedec347038dcb2ad).
+
+### Fixes
+
+- Add core-js pollyfills, so internet access is not needed. Commit:
+  [02cf5212a28c](https://github.com/SUSE/Portus/commit/02cf5212a28c6d27830546a6eb14080904711b77).
+- Fixed performance problems on the activities page. Commit:
+  [b5fd93bd9486](https://github.com/SUSE/Portus/commit/b5fd93bd9486fc426c9ad76d9d84393b45689213).
+- Fixed table pagination. Commit:
+  [f05aad9e6183](https://github.com/SUSE/Portus/commit/f05aad9e61837b066b4a332cc5730dc0207ed7c8).
+- Fixed some issues on activities. Commit:
+  [db553f8d0bcc](https://github.com/SUSE/Portus/commit/db553f8d0bcc7b2f9eafa4a9795c846b1141c2b7).
+- Honor external_hostname in token generation. Commit:
+  [802bb89b0ec4](https://github.com/SUSE/Portus/commit/802bb89b0ec4eebefdd9a7d6fea513857c2483c7).
+- Fixed Vagrant setup. Commit:
+  [6ca35b1bc2e7](https://github.com/SUSE/Portus/commit/6ca35b1bc2e7e1d1cf124dab5d35ffa93b61a139).
+- Read the TZ env variable to display dates correctly. Commit:
+  [e2eed1463aaa](https://github.com/SUSE/Portus/commit/e2eed1463aaaf37a32e01cb5cdcee3e1c5722df1).
+- LDAP: avoid clashes on emails. Commit:
+  [1a57f0f7f95b](https://github.com/SUSE/Portus/commit/1a57f0f7f95bcb1e9dbb0c5e858ae2d7c7701f5c).
+- Fixed icons spacing/positioning. Commit:
+  [ab34bf9ebc5b](https://github.com/SUSE/Portus/commit/ab34bf9ebc5b36bedda53c97422d4bed1818cbef).
+- Fixed team name validation behavior. Commit:
+  [86e72f88b20f](https://github.com/SUSE/Portus/commit/86e72f88b20f98b20944efd215119b81a972ec7d).
+- Fixed a render error on the search/index page. Commit:
+  [d12306daa47b](https://github.com/SUSE/Portus/commit/d12306daa47bb78142b969650bfd306087dc1d10).
+- Fixed the namespace and team name clashes. Commit:
+  [eec31da471a7](https://github.com/SUSE/Portus/commit/eec31da471a7a776633cb1500b60c131f74e0636).
+- Properly check SSL requirements. Commit:
+  [a86ec03923f8](https://github.com/SUSE/Portus/commit/a86ec03923f821d7abb9e65ce3f5ca2206ff2b8b).
+- Fixed tag name uniqueness validation. Commit:
+  [83478b1911b0](https://github.com/SUSE/Portus/commit/83478b1911b00ef37fccf94eb4e7c2c3c598b4c1).
+- Fixed crash on null author of a tag. Commit:
+  [7f84fbc60307](https://github.com/SUSE/Portus/commit/7f84fbc6030776d03950d25be109b1a0ef42fdbd).
+- Update tags by digest when scanning. Commit:
+  [46065607fbc1](https://github.com/SUSE/Portus/commit/46065607fbc1b19f534fe62535e181f50579dbc6).
+- Fixed crash when vulnerabilities were not found. Commit:
+  [a904cef41cb2](https://github.com/SUSE/Portus/commit/a904cef41cb200f5abbb787394bcc56aa34cbe10).
+- Added some checks on mailer configuration to avoid crashes later on. Commit:
+  [c3ba1b50ca31](https://github.com/SUSE/Portus/commit/c3ba1b50ca3148601ec2676b1cd930f016e93337).
+- Catch exceptions on password resets creation. Commit:
+  [9d2ba4748693](https://github.com/SUSE/Portus/commit/9d2ba47486932307b1fe7934b20a2938aa7fff84).
+- Registry Client should probe that the /v2/ path reachable and that we accept
+  200 responses as well. Commit:
+  [2b0bf59a2601](https://github.com/SUSE/Portus/commit/2b0bf59a260102cdd837590660bb10babe08a824).
+
+#### CVE
+
+This release includes a fix for
+[CVE-2017-14621](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-14621). **Thanks
+a lot** Ricardo Sánchez for reporting this security issue! Commit:
+[c21dfec24cfc](https://github.com/SUSE/Portus/commit/c21dfec24cfcf93f0ac06c1b9a08afad1824e41f).
+
+### Development
+
+- Our Rubocop rules are now as close as possible to the default style. This is
+  an attempt to be closer to the decisions from the ruby community. Commit:
+  [71ff67ae123b](https://github.com/SUSE/Portus/commit/71ff67ae123bb0f552732b9011de29b02a398cee).
 - Update the development environment for docker-compose v2.
-- Fixed icon incoherent in teams page on add namespace action button
+- Many fixes went into the test suite. Commit (among others):
+  [af7d093cfdc2](https://github.com/SUSE/Portus/commit/af7d093cfdc2d421b00d0d43e2850138383c69a2).
+- The configuration management has been extracted into its own gem:
+  [cconfig](https://github.com/mssola/cconfig). Commits:
+  [9ce311a832ae](https://github.com/SUSE/Portus/commit/9ce311a832ae83913b5b087df05bf5fd227591a8),
+  [c8abbff3bd38](https://github.com/SUSE/Portus/commit/c8abbff3bd38491c9f462aa48412ac13de9e65a0).
+- Introduced the `DeprecationError` exception. Commit:
+  [3691273ebbd9](https://github.com/SUSE/Portus/commit/3691273ebbd9dd1179ec79a402836c170bed0573).
+- Networking errors have been merged into a single point of entry. Commit:
+  [944e50176c1a](https://github.com/SUSE/Portus/commit/944e50176c1a11dee40be9f3d032e9a4f1b53bde).
+- Big changes on the Javascript side:
+  - Turbolinks has been removed. Commit:
+    [2803e2962419](https://github.com/SUSE/Portus/commit/2803e29624197665b5a95a955421dd74a95894b9).
+  - We have migrated from Coffeescript to Javascript:
+    [79fb15164f32](https://github.com/SUSE/Portus/commit/79fb15164f32a3da86b39e7a7b2340588830c8c9),
+    [d30bc2baef16](https://github.com/SUSE/Portus/commit/d30bc2baef16693fad97d88eda88d1021d729969).
+  - Javascript dependencies are now managed by yarn:
+    [803829045ff3](https://github.com/SUSE/Portus/commit/803829045ff3fa53630604b972c1db1dfb8077c3).
+  - Webpack is the responsible for building the assets:
+    [bc56035f9c5e](https://github.com/SUSE/Portus/commit/bc56035f9c5e8ff486416cc0da9910ce52cde1cb).
+  - We have introduced VueJS to bring some order into the Javascript front:
+    [c3ad4bf97dbe](https://github.com/SUSE/Portus/commit/c3ad4bf97dbe2041d675ce5ef112fac8d9374956),
+    [3e145dc03c79](https://github.com/SUSE/Portus/commit/3e145dc03c798b84ab4f23fb7f932cea75a136eb),
+    [3dd743fd610e](https://github.com/SUSE/Portus/commit/3dd743fd610e37b266264abb08dcab6ff46a07f7).
+  - We have migrated to the latest Javascript standard (EcmaScript6). This has
+    involved some refactoring. See commits (among others):
+    [efbff080ff82](https://github.com/SUSE/Portus/commit/efbff080ff828a504dd73455b26edae17bd9468e),
+    [c8fc5823f6b7](https://github.com/SUSE/Portus/commit/c8fc5823f6b7b7d90abe6b6abcefae27013f016c),
+    [dc3b00dd3dbd](https://github.com/SUSE/Portus/commit/dc3b00dd3dbd23c9adc9bbf91cf04a89d2d2fa8e),
+    [ad5da31283df](https://github.com/SUSE/Portus/commit/ad5da31283df5a73a85db43d1ce29e9eb70c85a2),
+    [e70e78c75b89](https://github.com/SUSE/Portus/commit/e70e78c75b89569806f27a64494b93ba41277df2),
+    [a838cabc0720](https://github.com/SUSE/Portus/commit/a838cabc07204885a8fd0d24df03ca7c78db382e),
+    [0428092a287f](https://github.com/SUSE/Portus/commit/0428092a287feca0cf301fdf1b7496b239816733),
+    [821595bc4c52](https://github.com/SUSE/Portus/commit/821595bc4c526bbc7e1e2c1fd3de080e9e478044),
+    [6e8b57f4c531](https://github.com/SUSE/Portus/commit/6e8b57f4c5316dce1cb4a96a5f46e308962cc8cf),
+    [76909e9c931d](https://github.com/SUSE/Portus/commit/76909e9c931def78daa5dbf1516450d9ff9e086b),
+    [0c3a003cf897](https://github.com/SUSE/Portus/commit/0c3a003cf897f58598329841bf757c0192f6f77c),
+    [9c223b7a5918](https://github.com/SUSE/Portus/commit/9c223b7a5918f8eafc055d104da0a4b658e15d86),
+    [f1d47a6abda7](https://github.com/SUSE/Portus/commit/f1d47a6abda7ec0a7660c1a20bca65b55018daaa),
+    [1103a1ac3b55](https://github.com/SUSE/Portus/commit/1103a1ac3b55f06015e1c63b4660a750a18e1b69),
+    [452ec54fc224](https://github.com/SUSE/Portus/commit/452ec54fc224da754947be2a6032d71dea4e5ad2).
+
+### Upgrading
+
+In this section we want to detail some things that you might want to take into
+account when upgrading to 2.3:
+
+- As explained above, Puma is now the HTTP server being used. Make sure to use
+  the `PORTUS_PUMA_TLS_KEY` and the `PORTUS_PUMA_TLS_CERT` environment variables
+  to point puma to the right paths for the certificates. Moreover, if you are
+  not using the official Docker image, you will have to use the
+  `PORTUS_PUMA_HOST` environment variable to tell Puma where to bind itself (in
+  containerized deployments it will bind by default to `0.0.0.0:3000`).
+- The database environment variables have changed the prefix from
+  `PORTUS_PRODUCTION_` to `PORTUS_DB_`. Moreover, you will be able now to
+  provide values for the following items: adapter (set it to `postgresql` for
+  PostgreSQL support), port, pool and timeout. All these values are prefixed by
+  `PORTUS_DB_` as well, so for example, to provide a value for the pool you need
+  to set `PORTUS_DB_POOL`.
+
+Finally, we are not running migrations automatically anymore as we used to do
+before. This is now to be done by the administrator by executing (on the Portus
+context in `/srv/Portus` or simply as part of a `docker exec` command):
+
+```
+$ portusctl exec rake db:migrate
+```
+
+For more details on this check the commits
+[7fdfe9634180](https://github.com/SUSE/Portus/commit/7fdfe96341801b492ca0e2637fcbb0d31e54d5fc)
+and
+[1c4d2b6cf0e0](https://github.com/SUSE/Portus/commit/1c4d2b6cf0e09e3be770a0675a42ee23cd2f62dd).
+
+### Deprecations
+
+Some configuration options that were soft-deprecated in 2.2 will now raise a
+`DeprecationError`. These are:
+
+- The expiration time of the JWT token can no longer be expressed as a string
+  with a format: `x.minutes`. You have to provide now an integer representing
+  the minutes for the `jwt_expiration_time` configurable option. Users that have
+  not touched this option since the 2.1 times will have to change this.
+- The `jwt_expiration_time` option was moved to `registry.jwt_expiration_time`
+  in 2.2. Now, if you continue to provide the former rather than the latter,
+  you'll get a `DeprecationError` exception.
+
+Besides this, Portus will also raise a `DeprecationError` during initialization
+in the case you provided the prefix `PORTUS_PRODUCTION_` for database
+configurable options instead of `PORTUS_DB_`.
+
+Finally, `portusctl` as provided by Portus is getting deprecated in favor of
+[openSUSE/portusctl](https://github.com/openSUSE/portusctl). This new
+`portusctl` has been built from scratch for the following reasons:
+
+- Since 2.3 our main focus is the support containerized deployments. Therefore,
+  `portusctl`'s main task to setup the installation didn't make sense
+  anymore.
+- Moreover, from experience we noticed lots of corner cases where the old
+  portusctl was simply not effective.
+- With the introduction of the API, we wanted to re-purpose the tool to be more
+  similar to tools like `kubectl` for Kubernetes. That is, a CLI interface to
+  the API that administrators can use with ease.
+
+### Packaging
+
+Lots of issues regarding packaging were fixed. We want to highlight the
+following commits:
+
+- Do not touch the Gemfile anymore. Commit:
+  [bd383fba329b](https://github.com/SUSE/Portus/commit/bd383fba329b6256fdd0bb6d1a07fa98b12aeff0).
+- Change how we build dependencies. Commit:
+  [0970b9903af5](https://github.com/SUSE/Portus/commit/0970b9903af5bf1668ddb48ec9915f30e9e0902e).
+- Added bundled JS dependencies in the spec file. Commit:
+  [f08803be6fbc](https://github.com/SUSE/Portus/commit/f08803be6fbc9d6922af38645ca0fe477c442ea7).
+- Added a script to compare the gems on git and OBS. Commit:
+  [291d172c12e3](https://github.com/SUSE/Portus/commit/291d172c12e3012e9857967b8f3641b2bb3dc964).
+
+### Contributors for this release
+
+Alexander Block, banuchka, Ben Rexin, Diokuz, Fabian Baumanis, Hart Simha, James
+Maidment, Jordi Massaguer Pla, Lefnui, Maik Hinrichs, Maximilian Meister, Miquel
+Sabaté Solà, Ricardo Mateus, Robin Müller, Saurabh Surana, Shammah Chancellor,
+Soedarsono, Thorsten Schifferdecker, Vadim Bauer, Vítor Avelino.
+
+... and many thanks to everyone that has contributed to Portus by leaving
+comments, sending emails, submitting issues, providing feedback, etc. Thanks!
 
 ## 2.2.0
 

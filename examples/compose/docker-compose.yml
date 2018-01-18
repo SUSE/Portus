@@ -8,9 +8,9 @@ services:
 
       # DB. The password for the database should definitely not be here. You are
       # probably better off with Docker Swarm secrets.
-      - PORTUS_PRODUCTION_HOST=db
-      - PORTUS_PRODUCTION_DATABASE=portus_production
-      - PORTUS_PRODUCTION_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_DATABASE=portus_production
+      - PORTUS_DB_PASSWORD=${DATABASE_PASSWORD}
       - PORTUS_DB_POOL=5
 
       # Secrets. It can possibly be handled better with Swarm's secrets.
