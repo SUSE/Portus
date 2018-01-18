@@ -18,6 +18,7 @@ RUN zypper ref && \
     zypper -n in --no-recommends ruby2.5-devel \
            libxml2-devel nodejs libmysqlclient-devel postgresql-devel libxslt1 && \
     zypper -n in --no-recommends -t pattern devel_basis && \
+    gem install bundler --no-ri --no-rdoc -v 1.15.4 && \
     bundle install --retry=3 && \
     zypper -n rm wicked wicked-service autoconf automake \
            binutils bison cpp cvs flex gdbm-devel gettext-tools \
