@@ -8,6 +8,7 @@ const StatsPlugin = require('stats-webpack-plugin');
 
 const ROOT_PATH = path.resolve(__dirname, '..');
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
+const IS_TEST = process.env.NODE_ENV === 'test';
 
 var config = {
   context: path.join(ROOT_PATH, 'app/assets/javascripts'),
@@ -20,6 +21,8 @@ var config = {
     path: path.join(ROOT_PATH, 'public/assets/webpack'),
     publicPath: '/assets/webpack/',
     filename: IS_PRODUCTION ? '[name]-[chunkhash].js' : '[name].js',
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+    devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]',
   },
 
   plugins: [
@@ -55,22 +58,23 @@ var config = {
   devtool: 'inline-source-map',
 
   module: {
-    loaders: [
+    loaders: [].concat(
+      IS_TEST ? {
+        test: /\.(js|vue)/,
+        include: path.join(ROOT_PATH, 'app/assets/javascripts'),
+        loader: 'istanbul-instrumenter-loader',
+      } : [],
       {
         test: /\.js$/,
         exclude: /(node_modules|vendor\/assets)/,
         loader: 'babel-loader',
-        query: {
-          presets: ['es2015'],
-          plugins: ['lodash', 'transform-object-rest-spread'],
-        },
       },
       {
         test: /\.vue$/,
         exclude: /(node_modules|vendor\/assets)/,
         loader: 'vue-loader',
       },
-    ],
+    ),
   },
 };
 
@@ -91,6 +95,12 @@ if (IS_PRODUCTION) {
     new CompressionPlugin({
       asset: '[path].gz[query]',
     }));
+}
+
+if (IS_TEST) {
+  // eslint-disable-next-line
+  config.externals = [require('webpack-node-externals')()];
+  config.devtool = 'inline-cheap-module-source-map';
 }
 
 module.exports = config;

@@ -2,20 +2,39 @@
   "private": true,
   "scripts": {
     "eslint": "eslint --max-warnings 0 --ext .js,.vue ./app/assets/javascripts",
-    "webpack": "webpack --watch --config config/webpack.js"
+    "webpack": "webpack --watch --config config/webpack.js",
+    "test": "cross-env NODE_ENV=test mocha-webpack --webpack-config ./config/webpack.js --require ./spec/javascripts/setup.js ./spec/javascripts/**/*.spec.js",
+    "cover": "cross-env NODE_ENV=test nyc --reporter=text --reporter=html yarn test"
+  },
+  "nyc": {
+    "include": [
+      "app/assets/**/*.(js|vue)"
+    ],
+    "instrument": false,
+    "sourceMap": false
   },
   "devDependencies": {
-    "babel-core": "^6.23.0",
+    "babel-core": "^6.26.0",
     "babel-loader": "^6.3.2",
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
+    "cross-env": "^5.1.3",
     "eslint": "^3.16.1",
     "eslint-config-airbnb-base": "^11.1.0",
     "eslint-import-resolver-webpack": "^0.8.1",
     "eslint-plugin-html": "^2.0.3",
     "eslint-plugin-import": "^2.2.0",
-    "webpack-dev-server": "^2.3.0"
+    "expect": "^22.0.3",
+    "istanbul-instrumenter-loader": "^3.0.0",
+    "jsdom": "^11.5.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^4.1.0",
+    "mocha-webpack": "^1.0.1",
+    "nyc": "^11.4.1",
+    "vue-test-utils": "^1.0.0-beta.9",
+    "webpack-dev-server": "^2.3.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
@@ -35,10 +54,5 @@
     "vue-template-compiler": "^2.3.3",
     "vuelidate": "^0.6.0",
     "webpack": "^2.2.1"
-  },
-  "babel": {
-    "presets": [
-      "es2015"
-    ]
   }
 }

@@ -59,8 +59,11 @@ script:
 
   - bundle exec rake portus:annotate_and_exit
 
-  # Javascript style
-  - yarn run eslint
+  # JavaScript tests
+  - yarn test
+
+  # JavaScript style
+  - yarn eslint
 
 env:
   global:
