@@ -83,32 +83,12 @@ Portus image](https://hub.docker.com/r/opensuse/portus/), you can call
 you can simply use `/srv/Portus` as the working directory).
 
 For the containerized scenario though, you have to wait for the database to be
-up. You can do this in two ways:
+up. This is already done automatically by our official Portus image. If you want
+to check whether Portus can access the database, you can perform the following
+command:
 
-1. **Manually** (not recommended): in the Portus source code there is an
-   executable script that can check whether the DB is up. You can call it like
-   this: `portusctl exec rails r bin/check_db.rb`.
-2. **Init script**: if you are using tools/frameworks such as `docker-compose`,
-   `Docker Swarm`, `Kubernetes`, etc. you cannot manually check for the
-   database. Instead, you should create your own init script for your
-   container. In the [source code of Portus](https://github.com/SUSE/Portus),
-   you can find some examples on the `examples` directory. A possible script
-   would be the following:
-
-```sh
-#!/usr/bin/env bash
-
-while true; do
-    if bundle exec rake db:migrate:reset; then
-        bundle exec rake db:seed
-        break
-    fi
-
-    echo "Waiting for mariadb to be ready in 5 seconds"
-    sleep 5
-done
-
-pumactl -F /srv/Portus/config/puma.rb start
+```
+$ portusctl exec rails r bin/check_db.rb
 ```
 
 ## Considerations when deploying a database for Portus
