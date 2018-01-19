@@ -109,6 +109,36 @@ describe "Login feature" do
     expect(page).to have_current_path(new_user_session_path)
   end
 
+  it "Login form is enabled when local_login is enabled" do
+    APP_CONFIG["oauth"]["local_login"] = { "enabled" => true }
+    APP_CONFIG["ldap"] = { "enabled" => false }
+
+    visit root_path
+    expect(page).to have_current_path(root_path)
+    expect(page).to have_content("Login")
+    expect(page).to have_content("I forgot my password")
+  end
+
+  it "Login form is enabled when ldap is enabled" do
+    APP_CONFIG["oauth"]["local_login"] = { "enabled" => false }
+    APP_CONFIG["ldap"] = { "enabled" => true }
+
+    visit root_path
+    expect(page).to have_current_path(root_path)
+    expect(page).to have_content("Login")
+    expect(page).not_to have_content("I forgot my password")
+  end
+
+  it "Login form is disabled when both local_login and ldap are disabled" do
+    APP_CONFIG["oauth"]["local_login"] = { "enabled" => false }
+    APP_CONFIG["ldap"] = { "enabled" => false }
+
+    visit root_path
+    expect(page).to have_current_path(root_path)
+    expect(page).not_to have_content("Login")
+    expect(page).not_to have_content("I forgot my password")
+  end
+
   it "Sign up is disabled" do
     APP_CONFIG["signup"] = { "enabled" => true }
 
