@@ -1,4 +1,4 @@
-/* eslint-disable quote-props */
+/* eslint-disable quote-props, comma-dangle */
 // This file is based on Gitlab's config/webpack.config.js file.
 
 const path = require('path');
@@ -73,7 +73,7 @@ var config = {
         test: /\.vue$/,
         exclude: /(node_modules|vendor\/assets)/,
         loader: 'vue-loader',
-      },
+      }
     ),
   },
 };
