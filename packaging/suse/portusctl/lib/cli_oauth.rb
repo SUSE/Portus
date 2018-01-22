@@ -5,6 +5,10 @@ module CliOAuth
   # rubocop:disable Metrics/BlockLength
   def self.included(thor)
     thor.class_eval do
+      option "oauth-local-login-enable",
+             desc:    "Enable local login form",
+             type:    :boolean,
+             default: true
       option "oauth-google-oauth2-enable",
              desc:    "OAuth: Google OAuth2 enable",
              type:    :boolean,

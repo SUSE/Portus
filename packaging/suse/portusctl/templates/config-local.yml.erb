@@ -93,6 +93,13 @@ ldap:
     attr: <%= @options["ldap-guess-email-attr"] %>
 <% end %>
 
+# OAuth support
+oauth:
+  # If enabled, then users can login with portus credential.
+  # Otherwise, the users can only login via OAuth.
+  local_login:
+    enabled: <%= @options["oauth-local-login-enable"] %>
+
 # Set first_user_admin to true if you want that the first user that signs up
 # to be an admin.
 #

@@ -124,6 +124,10 @@ first time.
   When in combination with **ldap-guess-email-enable**, Portus will use the given
   **attr** to fetch the email instead of guessing it from the DN.
 
+**--oauth-local-login-enable**
+  Toggle local login form enabling. If enabled, then users can login with portus credential.
+  Otherwise, the users can only login via OAuth. By default oauth-local-login is enabled.
+
 **--oauth-google-oauth2-enable**
   Enable authentication with Google OAuth2.
 
