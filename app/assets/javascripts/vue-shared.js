@@ -10,7 +10,7 @@ Vue.use(VueResource);
 Vue.use(EventBus);
 Vue.use(Alert);
 
-Vue.http.options.root = window.API_ROOT_URL;
+Vue.http.options.root = window.API_URL;
 
 Vue.http.interceptors.push((_request, next) => {
   window.$.active = window.$.active || 0;

@@ -29,7 +29,7 @@ html
     meta content="#205683" name="theme-color"
 
     javascript:
-      window.API_ROOT_URL = '//#{app_host}';
+      window.API_URL = '//#{app_path}';
     = javascript_include_tag(*webpack_asset_paths("application"))
     = yield :js_header
 

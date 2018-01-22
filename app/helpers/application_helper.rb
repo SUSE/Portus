@@ -12,6 +12,14 @@ module ApplicationHelper
     request.env["HTTP_HOST"]
   end
 
+  def app_relative_url_root
+    ENV["RAILS_RELATIVE_URL_ROOT"] || ""
+  end
+
+  def app_path
+    File.join(app_host, app_relative_url_root)
+  end
+
   def js_route
     action_name = ACTION_ALIASES[controller.action_name] || controller.action_name
 
