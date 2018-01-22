@@ -68,8 +68,7 @@ module Portus
 
     # The expiration time to be added to the current token.
     def expiration_time
-      value = Portus::Migrate.registry_config("jwt_expiration_time")
-      Portus::Migrate.from_humanized_time(value, 5)
+      APP_CONFIG["registry"]["jwt_expiration_time"]["value"].to_i.minutes
     end
 
     # Returns an array with the authorized actions hash.
