@@ -6,7 +6,7 @@ gem "active_record_union"
 gem "base32"
 gem "bootstrap-sass", "~> 3.3.4"
 gem "devise"
-gem "font-awesome-rails", "= 4.7.0.1"
+gem "font-awesome-rails", "~> 4.7.0.1"
 gem "grape"
 gem "grape-entity"
 gem "grape-swagger"
@@ -42,7 +42,7 @@ gem "ethon", "~> 0.9.0"
 gem "typhoeus", "~> 1.0.2"
 
 # Used to store application tokens.
-gem "bcrypt"
+gem "bcrypt", "~> 3.1.11"
 
 # This is already a Rails dependency, but we use it to run portusctl
 gem "thor", "~> 0.19.4"
@@ -54,15 +54,14 @@ gem "puma", "~> 3.10.0"
 gem "cconfig", "~> 1.2.0"
 
 # Pinning some versions
-gem "concurrent-ruby", "= 1.0.4"
 gem "i18n", "= 0.8.0"
 gem "ice_nine", "~> 0.11.2"
 gem "loofah", "= 2.0.3"
 gem "minitest", "= 5.10.1"
-gem "multi_json", "= 1.12.1"
-gem "rails-dom-testing", "= 1.0.8"
+gem "multi_json", "~> 1.12.1"
+gem "rails-dom-testing", "~> 1.0.8"
 gem "sprockets", "= 3.7.1"
-gem "sprockets-rails", "= 3.2.0"
+gem "sprockets-rails", "~> 3.2.0"
 gem "temple", "= 0.7.7"
 
 ##
