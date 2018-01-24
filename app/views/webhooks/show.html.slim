@@ -12,6 +12,10 @@
                   | Edit webhook
           .panel-body
             .form-group
+              = f.label :name, {class: 'control-label col-md-2'}
+              .col-md-7
+                = f.text_field(:name, class: 'form-control', required: true, placeholder: "Name of the webhook")
+            .form-group
               = f.label :request_method, {class: 'control-label col-md-2'}
               .col-md-7
                 = f.select(:request_method, Webhook.request_methods.keys, {}, {class: 'form-control'})
@@ -39,7 +43,7 @@
           '#{@webhook.host}
         ' webhook
         small
-          a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content="<b>Request method</b>: URL endpoint where the HTTP request is sent to.<br/><b>Content type</b>: Description of the webhook request content.<br/><b>Username</b>: Username used for basic HTTP auth.<br/><b>Password</b>: Password used for basic HTTP auth." data-original-title="What's this?" tabindex="0" data-html="true"]
+          a[data-placement="right" data-toggle="popover" data-container=".panel-heading" data-content="<b>Name</b>: Name of the webhook.<br><b>Request method</b>: URL endpoint where the HTTP request is sent to.<br/><b>Content type</b>: Description of the webhook request content.<br/><b>Username</b>: Username used for basic HTTP auth.<br/><b>Password</b>: Password used for basic HTTP auth." data-original-title="What's this?" tabindex="0" data-html="true"]
             i.fa.fa-info-circle
         - if can_manage_namespace?(@namespace)
           .pull-right

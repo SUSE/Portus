@@ -92,6 +92,13 @@ class WebhooksController < ApplicationController
   end
 
   def webhook_params
-    params.require(:webhook).permit(:url, :request_method, :content_type, :username, :password)
+    params.require(:webhook).permit(
+      :name,
+      :url,
+      :request_method,
+      :content_type,
+      :username,
+      :password
+    )
   end
 end

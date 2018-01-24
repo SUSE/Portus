@@ -14,6 +14,7 @@
 #  enabled        :boolean          default(FALSE)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  name           :string(255)
 #
 # Indexes
 #
@@ -152,7 +153,8 @@ class Webhook < ActiveRecord::Base
         namespace_id:   namespace.id,
         namespace_name: namespace.clean_name,
         webhook_url:    url,
-        webhook_host:   host
+        webhook_host:   host,
+        webhook_name:   name
       }
     )
   end
