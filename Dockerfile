@@ -18,7 +18,7 @@ RUN zypper ref && \
     zypper -n in --no-recommends ruby2.5-devel \
            libxml2-devel nodejs libmysqlclient-devel postgresql-devel libxslt1 && \
     zypper -n in --no-recommends -t pattern devel_basis && \
-    gem install bundler --no-ri --no-rdoc -v 1.15.4 && \
+    gem install bundler --no-ri --no-rdoc -v 1.16.0 && \
     update-alternatives --install /usr/bin/bundle bundle /usr/bin/bundle.ruby2.5 3 && \
     update-alternatives --install /usr/bin/bundler bundler /usr/bin/bundler.ruby2.5 3 && \
     bundle install --retry=3 && \
