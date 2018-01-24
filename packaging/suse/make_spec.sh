@@ -3,7 +3,7 @@
 ##
 # Requirements
 
-BUNDLER_VERSION="1.15.4"
+BUNDLER_VERSION="1.16.0"
 
 ##
 # Helper functions
