@@ -22,7 +22,6 @@
     "compression-webpack-plugin": "^0.3.2",
     "core-js": "^2.5.1",
     "css-loader": "^0.28.1",
-    "jquery": "^2.2.1",
     "jquery-ujs": "^1.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",

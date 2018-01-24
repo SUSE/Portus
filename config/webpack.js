@@ -32,13 +32,6 @@ var config = {
       modules: false,
       assets: true,
     }),
-
-    // fix legacy jQuery plugins which depend on globals
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-    }),
   ],
 
   resolve: {

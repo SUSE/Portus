@@ -2430,7 +2430,7 @@ jquery-ujs@^1.2.1:
   dependencies:
     jquery ">=1.8.0"
 
-jquery@>=1.7, jquery@>=1.8.0, jquery@^2.2.1:
+jquery@>=1.7, jquery@>=1.8.0:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
 

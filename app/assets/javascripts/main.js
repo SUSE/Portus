@@ -1,4 +1,3 @@
-import 'jquery';
 import 'jquery-ujs';
 
 // Bootstrap
