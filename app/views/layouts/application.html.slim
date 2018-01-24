@@ -30,6 +30,7 @@ html
 
     javascript:
       window.API_URL = '//#{app_path}';
+    = javascript_include_tag("unmanaged")
     = javascript_include_tag(*webpack_asset_paths("application"))
     = yield :js_header
 
