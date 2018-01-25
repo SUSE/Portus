@@ -6,7 +6,7 @@ Vue.use(VueResource);
 const customActions = {
   teamTypeahead: {
     method: 'GET',
-    url: '/namespaces/typeahead/{teamName}',
+    url: 'namespaces/typeahead/{teamName}',
   },
   validate: {
     method: 'GET',
@@ -17,7 +17,7 @@ const customActions = {
 const oldCustomActions = {
   changeVisibility: {
     method: 'PUT',
-    url: '/namespaces/{id}/change_visibility',
+    url: 'namespaces/{id}/change_visibility',
   },
 };
 

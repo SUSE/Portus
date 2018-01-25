@@ -17,7 +17,8 @@ module ApplicationHelper
   end
 
   def app_path
-    File.join(app_host, app_relative_url_root)
+    path = File.join(app_host, app_relative_url_root)
+    path.chomp("/")
   end
 
   def js_route
