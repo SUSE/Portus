@@ -17,6 +17,14 @@ module Portus
         true
       end
 
+      def enabled?
+        if APP_CONFIG("background.registry") == true
+          Rails.logger.warn("WARNING: Registry is disabled!")
+        else
+          APP_CONFIG.enabled?("background.registry")
+        end
+      end
+
       def execute!
         RegistryEvent.where(status: RegistryEvent.statuses[:fresh]).find_each do |e|
           data = JSON.parse(e.data)

@@ -19,7 +19,8 @@ they = [
   ::Portus::Background::Registry.new,
   ::Portus::Background::SecurityScanning.new,
   ::Portus::Background::Sync.new
-]
+].select(&:enabled?)
+
 values = they.map { |v| "'#{v}'" }.join(", ")
 Rails.logger.tagged("Initialization") { Rails.logger.info "Running: #{values}" }
 
