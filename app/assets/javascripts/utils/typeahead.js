@@ -1,5 +1,3 @@
-import Bloodhound from 'typeahead.js';
-
 export const setTypeahead = function (el, url) {
   $(el).typeahead('destroy');
 
