@@ -158,6 +158,48 @@ oauth:
       # Only members of team can sign in/up with Bitbucket. Need permission to read team membership.
       team: ""
 
+  # OpenID Connect authentication support. Need permission to read email.
+  # Callback url: <host>/users/auth/openid_connect/callback
+  openid_connect:
+    enabled: true
+    # Base url that the endpoints are located.
+    issuer: 'https://auth.muike.com/auth/realms/master'
+    scope: 'openid'
+    # Use code for Basic flow or 'token id_token' for implicit flow  or (default 'code')
+    response_type: 'code'
+    # Will utilize the .well-known configuration to find the endpoints
+    # <issuer>/.well-known/openid-configuration
+    discovery: true
+    # Client options below are used to create the URLs to connect to the OpenID Connect services.
+    # Typically these are the same as the issuer
+    client_options:
+      scheme: 'https'
+      host: 'auth.muike.com'
+      port: 443
+      identifier: 'portus'
+      secret: ''
+      redirect_uri: 'http://localhost:3000/users/auth/openid_connect/callback'
+      # If you discorvery is disabled you must specify the following options
+      # authorization_endpoint:
+      # token_endpoint:
+      # userinfo_endpoint:
+      # client_x509_signing_key:
+      # {
+      #      # /auth/<name> が認証開始のURLになる.
+
+      #    issuer:
+    #      scope: [:openid, :email, :profile, :address],
+    #      response_type: :code,
+  #        discovery: true,
+####          client_options: {
+  #          scheme: "https",
+#            host: "auth.muike.com",#
+#            port: 443,
+#            identifier: "portus",
+#            secret: "",
+#            redirect_uri: "http://localhost:3000/users/auth/openid_connect/callback",
+#          },
+#        }
 # Set first_user_admin to true if you want that the first user that signs up
 # to be an admin.
 #

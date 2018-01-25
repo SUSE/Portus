@@ -16,7 +16,7 @@ COPY Gemfile* ./
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
 RUN zypper ref && \
     zypper -n in --no-recommends ruby2.5-devel \
-           libxml2-devel nodejs libmysqlclient-devel postgresql-devel libxslt1 && \
+           libxml2-devel nodejs libmysqlclient-devel postgresql-devel libxslt1 git && \
     zypper -n in --no-recommends -t pattern devel_basis && \
     gem install bundler --no-ri --no-rdoc -v 1.16.0 && \
     update-alternatives --install /usr/bin/bundle bundle /usr/bin/bundle.ruby2.5 3 && \

@@ -78,6 +78,24 @@ describe Auth::OmniauthCallbacksController do
     end
   end
 
+  describe "GET #openid_connect" do
+    before do
+      APP_CONFIG["oauth"] = { "openid_connect" => { } }
+      OmniAuth.config.add_mock(:openid_connect,
+                               provider: "openid_connect",
+                               uid:      "12345",
+                               info:     { email: "test@mail.net" })
+      request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:open_id]
+    end
+
+    it "sign in and redirect to /" do
+      create :user, email: "test@mail.net"
+      get :openid_connect
+      expect(response).to redirect_to authenticated_root_url
+      expect(subject.current_user).not_to eq(nil)
+    end
+  end
+
   describe "GET #github" do
     before do
       APP_CONFIG["oauth"] = { "github" => {

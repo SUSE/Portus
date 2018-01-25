@@ -29,6 +29,17 @@ def open_id_fetch_options
   options
 end
 
+def openid_connect_fetch_options
+  {
+      name: :openid_connect,
+      issuer: APP_CONFIG["oauth"]["openid_connect"]['issuer'],
+      scope: APP_CONFIG["oauth"]["openid_connect"]['scope'],
+      response_type: APP_CONFIG["oauth"]["openid_connect"]['code'],
+      discovery: APP_CONFIG["oauth"]["openid_connect"]["discovery"],
+      client_options:  APP_CONFIG["oauth"]["openid_connect"]["client_options"]
+    }
+end
+
 def github_fetch_options
   { scope: "user,read:org" }
 end
@@ -55,7 +66,6 @@ def configure_backend!(config, backend, id = nil, secret = nil)
   return unless APP_CONFIG.enabled?("oauth.#{backend}")
 
   options = send("#{backend}_fetch_options")
-
   if id
     config.omniauth backend, id, secret, options
   else
@@ -68,6 +78,7 @@ def configure_oauth!(config)
   [
     { backend: :google_oauth2, id: "id", secret: "secret" },
     { backend: :open_id },
+    { backend: :openid_connect},
     { backend: :github, id: "client_id", secret: "client_secret" },
     { backend: :gitlab, id: "application_id", secret: "secret" },
     { backend: :bitbucket, id: "key", secret: "secret" }
