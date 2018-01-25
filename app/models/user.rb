@@ -49,6 +49,7 @@ class User < ActiveRecord::Base
                               github
                               gitlab
                               bitbucket
+                              openid_connect
                             ],
                             authentication_keys: [:username]]
 

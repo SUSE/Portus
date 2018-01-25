@@ -20,6 +20,8 @@ gem "omniauth-github"
 gem "omniauth-gitlab"
 gem "omniauth-google-oauth2"
 gem "omniauth-openid"
+gem 'omniauth-openid-connect', :git => 'https://github.com/hhorikawa/omniauth-openid-connect'
+gem 'activerecord-session_store'
 gem "public_activity"
 gem "pundit"
 gem "rails", "~> 4.2.10"

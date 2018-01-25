@@ -23,12 +23,14 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   alias gitlab google_oauth2
   # Callback for Bitbucket.
   alias bitbucket google_oauth2
+  # Callback for Open ID.
+  alias openid_connect google_oauth2
 
   private
 
   # If user does not exist then ask for username and display_name.
   def check_user
-    data = request.env["omniauth.auth"]
+    data = request.env["omniauth.auth"].to_hash
     unless data
       redirect_to new_user_session_url
       return
@@ -38,7 +40,7 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       redirect_to new_user_session_url, alert: alert
       return
     end
-    @user = User.find_by(email: data.info["email"])
+    @user = User.find_by(email: data["info"]["email"])
     return if @user
     session["omniauth.auth"] = data.except(:extra)
     redirect_to users_oauth_url
