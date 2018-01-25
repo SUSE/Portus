@@ -41,11 +41,6 @@ fi
 
 packagename=$1
 
-bundler_version=$(bundle version 2>/dev/null | awk '{ print $3 }')
-if [ "$bundler_version" != "$BUNDLER_VERSION" ];then
-  error "Bundler $BUNDLER_VERSION required!"
-fi
-
 cd $(dirname $0)
 
 if [ $TRAVIS_BRANCH ];then
@@ -117,7 +112,12 @@ pushd build/$packagename-$branch/
   # with tr. This way, fetching the name and version is as easy as awk'ing again.
   for gem in $(bundle show | tail -n +2 | awk '{ print $2 " " $3 }' | tr -d '()');do
     gem_name=$(echo $gem | awk '{ print $1 }')
-    gem_version=$(echo $gem | awk '{ print $2 }')
+    if [[ "$gem_name" == "bundler" ]]; then
+        gem_version="$BUNDLER_VERSION"
+    else
+        gem_version=$(echo $gem | awk '{ print $2 }')
+    fi
+
     build_requires="$build_requires\nBuildRequires: %{rubygem $gem_name} = $gem_version"
     build_requires="$build_requires$(additional_native_build_requirements $gem_name)"
   done
