@@ -96,7 +96,7 @@ pushd build/$packagename-$branch/
   export BUNDLE_GEMFILE=$PWD/Gemfile
   cp Gemfile.lock Gemfile.lock.orig
   bundle config build.nokogiri --use-system-libraries
-  bundle install --retry=3 --deployment --without assets test development
+  bundle install --retry=3 --deployment --without test development
 
   debug "Diff of old and new Gemfile.lock file"
   diff Gemfile.lock Gemfile.lock.orig

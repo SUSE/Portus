@@ -87,17 +87,23 @@ tar xzvf node_modules.tar.gz
 install -d vendor/cache
 cp %{_libdir}/ruby/gems/%{rb_ver}/cache/*.gem vendor/cache
 
-# Deploy gems
+# Deploy gems for compiling the assets.
 bundle config build.nokogiri --use-system-libraries
-bundle install --retry=3 --local --deployment --without assets test development
-
-# Install bundler
+bundle install --retry=3 --local --deployment --without test development
 gem.ruby2.5 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
 
 # Compile assets
 PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
   RAILS_ENV=production NODE_ENV=production \
   bundle exec rake portus:assets:compile
+
+# Install the final gems (i.e. exclude the `assets` group from the final
+# bundle). Unfortunately, bundler does not have a way to remove gems from a
+# given group. So, we have to remove all of them, and then install the ones we
+# want...
+rm -r vendor/bundle/ruby/%{rb_ver}/*
+gem.ruby2.5 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+bundle install --retry=3 --local --deployment --without test development
 
 # Patch landing_page
 APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
