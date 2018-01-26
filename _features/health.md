@@ -11,11 +11,11 @@ longtitle: Check the status of the different components of your deployment
 
 ## Ping
 
-Portus has the `/_ping` endpoint exposed, so anyone can check whether it is up
-and running. Portus will return an empty `200 OK` response. For example:
+Portus has the `/api/v1/_ping` endpoint exposed, so anyone can check whether it
+is up and running. Portus will return an empty `200 OK` response. For example:
 
 ```
-$ curl -X GET -I https://registry.mssola.cat/_ping
+$ curl -X GET -I https://registry.mssola.cat/api/v1/_ping
 HTTP/1.1 200 OK
 Server: nginx
 Date: Fri, 04 Aug 2017 11:09:42 GMT
@@ -36,11 +36,11 @@ X-XSS-Protection: 1; mode=block
 ## Health check
 
 There is another endpoint which is a bit more complex than the ping one:
-`/_health`. This will return a JSON body with the status of the different
+`/api/v1/health`. This will return a JSON body with the status of the different
 components. For example:
 
 ```
-$ curl -X GET https://registry.mssola.cat/_health | jq
+$ curl -X GET https://registry.mssola.cat/api/v1/health | jq
 {
   "database": {
     "msg": "database is up-to-date",
