@@ -35,6 +35,7 @@ __PATCHSOURCES__
 Requires:       rubygem(%{rb_default_ruby_abi}:gem2rpm)
 Requires:       timezone
 Requires:       net-tools
+Requires:       portusctl
 %if 0%{?suse_version} >= 1210
 BuildRequires: systemd-rpm-macros
 %endif
