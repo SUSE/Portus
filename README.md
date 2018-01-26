@@ -11,9 +11,9 @@ of the Docker registry. Portus targets
 of the Docker Registry API. The minimum required version of Registry is 2.1,
 which is the first version supporting soft deletes of blobs.
 
-| master | v2.2 | v2.3 (in development) | Code Climate |
-|--------|------|-----------------------|--------------|
-| [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus) | [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=v2.2)](https://travis-ci.org/SUSE/Portus) | [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=v2.3)](https://travis-ci.org/SUSE/Portus) | [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus) [![Test Coverage](https://codeclimate.com/github/SUSE/Portus/badges/coverage.svg)](https://codeclimate.com/github/SUSE/Portus/coverage) |
+| master | v2.3 | Code Climate |
+|--------|------|--------------|
+| [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus) | [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=v2.3)](https://travis-ci.org/SUSE/Portus) | [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus) [![Test Coverage](https://codeclimate.com/github/SUSE/Portus/badges/coverage.svg)](https://codeclimate.com/github/SUSE/Portus/coverage) |
 
 ## Features
 
@@ -110,15 +110,16 @@ comes with some challenges. As requested by some of our users, the following
 table shows which versions of Docker and Docker Distribution are supported by
 each Portus version:
 
-| Portus | Docker Engine | Docker Distribution |
-|:------:|:-------------:|:-------------------:|
-| master | 1.6+ | 2.0+ |
-| 2.1.x & 2.2.x | 1.6+ | 2.0+ |
-| 2.0.0 & 2.0.1 | 1.6 to 1.9 | 2.0 to 2.2 |
-| 2.0.2 | 1.6 to 1.9 | 2.0 to 2.4 |
-| 2.0.3+ | 1.6+ | 2.0 to 2.4 |
+| Portus | Docker Engine | Docker Distribution | CoreOS Clair |
+|:------:|:-------------:|:-------------------:|:------------:|
+| master | 1.6+ | 2.0+ | 2.0.x |
+| 2.3.x | 1.6+ | 2.0+ | 2.0.x |
+| 2.1.x & 2.2.x | 1.6+ | 2.0+ | - |
+| 2.0.0 & 2.0.1 | 1.6 to 1.9 | 2.0 to 2.2 | - |
+| 2.0.2 | 1.6 to 1.9 | 2.0 to 2.4 | - |
+| 2.0.3+ | 1.6+ | 2.0 to 2.4 | - |
 
-Let's detail some of the version being specified:
+Let's detail some of the versions being specified:
 
 - Docker Engine `1.6` is the first version supported by Docker Distribution 2.
   Therefore, this requirement is also the same for Portus.
@@ -127,6 +128,7 @@ Let's detail some of the version being specified:
 - Docker Distribution `2.3` supports both Manifest versions, but some changes
   had to be made in order to offer backwards compatibility. This is not
   supported neither for Portus `2.0.0` nor `2.0.1`.
+- CoreOS Clair has been supported as a security scanner since `2.3.0`.
 
 # Contributing
 
