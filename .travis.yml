@@ -40,7 +40,7 @@ script:
   - bundle exec rake portus:assets:compile
 
   # Ruby tests
-  - bundle exec rspec spec packaging/suse/portusctl/spec --tag ~integration
+  - bundle exec rspec spec --tag ~integration
 
   # Style and security checks
   - bundle exec rubocop -V

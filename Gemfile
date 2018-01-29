@@ -44,9 +44,6 @@ gem "typhoeus", "~> 1.0.2"
 # Used to store application tokens.
 gem "bcrypt", "~> 3.1.11"
 
-# This is already a Rails dependency, but we use it to run portusctl
-gem "thor", "~> 0.19.4"
-
 # If the deployment is done through Puma, include it in the bundle.
 gem "puma", "~> 3.10.0"
 
@@ -96,7 +93,6 @@ group :development, :test do
   gem "ffaker"
   gem "grape-swagger-rails"
   gem "hirb"
-  gem "md2man", "~>5.1.1", require: false
   gem "rubocop", "~> 0.52.0", require: false
   gem "web-console", "~> 2.1.3"
   gem "wirb"
