@@ -55,5 +55,6 @@ directory (e.g. in the `package_and_push_to_obs.sh` script).
 
 ## portusctl
 
-We have developed `portusctl` as a helper application for managing your Portus
-instance. You can read more about this in [portusctl/README.md](./portusctl/README.md).
+Once upon a time, we developed `portusctl` as a helper application for managing
+your Portus instance. Eventually we realized that we had to re-purpose it, and
+so we moved it into its [own project](https://github.com/openSUSE/portusctl).
