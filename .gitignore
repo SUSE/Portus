@@ -1,7 +1,6 @@
 /.bundle
 /bundle
 _site
-/node_modules
 .sass-cache
 *.log
 /javascripts/dist/manifest.json
