@@ -1,0 +1,41 @@
+$left-max: 330px;
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+#posts-list, #post-body {
+  padding: 60px 0px;
+  width: 100%;
+}
+
+.post-preview {
+  padding: 35px 0;
+  border-bottom: 1px solid #eee;
+
+  .post-title {
+    margin: 10px 0;
+  }
+}
+
+.post-preview .post-meta,
+.post-content .post-meta {
+  color: #808080;
+  font-size: 18px;
+  font-style: italic;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.post-body, .post-entry {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 18px;
+}
+
+.post-preview .post-meta {
+  margin: 0 0 10px;
+}
+
+.post-content .post-meta {
+  margin: 0px 0px 20px;
+}

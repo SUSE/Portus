@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Teams, namespaces and users
 order: 3
 longtitle: Fine-grained control of permissions
@@ -16,7 +16,7 @@ can push/pull certain repositories. This is done through
 The UI for managing teams is quite simple. First, you can go to the "Teams"
 page and you will see something similar to this:
 
-![Creating a team](/build/images/docs/create-team.png)
+![Creating a team](/images/docs/create-team.png)
 
 In the previous image you can see the form for creating a new team. Moreover,
 this page will list the teams in which the current user is a member. If you
@@ -24,7 +24,7 @@ click to one of the teams, then you will go to this team's page. In there
 you can see listed the team members and the list of owned namespaces. It
 should be something similar to this:
 
-![The team page](/build/images/docs/team-show.png)
+![The team page](/images/docs/team-show.png)
 
 In the previous image, the current user was the owner of the team. Therefore,
 some UI elements are available to this user:
@@ -88,14 +88,14 @@ and the other from the "Teams" tab. In the "Namespaces" tab, you do this
 by clicking on the link on the top right corner that says
 "Create new namespace", as you can see in the following snapshot:
 
-![Creating a namespace](/build/images/docs/create-namespace2.png)
+![Creating a namespace](/images/docs/create-namespace2.png)
 
 In order to do this from the "Teams" tab, the owner of the team has to click
 on the team in which the owner wants to create said namespace. Once this is
 done, the owner will just have to click on the link on the top right corner
 that says "Add namespace", as you can see in the following snapshot:
 
-![Creating a namespace from the Team page](/build/images/docs/create-namespace1.png)
+![Creating a namespace from the Team page](/images/docs/create-namespace1.png)
 
 Note that only owners of a team can create new namespaces. Finally, in order
 to show the repositories that are accessible from a namespace, the user
@@ -106,7 +106,7 @@ go the "Teams" tab and click on the wanted team. The page of a namespace
 just shows the repositories contained in each given namespace, and how many
 tags does the repository have. For example:
 
-![The namespace page](/build/images/docs/namespace-show.png)
+![The namespace page](/images/docs/namespace-show.png)
 
 ## Users
 
@@ -116,7 +116,7 @@ Only the admin user can add more administrators to the system. In order to do
 it, the admin has to click the "Admin" tab, and then click "Users" in one of
 the top containers. Then, the admin should be seeing something similar to this:
 
-![Adding admin users](/build/images/docs/toggle-admin.png)
+![Adding admin users](/images/docs/toggle-admin.png)
 
 This page contains a list of all the users registered in the system. By
 toggling the switch under the "Admin" label, the admin can give admin

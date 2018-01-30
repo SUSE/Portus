@@ -1,0 +1,26 @@
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+
+// Main colours
+//
+// Colour pallete created with
+// https://coolors.co/app/0a1a28-205683-68b0ab-e08dac-ddd8b8
+$mainColour:   #205683;
+$secondColour: #68B0AB;
+$thirdColour:  #0A1A28;
+$white: #f8f8f8;
+
+// Layout Backgrounds
+$portus-users-bg:          $mainColour;
+$portus-users-bg-hover:    $secondColour;
+
+// Text selection
+$text-selected: $secondColour;
+
+// Buttons
+$btn-primary-color:  $white;
+$btn-primary-bg:     $secondColour;
+$btn-primary-border: $secondColour;
+
+// Documentation
+$aside-titles:   $secondColour;
+$aside-background: $thirdColour;

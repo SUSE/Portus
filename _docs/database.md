@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Configuring the database
 order: 1
 longtitle: How Portus connects to the database and configuration options

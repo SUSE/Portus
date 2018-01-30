@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Supported Docker Versions
 order: 6
 longtitle: Which Docker versions are supported by Portus

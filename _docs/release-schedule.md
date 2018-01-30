@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Release schedule
 order: 8
 longtitle: What to expect in future releases of Portus

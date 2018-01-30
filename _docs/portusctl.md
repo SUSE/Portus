@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: portusctl
 order: 5
 longtitle: Configure and manage a Portus instance installed with the RPM

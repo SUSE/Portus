@@ -1,6 +1,6 @@
 ---
 title: Portus - Documentation
-layout: post
+layout: default
 ---
 
 # Welcome to the Portus documentation!

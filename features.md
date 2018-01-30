@@ -1,6 +1,6 @@
 ---
 title: Portus - Features
-layout: post
+layout: default
 ---
 
 # Features

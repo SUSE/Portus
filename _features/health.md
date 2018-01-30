@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Health checking
 order: 12
 longtitle: Check the status of the different components of your deployment

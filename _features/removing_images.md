@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Removing images and tags
 order: 5
 longtitle: Removing images and tags from the registry through Portus
@@ -38,7 +38,7 @@ option to true.
 Removing images and tags is quite intuitive from a user point of view. Just go
 to the repository page:
 
-![Repository page](/build/images/docs/repo-images.png)
+![Repository page](/images/docs/repo-images.png)
 
 In there, you can see trash cans. Click on any of them and a confirmation form
 will pop up. If you agree, then you will have removed the specified tag or
@@ -46,14 +46,14 @@ image. Moreover, all this is still tracked in the activities list. For
 example, let's say that in the previous example we removed the `latest` tag.
 Then we would have the following activities list:
 
-![Activities of removing a tag](/build/images/docs/repo-activities1.png)
+![Activities of removing a tag](/images/docs/repo-activities1.png)
 
 Now, in the same repository page, if we want to remove the image and all its
 tags, we can just simply click on the "Delete image" link located on the top
 right corner of the page. In the previous example, if now we removed the whole
 image, we would get the following activities list:
 
-![Activities of removing an image](/build/images/docs/repo-activities2.png)
+![Activities of removing an image](/images/docs/repo-activities2.png)
 
 ## Maintenance
 

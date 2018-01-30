@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Portus Releases
 order: 7
 longtitle: How we release Portus

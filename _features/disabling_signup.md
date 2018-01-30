@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Disabling the sign up form
 order: 10
 longtitle: Disable the possibility of users signing up on their own
@@ -19,13 +19,13 @@ the admin section, or with a simple rake task.
 Just access the admin section and click on the `Users` container. By doing so,
 you will access to the users section, and it should be similar to this:
 
-![Users](/build/images/docs/users-panel.png)
+![Users](/images/docs/users-panel.png)
 
 As you can see in the image above, in the top right corner of the users list
 there is a link for creating a new user. Click it and you will access the
 following form:
 
-![Create user](/build/images/docs/new-user-form.png)
+![Create user](/images/docs/new-user-form.png)
 
 ### The rake task
 

@@ -64,11 +64,11 @@ recommend one of them for now):
 If you have enabled this feature, you should be able to see something like this
 in a repository:
 
-![Repository page with vulnerabilities highlighted](/build/images/docs/security.png)
+![Repository page with vulnerabilities highlighted](/images/docs/security.png)
 
 Clicking these links will take you to the tag's page. For example:
 
-![Tag page with Clair vulnerabilities](/build/images/docs/tag-vulnerabilities.png)
+![Tag page with Clair vulnerabilities](/images/docs/tag-vulnerabilities.png)
 
 ## Availability
 

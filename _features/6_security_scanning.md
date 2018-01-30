@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Security scanning
 order: 5
 longtitle: Configuring a security scanner to improve the security from your images
@@ -66,11 +66,11 @@ security:
 If you have enabled this backend, you should be able to see something like this
 in a repository:
 
-![Repository page with vulnerabilities highlighted](/build/images/docs/security.png)
+![Repository page with vulnerabilities highlighted](/images/docs/security.png)
 
 Clicking these links will take you to the tag's page. For example:
 
-![Tag page with Clair vulnerabilities](/build/images/docs/tag-vulnerabilities.png)
+![Tag page with Clair vulnerabilities](/images/docs/tag-vulnerabilities.png)
 
 ## Others
 

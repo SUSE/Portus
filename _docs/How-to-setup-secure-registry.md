@@ -1,6 +1,6 @@
 ---
 title: Configuring a secure private registry
-layout: post
+layout: default
 order: 2
 longtitle: How to setup a secure private registry
 ---
@@ -132,12 +132,12 @@ in the `config/secrets.yml` file. If you change this file you should restart
 Portus afterwards. Note that in production you can just provide the
 `PORTUS_MACHINE_FQDN` environment variable.
 
-Another thing to consider is the expiration time of the token itself. By
-default it expires in 5 minutes. However, it's possible that the image to be
-uploaded is too big or the communication is too slow; and the upload can take
-more than 5 minutes. If this happens, then the upload will be cancelled from
-the registry's side, and it will fail. This is a known issue, and from Portus'
-side we provide [this workaround](/docs/Configuring-Portus.html#jwt-expiration-time).
+Another thing to consider is the expiration time of the token itself. By default
+it expires in 5 minutes. However, it's possible that the image to be uploaded is
+too big or the communication is too slow; and the upload can take more than 5
+minutes. If this happens, then the upload will be cancelled from the registry's
+side, and it will fail. This is a known issue, and from Portus' side we provide
+[this workaround](/docs/Configuring-Portus.html#advanced-registry-options).
 
 ### Synchronizing the Registry and Portus
 

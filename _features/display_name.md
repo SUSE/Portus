@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Display name
 longtitle: Showing users by their preferred "display name" rather by their user names
 order: 11
@@ -25,19 +25,19 @@ This can be done in two ways. First of all, if you are an admin, you can do
 that by going to the users page on the `Admin` section and click a specific
 user. You will see the following:
 
-![Admin view of changing a display name](/build/images/docs/admin.png)
+![Admin view of changing a display name](/images/docs/admin.png)
 
 If you want to change your own display name (regardless if you are an admin or
 not), then you can click your username on the top right corner to go your
 profile. In there you will be able to change it on the "Public Profile"
 container:
 
-![Changing from the profile](/build/images/docs/user.png)
+![Changing from the profile](/images/docs/user.png)
 
 In the above example, if I set the display name to "Miquel", this is what I'll
 see from now on:
 
-![Display name changed](/build/images/docs/display_name.png)
+![Display name changed](/images/docs/display_name.png)
 
 As you can see, the name on the top right corner has changed to "Miquel". This
 is what everyone will see from now on for this particular user.

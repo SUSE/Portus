@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: OAuth and OpenID Connect support
 order: 10
 longtitle: Authenticate with an OAuth backend or an OpenID Connect provider
@@ -15,7 +15,7 @@ You can tell Portus to use an OAuth or an OpenID Connect provider to login. The
 currently supported providers are: Google, Github, Gitlab and Bitbucket. An
 example (with a Github provider):
 
-![OAuth](/build/images/docs/oauth.gif)
+![OAuth](/images/docs/oauth.gif)
 
 One thing to notice is that the password is auto-generated. So, if you want to
 login afterwards with the given username and a password, you will have to go to
