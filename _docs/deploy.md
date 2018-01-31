@@ -74,7 +74,7 @@ openSUSE and SUSE we quite are invested in Kubernetes (see the [kubic
 project](https://github.com/kubic-project)).
 
 Moreover, to maintain Kubernetes applications the community has developed
-[Helm](https://helm.sh/is). Because of this, we have been working on proper Helm
+[Helm](https://helm.sh). Because of this, we have been working on proper Helm
 charts to deploy Portus in your Kubernetes cluster. We are working on pushing
 these charts into the main repository, but for now you can use the charts from
 [this

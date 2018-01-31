@@ -8,7 +8,7 @@ longtitle: Configure and manage a Portus instance installed with the RPM
 ## portusctl
 
 **portusctl** is a CLI tool that comes with the
-[provided RPM](/docs/setups/1_rpm_packages.html) and it allows administrators to
+[provided RPM](/docs/setups/rpm.html) and it allows administrators to
 setup and manage their Portus instance. This tool requires root privileges and
 it has the following commands:
 

@@ -34,8 +34,8 @@ task:
 
     $ rake portus:create_user[username,email@example.com,password,false]
 
-If you have installed Portus from the [RPM](/docs/setups/1_rpm_packages.html),
-you can also use `portusctl` for that:
+If you have installed Portus from the [RPM](/docs/setups/rpm.html), you can also
+use `portusctl` for that:
 
     $ portusctl rake portus:create_user[username,email@example.com,password,false]
 

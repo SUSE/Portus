@@ -13,7 +13,7 @@ being said, we mainly recommend two deployment procedures:
 
 <ul>
 <li>
-<a href="/docs/setups/1_rpm_packages.html"> The RPM package</a>: we maintain
+<a href="/docs/setups/rpm.html"> The RPM package</a>: we maintain
 <a href="https://build.opensuse.org/project/show/Virtualization:containers:Portus:2.0">a project in OBS</a>
 in which we provide RPMs for openSUSE. This is perfect if you plan to deploy
 Portus in a "traditional way". Moreover, the RPM includes some utilities like

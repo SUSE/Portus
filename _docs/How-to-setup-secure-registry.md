@@ -72,7 +72,7 @@ Some things to note:
   docker daemon and the registry is done through TLS. We *strongly* recommend
   to use this, otherwise we cannot guarantee that the communication will be
   secure. Both the key and the certificate will be generated automatically by
-  `portusctl` if you are using the [RPM package](/docs/setups/1_rpm_packages.html).
+  `portusctl` if you are using the [RPM package](/docs/setups/rpm.html).
 - The **auth** value defines the communication between Portus and this
   registry. Some important things to note:
   - The **issuer** should be the same as the one defined by `machine_fqdn` in
@@ -151,10 +151,10 @@ the registry in Portus' database. This is better explained in this
 
 Moreover, in order for this to happen, Portus needs the `portus` user to exist.
 This user is created when setting up Portus for the first time by the admin.
-This is done automatically by the `portusctl` tool if you are using the [provided
-RPM](/docs/setups/1_rpm_packages.html) (or if you are on development mode and
-you are using either the docker compose setup or the vagrant setup). If this is
-not your case, you have to create it after migrating the database by performing:
+This is done automatically by the `portusctl` tool if you are using the
+[provided RPM](/docs/setups/rpm.html) (or if you are on development mode and you
+are using either the docker compose setup or the vagrant setup). If this is not
+your case, you have to create it after migrating the database by performing:
 
     $ rake db:seed
 
