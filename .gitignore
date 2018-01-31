@@ -4,4 +4,3 @@ _site
 .sass-cache
 *.log
 /javascripts/dist/manifest.json
-/node_modules
