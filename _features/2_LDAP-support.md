@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: LDAP support
 order: 2
 longtitle: LDAP user authentication
@@ -17,8 +17,9 @@ file.
 Even if users are authenticated through the LDAP server, Portus needs to store
 them in its database in order to perform all the interaction with the
 registry. Moreover, each user will have a personal namespace, which will be
-named after the given username. Bear in mind that
-[Docker's naming rules](https://github.com/docker/docker/blob/master/docs/reference/commandline/tag.md)
+named after the given username. Bear in mind that [Docker's naming
+rules](https://docs.docker.com/engine/reference/commandline/tag/).
+
 might be more strict than what is required on your LDAP server. For this
 reason, Portus will change the name of the personal namespace of users with a
 username that contains characters that are not accepted by Docker rules. Users in
@@ -42,7 +43,7 @@ approach taken by Portus is to not do anything at all. In this case, no email
 will be set when login for the first time, and the user will always be
 redirected to a page asking for an email. This page looks like this:
 
-![Profile page](/build/images/docs/email-guessing-fail.png)
+![Profile page](/images/docs/email-guessing-fail.png)
 
 Otherwise, you can tell Portus to be more clever and guess the email account
 of each user. This can be done through the *guess_email* configurable value.

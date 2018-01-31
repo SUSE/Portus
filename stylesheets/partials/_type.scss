@@ -1,0 +1,15 @@
+@import "variables";
+
+h1, h2, h3, h4 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: $gray;
+}
+
+main-colour {
+    color: $mainColour;
+}
+
+secondary-colour {
+    color: $secondColour;
+}

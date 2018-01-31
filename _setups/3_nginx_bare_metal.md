@@ -1,7 +1,7 @@
 ---
 title: NGinx + Thin/Puma
 order: 3
-layout: post
+layout: default
 ---
 
 ## Introduction

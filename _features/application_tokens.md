@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Application tokens
 order: 11
 longtitle: Use Application tokens for improved security
@@ -65,13 +65,13 @@ access Portus and revoke all your Application tokens.
 First of all, go to your profile page. You can do that by clicking on your name
 on the top right corner. In this page, you should be able to see the following:
 
-![Application Token container](/build/images/docs/application-tokens.png)
+![Application Token container](/images/docs/application-tokens.png)
 
 If you click on "Create new token", a form will appear, asking you to provide a
 name. After that, click "Create", and you will get the following message on the
 top of the page:
 
-![Token create](/build/images/docs/token-created.png)
+![Token create](/images/docs/token-created.png)
 
 <div class="alert alert-info">
   <strong>Note well</strong>:
@@ -84,7 +84,7 @@ That's it, this is the value of the token that you can now use to authenticate
 yourself. Moreover, you can add up to 5 different Application tokens. Finally,
 in the same way that you can create tokens, you can remove them:
 
-![Remove token](/build/images/docs/remove-token.png)
+![Remove token](/images/docs/remove-token.png)
 
 ### What's next ?
 

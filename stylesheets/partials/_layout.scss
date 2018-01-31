@@ -1,0 +1,272 @@
+@import "variables";
+
+.portus-topbar {
+  height: 6rem;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: $mainColour;
+
+  .container-fluid {
+    height: 100%;
+  }
+
+  .pull-right{
+    height: 100%;
+  }
+
+  .topbar-logo {
+    padding-top: 1rem;
+  }
+
+  .btn-link {
+    color: $white;
+    font-weight: bold;
+    font-size: 14px;
+    height: 100%;
+
+    margin: 0;
+    border: 0;
+    padding: 2rem 2.5rem;
+
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+
+    border: 0;
+
+    transition-duration: 0.5s;
+    transition-property: all;
+
+    &:hover {
+      color: $white;
+      text-decoration: none;
+
+      margin-left: 0rem;
+      margin-right: 0rem;
+      padding: 2rem 4rem 0 4rem;
+      background-color: fade-in($mainColour, 0.2);
+
+      border-bottom-color: $white;
+      border-bottom: 0.3rem solid $white;
+      transition-duration: 0.5s;
+      transition-property: all;
+    }
+  }
+}
+
+.opaque {
+  background-color: fade-in($mainColour, 0.9);
+  transition-property: all;
+  transition-duration: 0.5s;
+}
+
+.menu-sandwich {
+  padding: 1.5rem 0 0 0;
+  margin-right: 2rem;
+  float: left;
+  color: $white;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  height: 100vh;
+  padding-top: 6rem;
+  width: 0;
+  position: fixed;
+  background-color: fade-in($gray-dark, 0.95);
+  z-index: 999;
+  overflow: hidden;
+  opacity: 0;
+
+  transition-duration: 0.5s;
+  transition-property: all;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    li {
+      padding: 2rem 0 2rem 1rem;
+      vertical-align: middle;
+
+      transition-duration: 0.5s;
+      transition-property: all;
+
+      i {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 2rem;
+        color: $white;
+      }
+
+      a {
+        display: inline-block;
+        vertical-align: middle;
+        color: $white;
+        font-family: "Roboto", sans-serif;
+        text-transform: uppercase;
+      }
+
+      &:hover {
+        background-color: fade-in($portus-users-bg, 0.5);
+
+        transition-duration: 0.5s;
+        transition-property: all;
+
+        a {
+          color: $white;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  &.active {
+    width: 25rem;
+    opacity: 1;
+
+    transition-duration: 0.5s;
+    transition-property: all;
+  }
+}
+
+footer {
+  padding: 2em 0;
+  border-top: 1px solid $gray-lighter
+}
+
+.row-0 {
+  margin: 0;
+}
+
+section {
+  padding: 4em
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+::selection {
+  background: $text-selected;
+  color: #fff;
+}
+::-moz-selection {
+  background: $text-selected;
+  color: #fff;
+}
+
+.credits {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid $portus-users-bg-hover;
+}
+
+aside {
+  .credits {
+    background: lighten($thirdColour, 2%);
+  }
+}
+
+.content-list {
+  background-color: $gray-darker;
+  height: 100%;
+  width: calc(100vw - 75vw);
+  position: fixed;
+  margin-left: 0;
+  overflow-y: auto;
+
+  .topics {
+    padding: 0 !important;
+    > li {
+      background: lighten($thirdColour, 1%);
+      list-style: none;
+      padding: 1rem 2rem;
+      text-transform: uppercase;
+      font-family: Roboto,sans-serif;
+      color: $aside-titles;
+    }
+  }
+  .subtopics {
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+    padding-left: 0;
+    > li {
+      list-style: none;
+      padding: 0.3rem;
+      padding-left: 3rem;
+      a {
+        color: $white;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+      &:hover {
+        background-color: lighten($thirdColour, 3%);
+      }
+    }
+  }
+}
+
+.content-list::-webkit-scrollbar {
+  width: 0.8rem;
+  margin-right: 0.5rem;
+}
+
+.content-list::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: fade-in($thirdColour, 0.03);
+}
+
+.content-bar {
+  margin: 1rem auto 1rem auto;
+  display: table;
+  .topics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    > li {
+      display: inline-flex;
+      button {
+        border-radius: 0;
+        border: 0;
+        border-bottom: 3px solid $portus-users-bg;
+        background: transparent;
+        padding: 1rem;
+        text-transform: uppercase;
+        text-align: left;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        width: 40rem;
+        span {
+          float: right;
+          margin: 1rem;
+        }
+      }
+    }
+    .dropdown-menu {
+      width: 40rem;
+      margin-left: 1rem;
+      .dropdown-header {
+        color: $portus-users-bg;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
+.post-entry {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.post-content {
+    p {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+}

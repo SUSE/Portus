@@ -1,0 +1,31 @@
+{
+  "name": "eslint-plugin-html",
+  "version": "2.0.3",
+  "description": "An ESLint plugin to extract and lint scripts from HTML files.",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BenoitZugmeyer/eslint-plugin-html"
+  },
+  "homepage": "https://github.com/BenoitZugmeyer/eslint-plugin-html",
+  "bugs": "https://github.com/BenoitZugmeyer/eslint-plugin-html/issues",
+  "keywords": [
+    "eslint-plugin",
+    "eslintplugin",
+    "eslint",
+    "html"
+  ],
+  "main": "src/index.js",
+  "dependencies": {
+    "htmlparser2": "^3.8.2"
+  },
+  "devDependencies": {
+    "eslint": "3",
+    "jest": "^20.0.0",
+    "semver": "^5.3.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint ."
+  }
+}

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Anonymous browsing
 order: 7
 longtitle: Explore public images from within Portus without logging in
@@ -24,4 +24,4 @@ anonymous_browsing:
 
 The following GIF will show you this feature in action:
 
-![Explore](/build/images/docs/explore.gif)
+![Explore](/images/docs/explore.gif)

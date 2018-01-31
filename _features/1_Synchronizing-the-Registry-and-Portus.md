@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: Synchonizing the Registry and Portus
 longtitle: Synchronization with your private registry in order to fetch which images and tags are available
 order: 1
@@ -35,8 +35,8 @@ API](https://github.com/docker/distribution/blob/master/docs/spec/api.md#listing
 since version 2.1.0. By exposing this API, it's possible for Portus to check the
 consistency of the database with the registry.
 
-This is one of the main tasks of the [background process](/docs/background) that
-should be running on any production-ready deployment. This process will
+This is one of the main tasks of the [background process](/docs/background.html)
+that should be running on any production-ready deployment. This process will
 continuously check for the consistency of the DB against the registry, and
 update the DB when needed.
 

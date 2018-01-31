@@ -1,6 +1,6 @@
 ---
 title: Upgrading Portus
-layout: post
+layout: default
 order: 6
 longtitle: How to upgrade Portus across different versions
 ---

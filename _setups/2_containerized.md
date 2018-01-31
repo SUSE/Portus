@@ -1,7 +1,7 @@
 ---
 title: Containerized
 order: 2
-layout: post
+layout: default
 ---
 
 ## Using the official Docker image in production

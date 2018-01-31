@@ -11,7 +11,7 @@ we will try to communicate as much as possible regarding our plans for the
 future, new features and other exciting news.
 
 For this post, we've been honored to be one of the projects selected to
-represent [openSUSE](www.opensuse.org) in the [Google Summer of
+represent [openSUSE](https://www.opensuse.org) in the [Google Summer of
 Code](https://developers.google.com/open-source/gsoc/) program (or GSoC, for
 short). You can see more projects inside of the openSUSE umbrella
 [here](http://101.opensuse.org/). We think that the Google Summer of Code

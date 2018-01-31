@@ -1,12 +1,6 @@
 /.bundle
 /bundle
 _site
-docker
-coverage
-log
-tmp
-.vagrant
-/node_modules
-/public
-/config
-/bin
+.sass-cache
+*.log
+/javascripts/dist/manifest.json

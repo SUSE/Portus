@@ -1,7 +1,7 @@
 ---
 title: RPM packages
 order: 1
-layout: post
+layout: default
 ---
 
 ## Installing the RPM

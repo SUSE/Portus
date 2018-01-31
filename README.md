@@ -1,4 +1,4 @@
-## suse.github.io/Portus
+## port.us.org
 
 The `gh-pages` branch contains the code of the web site of Portus. It has been
 built with [Github Pages](https://pages.github.com/). You can also get your
@@ -10,11 +10,20 @@ $ bundle
 $ bundle exec jekyll serve
 ```
 
+Moreover, for the assets you need [yarn](https://yarnpkg.com/lang/en/). Simply
+run:
+
+```
+$ yarn
+```
+
+This will download all the dependencies for the assets.
+
 ## Adding a new documentation page
 
-The documentation follows the `post` layout. This layout is used in combination
-with [Jekyll Collections](http://jekyllrb.com/docs/collections/). We have three
-collections:
+The documentation follows the `default` layout. This layout is used in
+combination with [Jekyll Collections](http://jekyllrb.com/docs/collections/). We
+have three collections:
 
 - `_features`: the documentation for a feature.
 - `_docs`: a page explaining a general topic (e.g. configuring Portus).
@@ -23,7 +32,7 @@ collections:
 Each page of a Jekyll Collection has some headers specified in YAML format. In
 our case we have the following headers:
 
-- **layout**: set it to `post`.
+- **layout**: set it to `default`.
 - **title**: the short title for the page. This will be displayed on the left
 sidebar.
 - **longtitle**: a longer explanation for the page. This is not used for the
@@ -35,7 +44,7 @@ each page in a list.
 
 Therefore, when you want to create a new documentation page, you have to think
 about in which collection does it fall, and then create the document with the
-proper headers. After that, you can write you page in Markdown format.
+proper headers. After that, you can write your page in Markdown format.
 
 ## Adding a new blog post
 
@@ -47,25 +56,35 @@ following metadata:
 - `author`: the author publishing the post.
 - `layout`: should be set to `blogpost`.
 
-Once you are set, then you can write your blog post in plain markdown. The
-style for blog posts have been adapted from
+Once you are set, then you can write your blog post in plain markdown. The style
+for blog posts have been adapted from
 [rootco.de-web](https://github.com/sysrich/rootco.de-web).
 
 ## Editing the assets
 
-If you are modifiying Less, JS or images in the `/assets` folder, you need to
-run Gulp in your console in order to preprocess CSS, minify JS and compress
-the images. All you need to do is type the following:
+We are using [SASS/SCSS](http://sass-lang.com/) for the stylesheets. This is
+automatically rendered by Jekyll if you follow these conventions:
 
-    $ ./node_modules/gulp/bin/gulp.js
+- The main scss file is in the `stylesheets` directory (and the file has to
+  start with `---`). From there you import the partials and you can add some
+  additional style code.
+- Partials are stored in the `stylesheets/partials` directory. The name of a
+  partial has to start with an underscore, and they can be imported with a
+  simple `@import "partial";` statement from the main file.
+- Vendor CSS has been stored in `stylesheets/vendor`.
 
-After that, you will have the site available at `localhost:4000`.
+When you modify any of these files, Jekyll will notice it and it will rebuild
+the `portus.css` final stylesheet.
 
-Note that this command will take care of the `build` directory, which is the
-one used by the finally rendered HTML page. Therefore, do *not* add a new
-asset into the `build` directory manually. Instead, do it on the `/assets` one
-and let Gulp handle it for you. Also note that you have to add into git both
-versions of assets files.
+For the Javascript files, as mentioned earlier, you need Yarn. After downloading
+all dependencies, you can perform:
+
+```
+$ yarn run webpack
+```
+
+This will run `webpack` with the `--watch` flag, so if you modify any file, it
+will automatically get built.
 
 ## Tips and tricks when writing new pages
 
@@ -84,17 +103,8 @@ Referencing another document is pretty easy, but there are some subtleties:
   `The Catalog API`, then the anchor to be appended to the name of the document
   is: `#the-catalog-api`.
 
-Last but not least, images work in a similar way but they have `/build`
-prepended to their path. This is because Gulp will put the generated assets
-inside of this `build` directory.
-
 ## Licensing
 
 Licensed under the Apache License, Version 2.0. See
 [LICENSE](https://github.com/SUSE/Portus/blob/master/LICENSE) for the full
 license text.
-
-**Attributions**
-
-Background picture by
-[Skitter Photo](http://www.freepik.es/index.php?goto=41&idd=759003&url=aHR0cDovL3NraXR0ZXJwaG90by5jb20vP3BvcnRmb2xpbz1qZXR0eS1ieS1uaWdodA==#).

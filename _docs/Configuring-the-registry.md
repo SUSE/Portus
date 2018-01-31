@@ -1,6 +1,6 @@
 ---
 title: Portus and your private registry
-layout: post
+layout: default
 order: 3
 longtitle: Letting Portus know about your private registry
 ---
@@ -12,7 +12,7 @@ user, now it's time to tell Portus about the existence of your private
 registry. For this matter, if you haven't done this before, Portus will
 automatically redirect you to this page:
 
-![New registry form](/build/images/docs/new-registry.png)
+![New registry form](/images/docs/new-registry.png)
 
 In this form you have to provide the information about your registry. You can
 set any name you want, but the `Hostname` and the `Use SSL` fields are crucial
@@ -20,18 +20,18 @@ set any name you want, but the `Hostname` and the `Use SSL` fields are crucial
 [here](/docs/Configuring-the-registry.html#adding-an-external-hostname)).
 For the hostname, remember to also provide the port. As an example:
 
-![Well configured](/build/images/docs/new-registry-filled.png)
+![Well configured](/images/docs/new-registry-filled.png)
 
 If everything went correctly, you should be redirected to this page:
 
-![Registries](/build/images/docs/index-registries.png)
+![Registries](/images/docs/index-registries.png)
 
 However, on error, you will get an alert message with the explanation of the
 possible error. Let's imagine that in the above example we forgot to set the
 usage of SSL (and this registry *has* SSL configured). In this case, you'll
 get the following result:
 
-![Registry error](/build/images/docs/new-registry-error.png)
+![Registry error](/images/docs/new-registry-error.png)
 
 As you can see, on the top of the page an alert with the given error is shown.
 Moreover, now in the form you'll see the new field `Skip remote checks`. If you
@@ -43,11 +43,11 @@ registry is down at the moment, or you haven't configured it yet.
 
 As you can see in the following image, the form includes a `Show Advanced` button:
 
-![Registry advanced configuration](/build/images/docs/advanced-registry-config.png)
+![Registry advanced configuration](/images/docs/advanced-registry-config.png)
 
 If you click this button, the following elements will be available:
 
-![Filled advanced configuration](/build/images/docs/advanced-filled-registry-config.png)
+![Filled advanced configuration](/images/docs/advanced-filled-registry-config.png)
 
 As the shown paragraph describes, you can configure Portus to use an external
 hostname that will be used for the events received from the registry (e.g. a new
@@ -66,7 +66,7 @@ In order to do this, just go to the "Registries" panel in the admin page, and
 click the "Edit" link for the registry to be edited. You'll find the following
 form:
 
-![Registry edit](/build/images/docs/edit-registry.png)
+![Registry edit](/images/docs/edit-registry.png)
 
 There are two scenarios when entering this page:
 

@@ -1,6 +1,6 @@
 ---
 title: Configuring Portus
-layout: post
+layout: default
 order: 1
 longtitle: How to configure Portus
 ---
@@ -156,7 +156,7 @@ By default the first user to be created will be granted admin permissions. In
 this case, when you go to the "Sign up" page, you will find the following
 situation:
 
-![Creating the Admin](/build/images/docs/create-admin.png)
+![Creating the Admin](/images/docs/create-admin.png)
 
 That is, the "Sign up" form is telling you that the user to be created will be
 an admin. Therefore, in order to create the first admin user, you just have to
@@ -168,7 +168,7 @@ However, note if LDAP support is enabled, the first user that logs in with LDAP
 credentials will be automatically an admin. This is shown in the following
 screenshot:
 
-![Creating the Admin in LDAP](/build/images/docs/create-admin-ldap.png)
+![Creating the Admin in LDAP](/images/docs/create-admin-ldap.png)
 
 The other way to do this is to disable the `first_user_admin` configurable
 value. In this case, the first admin cannot be created from the Web UI, rather

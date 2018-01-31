@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: The background process
 longtitle: The background process needed to keep Portus in sync with other components
 order: 5
