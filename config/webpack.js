@@ -52,7 +52,7 @@ var config = {
     mainFields: ['jsnext', 'main', 'browser'],
     alias: {
       '~': path.join(ROOT_PATH, 'javascripts'),
-      'bootstrap/js': 'bootstrap-sass/assets/javascripts/bootstrap'
+      'bootstrap/js': path.join(ROOT_PATH, '_site/assets/javascripts/bootstrap')
     },
   },
 

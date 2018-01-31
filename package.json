@@ -17,10 +17,8 @@
     "eslint-plugin-import": "^2.2.0"
   },
   "dependencies": {
-    "bootstrap-sass": "^3.3.6",
     "compression-webpack-plugin": "^0.3.2",
     "stats-webpack-plugin": "^0.4.3",
-    "font-awesome": "~4.7.0",
     "core-js": "^2.5.1",
     "jquery": "^3.3.0",
     "webpack": "^2.2.1"

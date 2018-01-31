@@ -1,8 +1,13 @@
 ---
 ---
 
+$fa-font-path: "{{ site.github.url }}/assets/fonts/font-awesome/";
+$icon-font-path: "{{ site.github.url }}/assets/fonts/bootstrap";
+
+@import 'font-awesome';
+@import 'bootstrap';
+
 @import "../vendor/google-roboto.scss";
-@import "../../node_modules/font-awesome/scss/font-awesome.scss";
 
 @import "variables";
 
