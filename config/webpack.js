@@ -1,4 +1,4 @@
-/* eslint-disable quote-props, comma-dangle */
+/* eslint-disable quote-props, comma-dangle, import/no-extraneous-dependencies */
 // This file is based on Gitlab's config/webpack.config.js file.
 
 const path = require('path');
@@ -52,7 +52,7 @@ var config = {
     mainFields: ['jsnext', 'main', 'browser'],
     alias: {
       '~': path.join(ROOT_PATH, 'javascripts'),
-      'bootstrap/js': path.join(ROOT_PATH, '_site/assets/javascripts/bootstrap')
+      'bootstrap/js': 'bootstrap-sass/assets/javascripts/bootstrap'
     },
   },
 
