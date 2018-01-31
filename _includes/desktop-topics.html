@@ -11,17 +11,6 @@
         </li>
       {% endfor %}
     </ul>
-    <li>Setups</li>
-    <ul class="subtopics">
-      {% assign setups = (site.setups | sort: 'order') %}
-      {% for subtopic in setups %}
-        <li>
-          <a href="{{ subtopic.url | prepend: site.baseurl }}">
-            {{ subtopic.title }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
     <li>Features</li>
     <ul class="subtopics">
       {% assign features = (site.features | sort: 'order') %}

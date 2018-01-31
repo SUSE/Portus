@@ -14,15 +14,6 @@
               </a>
             </li>
           {% endfor %}
-          <li class="dropdown-header">Setups</li>
-          {% assign setups = (site.setups | sort: 'order') %}
-          {% for subtopic in setups %}
-            <li>
-              <a href="{{ subtopic.url | prepend: site.baseurl }}">
-                {{ subtopic.title }}
-              </a>
-            </li>
-          {% endfor %}
           <li class="dropdown-header">Features</li>
           {% assign features = (site.features | sort: 'order') %}
           {% for subtopic in features %}

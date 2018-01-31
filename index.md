@@ -7,9 +7,9 @@ layout: default
     <div class="center-block">
         <h2 class="text-uppercase" lang="en">Claim control of your Docker images</h2>
         <hr>
-        <a href="https://github.com/SUSE/Portus#containerized" class="btn btn-primary" lang="en">Try out Portus</a>
+        <a href="/docs/deploy.html" class="btn btn-primary" lang="en">Deploy Portus</a>
         <a href="https://github.com/SUSE/Portus" class="btn btn-primary" lang="en">View on GitHub</a>
-        <a href="https://groups.google.com/forum/#!forum/portus-dev" class="btn btn-primary" data-wow-delay="700ms" lang="en">Mailing list</a>
+        <a href="https://groups.google.com/forum/#!forum/portus-dev" class="btn btn-primary" lang="en">Mailing list</a>
     </div>
 </div>
 
