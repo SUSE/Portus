@@ -35,15 +35,7 @@ sass:
 # Plugins
 
 plugins:
-  - jekyll-bootstrap-sass
-  - jekyll-font-awesome-sass
   - jekyll-paginate
-
-font-awesome:
-  assets: true
-
-bootstrap:
-  assets: true
 
 paginate: 5
 paginate_path: "/blog/page:num"
