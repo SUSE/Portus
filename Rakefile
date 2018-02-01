@@ -1,21 +1,23 @@
-abort('Please run this using `bundle exec rake`') unless ENV['BUNDLE_BIN_PATH']
-require 'html-proofer'
+# frozen_string_literal: true
 
-desc 'Test the website'
+abort("Please run this using `bundle exec rake`") unless ENV["BUNDLE_BIN_PATH"]
+require "html-proofer"
+
+desc "Test the website"
 task :test do
   options = {
-    check_sri: true,
-    check_html: true,
-    check_img_http: true,
+    check_sri:       true,
+    check_html:      true,
+    check_img_http:  true,
     check_opengraph: true,
-    typhoeus: {
+    typhoeus:        {
       timeout: 120
     },
-    cache: {
-      timeframe: '6w'
+    cache:           {
+      timeframe: "6w"
     }
   }
-  HTMLProofer.check_directory('./_site', options).run
+  HTMLProofer.check_directory("./_site", options).run
 end
 
 task default: [:test]
