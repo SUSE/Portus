@@ -13,12 +13,12 @@ module API
 
         desc "Returns a list of registries",
              tags:     ["registries"],
-             detail:   "This will expose all accessible registries.",
+             detail:   "This will expose all accessible registries",
              is_array: true,
              entity:   API::Entities::Registries,
              failure:  [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         get do
@@ -33,8 +33,8 @@ module API
                       "then everything went well",
              entity:  API::Entities::Status,
              failure: [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         params do
@@ -46,7 +46,9 @@ module API
                    using: API::Entities::Registries.documentation.slice(:external_hostname)
           requires :use_ssl,
                    using: API::Entities::Registries.documentation.slice(:use_ssl)
-          optional :only, type: Array[String]
+          optional :only,
+                   documentation: { desc: "Restrict which parameters are to be validated" },
+                   type:          Array[String]
         end
 
         get "/validate" do

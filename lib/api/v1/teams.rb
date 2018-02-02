@@ -10,14 +10,14 @@ module API
           authorization!(force_admin: false)
         end
 
-        desc "Returns list of teams.",
+        desc "Returns list of teams",
              tags:     ["teams"],
-             detail:   "This will expose all teams.",
+             detail:   "This will expose all teams",
              is_array: true,
              entity:   API::Entities::Teams,
              failure:  [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         get do
@@ -27,12 +27,12 @@ module API
         desc "Create a team",
              entity:  API::Entities::Teams,
              failure: [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         params do
-          requires :name, type: String, documentation: { desc: "Team name." }
+          requires :name, type: String, documentation: { desc: "Team name" }
           optional :description, type: String, documentation: { desc: "Team description" }
         end
 
@@ -58,9 +58,9 @@ module API
                  is_array: true,
                  entity:   API::Entities::Namespaces,
                  failure:  [
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."]
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"]
                  ]
 
             get do
@@ -76,9 +76,9 @@ module API
                  is_array: true,
                  entity:   API::Entities::Users,
                  failure:  [
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."]
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"]
                  ]
 
             get do
@@ -88,16 +88,16 @@ module API
             end
           end
 
-          desc "Show teams by id.",
+          desc "Show teams by id",
                entity:  API::Entities::Teams,
                failure: [
-                 [401, "Authentication fails."],
-                 [403, "Authorization fails."],
-                 [404, "Not found."]
+                 [401, "Authentication fails"],
+                 [403, "Authorization fails"],
+                 [404, "Not found"]
                ]
 
           params do
-            requires :id, type: String, documentation: { desc: "Team ID." }
+            requires :id, type: String, documentation: { desc: "Team ID" }
           end
 
           get do
