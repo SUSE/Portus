@@ -2,7 +2,11 @@
 
 unless Rails.env.production?
   protocol = ::APP_CONFIG.enabled?("check_ssl_usage") ? "https://" : "http://"
+  port = if ENV["PORTUS_PUMA_HOST"]
+           val = ENV["PORTUS_PUMA_HOST"].split(":")
+           ":#{val.last}" if val.size == 2
+         end
 
-  GrapeSwaggerRails.options.url      = "/api/swagger_doc.json"
-  GrapeSwaggerRails.options.app_url  = "#{protocol}#{APP_CONFIG["machine_fqdn"]["value"]}"
+  GrapeSwaggerRails.options.url     = "/api/swagger_doc.json"
+  GrapeSwaggerRails.options.app_url = "#{protocol}#{APP_CONFIG["machine_fqdn"]["value"]}#{port}"
 end
