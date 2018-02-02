@@ -13,14 +13,14 @@ module API
           authorization!(force_admin: false)
         end
 
-        desc "Returns list of repositories.",
+        desc "Returns list of repositories",
              tags:     ["repositories"],
-             detail:   "This will expose all repositories.",
+             detail:   "This will expose all repositories",
              is_array: true,
              entity:   API::Entities::Repositories,
              failure:  [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         get do
@@ -29,14 +29,14 @@ module API
 
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :tags do
-            desc "Returns the list of the tags for the given repository.",
+            desc "Returns the list of the tags for the given repository",
                  params:   API::Entities::Repositories.documentation.slice(:id),
                  is_array: true,
                  entity:   API::Entities::Tags,
                  failure:  [
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."]
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"]
                  ]
 
             get do
@@ -45,14 +45,14 @@ module API
               present repo.tags, with: API::Entities::Tags
             end
 
-            desc "Returns the list of the tags for the given repository groupped by digest.",
+            desc "Returns the list of the tags for the given repository groupped by digest",
                  params:   API::Entities::Repositories.documentation.slice(:id),
                  is_array: true,
                  entity:   API::Entities::Tags,
                  failure:  [
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."]
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"]
                  ]
 
             get "/grouped" do
@@ -67,16 +67,17 @@ module API
 
             # NOTE: (for v2 ?) the repository ID is ignored...
             route_param :tag_id, type: String, requirements: { tag_id: /.*/ } do
-              desc "Show tag by id.",
+              desc "Show tag by id",
                    entity:  API::Entities::Tags,
                    failure: [
-                     [401, "Authentication fails."],
-                     [403, "Authorization fails."],
-                     [404, "Not found."]
+                     [401, "Authentication fails"],
+                     [403, "Authorization fails"],
+                     [404, "Not found"]
                    ]
 
               params do
-                requires :tag_id, type: String, documentation: { desc: "Tag ID." }
+                requires :id, using: API::Entities::Repositories.documentation.slice(:id)
+                requires :tag_id, type: String, documentation: { desc: "Tag ID" }
               end
 
               get do
@@ -87,16 +88,16 @@ module API
             end
           end
 
-          desc "Show repositories by id.",
+          desc "Show repositories by id",
                entity:  API::Entities::Repositories,
                failure: [
-                 [401, "Authentication fails."],
-                 [403, "Authorization fails."],
-                 [404, "Not found."]
+                 [401, "Authentication fails"],
+                 [403, "Authorization fails"],
+                 [404, "Not found"]
                ]
 
           params do
-            requires :id, type: String, documentation: { desc: "Repository ID." }
+            requires :id, using: API::Entities::Repositories.documentation.slice(:id)
           end
 
           get do

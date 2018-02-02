@@ -221,5 +221,31 @@ module API
         }
       end
     end
+
+    class Version < Grape::Entity
+      expose :"api-versions", documentation: {
+        type: "Array[String]",
+        desc: "Versions of the API supported"
+      }
+      expose :git, documentation: { type: String, desc: "Git information" }
+      expose :version, documentation: { type: String, desc: "Version of Portus" }
+    end
+
+    class Health < Grape::Entity
+      class HealthStatus < Grape::Entity
+        expose :msg, documentation: { type: String, desc: "Description message" }
+        expose :success, documentation: {
+          type: "Boolean",
+          desc: "Whether health checking was successful or not for the component"
+        }
+      end
+
+      expose :database, documentation: { type: HealthStatus, desc: "Database health status" }
+      expose :registry, documentation: { type: HealthStatus, desc: "Registry health status" }
+      expose :clair, documentation: {
+        type: HealthStatus,
+        desc: "CoreOS Clair health status. Empty if Clair support has not been enabled"
+      }
+    end
   end
 end
