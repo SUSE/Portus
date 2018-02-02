@@ -13,14 +13,14 @@ module API
 
         helpers ::API::Helpers::Namespaces
 
-        desc "Returns a list of namespaces.",
+        desc "Returns a list of namespaces",
              tags:     ["namespaces"],
-             detail:   "This will expose all accessible namespaces.",
+             detail:   "This will expose all accessible namespaces",
              is_array: true,
              entity:   API::Entities::Namespaces,
              failure:  [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         get do
@@ -32,15 +32,15 @@ module API
 
         desc "Validates the given namespace",
              tags:    ["namespaces"],
-             detail:  "Validates the given namespace.",
+             detail:  "Validates the given namespace",
              entity:  API::Entities::Status,
              failure: [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         params do
-          requires :name, type: String, documentation: { desc: "Name to be checked." }
+          requires :name, type: String, documentation: { desc: "Name to be checked" }
         end
 
         get "/validate" do
@@ -53,12 +53,12 @@ module API
         desc "Create a namespace",
              entity:  API::Entities::Teams,
              failure: [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         params do
-          requires :name, type: String, documentation: { desc: "Namespace name." }
+          requires :name, type: String, documentation: { desc: "Namespace name" }
           requires :team, type: String, documentation: { desc: "Team name" }
           optional :description, type: String, documentation: { desc: "Team description" }
         end
@@ -79,16 +79,16 @@ module API
           end
         end
 
-        route_param :id, type: String, requirements: { id: /.*/ } do
+        route_param :id, type: Integer, requirements: { id: /.*/ } do
           resource :repositories do
-            desc "Returns the list of the repositories for the given namespace.",
+            desc "Returns the list of the repositories for the given namespace",
                  params:   API::Entities::Namespaces.documentation.slice(:id),
                  is_array: true,
                  entity:   API::Entities::Repositories,
                  failure:  [
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."]
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"]
                  ]
 
             get do
@@ -100,16 +100,16 @@ module API
             end
           end
 
-          desc "Show namespaces by id.",
+          desc "Show namespaces by id",
                entity:  API::Entities::Namespaces,
                failure: [
-                 [401, "Authentication fails."],
-                 [403, "Authorization fails."],
-                 [404, "Not found."]
+                 [401, "Authentication fails"],
+                 [403, "Authorization fails"],
+                 [404, "Not found"]
                ]
 
           params do
-            requires :id, type: String, documentation: { desc: "Namespace ID." }
+            requires :id, type: Integer, documentation: { desc: "Namespace ID" }
           end
 
           get do

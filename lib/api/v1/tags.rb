@@ -12,14 +12,14 @@ module API
           authorization!(force_admin: false)
         end
 
-        desc "Returns list of tags.",
+        desc "Returns list of tags",
              tags:     ["tags"],
-             detail:   "This will expose all tags.",
+             detail:   "This will expose all tags",
              is_array: true,
              entity:   API::Entities::Tags,
              failure:  [
-               [401, "Authentication fails."],
-               [403, "Authorization fails."]
+               [401, "Authentication fails"],
+               [403, "Authorization fails"]
              ]
 
         get do
@@ -27,17 +27,17 @@ module API
           present Tag.all, with: API::Entities::Tags
         end
 
-        route_param :id, type: String, requirements: { id: /.*/ } do
-          desc "Show tag by id.",
+        route_param :id, type: Integer, requirements: { id: /.*/ } do
+          desc "Show tag by id",
                entity:  API::Entities::Tags,
                failure: [
-                 [401, "Authentication fails."],
-                 [403, "Authorization fails."],
-                 [404, "Not found."]
+                 [401, "Authentication fails"],
+                 [403, "Authorization fails"],
+                 [404, "Not found"]
                ]
 
           params do
-            requires :id, type: String, documentation: { desc: "Tag ID." }
+            requires :id, type: Integer, documentation: { desc: "Tag ID" }
           end
 
           get do
