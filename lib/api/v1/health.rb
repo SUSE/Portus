@@ -14,14 +14,16 @@ module API
 
       resource :health do
         desc "Returns hash of metrics",
-             tags:   ["health"],
-             detail: "Returns general metrics on the health of the system"
+             entity:  API::Entities::Health,
+             tags:    ["health"],
+             detail:  "Returns general metrics on the health of the system",
+             failure: [[503, "Some of the required services are unhealthy"]]
 
         get do
           response, success = ::Portus::Health.check
           code = success ? 200 : 503
           status code
-          response
+          present response
         end
       end
     end

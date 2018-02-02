@@ -9,6 +9,7 @@ module API
     end
 
     desc "Fetch the version of Portus",
+         entity: API::Entities::Version,
          tags:   ["version"],
          detail: "Returns the version of Portus and the supported API versions"
 
@@ -22,11 +23,8 @@ module API
               end
             end
 
-      {
-        "api-versions": ["v1"],
-        git:            git,
-        version:        version
-      }
+      obj = { "api-versions": ["v1"], git: git, version: version }
+      present obj, with: API::Entities::Version, type: current_type
     end
   end
 end
