@@ -16,7 +16,7 @@ If the authentication fails, then the HTTP status code 401 is returned. If autho
 
 ## OpenAPI Specification
 
-OpenAPI Specification (aka The Swagger Specification) can be fetched from the running Portus instance by visiting the URL `/api/swagger_doc` e.g.
-[localhost:3000/api/swagger_doc](http://localhost:3000/api/swagger_doc) or executing the rake command `rake oapi:fetch`
+OpenAPI Specification (aka The Swagger Specification) can be fetched from the running Portus instance by visiting the URL `/api/openapi-spec` e.g.
+[localhost:3000/api/openapi-spec](http://localhost:3000/api/openapi-spec) or executing the rake command `rake oapi:fetch`
 
 To display the results in a more human readable form you can use the [Swagger UI](http://petstore.swagger.io/) and import the above URL.
