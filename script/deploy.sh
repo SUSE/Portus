@@ -8,6 +8,7 @@ pushd $DIR
 # Perform the build.
 chmod +x ./script/build.sh
 ./script/build.sh
+cp README.gh-pages.md _site
 
 # Move the contents of _site into a temporary directory, change to the gh-pages
 # branch and finally move the contents into the current directory.
