@@ -24,7 +24,7 @@ module API
              ]
 
         get do
-          present policy_scope(Repository), with: API::Entities::Repositories
+          present policy_scope(Repository), with: API::Entities::Repositories, type: current_type
         end
 
         route_param :id, type: String, requirements: { id: /.*/ } do
@@ -103,7 +103,7 @@ module API
           get do
             repo = Repository.find(params[:id])
             authorize repo, :show?
-            present repo, with: API::Entities::Repositories
+            present repo, with: API::Entities::Repositories, type: current_type
           end
         end
       end

@@ -21,7 +21,7 @@ module API
              ]
 
         get do
-          present policy_scope(Team), with: API::Entities::Teams
+          present policy_scope(Team), with: API::Entities::Teams, type: current_type
         end
 
         desc "Create a team",
@@ -103,7 +103,7 @@ module API
           get do
             team = Team.find(params[:id])
             authorize team, :show?
-            present team, with: API::Entities::Teams
+            present team, with: API::Entities::Teams, type: current_type
           end
         end
       end
