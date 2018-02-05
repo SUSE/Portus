@@ -8,16 +8,17 @@
     </div>
     <div class="col-sm-6 text-right" v-if="totalPages > 1">
       <ul class="pagination">
-        <li :class="{ 'disabled': previousDisabled }">
+        <li class="previous" :class="{ 'disabled': previousDisabled }">
           <a href="#" @click.prevent="setCurrentPage(currentPage - 1)">Previous</a>
         </li>
         <li
+          class="page"
           v-for="(page, index) in displayedPages"
           :key="index"
           :class="{ 'active': currentPage == page }">
             <a href="#" @click.prevent="setCurrentPage(page)">{{ page }}</a>
         </li>
-        <li :class="{ 'disabled': nextDisabled }">
+        <li class="next" :class="{ 'disabled': nextDisabled }">
           <a href="#" @click.prevent="setCurrentPage(currentPage + 1)">Next</a>
         </li>
       </ul>
@@ -29,10 +30,6 @@
   import range from '~/utils/range';
 
   export default {
-    template: `
-
-    `,
-
     props: ['total', 'itensPerPage', 'currentPage'],
 
     data() {
@@ -57,6 +54,10 @@
       },
 
       displayedPages() {
+        if (this.totalPages === 0) {
+          return [];
+        }
+
         let minRange = this.currentPage - this.showMore;
         let maxRange = this.currentPage + this.showMore;
 
