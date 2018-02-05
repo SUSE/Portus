@@ -12,10 +12,12 @@ before_install:
   - yarn install
 
 script:
-  - bundle exec jekyll build
-  - bundle exec rake
-  - bundle exec rubocop
+  # Build && test
+  - chmod+x bin/build.sh && ./bin/build.sh
+
+  # Lint
   - yarn eslint
+  - bundle exec rubocop
 
 env:
   global:

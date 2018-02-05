@@ -1,17 +1,28 @@
 ## port.us.org
 
-The `gh-pages` branch contains the code of the web site of Portus. It has been
-built with [Github Pages](https://pages.github.com/). You can also get your
-hands dirty with this locally. Since this is built on top of
-[Jekyll](http://jekyllrb.com/), you just have to type the following:
+The `gh-pages` branch contains the code of the web site of Portus, but it's
+built out of the contents of this branch. In order to deploy from this branch to
+`gh-pages`, you have to execute:
+
+```
+$ ./script/deploy.sh
+```
+
+As a developer, you don't have to care about all this: the only thing you need
+to know is that you have to work by targeting this branch instead of
+`gh-pages`.
+
+This site is built with [Jekyll](http://jekyllrb.com/), so in order to get your
+hands dirty you just have to type the following:
 
 ```
 $ bundle
 $ bundle exec jekyll serve
 ```
 
-Moreover, for the assets you need [yarn](https://yarnpkg.com/lang/en/). Simply
-run:
+After executing this, the site will be available at
+`http://localhost:4000`. Moreover, for the assets you need
+[yarn](https://yarnpkg.com/lang/en/). Simply run:
 
 ```
 $ yarn

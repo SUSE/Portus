@@ -1,6 +1,6 @@
 title: Portus
 description: Claim control of your Docker images
-exclude: [LICENSE, README.md, yarn.lock, Gemfile, Gemfile.lock, config, node_modules, Rakefile, vendor]
+exclude: [LICENSE, README.md, yarn.lock, Gemfile, Gemfile.lock, config, node_modules, Rakefile, vendor, script]
 
 timezone: "Europe/Berlin"
 markdown: kramdown
