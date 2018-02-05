@@ -7,6 +7,6 @@ unless Rails.env.production?
            ":#{val.last}" if val.size == 2
          end
 
-  GrapeSwaggerRails.options.url     = "/api/swagger_doc.json"
+  GrapeSwaggerRails.options.url     = "/api/openapi-spec.json"
   GrapeSwaggerRails.options.app_url = "#{protocol}#{APP_CONFIG["machine_fqdn"]["value"]}#{port}"
 end
