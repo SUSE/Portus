@@ -5,7 +5,7 @@ import ToggleLink from '~/shared/components/toggle-link';
 describe('toggle-link', () => {
   let wrapper;
 
-  before(() => {
+  beforeEach(() => {
     wrapper = mount(ToggleLink, {
       propsData: {
         state: {

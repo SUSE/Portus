@@ -26,12 +26,12 @@
 
     methods: {
       copyToClipboard() {
-        const $temp = $('<input>');
+        const tempInput = document.createElement('input');
 
-        $('body').append($temp);
-        $temp.val(this.commandToPull).select();
+        document.body.appendChild(tempInput);
+        tempInput.value = this.commandToPull;
+        tempInput.select();
         document.execCommand('copy');
-        $temp.remove();
 
         this.$alert.$show('Copied pull command to clipboard');
       },
