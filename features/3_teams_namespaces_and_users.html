@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Teams, namespaces and users</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Teams">
+
+    <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+    <div class="container" id="documentation">
+      <div class="row">
+        <div class="post-content col-md-10 col-md-offset-3 col-sm-12 col-xs-12">
+          <section>
+            <div class="row">
+              <div class="visible-xs visible-sm">
+  <div class="content-bar">
+    <ul class="topics">
+      <li class="dropdown">
+        <button class="dropdown-toggle" type="button" data-toggle="dropdown">Documentation Index
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Documentation</li>
+          
+          
+            <li>
+              <a href="/docs/first-steps.html">
+                Docker and Portus for newcomers
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-Portus.html">
+                Configuring Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/database.html">
+                Configuring the database
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/How-to-setup-secure-registry.html">
+                Configuring a secure private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/deploy.html">
+                Deploying Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-the-registry.html">
+                Portus and your private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/API.html">
+                Portus REST API
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/background.html">
+                The background process
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/portusctl.html">
+                portusctl
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/upgrading-portus.html">
+                Upgrading Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/versions.html">
+                Supported Docker Versions
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/how_we_release.html">
+                Portus Releases
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/release-schedule.html">
+                Release schedule
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/FAQ.html">
+                FAQ
+              </a>
+            </li>
+          
+          <li class="dropdown-header">Features</li>
+          
+          
+            <li>
+              <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+                Synchonizing the Registry and Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/2_LDAP-support.html">
+                LDAP support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/3_teams_namespaces_and_users.html">
+                Teams, namespaces and users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/4_audit.html">
+                Audit
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/5_search.html">
+                Search
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_security_scanning.html">
+                Security scanning
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/removing_images.html">
+                Removing images and tags
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_starring.html">
+                Starring repositories
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/7_disabling_users.html">
+                Removing/Disabling users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/anonymous_browsing.html">
+                Anonymous browsing
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/8_locking.html">
+                Locking accounts for safety reasons
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/9_recovering_password.html">
+                Recovering the password
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/disabling_signup.html">
+                Disabling the sign up form
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/oauth.html">
+                OAuth and OpenID Connect support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/application_tokens.html">
+                Application tokens
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/display_name.html">
+                Display name
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/health.html">
+                Health checking
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+            </div>
+            <div class="row post">
+              <article>
+                <h2 id="teams">Teams</h2>
+
+<p>Teams are the way in which an organization can manage sets of users. Each team
+owns a set of namespaces, which are used to group repositories. Besides grouping
+namespaces, teams are used to manage the permissions in which each team member
+can push/pull certain repositories. This is done through
+<a href="/features/3_teams_namespaces_and_users.html#team-roles">team roles</a>.</p>
+
+<p>The UI for managing teams is quite simple. First, you can go to the “Teams”
+page and you will see something similar to this:</p>
+
+<p><img src="/images/docs/create-team.png" alt="Creating a team" /></p>
+
+<p>In the previous image you can see the form for creating a new team. Moreover,
+this page will list the teams in which the current user is a member. If you
+click to one of the teams, then you will go to this team’s page. In there
+you can see listed the team members and the list of owned namespaces. It
+should be something similar to this:</p>
+
+<p><img src="/images/docs/team-show.png" alt="The team page" /></p>
+
+<p>In the previous image, the current user was the owner of the team. Therefore,
+some UI elements are available to this user:</p>
+
+<ul>
+  <li>A widget that will allow us to edit the team role of each user.</li>
+  <li>A button that will allow us to remove a certain user.</li>
+</ul>
+
+<h3 id="team-roles">Team roles</h3>
+
+<p>The way to handle permissions within a team is by establishing roles for each
+team member. Roles are managed by team owners, and they are as follows:</p>
+
+<ul>
+  <li><strong>Viewer</strong>: viewers can only pull from the repositories owned by the team.</li>
+  <li><strong>Contributor</strong>: contributors can both pull and push from the repositories
+owned by the team.</li>
+  <li><strong>Owner</strong>: owners have the same permissions as contributors, but they can
+also manage the list of team members. Owners can: add/remove team members and
+edit the role of team members.</li>
+</ul>
+
+<h2 id="namespaces">Namespaces</h2>
+
+<p>A <code class="highlighter-rouge">namespace</code> is simply a collection of repositories. Namespaces are the way in
+which Portus is able to manage repositories in a friendly and clear way. Each
+namespace belongs to a team. As we have seen in the
+<a href="/features/3_teams_namespaces_and_users.html#teams">section about teams</a>, teams
+are the responsible for setting the push and pull permissions. Therefore,
+namespaces don’t have to deal with permissions, they are just a tool for teams
+to aggregate repositories. Of course, each team can have multiple namespaces.</p>
+
+<h3 id="kinds-of-namespaces">Kinds of namespaces</h3>
+
+<p>Namespaces group repositories, but we have to have in mind that there are
+multiple types of namespaces. This is because besides team-owned namespaces,
+there are two more kinds of namespaces that are a bit special: the global
+namespace and personal namespaces. More clearly:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Kind</th>
+      <th>Description</th>
+      <th>Permissions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Global</td>
+      <td>The one that belongs to the registry.</td>
+      <td>Only admin users can push. Everyone can pull.</td>
+    </tr>
+    <tr>
+      <td>Team</td>
+      <td>The ones that belong to a team.</td>
+      <td>Defined by the <a href="/features/3_teams_namespaces_and_users.html#team-roles">team</a>.</td>
+    </tr>
+    <tr>
+      <td>Personal</td>
+      <td>Each user has its own namespace.</td>
+      <td>Only the user and administrators can push/pull.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The global namespace gets created when installing Portus, after a registry has
+been created (see more about this <a href="/docs/Configuring-the-registry.html">here</a>).
+The personal namespace gets created when the user signs up.</p>
+
+<p>Moreover, a namespace can be <strong>public</strong>. A public namespace can be pulled by
+anyone, regardless if the user is logged in or not. This can be useful to allow
+a set of repositories to be accessible to anyone outside of the organization.</p>
+
+<h3 id="the-web-interface-for-namespaces">The Web interface for namespaces</h3>
+
+<p>There are two main things that an user can do on the web site regarding
+namespaces:</p>
+
+<ol>
+  <li>Creating a new namespace.</li>
+  <li>Listing all the repositories from a given namespace.</li>
+</ol>
+
+<p>There are two ways of creating a namespace: one from the “Namespaces” tab,
+and the other from the “Teams” tab. In the “Namespaces” tab, you do this
+by clicking on the link on the top right corner that says
+“Create new namespace”, as you can see in the following snapshot:</p>
+
+<p><img src="/images/docs/create-namespace2.png" alt="Creating a namespace" /></p>
+
+<p>In order to do this from the “Teams” tab, the owner of the team has to click
+on the team in which the owner wants to create said namespace. Once this is
+done, the owner will just have to click on the link on the top right corner
+that says “Add namespace”, as you can see in the following snapshot:</p>
+
+<p><img src="/images/docs/create-namespace1.png" alt="Creating a namespace from the Team page" /></p>
+
+<p>Note that only owners of a team can create new namespaces. Finally, in order
+to show the repositories that are accessible from a namespace, the user
+should go to the “Namespaces” tab and click on one of the listed namespaces.
+Note that this list gives all the namespaces in which the current user has
+access to. In order to list the namespaces from a specific team, one has to
+go the “Teams” tab and click on the wanted team. The page of a namespace
+just shows the repositories contained in each given namespace, and how many
+tags does the repository have. For example:</p>
+
+<p><img src="/images/docs/namespace-show.png" alt="The namespace page" /></p>
+
+<h2 id="users">Users</h2>
+
+<h3 id="adding-more-admin-users">Adding more admin users</h3>
+
+<p>Only the admin user can add more administrators to the system. In order to do
+it, the admin has to click the “Admin” tab, and then click “Users” in one of
+the top containers. Then, the admin should be seeing something similar to this:</p>
+
+<p><img src="/images/docs/toggle-admin.png" alt="Adding admin users" /></p>
+
+<p>This page contains a list of all the users registered in the system. By
+toggling the switch under the “Admin” label, the admin can give admin
+permissions to different users.</p>
+
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+      <aside class="hidden-xs hidden-sm content-list">
+  <ul class="topics">
+    <li>Documentation</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/docs/first-steps.html">
+            Docker and Portus for newcomers
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-Portus.html">
+            Configuring Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/database.html">
+            Configuring the database
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/How-to-setup-secure-registry.html">
+            Configuring a secure private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/deploy.html">
+            Deploying Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-the-registry.html">
+            Portus and your private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/API.html">
+            Portus REST API
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/background.html">
+            The background process
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/portusctl.html">
+            portusctl
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/upgrading-portus.html">
+            Upgrading Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/versions.html">
+            Supported Docker Versions
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/how_we_release.html">
+            Portus Releases
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/release-schedule.html">
+            Release schedule
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/FAQ.html">
+            FAQ
+          </a>
+        </li>
+      
+    </ul>
+    <li>Features</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+            Synchonizing the Registry and Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/2_LDAP-support.html">
+            LDAP support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/3_teams_namespaces_and_users.html">
+            Teams, namespaces and users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/4_audit.html">
+            Audit
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/5_search.html">
+            Search
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_security_scanning.html">
+            Security scanning
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/removing_images.html">
+            Removing images and tags
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_starring.html">
+            Starring repositories
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/7_disabling_users.html">
+            Removing/Disabling users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/anonymous_browsing.html">
+            Anonymous browsing
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/8_locking.html">
+            Locking accounts for safety reasons
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/9_recovering_password.html">
+            Recovering the password
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/disabling_signup.html">
+            Disabling the sign up form
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/oauth.html">
+            OAuth and OpenID Connect support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/application_tokens.html">
+            Application tokens
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/display_name.html">
+            Display name
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/health.html">
+            Health checking
+          </a>
+        </li>
+      
+    </ul>
+  </ul>
+  <div class="credits">
+    <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+  </div>
+</aside>
+
+      <div class="visible-xs visible-sm credits">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </div>
+  </body>
+</html>

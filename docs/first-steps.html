@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Docker and Portus for newcomers</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="  This page is targetted towards newcomers to the Docker ecosystem that want  to get acquainted with commands such as login or  push. If this is not your cas...">
+
+    <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+    <div class="container" id="documentation">
+      <div class="row">
+        <div class="post-content col-md-10 col-md-offset-3 col-sm-12 col-xs-12">
+          <section>
+            <div class="row">
+              <div class="visible-xs visible-sm">
+  <div class="content-bar">
+    <ul class="topics">
+      <li class="dropdown">
+        <button class="dropdown-toggle" type="button" data-toggle="dropdown">Documentation Index
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Documentation</li>
+          
+          
+            <li>
+              <a href="/docs/first-steps.html">
+                Docker and Portus for newcomers
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-Portus.html">
+                Configuring Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/database.html">
+                Configuring the database
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/How-to-setup-secure-registry.html">
+                Configuring a secure private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/deploy.html">
+                Deploying Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-the-registry.html">
+                Portus and your private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/API.html">
+                Portus REST API
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/background.html">
+                The background process
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/portusctl.html">
+                portusctl
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/upgrading-portus.html">
+                Upgrading Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/versions.html">
+                Supported Docker Versions
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/how_we_release.html">
+                Portus Releases
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/release-schedule.html">
+                Release schedule
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/FAQ.html">
+                FAQ
+              </a>
+            </li>
+          
+          <li class="dropdown-header">Features</li>
+          
+          
+            <li>
+              <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+                Synchonizing the Registry and Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/2_LDAP-support.html">
+                LDAP support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/3_teams_namespaces_and_users.html">
+                Teams, namespaces and users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/4_audit.html">
+                Audit
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/5_search.html">
+                Search
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_security_scanning.html">
+                Security scanning
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/removing_images.html">
+                Removing images and tags
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_starring.html">
+                Starring repositories
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/7_disabling_users.html">
+                Removing/Disabling users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/anonymous_browsing.html">
+                Anonymous browsing
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/8_locking.html">
+                Locking accounts for safety reasons
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/9_recovering_password.html">
+                Recovering the password
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/disabling_signup.html">
+                Disabling the sign up form
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/oauth.html">
+                OAuth and OpenID Connect support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/application_tokens.html">
+                Application tokens
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/display_name.html">
+                Display name
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/health.html">
+                Health checking
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+            </div>
+            <div class="row post">
+              <article>
+                <div class="alert alert-info">
+  This page is targetted towards newcomers to the Docker ecosystem that want
+  to get acquainted with commands such as <strong>login</strong> or
+  <strong>push</strong>. If this is not your case, feel free to skip this page.
+</div>
+
+<h1 id="basic-definitions">Basic definitions</h1>
+
+<h2 id="the-docker-engine">The Docker Engine</h2>
+
+<p>The Docker Engine (or just “Docker” as most people refer to it) is a CLI tool
+that allows you to run your applications in a controlled, secure and portable
+environment. As a starting point, you can think of Docker <em>containers</em> as
+something similar to virtual machines but with a radically different
+architectural approach that makes them much more efficient and portable.</p>
+
+<p>Starting with Docker will introduce you to lots of different concepts like
+<em>images</em> and <em>containers</em>. You need to learn all these concepts (or at least
+have a basic idea about them) before you proceed with this page (or any page
+on Portus). Docker provides
+<a href="https://www.docker.com/what-docker">great documentation</a> for newcomers, so make
+sure to read it and come back for more information.</p>
+
+<h2 id="docker-distribution-and-portus">Docker Distribution and Portus</h2>
+
+<p>Docker Distribution (also known as <strong>Docker Registry</strong>) is a storage and
+distribution solution for your Docker images. It is the backend behind the
+<a href="https://hub.docker.com/">Docker Hub</a> and it’s <a href="https://github.com/docker/distribution">open
+source</a>. The fact that it is open source
+means that you can have your own Docker Registry on your own servers. This is
+really interesting for lots of different reasons, but one main thing to
+consider is that it delegates authorization to an “authorization service”.</p>
+
+<p>As explained <a href="/docs/How-to-setup-secure-registry.html">here</a> one of the main
+jobs of Portus is being an authorization service for your Docker registry. The
+other main goal of Portus is to provide a useful and powerful UI on top of your
+registry. You can learn about all this <a href="/features.html">here</a>.</p>
+
+<h1 id="interacting-with-a-registry-and-portus-in-the-cli">Interacting with a registry and Portus in the CLI</h1>
+
+<h2 id="log-in-and-out">Log in and out</h2>
+
+<p>First and foremost, you have to make sure that you have an account already
+available in your Portus instance. Usually you create the account yourself by
+going to the “Signup” page. This might not be the case if:</p>
+
+<ul>
+  <li>Your organization is using an <a href="/features/2_LDAP-support.html">LDAP server</a>
+for authentication, in which case you just need to login at least once with
+your LDAP credentials into Portus.</li>
+  <li>Your organization has
+<a href="/features/disabling_signup.html">disabled the sign up form</a>. In this case
+the administrators of Portus have to tell you what your credentials are.</li>
+</ul>
+
+<p>Once you are sure that you have your Portus user in place, you need to login
+to your registry with the <code class="highlighter-rouge">docker login</code> command. Assuming that your
+registry’s hostname is <code class="highlighter-rouge">https://my.registry:5000</code>, then you should perform the
+following in a terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker login my.registry:5000
+</code></pre></div></div>
+
+<p>The previous command will ask for your credentials and, if everything goes as
+expected, you will successfully login to your registry. Note two things:</p>
+
+<ol>
+  <li>If you don’t specify a hostname, then Docker assumes the
+<a href="https://hub.docker.com/">Docker Hub</a>.</li>
+  <li>You don’t have to specify the <code class="highlighter-rouge">https://</code> part.</li>
+</ol>
+
+<p>After logging in your credentials will be stored in your system so you won’t
+have to login again unless you explicitly log out with the <code class="highlighter-rouge">docker logout</code>
+command. Note that in the <code class="highlighter-rouge">logout</code> command you will also have to pass the
+hostname (or Docker will assume Docker Hub).</p>
+
+<h2 id="push--pull">Push &amp; pull</h2>
+
+<p>The Docker Engine will allow you to push or pull only if you are logged in. If
+this is the case, then it will be up to the authorization service (Portus in
+our case) to decide whether you can push or pull. This depends on which team
+your user belongs to, which role he or she plays in said team and so on. Check
+out <a href="/features/3_teams_namespaces_and_users.html">this page</a> for more
+information on the topic.</p>
+
+<p>Assuming that your user is called <code class="highlighter-rouge">mssola</code>, you can be sure that a namespace
+with the exact same name exists (unless the given user name does not abide to
+<a href="https://docs.docker.com/engine/reference/commandline/tag/">Docker’s naming
+rules</a>.  In this
+case, the name of the namespace will be transformed and the user will get
+notified about this change). This is because each user has a <strong>personal
+namespace</strong>. In there, you will always be able to push and pull. We will use
+this as an example because of its simplicity.</p>
+
+<p>Let’s say that you want to push a local image called <code class="highlighter-rouge">image:latest</code> to your
+registry. The first thing that comes to our mind is to perform the following
+<em>wrong</em> command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker push image:latest
+</code></pre></div></div>
+
+<p>This is wrong because Docker will assume that your image should be pushed onto
+the Docker Hub. In order to avoid this you have to specify the hostname of your
+registry in the name of the image that you want to push. In order to
+accomplish this, we will use the <code class="highlighter-rouge">docker tag</code> command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker tag image:latest my.registry:5000/mssola/image:latest
+</code></pre></div></div>
+
+<p>Note two things in the previous command:</p>
+
+<ol>
+  <li>The <code class="highlighter-rouge">https://</code> part is not specified.</li>
+  <li>We also added <code class="highlighter-rouge">mssola</code> to it. We did this to specify that the <code class="highlighter-rouge">image:latest</code>
+image should be stored inside of the <code class="highlighter-rouge">mssola</code> namespace, which is your
+personal namespace. If you don’t provide this, then Portus will assume that
+you want to push this image into the <strong>global namespace</strong>, which is only
+writeable by administrators. You can read more about this
+<a href="/features/3_teams_namespaces_and_users.html">here</a>.</li>
+</ol>
+
+<p>Now you can push it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker push my.registry:5000/mssola/image:latest
+</code></pre></div></div>
+
+<p>If everything goes as expected, your image should have been pushed into your
+registry! Now, whenever you want to pull this image again, just perform the
+following command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker pull my.registry:5000/mssola/image:latest
+</code></pre></div></div>
+
+<h1 id="next-steps">Next steps</h1>
+
+<p>If you are also an administrator make sure to understand all the nuts and
+bolts regarding deploying and configuring Portus. In order to do this, just go
+to the <a href="/documentation.html">documentation page</a>. Another interesting page is
+the <a href="/features.html">features</a> page, in which you will learn about the
+capabilities that Portus has to offer.</p>
+
+<p>Otherwise, if you have any doubt that the documentation fails to cover, don’t be
+shy and ask in our <a href="https://groups.google.com/forum/#!forum/portus-dev">Google group</a>.
+We are eager to understand what we can do to improve your experience with
+Portus!</p>
+
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+      <aside class="hidden-xs hidden-sm content-list">
+  <ul class="topics">
+    <li>Documentation</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/docs/first-steps.html">
+            Docker and Portus for newcomers
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-Portus.html">
+            Configuring Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/database.html">
+            Configuring the database
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/How-to-setup-secure-registry.html">
+            Configuring a secure private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/deploy.html">
+            Deploying Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-the-registry.html">
+            Portus and your private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/API.html">
+            Portus REST API
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/background.html">
+            The background process
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/portusctl.html">
+            portusctl
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/upgrading-portus.html">
+            Upgrading Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/versions.html">
+            Supported Docker Versions
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/how_we_release.html">
+            Portus Releases
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/release-schedule.html">
+            Release schedule
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/FAQ.html">
+            FAQ
+          </a>
+        </li>
+      
+    </ul>
+    <li>Features</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+            Synchonizing the Registry and Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/2_LDAP-support.html">
+            LDAP support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/3_teams_namespaces_and_users.html">
+            Teams, namespaces and users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/4_audit.html">
+            Audit
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/5_search.html">
+            Search
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_security_scanning.html">
+            Security scanning
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/removing_images.html">
+            Removing images and tags
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_starring.html">
+            Starring repositories
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/7_disabling_users.html">
+            Removing/Disabling users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/anonymous_browsing.html">
+            Anonymous browsing
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/8_locking.html">
+            Locking accounts for safety reasons
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/9_recovering_password.html">
+            Recovering the password
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/disabling_signup.html">
+            Disabling the sign up form
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/oauth.html">
+            OAuth and OpenID Connect support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/application_tokens.html">
+            Application tokens
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/display_name.html">
+            Display name
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/health.html">
+            Health checking
+          </a>
+        </li>
+      
+    </ul>
+  </ul>
+  <div class="credits">
+    <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+  </div>
+</aside>
+
+      <div class="visible-xs visible-sm credits">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </div>
+  </body>
+</html>

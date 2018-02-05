@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Portus 2.2 has been released!</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="In October we planned the 2.2.0 release of Portus, and a lot of things havehappened meanwhile (see this and this).This means that even if our initial goals w...">
+
+    <link href="/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js"    type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+
+    <div class="container">
+      <div id="post-body" class="row">
+        <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <a href="/2017/01/31/portus-2.2.html">
+          <h2 class="post-title">Portus 2.2 has been released!</h2>
+
+          
+          </a>
+
+          <p class="post-meta">
+            Posted on January 31, 2017
+            by Miquel Sabaté Solà
+          </p>
+
+          <div class="post-body">
+            <p>In October we planned the 2.2.0 release of Portus, and a lot of things have
+happened meanwhile (see <a href="https://www.suse.com/communities/blog/introducing-suse-containers-service-platform/">this</a> and <a href="http://thenewstack.io/micro-os-suses-answer-container-os/">this</a>).
+This means that even if our initial goals were quite modest, we had to be more
+conservative in regards of the features and fixes that we could actually deliver
+for this new release of Portus.</p>
+
+<p>For this reason, this release is more about fixing issues, rather than adding
+new shiny features. That being said, there are a couple of improvements that we
+would like to highlight:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">portusctl</code> will now raise a warning whenever you are trying to use the
+<code class="highlighter-rouge">--local-registry</code> flag, but the package is not installed in your local
+computer. This was a common pitfall for openSUSE and SLE users, so we decided
+to go ahead and improve this situation.</li>
+  <li>Portus now also supports Docker Distribution 2.5 and 2.6. In these two
+releases, the developers of Docker Distribution polished some rough edges that
+needed to be taken into consideration on the Portus side.</li>
+</ul>
+
+<p>Besides these features, we have included lots of fixes for bugs that the
+community has been spotting in past releases. You can read about this on the
+<a href="https://github.com/SUSE/Portus/releases/tag/2.2.0">changelog</a>.</p>
+
+<h4 id="upgrading-from-portus-21x">Upgrading from Portus 2.1.x</h4>
+
+<p>All the details for upgrading from 2.1.x to 2.2 have been detailed in
+<a href="/docs/upgrading-portus.html#upgrading-from-21-to-22">this page</a>. The
+instructions are quite simple: only a simple database migration is needed.</p>
+
+<h4 id="next">Next…</h4>
+
+<p>In the following days we will specify all the details about the next
+release.</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="row row-0">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Configuring Portus</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="The config.yml file">
+
+    <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+    <div class="container" id="documentation">
+      <div class="row">
+        <div class="post-content col-md-10 col-md-offset-3 col-sm-12 col-xs-12">
+          <section>
+            <div class="row">
+              <div class="visible-xs visible-sm">
+  <div class="content-bar">
+    <ul class="topics">
+      <li class="dropdown">
+        <button class="dropdown-toggle" type="button" data-toggle="dropdown">Documentation Index
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Documentation</li>
+          
+          
+            <li>
+              <a href="/docs/first-steps.html">
+                Docker and Portus for newcomers
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-Portus.html">
+                Configuring Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/database.html">
+                Configuring the database
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/How-to-setup-secure-registry.html">
+                Configuring a secure private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/deploy.html">
+                Deploying Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-the-registry.html">
+                Portus and your private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/API.html">
+                Portus REST API
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/background.html">
+                The background process
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/portusctl.html">
+                portusctl
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/upgrading-portus.html">
+                Upgrading Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/versions.html">
+                Supported Docker Versions
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/how_we_release.html">
+                Portus Releases
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/release-schedule.html">
+                Release schedule
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/FAQ.html">
+                FAQ
+              </a>
+            </li>
+          
+          <li class="dropdown-header">Features</li>
+          
+          
+            <li>
+              <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+                Synchonizing the Registry and Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/2_LDAP-support.html">
+                LDAP support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/3_teams_namespaces_and_users.html">
+                Teams, namespaces and users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/4_audit.html">
+                Audit
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/5_search.html">
+                Search
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_security_scanning.html">
+                Security scanning
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/removing_images.html">
+                Removing images and tags
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_starring.html">
+                Starring repositories
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/7_disabling_users.html">
+                Removing/Disabling users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/anonymous_browsing.html">
+                Anonymous browsing
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/8_locking.html">
+                Locking accounts for safety reasons
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/9_recovering_password.html">
+                Recovering the password
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/disabling_signup.html">
+                Disabling the sign up form
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/oauth.html">
+                OAuth and OpenID Connect support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/application_tokens.html">
+                Application tokens
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/display_name.html">
+                Display name
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/health.html">
+                Health checking
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+            </div>
+            <div class="row post">
+              <article>
+                <h2 id="the-configyml-file">The config.yml file</h2>
+
+<p>Before starting this application, you may want to configure some values that
+are evaluated during the initialization process of Portus. All these values are
+specified in the <code class="highlighter-rouge">config/config.yml</code> file. This file contains the default
+values for each setting. In order to change these settings, you should create
+the <code class="highlighter-rouge">config/config-local.yml</code> file and write your own values there. Note that
+if you have your own <code class="highlighter-rouge">config-local.yml</code> file, then the definitive values will
+be the result of a merge of both config files, where the settings of
+<code class="highlighter-rouge">config-local.yml</code> take precedence. For example, imagine the following
+situation:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># In config.yml</span>
+<span class="na">settings</span><span class="pi">:</span>
+  <span class="na">a</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">b</span><span class="pi">:</span> <span class="no">false</span>
+
+<span class="c1"># In config-local.yml</span>
+<span class="na">settings</span><span class="pi">:</span>
+  <span class="na">a</span><span class="pi">:</span> <span class="no">false</span></code></pre></figure>
+
+<p>The result of the previous example is that both <code class="highlighter-rouge">a</code> and <code class="highlighter-rouge">b</code> are false. Moreover,
+the path of the <code class="highlighter-rouge">config-local.yml</code> file can be tweaked through the
+<code class="highlighter-rouge">PORTUS_LOCAL_CONFIG_PATH</code> environment variable.</p>
+
+<h2 id="override-specific-configuration-options">Override specific configuration options</h2>
+
+<p>Besides the <code class="highlighter-rouge">config-local.yml</code> file, specific configuration options can be
+tweaked through environment variables. These environment variables follow a
+naming convention. Let’s imagine the following configuration:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">feature</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">val"</span></code></pre></figure>
+
+<p>In this case, the environment variables that can be used are <code class="highlighter-rouge">PORTUS_FEATURE_ENABLED</code> and <code class="highlighter-rouge">PORTUS_FEATURE_VALUE</code>. Therefore, the name of the environment variables always start with <code class="highlighter-rouge">PORTUS</code> and then they follow the name of the keys.</p>
+
+<p>Note that environment variables override even values from the <code class="highlighter-rouge">config-local.yml</code> file. To sum this up, you can assume that Portus follows the following preference when reading a configuration value (listed from max. preference to least):</p>
+
+<ol>
+  <li>Environment variables.</li>
+  <li>The user-defined <code class="highlighter-rouge">config-local.yml</code> file.</li>
+  <li>The default values from the <code class="highlighter-rouge">config.yml</code> file.</li>
+</ol>
+
+<h2 id="list-of-configuration-options">List of configuration options</h2>
+
+<h3 id="email-configuration">Email configuration</h3>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">email</span><span class="pi">:</span>
+  <span class="na">from</span><span class="pi">:</span> <span class="s2">"</span><span class="s">portus@example.com"</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Portus"</span>
+  <span class="na">reply_to</span><span class="pi">:</span> <span class="s2">"</span><span class="s">no-reply@example.com"</span>
+
+  <span class="na">smtp</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">address</span><span class="pi">:</span> <span class="s2">"</span><span class="s">smtp.example.com"</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="s">587,</span>
+    <span class="na">user_name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">username@example.com"</span>
+    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">password"</span>
+    <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">example.com"</span></code></pre></figure>
+
+<p>Note that if <strong>smtp</strong> is disabled, then <code class="highlighter-rouge">sendmail</code> is used instead (the specific command being: <code class="highlighter-rouge">/usr/sbin/sendmail -i -t</code>).</p>
+
+<h3 id="gravatar">Gravatar</h3>
+
+<p>If enabled, then the profile picture will be picked from the <a href="https://en.gravatar.com/">Gravatar</a> associated with each user. Otherwise, a default icon will be shown.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">gravatar</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span></code></pre></figure>
+
+<h3 id="delete-support">Delete support</h3>
+
+<p><strong>Note</strong>: feature only available in Portus 2.1 or later. Also bear in mind that
+this will only work accordingly if you are using Docker Distribution 2.4 or later.</p>
+
+<p>As of 2.1, and if you are using a Docker Distribution version not older than
+2.4, you will be able to delete images, tags, users, namespaces and teams. In
+order to do so just enable the <code class="highlighter-rouge">delete</code> option:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">delete</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span></code></pre></figure>
+
+<p>This option is <strong>disabled</strong> by default. This is because we want users enabling
+this if they are really sure about the feature itself and its requirements. For
+more information, read <a href="/features/removing_images.html">this page</a>.</p>
+
+<h3 id="ldap-support">LDAP Support</h3>
+
+<p>If enabled, then only users of the specified LDAP server will be able to use Portus.</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">ldap</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+  <span class="na">hostname</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ldap_hostname"</span>
+  <span class="na">port</span><span class="pi">:</span> <span class="s">389</span>
+  <span class="na">method</span><span class="pi">:</span> <span class="s2">"</span><span class="s">plain"</span>
+  <span class="na">base</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+  <span class="na">filter</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+  <span class="na">uid</span><span class="pi">:</span> <span class="s2">"</span><span class="s">uid"</span>
+
+  <span class="na">authentication</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">bind_dn</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+  <span class="na">guess_email</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">attr</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span></code></pre></figure>
+
+<p>Some notes:</p>
+
+<ul>
+  <li><strong>base</strong>: The base where users are located (e.g. “ou=users,dc=example,dc=com”).</li>
+  <li><strong>filter</strong>: This option comes in handy when you want to filter even further the results that might be hanging from the <em>base</em>.</li>
+  <li><strong>method</strong>: The method of encryption between Portus and the LDAP server. It defaults to “plain”, which means that the communication won’t be encrypted. You can also use “simple_tls”, to setup LDAP over SSL/TLS. However, the recommended value is “starttls”, which sets StartTLS as the encryption method.</li>
+  <li><strong>guess_email</strong>: Portus needs an email for each user, but there’s no standard way to get that from LDAP servers. You can tell Portus how to get the email from users registered in the LDAP server with this configurable value.</li>
+  <li><strong>uid</strong>: The attribute where Portus will look for the user ID when authenticating.</li>
+  <li><strong>authentication</strong>: Some LDAP servers require a binding user in order to authenticate. You can specify this user by enabling this option. Then you should provide the DN of this user in the <code class="highlighter-rouge">bind_dn</code> value.</li>
+</ul>
+
+<p>There are three possibilities for the <strong>guess_email</strong> option:</p>
+
+<ul>
+  <li>disabled: this is the default value. It means that Portus won’t do a thing when registering LDAP users (users will be redirected to their profile page until they setup an email account).</li>
+  <li>enabled where “attr” is empty: for this you need “ldap.base” to have some value. In this case, the hostname will be guessed from the domain component of the provided base string. For example, for the dn: “ou=users,dc=example,dc=com”, and a user named “mssola”, the resulting email is “mssola@example.com”.</li>
+  <li>enabled where “attr” is not empty: with this you specify the attribute inside a LDIF record where the email is set.</li>
+</ul>
+
+<p>If something goes wrong when trying to guess the email, then it just falls back to the default behavior (empty email).</p>
+
+<h3 id="creating-the-first-admin-user">Creating the first admin user</h3>
+
+<p>As explained <a href="/features/3_teams_namespaces_and_users.html">here</a>, an admin user
+can upgrade users to be administrators. But, how do we create the very first
+admin user? There are two ways in which this can be done:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">first_user_admin</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span></code></pre></figure>
+
+<p>By default the first user to be created will be granted admin permissions. In
+this case, when you go to the “Sign up” page, you will find the following
+situation:</p>
+
+<p><img src="/images/docs/create-admin.png" alt="Creating the Admin" /></p>
+
+<p>That is, the “Sign up” form is telling you that the user to be created will be
+an admin. Therefore, in order to create the first admin user, you just have to
+proceed as usual and fill the “Sign up” form for this user. After doing this,
+the “Sign up” form will not be able to create administrators, but only regular
+users.</p>
+
+<p>However, note if LDAP support is enabled, the first user that logs in with LDAP
+credentials will be automatically an admin. This is shown in the following
+screenshot:</p>
+
+<p><img src="/images/docs/create-admin-ldap.png" alt="Creating the Admin in LDAP" /></p>
+
+<p>The other way to do this is to disable the <code class="highlighter-rouge">first_user_admin</code> configurable
+value. In this case, the first admin cannot be created from the Web UI, rather
+you have to use the <code class="highlighter-rouge">portus:make_admin</code> rake task. Therefore, you should
+access into the Portus application and run:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake portus:make_admin[&lt;username&gt;]
+</code></pre></div></div>
+
+<p>When Portus has been installed via RPM, this operation can be performed via
+<code class="highlighter-rouge">portusctl</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ portusctl make_admin &lt;username&gt;
+</code></pre></div></div>
+
+<h3 id="disabling-the-sign-up-form">Disabling the sign up form</h3>
+
+<p><strong>Note</strong>: feature only available in Portus 2.1 or later.</p>
+
+<p>By default Portus will have the sign up form available for any person that comes
+across your Portus instance. You can change that by disabling the <code class="highlighter-rouge">signup</code>
+configuration value:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">signup</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span></code></pre></figure>
+
+<p>This way, only the admins of this Portus instance will be able to create users
+in the system. This setting is completely ignored when LDAP support is enabled.
+This option is explained with more detail
+<a href="/features/disabling_signup.html">here</a>.</p>
+
+<h3 id="enforce-ssl-usage-on-production">Enforce SSL usage on production</h3>
+
+<p>By default Portus will enforce usage of SSL when ran with the “production”
+environment. This is required for security reasons. The behaviour is controller
+by this configuration setting:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">check_ssl_usage</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span></code></pre></figure>
+
+<h3 id="oauth-support">OAuth support</h3>
+
+<p><strong>Note</strong>: this is only available in Portus 2.3 or later.</p>
+
+<p>Portus provides OAuth support: you can configure it to support authentication
+from one of the supported platforms. Here is the full list:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">oauth</span><span class="pi">:</span>
+  <span class="na">google_oauth2</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">secret</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">options</span><span class="pi">:</span>
+      <span class="c1"># G Suite domain. If set, then only members of the domain can sign in/up.</span>
+      <span class="c1"># If it's empty then any google users con sign in/up.</span>
+      <span class="na">hd</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+  <span class="na">open_id</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">identifier</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+  <span class="na">github</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">client_id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">client_secret</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">organization</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">team</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+  <span class="na">gitlab</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">application_id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">secret</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">group</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+  <span class="na">bitbucket</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">secret</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">options</span><span class="pi">:</span>
+      <span class="na">team</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span></code></pre></figure>
+
+<p>All supported platforms have their own settings, but there are some common
+attributes that might not be evident:</p>
+
+<ul>
+  <li><em>domain</em>: if a domain (e.g. mycompany.com) is set, then only signups with
+emails from this domain are allowed.</li>
+  <li><em>organization</em>, <em>group</em> and <em>team</em>: this is used by providers like Github,
+Gitlab or Bitbucket. With this you can restrict the team or organization where
+the given user belongs.</li>
+  <li>OpenID’s <em>identifier</em> and Gitlab’s <em>server</em>: these attributes enable Portus to
+fetch the proper source. That is, you can specify the Gitlab server (by
+default gitlab.com), or the OpenID provider (by default you’ll be prompted
+with a form asking for this information).</li>
+</ul>
+
+<h3 id="advanced-registry-options">Advanced registry options</h3>
+
+<p><strong>Note</strong>: this is only available in Portus 2.1 or later.</p>
+
+<p>You can configure some aspects on how Portus interacts with your Docker registry:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">registry</span><span class="pi">:</span>
+  <span class="na">jwt_expiration_time</span><span class="pi">:</span>
+    <span class="na">value</span><span class="pi">:</span> <span class="s">5</span>
+
+  <span class="na">catalog_page</span><span class="pi">:</span>
+    <span class="na">value</span><span class="pi">:</span> <span class="s">100</span>
+
+  <span class="na">timeout</span><span class="pi">:</span>
+    <span class="na">value</span><span class="pi">:</span> <span class="s">2</span></code></pre></figure>
+
+<p>The JWT token is one of the main keys in the authentication process between
+Portus and the registry. This token has as one of its values the expiration
+time of itself. The problem is that the registry does not request another token
+when it expires. This means that for large images, the upload might fail
+because it takes longer than the expiration time. You can read more about this
+in the issue <a href="https://github.com/SUSE/Portus/issues/510">SUSE/Portus#510</a>.</p>
+
+<p>To workaround this, we allow the admin of Portus to raise the expiration time
+as required through the <code class="highlighter-rouge">jwt_expiration_time</code> configurable value. This value is
+set in minutes, but we still allow the syntax as allowed before the 2.1 release.</p>
+
+<p>Moreover, the registry might be slow or the network connection flaky. For this,
+you can also use the <code class="highlighter-rouge">timeout</code> value. This has been added in Portus 2.3.</p>
+
+<p>Finally, another option is the <code class="highlighter-rouge">catalog_page</code>. This tweaks the page size for
+each catalog request performed by Portus. The default value for this should be
+enough for the vast majority of users, but with this we allow administrators to
+workaround a Docker Registry bug as stated
+<a href="https://github.com/SUSE/Portus/issues/1001">here</a>.</p>
+
+<h3 id="fqdn-of-your-machine">FQDN of your machine</h3>
+
+<p><strong>Note</strong>: feature only available in Portus 2.1 or later.</p>
+
+<p>On the next release of Portus, the FQDN of the machine is no longer a secret
+and it’s now considered a configurable value. The fact that it was a secret
+before is because of legacy code. However, you now can configure it like this:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">machine_fqdn</span><span class="pi">:</span>
+  <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">portus.test.lan"</span></code></pre></figure>
+
+<h3 id="security-scanning">Security scanning</h3>
+
+<p><strong>Note</strong>: this is only available in Portus 2.3 or later.</p>
+
+<p>You can setup a security scanner for your Portus instance. This way, Portus will
+display whether the images you have on your registry have known security
+vulnerabilities. This feature is disabled by default, but it can be configured
+through the following values:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">security</span><span class="pi">:</span>
+  <span class="c1"># CoreOS Clair support (https://github.com/coreos/clair).</span>
+  <span class="na">clair</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">health_port</span><span class="pi">:</span> <span class="s">6061</span>
+
+  <span class="c1"># zypper-docker can be run as a server with its `serve` command. This backend</span>
+  <span class="c1"># fetches the information as given by zypper-docker. Note that this feature</span>
+  <span class="c1"># from zypper-docker is experimental and only available through another branch</span>
+  <span class="c1"># than master.</span>
+  <span class="c1">#</span>
+  <span class="c1"># NOTE: support for this is experimental since this functionality has not</span>
+  <span class="c1"># been merged into master yet in zypper-docker.</span>
+  <span class="na">zypper</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+  <span class="c1"># This backend is only used for testing purposes, don't use it.</span>
+  <span class="na">dummy</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+</code></pre></div></div>
+
+<p>Portus supports having multiple scanners enabled at the same time. You can read
+more about this <a href="/features/6_security_scanning.html">here</a>.</p>
+
+<h3 id="anonymous-browsing">Anonymous browsing</h3>
+
+<p><strong>Note</strong>: feature only available in Portus 2.3 or later.</p>
+
+<p>You can configure Portus to allow anonymous users to explore public
+repositories. This feature is enabled by default:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">anonymous_browsing</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span></code></pre></figure>
+
+<p>You can read more about this <a href="/features/anonymous_browsing.html">here</a>.</p>
+
+<h3 id="display-name">Display name</h3>
+
+<p><strong>Note</strong>: feature only available in Portus 2.1 or later.</p>
+
+<p>This option tells Portus to not use the username when showing users, rather a
+user-defined “display name”. You can read more about this
+<a href="/features/display_name.html">here</a>. By default this feature is disabled, and
+it’s controlled with this setting:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">display_name</span><span class="pi">:</span>
+  <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span></code></pre></figure>
+
+<h3 id="granular-user-permissions">Granular user permissions</h3>
+
+<p><strong>Note</strong>: this is only available in Portus 2.1 or later.</p>
+
+<p>You can further tweak the permissions that users have on a Portus instance with
+the following options:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">user_permission</span><span class="pi">:</span>
+  <span class="na">change_visibility</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">create_team</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">manage_team</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">create_namespace</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">manage_namespace</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span></code></pre></figure>
+
+<ul>
+  <li><strong>change_visibility</strong>: allow users to change the visibility or their personal
+namespace. If this is disabled, only an admin will be able to change this. It
+defaults to true.</li>
+  <li><strong>create/manage_team</strong>: allow users to create/modify teams if they are an
+owner of it. If this is disabled, only an admin will be able to do this. It
+defaults to true.</li>
+  <li><strong>create/manage_namespace</strong>: allow users to create/modify namespaces if they
+are an owner of it. If this is disabled, only an admin will be able to do
+this. It defaults to true.</li>
+</ul>
+
+<h2 id="deploying-portus-in-a-sub-uri">Deploying Portus in a Sub-URI</h2>
+
+<p>In some deployments it might make sense to make Portus accessible through a
+Sub-URI. That is, to be able to prefix requests to Portus with a subdirectory.
+In non-passenger setups, this can be accomplished by setting the
+<code class="highlighter-rouge">RAILS_RELATIVE_URL_ROOT</code> environment variable. With this, you will be able to
+serve Portus from the specified subdirectory.</p>
+
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+      <aside class="hidden-xs hidden-sm content-list">
+  <ul class="topics">
+    <li>Documentation</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/docs/first-steps.html">
+            Docker and Portus for newcomers
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-Portus.html">
+            Configuring Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/database.html">
+            Configuring the database
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/How-to-setup-secure-registry.html">
+            Configuring a secure private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/deploy.html">
+            Deploying Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-the-registry.html">
+            Portus and your private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/API.html">
+            Portus REST API
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/background.html">
+            The background process
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/portusctl.html">
+            portusctl
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/upgrading-portus.html">
+            Upgrading Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/versions.html">
+            Supported Docker Versions
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/how_we_release.html">
+            Portus Releases
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/release-schedule.html">
+            Release schedule
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/FAQ.html">
+            FAQ
+          </a>
+        </li>
+      
+    </ul>
+    <li>Features</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+            Synchonizing the Registry and Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/2_LDAP-support.html">
+            LDAP support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/3_teams_namespaces_and_users.html">
+            Teams, namespaces and users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/4_audit.html">
+            Audit
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/5_search.html">
+            Search
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_security_scanning.html">
+            Security scanning
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/removing_images.html">
+            Removing images and tags
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_starring.html">
+            Starring repositories
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/7_disabling_users.html">
+            Removing/Disabling users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/anonymous_browsing.html">
+            Anonymous browsing
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/8_locking.html">
+            Locking accounts for safety reasons
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/9_recovering_password.html">
+            Recovering the password
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/disabling_signup.html">
+            Disabling the sign up form
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/oauth.html">
+            OAuth and OpenID Connect support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/application_tokens.html">
+            Application tokens
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/display_name.html">
+            Display name
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/health.html">
+            Health checking
+          </a>
+        </li>
+      
+    </ul>
+  </ul>
+  <div class="credits">
+    <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+  </div>
+</aside>
+
+      <div class="visible-xs visible-sm credits">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Removing images and tags</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Hello again!">
+
+    <link href="/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js"    type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+
+    <div class="container">
+      <div id="post-body" class="row">
+        <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <a href="/2016/06/20/removing-images-and-tags.html">
+          <h2 class="post-title">Removing images and tags</h2>
+
+          
+          </a>
+
+          <p class="post-meta">
+            Posted on June 20, 2016
+            by Miquel Sabaté Solà
+          </p>
+
+          <div class="post-body">
+            <p>Hello again!</p>
+
+<p>Some months ago we implemented one of the most requested features for Portus:
+removing images and tags. This is one of the most important features that will
+be available on the 2.1 release (due in September), and it has been a bit
+challenging to get it right.</p>
+
+<p>The main original blocker for this feature is that Docker Distribution only
+provides garbage collection as of its 2.4 version. This is important because
+we didn’t feel save releasing this feature without proper support from
+the registry’s side. With this in mind, we are sure that lots of users are
+still not running on Docker Distribution 2.4 (and probably won’t for quite some
+time) so, to avoid any surprises we have disabled this feature by default. That
+is, in order to remove images and tags from within Portus, administrators will
+have to conciously enable it. You can do this with the
+<a href="/docs/Configuring-Portus.html#delete-support">delete</a> configurable value.</p>
+
+<p>Last but not least, it’s important to note that maintainers are the ones
+responsible for running the garbage collector (it’s not done automatically by
+the registry and it cannot be activated through an API endpoint). Therefore,
+it’s up to administrators to decide what they want to do. For more information
+on this, please take a look at both
+<a href="/features/removing_images.html">our documentation</a> and the one from
+<a href="https://github.com/mssola/distribution/blob/master/docs/garbage-collection.md">Docker Distribution</a>.</p>
+
+<p>With this feature already on our belt, we will be able to proceed with more
+features that will make it for the 2.1 release, like removing namespaces or
+users. If you are interested in knowing more about this, just say something on
+our <a href="https://groups.google.com/forum/#!forum/portus-dev">Google group</a> or
+submit a new issue on our <a href="https://github.com/SUSE/Portus">Github project</a>.</p>
+
+<p>Enjoy!</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="row row-0">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </footer>
+  </body>
+</html>

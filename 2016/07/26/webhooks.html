@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introducing webhooks</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Hello!">
+
+    <link href="/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js"    type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+
+    <div class="container">
+      <div id="post-body" class="row">
+        <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <a href="/2016/07/26/webhooks.html">
+          <h2 class="post-title">Introducing webhooks</h2>
+
+          
+          </a>
+
+          <p class="post-meta">
+            Posted on July 26, 2016
+            by Thomas Hipp
+          </p>
+
+          <div class="post-body">
+            <p>Hello!</p>
+
+<p>I am pleased to announce one of the new features which will be shipped with
+Portus version 2.1.</p>
+
+<h4 id="what-are-webhooks-and-how-do-they-work">What are webhooks and how do they work?</h4>
+
+<p>Simply put, a webhook is a user-defined HTTP callback which notifies a
+specified endpoint about some sort of change.
+In Portus, this change can be either a push or delete event, i.e. webhooks will
+be triggered when you push or delete an image.</p>
+
+<p>Creating a webhook in Portus is as simple as defining a URL.
+Although every HTTP request also requires a request method, this does not
+explicitly need to be set by the user, and defaults to <code class="highlighter-rouge">GET</code> in Portus.
+Another option, or better header, which has a default value is <code class="highlighter-rouge">content-type</code>.
+It defaults to <code class="highlighter-rouge">application/json</code> but can be changed if needed.
+Other customizable options include  username and password, and custom HTTP
+headers.
+Per default, these are left empty if not explicitly specified.
+Furthermore, each webhook can be temporary disabled if it’s not needed, and be
+enabled again any time.</p>
+<div class="alert alert-info">
+<strong>Note</strong>: a newly created webhook is disabled and needs to be
+enabled before it can be used.
+</div>
+
+<p>The way it works is that every push or delete event to the registry returns an
+event back to Portus itself.
+Portus only enriches these hooks with filtering at namespace level,
+authorization, persistence, and UI-based management.
+The latter includes enabling/disabling and retriggering webhooks, and
+customizing parameters regarding the endpoint.
+Should one want to filter at repository level, this has to be done by parsing
+the response.</p>
+
+<h4 id="why-use-webhooks">Why use webhooks?</h4>
+
+<p>Since webhooks are triggered on events, they can be used for things like
+automatic deployment or triggering CI builds.</p>
+
+<p>Simple example:</p>
+
+<p>Your web application is containerized, and you have just pushed a new version
+of the used image to your registry.
+Since you want everything to work without much interaction, you have created a
+webhook which will notify some service.
+When this service gets notified, it can pull the new image and then restart the
+containerized web application.
+It’s as simple as that.</p>
+
+<h4 id="what-information-is-provided-in-the-request-body">What information is provided in the request body?</h4>
+
+<p>The provided information is documented
+<a href="https://docs.docker.com/registry/notifications/">here</a>.  As mentioned above, we
+simply forward the received webhook content coming from the registry.</p>
+
+<p>If you’re interested in how it works in detail, be sure to check out the
+<a href="https://github.com/SUSE/Portus">code on GitHub</a>.</p>
+
+<p>Enjoy!</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="row row-0">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </footer>
+  </body>
+</html>

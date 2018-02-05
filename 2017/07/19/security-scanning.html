@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Security scanning</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="One of the perks of working at SUSE are hackweeks. A hackweek is a periodof 5 days in which every employee is free to work on whatever they want. Portuswas b...">
+
+    <link href="/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js"    type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+
+    <div class="container">
+      <div id="post-body" class="row">
+        <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <a href="/2017/07/19/security-scanning.html">
+          <h2 class="post-title">Security scanning</h2>
+
+          
+          </a>
+
+          <p class="post-meta">
+            Posted on July 19, 2017
+            by Miquel Sabaté Solà
+          </p>
+
+          <div class="post-body">
+            <p>One of the perks of working at SUSE are <a href="https://en.opensuse.org/Portal:Hackweek">hackweeks</a>. A hackweek is a period
+of 5 days in which every employee is free to work on whatever they want. Portus
+was born this way, as Flavio explained in his <a href="https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/">blog post</a>, and we are happy
+to say that the feature announced today was also started this way.</p>
+
+<h2 id="adding-security-features-into-portus">Adding security features into Portus</h2>
+
+<p>We value security at SUSE, and particularly in our team, we think that security
+in Docker images and containers is really important. Luckily for us, we are not
+alone, and we have witnessed lots of interesting projects springing up from the
+community. In this regard, we have contributed to the community
+with <a href="https://github.com/SUSE/zypper-docker">zypper-docker</a>, a tool that allows you to patch and monitor Docker
+images.</p>
+
+<p>Moreover, as other projects like <a href="https://hub.docker.com/">Docker hub</a> and <a href="https://quay.io/">Quay</a> have proven, it’s
+pretty useful that the same web application that allows you to manage your
+Docker images, also fetches security information about them. Because of all
+this, we thought that it would be a good idea to create a new layer in Portus,
+in which we could integrate security tools, and finally report back about the
+security status of the images on your on-premise Docker registry. After toying
+with the idea, <a href="https://github.com/vitoravelino">Vítor Avelino</a> and I worked on this and we have just
+recently <a href="https://github.com/SUSE/Portus/pull/1289">merged it all into master</a>.</p>
+
+<h2 id="how-to-use-it">How to use it</h2>
+
+<p>First of all, this feature is disabled by default, and the configuration part
+for it looks like this (inside of the <code class="highlighter-rouge">config/config.yml</code> file, see <a href="/docs/Configuring-Portus.html">the
+documentation on how to configure Portus</a>):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">security</span><span class="pi">:</span>
+  <span class="na">clair</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+  <span class="na">zypper</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+  <span class="na">dummy</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+</code></pre></div></div>
+
+<p>This feature is enabled through backends. That is, you can enable multiple
+backends and Portus will aggregate all the information for each image and
+tag. To enable a backend, you have to provide the server URL for the security
+scanner. We are currently supporting three backends (even though we only
+recommend one of them for now):</p>
+
+<ul>
+  <li><a href="https://github.com/coreos/clair">CoreOS Clair</a>: Clair is an open source project for the static analysis of
+vulnerabilities in application containers (currently including appc and
+Docker).</li>
+  <li><a href="https://github.com/SUSE/zypper-docker">zypper-docker</a>: zypper-docker is a command line tool that provides a quick
+way to patch and update Docker Images based on either SUSE Linux Enterprise or
+openSUSE. In a hackweek we started to work on a <code class="highlighter-rouge">serve</code> command, so it can be
+used as a server (see <a href="https://github.com/SUSE/zypper-docker/tree/cli-separation">this branch</a>). However, we never managed to fully
+stabilize this branch, so support for this is considered experimental.</li>
+  <li>The <code class="highlighter-rouge">dummy</code> backend: this backend is only meant to be used for development
+purposes. That is, it allows developers to have some fixtures that they can
+use.</li>
+</ul>
+
+<p>If you have enabled this feature, you should be able to see something like this
+in a repository:</p>
+
+<p><img src="/images/docs/security.png" alt="Repository page with vulnerabilities highlighted" /></p>
+
+<p>Clicking these links will take you to the tag’s page. For example:</p>
+
+<p><img src="/images/docs/tag-vulnerabilities.png" alt="Tag page with Clair vulnerabilities" /></p>
+
+<h2 id="availability">Availability</h2>
+
+<p>This feature will be available as of Portus 2.3, but you can already try it out
+on the master branch. You can read more about this feature in
+the <a href="/features/6_security_scanning.html">documentation</a>.</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="row row-0">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </footer>
+  </body>
+</html>

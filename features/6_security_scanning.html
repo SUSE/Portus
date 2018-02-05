@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Security scanning</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="  Only available in 2.3 or later.">
+
+    <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+    <div class="container" id="documentation">
+      <div class="row">
+        <div class="post-content col-md-10 col-md-offset-3 col-sm-12 col-xs-12">
+          <section>
+            <div class="row">
+              <div class="visible-xs visible-sm">
+  <div class="content-bar">
+    <ul class="topics">
+      <li class="dropdown">
+        <button class="dropdown-toggle" type="button" data-toggle="dropdown">Documentation Index
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Documentation</li>
+          
+          
+            <li>
+              <a href="/docs/first-steps.html">
+                Docker and Portus for newcomers
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-Portus.html">
+                Configuring Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/database.html">
+                Configuring the database
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/How-to-setup-secure-registry.html">
+                Configuring a secure private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/deploy.html">
+                Deploying Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/Configuring-the-registry.html">
+                Portus and your private registry
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/API.html">
+                Portus REST API
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/background.html">
+                The background process
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/portusctl.html">
+                portusctl
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/upgrading-portus.html">
+                Upgrading Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/versions.html">
+                Supported Docker Versions
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/how_we_release.html">
+                Portus Releases
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/release-schedule.html">
+                Release schedule
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/FAQ.html">
+                FAQ
+              </a>
+            </li>
+          
+          <li class="dropdown-header">Features</li>
+          
+          
+            <li>
+              <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+                Synchonizing the Registry and Portus
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/2_LDAP-support.html">
+                LDAP support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/3_teams_namespaces_and_users.html">
+                Teams, namespaces and users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/4_audit.html">
+                Audit
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/5_search.html">
+                Search
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_security_scanning.html">
+                Security scanning
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/removing_images.html">
+                Removing images and tags
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/6_starring.html">
+                Starring repositories
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/7_disabling_users.html">
+                Removing/Disabling users
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/anonymous_browsing.html">
+                Anonymous browsing
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/8_locking.html">
+                Locking accounts for safety reasons
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/9_recovering_password.html">
+                Recovering the password
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/disabling_signup.html">
+                Disabling the sign up form
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/oauth.html">
+                OAuth and OpenID Connect support
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/application_tokens.html">
+                Application tokens
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/display_name.html">
+                Display name
+              </a>
+            </li>
+          
+            <li>
+              <a href="/features/health.html">
+                Health checking
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+            </div>
+            <div class="row post">
+              <article>
+                <div class="alert alert-info">
+  Only available in <strong>2.3 or later</strong>.
+</div>
+
+<h2 id="intro">Intro</h2>
+
+<p>You can setup a security scanner for your Portus instance. This way, Portus will
+display whether the images you have on your registry have known security
+vulnerabilities. This feature is disabled by default, but it can be configured
+through the following values:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">security</span><span class="pi">:</span>
+  <span class="c1"># CoreOS Clair support (https://github.com/coreos/clair). This is only</span>
+  <span class="c1"># guaranteed to work for v2.0.x releases of Clair.</span>
+  <span class="na">clair</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+    <span class="c1"># Port where Clair exposes the health endpoint.</span>
+    <span class="c1"># See http://port.us.org/features/health.html</span>
+    <span class="na">health_port</span><span class="pi">:</span> <span class="s">6061</span>
+
+  <span class="c1"># zypper-docker can be run as a server with its `serve` command. This backend</span>
+  <span class="c1"># fetches the information as given by zypper-docker. Note that this feature</span>
+  <span class="c1"># from zypper-docker is experimental and only available through another branch</span>
+  <span class="c1"># than master.</span>
+  <span class="c1">#</span>
+  <span class="c1"># NOTE: support for this is experimental since this functionality has not</span>
+  <span class="c1"># been merged into master yet in zypper-docker.</span>
+  <span class="na">zypper</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+
+  <span class="c1"># This backend is only used for testing purposes, don't use it.</span>
+  <span class="na">dummy</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+</code></pre></div></div>
+
+<p>Portus supports having multiple scanners enabled at the same time.</p>
+
+<h2 id="coreos-clair">CoreOS Clair</h2>
+
+<div class="alert alert-info">
+  Clair support is only guaranteed to work for <strong>v2.0.x</strong> releases
+  of Clair.
+</div>
+
+<p><a href="https://coreos.com/clair/docs/latest/">CoreOS Clair</a> is an open source project
+for the static analysis of vulnerabilities in appc and docker containers. Portus
+only supports the analysis of docker images. In order to enable this backend,
+you have to pass the URL of your Clair server. For example (or simply with the
+<code class="highlighter-rouge">PORTUS_SECURITY_CLAIR_SERVER</code> environment variable):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">security</span><span class="pi">:</span>
+  <span class="na">clair</span><span class="pi">:</span>
+    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://my.clair.server:6060"</span>
+</code></pre></div></div>
+
+<p>If you have enabled this backend, you should be able to see something like this
+in a repository:</p>
+
+<p><img src="/images/docs/security.png" alt="Repository page with vulnerabilities highlighted" /></p>
+
+<p>Clicking these links will take you to the tag’s page. For example:</p>
+
+<p><img src="/images/docs/tag-vulnerabilities.png" alt="Tag page with Clair vulnerabilities" /></p>
+
+<h2 id="others">Others</h2>
+
+<p>There are two other available backends:</p>
+
+<ul>
+  <li><strong>zypper-docker</strong>: this is an experimental backend that uses a branch that is
+still under development in <a href="https://github.com/SUSE/zypper-docker">zypper-docker</a>.</li>
+  <li><strong>dummy</strong>: this should only be used for development purposes.</li>
+</ul>
+
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+      <aside class="hidden-xs hidden-sm content-list">
+  <ul class="topics">
+    <li>Documentation</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/docs/first-steps.html">
+            Docker and Portus for newcomers
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-Portus.html">
+            Configuring Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/database.html">
+            Configuring the database
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/How-to-setup-secure-registry.html">
+            Configuring a secure private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/deploy.html">
+            Deploying Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/Configuring-the-registry.html">
+            Portus and your private registry
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/API.html">
+            Portus REST API
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/background.html">
+            The background process
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/portusctl.html">
+            portusctl
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/upgrading-portus.html">
+            Upgrading Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/versions.html">
+            Supported Docker Versions
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/how_we_release.html">
+            Portus Releases
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/release-schedule.html">
+            Release schedule
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/FAQ.html">
+            FAQ
+          </a>
+        </li>
+      
+    </ul>
+    <li>Features</li>
+    <ul class="subtopics">
+      
+      
+        <li>
+          <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
+            Synchonizing the Registry and Portus
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/2_LDAP-support.html">
+            LDAP support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/3_teams_namespaces_and_users.html">
+            Teams, namespaces and users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/4_audit.html">
+            Audit
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/5_search.html">
+            Search
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_security_scanning.html">
+            Security scanning
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/removing_images.html">
+            Removing images and tags
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/6_starring.html">
+            Starring repositories
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/7_disabling_users.html">
+            Removing/Disabling users
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/anonymous_browsing.html">
+            Anonymous browsing
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/8_locking.html">
+            Locking accounts for safety reasons
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/9_recovering_password.html">
+            Recovering the password
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/disabling_signup.html">
+            Disabling the sign up form
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/oauth.html">
+            OAuth and OpenID Connect support
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/application_tokens.html">
+            Application tokens
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/display_name.html">
+            Display name
+          </a>
+        </li>
+      
+        <li>
+          <a href="/features/health.html">
+            Health checking
+          </a>
+        </li>
+      
+    </ul>
+  </ul>
+  <div class="credits">
+    <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+  </div>
+</aside>
+
+      <div class="visible-xs visible-sm credits">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </div>
+  </body>
+</html>

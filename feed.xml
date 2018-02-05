@@ -1,24 +1,562 @@
----
-layout: null
----
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>{{ site.title | xml_escape }}</title>
-    <description>{{ site.description | xml_escape }}</description>
-    <link>{{ site.url }}</link>
-    <atom:link href="{{ site.url }}/feed.xml" rel="self" type="application/rss+xml" />
-    {% for post in site.posts limit:20 %}
+    <title>Portus</title>
+    <description>Claim control of your Docker images</description>
+    <link></link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    
       <item>
-        <title>{{ post.title | xml_escape }}</title>
+        <title>RPM support for container-diff</title>
         <description>
-          {% if post.subtitle %}{{ post.subtitle | xml_escape }} - {% endif %}
-          {{ post.content | xml_escape }}
+          
+          &lt;p&gt;Google just recently released &lt;a href=&quot;ihttps://github.com/GoogleCloudPlatform/container-diff&quot;&gt;container-diff&lt;/a&gt; as an open-source project to share it with the containers community. The core use case of container-diff is to analyze container images and report differences among them, including installed software packages with respect to their name, version and size, but it can also analyze files on the images’ file systems.&lt;/p&gt;
+
+&lt;p&gt;The release of container-diff instantly caught the attention of the Kubernetes Core Team at SUSE, as we consider it to be a useful tool for the broader containers community, but also for our own open source projects. Analyzing and comparing the differences among containers can be a useful extension to Portus, and we will add support for it in the near future.  While Portus’ &lt;a href=&quot;http://port.us.org/2017/07/19/security-scanning.html&quot;&gt;security scanning&lt;/a&gt; informs users about security issues in images and ultimately protects them from using insecure software, container-diff can assist in managing installed software packages in a more general fashion. For instance, container-diff can be used in automation to find out if or where a given software package is installed, reveal differences among those images, and assist in containerized software management.&lt;/p&gt;
+
+&lt;p&gt;SUSE knows that real-world IT systems are heterogeneous environments where products from different vendors are used to fit best to each individual need. Hence, one of the main goals of Portus’ security scanning is to support not only the scanning of SUSE-based images via &lt;a href=&quot;https://github.com/SUSE/zypper-docker&quot;&gt;zypper-docker&lt;/a&gt;, but to also to allow revealing vulnerabilities in non-SUSE based images, which we achieve by integrating &lt;a href=&quot;https://github.com/coreos/clair&quot;&gt;CoreOS clair&lt;/a&gt;. Container-diff follows a similar philosophy and allows users to analyze images with software being installed by various package managers, such as apt for Debian-based images and pip for Python packages with more analyzers being added by the community. However, one missing piece in container-diff for SUSE was the support for RPM packages in order to support openSUSE and SUSE images, which has just been &lt;a href=&quot;https://github.com/GoogleCloudPlatform/container-diff/commit/a039c5878b41c13a991c5e0d3a05052b9881ccc6&quot;&gt;contributed to upstream&lt;/a&gt; by SUSE’s Kubernetes Core Team.&lt;/p&gt;
+
+&lt;p&gt;At the moment of writing, container-diff ships two main functionalities. The first one is a basic analysis of the installed software packages in container images and tar archives. With the newly added RPM feature, analyzing an openSUSE image with container-diff can be achieved via &lt;code class=&quot;highlighter-rouge&quot;&gt;container-diff analyze --type rpm daemon://opensuse:tumbleweed&lt;/code&gt;, which will load the &lt;code class=&quot;highlighter-rouge&quot;&gt;opensuse:tumbleweed&lt;/code&gt; image from the local daemon, run the RPM analysis and report the results to the user:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-----RPM-----
+
+Packages found in opensuse:tumbleweed:
+NAME                            VERSION                      SIZE
+-acl                            2.2.52                       216.6K
+-bash                           4.4                          1M
+-blog                           2.18                         128.9K
+-bzip2                          1.0.6                        72.8K
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Another core functionality of container-diff is to compare two specified container images or tar archives and output the software packages that are specific to one image, or common to both images. Comparing the &lt;code class=&quot;highlighter-rouge&quot;&gt;opensuse:42.2&lt;/code&gt; with the &lt;code class=&quot;highlighter-rouge&quot;&gt;opensuse:42.3&lt;/code&gt; image, for instance, can be achieved via &lt;code class=&quot;highlighter-rouge&quot;&gt;container-diff diff --type rpm daemon://opensuse:42.2 daemon://opensuse:42.3&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-----RPM-----
+
+Packages found only in opensuse:42.2:
+NAME             VERSION        SIZE
+-binutils        2.29.1         33.6M
+
+Packages found only in opensuse:42.3:
+NAME                VERSION        SIZE
+-blog               2.18           129.2K
+-libncurses6        5.9            1021.2K
+
+Version differences:
+PACKAGE                                   IMAGE1 (opensuse:42.2)        IMAGE2 (opensuse:42.3)
+-gpg-pubkey                               307e3d54, 0                   3dbdc284, 0
+-libblkid1                                2.28, 263.1K                  2.29.2, 271.1K
+-libfdisk1                                2.28, 353.6K                  2.29.2, 369.6K
+-libgcc_s1                                6.2.1+r239768, 90.5K          7.2.1+r253435, 90.4K
+-libgpg-error0                            1.13, 254.7K                  1.27, 495.6K
+-libmount1                                2.28, 294.5K                  2.29.2, 298.5K
+-libp11-kit0                              0.20.3, 565.9K                0.20.7, 286.8K
+-libsmartcols1                            2.28, 150.2K                  2.29.2, 162.2K
+-libsolv-tools                            0.6.26, 4.3M                  0.6.30, 4.3M
+-libstdc++6                               6.2.1+r239768, 1.5M           7.2.1+r253435, 1.5M
+-libtasn1                                 3.7, 120.7K                   4.9, 91.9K
+-libtasn1-6                               3.7, 78.6K                    4.9, 74.6K
+-libuuid1                                 2.28, 18.2K                   2.29.2, 18.2K
+-libzypp                                  16.15.6, 7.4M                 16.17.4, 7.4M
+-openSUSE-release                         42.2, 1.3M                    42.3, 587.2K
+-openSUSE-release-mini                    42.2, 67B                     42.3, 67B
+-p11-kit                                  0.20.3, 224.4K                0.20.7, 236.4K
+-p11-kit-tools                            0.20.3, 182.2K                0.20.7, 194.2K
+-systemd-presets-branding-openSUSE        0.3.0, 892B                   12.2, 3.6K
+-util-linux                               2.28, 3.6M                    2.29.2, 3.7M
+-zypper                                   1.13.32, 6.6M                 1.13.38, 6.7M
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;All in all, &lt;a href=&quot;ihttps://github.com/GoogleCloudPlatform/container-diff&quot;&gt;container-diff&lt;/a&gt; is a great tool for containerized software management, and it integrates well in automation processes with new functionality being added by the community. Have fun, try it out, and contribute to upstream.&lt;/p&gt;
+
         </description>
-        <pubDate>{{ post.date | date: "%a, %d %b %Y %H:%M:%S %z" }}</pubDate>
-        <link>{{ site.url }}{{ post.url }}</link>
-        <guid isPermaLink="true">{{ site.url }}{{ post.url }}</guid>
+        <pubDate>Tue, 19 Dec 2017 00:00:00 +0100</pubDate>
+        <link>/2017/12/19/container-diff.html</link>
+        <guid isPermaLink="true">/2017/12/19/container-diff.html</guid>
       </item>
-    {% endfor %}
+    
+      <item>
+        <title>Rebumping portusctl</title>
+        <description>
+          
+          &lt;p&gt;Another &lt;a href=&quot;https://en.opensuse.org/Portal:Hackweek&quot;&gt;hackweek&lt;/a&gt;, another new cool
+project. At SUSE we are proud to get our hands dirty with hackweeks from time to
+time. This is how &lt;a href=&quot;https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/&quot;&gt;Portus was
+born&lt;/a&gt;,
+and how we’ve introduced some nice features like &lt;a href=&quot;/2017/07/19/security-scanning.html&quot;&gt;security
+scanning&lt;/a&gt;. This time, however, we wanted to
+have some fun with one of our tools: &lt;strong&gt;portusctl&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-portusctl-&quot;&gt;What is portusctl ?&lt;/h2&gt;
+
+&lt;p&gt;The initial goal of &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; was to make things easier for our openSUSE/SLE
+users. This was done because in our RPM we had a clear picture on where things
+were stored, how Portus was deployed, etc. Hence, we could automate most tasks
+because we already knew what was needed to have a working Portus when installing
+from an RPM.&lt;/p&gt;
+
+&lt;p&gt;This way, we introduced &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; as a tool for our RPM users to achieve
+exactly this, with commands like &lt;code class=&quot;highlighter-rouge&quot;&gt;setup&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;logs&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;exec&lt;/code&gt;. Therefore, when
+installing from an RPM, the instructions were clear:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Install the provided RPM.&lt;/li&gt;
+  &lt;li&gt;Call &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl setup&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Magic happens.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There were quite some bugs on the process of making &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt;, but in the end
+it worked and it proved to be quite useful.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-a-new-implementation-was-needed&quot;&gt;Why a new implementation was needed&lt;/h2&gt;
+
+&lt;p&gt;Two things happened at once that made us re-evaluate the purpose of this tool:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The deployment of Portus had to be more focused on the containerized
+scenario. This is a trend that we have noticed both inside and outside of
+SUSE (e.g. &lt;a href=&quot;https://github.com/kubic-project/caasp-services&quot;&gt;Portus as a Helm
+chart&lt;/a&gt;). In this scenario, a
+tool like &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; didn’t matter that much (the most important commands
+are irrelevant there).&lt;/li&gt;
+  &lt;li&gt;The community started to work on a REST API for Portus (thanks
+&lt;a href=&quot;https://github.com/Vad1mo&quot;&gt;@Vad1mo&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/andrew2net&quot;&gt;@andrew2net&lt;/a&gt; for working on
+&lt;a href=&quot;https://github.com/SUSE/Portus/pull/1299&quot;&gt;#1299&lt;/a&gt; !). We quickly embraced
+this idea and started to move things to this new REST API. As of now, this
+API is not by any means in a stable phase, but it’s mature enough so we can
+work with it more seriously.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;While working on &lt;a href=&quot;https://www.suse.com/products/caas-platform/&quot;&gt;SUSE CaaS
+Platform&lt;/a&gt;, we started to
+appreciate more and more one of the handier tools of Kubernetes:
+&lt;a href=&quot;https://kubernetes.io/docs/user-guide/kubectl/&quot;&gt;kubectl&lt;/a&gt;. This tool is, in
+short, a client of the REST API of Kubernetes. It has a very nice user
+experience, and we thought we could provide something similar for the Portus
+API.&lt;/p&gt;
+
+&lt;p&gt;Our first move, then, was to check whether &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; was a nice fit for it
+(see &lt;a href=&quot;https://github.com/SUSE/Portus/pull/1403&quot;&gt;this pull request&lt;/a&gt;). The idea we
+got from this proof of concept was that &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; was a good candidate, but
+adding this functionality would increase its maintenance burden. Having both the
+old portusctl and this new big feature was not the best scenario, and following
+the containerization trend, we decided that some of the old portusctl had to be
+removed.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-new-portusctl&quot;&gt;The new portusctl&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/openSUSE/portusctl&quot;&gt;new portusctl&lt;/a&gt; is a tool that
+interacts with the REST API very similar to Kubernetes’ kubectl:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Creating a user&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;portusctl create user &lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;admin &lt;span class=&quot;nv&quot;&gt;email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;admin@test.lan &lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;12341234
+
+&lt;span class=&quot;c&quot;&gt;# Fetch namespaces&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;portusctl get namespaces
+
+&lt;span class=&quot;c&quot;&gt;# Updating a user&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;portusctl update user 2 &lt;span class=&quot;nv&quot;&gt;display_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Administrator
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Moreover, it can also interact with a local Portus instance with the &lt;code class=&quot;highlighter-rouge&quot;&gt;exec&lt;/code&gt;
+command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;portusctl &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake portus:info
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In order to implement all this, we started a new project under the openSUSE
+umbrella named
+&lt;a href=&quot;https://github.com/openSUSE/portusctl&quot;&gt;openSUSE/portusctl&lt;/a&gt;. Since this new
+&lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; was completely different from the old one, we implemented it from
+scratch using Go, and we licensed it under the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.en.html&quot;&gt;GPLv3&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;After re-evaluating &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt;, we decided to re-implement it from scratch so
+it fits better how Portus is going to be deployed and used in the future. This
+tool is not stable yet, but we have great confidence that this is the way to
+go. Hopefully for the next version of Portus we can announce a proper stable
+API, and &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; as its stable client.&lt;/p&gt;
+
+&lt;p&gt;Keep tuned!&lt;/p&gt;
+
+        </description>
+        <pubDate>Thu, 23 Nov 2017 00:00:00 +0100</pubDate>
+        <link>/2017/11/23/portusctl.html</link>
+        <guid isPermaLink="true">/2017/11/23/portusctl.html</guid>
+      </item>
+    
+      <item>
+        <title>Security scanning</title>
+        <description>
+          
+          &lt;p&gt;One of the perks of working at SUSE are &lt;a href=&quot;https://en.opensuse.org/Portal:Hackweek&quot;&gt;hackweeks&lt;/a&gt;. A hackweek is a period
+of 5 days in which every employee is free to work on whatever they want. Portus
+was born this way, as Flavio explained in his &lt;a href=&quot;https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/&quot;&gt;blog post&lt;/a&gt;, and we are happy
+to say that the feature announced today was also started this way.&lt;/p&gt;
+
+&lt;h2 id=&quot;adding-security-features-into-portus&quot;&gt;Adding security features into Portus&lt;/h2&gt;
+
+&lt;p&gt;We value security at SUSE, and particularly in our team, we think that security
+in Docker images and containers is really important. Luckily for us, we are not
+alone, and we have witnessed lots of interesting projects springing up from the
+community. In this regard, we have contributed to the community
+with &lt;a href=&quot;https://github.com/SUSE/zypper-docker&quot;&gt;zypper-docker&lt;/a&gt;, a tool that allows you to patch and monitor Docker
+images.&lt;/p&gt;
+
+&lt;p&gt;Moreover, as other projects like &lt;a href=&quot;https://hub.docker.com/&quot;&gt;Docker hub&lt;/a&gt; and &lt;a href=&quot;https://quay.io/&quot;&gt;Quay&lt;/a&gt; have proven, it’s
+pretty useful that the same web application that allows you to manage your
+Docker images, also fetches security information about them. Because of all
+this, we thought that it would be a good idea to create a new layer in Portus,
+in which we could integrate security tools, and finally report back about the
+security status of the images on your on-premise Docker registry. After toying
+with the idea, &lt;a href=&quot;https://github.com/vitoravelino&quot;&gt;Vítor Avelino&lt;/a&gt; and I worked on this and we have just
+recently &lt;a href=&quot;https://github.com/SUSE/Portus/pull/1289&quot;&gt;merged it all into master&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-use-it&quot;&gt;How to use it&lt;/h2&gt;
+
+&lt;p&gt;First of all, this feature is disabled by default, and the configuration part
+for it looks like this (inside of the &lt;code class=&quot;highlighter-rouge&quot;&gt;config/config.yml&lt;/code&gt; file, see &lt;a href=&quot;/docs/Configuring-Portus.html&quot;&gt;the
+documentation on how to configure Portus&lt;/a&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;security&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;clair&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;zypper&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;dummy&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This feature is enabled through backends. That is, you can enable multiple
+backends and Portus will aggregate all the information for each image and
+tag. To enable a backend, you have to provide the server URL for the security
+scanner. We are currently supporting three backends (even though we only
+recommend one of them for now):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/coreos/clair&quot;&gt;CoreOS Clair&lt;/a&gt;: Clair is an open source project for the static analysis of
+vulnerabilities in application containers (currently including appc and
+Docker).&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/SUSE/zypper-docker&quot;&gt;zypper-docker&lt;/a&gt;: zypper-docker is a command line tool that provides a quick
+way to patch and update Docker Images based on either SUSE Linux Enterprise or
+openSUSE. In a hackweek we started to work on a &lt;code class=&quot;highlighter-rouge&quot;&gt;serve&lt;/code&gt; command, so it can be
+used as a server (see &lt;a href=&quot;https://github.com/SUSE/zypper-docker/tree/cli-separation&quot;&gt;this branch&lt;/a&gt;). However, we never managed to fully
+stabilize this branch, so support for this is considered experimental.&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;dummy&lt;/code&gt; backend: this backend is only meant to be used for development
+purposes. That is, it allows developers to have some fixtures that they can
+use.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you have enabled this feature, you should be able to see something like this
+in a repository:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/docs/security.png&quot; alt=&quot;Repository page with vulnerabilities highlighted&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Clicking these links will take you to the tag’s page. For example:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/docs/tag-vulnerabilities.png&quot; alt=&quot;Tag page with Clair vulnerabilities&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;availability&quot;&gt;Availability&lt;/h2&gt;
+
+&lt;p&gt;This feature will be available as of Portus 2.3, but you can already try it out
+on the master branch. You can read more about this feature in
+the &lt;a href=&quot;/features/6_security_scanning.html&quot;&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+
+        </description>
+        <pubDate>Wed, 19 Jul 2017 00:00:00 +0200</pubDate>
+        <link>/2017/07/19/security-scanning.html</link>
+        <guid isPermaLink="true">/2017/07/19/security-scanning.html</guid>
+      </item>
+    
+      <item>
+        <title>Portus 2.2 has been released!</title>
+        <description>
+          
+          &lt;p&gt;In October we planned the 2.2.0 release of Portus, and a lot of things have
+happened meanwhile (see &lt;a href=&quot;https://www.suse.com/communities/blog/introducing-suse-containers-service-platform/&quot;&gt;this&lt;/a&gt; and &lt;a href=&quot;http://thenewstack.io/micro-os-suses-answer-container-os/&quot;&gt;this&lt;/a&gt;).
+This means that even if our initial goals were quite modest, we had to be more
+conservative in regards of the features and fixes that we could actually deliver
+for this new release of Portus.&lt;/p&gt;
+
+&lt;p&gt;For this reason, this release is more about fixing issues, rather than adding
+new shiny features. That being said, there are a couple of improvements that we
+would like to highlight:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; will now raise a warning whenever you are trying to use the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;--local-registry&lt;/code&gt; flag, but the package is not installed in your local
+computer. This was a common pitfall for openSUSE and SLE users, so we decided
+to go ahead and improve this situation.&lt;/li&gt;
+  &lt;li&gt;Portus now also supports Docker Distribution 2.5 and 2.6. In these two
+releases, the developers of Docker Distribution polished some rough edges that
+needed to be taken into consideration on the Portus side.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Besides these features, we have included lots of fixes for bugs that the
+community has been spotting in past releases. You can read about this on the
+&lt;a href=&quot;https://github.com/SUSE/Portus/releases/tag/2.2.0&quot;&gt;changelog&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;upgrading-from-portus-21x&quot;&gt;Upgrading from Portus 2.1.x&lt;/h4&gt;
+
+&lt;p&gt;All the details for upgrading from 2.1.x to 2.2 have been detailed in
+&lt;a href=&quot;/docs/upgrading-portus.html#upgrading-from-21-to-22&quot;&gt;this page&lt;/a&gt;. The
+instructions are quite simple: only a simple database migration is needed.&lt;/p&gt;
+
+&lt;h4 id=&quot;next&quot;&gt;Next…&lt;/h4&gt;
+
+&lt;p&gt;In the following days we will specify all the details about the next
+release.&lt;/p&gt;
+
+        </description>
+        <pubDate>Tue, 31 Jan 2017 00:00:00 +0100</pubDate>
+        <link>/2017/01/31/portus-2.2.html</link>
+        <guid isPermaLink="true">/2017/01/31/portus-2.2.html</guid>
+      </item>
+    
+      <item>
+        <title>Small update: 2.1.1 released and planning for 2.2</title>
+        <description>
+          
+          &lt;p&gt;After the release of Portus 2.1 some users notified us about some regressions
+and bugs. We’ve been handling those as well as including some small
+improvements. You can read more about that in the
+&lt;a href=&quot;https://github.com/SUSE/Portus/releases/tag/2.1.1&quot;&gt;release notes&lt;/a&gt;. We urge
+users of the 2.1 release to upgrade to 2.1.1 as soon as possible.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-road-ahead&quot;&gt;The road ahead&lt;/h3&gt;
+
+&lt;p&gt;As we wrote in the &lt;a href=&quot;/2016/09/30/portus-2.1.html&quot;&gt;last blog post&lt;/a&gt;, we are not
+particularly happy on how we handled some things during the development of the
+2.1 release. For this reason, we will maintain
+&lt;a href=&quot;/docs/release-schedule.html&quot;&gt;this dedicated page&lt;/a&gt; explaining what to expect
+from new releases, the exact dates, and the overall goals of the releases to
+come.&lt;/p&gt;
+
+        </description>
+        <pubDate>Tue, 18 Oct 2016 00:00:00 +0200</pubDate>
+        <link>/2016/10/18/portus-2.1.1-and-planning-for-2.2.html</link>
+        <guid isPermaLink="true">/2016/10/18/portus-2.1.1-and-planning-for-2.2.html</guid>
+      </item>
+    
+      <item>
+        <title>Portus 2.1 has been released!</title>
+        <description>
+          
+          &lt;p&gt;It’s been a long release and with it we have tried to add as many new exciting
+features as possible. That being said, we haven’t been able to include all the
+features that we initially planned on, but more on that later!&lt;/p&gt;
+
+&lt;p&gt;First of all, we have improved the support for Docker Distribution, so Portus
+should be able to handle the latest release of Docker Distribution (2.5.1 at the
+time of writing). Moreover, since Docker Distribution 2.4, now administrators
+can garbage collect orphaned blobs from their registries. Because of this, we
+decided that it was about time to implement image/tag deletion! We
+&lt;a href=&quot;/2016/06/20/removing-images-and-tags.html&quot;&gt;blogged about this&lt;/a&gt; in June, but
+you can read more about this in the
+&lt;a href=&quot;/features/removing_images.html&quot;&gt;documentation&lt;/a&gt; too. Similarly, we have also
+implemented &lt;a href=&quot;/features/7_disabling_users.html#removing-users&quot;&gt;user removal&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Besides this, webhooks can also be added into Portus. With this, you can tell
+Portus to send an HTTP request (with the given headers, etc.) after receiving
+a push/delete event. Thomas &lt;a href=&quot;/2016/07/26/webhooks.html&quot;&gt;blogged about this&lt;/a&gt; in
+July. Another exciting feature is the addition of
+&lt;a href=&quot;/features/application_tokens.html&quot;&gt;application tokens&lt;/a&gt;. This is an important
+step on the security front, and we are sure that users will appreciate it.&lt;/p&gt;
+
+&lt;p&gt;Moreover, we were fortunate enough to have a
+&lt;a href=&quot;https://summerofcode.withgoogle.com/&quot;&gt;Google Summer of Code&lt;/a&gt;
+student with us. &lt;a href=&quot;https://github.com/msfernandes&quot;&gt;Matheus&lt;/a&gt; helped us greatly on
+the UI/UX front, providing tons of fixes and nice touches. You can read about
+his experiences with us in his &lt;a href=&quot;http://msfernandes.github.io/blog/&quot;&gt;blog&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;These are the coolest features from this new release, but there are many more
+features and fixes. Make sure to read the
+&lt;a href=&quot;https://github.com/SUSE/Portus/releases/tag/2.1.0&quot;&gt;release notes&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Finally, we’d like to thank all the contributors that have helped during the
+development of this release. It’s been awesome to see all the different
+contributions and it certainly motivates us to go on with Portus. Thanks!&lt;/p&gt;
+
+&lt;h4 id=&quot;upgrading-from-portus-20x&quot;&gt;Upgrading from Portus 2.0.x&lt;/h4&gt;
+
+&lt;p&gt;We have detailed all the needed steps to upgrade from a 2.0.x release to 2.1 in
+&lt;a href=&quot;/docs/upgrading-portus.html#upgrading-from-20-to-21&quot;&gt;this page&lt;/a&gt;. If you are
+using an even older version of Portus, please consider upgrading to Portus 2.0.5 first.&lt;/p&gt;
+
+&lt;h4 id=&quot;what-to-expect-in-the-future&quot;&gt;What to expect in the future&lt;/h4&gt;
+
+&lt;p&gt;Portus is a relatively young project, and we have maintained it in the best way
+we could. There have been aspects of the development of Portus that we could
+have handled better though, and we want to fix this sooner rather than later. In
+particular:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The release schedule was unclear and it was never properly documented.&lt;/li&gt;
+  &lt;li&gt;We should release more often. Almost a year has passed since the 2.0 release.&lt;/li&gt;
+  &lt;li&gt;The feature list was never properly specified, so users never knew what was
+coming.&lt;/li&gt;
+  &lt;li&gt;Documentation could be better.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is an incomplete list of issues that some of our users have been
+complaining during our last release, and we couldn’t agree more. To remedy this,
+we are going to provide a better release schedule for the 2.2 release. In the
+following weeks we’ll specify all the details about this. Stay tuned!&lt;/p&gt;
+
+        </description>
+        <pubDate>Fri, 30 Sep 2016 00:00:00 +0200</pubDate>
+        <link>/2016/09/30/portus-2.1.html</link>
+        <guid isPermaLink="true">/2016/09/30/portus-2.1.html</guid>
+      </item>
+    
+      <item>
+        <title>Introducing webhooks</title>
+        <description>
+          
+          &lt;p&gt;Hello!&lt;/p&gt;
+
+&lt;p&gt;I am pleased to announce one of the new features which will be shipped with
+Portus version 2.1.&lt;/p&gt;
+
+&lt;h4 id=&quot;what-are-webhooks-and-how-do-they-work&quot;&gt;What are webhooks and how do they work?&lt;/h4&gt;
+
+&lt;p&gt;Simply put, a webhook is a user-defined HTTP callback which notifies a
+specified endpoint about some sort of change.
+In Portus, this change can be either a push or delete event, i.e. webhooks will
+be triggered when you push or delete an image.&lt;/p&gt;
+
+&lt;p&gt;Creating a webhook in Portus is as simple as defining a URL.
+Although every HTTP request also requires a request method, this does not
+explicitly need to be set by the user, and defaults to &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; in Portus.
+Another option, or better header, which has a default value is &lt;code class=&quot;highlighter-rouge&quot;&gt;content-type&lt;/code&gt;.
+It defaults to &lt;code class=&quot;highlighter-rouge&quot;&gt;application/json&lt;/code&gt; but can be changed if needed.
+Other customizable options include  username and password, and custom HTTP
+headers.
+Per default, these are left empty if not explicitly specified.
+Furthermore, each webhook can be temporary disabled if it’s not needed, and be
+enabled again any time.&lt;/p&gt;
+&lt;div class=&quot;alert alert-info&quot;&gt;
+&lt;strong&gt;Note&lt;/strong&gt;: a newly created webhook is disabled and needs to be
+enabled before it can be used.
+&lt;/div&gt;
+
+&lt;p&gt;The way it works is that every push or delete event to the registry returns an
+event back to Portus itself.
+Portus only enriches these hooks with filtering at namespace level,
+authorization, persistence, and UI-based management.
+The latter includes enabling/disabling and retriggering webhooks, and
+customizing parameters regarding the endpoint.
+Should one want to filter at repository level, this has to be done by parsing
+the response.&lt;/p&gt;
+
+&lt;h4 id=&quot;why-use-webhooks&quot;&gt;Why use webhooks?&lt;/h4&gt;
+
+&lt;p&gt;Since webhooks are triggered on events, they can be used for things like
+automatic deployment or triggering CI builds.&lt;/p&gt;
+
+&lt;p&gt;Simple example:&lt;/p&gt;
+
+&lt;p&gt;Your web application is containerized, and you have just pushed a new version
+of the used image to your registry.
+Since you want everything to work without much interaction, you have created a
+webhook which will notify some service.
+When this service gets notified, it can pull the new image and then restart the
+containerized web application.
+It’s as simple as that.&lt;/p&gt;
+
+&lt;h4 id=&quot;what-information-is-provided-in-the-request-body&quot;&gt;What information is provided in the request body?&lt;/h4&gt;
+
+&lt;p&gt;The provided information is documented
+&lt;a href=&quot;https://docs.docker.com/registry/notifications/&quot;&gt;here&lt;/a&gt;.  As mentioned above, we
+simply forward the received webhook content coming from the registry.&lt;/p&gt;
+
+&lt;p&gt;If you’re interested in how it works in detail, be sure to check out the
+&lt;a href=&quot;https://github.com/SUSE/Portus&quot;&gt;code on GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Enjoy!&lt;/p&gt;
+
+        </description>
+        <pubDate>Tue, 26 Jul 2016 00:00:00 +0200</pubDate>
+        <link>/2016/07/26/webhooks.html</link>
+        <guid isPermaLink="true">/2016/07/26/webhooks.html</guid>
+      </item>
+    
+      <item>
+        <title>Removing images and tags</title>
+        <description>
+          
+          &lt;p&gt;Hello again!&lt;/p&gt;
+
+&lt;p&gt;Some months ago we implemented one of the most requested features for Portus:
+removing images and tags. This is one of the most important features that will
+be available on the 2.1 release (due in September), and it has been a bit
+challenging to get it right.&lt;/p&gt;
+
+&lt;p&gt;The main original blocker for this feature is that Docker Distribution only
+provides garbage collection as of its 2.4 version. This is important because
+we didn’t feel save releasing this feature without proper support from
+the registry’s side. With this in mind, we are sure that lots of users are
+still not running on Docker Distribution 2.4 (and probably won’t for quite some
+time) so, to avoid any surprises we have disabled this feature by default. That
+is, in order to remove images and tags from within Portus, administrators will
+have to conciously enable it. You can do this with the
+&lt;a href=&quot;/docs/Configuring-Portus.html#delete-support&quot;&gt;delete&lt;/a&gt; configurable value.&lt;/p&gt;
+
+&lt;p&gt;Last but not least, it’s important to note that maintainers are the ones
+responsible for running the garbage collector (it’s not done automatically by
+the registry and it cannot be activated through an API endpoint). Therefore,
+it’s up to administrators to decide what they want to do. For more information
+on this, please take a look at both
+&lt;a href=&quot;/features/removing_images.html&quot;&gt;our documentation&lt;/a&gt; and the one from
+&lt;a href=&quot;https://github.com/mssola/distribution/blob/master/docs/garbage-collection.md&quot;&gt;Docker Distribution&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;With this feature already on our belt, we will be able to proceed with more
+features that will make it for the 2.1 release, like removing namespaces or
+users. If you are interested in knowing more about this, just say something on
+our &lt;a href=&quot;https://groups.google.com/forum/#!forum/portus-dev&quot;&gt;Google group&lt;/a&gt; or
+submit a new issue on our &lt;a href=&quot;https://github.com/SUSE/Portus&quot;&gt;Github project&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Enjoy!&lt;/p&gt;
+
+        </description>
+        <pubDate>Mon, 20 Jun 2016 00:00:00 +0200</pubDate>
+        <link>/2016/06/20/removing-images-and-tags.html</link>
+        <guid isPermaLink="true">/2016/06/20/removing-images-and-tags.html</guid>
+      </item>
+    
+      <item>
+        <title>Portus and Google Summer of Code</title>
+        <description>
+          
+          &lt;p&gt;Hello!&lt;/p&gt;
+
+&lt;p&gt;It’s my pleasure to write the first post on the Portus’ blog. In this blog
+we will try to communicate as much as possible regarding our plans for the
+future, new features and other exciting news.&lt;/p&gt;
+
+&lt;p&gt;For this post, we’ve been honored to be one of the projects selected to
+represent &lt;a href=&quot;https://www.opensuse.org&quot;&gt;openSUSE&lt;/a&gt; in the &lt;a href=&quot;https://developers.google.com/open-source/gsoc/&quot;&gt;Google Summer of
+Code&lt;/a&gt; program (or GSoC, for
+short). You can see more projects inside of the openSUSE umbrella
+&lt;a href=&quot;http://101.opensuse.org/&quot;&gt;here&lt;/a&gt;. We think that the Google Summer of Code
+program is the perfect opportunity for students to dive into Free Software and
+meet the people involved in Free Software products. In our case, we want to
+present to you &lt;a href=&quot;http://msfernandes.github.io/&quot;&gt;Matheus Fernandes&lt;/a&gt;, a student
+from Brazil that is giving Portus a nicer look and a more usable experience. If
+you want to know him more and what he will be working on, don’t hesitate and
+read his first blog post on his first Google Summer of Code &lt;a href=&quot;http://msfernandes.github.io/blog/2016/05/29/GSoC&quot;&gt;blog
+post&lt;/a&gt;. We are really proud
+to have him in board and we expect great things coming from him!&lt;/p&gt;
+
+&lt;p&gt;That has been all for the first post of this blog. Stay tuned for more news!&lt;/p&gt;
+
+        </description>
+        <pubDate>Mon, 30 May 2016 00:00:00 +0200</pubDate>
+        <link>/2016/05/30/first-post.html</link>
+        <guid isPermaLink="true">/2016/05/30/first-post.html</guid>
+      </item>
+    
   </channel>
 </rss>

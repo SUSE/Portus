@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rebumping portusctl</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Another hackweek, another new coolproject. At SUSE we are proud to get our hands dirty with hackweeks from time totime. This is how Portus wasborn,and how we...">
+
+    <link href="/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js"    type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+
+    <div class="container">
+      <div id="post-body" class="row">
+        <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <a href="/2017/11/23/portusctl.html">
+          <h2 class="post-title">Rebumping portusctl</h2>
+
+          
+          </a>
+
+          <p class="post-meta">
+            Posted on November 23, 2017
+            by Miquel Sabaté Solà
+          </p>
+
+          <div class="post-body">
+            <p>Another <a href="https://en.opensuse.org/Portal:Hackweek">hackweek</a>, another new cool
+project. At SUSE we are proud to get our hands dirty with hackweeks from time to
+time. This is how <a href="https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/">Portus was
+born</a>,
+and how we’ve introduced some nice features like <a href="/2017/07/19/security-scanning.html">security
+scanning</a>. This time, however, we wanted to
+have some fun with one of our tools: <strong>portusctl</strong>.</p>
+
+<h2 id="what-is-portusctl-">What is portusctl ?</h2>
+
+<p>The initial goal of <code class="highlighter-rouge">portusctl</code> was to make things easier for our openSUSE/SLE
+users. This was done because in our RPM we had a clear picture on where things
+were stored, how Portus was deployed, etc. Hence, we could automate most tasks
+because we already knew what was needed to have a working Portus when installing
+from an RPM.</p>
+
+<p>This way, we introduced <code class="highlighter-rouge">portusctl</code> as a tool for our RPM users to achieve
+exactly this, with commands like <code class="highlighter-rouge">setup</code>, <code class="highlighter-rouge">logs</code> and <code class="highlighter-rouge">exec</code>. Therefore, when
+installing from an RPM, the instructions were clear:</p>
+
+<ul>
+  <li>Install the provided RPM.</li>
+  <li>Call <code class="highlighter-rouge">portusctl setup</code>.</li>
+  <li>Magic happens.</li>
+</ul>
+
+<p>There were quite some bugs on the process of making <code class="highlighter-rouge">portusctl</code>, but in the end
+it worked and it proved to be quite useful.</p>
+
+<h2 id="why-a-new-implementation-was-needed">Why a new implementation was needed</h2>
+
+<p>Two things happened at once that made us re-evaluate the purpose of this tool:</p>
+
+<ol>
+  <li>The deployment of Portus had to be more focused on the containerized
+scenario. This is a trend that we have noticed both inside and outside of
+SUSE (e.g. <a href="https://github.com/kubic-project/caasp-services">Portus as a Helm
+chart</a>). In this scenario, a
+tool like <code class="highlighter-rouge">portusctl</code> didn’t matter that much (the most important commands
+are irrelevant there).</li>
+  <li>The community started to work on a REST API for Portus (thanks
+<a href="https://github.com/Vad1mo">@Vad1mo</a> and
+<a href="https://github.com/andrew2net">@andrew2net</a> for working on
+<a href="https://github.com/SUSE/Portus/pull/1299">#1299</a> !). We quickly embraced
+this idea and started to move things to this new REST API. As of now, this
+API is not by any means in a stable phase, but it’s mature enough so we can
+work with it more seriously.</li>
+</ol>
+
+<p>While working on <a href="https://www.suse.com/products/caas-platform/">SUSE CaaS
+Platform</a>, we started to
+appreciate more and more one of the handier tools of Kubernetes:
+<a href="https://kubernetes.io/docs/user-guide/kubectl/">kubectl</a>. This tool is, in
+short, a client of the REST API of Kubernetes. It has a very nice user
+experience, and we thought we could provide something similar for the Portus
+API.</p>
+
+<p>Our first move, then, was to check whether <code class="highlighter-rouge">portusctl</code> was a nice fit for it
+(see <a href="https://github.com/SUSE/Portus/pull/1403">this pull request</a>). The idea we
+got from this proof of concept was that <code class="highlighter-rouge">portusctl</code> was a good candidate, but
+adding this functionality would increase its maintenance burden. Having both the
+old portusctl and this new big feature was not the best scenario, and following
+the containerization trend, we decided that some of the old portusctl had to be
+removed.</p>
+
+<h2 id="the-new-portusctl">The new portusctl</h2>
+
+<p>The <a href="https://github.com/openSUSE/portusctl">new portusctl</a> is a tool that
+interacts with the REST API very similar to Kubernetes’ kubectl:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Creating a user</span>
+<span class="nv">$ </span>portusctl create user <span class="nv">username</span><span class="o">=</span>admin <span class="nv">email</span><span class="o">=</span>admin@test.lan <span class="nv">password</span><span class="o">=</span>12341234
+
+<span class="c"># Fetch namespaces</span>
+<span class="nv">$ </span>portusctl get namespaces
+
+<span class="c"># Updating a user</span>
+<span class="nv">$ </span>portusctl update user 2 <span class="nv">display_name</span><span class="o">=</span>Administrator
+</code></pre></div></div>
+
+<p>Moreover, it can also interact with a local Portus instance with the <code class="highlighter-rouge">exec</code>
+command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>portusctl <span class="nb">exec </span>rake portus:info
+</code></pre></div></div>
+
+<p>In order to implement all this, we started a new project under the openSUSE
+umbrella named
+<a href="https://github.com/openSUSE/portusctl">openSUSE/portusctl</a>. Since this new
+<code class="highlighter-rouge">portusctl</code> was completely different from the old one, we implemented it from
+scratch using Go, and we licensed it under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a>.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>After re-evaluating <code class="highlighter-rouge">portusctl</code>, we decided to re-implement it from scratch so
+it fits better how Portus is going to be deployed and used in the future. This
+tool is not stable yet, but we have great confidence that this is the way to
+go. Hopefully for the next version of Portus we can announce a proper stable
+API, and <code class="highlighter-rouge">portusctl</code> as its stable client.</p>
+
+<p>Keep tuned!</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="row row-0">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </footer>
+  </body>
+</html>
