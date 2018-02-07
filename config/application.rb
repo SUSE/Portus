@@ -4,9 +4,11 @@ require File.expand_path("../boot", __FILE__)
 
 require "rails/all"
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups)
+bundler_groups = Rails.groups | [:db]
+if Rails.env.test? || Rails.env.development? || ENV["INCLUDE_ASSETS_GROUP"] == "yes"
+  bundler_groups << :assets
+end
+Bundler.require(*bundler_groups)
 
 module Portus
   # Application implements the Rails application base for Portus.
