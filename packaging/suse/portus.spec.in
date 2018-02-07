@@ -94,7 +94,7 @@ gem.ruby2.5 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}
 
 # Compile assets
 PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
-  RAILS_ENV=production NODE_ENV=production \
+  INCLUDE_ASSETS_GROUP=yes RAILS_ENV=production NODE_ENV=production \
   bundle exec rake portus:assets:compile
 
 # Install the final gems (i.e. exclude the `assets` group from the final
@@ -103,7 +103,10 @@ PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
 # want...
 rm -r vendor/bundle/ruby/%{rb_ver}/*
 gem.ruby2.5 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
-bundle install --retry=3 --local --deployment --without test development
+bundle install --retry=3 --local --deployment --without test development assets
+
+# Clean unused gems
+bundle clean
 
 # Patch landing_page
 APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
