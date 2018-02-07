@@ -3,7 +3,7 @@
   "scripts": {
     "eslint": "eslint --max-warnings 0 --ext .js,.vue ./app/assets/javascripts",
     "webpack": "webpack --watch --config config/webpack.js",
-    "test": "cross-env NODE_ENV=test mocha-webpack --webpack-config ./config/webpack.js --require ./spec/javascripts/setup.js ./spec/javascripts/**/*.spec.js",
+    "test": "cross-env NODE_ENV=test mocha-webpack --webpack-config ./config/webpack.js --require ./spec/javascripts/setup.js ./spec/javascripts/**/*.spec.js ./spec/javascripts/**/**/*.spec.js",
     "cover": "cross-env NODE_ENV=test nyc --reporter=text --reporter=html yarn test"
   },
   "nyc": {
@@ -32,6 +32,7 @@
     "mocha": "^4.1.0",
     "mocha-webpack": "^1.0.1",
     "nyc": "^11.4.1",
+    "sinon": "^4.2.2",
     "vue-test-utils": "^1.0.0-beta.9",
     "webpack-dev-server": "^2.3.0",
     "webpack-node-externals": "^1.6.0"

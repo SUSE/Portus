@@ -15,7 +15,7 @@
 
     <td>{{ tag[0].author.name }}</td>
 
-    <td>
+    <td class="image-id">
       <span v-if="tag[0].image_id === ''">-</span>
       <span v-else :title="prettyFormatID">
         {{ shortFormatID }}
@@ -24,7 +24,7 @@
 
     <td>{{ tag[0].updated_at }}</td>
 
-    <td v-if="securityEnabled">
+    <td class="vulns" v-if="securityEnabled">
       <span v-if="scanPending">Pending</span>
       <span v-if="scanInProgress">In progress</span>
       <a :href="tagLink" v-if="scanDone">
