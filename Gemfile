@@ -4,7 +4,6 @@ source "https://rubygems.org"
 
 gem "active_record_union"
 gem "base32"
-gem "bootstrap-sass", "~> 3.3.4"
 gem "devise"
 gem "font-awesome-rails", "~> 4.7.0.1"
 gem "grape"
@@ -26,7 +25,6 @@ gem "rails", "~> 4.2.10"
 gem "rails_stdout_logging", "~> 0.0.5", group: %i[development staging production]
 gem "redcarpet", "~> 3.4.0"
 gem "sass", "~> 3.4.23"
-gem "sass-rails", "~> 5.0.6"
 gem "search_cop"
 gem "slim", "~> 3.0.8"
 gem "webpack-rails"
@@ -34,8 +32,8 @@ gem "webpack-rails"
 gem "rack-cors", "~> 1.0.1"
 
 # Supported DBs
-gem "mysql2", "= 0.4.10", group: :mysql
-gem "pg", "~> 0.20.0", group: :postgres
+gem "mysql2", "= 0.4.10", group: :db
+gem "pg", "~> 0.20.0", group: :db
 
 # Pinning these specific versions because that's what we have on OBS.
 gem "ethon", "~> 0.9.0"
@@ -65,6 +63,8 @@ gem "temple", "= 0.7.7"
 # The following groups will *not* be included on the production installation.
 
 group :assets do
+  gem "bootstrap-sass", "~> 3.3.4"
+  gem "sass-rails", "~> 5.0.6"
   gem "uglifier", "~> 4.1.3"
 end
 
