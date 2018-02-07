@@ -85,6 +85,15 @@ describe API::V1::Health do
         end
       end
 
+      it "corrects when the protocol was not specified" do
+        APP_CONFIG["security"]["clair"]["server"] = "registry.mssola.cat"
+
+        VCR.use_cassette("health/clair-ok", record: :none) do
+          get "/api/v1/health"
+          expect(response.status).to eq 200
+        end
+      end
+
       it "handles errors as well" do
         # Forcing a 404 from Clair.
         expect(::Portus::HealthChecks::Clair).to receive(:health_endpoint).and_raise(SocketError)
