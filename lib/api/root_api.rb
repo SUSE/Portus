@@ -11,6 +11,7 @@ require "api/v1/repositories"
 require "api/v1/tags"
 require "api/v1/teams"
 require "api/v1/users"
+require "api/v1/vulnerabilities"
 require "api/version"
 
 module API
@@ -55,6 +56,7 @@ module API
     mount ::API::V1::Tags
     mount ::API::V1::Teams
     mount ::API::V1::Users
+    mount ::API::V1::Vulnerabilities
     mount ::API::Version
 
     route :any, "*path" do
