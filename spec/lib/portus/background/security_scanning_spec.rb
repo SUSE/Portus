@@ -111,6 +111,17 @@ describe ::Portus::Background::SecurityScanning do
       expect(Tag.all).to(be_all { |t| t.scanned == Tag.statuses[:scan_done] })
       expect(Tag.all).to(be_all { |t| t.vulnerabilities == ["something"] })
     end
+
+    it "marks tags as not scanned if it does not fetch vulnerabilities properly" do
+      create(:tag, name: "tag", repository: repository, digest: "1", author: admin)
+      allow_any_instance_of(::Portus::Security).to receive(:vulnerabilities) {}
+      allow_any_instance_of(Tag).to receive(:update_vulnerabilities) {}
+
+      subject.execute!
+
+      t = Tag.find_by(name: "tag")
+      expect(t.scanned).to eq(Tag.statuses[:scan_none])
+    end
   end
 
   describe "#to_s" do

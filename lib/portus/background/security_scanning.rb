@@ -46,6 +46,8 @@ module Portus
           dig = update_tag(tag, vulns)
           digests << dig if dig
         end
+
+        check_failed!
       end
 
       def to_s
@@ -80,6 +82,20 @@ module Portus
         end
 
         digest
+      end
+
+      # If not all tags where marked as done, then we have a problem (either
+      # Clair was temporarily unavailable, or we are hitting a bug). In that
+      # case, log the issue and mark the affected tags as not-scanned, so they
+      # can be picked up in following iterations.
+      def check_failed!
+        tags = Tag.where.not(scanned: Tag.statuses[:scan_done])
+        return if tags.empty?
+
+        Rails.logger.warn "Some tags were not marked as done. This may happen" \
+                          " either because the security scanner had a temporary problem, or" \
+                          " because there is a bug. They will be picked up in the next iteration."
+        tags.update_all(scanned: Tag.statuses[:scan_none])
       end
     end
   end
