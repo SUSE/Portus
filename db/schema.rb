@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109114124) do
+ActiveRecord::Schema.define(version: 20180207145522) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -109,17 +109,17 @@ ActiveRecord::Schema.define(version: 20180109114124) do
   add_index "stars", ["user_id"], name: "index_stars_on_user_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name",            limit: 255,   default: "latest", null: false
-    t.integer  "repository_id",   limit: 4,                        null: false
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.string   "name",            limit: 255,      default: "latest", null: false
+    t.integer  "repository_id",   limit: 4,                           null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.integer  "user_id",         limit: 4
     t.string   "digest",          limit: 255
-    t.string   "image_id",        limit: 255,   default: ""
-    t.boolean  "marked",                        default: false
+    t.string   "image_id",        limit: 255,      default: ""
+    t.boolean  "marked",                           default: false
     t.string   "username",        limit: 255
-    t.integer  "scanned",         limit: 4,     default: 0
-    t.text     "vulnerabilities", limit: 65535
+    t.integer  "scanned",         limit: 4,        default: 0
+    t.text     "vulnerabilities", limit: 16777215
   end
 
   add_index "tags", ["repository_id"], name: "index_tags_on_repository_id", using: :btree
