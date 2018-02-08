@@ -15,7 +15,7 @@
 #  marked          :boolean          default(FALSE)
 #  username        :string(255)
 #  scanned         :integer          default(0)
-#  vulnerabilities :text(65535)
+#  vulnerabilities :text(16777215)
 #
 # Indexes
 #
