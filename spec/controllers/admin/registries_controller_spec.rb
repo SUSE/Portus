@@ -117,8 +117,7 @@ RSpec.describe Admin::RegistriesController, type: :controller do
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
-    it "renders 'edit' with unprocessable entity status (422)
-        when registry is invalid" do
+    it "renders 'edit' with unprocessable entity status (422) when registry is invalid" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
       expect do
         put :update, id: registry.id, registry: { name: "" }

@@ -26,18 +26,18 @@ class Admin::RegistriesController < Admin::BaseController
   # done. If this check is passed/skipped, then it will try to create the
   # registry.
   def create
-    @registry = Registry.new(create_params)
+    svc = ::Registries::CreateService.new(current_user, create_params)
+    svc.force = params[:force]
+    svc.execute
 
-    # Check the reachability of the registry.
-
-    check_reachability("new") unless params[:force]
-    return if @unreachable
-
-    if @registry.save
-      Namespace.update_all(registry_id: @registry.id)
+    if svc.valid?
       redirect_to admin_registries_path, notice: "Registry was successfully created."
+    elsif svc.reachable?
+      flash[:alert] = svc.messages
+      redirect_to new_admin_registry_path, alert: svc.messages
     else
-      redirect_to new_admin_registry_path, alert: @registry.errors.full_messages
+      flash[:alert] = svc.messages
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -55,39 +55,23 @@ class Admin::RegistriesController < Admin::BaseController
   # Right now this just toggles the value of the "use_ssl" attribute for the
   # given registry. This might change in the future.
   def update
-    @registry = Registry.find(params[:id])
-    @registry.assign_attributes(update_params)
-    @can_change_hostname = !Repository.any?
+    attrs = update_params.merge(id: params[:id])
+    svc = ::Registries::UpdateService.new(current_user, attrs)
+    @registry = svc.execute
 
-    # Check the reachability of the registry.
-    check_reachability("edit")
-    return if @unreachable
-
-    if @registry.save
+    if svc.valid?
       # NOTE: if we decide to use rails-observers at some point,
       # we can remove this from here and use it in observers
       Rails.cache.delete "registry#{@registry.id}_status"
       redirect_to admin_registries_path, notice: "Registry updated successfully!"
     else
-      flash[:alert] = @registry.errors.full_messages
+      flash[:alert] = svc.messages
+      @can_change_hostname = !Repository.any?
       render "edit", status: :unprocessable_entity
     end
   end
 
   private
-
-  # Checks if registry is reachable and sends `unprocessable_entity`
-  # status if unreachable
-  def check_reachability(action)
-    msg = @registry.reachable?
-    return if msg.blank?
-
-    logger.info "\nRegistry not reachable:\n#{@registry.inspect}\n#{msg}\n"
-    flash[:alert] = "#{msg} You can skip this check by clicking on the
-      \"Skip remote checks\" checkbox."
-    render action, status: :unprocessable_entity
-    @unreachable = true
-  end
 
   # Raises a routing error if there is already a registry in place.
   # NOTE: (mssola) remove this once we support multiple registries.
