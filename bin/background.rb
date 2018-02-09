@@ -51,9 +51,14 @@ slept = 0
 #
 
 loop do
-  they.each do |t|
+  they.each_with_index do |t, idx|
     next if slept % t.sleep_value != 0
     t.execute! if t.work?
+
+    if t.disable?
+      Rails.logger.info "Disabling '#{t}'. Reason: #{t.disable_message}."
+      they.delete_at(idx)
+    end
   end
 
   break if ARGV.first == "--one-shot"

@@ -139,6 +139,12 @@ describe ::Portus::Background::SecurityScanning do
     end
   end
 
+  describe "#disable?" do
+    it "always returns false" do
+      expect(subject.disable?).to be_falsey
+    end
+  end
+
   describe "#to_s" do
     it "works" do
       expect(subject.to_s).to eq "Security scanning"

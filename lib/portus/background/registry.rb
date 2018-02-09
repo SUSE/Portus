@@ -31,6 +31,10 @@ module Portus
         end
       end
 
+      def disable?
+        false
+      end
+
       def to_s
         "Registry events"
       end

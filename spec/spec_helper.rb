@@ -80,6 +80,10 @@ RSpec.configure do |config|
       }
     }
 
+    APP_CONFIG["background"] = {
+      "sync" => { "enabled" => false, "sync-strategy" => "initial" }
+    }
+
     Rails.cache.write("portus-checks", nil)
   end
 
