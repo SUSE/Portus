@@ -77,6 +77,16 @@ module Portus
         portus = User.find_by(username: "portus")
         Tag.where(repository_id: dangling_repos).find_each { |t| t.delete_and_update!(portus) }
         Repository.where(id: dangling_repos).find_each { |r| r.delete_and_update!(portus) }
+
+        # Check that no events have happened while doing all this.
+        check_events!
+      end
+
+      # Raises an ActiveRecord::Rollback exception if there are registry events
+      # ready to be fetched.
+      def check_events!
+        return unless RegistryEvent.exists?(status: RegistryEvent.statuses[:fresh])
+        raise ActiveRecord::Rollback
       end
     end
   end
