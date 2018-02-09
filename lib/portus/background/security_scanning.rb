@@ -21,6 +21,10 @@ module Portus
         ::Portus::Security.enabled?
       end
 
+      def disable?
+        false
+      end
+
       # execute! updates the vulnerabilities of all tags which have not been
       # scanned yet. Note that this is done digest-wise, so tags which have
       # already been scanned might be updated as a side-effect of a tag with the

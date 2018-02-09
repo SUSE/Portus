@@ -11,6 +11,13 @@ class SyncMock < ::Portus::Background::Sync
 end
 
 describe ::Portus::Background::Sync do
+  before do
+    APP_CONFIG["background"]["sync"] = {
+      "enabled"       => true,
+      "sync-strategy" => "update-delete"
+    }
+  end
+
   describe "#sleep_value" do
     it "returns always 20" do
       expect(subject.sleep_value).to eq 20
@@ -18,7 +25,54 @@ describe ::Portus::Background::Sync do
   end
 
   describe "#work?" do
-    it "always return true" do
+    it "returns false if this feature is disabled" do
+      APP_CONFIG["background"]["sync"]["enabled"] = false
+      expect(subject.work?).to be_falsey
+    end
+
+    it "returns false on an unrecognized value" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "Wubba Lubba Dub Dub"
+
+      expect(Rails.logger).to receive(:error).with("Unrecognized value " \
+                                                   "'Wubba Lubba Dub Dub' for sync-strategy")
+      expect(subject.work?).to be_falsey
+    end
+
+    it "returns true if it's update or update-delete" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update"
+      expect(subject.work?).to be_truthy
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update-delete"
+      expect(subject.work?).to be_truthy
+    end
+
+    it "returns the same value as @executed on 'on-start'" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "on-start"
+      expect(subject.work?).to be_truthy
+
+      create(:registry)
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:catalog).and_return("")
+      allow_any_instance_of(::Portus::Background::Sync).to receive(:update_registry!) {}
+      subject.execute!
+
+      expect(subject.work?).to be_falsey
+    end
+
+    it "returns the same value as @executed on 'initial'" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      expect(subject.work?).to be_truthy
+
+      create(:registry)
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:catalog).and_return("")
+      allow_any_instance_of(::Portus::Background::Sync).to receive(:update_registry!) {}
+      subject.execute!
+
+      expect(subject.work?).to be_falsey
+    end
+
+    it "returns true if on 'initial' if there was no registry" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      expect(subject.work?).to be_truthy
+      subject.execute!
       expect(subject.work?).to be_truthy
     end
   end
@@ -146,6 +200,33 @@ describe ::Portus::Background::Sync do
         tags = Repository.find_by(name: "repo2").tags
         expect(tags.map(&:name)).to match_array(%w[latest tag2])
       end
+
+      it "does not remove old repositories if we are using 'update'" do
+        APP_CONFIG["background"]["sync"]["sync-strategy"] = "update"
+
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+
+        # With this "repo2" should be removed, but since we are on "update" this
+        # won't happen.
+        sync = SyncMock.new
+        sync.update_registry!([{ "name" => "busybox", "tags" => ["latest", "0.1"] },
+                               { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"] }])
+
+        # Global repos
+        ns = Namespace.where(global: true)
+        repos = Repository.where(namespace: ns)
+        expect(repos.map(&:name).sort).to match_array(["busybox"])
+        tags = repos.first.tags
+        expect(tags.map(&:name).sort).to match_array(["0.1", "latest"])
+
+        # User namespaces.
+        repos = Repository.where(namespace: namespace)
+        expect(repos.map(&:name).sort).to match_array(%w[repo1 repo2])
+        tags = Repository.find_by(name: "repo1").tags
+        expect(tags.map(&:name)).to match_array(["latest"])
+        tags = Repository.find_by(name: "repo2").tags
+        expect(tags.map(&:name)).to match_array(%w[tag2 tag3])
+      end
     end
 
     describe "uploading repository whose tags is nil" do
@@ -230,6 +311,53 @@ describe ::Portus::Background::Sync do
       create(:tag, name: "tag", repository: repo)
 
       expect(subject.enabled?).to be_falsey
+    end
+  end
+
+  describe "#disable?" do
+    it "returns false on update or update-delete" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update"
+      expect(subject.disable?).to be_falsey
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update-delete"
+      expect(subject.disable?).to be_falsey
+    end
+
+    it "returns whatever @executed contains on initial" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      expect(subject.disable?).to be_falsey
+
+      create(:registry)
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:catalog).and_return("")
+      allow_any_instance_of(::Portus::Background::Sync).to receive(:update_registry!) {}
+      subject.execute!
+
+      expect(subject.disable?).to be_truthy
+    end
+
+    it "returns whatever @executed contains on on-start" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "on-start"
+      expect(subject.disable?).to be_falsey
+
+      create(:registry)
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:catalog).and_return("")
+      allow_any_instance_of(::Portus::Background::Sync).to receive(:update_registry!) {}
+      subject.execute!
+
+      expect(subject.disable?).to be_truthy
+    end
+
+    it "returns false if no registry was set" do
+      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      expect(subject.disable?).to be_falsey
+      subject.execute!
+      expect(subject.disable?).to be_falsey
+    end
+  end
+
+  describe "#disable_message" do
+    it "works" do
+      expect(subject.disable_message).to eq "task was ordered to execute once, " \
+                                            "and this has already been performed"
     end
   end
 
