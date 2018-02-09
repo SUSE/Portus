@@ -187,6 +187,23 @@ describe ::Portus::Background::Sync do
         expect(activities.last.key).to eq "repository.delete"
       end
     end
+
+    it "rolls back if an event happened while syncing" do
+      registry = create(:registry)
+      owner = create(:user)
+      repo = create(:repository, name: "repo", namespace: registry.global_namespace)
+      create(:tag, name: "latest", author: owner, repository: repo)
+
+      # Event!
+      RegistryEvent.create!(event_id: "id", data: "", status: RegistryEvent.statuses[:fresh])
+
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+      sync = SyncMock.new
+
+      expect do
+        sync.update_registry!([{ "name" => "repo", "tags" => ["0.1"] }])
+      end.to raise_error(ActiveRecord::Rollback)
+    end
   end
 
   describe "#enabled?" do
