@@ -280,3 +280,11 @@ security:
 # Docker Registry. Only images on public namespaces will be shown.
 anonymous_browsing:
   enabled: true
+
+# Environment variables for ensuring the execution of the
+# background tasks 'registry' and 'sync'.
+background:
+  registry: 
+    enabled: true
+  sync: 
+    enabled: true

@@ -18,6 +18,14 @@ module Portus
         true
       end
 
+      def enabled?
+        if APP_CONFIG("background.sync") == false
+          Rails.logger.warn("WARNING: Sync is disabled!")
+        else
+          APP_CONFIG("background.sync")
+        end
+      end
+
       # Simply fetches the catalog from the registry and calls
       # `update_registry!`.
       def execute!
