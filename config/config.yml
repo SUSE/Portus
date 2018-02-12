@@ -276,10 +276,25 @@ security:
 anonymous_browsing:
   enabled: true
 
-# Environment variables for ensuring the execution of the
-# background tasks 'registry' and 'sync'.
+# Configuration for the background tasks.
 background:
-  registry: 
+  # The registry integration: it processes the given registry events (e.g. a new
+  # tag was pushed). It's therefore highly *discouraged* to disable this task.
+  registry:
     enabled: true
-  sync: 
+
+  # Registry synchronization: it synchronizes all the contents from the registry
+  # into the database.
+  sync:
     enabled: true
+
+    # There are four accepted values:
+    #   - update-delete: it performs a full synchronization.
+    #   - update: it only adds missing tags, but it does not remove any contents
+    #     from the database.
+    #   - on-start: when starting Portus it runs an `update-delete` and then it
+    #     gets disabled (i.e. it will only run once).
+    #   - initial: like `on-start`, but it only runs if the database is
+    #     empty. This is the default value since it's deemed to be the most
+    #     common use-case.
+    sync-strategy: initial

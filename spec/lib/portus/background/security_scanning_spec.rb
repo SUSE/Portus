@@ -124,6 +124,21 @@ describe ::Portus::Background::SecurityScanning do
     end
   end
 
+  describe "#enabled?" do
+    it "returns true when enabled" do
+      expect(subject.enabled?).to be_truthy
+    end
+
+    it "returns false when not enabled" do
+      APP_CONFIG["security"] = {
+        "clair"  => { "server" => "" },
+        "zypper" => { "server" => "" },
+        "dummy"  => { "server" => "" }
+      }
+      expect(subject.enabled?).to be_falsey
+    end
+  end
+
   describe "#to_s" do
     it "works" do
       expect(subject.to_s).to eq "Security scanning"

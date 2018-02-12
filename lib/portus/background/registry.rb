@@ -19,9 +19,10 @@ module Portus
 
       def enabled?
         val = APP_CONFIG.enabled?("background.registry")
-				Rails.logger.warn("Registry integration has been disabled. This is highly discouraged!") unless val
-				val
-			end
+        msg = "Registry integration has been disabled. This is highly discouraged!"
+        Rails.logger.warn(msg) unless val
+        val
+      end
 
       def execute!
         RegistryEvent.where(status: RegistryEvent.statuses[:fresh]).find_each do |e|
