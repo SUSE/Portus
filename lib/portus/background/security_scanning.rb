@@ -17,6 +17,10 @@ module Portus
         ::Portus::Security.enabled? && Tag.exists?(scanned: Tag.statuses[:scan_none])
       end
 
+      def enabled?
+        ::Portus::Security.enabled?
+      end
+
       # execute! updates the vulnerabilities of all tags which have not been
       # scanned yet. Note that this is done digest-wise, so tags which have
       # already been scanned might be updated as a side-effect of a tag with the
