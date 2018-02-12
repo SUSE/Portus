@@ -189,6 +189,33 @@ describe ::Portus::Background::Sync do
     end
   end
 
+  describe "#enabled?" do
+    it "returns true when enabled" do
+      APP_CONFIG["background"]["sync"] = { "enabled" => true }
+      expect(subject.enabled?).to be_truthy
+    end
+
+    it "returns false when not enabled" do
+      APP_CONFIG["background"]["sync"] = { "enabled" => false }
+      expect(subject.enabled?).to be_falsey
+    end
+
+    it "returns false on initial if there are repositories" do
+      APP_CONFIG["background"]["sync"] = {
+        "enabled"       => true,
+        "sync-strategy" => "initial"
+      }
+
+      registry = create(:registry)
+      create(:user)
+      namespace = create(:namespace, registry: registry)
+      repo = create(:repository, name: "repo", namespace: namespace)
+      create(:tag, name: "tag", repository: repo)
+
+      expect(subject.enabled?).to be_falsey
+    end
+  end
+
   describe "#to_s" do
     it "works" do
       expect(subject.to_s).to eq "Registry synchronization"

@@ -19,10 +19,17 @@ module Portus
       end
 
       def enabled?
-        if APP_CONFIG("background.sync") == false
-          Rails.logger.warn("WARNING: Sync is disabled!")
+        if APP_CONFIG.enabled?("background.sync")
+          strategy = APP_CONFIG["background"]["sync"]["sync-strategy"]
+          if strategy == "initial" && Repository.any?
+            Rails.logger.info "`#{self}` was disabled because strategy is set to " \
+                              "'initial' and the database is not empty"
+            false
+          else
+            true
+          end
         else
-          APP_CONFIG("background.sync")
+          false
         end
       end
 
