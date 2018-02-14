@@ -72,11 +72,11 @@ class Tag < ActiveRecord::Base
       return false
     end
 
-    Tag.where(digest: dig).map { |t| t.delete_and_update!(actor) }
+    Tag.where(digest: dig).map { |t| t.delete_by!(actor) }
   end
 
   # Delete this tag and update its activity.
-  def delete_and_update!(actor)
+  def delete_by!(actor)
     logger.tagged("catalog") { logger.info "Removed the tag '#{name}'." }
 
     # If the tag is no longer there, ignore this call and return early.

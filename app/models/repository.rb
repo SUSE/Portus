@@ -65,7 +65,7 @@ class Repository < ActiveRecord::Base
 
   # Updates the activities related to this repository and adds a new activity
   # regarding the removal of this.
-  def delete_and_update!(actor)
+  def delete_by!(actor)
     logger.tagged("catalog") { logger.info "Removed the image '#{name}'." }
 
     # Take care of current activities.
@@ -118,10 +118,10 @@ class Repository < ActiveRecord::Base
     # Destroy tags and the repository if it's empty now.
     user = User.find_from_event(event)
     repo.tags.where(digest: event["target"]["digest"], marked: false).map do |t|
-      t.delete_and_update!(user)
+      t.delete_by!(user)
     end
     repo = repo.reload
-    repo.delete_and_update!(user) if !repo.nil? && repo.tags.empty?
+    repo.delete_by!(user) if !repo.nil? && repo.tags.empty?
   end
 
   # Add the repository with the given `repo` name and the given `tag`. The
@@ -202,7 +202,7 @@ class Repository < ActiveRecord::Base
     create_tags client, repository, portus, repo["tags"] - tags
 
     # Finally remove the tags that are left and return the repo.
-    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_and_update!(portus) }
+    repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_by!(portus) }
     repository.reload
   end
 

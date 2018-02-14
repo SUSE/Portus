@@ -116,8 +116,8 @@ module Portus
         return if APP_CONFIG["background"]["sync"]["sync-strategy"] == "update"
 
         portus = User.find_by(username: "portus")
-        Tag.where(repository_id: repositories).find_each { |t| t.delete_and_update!(portus) }
-        Repository.where(id: repositories).find_each { |r| r.delete_and_update!(portus) }
+        Tag.where(repository_id: repositories).find_each { |t| t.delete_by!(portus) }
+        Repository.where(id: repositories).find_each { |r| r.delete_by!(portus) }
       end
 
       # Raises an ActiveRecord::Rollback exception if there are registry events
