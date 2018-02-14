@@ -23,7 +23,7 @@ class TagsController < ApplicationController
     repo = tag.repository
     if tag.delete_by_digest!(current_user)
       if repo.tags.empty?
-        repo.delete_and_update!(current_user)
+        repo.delete_by!(current_user)
         flash[:notice] = "Repository removed with all its tags"
       end
       head :ok

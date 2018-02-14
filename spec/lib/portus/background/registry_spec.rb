@@ -11,7 +11,7 @@ describe ::Portus::Background::Registry do
   end
 
   describe "#work?" do
-    it "always return true" do
+    it "always returns true" do
       expect(subject.work?).to be_truthy
     end
   end
@@ -56,6 +56,24 @@ describe ::Portus::Background::Registry do
       subject.execute!
 
       expect(RegistryEvent.all.all? { |e| e.status == "done" }).to be_truthy
+    end
+  end
+
+  describe "#enabled?" do
+    it "returns true when enabled" do
+      APP_CONFIG["background"]["registry"] = { "enabled" => true }
+      expect(subject.enabled?).to be_truthy
+    end
+
+    it "returns false when not enabled" do
+      APP_CONFIG["background"]["registry"] = { "enabled" => false }
+      expect(subject.enabled?).to be_falsey
+    end
+  end
+
+  describe "#disable?" do
+    it "always returns false" do
+      expect(subject.disable?).to be_falsey
     end
   end
 

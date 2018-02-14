@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe API::V1::Vulnerabilities, focus: true do
+describe API::V1::Vulnerabilities do
   let!(:admin) { create(:admin) }
   let!(:token) { create(:application_token, user: admin) }
   let!(:public_namespace) do

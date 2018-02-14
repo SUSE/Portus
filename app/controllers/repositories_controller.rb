@@ -50,7 +50,7 @@ class RepositoriesController < ApplicationController
       logger.error "The following tags could not be removed: #{ts}."
       redirect_to repository_path(@repository), alert: "Could not remove all the tags", float: true
     else
-      @repository.delete_and_update!(current_user)
+      @repository.delete_by!(current_user)
       redirect_to namespace_path(@repository.namespace),
                   notice: "Repository removed with all its tags", float: true
     end
