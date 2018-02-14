@@ -24,8 +24,8 @@ $ bundle exec rails r bin/background.rb
 That being said, unless you are in a development environment, you won't have to
 perform that command. Instead, if you are using the official [Docker
 image](https://hub.docker.com/r/opensuse/portus/tags/), you will have to set the
-following environment variable: `PORTUS_INIT_COMMAND=bin/background`. This has
-been already set in the [examples that we
+following environment variable: `PORTUS_BACKGROUND=true`. This has been already
+set in the [examples that we
 provide](https://github.com/SUSE/Portus/tree/master/examples).
 
 ## Tasks
