@@ -93,7 +93,7 @@ describe Tag do
       repository.create_activity(:push, owner: user, recipient: tag)
       repository.create_activity(:push, owner: user, recipient: tag2)
 
-      tag.delete_and_update!(user)
+      tag.delete_by!(user)
 
       activities = PublicActivity::Activity.order(:updated_at)
       expect(activities.count).to eq 3
@@ -155,7 +155,7 @@ describe Tag do
 
   # NOTE: lots of cases are being left out on purpose because they are already
   # tested in the previous `describe` block.
-  describe "#delete_and_update!" do
+  describe "#delete_by!" do
     let!(:tag) { create(:tag, name: "tag1", repository: repository, digest: "1") }
 
     before do
@@ -165,7 +165,7 @@ describe Tag do
     it "does nothing if the tag has already beed removed" do
       expect(Rails.logger).to receive(:info).with(/Removed the tag.../)
       expect(Rails.logger).to receive(:info).with(/Ignoring.../)
-      tag.delete_and_update!(user)
+      tag.delete_by!(user)
     end
   end
 

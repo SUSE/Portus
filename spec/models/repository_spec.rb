@@ -684,7 +684,7 @@ describe Repository do
     end
   end
 
-  describe "#delete_and_update!" do
+  describe "#delete_by!" do
     let(:registry)        { create(:registry, hostname: "registry.test.lan") }
     let(:user)            { create(:user) }
     let(:repository_name) { "busybox" }
@@ -708,7 +708,7 @@ describe Repository do
 
       # And now delete and see what happens.
       expect do
-        repo.delete_and_update!(user)
+        repo.delete_by!(user)
       end.to change(PublicActivity::Activity, :count).by(1)
 
       # The original push activity has changed, so it's still trackable.
