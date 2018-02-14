@@ -302,6 +302,15 @@ first time.
 **--anonymous-browsing-enable**
   Allow anonymous users to explore public repositories.
 
+**--background-registry-enable**
+  Toggle registry support.
+
+**--background-sync-enable**
+  Toggle registry synchronization support.
+
+**--background-sync-sync-strategy**
+  Set the synchronization strategy for the sync task.
+
 # EXAMPLES
 
 The simplest example is:

@@ -204,6 +204,20 @@ class Cli < Thor
          type:    :boolean,
          default: true
 
+  option "background-registry-enable",
+         desc:    "Toggle registry support",
+         type:    :boolean,
+         default: true
+
+  option "background-sync-enable",
+         desc:    "Toggle synchronization support",
+         type:    :boolean,
+         default: true
+
+  option "background-sync-sync-strategy",
+         desc:    "Set the synchronization strategy for the sync task",
+         default: "initial"
+
   def setup
     ensure_root
     check_setup_flags options
