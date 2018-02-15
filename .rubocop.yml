@@ -43,7 +43,7 @@ Metrics/BlockLength:
 #   2. The models regarding the registry have to be modularized.
 #   3. LDAP has to be refactored.
 Metrics/ClassLength:
-  Max: 210
+  Max: 230
 
 # The default is just too small. A limit of 100 looks reasonable and many other
 # projects (including inside of SUSE) are also using this value.
