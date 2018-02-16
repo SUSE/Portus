@@ -13,8 +13,8 @@ end
 describe ::Portus::Background::Sync do
   before do
     APP_CONFIG["background"]["sync"] = {
-      "enabled"       => true,
-      "sync-strategy" => "update-delete"
+      "enabled"  => true,
+      "strategy" => "update-delete"
     }
   end
 
@@ -31,22 +31,22 @@ describe ::Portus::Background::Sync do
     end
 
     it "returns false on an unrecognized value" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "Wubba Lubba Dub Dub"
+      APP_CONFIG["background"]["sync"]["strategy"] = "Wubba Lubba Dub Dub"
 
       expect(Rails.logger).to receive(:error).with("Unrecognized value " \
-                                                   "'Wubba Lubba Dub Dub' for sync-strategy")
+                                                   "'Wubba Lubba Dub Dub' for strategy")
       expect(subject.work?).to be_falsey
     end
 
     it "returns true if it's update or update-delete" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update"
+      APP_CONFIG["background"]["sync"]["strategy"] = "update"
       expect(subject.work?).to be_truthy
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update-delete"
+      APP_CONFIG["background"]["sync"]["strategy"] = "update-delete"
       expect(subject.work?).to be_truthy
     end
 
     it "returns the same value as @executed on 'on-start'" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "on-start"
+      APP_CONFIG["background"]["sync"]["strategy"] = "on-start"
       expect(subject.work?).to be_truthy
 
       create(:registry)
@@ -58,7 +58,7 @@ describe ::Portus::Background::Sync do
     end
 
     it "returns the same value as @executed on 'initial'" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      APP_CONFIG["background"]["sync"]["strategy"] = "initial"
       expect(subject.work?).to be_truthy
 
       create(:registry)
@@ -70,7 +70,7 @@ describe ::Portus::Background::Sync do
     end
 
     it "returns true if on 'initial' if there was no registry" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      APP_CONFIG["background"]["sync"]["strategy"] = "initial"
       expect(subject.work?).to be_truthy
       subject.execute!
       expect(subject.work?).to be_truthy
@@ -202,7 +202,7 @@ describe ::Portus::Background::Sync do
       end
 
       it "does not remove old repositories if we are using 'update'" do
-        APP_CONFIG["background"]["sync"]["sync-strategy"] = "update"
+        APP_CONFIG["background"]["sync"]["strategy"] = "update"
 
         allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
 
@@ -300,8 +300,8 @@ describe ::Portus::Background::Sync do
 
     it "returns false on initial if there are repositories" do
       APP_CONFIG["background"]["sync"] = {
-        "enabled"       => true,
-        "sync-strategy" => "initial"
+        "enabled"  => true,
+        "strategy" => "initial"
       }
 
       registry = create(:registry)
@@ -316,14 +316,14 @@ describe ::Portus::Background::Sync do
 
   describe "#disable?" do
     it "returns false on update or update-delete" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update"
+      APP_CONFIG["background"]["sync"]["strategy"] = "update"
       expect(subject.disable?).to be_falsey
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "update-delete"
+      APP_CONFIG["background"]["sync"]["strategy"] = "update-delete"
       expect(subject.disable?).to be_falsey
     end
 
     it "returns whatever @executed contains on initial" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      APP_CONFIG["background"]["sync"]["strategy"] = "initial"
       expect(subject.disable?).to be_falsey
 
       create(:registry)
@@ -335,7 +335,7 @@ describe ::Portus::Background::Sync do
     end
 
     it "returns whatever @executed contains on on-start" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "on-start"
+      APP_CONFIG["background"]["sync"]["strategy"] = "on-start"
       expect(subject.disable?).to be_falsey
 
       create(:registry)
@@ -347,7 +347,7 @@ describe ::Portus::Background::Sync do
     end
 
     it "returns false if no registry was set" do
-      APP_CONFIG["background"]["sync"]["sync-strategy"] = "initial"
+      APP_CONFIG["background"]["sync"]["strategy"] = "initial"
       expect(subject.disable?).to be_falsey
       subject.execute!
       expect(subject.disable?).to be_falsey

@@ -19,7 +19,7 @@ module Portus
       def work?
         return false unless APP_CONFIG.enabled?("background.sync")
 
-        val = APP_CONFIG["background"]["sync"]["sync-strategy"]
+        val = APP_CONFIG["background"]["sync"]["strategy"]
         case val
         when "update-delete", "update"
           true
@@ -28,14 +28,14 @@ module Portus
         when "initial"
           !@executed && !Repository.any?
         else
-          Rails.logger.error "Unrecognized value '#{val}' for sync-strategy"
+          Rails.logger.error "Unrecognized value '#{val}' for strategy"
           false
         end
       end
 
       def enabled?
         if APP_CONFIG.enabled?("background.sync")
-          strategy = APP_CONFIG["background"]["sync"]["sync-strategy"]
+          strategy = APP_CONFIG["background"]["sync"]["strategy"]
           if strategy == "initial" && Repository.any?
             Rails.logger.info "`#{self}` was disabled because strategy is set to " \
                               "'initial' and the database is not empty"
@@ -69,7 +69,7 @@ module Portus
       # This task will be asked to be disable if the strategy was set to
       # "on-start" or "initial", and the first execution has already been done.
       def disable?
-        strategy = APP_CONFIG["background"]["sync"]["sync-strategy"]
+        strategy = APP_CONFIG["background"]["sync"]["strategy"]
         if strategy == "initial" || strategy == "on-start"
           @executed
         else
@@ -113,7 +113,7 @@ module Portus
 
       # Delete the given repositories unless the configuration does not allow it.
       def delete_maybe!(repositories)
-        return if APP_CONFIG["background"]["sync"]["sync-strategy"] == "update"
+        return if APP_CONFIG["background"]["sync"]["strategy"] == "update"
 
         portus = User.find_by(username: "portus")
         Tag.where(repository_id: repositories).find_each { |t| t.delete_by!(portus) }

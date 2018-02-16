@@ -297,4 +297,4 @@ background:
     #   - initial: like `on-start`, but it only runs if the database is
     #     empty. This is the default value since it's deemed to be the most
     #     common use-case.
-    sync-strategy: initial
+    strategy: initial
