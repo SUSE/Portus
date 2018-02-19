@@ -247,6 +247,11 @@ user_permission:
   # is disabled, only an admin will be able to do this. This defaults to true.
   manage_namespace:
     enabled: true
+  
+  # Allow users to push images to namespaces, where they are owner/contributor of.
+  # If this is disabled, only admins can push images. This defaults to true.  
+  push_images:
+    enabled: true
 
 # Security scanner support. Add the server location for each driver in order to
 # enable it. If no drivers have been enabled, then this feature is skipped
