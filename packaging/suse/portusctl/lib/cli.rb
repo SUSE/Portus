@@ -214,7 +214,7 @@ class Cli < Thor
          type:    :boolean,
          default: true
 
-  option "background-sync-sync-strategy",
+  option "background-sync-strategy",
          desc:    "Set the synchronization strategy for the sync task",
          default: "initial"
 

@@ -308,7 +308,7 @@ first time.
 **--background-sync-enable**
   Toggle registry synchronization support.
 
-**--background-sync-sync-strategy**
+**--background-sync-strategy**
   Set the synchronization strategy for the sync task.
 
 # EXAMPLES
