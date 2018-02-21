@@ -5,10 +5,17 @@ order: 5
 longtitle: Configure and manage a Portus instance installed with the RPM
 ---
 
+<div class="alert alert-danger">
+  This version is <strong>deprecated</strong>, and it will be definitely removed
+  in <strong>2.4</strong>. We will switch to
+  <a href="https://github.com/openSUSE/portusctl" title="openSUSE/portusctl">this version</a>
+  instead.
+</div>
+
 ## portusctl
 
-**portusctl** is a CLI tool that comes with the
-[provided RPM](/docs/setups/rpm.html) and it allows administrators to
+**portusctl** is a CLI tool that comes with the Portus' RPM (so it's installed
+automatically in the official Docker image) and it allows administrators to
 setup and manage their Portus instance. This tool requires root privileges and
 it has the following commands:
 

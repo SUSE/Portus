@@ -5,6 +5,57 @@ order: 6
 longtitle: How to upgrade Portus across different versions
 ---
 
+## Upgrading from 2.2 to 2.3
+
+<div class="alert alert-info">
+  <strong>Important note</strong>: before doing anything at all, make sure to
+  backup the contents of the database.
+</div>
+
+Puma is now the HTTP server being used. Make sure to use the
+`PORTUS_PUMA_TLS_KEY` and the `PORTUS_PUMA_TLS_CERT` environment variables to
+point puma to the right paths for the certificates. Moreover, if you are not
+using the official Docker image, you will have to use the `PORTUS_PUMA_HOST`
+environment variable to tell Puma where to bind itself (in containerized
+deployments it will bind by default to `0.0.0.0:3000`).
+
+The database environment variables have changed the prefix from
+`PORTUS_PRODUCTION_` to `PORTUS_DB_`. Moreover, you will be able now to provide
+values for the following items: adapter (set it to `postgresql` for PostgreSQL
+support), port, pool and timeout. All these values are prefixed by `PORTUS_DB_`
+as well, so for example, to provide a value for the pool you need to set
+`PORTUS_DB_POOL`.
+
+Finally, we are not running migrations automatically anymore as we used to do
+before. This is now to be done by the administrator by executing (on the Portus
+context in `/srv/Portus` or simply as part of a `docker exec` command):
+
+```
+$ portusctl exec rake db:migrate
+```
+
+For more details on this check the commits
+[7fdfe9634180](https://github.com/SUSE/Portus/commit/7fdfe96341801b492ca0e2637fcbb0d31e54d5fc)
+and
+[1c4d2b6cf0e0](https://github.com/SUSE/Portus/commit/1c4d2b6cf0e09e3be770a0675a42ee23cd2f62dd).
+
+## Upgrading from 2.1 to 2.2
+
+<div class="alert alert-info">
+  <strong>Important note</strong>: before doing anything at all, make sure to
+  backup the contents of the database.
+</div>
+
+In order to upgrade from 2.1 to 2.2, you only need to perform a database
+migration. So, with the new code in place, simply run the following (wrap it
+with `portusctl` if you are using the RPM for openSUSE/SLE):
+
+```
+$ rake db:migrate
+```
+
+And you should be all set!
+
 ## Upgrading from 2.0 to 2.1
 
 ### Changes on the configuration
@@ -93,20 +144,3 @@ the registry to `readonly` mode before performing this operation, just to avoid
 any concurrency issues. Moreover, this task also asks for confirmation before
 doing anything at all. You can skip this by setting the
 `PORTUS_FORCE_DIGEST_UPDATE` environment variable before calling the rake task.
-
-## Upgrading from 2.1 to 2.2
-
-<div class="alert alert-info">
-  <strong>Important note</strong>: before doing anything at all, make sure to
-  backup the contents of the database.
-</div>
-
-In order to upgrade from 2.1 to 2.2, you only need to perform a database
-migration. So, with the new code in place, simply run the following (wrap it
-with `portusctl` if you are using the RPM for openSUSE/SLE):
-
-```
-$ rake db:migrate
-```
-
-And you should be all set!

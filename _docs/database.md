@@ -78,9 +78,8 @@ $ bundle exec rake db:seed
 ```
 
 If you have installed Portus through the RPM or you are using the [official
-Portus image](https://hub.docker.com/r/opensuse/portus/), you can call
-`portusctl` instead of `bundle` in order to get the right environment (otherwise
-you can simply use `/srv/Portus` as the working directory).
+Portus image](https://hub.docker.com/r/opensuse/portus/), you should call
+`portusctl` instead of `bundle` in order to get the right environment.
 
 For the containerized scenario though, you have to wait for the database to be
 up. This is already done automatically by our official Portus image. If you want
@@ -95,3 +94,9 @@ $ portusctl exec rails r bin/check_db.rb
 
 Portus does not require anything specific for the database. Thus, you can deploy
 your database cluster in the way you feel it's safer, faster, etc.
+
+That being said, there is a known issue in MariaDB and encoding that can be
+avoided as described [in this
+issue](https://github.com/SUSE/Portus/issues/1688). The provided
+[examples](https://github.com/SUSE/Portus/tree/master/examples) already
+incorporate this fix.

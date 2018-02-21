@@ -44,6 +44,10 @@ real-time Portus keeps track of images/tags that have been pushed/deleted.
 Before this implementation, this was done synchronously, which led into some
 blocking issues.
 
+This task can be disabled as described
+[here](/docs/Configuring-Portus.html#background-process), but it is **highly
+discouraged** to do so.
+
 ### Registry synchronization
 
 All Docker registries provide an API in which any client can fetch some
@@ -51,10 +55,34 @@ information. Portus makes a heavy use of this API, and in this case it fetches
 the catalog of Docker images/tags. This is done periodically, and it will update
 the database when needed.
 
-This way Portus makes sure that there are no consistency issues between the
-database and the real contents of the registry.
+Just like the other tasks, this task can be disabled, but we recommend tuning
+the `strategy` option as described
+[here](/docs/Configuring-Portus.html#background-process) instead. For that, you
+have to consider when do you think this synchronization has to be performed, and
+what should be its reach. In this case you have three possible scenarios:
 
-**Note**: this was done by the *crono* process before this new implementation.
+1. It's the first time you setup your own registry and Portus (i.e. you are
+   starting from scratch). In this situation the default value (*initial*) is
+   good enough: it will simply do nothing and it will get disabled.
+2. You already have a private Docker Registry and you are setting Portus to
+   connect to this one. The default value is again the best one because it will
+   import the images from this registry and then it will get disabled. That is,
+   the `sync` task will act as a registry importer.
+3. Regardless of the above cases, you want to guarantee that the database and
+   the Docker registry will never be out of sync. In this case you might want to
+   set the *update-delete* option (or its safer option *update*). The chance of
+   the database to be out of sync with the Docker registry is *highly
+   unlikely*. This is why we still recommend leaving the default value, since
+   the *update-delete* strategy is prone to be dangerous (its safer sibling
+   *update* shouldn't be that potentially dangerous).
+
+Regardless of our recommendations, we suggest you to go to the
+[section](/docs/Configuring-Portus.html#background-process) of the documentation
+where we describe all options.
+
+**Note**: this was done by the *crono* process before this new
+implementation. The old behavior of the old *crono* process corresponds to the
+actual *update-delete* strategy.
 
 ### Security scanning
 

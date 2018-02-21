@@ -84,8 +84,8 @@ gravatar:
 
 ### Delete support
 
-**Note**: feature only available in Portus 2.1 or later. Also bear in mind that
-this will only work accordingly if you are using Docker Distribution 2.4 or later.
+**Note**: bear in mind that this will only work accordingly if you are using
+Docker Distribution 2.4 or later.
 
 As of 2.1, and if you are using a Docker Distribution version not older than
 2.4, you will be able to delete images, tags, users, namespaces and teams. In
@@ -177,14 +177,12 @@ access into the Portus application and run:
 
     $ rake portus:make_admin[<username>]
 
-When Portus has been installed via RPM, this operation can be performed via
-`portusctl`:
+When you are using the [official Docker
+image](https://hub.docker.com/r/opensuse/portus/), you can do this with:
 
-    $ portusctl make_admin <username>
+    $ docker exec -it <container-id> portusctl make_admin <username>
 
 ### Disabling the sign up form
-
-**Note**: feature only available in Portus 2.1 or later.
 
 By default Portus will have the sign up form available for any person that comes
 across your Portus instance. You can change that by disabling the `signup`
@@ -275,8 +273,6 @@ attributes that might not be evident:
 
 ### Advanced registry options
 
-**Note**: this is only available in Portus 2.1 or later.
-
 You can configure some aspects on how Portus interacts with your Docker registry:
 
 {% highlight yaml %}
@@ -289,6 +285,9 @@ registry:
 
   timeout:
     value: 2
+
+  read_timeout:
+    value: 120
 {% endhighlight %}
 
 The JWT token is one of the main keys in the authentication process between
@@ -300,10 +299,12 @@ in the issue [SUSE/Portus#510](https://github.com/SUSE/Portus/issues/510).
 
 To workaround this, we allow the admin of Portus to raise the expiration time
 as required through the `jwt_expiration_time` configurable value. This value is
-set in minutes, but we still allow the syntax as allowed before the 2.1 release.
+set in minutes, but we still allow the syntax as allowed before the 2.1 release
+(deprecated in 2.3 and to be removed in 2.4).
 
 Moreover, the registry might be slow or the network connection flaky. For this,
-you can also use the `timeout` value. This has been added in Portus 2.3.
+you can also use the `timeout` and the `read_timeout` values. This has been
+added in Portus 2.3.
 
 Finally, another option is the `catalog_page`. This tweaks the page size for
 each catalog request performed by Portus. The default value for this should be
@@ -312,8 +313,6 @@ workaround a Docker Registry bug as stated
 [here](https://github.com/SUSE/Portus/issues/1001).
 
 ### FQDN of your machine
-
-**Note**: feature only available in Portus 2.1 or later.
 
 On the next release of Portus, the FQDN of the machine is no longer a secret
 and it's now considered a configurable value. The fact that it was a secret
@@ -374,8 +373,6 @@ You can read more about this [here](/features/anonymous_browsing.html).
 
 ### Display name
 
-**Note**: feature only available in Portus 2.1 or later.
-
 This option tells Portus to not use the username when showing users, rather a
 user-defined "display name". You can read more about this
 [here](/features/display_name.html). By default this feature is disabled, and
@@ -387,8 +384,6 @@ display_name:
 {% endhighlight %}
 
 ### Granular user permissions
-
-**Note**: this is only available in Portus 2.1 or later.
 
 You can further tweak the permissions that users have on a Portus instance with
 the following options:
@@ -420,6 +415,44 @@ user_permission:
 - **create/manage_namespace**: allow users to create/modify namespaces if they
   are an owner of it. If this is disabled, only an admin will be able to do
   this. It defaults to true.
+
+### Background process
+
+**Note**: this is only available in Portus 2.3 or later.
+
+As explained in the [documentation page](/docs/background.html) of the background
+process, we have introduced a background process to alleviate some heavy
+operations from the main Portus process. This background process has its own
+configuration values:
+
+{% highlight yaml %}
+background:
+  registry:
+    enabled: true
+
+  sync:
+    enabled: true
+    strategy: initial
+{% endhighlight %}
+
+- The `security scanning` task can be disabled by not providing a server as
+  described [here](/docs/Configuring-Portus.html#security-scanning).
+- The `registry` integration can be disabled, but it is **highly discouraged**
+  since then all registry events will be missed by Portus (they will be logged,
+  but not handled).
+- The `sync` task can be disabled as well, but more importantly you can tune it
+  further when enabled with the `strategy` option. This option may have any of
+  the following values:
+  - **update-delete**: it performs a full synchronization (traditional behavior
+    of the old `crono` process).
+  - **update**: it only adds missing tags, but it does not remove any contents
+    from the database.
+  - **on-start**: when starting Portus it runs an `update-delete` and then it
+    gets disabled (i.e. it will only run once).
+  - **initial**: like `on-start`, but it only runs if the database is
+    empty. This is the default value since it's deemed to be the most common
+    use-case and the safest option. The idea behind this option is that you only
+    want to synchronize when bootstrapping your instance.
 
 ## Deploying Portus in a Sub-URI
 
