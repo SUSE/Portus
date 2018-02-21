@@ -44,11 +44,16 @@ The following tasks have been moved into this new process:
   which could take quite some time. This meant that Portus got blocked in some
   deployments. Now Portus will simply log the event, and then the background
   process will process it right away (by default this process will check for
-  events every 2 seconds). Commit:
+  events every 2 seconds). This task can be disabled as documented
+  [here](http://port.us.org/docs/background.html). Commit:
   [6a4f7d7dca60](https://github.com/SUSE/Portus/commit/6a4f7d7dca60cd6afb59b51d951b20e808690bbb).
 - *Registry synchronization*: we have removed the *crono* process in favor of
   this new process. Hence, the code that was executed in previous releases by
-  crono has been merged as another task of this new process. Commit:
+  crono has been merged as another task of this new process. Moreover, since it
+  can be quite dangerous, we have added some configuration options: it can be
+  disabled; and it can be tuned with a strategy (from a riskier approach to a
+  safer one). All this has been documented in [its documentation
+  page](http://port.us.org/docs/background.html). Commit:
   [ced9b46a9064](https://github.com/SUSE/Portus/commit/ced9b46a9064a7c3e4374e427f3201a200db8c0a).
 
 **Note** on deployment: this new background process has to have access to the
@@ -235,6 +240,8 @@ Commits: [a2407506ff5c](https://github.com/SUSE/Portus/commit/a2407506ff5cd3dc65
 - Registry Client should probe that the /v2/ path reachable and that we accept
   200 responses as well. Commit:
   [2b0bf59a2601](https://github.com/SUSE/Portus/commit/2b0bf59a260102cdd837590660bb10babe08a824).
+- Upgraded jQuery to 3.x to avoid security issues. Commit:
+  [0505c177f5d2](https://github.com/SUSE/Portus/commit/ec07d2240681e43cb9575454d3baa956d2eb7d38).
 
 #### CVE
 
