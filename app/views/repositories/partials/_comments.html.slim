@@ -1,0 +1,36 @@
+.comments-wrapper
+  .comment-form.collapse
+    = form_for [@repository, @repository.comments.build], remote: true, html: {id: 'new-comment-form', class: 'form-horizontal', role: 'form'} do |f|
+      .form-group
+        = f.label :comment, {class: 'control-label col-md-2'}
+        .col-md-7
+          = f.text_area(:body, class: 'form-control fixed-size', required: false, placeholder: "Please write a comment.")
+      .form-group
+        .col-md-offset-2.col-md-7
+          = f.submit('Add', class: 'btn btn-primary')
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      .row
+        .col-sm-6
+          h5
+            span class="number_of_comments badge"
+              = @repository.comments.count
+            span class="comment_string"
+              - if @repository.comments.count == 1
+                |  Comment
+              - else
+                |  Comments
+        .col-sm-6.text-right
+          a.btn.btn-xs.btn-link.add-comment role="button"
+            i.fa.fa-comment
+            |  Write a comment
+
+    #comments.panel-body.panel-no-side-padding
+      .container-full
+        - if @repository_comments.empty?
+          .no-comments-found
+            ' Nobody has left a comment yet.
+        - else
+          - @repository_comments.each do |comment|
+            = render(comment)

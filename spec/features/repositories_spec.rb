@@ -7,7 +7,7 @@ def find_tag_checkbox(name)
   tag.find(:xpath, "../..").find("input[type='checkbox']")
 end
 
-describe "Repositories support" do
+describe "Feature: Repositories" do
   let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:user) { create(:admin) }
   let!(:user2) { create(:user) }
@@ -205,9 +205,9 @@ describe "Repositories support" do
 
         repository_count = Repository.count
         find(".repository-delete-btn").click
-        find(".repository-confirm-btn").click
-        expect(Repository.count).to be(repository_count - 1)
+        find(".popover-content .yes").click
         expect(page).to have_content("Repository removed with all its tags")
+        expect(Repository.count).to be(repository_count - 1)
       end
 
       it "A user deletes a tag", js: true do

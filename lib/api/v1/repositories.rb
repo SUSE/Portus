@@ -105,6 +105,24 @@ module API
             authorize repo, :show?
             present repo, with: API::Entities::Repositories, type: current_type
           end
+
+          desc "Delete repository",
+               params:  API::Entities::Repositories.documentation.slice(:id),
+               failure: [
+                 [401, "Authentication fails"],
+                 [403, "Authorization fails"],
+                 [404, "Not found"]
+               ]
+
+          delete do
+            repository = Repository.find(params[:id])
+            authorize repository, :destroy?
+
+            destroy_service = ::Repositories::DestroyService.new(current_user)
+            destroyed = destroy_service.execute(repository)
+
+            error!({ "errors" => destroy_service.error }, 422, header) unless destroyed
+          end
         end
       end
     end

@@ -37,7 +37,8 @@ $(() => {
 
       return {
         state: store.state,
-        isLoading: false,
+        isDeleting: false,
+        isLoading: true,
         notLoaded: false,
         unableToFetchBefore: false,
         tags: [],
@@ -57,6 +58,11 @@ $(() => {
 
       fetchTags() {
         const repositoryId = this.$refs.repoTitle.dataset.id;
+
+        if (this.state.isDeleting) {
+          setTimeout(() => this.fetchTags(), POLLING_VALUE);
+          return;
+        }
 
         RepositoriesService.groupedTags(repositoryId).then((response) => {
           set(this, 'tags', response.body);
@@ -113,27 +119,62 @@ $(() => {
 
             if (!this.tags.length) {
               const namespaceHref = this.$refs.repoLink.href;
+
+              this.$alert.$schedule('Repository removed with all its tags.');
               window.location.href = namespaceHref;
             }
           }
         };
 
         this.state.selectedTags.forEach((t) => {
+          set(this.state, 'isDeleting', true);
+
           TagsService.remove(t.id).then(() => {
             this.removeFromCollection(t.id);
             this.removeFromSelection(t.id);
             success.push(t.name);
           }).catch(() => {
             failure.push(t.name);
-          }).finally(() => showAlert(++promiseCount));
+          }).finally(() => {
+            set(this.state, 'isDeleting', false);
+            showAlert(++promiseCount);
+          });
         });
+      },
+
+      deleteRepository() {
+        set(this.state, 'isDeleting', true);
+
+        RepositoriesService.remove(this.state.repository.id).then(() => {
+          const namespaceHref = this.$refs.repoLink.href;
+
+          this.$alert.$schedule('Repository removed with all its tags');
+          window.location.href = namespaceHref;
+        }).catch((response) => {
+          let errors = response.data.errors || response.data.error;
+
+          if (Array.isArray(errors)) {
+            errors = errors.join('<br />');
+          }
+
+          this.$alert.$show(errors, false);
+        }).finally(() => set(this.state, 'isDeleting', false));
       },
     },
 
     mounted() {
-      set(this, 'isLoading', true);
+      const DELETE_BTN = '.repository-delete-btn';
+      const POPOVER_DELETE = '.popover-repository-delete';
+
+      // TODO: refactor bootstrap popover to a component
+      $(this.$el).on('inserted.bs.popover', DELETE_BTN, () => {
+        const $yes = $(POPOVER_DELETE).find('.yes');
+        $yes.click(this.deleteRepository.bind(this));
+      });
+
       this.loadData();
       this.$bus.$on('deleteTags', () => this.deleteTags());
+
       // eslint-disable-next-line no-new
       new CommentsPanel($('.comments-wrapper'));
     },

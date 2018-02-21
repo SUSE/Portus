@@ -72,7 +72,11 @@ class Tag < ActiveRecord::Base
       return false
     end
 
-    Tag.where(digest: dig).map { |t| t.delete_by!(actor) }
+    success = true
+    Tag.where(digest: dig).find_each do |tag|
+      success &&= tag&.delete_by!(actor)
+    end
+    success
   end
 
   # Delete this tag and update its activity.
@@ -86,8 +90,9 @@ class Tag < ActiveRecord::Base
     end
 
     # Delete tag and create the corresponding activities.
-    destroy
-    create_delete_activities!(actor)
+    destroyed = destroy
+    create_delete_activities!(actor) if destroyed
+    destroyed
   end
 
   # Returns vulnerabilities if there are any available and security scanning is

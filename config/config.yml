@@ -35,7 +35,10 @@ gravatar:
 # Also, you can read more in our documentation here:
 # http://port.us.org/features/removing_images.html
 delete:
-  enabled: false
+  enabled: true
+
+  # Allow contributors to delete images and tags
+  contributors: false
 
 # LDAP support. If enabled, then only users of the specified LDAP server will
 # be able to use Portus. Take a look at the documentation of LDAP support in our

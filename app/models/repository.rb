@@ -67,27 +67,9 @@ class Repository < ActiveRecord::Base
   # regarding the removal of this.
   def delete_by!(actor)
     logger.tagged("catalog") { logger.info "Removed the image '#{name}'." }
-
-    # Take care of current activities.
-    PublicActivity::Activity.where(trackable: self).update_all(
-      trackable_type: Namespace,
-      trackable_id:   namespace.id,
-      recipient_type: nil
-    )
-
-    # Add a "delete" activity"
-    namespace.create_activity(
-      :delete,
-      owner:      actor,
-      recipient:  self,
-      parameters: {
-        repository_name: name,
-        namespace_id:    namespace.id,
-        namespace_name:  namespace.clean_name
-      }
-    )
-
-    destroy
+    destroyed = destroy
+    create_delete_activities!(actor) if destroyed
+    destroyed
   end
 
   # Handle a push event from the registry.
@@ -255,5 +237,29 @@ class Repository < ActiveRecord::Base
       repository.create_activity(:push, owner: portus, recipient: t)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }
     end
+  end
+
+  protected
+
+  # Create/update the activities for a delete operation.
+  def create_delete_activities!(actor)
+    # Take care of current activities.
+    PublicActivity::Activity.where(trackable: self).update_all(
+      trackable_type: Namespace,
+      trackable_id:   namespace.id,
+      recipient_type: nil
+    )
+
+    # Add a "delete" activity"
+    namespace.create_activity(
+      :delete,
+      owner:      actor,
+      recipient:  self,
+      parameters: {
+        repository_name: name,
+        namespace_id:    namespace.id,
+        namespace_name:  namespace.clean_name
+      }
+    )
   end
 end

@@ -103,4 +103,50 @@ describe API::V1::Repositories do
       expect(tags[second].length).to eq(4)
     end
   end
+
+  context "DELETE /api/v1/repositories/:id" do
+    before do
+      APP_CONFIG["delete"]["enabled"] = true
+    end
+
+    it "deletes repository" do
+      repository = create(:repository, namespace: public_namespace)
+      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      expect(response).to have_http_status(:no_content)
+      expect { Repository.find(repository.id) }.to raise_exception(ActiveRecord::RecordNotFound)
+    end
+
+    it "forbids deletion of repository (delete disabled)" do
+      APP_CONFIG["delete"]["enabled"] = false
+      repository = create(:repository, namespace: public_namespace)
+      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns 422 if unable to remove dependent tag" do
+      allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
+        raise "I AM ERROR."
+      end
+
+      repository = create(:repository, namespace: public_namespace)
+      create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
+      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      body = JSON.parse(response.body)
+      expect(body["errors"]).to include("could not remove taggg tag")
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "returns 422 if unable to remove repository" do
+      repository = create(:repository, namespace: public_namespace)
+      allow_any_instance_of(Repository).to receive(:destroy).and_return(false)
+
+      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "returns status 404" do
+      delete "/api/v1/repositories/999", nil, @header
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

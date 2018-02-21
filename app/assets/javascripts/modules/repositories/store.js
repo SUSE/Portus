@@ -1,6 +1,9 @@
 export default class RepositoriesStore {
   constructor() {
-    this.state = {};
+    this.state = {
+      isDeleting: false,
+      repository: {},
+    };
 
     this.state.selectedTags = [];
   }
