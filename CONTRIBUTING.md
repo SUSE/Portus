@@ -16,31 +16,6 @@ Moreover, check whether it has already been reported
 - Add a comment only if you can provide helpful information that has not been
   provided in the discussion yet.
 
-If you want to report a **new issue**, please try to follow the following
-points if your issue is about Portus behaving in an unexpected manner:
-
-- Tell us the setup you're using. It can be as simple as:
-  - The docker-compose setup.
-  - The vagrant setup.
-  - The NGinx setup as described [here](http://port.us.org/docs/setups/3_nginx_bare_metal.html).
-  That being said, if you are using a custom setup explain to us how all the
-  pieces are glued together (you don't have to be too verbose, just specify the
-  most important stuff like configurations, etc.).
-- Paste the output of `rake portus:info` (or `portusctl rake portus:info` if
-  you are using the RPM).
-- If relevant, provide the related logs. If you are using the provided RPM,
-  this is as simple as just calling `portusctl logs`. Otherwise, provide the
-  contents of your `log/$environment.log` file, and the contents of the logs of
-  Apache/NGinx/etc. You don't have to provide *all* the contents, only the
-  relevant lines.
-- If possible, try to reproduce the same issue with logging set to `:debug`. You
-  can set this by modifying `config/environment/production.rb` (or whatever
-  environment you are in) and setting `config.log_level` to `:debug`. This will
-  give us more detailed logs. Another way to set this in production is by
-  setting the `PORTUS_LOG_LEVEL` environment variable to `debug`. Remember to
-  restart Portus when doing this.  And remember to set that value to `:info`
-  back again once you're done, otherwise your logs will grow quite rapidly!
-
 ## Check for assigned people
 
 We are using Github Issues for submitting known issues (e.g. bugs, features,
@@ -85,14 +60,6 @@ that all these changes have a comment explaining the reasoning behind it.
 
 Finally, note that `rubocop` is called on Travis-CI. This means that your Pull
 Request will not be merged until `rubocop` approves your changes.
-
-## Update the Changelog
-
-We keep a changelog in the `CHANGELOG.md` file. This is useful to understand
-what has changed between each version. When you implement a new feature, or a
-fix for an issue, please also update the `CHANGELOG.md` file accordingly. We
-don't follow a strict style for the changelog, just try to be consistent with
-the rest of the file.
 
 ## Sign your work
 

@@ -311,9 +311,28 @@ describe "Namespaces support" do
       expect(page).to have_content("Pull Viewer")
     end
 
+    context "when user_permission.push_images is disabled" do
+      before do
+        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+      end
+
+      it "shows the proper visual aid for each role" do
+        login_as user
+        visit namespace_path(namespace.id)
+        expect(page).to have_content("Push Pull Owner")
+
+        login_as user2, scope: :user
+        visit namespace_path(namespace.id)
+        expect(page).not_to have_content("Push Pull Contr.")
+
+        login_as user3, scope: :user
+        visit namespace_path(namespace.id)
+        expect(page).to have_content("Pull Viewer")
+      end
+    end
+
     it "An user sees dropdown for 'Show webhooks'", js: true do
       visit namespace_path(namespace.id)
-
       expect(page).not_to have_content("Show webhooks")
       find("[data-toggle='dropdown']").click
       expect(page).to have_content("Show webhooks")

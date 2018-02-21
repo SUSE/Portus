@@ -31,9 +31,9 @@ class NamespacePolicy
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     if APP_CONFIG.enabled?("user_permission.push_images")
       # Only owners and contributors have WRITE access
-       user.admin? ||
-         namespace.team.owners.exists?(user.id) ||
-         namespace.team.contributors.exists?(user.id)
+      user.admin? ||
+        namespace.team.owners.exists?(user.id) ||
+        namespace.team.contributors.exists?(user.id)
     else
       user.admin?
     end
