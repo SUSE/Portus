@@ -8,7 +8,7 @@ end
 
 unless Rails.env.test?
   check_email!("from")
-  check_email!("reply_to")
+  check_email!("reply_to") if APP_CONFIG["email"]["reply_to"].present?
 
   # If SMTP was set, then use it as the delivery method and configure it with the
   # given config.
