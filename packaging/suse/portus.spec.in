@@ -152,9 +152,6 @@ mkdir %{buildroot}/%{portusdir}/log
 rm -rf %{buildroot}/%{portusdir}/tmp
 mkdir %{buildroot}/%{portusdir}/tmp
 
-install -d %{buildroot}/%{_sbindir}
-cp packaging/suse/bin/portusctl %{buildroot}/%{_sbindir}/
-
 %fdupes %{buildroot}/%{portusdir}
 
 %files
