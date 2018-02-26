@@ -97,13 +97,14 @@ module API
         end
 
         desc "Validates the given registry",
-             tags:    ["registries"],
-             detail:  "Besides containing the usual Status object, it adds the reachable " \
-                      "validation to the `hostname` field in the `messages` hash. This validation "\
-                      "returns a string containing the error as given by the registry. If empty " \
-                      "then everything went well",
-             entity:  API::Entities::Status,
-             failure: [
+             tags:     ["registries"],
+             detail:   "Besides containing the usual Status object, it adds the reachable " \
+                       "validation to the `hostname` field in the `messages` hash. This " \
+                       "validation returns a string containing the error as given by the " \
+                       "registry. If empty then everything went well",
+             entity:   API::Entities::Status,
+             consumes: ["application/x-www-form-urlencoded", "application/json"],
+             failure:  [
                [401, "Authentication fails"],
                [403, "Authorization fails"]
              ]

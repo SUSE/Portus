@@ -51,8 +51,9 @@ module API
         end
 
         desc "Create a namespace",
-             entity:  API::Entities::Teams,
-             failure: [
+             entity:   API::Entities::Teams,
+             consumes: ["application/x-www-form-urlencoded", "application/json"],
+             failure:  [
                [401, "Authentication fails"],
                [403, "Authorization fails"]
              ]

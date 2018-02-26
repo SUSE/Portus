@@ -224,7 +224,7 @@ module API
 
     class Version < Grape::Entity
       expose :"api-versions", documentation: {
-        type: "Array[String]",
+        type: Array[String],
         desc: "Versions of the API supported"
       }
       expose :git, documentation: { type: String, desc: "Git information" }
