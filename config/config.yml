@@ -7,7 +7,9 @@
 email:
   from: "portus@example.com"
   name: "Portus"
-  reply_to: "no-reply@example.com"
+  # The reply_to field is empty, as the user has the possibility to enable
+  # it optionally by filling in the appropriate reply address.
+  reply_to: ""
 
   # If enabled, then SMTP will be used. Otherwise 'sendmail' will be used
   # (defaults to: /usr/sbin/sendmail -i -t).
