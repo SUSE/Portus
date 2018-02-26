@@ -118,6 +118,38 @@ describe NamespacePolicy do
         expect(subject).not_to permit(user, registry.global_namespace)
       end
     end
+
+    context "when user_permission.push_images is disabled" do
+      before do
+        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+      end
+
+      it "disallows access to user with viewer role" do
+        expect(subject).not_to permit(viewer, namespace)
+      end
+
+      it "disallows access to user with owner role" do
+        expect(subject).not_to permit(owner, namespace)
+      end
+
+      it "disallows access to user who is not part of the team" do
+        expect(subject).not_to permit(user, namespace)
+      end
+
+      it "disallows access to user who is not part of the team" do
+        expect(subject).not_to permit(user, namespace)
+      end
+
+      it "disallows access to user who is not logged in" do
+        expect do
+          subject.new(nil, namespace).push?
+        end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+      end
+
+      it "allows access to admin" do
+        expect(subject).to permit(@admin, namespace)
+      end
+    end
   end
 
   permissions :all? do

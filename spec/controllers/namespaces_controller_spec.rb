@@ -276,6 +276,19 @@ describe NamespacesController, type: :controller do
         expect(response.status).to eq(401)
         expect(namespace.reload.team.id).to eq team.id
       end
+
+      context "when option user_permission.push_images" do
+        before do
+          APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+        end
+
+        it "raises an authorization error when trying to change to a non-existing team" do
+          sign_in owner
+          patch :update, id: namespace.id, namespace: { team: "unknown" }, format: :json
+          expect(response.status). to eq(401)
+          expect(namespace.reload.team.id).to eq team.id
+        end
+      end
     end
 
     it "does not allow to change the team to viewers" do

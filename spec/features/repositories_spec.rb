@@ -131,6 +131,32 @@ describe "Repositories support" do
       expect(info).not_to have_content("You are a contributor in this repository")
     end
 
+    context "when user_permission.push_images is disabled" do
+      before do
+        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+      end
+
+      it "Visual  aid for each role is shown properly" do
+        login_as user
+        visit repository_path(repository)
+        info = page.find(".repository-information-icon")["data-content"]
+        expect(info).to have_content("You can push images")
+        expect(info).to have_content("You can pull images")
+        expect(info).to have_content("You are an owner of this repository")
+        expect(info).not_to have_content("You are a contributor in this repository")
+        expect(info).not_to have_content("You are a viewer in this repository")
+
+        login_as user2, scope: :user
+        visit repository_path(repository)
+        info = page.find(".repository-information-icon")["data-content"]
+        expect(info).not_to have_content("You can push images")
+        expect(info).to have_content("You can pull images")
+        expect(info).not_to have_content("You are an owner of this repository")
+        expect(info).to have_content("You are a contributor in this repository")
+        expect(info).not_to have_content("You are a viewer in this repository")
+      end
+    end
+
     it "A user can star a repository", js: true do
       visit repository_path(repository)
       expect(page).to have_css("#toggle_star")

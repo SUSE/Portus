@@ -33,6 +33,18 @@ RSpec.describe RepositoriesHelper, type: :helper do
       expect(message).to include("You can push images")
     end
 
+    context "when the user push permission is disabled" do
+      before do
+        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+      end
+
+      it "shows you can push images only for admins" do
+        sign_in owner
+        message = helper.render_repository_information(repo)
+        expect(message).not_to include("You can push images")
+      end
+    end
+
     it "shows you can pull images" do
       sign_in owner
       message = helper.render_repository_information(repo)
