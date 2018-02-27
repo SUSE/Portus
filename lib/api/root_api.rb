@@ -64,6 +64,7 @@ module API
     end
 
     add_swagger_documentation \
+      mount_path:           "/openapi-spec",
       security_definitions: {
         api_key: {
           type: "apiKey",
