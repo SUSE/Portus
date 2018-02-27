@@ -16,12 +16,15 @@ COPY Gemfile* ./
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
 RUN zypper ref && \
     zypper -n in --no-recommends ruby2.5-devel \
-           libxml2-devel nodejs libmysqlclient-devel postgresql-devel libxslt1 && \
+           libmysqlclient-devel postgresql-devel \
+           nodejs libxml2-devel libxslt1 git-core go1.9 && \
     zypper -n in --no-recommends -t pattern devel_basis && \
     gem install bundler --no-ri --no-rdoc -v 1.16.0 && \
     update-alternatives --install /usr/bin/bundle bundle /usr/bin/bundle.ruby2.5 3 && \
     update-alternatives --install /usr/bin/bundler bundler /usr/bin/bundler.ruby2.5 3 && \
     bundle install --retry=3 && \
+    go get -u github.com/vbatts/git-validation && \
+    mv /root/go/bin/git-validation /usr/local/bin/ && \
     zypper -n rm wicked wicked-service autoconf automake \
            binutils bison cpp cvs flex gdbm-devel gettext-tools \
            libtool m4 make makeinfo && \

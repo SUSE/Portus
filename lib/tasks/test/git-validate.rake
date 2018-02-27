@@ -35,7 +35,7 @@ namespace :test do
   desc "Run git-validate on the source code"
   task git: :environment do
     unless git_validation?
-      puts "[TEST] The git-validate command could not be found"
+      puts "[TEST] The git-validation command could not be found"
       exit 1
     end
 
