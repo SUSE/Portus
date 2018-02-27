@@ -54,4 +54,38 @@ describe API::V1::Tags do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  context "DELETE /api/v1/tags/:id" do
+    it "deletes tag" do
+      APP_CONFIG["delete"]["enabled"] = true
+      allow_any_instance_of(Portus::RegistryClient).to receive(:delete).and_return(true)
+
+      tag = create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
+      delete "/api/v1/tags/#{tag.id}", nil, @header
+      expect(response).to have_http_status(:no_content)
+      expect { Tag.find(tag.id) }.to raise_exception(ActiveRecord::RecordNotFound)
+    end
+
+    it "forbids deletion of tag (delete disabled)" do
+      tag = create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
+      delete "/api/v1/tags/#{tag.id}", nil, @header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns 422 if unable to remove tag" do
+      APP_CONFIG["delete"]["enabled"] = true
+      allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
+        raise "I AM ERROR."
+      end
+
+      tag = create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
+      delete "/api/v1/tags/#{tag.id}", nil, @header
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "returns status 404" do
+      delete "/api/v1/tags/999", nil, @header
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

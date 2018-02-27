@@ -45,6 +45,24 @@ module API
             authorize tag, :show?
             present tag, with: API::Entities::Tags
           end
+
+          desc "Delete tag",
+               params:  API::Entities::Tags.documentation.slice(:id),
+               failure: [
+                 [401, "Authentication fails"],
+                 [403, "Authorization fails"],
+                 [404, "Not found"]
+               ]
+
+          delete do
+            tag = Tag.find(params[:id])
+            authorize tag, :destroy?
+
+            service = ::Tags::DestroyService.new(current_user)
+            destroyed = service.execute(tag)
+
+            error!({ "errors" => service.error }, 422, header) unless destroyed
+          end
         end
       end
     end

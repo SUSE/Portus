@@ -3,10 +3,10 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 
-const oldResource = Vue.resource('tags{/id}.json');
+const resource = Vue.resource('api/v1/tags{/id}');
 
 function remove(id) {
-  return oldResource.delete({ id });
+  return resource.delete({ id });
 }
 
 export default {

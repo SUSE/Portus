@@ -18,7 +18,6 @@ class TagPolicy
 
   # Returns true if the tag can be destroyed.
   def destroy?
-    raise Pundit::NotAuthorizedError, "must be logged in" unless @user
-    @user.admin? || @tag.repository.namespace.team.owners.exists?(user.id)
+    RepositoryPolicy.new(user, tag.repository).destroy?
   end
 end

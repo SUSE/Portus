@@ -88,6 +88,11 @@ RSpec.configure do |config|
       "sync" => { "enabled" => false, "strategy" => "initial" }
     }
 
+    APP_CONFIG["delete"] = {
+      "enabled"      => false,
+      "contributors" => false
+    }
+
     Rails.cache.write("portus-checks", nil)
   end
 

@@ -17,6 +17,10 @@ function get(id) {
   return resource.get({ id });
 }
 
+function remove(id) {
+  return resource.delete({ id });
+}
+
 function groupedTags(repositoryId) {
   return tagsResource.groupedTags({ repositoryId });
 }
@@ -24,4 +28,5 @@ function groupedTags(repositoryId) {
 export default {
   get,
   groupedTags,
+  remove,
 };

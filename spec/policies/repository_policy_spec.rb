@@ -72,6 +72,87 @@ describe RepositoryPolicy do
 
   permissions :destroy? do
     before do
+      namespace = create(:namespace, team: team2, registry: registry)
+      @repository = create(:repository, namespace: namespace)
+    end
+
+    context "delete disabled" do
+      before do
+        APP_CONFIG["delete"] = { "enabled" => false }
+      end
+
+      it "denies access to admin" do
+        admin = create(:admin)
+        expect(subject).not_to permit(admin, @repository)
+      end
+
+      it "denies access to owner" do
+        owner = create(:user)
+        TeamUser.create(team: team2, user: owner, role: TeamUser.roles["owner"])
+
+        expect(subject).not_to permit(owner, @repository)
+      end
+
+      it "denies access to contributor" do
+        contributor = create(:user)
+        TeamUser.create(team: team2, user: contributor, role: TeamUser.roles["contributor"])
+
+        expect(subject).not_to permit(contributor, @repository)
+      end
+
+      it "denies access to non-member" do
+        expect(subject).not_to permit(user, @repository)
+      end
+    end
+
+    context "delete enabled" do
+      before do
+        APP_CONFIG["delete"] = { "enabled" => true }
+      end
+
+      it "grants access to admin" do
+        admin = create(:admin)
+        expect(subject).to permit(admin, @repository)
+      end
+
+      it "grants access to owner" do
+        owner = create(:user)
+        TeamUser.create(team: team2, user: owner, role: TeamUser.roles["owner"])
+
+        expect(subject).to permit(owner, @repository)
+      end
+
+      it "denies access to contributor" do
+        contributor = create(:user)
+        TeamUser.create(team: team2, user: contributor, role: TeamUser.roles["contributor"])
+
+        expect(subject).not_to permit(contributor, @repository)
+      end
+
+      it "denies access to non-member" do
+        expect(subject).not_to permit(user, @repository)
+      end
+    end
+
+    context "delete contributors enabled" do
+      before do
+        APP_CONFIG["delete"] = {
+          "enabled"      => true,
+          "contributors" => true
+        }
+      end
+
+      it "grants access to contributor" do
+        contributor = create(:user)
+        TeamUser.create(team: team2, user: contributor, role: TeamUser.roles["contributor"])
+
+        expect(subject).to permit(contributor, @repository)
+      end
+    end
+  end
+
+  describe "scope" do
+    before do
       public_namespace = create(
         :namespace,
         team:       team2,
@@ -90,65 +171,32 @@ describe RepositoryPolicy do
 
       private_namespace = create(:namespace, team: team2, registry: registry)
       @private_repository = create(:repository, namespace: private_namespace)
-    end
-
-    it "grants access if the user is an admin" do
-      admin = create(:admin)
-      testing_repositories = [@public_repository, @private_repository]
-      testing_repositories.each do |repository|
-        expect(subject).to permit(admin, repository)
-      end
-    end
-
-    it "denies access if the namespace is public" do
-      expect(subject).not_to permit(user, @public_repository)
-    end
-
-    it "denies access if the namespace is protected" do
-      expect(subject).not_to permit(user, @protected_repository)
-    end
-
-    it "grants access if the repository belongs to a namespace of a team member" do
-      user3 = create(:user)
-      TeamUser.create(team: team2, user: user3, role: TeamUser.roles["viewer"])
-      expect(subject).not_to permit(user3, @private_repository)
-      TeamUser.find_by(team: team2, user: user3).update_attributes(role: TeamUser.roles["owner"])
-      expect(subject).to permit(user3, @private_repository)
-    end
-
-    it "denies access if repository is private and the user is no team member or an admin" do
-      expect(subject).not_to permit(user, @private_repository)
-    end
-  end
-
-  describe "scope" do
-    before do
-      public_namespace = create(
-        :namespace,
-        team:       team2,
-        visibility: Namespace.visibilities[:visibility_public],
-        registry:   registry
-      )
-      @public_repository = create(:repository, namespace: public_namespace)
-
-      private_namespace = create(:namespace, team: team2, registry: registry)
-      @private_repository = create(:repository, namespace: private_namespace)
 
       namespace = create(:namespace, team: team, registry: registry)
       @repository = create(:repository, namespace: namespace)
     end
 
-    it "include repositories that are part of public namespaces" do
+    it "includes the repositories of public/protected namespaces to admin" do
+      admin = create(:admin)
+      expect(Pundit.policy_scope(admin, Repository).to_a).to include(@public_repository)
+      expect(Pundit.policy_scope(admin, Repository).to_a).to include(@protected_repository)
+    end
+
+    it "includes repositories of public namespaces to anonnymous" do
+      expect(Pundit.policy_scope(nil, Repository).to_a).to include(@public_repository)
+    end
+
+    it "includes repositories of public namespaces to user" do
       expect(Pundit.policy_scope(user, Repository).to_a).to include(@public_repository)
     end
 
-    it "include repositories that are part of namespace controlled by a team to which " \
+    it "includes repositories of namespace controlled by a team to which " \
       "the user belongs" do
 
       expect(Pundit.policy_scope(user, Repository).to_a).to include(@repository)
     end
 
-    it "never shows repositories inside of private namespaces" do
+    it "never shows repositories of private namespaces" do
       expect(Pundit.policy_scope(user, Repository).to_a).not_to include(@private_repository)
     end
   end

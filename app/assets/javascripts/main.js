@@ -1,3 +1,5 @@
+import Alert from '~/shared/components/alert';
+
 import 'jquery-ujs';
 
 // Bootstrap
@@ -30,6 +32,9 @@ import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects
 
 // Actions to be done to initialize any page.
 $(function () {
+  // process scheduled alerts
+  Alert.$process();
+
   refreshFloatAlertPosition();
 
   // necessary to be compatible with the js rendered
