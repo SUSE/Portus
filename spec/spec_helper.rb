@@ -71,7 +71,9 @@ RSpec.configure do |config|
       # This allows non-admins to modify teams
       "manage_team"       => { "enabled" => true },
       # This allows non-admins to create teams
-      "create_team"       => { "enabled" => true }
+      "create_team"       => { "enabled" => true },
+      # This allows non-admins to push images
+      "push_images"       => { "enabled" => true }
     }
 
     APP_CONFIG["security"] = {
