@@ -19,4 +19,4 @@ it's not possible for a user to accidentally find a repository that is out of
 his scope.
 
 **Pro tip**: you can access the search widget without using the mouse. There's
-a shortcut for it: \<Ctrl\>\<Space\>.
+a shortcut for it: <kbd>Ctrl</kbd><kbd>Space</kbd>.

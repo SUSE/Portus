@@ -71,8 +71,7 @@ Some things to note:
   certificate and a key. This will be used so the communication between the
   docker daemon and the registry is done through TLS. We *strongly* recommend
   to use this, otherwise we cannot guarantee that the communication will be
-  secure. Both the key and the certificate will be generated automatically by
-  `portusctl` if you are using the [RPM package](/docs/setups/rpm.html).
+  secure.
 - The **auth** value defines the communication between Portus and this
   registry. Some important things to note:
   - The **issuer** should be the same as the one defined by `machine_fqdn` in
@@ -149,12 +148,11 @@ First of all, note that no synchronization will be made until the admin sets up
 the registry in Portus' database. This is better explained in this
 [page](/docs/Configuring-the-registry.html).
 
-Moreover, in order for this to happen, Portus needs the `portus` user to exist.
-This user is created when setting up Portus for the first time by the admin.
-This is done automatically by the `portusctl` tool if you are using the
-[provided RPM](/docs/setups/rpm.html) (or if you are on development mode and you
-are using either the docker compose setup or the vagrant setup). If this is not
-your case, you have to create it after migrating the database by performing:
+Moreover, in order for this to happen, Portus needs the `portus` user to
+exist. This is done automatically in
+[containerized](/docs/deploy.html#containerized) deployments. That being said,
+if this is not your case, you have to create it after migrating the database by
+performing:
 
     $ rake db:seed
 
@@ -165,19 +163,3 @@ or
 Note that neither of these commands will work if you have not set the
 `portus_password` secret value in the `config/secrets.yml` file. This value can
 be set on production with the environment variable `PORTUS_PASSWORD`.
-
-## Known issues
-
-Since Docker Distribution 2.1, when Portus receives a web event regarding a tag
-being pushed, it has to make another HTTP request in order to get which tag was
-actually pushed. This works perfectly with either a development environment
-without SSL or with a production environment with SSL with our provided
-Passenger configuration. However, it's been reported that this does not work
-properly in some setups. In these setups, the Rails worker tries to use the
-same connection as the one used by the web event, and thus its gets stuck until
-the web event times out. In order to work-around this, in this scenario you
-need to setup your Rails instance so it uses more than one socket. An example
-of this work-around can be found
-[here](http://jordanhollinger.com/2011/12/19/deploying-with-thin/). If you want
-to read more about this issue, you can find the original issue:
-[Portus freezes when trying to get manifest after image push](https://github.com/SUSE/Portus/issues/373).

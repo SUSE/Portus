@@ -18,8 +18,9 @@ The **recommended** way to deploy Portus is with the [official Docker
 image](https://hub.docker.com/r/opensuse/portus/). This image is built from the
 [openSUSE/docker-containers](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus)
 repository. Long story short, this image downloads the [official
-RPM](/docs/setups/rpm.html) and provides an `init` script which is
-good for any kind of container deployment.
+RPM](https://build.opensuse.org/project/show/Virtualization:containers:Portus)
+and provides an `init` script which is good for any kind of container
+deployment.
 
 This Docker image has in turn a tag policy worth mentioning:
 
@@ -50,6 +51,9 @@ be aware of the following requirements:
   - `CCONFIG_PREFIX`: set this to `PORTUS` just to be sure (it shouldn't be
     necessary, but some deployments have had weird bugs because of this in the
     past).
+  - `PORTUS_BACKGROUND`: set to `true` if the container has to execute the
+    [background process](/docs/background.html) instead of the main Portus
+    process.
 - Check the environment variables to be used for the
   [database](/docs/database.html).
 - You have to provide three environment variables which contain secret data:
@@ -102,8 +106,9 @@ somewhere and setup a load balancer (we recommend the
 Portus, you have two options:
 
 1. You clone the [git repository](https://github.com/SUSE/Portus).
-2. You install the [RPM](/docs/setups/rpm.html) if you are using
-   openSUSE or SLE.
+2. You install the
+   [RPM](https://build.opensuse.org/project/show/Virtualization:containers:Portus)
+   if you are using openSUSE or SLE.
 
 After that, you will have to setup everything as any other Rails
 application. You have an example of an [NGinx configuration

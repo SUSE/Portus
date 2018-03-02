@@ -34,13 +34,10 @@ task:
 
     $ rake portus:create_user[username,email@example.com,password,false]
 
-If you have installed Portus from the [RPM](/docs/setups/rpm.html), you can also
-use `portusctl` for that:
+For the [official Docker image](https://hub.docker.com/r/opensuse/portus/) you
+will have to use `portusctl` instead:
 
-    $ portusctl rake portus:create_user[username,email@example.com,password,false]
-
-Note that if you have installed Portus from the RPMs, it's better to use
-`portusctl`, since it will always pick the right gems.
+    $ docker exec -it <container-id> portusctl exec rake portus:create_user[username,email@example.com,password,false]
 
 ## The password for created users
 

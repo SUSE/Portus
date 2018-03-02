@@ -13,7 +13,7 @@ before_install:
 
 script:
   # Build && test
-  - chmod+x bin/build.sh && ./bin/build.sh
+  - chmod +x script/build.sh && ./script/build.sh
 
   # Lint
   - yarn eslint
