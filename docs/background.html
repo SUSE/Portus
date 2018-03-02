@@ -320,6 +320,10 @@ real-time Portus keeps track of images/tags that have been pushed/deleted.</p>
 <p>Before this implementation, this was done synchronously, which led into some
 blocking issues.</p>
 
+<p>This task can be disabled as described
+<a href="/docs/Configuring-Portus.html#background-process">here</a>, but it is <strong>highly
+discouraged</strong> to do so.</p>
+
 <h3 id="registry-synchronization">Registry synchronization</h3>
 
 <p>All Docker registries provide an API in which any client can fetch some
@@ -327,10 +331,36 @@ information. Portus makes a heavy use of this API, and in this case it fetches
 the catalog of Docker images/tags. This is done periodically, and it will update
 the database when needed.</p>
 
-<p>This way Portus makes sure that there are no consistency issues between the
-database and the real contents of the registry.</p>
+<p>Just like the other tasks, this task can be disabled, but we recommend tuning
+the <code class="highlighter-rouge">strategy</code> option as described
+<a href="/docs/Configuring-Portus.html#background-process">here</a> instead. For that, you
+have to consider when do you think this synchronization has to be performed, and
+what should be its reach. In this case you have three possible scenarios:</p>
 
-<p><strong>Note</strong>: this was done by the <em>crono</em> process before this new implementation.</p>
+<ol>
+  <li>It’s the first time you setup your own registry and Portus (i.e. you are
+starting from scratch). In this situation the default value (<em>initial</em>) is
+good enough: it will simply do nothing and it will get disabled.</li>
+  <li>You already have a private Docker Registry and you are setting Portus to
+connect to this one. The default value is again the best one because it will
+import the images from this registry and then it will get disabled. That is,
+the <code class="highlighter-rouge">sync</code> task will act as a registry importer.</li>
+  <li>Regardless of the above cases, you want to guarantee that the database and
+the Docker registry will never be out of sync. In this case you might want to
+set the <em>update-delete</em> option (or its safer option <em>update</em>). The chance of
+the database to be out of sync with the Docker registry is <em>highly
+unlikely</em>. This is why we still recommend leaving the default value, since
+the <em>update-delete</em> strategy is prone to be dangerous (its safer sibling
+<em>update</em> shouldn’t be that potentially dangerous).</li>
+</ol>
+
+<p>Regardless of our recommendations, we suggest you to go to the
+<a href="/docs/Configuring-Portus.html#background-process">section</a> of the documentation
+where we describe all options.</p>
+
+<p><strong>Note</strong>: this was done by the <em>crono</em> process before this new
+implementation. The old behavior of the old <em>crono</em> process corresponds to the
+actual <em>update-delete</em> strategy.</p>
 
 <h3 id="security-scanning">Security scanning</h3>
 

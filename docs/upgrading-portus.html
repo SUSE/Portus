@@ -4,7 +4,7 @@
     <title>Upgrading Portus</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Upgrading from 2.0 to 2.1">
+    <meta name="description" content="Upgrading from 2.2 to 2.3">
 
     <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
     <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
@@ -282,7 +282,56 @@
             </div>
             <div class="row post">
               <article>
-                <h2 id="upgrading-from-20-to-21">Upgrading from 2.0 to 2.1</h2>
+                <h2 id="upgrading-from-22-to-23">Upgrading from 2.2 to 2.3</h2>
+
+<div class="alert alert-info">
+  <strong>Important note</strong>: before doing anything at all, make sure to
+  backup the contents of the database.
+</div>
+
+<p>Puma is now the HTTP server being used. Make sure to use the
+<code class="highlighter-rouge">PORTUS_PUMA_TLS_KEY</code> and the <code class="highlighter-rouge">PORTUS_PUMA_TLS_CERT</code> environment variables to
+point puma to the right paths for the certificates. Moreover, if you are not
+using the official Docker image, you will have to use the <code class="highlighter-rouge">PORTUS_PUMA_HOST</code>
+environment variable to tell Puma where to bind itself (in containerized
+deployments it will bind by default to <code class="highlighter-rouge">0.0.0.0:3000</code>).</p>
+
+<p>The database environment variables have changed the prefix from
+<code class="highlighter-rouge">PORTUS_PRODUCTION_</code> to <code class="highlighter-rouge">PORTUS_DB_</code>. Moreover, you will be able now to provide
+values for the following items: adapter (set it to <code class="highlighter-rouge">postgresql</code> for PostgreSQL
+support), port, pool and timeout. All these values are prefixed by <code class="highlighter-rouge">PORTUS_DB_</code>
+as well, so for example, to provide a value for the pool you need to set
+<code class="highlighter-rouge">PORTUS_DB_POOL</code>.</p>
+
+<p>Finally, we are not running migrations automatically anymore as we used to do
+before. This is now to be done by the administrator by executing (on the Portus
+context in <code class="highlighter-rouge">/srv/Portus</code> or simply as part of a <code class="highlighter-rouge">docker exec</code> command):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ portusctl exec rake db:migrate
+</code></pre></div></div>
+
+<p>For more details on this check the commits
+<a href="https://github.com/SUSE/Portus/commit/7fdfe96341801b492ca0e2637fcbb0d31e54d5fc">7fdfe9634180</a>
+and
+<a href="https://github.com/SUSE/Portus/commit/1c4d2b6cf0e09e3be770a0675a42ee23cd2f62dd">1c4d2b6cf0e0</a>.</p>
+
+<h2 id="upgrading-from-21-to-22">Upgrading from 2.1 to 2.2</h2>
+
+<div class="alert alert-info">
+  <strong>Important note</strong>: before doing anything at all, make sure to
+  backup the contents of the database.
+</div>
+
+<p>In order to upgrade from 2.1 to 2.2, you only need to perform a database
+migration. So, with the new code in place, simply run the following (wrap it
+with <code class="highlighter-rouge">portusctl</code> if you are using the RPM for openSUSE/SLE):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake db:migrate
+</code></pre></div></div>
+
+<p>And you should be all set!</p>
+
+<h2 id="upgrading-from-20-to-21">Upgrading from 2.0 to 2.1</h2>
 
 <h3 id="changes-on-the-configuration">Changes on the configuration</h3>
 
@@ -360,22 +409,6 @@ the registry to <code class="highlighter-rouge">readonly</code> mode before perf
 any concurrency issues. Moreover, this task also asks for confirmation before
 doing anything at all. You can skip this by setting the
 <code class="highlighter-rouge">PORTUS_FORCE_DIGEST_UPDATE</code> environment variable before calling the rake task.</p>
-
-<h2 id="upgrading-from-21-to-22">Upgrading from 2.1 to 2.2</h2>
-
-<div class="alert alert-info">
-  <strong>Important note</strong>: before doing anything at all, make sure to
-  backup the contents of the database.
-</div>
-
-<p>In order to upgrade from 2.1 to 2.2, you only need to perform a database
-migration. So, with the new code in place, simply run the following (wrap it
-with <code class="highlighter-rouge">portusctl</code> if you are using the RPM for openSUSE/SLE):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake db:migrate
-</code></pre></div></div>
-
-<p>And you should be all set!</p>
 
               </article>
             </div>

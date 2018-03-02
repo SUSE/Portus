@@ -355,8 +355,8 @@ naming convention. Let’s imagine the following configuration:</p>
 
 <h3 id="delete-support">Delete support</h3>
 
-<p><strong>Note</strong>: feature only available in Portus 2.1 or later. Also bear in mind that
-this will only work accordingly if you are using Docker Distribution 2.4 or later.</p>
+<p><strong>Note</strong>: bear in mind that this will only work accordingly if you are using
+Docker Distribution 2.4 or later.</p>
 
 <p>As of 2.1, and if you are using a Docker Distribution version not older than
 2.4, you will be able to delete images, tags, users, namespaces and teams. In
@@ -447,15 +447,13 @@ access into the Portus application and run:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake portus:make_admin[&lt;username&gt;]
 </code></pre></div></div>
 
-<p>When Portus has been installed via RPM, this operation can be performed via
-<code class="highlighter-rouge">portusctl</code>:</p>
+<p>When you are using the <a href="https://hub.docker.com/r/opensuse/portus/">official Docker
+image</a>, you can do this with:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ portusctl make_admin &lt;username&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker exec -it &lt;container-id&gt; portusctl make_admin &lt;username&gt;
 </code></pre></div></div>
 
 <h3 id="disabling-the-sign-up-form">Disabling the sign up form</h3>
-
-<p><strong>Note</strong>: feature only available in Portus 2.1 or later.</p>
 
 <p>By default Portus will have the sign up form available for any person that comes
 across your Portus instance. You can change that by disabling the <code class="highlighter-rouge">signup</code>
@@ -542,8 +540,6 @@ with a form asking for this information).</li>
 
 <h3 id="advanced-registry-options">Advanced registry options</h3>
 
-<p><strong>Note</strong>: this is only available in Portus 2.1 or later.</p>
-
 <p>You can configure some aspects on how Portus interacts with your Docker registry:</p>
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">registry</span><span class="pi">:</span>
@@ -554,7 +550,10 @@ with a form asking for this information).</li>
     <span class="na">value</span><span class="pi">:</span> <span class="s">100</span>
 
   <span class="na">timeout</span><span class="pi">:</span>
-    <span class="na">value</span><span class="pi">:</span> <span class="s">2</span></code></pre></figure>
+    <span class="na">value</span><span class="pi">:</span> <span class="s">2</span>
+
+  <span class="na">read_timeout</span><span class="pi">:</span>
+    <span class="na">value</span><span class="pi">:</span> <span class="s">120</span></code></pre></figure>
 
 <p>The JWT token is one of the main keys in the authentication process between
 Portus and the registry. This token has as one of its values the expiration
@@ -565,10 +564,12 @@ in the issue <a href="https://github.com/SUSE/Portus/issues/510">SUSE/Portus#510
 
 <p>To workaround this, we allow the admin of Portus to raise the expiration time
 as required through the <code class="highlighter-rouge">jwt_expiration_time</code> configurable value. This value is
-set in minutes, but we still allow the syntax as allowed before the 2.1 release.</p>
+set in minutes, but we still allow the syntax as allowed before the 2.1 release
+(deprecated in 2.3 and to be removed in 2.4).</p>
 
 <p>Moreover, the registry might be slow or the network connection flaky. For this,
-you can also use the <code class="highlighter-rouge">timeout</code> value. This has been added in Portus 2.3.</p>
+you can also use the <code class="highlighter-rouge">timeout</code> and the <code class="highlighter-rouge">read_timeout</code> values. This has been
+added in Portus 2.3.</p>
 
 <p>Finally, another option is the <code class="highlighter-rouge">catalog_page</code>. This tweaks the page size for
 each catalog request performed by Portus. The default value for this should be
@@ -577,8 +578,6 @@ workaround a Docker Registry bug as stated
 <a href="https://github.com/SUSE/Portus/issues/1001">here</a>.</p>
 
 <h3 id="fqdn-of-your-machine">FQDN of your machine</h3>
-
-<p><strong>Note</strong>: feature only available in Portus 2.1 or later.</p>
 
 <p>On the next release of Portus, the FQDN of the machine is no longer a secret
 and it’s now considered a configurable value. The fact that it was a secret
@@ -634,8 +633,6 @@ repositories. This feature is enabled by default:</p>
 
 <h3 id="display-name">Display name</h3>
 
-<p><strong>Note</strong>: feature only available in Portus 2.1 or later.</p>
-
 <p>This option tells Portus to not use the username when showing users, rather a
 user-defined “display name”. You can read more about this
 <a href="/features/display_name.html">here</a>. By default this feature is disabled, and
@@ -645,8 +642,6 @@ it’s controlled with this setting:</p>
   <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span></code></pre></figure>
 
 <h3 id="granular-user-permissions">Granular user permissions</h3>
-
-<p><strong>Note</strong>: this is only available in Portus 2.1 or later.</p>
 
 <p>You can further tweak the permissions that users have on a Portus instance with
 the following options:</p>
@@ -677,6 +672,47 @@ defaults to true.</li>
   <li><strong>create/manage_namespace</strong>: allow users to create/modify namespaces if they
 are an owner of it. If this is disabled, only an admin will be able to do
 this. It defaults to true.</li>
+</ul>
+
+<h3 id="background-process">Background process</h3>
+
+<p><strong>Note</strong>: this is only available in Portus 2.3 or later.</p>
+
+<p>As explained in the <a href="/docs/background.html">documentation page</a> of the background
+process, we have introduced a background process to alleviate some heavy
+operations from the main Portus process. This background process has its own
+configuration values:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">background</span><span class="pi">:</span>
+  <span class="na">registry</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">sync</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">strategy</span><span class="pi">:</span> <span class="s">initial</span></code></pre></figure>
+
+<ul>
+  <li>The <code class="highlighter-rouge">security scanning</code> task can be disabled by not providing a server as
+described <a href="/docs/Configuring-Portus.html#security-scanning">here</a>.</li>
+  <li>The <code class="highlighter-rouge">registry</code> integration can be disabled, but it is <strong>highly discouraged</strong>
+since then all registry events will be missed by Portus (they will be logged,
+but not handled).</li>
+  <li>The <code class="highlighter-rouge">sync</code> task can be disabled as well, but more importantly you can tune it
+further when enabled with the <code class="highlighter-rouge">strategy</code> option. This option may have any of
+the following values:
+    <ul>
+      <li><strong>update-delete</strong>: it performs a full synchronization (traditional behavior
+of the old <code class="highlighter-rouge">crono</code> process).</li>
+      <li><strong>update</strong>: it only adds missing tags, but it does not remove any contents
+from the database.</li>
+      <li><strong>on-start</strong>: when starting Portus it runs an <code class="highlighter-rouge">update-delete</code> and then it
+gets disabled (i.e. it will only run once).</li>
+      <li><strong>initial</strong>: like <code class="highlighter-rouge">on-start</code>, but it only runs if the database is
+empty. This is the default value since it’s deemed to be the most common
+use-case and the safest option. The idea behind this option is that you only
+want to synchronize when bootstrapping your instance.</li>
+    </ul>
+  </li>
 </ul>
 
 <h2 id="deploying-portus-in-a-sub-uri">Deploying Portus in a Sub-URI</h2>

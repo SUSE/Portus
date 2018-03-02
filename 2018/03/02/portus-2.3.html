@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Portus 2.3 released!</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="It’s been a year since we released Portus 2.2, but we can finally present to youthe latest release of Portus. We wanted to deliver this new release much soon...">
+
+    <link href="/stylesheets/portus.css" type="text/css" rel="stylesheet" />
+    <script src="/javascripts/dist/portus.min.js"    type="text/javascript" charset="utf-8"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon for all different devices -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link href="/images/favicon/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" />
+<link href="/images/favicon/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60" />
+<link href="/images/favicon/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" />
+<link href="/images/favicon/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+<link href="/images/favicon/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" />
+<link href="/images/favicon/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+<link href="/images/favicon/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" />
+<link href="/images/favicon/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+<link href="/images/favicon/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+<link href="/images/favicon/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/images/favicon/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png" />
+<link href="/images/favicon/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png" />
+<link href="/images/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/images/favicon/manifest.json" rel="manifest" />
+<link color="#205683" href="/images/favicon/safari-pinned-tab.svg" rel="mask-icon" />
+<link href="/images/favicon/favicon.ico" rel="shortcut icon" />
+<meta content="Portus" name="apple-mobile-web-app-title" />
+<meta content="Portus" name="application-name" />
+<meta content="#da532c" name="msapplication-TileColor" />
+<meta content="/images/favicon/mstile-144x144.png" name="msapplication-TileImage" />
+<meta content="/images/favicon/browserconfig.xml" name="msapplication-config" />
+<meta content="#205683" name="theme-color" />
+
+  </head>
+  <body>
+    <header id="portus-header" class="portus-topbar">
+  <div class="container-fluid">
+    <i id="open_main_menu" class="fa fa-bars fa-2x visible-xs menu-sandwich"></i>
+
+    <a href="/">
+      <img class="pull-left img-responsive topbar-logo" src="/images/logo-header.png" alt="Logo on header">
+    </a>
+    <div class="pull-right hidden-xs">
+      <a class="btn btn-link" href="/blog/index.html">Blog</a>
+      <a class="btn btn-link" href="/features.html">Features</a>
+      <a class="btn btn-link" href="/documentation.html">Documentation</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="visible-xs mobile-menu">
+  <ul>
+    <li><i class="fa fa-list-ul"></i><a class="btn btn-link" href="/features.html">Features</a></li>
+    <li><i class="fa fa-book"></i><a class="btn btn-link" href="/documentation.html">Documentation</a></li>
+    <li><i class="fa fa-newspaper-o"></i><a class="btn btn-link" href="/blog/index.html">Blog</a></li>
+    <li><i class="fa fa-question-circle"></i><a class="btn btn-link" href="/docs/FAQ.html">FAQ</a></li>
+  </ul>
+</div>
+
+
+    <div class="container">
+      <div id="post-body" class="row">
+        <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <a href="/2018/03/02/portus-2.3.html">
+          <h2 class="post-title">Portus 2.3 released!</h2>
+
+          
+          </a>
+
+          <p class="post-meta">
+            Posted on March 2, 2018
+            by Miquel Sabaté Solà
+          </p>
+
+          <div class="post-body">
+            <p>It’s been a year since we released Portus 2.2, but we can finally present to you
+the latest release of Portus. We wanted to deliver this new release much sooner,
+but some late-coming features changed the release schedule quite a bit, so we
+had to spend more time for the final release.</p>
+
+<p>For this release we have improved lots of small UX details and we have fixed as
+many bugs as we could from the 2.2 release. You can check the
+<a href="https://github.com/SUSE/Portus/blob/master/CHANGELOG.md">changelog</a> for more
+details, but in this blog post we want to highlight the following features:</p>
+
+<h4 id="security-scanning">Security scanning</h4>
+
+<p>Portus is now able to scan security vulnerabilities on your Docker images. This
+is done with different backends, where the stable one is <a href="https://github.com/coreos/clair">CoreOS
+Clair</a>. You have to enable the desired backends
+and then Portus will use them to fetch known security vulnerabilities for your
+images. The repository page will now show the vulnerabilities like this:</p>
+
+<p><img src="/images/docs/security.png" alt="Repository page with vulnerabilities highlighted" /></p>
+
+<p>When you click any of the links, you will get to a page that lists the CVEs:</p>
+
+<p><img src="/images/docs/tag-vulnerabilities.png" alt="Tag page with Clair vulnerabilities" /></p>
+
+<p><strong>Note</strong>: this version of Portus supports Clair v2 specifically (current
+<code class="highlighter-rouge">master</code> branch is not supported).</p>
+
+<p>You can read the <a href="http://port.us.org/2017/07/19/security-scanning.html">blog
+post</a> or the
+<a href="/features/6_security_scanning.html">documentation</a> for more info.</p>
+
+<h4 id="background-process">Background process</h4>
+
+<p>One of the main issues for Portus was that sometimes it took too long to
+complete certain critical tasks. We have moved those tasks into a separate
+<em>background</em> process. This background process resides in the <code class="highlighter-rouge">bin/background.rb</code>
+file, and it can be enabled for containerized deployments by setting the
+<code class="highlighter-rouge">PORTUS_BACKGROUND</code> environment variable to <code class="highlighter-rouge">true</code>.</p>
+
+<p>The following tasks have been moved into this new process:</p>
+
+<ul>
+  <li><em>Security scanning</em>: after testing security scanning more in depth, we noticed
+that sometimes it could block Portus completely. This was the first task moved
+into this new process.</li>
+  <li><em>Registry events</em>: before creating this process, we dealt with incoming
+registry events in the main Portus process. The problem with this was that
+after getting a <em>push</em> event, for example, Portus had to fetch manifests,
+which could take quite some time. This meant that Portus got blocked in some
+deployments. Now Portus will simply log the event, and then the background
+process will process it right away (by default this process will check for
+events every 2 seconds).</li>
+  <li><em>Registry synchronization</em>: we have removed the <em>crono</em> process in favor of
+this new process. Hence, the code that was executed in previous releases by
+crono has been merged as another task of this new process. Moreover, since it
+can be quite dangerous, we have added some configuration options: it can be
+disabled; and it can be tuned with a strategy (from a riskier approach to a
+safer one).</li>
+</ul>
+
+<p><strong>Note</strong> on deployment: this new background process has to have access to the
+same database as the main Portus process.</p>
+
+<p>You can read the new <a href="/docs/background.html">documentation page</a> for more info.</p>
+
+<h4 id="anonymous-browsing">Anonymous browsing</h4>
+
+<p>Portus will now allow anonymous users to search for public images. This is a
+configurable option which is enabled by default. You can read more about this
+<a href="http://port.us.org/features/anonymous_browsing.html">in the documentation</a>.</p>
+
+<p><img src="/images/docs/explore.gif" alt="Explore" /></p>
+
+<h4 id="oauth--openid-support">OAuth &amp; OpenID support</h4>
+
+<p>Portus’ authentication logic has been extended to allow OAuth &amp; OpenID. For
+OAuth you are allowed to login through the following adapters: Google, Github,
+Gitlab and Bitbucket. Check the <code class="highlighter-rouge">config/config.yml</code> file for more info on the
+exact configurable options.</p>
+
+<p><strong>Thanks a lot</strong> to Vadim Bauer (<a href="https://github.com/Vad1mo">@Vad1mo</a>) and
+Andrei Kislichenko (<a href="https://github.com/andrew2net">@andrew2net</a>) for working on
+this!</p>
+
+<h4 id="api">API</h4>
+
+<p>An effort to design and implement an API for Portus has been started. This is
+useful for CLI tools like <a href="https://github.com/openSUSE/portusctl">portusctl</a>
+among other user cases. We do not consider the API to be in a stable state, but
+it is useful already. We will continue this effort in forthcoming
+releases.</p>
+
+<p><strong>Thanks a lot</strong> to Vadim Bauer (<a href="https://github.com/Vad1mo">@Vad1mo</a>) and
+Andrei Kislichenko (<a href="https://github.com/andrew2net">@andrew2net</a>) for working on
+this!</p>
+
+<h4 id="puma">Puma</h4>
+
+<p>The deployment of Portus has been simplified as much as possible. For this
+reason we have removed a <em>lot</em> of clutter on our official Docker image, and we
+have embraced best practices for deploying Ruby on Rails applications. For this
+reason we have set Puma as the web server for Portus.</p>
+
+<h4 id="production-deployment-examples">Production deployment examples</h4>
+
+<p>We provide in the source code examples that illustrate how Portus is intended to
+be deployed on production. These examples reside in the <code class="highlighter-rouge">examples</code>
+directory.</p>
+
+<h4 id="helm-chart">Helm Chart</h4>
+
+<p>An official <a href="https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/portus">Helm
+Chart</a>
+for deploying Portus in a Kubernetes cluster is being developed.</p>
+
+<h4 id="postgresql-support">PostgreSQL support</h4>
+
+<p>Some tools like CoreOS Clair require PostgreSQL as their database. When
+developing support for security scanning we noticed that it was quite redundant
+to have two different databases running. For this reason, we have added
+PostgreSQL support, so you can use PostgreSQL for both Portus and Clair.</p>
+
+<h4 id="upgrade-to-ruby-25">Upgrade to Ruby 2.5</h4>
+
+<p>Some features required an upgrade of Ruby. Since SLE 15 and Tumbleweed will most
+likely have Ruby 2.5 as their default version, we have anticipated this
+move. So, now Portus is supported for Ruby 2.5. If you try to run Portus on
+previous versions, it will error out during initialization.</p>
+
+<h3 id="upgrading-from-22">Upgrading from 2.2</h3>
+
+<p>These are the things that you have to take into account before moving to 2.3:</p>
+
+<ul>
+  <li>As explained above, Puma is now the HTTP server being used. Make sure to use
+the <code class="highlighter-rouge">PORTUS_PUMA_TLS_KEY</code> and the <code class="highlighter-rouge">PORTUS_PUMA_TLS_CERT</code> environment variables
+to point puma to the right paths for the certificates. Moreover, if you are
+not using the official Docker image, you will have to use the
+<code class="highlighter-rouge">PORTUS_PUMA_HOST</code> environment variable to tell Puma where to bind itself (in
+containerized deployments it will bind by default to <code class="highlighter-rouge">0.0.0.0:3000</code>).</li>
+  <li>The database environment variables have changed the prefix from
+<code class="highlighter-rouge">PORTUS_PRODUCTION_</code> to <code class="highlighter-rouge">PORTUS_DB_</code>. Moreover, you will be able now to
+provide values for the following items: adapter (set it to <code class="highlighter-rouge">postgresql</code> for
+PostgreSQL support), port, pool and timeout. All these values are prefixed by
+<code class="highlighter-rouge">PORTUS_DB_</code> as well, so for example, to provide a value for the pool you need
+to set <code class="highlighter-rouge">PORTUS_DB_POOL</code>.</li>
+  <li>As stated above, set the <code class="highlighter-rouge">PORTUS_BACKGROUND</code> environment variable to <code class="highlighter-rouge">true</code> for
+the background process.</li>
+  <li>You can set <code class="highlighter-rouge">RAILS_SERVE_STATIC_FILES</code> to <code class="highlighter-rouge">true</code> if you want Portus to serve the
+assets directly (e.g. if you don’t want a load-balancer like NGinx or HAproxy
+to do this).</li>
+  <li>Portus will complain if you forgot to specify some relevant environment
+variables for production like <code class="highlighter-rouge">PORTUS_MACHINE_FQDN_VALUE</code>.</li>
+</ul>
+
+<p>Finally, we are not running migrations automatically anymore as we used to do
+before. This is now to be done by the administrator by executing (on the Portus
+context in <code class="highlighter-rouge">/srv/Portus</code> or simply as part of a <code class="highlighter-rouge">docker exec</code> command):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ portusctl exec rake db:migrate
+</code></pre></div></div>
+
+<h3 id="whats-next">What’s next</h3>
+
+<p>We have already documented the <a href="/docs/release-schedule.html">release process</a>
+for 2.4. The idea from now on is to release earlier and more often. You can take
+a look at our planned features for 2.4
+<a href="https://github.com/SUSE/Portus/milestone/17">here</a>.</p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="row row-0">
+        <div class="text-center" lang="en">Created with <i class='fa fa-heart secondary-colour'></i> by the SUSE team</div>
+      </div>
+    </footer>
+  </body>
+</html>

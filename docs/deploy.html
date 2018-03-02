@@ -294,9 +294,10 @@
 <p>The <strong>recommended</strong> way to deploy Portus is with the <a href="https://hub.docker.com/r/opensuse/portus/">official Docker
 image</a>. This image is built from the
 <a href="https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus">openSUSE/docker-containers</a>
-repository. Long story short, this image downloads the <a href="/docs/setups/rpm.html">official
-RPM</a> and provides an <code class="highlighter-rouge">init</code> script which is
-good for any kind of container deployment.</p>
+repository. Long story short, this image downloads the <a href="https://build.opensuse.org/project/show/Virtualization:containers:Portus">official
+RPM</a>
+and provides an <code class="highlighter-rouge">init</code> script which is good for any kind of container
+deployment.</p>
 
 <p>This Docker image has in turn a tag policy worth mentioning:</p>
 
@@ -331,6 +332,9 @@ want to set this to true.</li>
       <li><code class="highlighter-rouge">CCONFIG_PREFIX</code>: set this to <code class="highlighter-rouge">PORTUS</code> just to be sure (it shouldn’t be
 necessary, but some deployments have had weird bugs because of this in the
 past).</li>
+      <li><code class="highlighter-rouge">PORTUS_BACKGROUND</code>: set to <code class="highlighter-rouge">true</code> if the container has to execute the
+<a href="/docs/background.html">background process</a> instead of the main Portus
+process.</li>
     </ul>
   </li>
   <li>Check the environment variables to be used for the
@@ -389,8 +393,9 @@ Portus, you have two options:</p>
 
 <ol>
   <li>You clone the <a href="https://github.com/SUSE/Portus">git repository</a>.</li>
-  <li>You install the <a href="/docs/setups/rpm.html">RPM</a> if you are using
-openSUSE or SLE.</li>
+  <li>You install the
+<a href="https://build.opensuse.org/project/show/Virtualization:containers:Portus">RPM</a>
+if you are using openSUSE or SLE.</li>
 </ol>
 
 <p>After that, you will have to setup everything as any other Rails

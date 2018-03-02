@@ -295,33 +295,45 @@ each Portus version:</p>
       <th style="text-align: center">Portus</th>
       <th style="text-align: center">Docker Engine</th>
       <th style="text-align: center">Docker Distribution</th>
+      <th style="text-align: center">CoreOS Clair</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td style="text-align: center">master</td>
       <td style="text-align: center">1.6+</td>
-      <td style="text-align: center">2.0+ (2.4+ recommended)</td>
+      <td style="text-align: center">2.0+</td>
+      <td style="text-align: center">2.0.x</td>
     </tr>
     <tr>
-      <td style="text-align: center">2.1.x &amp; 2.2.0</td>
+      <td style="text-align: center">2.3.x</td>
       <td style="text-align: center">1.6+</td>
-      <td style="text-align: center">2.0+ (2.4+ recommended)</td>
+      <td style="text-align: center">2.0+</td>
+      <td style="text-align: center">2.0.x</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2.1.x &amp; 2.2.x</td>
+      <td style="text-align: center">1.6+</td>
+      <td style="text-align: center">2.0+</td>
+      <td style="text-align: center">-</td>
     </tr>
     <tr>
       <td style="text-align: center">2.0.0 &amp; 2.0.1</td>
       <td style="text-align: center">1.6 to 1.9</td>
       <td style="text-align: center">2.0 to 2.2</td>
+      <td style="text-align: center">-</td>
     </tr>
     <tr>
       <td style="text-align: center">2.0.2</td>
       <td style="text-align: center">1.6 to 1.9</td>
       <td style="text-align: center">2.0 to 2.4</td>
+      <td style="text-align: center">-</td>
     </tr>
     <tr>
       <td style="text-align: center">2.0.3+</td>
       <td style="text-align: center">1.6+</td>
       <td style="text-align: center">2.0 to 2.4</td>
+      <td style="text-align: center">-</td>
     </tr>
   </tbody>
 </table>
@@ -335,23 +347,9 @@ Therefore, this requirement is also the same for Portus.</li>
 This is only supported by Portus in the <code class="highlighter-rouge">master</code> branch and in <code class="highlighter-rouge">2.0.3</code>.</li>
   <li>Docker Distribution <code class="highlighter-rouge">2.3</code> supports both Manifest versions, but some changes
 had to be made in order to offer backwards compatibility. This is not
-supported neither for Portus <code class="highlighter-rouge">2.0.0</code> nor <code class="highlighter-rouge">2.0.1</code>. Moreover, Docker
-Distribution <code class="highlighter-rouge">2.4</code> was the first to introduce garbage collection. Because of
-this, we recommend running Docker Distribution version <code class="highlighter-rouge">2.4</code> (or higher) if
-you are using Portus version <code class="highlighter-rouge">2.1</code> or later.</li>
+supported neither for Portus <code class="highlighter-rouge">2.0.0</code> nor <code class="highlighter-rouge">2.0.1</code>.</li>
+  <li>CoreOS Clair has been supported as a security scanner since <code class="highlighter-rouge">2.3.0</code>.</li>
 </ul>
-
-<h2 id="docker-compose">Docker Compose</h2>
-
-<div class="alert alert-info">
-  Only for <strong>development</strong> purposes.
-</div>
-
-<p>In our Docker Compose development setup described
-<a href="https://github.com/SUSE/Portus/wiki/Docker-Compose-Environment">here</a>, we
-require Docker Compose 1.6 or later. You might want to setup a Docker
-Compose setup differently, but we recommend sticking to using the
-<code class="highlighter-rouge">compose-setup.sh</code> script.</p>
 
               </article>
             </div>

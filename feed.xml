@@ -7,6 +7,185 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Portus 2.3 released!</title>
+        <description>
+          
+          &lt;p&gt;It’s been a year since we released Portus 2.2, but we can finally present to you
+the latest release of Portus. We wanted to deliver this new release much sooner,
+but some late-coming features changed the release schedule quite a bit, so we
+had to spend more time for the final release.&lt;/p&gt;
+
+&lt;p&gt;For this release we have improved lots of small UX details and we have fixed as
+many bugs as we could from the 2.2 release. You can check the
+&lt;a href=&quot;https://github.com/SUSE/Portus/blob/master/CHANGELOG.md&quot;&gt;changelog&lt;/a&gt; for more
+details, but in this blog post we want to highlight the following features:&lt;/p&gt;
+
+&lt;h4 id=&quot;security-scanning&quot;&gt;Security scanning&lt;/h4&gt;
+
+&lt;p&gt;Portus is now able to scan security vulnerabilities on your Docker images. This
+is done with different backends, where the stable one is &lt;a href=&quot;https://github.com/coreos/clair&quot;&gt;CoreOS
+Clair&lt;/a&gt;. You have to enable the desired backends
+and then Portus will use them to fetch known security vulnerabilities for your
+images. The repository page will now show the vulnerabilities like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/docs/security.png&quot; alt=&quot;Repository page with vulnerabilities highlighted&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;When you click any of the links, you will get to a page that lists the CVEs:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/docs/tag-vulnerabilities.png&quot; alt=&quot;Tag page with Clair vulnerabilities&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: this version of Portus supports Clair v2 specifically (current
+&lt;code class=&quot;highlighter-rouge&quot;&gt;master&lt;/code&gt; branch is not supported).&lt;/p&gt;
+
+&lt;p&gt;You can read the &lt;a href=&quot;http://port.us.org/2017/07/19/security-scanning.html&quot;&gt;blog
+post&lt;/a&gt; or the
+&lt;a href=&quot;/features/6_security_scanning.html&quot;&gt;documentation&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h4 id=&quot;background-process&quot;&gt;Background process&lt;/h4&gt;
+
+&lt;p&gt;One of the main issues for Portus was that sometimes it took too long to
+complete certain critical tasks. We have moved those tasks into a separate
+&lt;em&gt;background&lt;/em&gt; process. This background process resides in the &lt;code class=&quot;highlighter-rouge&quot;&gt;bin/background.rb&lt;/code&gt;
+file, and it can be enabled for containerized deployments by setting the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_BACKGROUND&lt;/code&gt; environment variable to &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The following tasks have been moved into this new process:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Security scanning&lt;/em&gt;: after testing security scanning more in depth, we noticed
+that sometimes it could block Portus completely. This was the first task moved
+into this new process.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Registry events&lt;/em&gt;: before creating this process, we dealt with incoming
+registry events in the main Portus process. The problem with this was that
+after getting a &lt;em&gt;push&lt;/em&gt; event, for example, Portus had to fetch manifests,
+which could take quite some time. This meant that Portus got blocked in some
+deployments. Now Portus will simply log the event, and then the background
+process will process it right away (by default this process will check for
+events every 2 seconds).&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Registry synchronization&lt;/em&gt;: we have removed the &lt;em&gt;crono&lt;/em&gt; process in favor of
+this new process. Hence, the code that was executed in previous releases by
+crono has been merged as another task of this new process. Moreover, since it
+can be quite dangerous, we have added some configuration options: it can be
+disabled; and it can be tuned with a strategy (from a riskier approach to a
+safer one).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; on deployment: this new background process has to have access to the
+same database as the main Portus process.&lt;/p&gt;
+
+&lt;p&gt;You can read the new &lt;a href=&quot;/docs/background.html&quot;&gt;documentation page&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;h4 id=&quot;anonymous-browsing&quot;&gt;Anonymous browsing&lt;/h4&gt;
+
+&lt;p&gt;Portus will now allow anonymous users to search for public images. This is a
+configurable option which is enabled by default. You can read more about this
+&lt;a href=&quot;http://port.us.org/features/anonymous_browsing.html&quot;&gt;in the documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/docs/explore.gif&quot; alt=&quot;Explore&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;oauth--openid-support&quot;&gt;OAuth &amp;amp; OpenID support&lt;/h4&gt;
+
+&lt;p&gt;Portus’ authentication logic has been extended to allow OAuth &amp;amp; OpenID. For
+OAuth you are allowed to login through the following adapters: Google, Github,
+Gitlab and Bitbucket. Check the &lt;code class=&quot;highlighter-rouge&quot;&gt;config/config.yml&lt;/code&gt; file for more info on the
+exact configurable options.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Thanks a lot&lt;/strong&gt; to Vadim Bauer (&lt;a href=&quot;https://github.com/Vad1mo&quot;&gt;@Vad1mo&lt;/a&gt;) and
+Andrei Kislichenko (&lt;a href=&quot;https://github.com/andrew2net&quot;&gt;@andrew2net&lt;/a&gt;) for working on
+this!&lt;/p&gt;
+
+&lt;h4 id=&quot;api&quot;&gt;API&lt;/h4&gt;
+
+&lt;p&gt;An effort to design and implement an API for Portus has been started. This is
+useful for CLI tools like &lt;a href=&quot;https://github.com/openSUSE/portusctl&quot;&gt;portusctl&lt;/a&gt;
+among other user cases. We do not consider the API to be in a stable state, but
+it is useful already. We will continue this effort in forthcoming
+releases.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Thanks a lot&lt;/strong&gt; to Vadim Bauer (&lt;a href=&quot;https://github.com/Vad1mo&quot;&gt;@Vad1mo&lt;/a&gt;) and
+Andrei Kislichenko (&lt;a href=&quot;https://github.com/andrew2net&quot;&gt;@andrew2net&lt;/a&gt;) for working on
+this!&lt;/p&gt;
+
+&lt;h4 id=&quot;puma&quot;&gt;Puma&lt;/h4&gt;
+
+&lt;p&gt;The deployment of Portus has been simplified as much as possible. For this
+reason we have removed a &lt;em&gt;lot&lt;/em&gt; of clutter on our official Docker image, and we
+have embraced best practices for deploying Ruby on Rails applications. For this
+reason we have set Puma as the web server for Portus.&lt;/p&gt;
+
+&lt;h4 id=&quot;production-deployment-examples&quot;&gt;Production deployment examples&lt;/h4&gt;
+
+&lt;p&gt;We provide in the source code examples that illustrate how Portus is intended to
+be deployed on production. These examples reside in the &lt;code class=&quot;highlighter-rouge&quot;&gt;examples&lt;/code&gt;
+directory.&lt;/p&gt;
+
+&lt;h4 id=&quot;helm-chart&quot;&gt;Helm Chart&lt;/h4&gt;
+
+&lt;p&gt;An official &lt;a href=&quot;https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/portus&quot;&gt;Helm
+Chart&lt;/a&gt;
+for deploying Portus in a Kubernetes cluster is being developed.&lt;/p&gt;
+
+&lt;h4 id=&quot;postgresql-support&quot;&gt;PostgreSQL support&lt;/h4&gt;
+
+&lt;p&gt;Some tools like CoreOS Clair require PostgreSQL as their database. When
+developing support for security scanning we noticed that it was quite redundant
+to have two different databases running. For this reason, we have added
+PostgreSQL support, so you can use PostgreSQL for both Portus and Clair.&lt;/p&gt;
+
+&lt;h4 id=&quot;upgrade-to-ruby-25&quot;&gt;Upgrade to Ruby 2.5&lt;/h4&gt;
+
+&lt;p&gt;Some features required an upgrade of Ruby. Since SLE 15 and Tumbleweed will most
+likely have Ruby 2.5 as their default version, we have anticipated this
+move. So, now Portus is supported for Ruby 2.5. If you try to run Portus on
+previous versions, it will error out during initialization.&lt;/p&gt;
+
+&lt;h3 id=&quot;upgrading-from-22&quot;&gt;Upgrading from 2.2&lt;/h3&gt;
+
+&lt;p&gt;These are the things that you have to take into account before moving to 2.3:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;As explained above, Puma is now the HTTP server being used. Make sure to use
+the &lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_PUMA_TLS_KEY&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_PUMA_TLS_CERT&lt;/code&gt; environment variables
+to point puma to the right paths for the certificates. Moreover, if you are
+not using the official Docker image, you will have to use the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_PUMA_HOST&lt;/code&gt; environment variable to tell Puma where to bind itself (in
+containerized deployments it will bind by default to &lt;code class=&quot;highlighter-rouge&quot;&gt;0.0.0.0:3000&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;The database environment variables have changed the prefix from
+&lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_PRODUCTION_&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_DB_&lt;/code&gt;. Moreover, you will be able now to
+provide values for the following items: adapter (set it to &lt;code class=&quot;highlighter-rouge&quot;&gt;postgresql&lt;/code&gt; for
+PostgreSQL support), port, pool and timeout. All these values are prefixed by
+&lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_DB_&lt;/code&gt; as well, so for example, to provide a value for the pool you need
+to set &lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_DB_POOL&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;As stated above, set the &lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_BACKGROUND&lt;/code&gt; environment variable to &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt; for
+the background process.&lt;/li&gt;
+  &lt;li&gt;You can set &lt;code class=&quot;highlighter-rouge&quot;&gt;RAILS_SERVE_STATIC_FILES&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt; if you want Portus to serve the
+assets directly (e.g. if you don’t want a load-balancer like NGinx or HAproxy
+to do this).&lt;/li&gt;
+  &lt;li&gt;Portus will complain if you forgot to specify some relevant environment
+variables for production like &lt;code class=&quot;highlighter-rouge&quot;&gt;PORTUS_MACHINE_FQDN_VALUE&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Finally, we are not running migrations automatically anymore as we used to do
+before. This is now to be done by the administrator by executing (on the Portus
+context in &lt;code class=&quot;highlighter-rouge&quot;&gt;/srv/Portus&lt;/code&gt; or simply as part of a &lt;code class=&quot;highlighter-rouge&quot;&gt;docker exec&lt;/code&gt; command):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ portusctl exec rake db:migrate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;whats-next&quot;&gt;What’s next&lt;/h3&gt;
+
+&lt;p&gt;We have already documented the &lt;a href=&quot;/docs/release-schedule.html&quot;&gt;release process&lt;/a&gt;
+for 2.4. The idea from now on is to release earlier and more often. You can take
+a look at our planned features for 2.4
+&lt;a href=&quot;https://github.com/SUSE/Portus/milestone/17&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+        </description>
+        <pubDate>Fri, 02 Mar 2018 00:00:00 +0100</pubDate>
+        <link>/2018/03/02/portus-2.3.html</link>
+        <guid isPermaLink="true">/2018/03/02/portus-2.3.html</guid>
+      </item>
+    
+      <item>
         <title>RPM support for container-diff</title>
         <description>
           

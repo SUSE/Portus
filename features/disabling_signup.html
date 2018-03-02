@@ -312,14 +312,11 @@ task:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake portus:create_user[username,email@example.com,password,false]
 </code></pre></div></div>
 
-<p>If you have installed Portus from the <a href="/docs/setups/rpm.html">RPM</a>, you can also
-use <code class="highlighter-rouge">portusctl</code> for that:</p>
+<p>For the <a href="https://hub.docker.com/r/opensuse/portus/">official Docker image</a> you
+will have to use <code class="highlighter-rouge">portusctl</code> instead:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ portusctl rake portus:create_user[username,email@example.com,password,false]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker exec -it &lt;container-id&gt; portusctl exec rake portus:create_user[username,email@example.com,password,false]
 </code></pre></div></div>
-
-<p>Note that if you have installed Portus from the RPMs, it’s better to use
-<code class="highlighter-rouge">portusctl</code>, since it will always pick the right gems.</p>
 
 <h2 id="the-password-for-created-users">The password for created users</h2>
 
