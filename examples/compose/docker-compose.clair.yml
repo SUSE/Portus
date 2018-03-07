@@ -5,6 +5,7 @@ services:
     image: opensuse/portus:head
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
 
       # DB. The password for the database should definitely not be here. You are
       # probably better off with Docker Swarm secrets.
@@ -42,6 +43,7 @@ services:
       # Theoretically not needed, but cconfig's been buggy on this...
       - CCONFIG_PREFIX=PORTUS
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
 
       # DB. The password for the database should definitely not be here. You are
       # probably better off with Docker Swarm secrets.
@@ -97,3 +99,22 @@ services:
       - 5001:5001 # required to access debug service
     links:
       - portus:portus
+
+  clair:
+    image: quay.io/coreos/clair:v2.0.1
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - "6060-6061:6060-6061"
+    volumes:
+      - /tmp:/tmp
+      - ./clair/clair.yml:/clair.yml
+    command: [-config, /clair.yml]
+
+  postgres:
+    image: library/postgres:10-alpine
+    environment:
+      POSTGRES_PASSWORD: portus

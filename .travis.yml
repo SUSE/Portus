@@ -31,6 +31,12 @@ before_install:
   - sudo apt-get install yarn
   - yarn install
 
+  # Install bats.
+  - git clone https://github.com/sstephenson/bats.git
+  - cd bats
+  - sudo ./install.sh /usr/local
+  - cd .. && rm -rf bats
+
   # Intall Go, which is needed for git-validation
   - eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.8 bash)"
   - go get -u github.com/vbatts/git-validation
@@ -40,30 +46,7 @@ before_script:
   - psql -c 'create database portus_test' -U postgres
 
 script:
-  # Compile assets
-  - bundle exec rake portus:assets:compile
-
-  # Ruby tests
-  - bundle exec rspec spec
-
-  # Style and security checks
-  - bundle exec rubocop -V
-  - bundle exec rubocop -F
-
-  # Note: it ignores a couple of files which use ruby 2.5 syntax which brakeman
-  # does not know how to handle...
-  - bundle exec brakeman --skip-files lib/portus/background/sync.rb,lib/portus/registry_client.rb
-
-  - bundle exec rake portus:annotate_and_exit
-
-  # JavaScript tests
-  - yarn test
-
-  # JavaScript style
-  - yarn eslint
-
-  # Test commit messages
-  - bundle exec rake test:git
+  - chmod +x bin/ci.sh && ./bin/ci.sh
 
 env:
   global:

@@ -10,6 +10,7 @@
 /public/assets
 /config/config-local.yml
 /bin/portus
+/bin/integration/init
 /docker-compose.overlay.yml
 /spec/integration/fixtures/config.yml
 /spec/integration/fixtures/data
