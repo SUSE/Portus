@@ -72,7 +72,7 @@ class NamespacesController < ApplicationController
     # Update the visibility if needed
     return if visibility_param == @namespace.visibility
 
-    return unless @namespace.update_attributes(visibility: visibility_param)
+    return unless @namespace.update(visibility: visibility_param)
 
     @namespace.create_activity :change_visibility,
                                owner:      current_user,
@@ -86,19 +86,19 @@ class NamespacesController < ApplicationController
 
   private
 
-  def change_team(p)
+  def change_team(parameters)
     # Update the team if needed/authorized.
-    return if p[:team].blank? || p[:team] == @namespace.team.name
+    return if parameters[:team].blank? || parameters[:team] == @namespace.team.name
     authorize @namespace, :change_team?
 
-    @team = Team.find_by(name: p[:team])
+    @team = Team.find_by(name: parameters[:team])
     if @team.nil?
-      @namespace.errors[:team_id] << "'#{p[:team]}' unknown."
+      @namespace.errors[:team_id] << "'#{parameters[:team]}' unknown."
     else
       @namespace.create_activity :change_team,
                                  owner:      current_user,
                                  parameters: { old: @namespace.team.id, new: @team.id }
-      @namespace.update_attributes(team: @team)
+      @namespace.update(team: @team)
     end
   end
 

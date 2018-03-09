@@ -89,7 +89,7 @@ module Portus
 
     # Returns the time in which the token has been issued (now).
     def issued_at
-      @now ||= Time.zone.now.to_i
+      @issued_at ||= Time.zone.now.to_i
     end
   end
 end

@@ -347,7 +347,7 @@ describe NamespacesController, type: :controller do
     end
 
     it "tracks set namespace private" do
-      namespace.update_attributes(visibility: Namespace.visibilities[:visibilty_public])
+      namespace.update(visibility: Namespace.visibilities[:visibilty_public])
 
       expect do
         put :change_visibility,
@@ -364,7 +364,7 @@ describe NamespacesController, type: :controller do
     end
 
     it "tracks set namespace protected" do
-      namespace.update_attributes(visibility: Namespace.visibilities[:visibilty_public])
+      namespace.update(visibility: Namespace.visibilities[:visibilty_public])
 
       expect do
         put :change_visibility,
@@ -381,7 +381,7 @@ describe NamespacesController, type: :controller do
     end
 
     it "tracks set namespace public" do
-      namespace.update_attributes(visibility: Namespace.visibilities[:visibility_private])
+      namespace.update(visibility: Namespace.visibilities[:visibility_private])
 
       expect do
         put :change_visibility,

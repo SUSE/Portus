@@ -63,7 +63,7 @@ describe "/v2/token" do
       end
 
       it "denies access to a disabled user" do
-        user.update_attributes(enabled: false)
+        user.update(enabled: false)
         get v2_token_url, valid_request, valid_auth_header
         expect(response.status).to eq 401
       end

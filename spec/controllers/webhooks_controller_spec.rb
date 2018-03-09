@@ -436,7 +436,7 @@ RSpec.describe WebhooksController, type: :controller do
     end
 
     it "tracks set webhook enabled" do
-      webhook.update_attributes(enabled: false)
+      webhook.update(enabled: false)
 
       expect do
         put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :js
@@ -449,7 +449,7 @@ RSpec.describe WebhooksController, type: :controller do
     end
 
     it "tracks set webhook disabled" do
-      webhook.update_attributes(enabled: true)
+      webhook.update(enabled: true)
 
       expect do
         put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :js

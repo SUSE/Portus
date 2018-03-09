@@ -86,7 +86,7 @@ describe "Admin - Users panel" do
     end
 
     it "allows the admin to enable back a user", js: true do
-      user.update_attributes(enabled: false)
+      user.update(enabled: false)
       visit admin_users_path
 
       expect(page).to have_css("#user_#{user.id}")
@@ -109,7 +109,7 @@ describe "Admin - Users panel" do
     end
 
     it "allows the admin to remove another admin", js: true do
-      user.update_attributes(admin: true)
+      user.update(admin: true)
       visit admin_users_path
 
       expect(page).to have_css("#user_#{user.id}")

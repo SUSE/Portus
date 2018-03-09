@@ -27,7 +27,7 @@ describe TeamUser do
   it "does not return disabled team members" do
     id = team.id
     expect(team.team_users.count).to be 2
-    user2.update_attributes(enabled: false)
+    user2.update(enabled: false)
     team = Team.find(id)
     expect(team.team_users.enabled.count).to be 1
   end

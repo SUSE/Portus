@@ -6,7 +6,7 @@ if Rails.env.development?
     require "brakeman"
 
     Brakeman.run(
-      app_path:     File.expand_path("../../..", __FILE__),
+      app_path:     File.expand_path("../..", __dir__),
       print_report: true,
       exit_on_warn: true
     )

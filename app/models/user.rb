@@ -128,7 +128,7 @@ class User < ActiveRecord::Base
       description: default_description,
       registry:    Registry.get # TODO: fix once we handle more registries
     )
-    update_attributes(namespace: namespace)
+    update(namespace: namespace)
   end
 
   # Find the user that can be guessed from the given push event.
@@ -142,7 +142,7 @@ class User < ActiveRecord::Base
   # registry accordingly.
   def toggle_admin!
     admin = !admin?
-    return unless update_attributes(admin: admin) && Registry.any?
+    return unless update(admin: admin) && Registry.any?
 
     # TODO: fix once we handle more registries
     team = Registry.get.global_namespace.team
@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
     return false if enabled && !can_disable?(user)
     return false if !enabled && !admin?
 
-    user.update_attributes(enabled: !enabled)
+    user.update(enabled: !enabled)
   end
 
   # This method is picked up by Devise before signing in a user.

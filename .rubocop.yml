@@ -98,3 +98,14 @@ Style/StringLiteralsInInterpolation:
 # disable this cop.
 Style/ClassAndModuleChildren:
   Enabled: false
+
+#
+# Naming
+#
+
+# The default minimum length is 3, which is too long for good names like
+# "js". Variables with only one letter are usually disallowed, but there are
+# some names which are easy to understand (e.g. convention).
+Naming/UncommunicativeMethodParamName:
+  MinNameLength: 2
+  AllowedNames: [_, n]

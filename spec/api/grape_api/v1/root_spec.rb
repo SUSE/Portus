@@ -15,7 +15,6 @@ end
 class ::API::RootAPI
   mount ::TestAPI
 end
-# rubocop:enable Style/ClassAndModuleChildren
 
 describe API::RootAPI do
   it "handles unknown routes" do

@@ -53,7 +53,7 @@ namespace :portus do
 
       begin
         id, digest, = client.manifest(t.repository.full_name, t.name)
-        t.update_attributes(digest: digest, image_id: id)
+        t.update(digest: digest, image_id: id)
       rescue StandardError => e
         puts "Could not get the manifest for #{repo_name}: #{e.message}"
       end
