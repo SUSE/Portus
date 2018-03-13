@@ -3,8 +3,13 @@
 require "portus/cmd"
 require "portus/test"
 
-# TODO: on a Travis PR, only test portus:development and registry:2.{5,6}
-# TODO: otherwise, test with portus:2.3 and portus:head
+# There are three cases for the matrix:
+#
+# 1. No CI: both development and production images will be used.
+# 2. CI and it's a pull request: only the development image will be used.
+# 3. CI and it's not a pull request: only production images will be used.
+#
+# In all cases they will test against registry 2.5 and 2.6.
 
 # Images for the supported registry versions. These versions will be applied
 # through a cartesian product into the test matrix.
@@ -13,10 +18,7 @@ SUPPORTED_REGISTRIES = [
   "library/registry:2.6"
 ].freeze
 
-MATRIX = [
-  # Development
-  {},
-
+PRODUCTION = [
   # Stable release: 2.3
   {
     background: "opensuse/portus:2.3",
@@ -28,7 +30,15 @@ MATRIX = [
     background: "opensuse/portus:head",
     portus:     "opensuse/portus:head"
   }
-].product(SUPPORTED_REGISTRIES).map { |v| v.first.merge(registry: v.last) }.freeze
+].freeze
+
+matrix = if ENV["CI"].present?
+           ENV["TRAVIS_PULL_REQUEST"] == "false" ? PRODUCTION.dup : [{}]
+         else
+           [{}] + PRODUCTION.dup
+         end
+
+MATRIX = matrix.product(SUPPORTED_REGISTRIES).map { |v| v.first.merge(registry: v.last) }.freeze
 
 namespace :test do
   desc "Run the integration test suite"
