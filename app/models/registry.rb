@@ -34,10 +34,9 @@ class Registry < ActiveRecord::Base
   # On create, make sure that all the needed namespaces are in place.
   after_create :create_namespaces!
 
-  # Today the data model supports many registries
-  # however Portus just supports on Registry
-  # therefore to avoid confusion, define just one way
-  # to ask for the registy
+  # Today the data model supports many registries however Portus just supports
+  # on Registry therefore to avoid confusion, define just one way to ask for the
+  # registy
   def self.get
     Registry.first
   end

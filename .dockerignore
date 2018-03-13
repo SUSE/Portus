@@ -4,3 +4,4 @@ vagrant
 packaging
 log/*
 .DS_Store
+.bundle/config

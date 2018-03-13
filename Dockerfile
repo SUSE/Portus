@@ -24,7 +24,9 @@ RUN zypper ref && \
     update-alternatives --install /usr/bin/bundler bundler /usr/bin/bundler.ruby2.5 3 && \
     bundle install --retry=3 && \
     go get -u github.com/vbatts/git-validation && \
+    go get -u github.com/openSUSE/portusctl && \
     mv /root/go/bin/git-validation /usr/local/bin/ && \
+    mv /root/go/bin/portusctl /usr/local/bin/ && \
     zypper -n rm wicked wicked-service autoconf automake \
            binutils bison cpp cvs flex gdbm-devel gettext-tools \
            libtool m4 make makeinfo && \
