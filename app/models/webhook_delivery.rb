@@ -47,9 +47,9 @@ class WebhookDelivery < ActiveRecord::Base
     request = Typhoeus::Request.new(webhook.url, args)
 
     request.on_complete do |response|
-      update_attributes status:          response.response_code,
-                        response_header: response.response_headers,
-                        response_body:   response.response_body
+      update status:          response.response_code,
+             response_header: response.response_headers,
+             response_body:   response.response_body
       # update `updated_at` field
       touch
     end

@@ -177,7 +177,7 @@ describe User do
 
     it "interacts with Devise as expected" do
       expect(user.active_for_authentication?).to be true
-      user.update_attributes(enabled: false)
+      user.update(enabled: false)
       expect(user.active_for_authentication?).to be false
     end
   end

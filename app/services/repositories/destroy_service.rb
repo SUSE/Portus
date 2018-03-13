@@ -25,7 +25,7 @@ module Repositories
 
     def mark_for_deletion!(repository)
       repository.tags.update_all(marked: true)
-      repository.update_attributes(marked: true)
+      repository.update(marked: true)
     end
 
     def destroy_tags(repository)

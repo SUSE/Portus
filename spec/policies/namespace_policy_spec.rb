@@ -244,7 +244,7 @@ describe NamespacePolicy do
     it "does not show duplicates" do
       # Namespaces controlled by the team that are also public are listed twice
       expected = team.namespaces
-      expected.first.update_attributes(visibility: :visibility_public)
+      expected.first.update(visibility: :visibility_public)
       expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
     end
 

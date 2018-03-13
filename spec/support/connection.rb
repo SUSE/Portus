@@ -37,5 +37,5 @@ if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
       end
     end
   end
-  # rubocop:enable Style/ClassAndModuleChildren
+
 end

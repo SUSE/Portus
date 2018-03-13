@@ -93,7 +93,7 @@ group :development, :test do
   gem "ffaker"
   gem "grape-swagger-rails"
   gem "hirb"
-  gem "rubocop", "~> 0.52.0", require: false
+  gem "rubocop", "~> 0.53.0", require: false
   gem "web-console", "~> 2.1.3"
   gem "wirb"
   gem "wirble"

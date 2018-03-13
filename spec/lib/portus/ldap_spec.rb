@@ -5,8 +5,8 @@ require "rails_helper"
 class LdapMockAdapter
   attr_accessor :opts
 
-  def initialize(o)
-    @opts = o
+  def initialize(opts)
+    @opts = opts
   end
 
   def bind_as(_)

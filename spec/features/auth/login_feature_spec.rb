@@ -99,7 +99,7 @@ describe "Login feature" do
   end
 
   it "A disabled user cannot login" do
-    user.update_attributes(enabled: false)
+    user.update(enabled: false)
     fill_in "user_username", with: user.username
     fill_in "user_password", with: user.password
     find("#login-btn").click

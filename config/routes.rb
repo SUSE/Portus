@@ -11,4 +11,3 @@ Rails.application.routes.draw do
     get "/#{code}", to: "errors#show", status: code
   end
 end
-# rubocop:enable Metrics/BlockLength
