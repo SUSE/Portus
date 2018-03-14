@@ -163,12 +163,18 @@ oauth:
       # Only members of team can sign in/up with Bitbucket. Need permission to read team membership.
       team: ""
 
-# Set first_user_admin to true if you want that the first user that signs up
-# to be an admin.
+# When enabled (default value), the first users to be created on the UI will be
+# a Portus admin. If you disable this, then, in order to set the admin user, you
+# will need to run: rake portus:make_admin[USERNAME].
 #
-# Set to false otherwise. Then you will need to run
-#   rake portus:make_admin[USERNAME]
-# in order to set the admin user
+# Moreover, if you set this option to false, then the POST
+# /api/v1/users/bootstrap endpoint will be disabled (since it will try to create
+# the first user as an administrator).
+#
+# Thus, only set this option to false if you are really sure that you have
+# direct access to your Portus instance and it can be reached by other people on
+# your network. Otherwise, leave the default value and create your first admin
+# user right away (either through the API or the UI).
 first_user_admin:
   enabled: true
 

@@ -121,7 +121,7 @@ module API
             destroy_service = ::Repositories::DestroyService.new(current_user)
             destroyed = destroy_service.execute(repository)
 
-            error!({ "errors" => destroy_service.error }, 422, header) unless destroyed
+            error!(destroy_service.error, 422, header) unless destroyed
           end
         end
       end
