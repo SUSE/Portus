@@ -5,11 +5,11 @@ require "rails_helper"
 describe NamespacePolicy do
   subject { described_class }
 
+  let!(:registry)   { create(:registry) }
   let(:user)        { create(:user) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
   let(:contributor) { create(:user) }
-  let(:registry)    { create(:registry) }
   let(:team) do
     create(:team,
            owners:       [owner],
@@ -86,29 +86,8 @@ describe NamespacePolicy do
     end
   end
 
-  permissions :push? do
-    it "disallow access to user with viewer role" do
-      expect(subject).not_to permit(viewer, namespace)
-    end
-
-    it "allows access to user with contributor role" do
-      expect(subject).to permit(contributor, namespace)
-    end
-
-    it "allows access to user with owner role" do
-      expect(subject).to permit(owner, namespace)
-    end
-
-    it "disallows access to user who is not part of the team" do
-      expect(subject).not_to permit(user, namespace)
-    end
-
-    it "disallows access to user who is not logged in" do
-      expect do
-        subject.new(nil, namespace).push?
-      end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
-    end
-
+  # The push? and all? are aliases, so they should share the same tests.
+  push_all = lambda { |_example|
     context "global namespace" do
       it "allows access to administrators" do
         expect(subject).to permit(@admin, registry.global_namespace)
@@ -119,21 +98,30 @@ describe NamespacePolicy do
       end
     end
 
-    context "when user_permission.push_images is disabled" do
+    context "user_permission.push_images.policy is set to admin-only" do
       before do
-        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+        APP_CONFIG["user_permission"]["push_images"]["policy"] = "admin-only"
+        contributor.create_personal_namespace!
       end
 
-      it "disallows access to user with viewer role" do
-        expect(subject).not_to permit(viewer, namespace)
+      it "allows access to admin" do
+        expect(subject).to permit(@admin, namespace)
       end
 
-      it "disallows access to user with owner role" do
-        expect(subject).not_to permit(owner, namespace)
+      it "owner cannot push to team namespace" do
+        expect(subject).to_not permit(owner, namespace)
       end
 
-      it "disallows access to user who is not part of the team" do
-        expect(subject).not_to permit(user, namespace)
+      it "contributor cannot push to team namespace" do
+        expect(subject).to_not permit(contributor, namespace)
+      end
+
+      it "viewer cannot push to team namespace" do
+        expect(subject).to_not permit(viewer, namespace)
+      end
+
+      it "does not allow access to the personal namespace" do
+        expect(subject).to_not permit(contributor, contributor.namespace)
       end
 
       it "disallows access to user who is not part of the team" do
@@ -145,40 +133,96 @@ describe NamespacePolicy do
           subject.new(nil, namespace).push?
         end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
       end
+    end
+
+    context "user_permission.push_images.policy is set to allow-personal" do
+      before do
+        APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-personal"
+        contributor.create_personal_namespace!
+      end
 
       it "allows access to admin" do
         expect(subject).to permit(@admin, namespace)
       end
-    end
-  end
 
-  permissions :all? do
-    it "disallow access to user with viewer role" do
-      expect(subject).not_to permit(viewer, namespace)
-    end
-
-    it "allows access to user with contributor role" do
-      expect(subject).to permit(contributor, namespace)
-    end
-
-    it "allows access to user with owner role" do
-      expect(subject).to permit(owner, namespace)
-    end
-
-    it "disallows access to user who is not part of the team" do
-      expect(subject).not_to permit(user, namespace)
-    end
-
-    context "global namespace" do
-      it "allows access to administrators" do
-        expect(subject).to permit(@admin, registry.global_namespace)
+      it "owner cannot push to team namespace" do
+        expect(subject).to_not permit(owner, namespace)
       end
 
-      it "denies access to other users" do
-        expect(subject).not_to permit(user, registry.global_namespace)
+      it "contributor cannot push to team namespace" do
+        expect(subject).to_not permit(contributor, namespace)
+      end
+
+      it "viewer cannot push to team namespace" do
+        expect(subject).to_not permit(viewer, namespace)
+      end
+
+      it "allows access to the personal namespace" do
+        expect(subject).to permit(contributor, contributor.namespace)
+      end
+
+      it "disallows access to user who is not part of the team" do
+        expect(subject).not_to permit(user, namespace)
+      end
+
+      it "disallows access to user who is not logged in" do
+        expect do
+          subject.new(nil, namespace).push?
+        end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
       end
     end
-  end
+
+    context "user_permission.push_images.policy is set to allow-teams" do
+      before do
+        APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-teams"
+        contributor.create_personal_namespace!
+      end
+
+      it "allows access to admin" do
+        expect(subject).to permit(@admin, namespace)
+      end
+
+      it "owner can push to team namespace" do
+        expect(subject).to permit(owner, namespace)
+      end
+
+      it "contributor can push to team namespace" do
+        expect(subject).to permit(contributor, namespace)
+      end
+
+      it "viewer cannot push to team namespace" do
+        expect(subject).to_not permit(viewer, namespace)
+      end
+
+      it "allows access to the personal namespace" do
+        expect(subject).to permit(contributor, contributor.namespace)
+      end
+
+      it "disallows access to user who is not part of the team" do
+        expect(subject).not_to permit(user, namespace)
+      end
+
+      it "disallows access to user who is not logged in" do
+        expect do
+          subject.new(nil, namespace).push?
+        end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+      end
+    end
+
+    context "user_permission.push_images.policy is set to an unknown value" do
+      before do
+        APP_CONFIG["user_permission"]["push_images"]["policy"] = "unknown"
+      end
+
+      it "it logs a warning and does not allow access to admins" do
+        expect(Rails.logger).to receive(:warn).with("Unknown push policy 'unknown'")
+        expect(subject).to_not permit(@admin, namespace)
+      end
+    end
+  }
+
+  permissions :push?, &push_all
+  permissions :all?, &push_all
 
   permissions :change_visibility? do
     it "allows admin to change it" do

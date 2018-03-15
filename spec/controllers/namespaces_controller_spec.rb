@@ -279,7 +279,7 @@ describe NamespacesController, type: :controller do
 
       context "when option user_permission.push_images" do
         before do
-          APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+          APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-personal"
         end
 
         it "raises an authorization error when trying to change to a non-existing team" do

@@ -259,10 +259,15 @@ user_permission:
   manage_namespace:
     enabled: true
 
-  # Allow users to push images to namespaces, where they are owner/contributor of.
-  # If this is disabled, only admins can push images. This defaults to true.
+  # Define a push policy. There are three possible values:
+  #   1. allow-teams (default): leaves push policy at the team level: owners and
+  #      contributors can push. Portus administrators will also be able to push.
+  #   2. allow-personal: regular users can only push into their personal
+  #      namespaces. Owners and contributors cannot push into team owned
+  #      repositories: only Portus administrators will be able to push.
+  #   3. admin-only: only Portus administrators can push.
   push_images:
-    enabled: true
+    policy: allow-teams
 
 # Security scanner support. Add the server location for each driver in order to
 # enable it. If no drivers have been enabled, then this feature is skipped

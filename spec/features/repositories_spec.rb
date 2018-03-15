@@ -133,7 +133,7 @@ describe "Feature: Repositories" do
 
     context "when user_permission.push_images is disabled" do
       before do
-        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+        APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-personal"
       end
 
       it "Visual  aid for each role is shown properly" do

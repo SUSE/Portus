@@ -28,15 +28,16 @@ class NamespacePolicy
   alias show? pull?
 
   def push?
+    # Only logged-in users can push.
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
 
-    if APP_CONFIG.enabled?("user_permission.push_images")
-      # Only owner and contributors have WRITE access
-      user.admin? ||
-        namespace.team.owners.exists?(user.id) ||
-        namespace.team.contributors.exists?(user.id)
+    policy = APP_CONFIG["user_permission"]["push_images"]["policy"]
+    case policy
+    when "allow-personal", "allow-teams", "admin-only"
+      user.admin? || push_policy_allow?(policy)
     else
-      user.admin?
+      Rails.logger.warn "Unknown push policy '#{policy}'"
+      false
     end
   end
 
@@ -92,6 +93,21 @@ class NamespacePolicy
           user_id: user.id, global: false, namespace_id: user.namespace_id
         )
         .distinct
+    end
+  end
+
+  protected
+
+  # Returns true if the given push policy allows the push. This method assumes
+  # that the current user is not an admin.
+  def push_policy_allow?(policy)
+    if policy == "allow-personal"
+      user.namespace.id == namespace.id
+    elsif policy == "allow-teams"
+      namespace.team.owners.exists?(user.id) ||
+        namespace.team.contributors.exists?(user.id)
+    else
+      false
     end
   end
 end

@@ -33,9 +33,9 @@ RSpec.describe RepositoriesHelper, type: :helper do
       expect(message).to include("You can push images")
     end
 
-    context "when the user push permission is disabled" do
+    context "when the user push permission is restrictred" do
       before do
-        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+        APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-personal"
       end
 
       it "shows you can push images only for admins" do
