@@ -13,8 +13,8 @@ function setup() {
     docker_run login -u admin -p 12341234 172.17.0.1:5000
     [ $status -eq 0 ]
 
-    docker_tag opensuse/portus:development 172.17.0.1:5000/portus:development
-    docker_run push 172.17.0.1:5000/portus:development
+    docker_tag $DEVEL_IMAGE 172.17.0.1:5000/test:development
+    docker_run push 172.17.0.1:5000/test:development
 
     [ $status -eq 0 ]
     [[ "${lines[-1]}" =~ "development: digest: sha256:" ]]
@@ -24,9 +24,9 @@ function setup() {
     docker_run login -u admin -p 12341234 172.17.0.1:5000
     [ $status -eq 0 ]
 
-    docker_tag opensuse/portus:development 172.17.0.1:5000/portus:development
-    docker_tag opensuse/portus:development 172.17.0.1:5000/portus:development2
-    docker_run push 172.17.0.1:5000/portus
+    docker_tag $DEVEL_IMAGE 172.17.0.1:5000/test:development
+    docker_tag $DEVEL_IMAGE 172.17.0.1:5000/test:development2
+    docker_run push 172.17.0.1:5000/test
 
     [ $status -eq 0 ]
 }
@@ -35,8 +35,8 @@ function setup() {
     docker_run login -u user -p 12341234 172.17.0.1:5000
     [ $status -eq 0 ]
 
-    docker_tag opensuse/portus:development 172.17.0.1:5000/portus:development
-    docker_run push 172.17.0.1:5000/portus:development
+    docker_tag $DEVEL_IMAGE 172.17.0.1:5000/test:development
+    docker_run push 172.17.0.1:5000/test:development
 
     [ $status -eq 1 ]
     [[ "${lines[-1]}" =~ "authentication required" ]]
@@ -48,8 +48,8 @@ function setup() {
 
     docker_run login -u user -p 12341234 172.17.0.1:5000
 
-    docker_tag opensuse/portus:development 172.17.0.1:5000/portus:development
-    docker_run push 172.17.0.1:5000/portus:development
+    docker_tag $DEVEL_IMAGE 172.17.0.1:5000/test:development
+    docker_run push 172.17.0.1:5000/test:development
     [ $status -eq 1 ]
 }
 
@@ -62,11 +62,11 @@ function setup() {
 
     # Contributor can push and pull
 
-    docker_tag opensuse/portus:development 172.17.0.1:5000/namespace/portus:development
-    docker_run push 172.17.0.1:5000/namespace/portus:development
+    docker_tag $DEVEL_IMAGE 172.17.0.1:5000/namespace/test:development
+    docker_run push 172.17.0.1:5000/namespace/test:development
     [ $status -eq 0 ]
 
-    docker_run pull 172.17.0.1:5000/namespace/portus:development
+    docker_run pull 172.17.0.1:5000/namespace/test:development
     [ $status -eq 0 ]
 
     # Viewer can only push
@@ -74,9 +74,9 @@ function setup() {
     __logout
     docker_run login -u viewer -p 12341234 172.17.0.1:5000
 
-    docker_run push 172.17.0.1:5000/namespace/portus:development
+    docker_run push 172.17.0.1:5000/namespace/test:development
     [ $status -eq 1 ]
 
-    docker_run pull 172.17.0.1:5000/namespace/portus:development
+    docker_run pull 172.17.0.1:5000/namespace/test:development
     [ $status -eq 0 ]
 }
