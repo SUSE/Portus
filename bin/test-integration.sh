@@ -78,6 +78,11 @@ if [[ ! "$SKIP_ENV_TESTS" ]]; then
     fi
 fi
 
+# Integration tests will play with the following images
+export DEVEL_NAME="busybox"
+export DEVEL_IMAGE="$DEVEL_NAME:latest"
+docker pull $DEVEL_IMAGE
+
 # Run tests.
 tests=()
 if [[ -z "$TESTS" ]]; then
