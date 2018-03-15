@@ -48,7 +48,7 @@ module API
                     current_user: current_user,
                     type:         current_type
           else
-            error!({ "errors" => team.errors.full_messages }, 422, header)
+            unprocessable_entity!(team.errors.full_messages)
           end
         end
 

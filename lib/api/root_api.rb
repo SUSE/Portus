@@ -26,25 +26,30 @@ module API
     end
 
     rescue_from ActiveRecord::RecordNotFound do
-      error_response message: "Not found", status: 404
+      not_found!
     end
 
     rescue_from Grape::Exceptions::MethodNotAllowed do |e|
-      error_response message: { errors: e.message }, status: 405
+      method_not_allowed!(e.message)
     end
 
     rescue_from Grape::Exceptions::ValidationErrors do |e|
-      error_response message: { errors: e.errors }, status: 400
+      bad_request!(e.errors)
     end
 
     rescue_from Pundit::NotAuthorizedError do |_|
-      error_response message: { errors: "Authorization fails" }, status: 403
+      forbidden!("Authorization fails")
     end
 
     # global exception handler, used for error notifications
     rescue_from :all do |e|
-      error_response message: "Internal server error: #{e}", status: 500
+      internal_server_error!(e)
     end
+
+    # We are using the same formatter for any error that might be raised. The
+    # _ignored parameter include (in order): backtrace, options, env and
+    # original_exception.
+    error_formatter :json, ->(message, *_ignored) { { errors: message }.to_json }
 
     helpers Pundit
     helpers ::API::Helpers
@@ -60,7 +65,7 @@ module API
     mount ::API::Version
 
     route :any, "*path" do
-      error!("Not found", 404)
+      not_found!
     end
 
     add_swagger_documentation \

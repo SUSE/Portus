@@ -76,7 +76,7 @@ module API
                     current_user: current_user,
                     type:         current_type
           else
-            error!({ "errors" => namespace.errors.full_messages }, 422, header)
+            unprocessable_entity!(namespace.errors.full_messages)
           end
         end
 

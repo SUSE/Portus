@@ -16,6 +16,8 @@ describe API::V1::Users do
     admin = create :admin
     token = create :application_token, user: admin
     @header = build_token_header(token)
+
+    APP_CONFIG["first_user_admin"] = { "enabled" => true }
   end
 
   context "GET /api/v1/users" do
@@ -221,5 +223,61 @@ describe API::V1::Users do
     token = create :application_token, user: user
     delete "/api/v1/users/#{user.id}/application_tokens/#{token.id}", nil, @header
     expect(response).to have_http_status(:not_found)
+  end
+
+  context "POST /api/v1/users/bootstrap" do
+    it "returns 400 if there is already a user available", focus: true do
+      create :user
+      post "/api/v1/users/bootstrap", { user: user_data }, @header
+      expect(response).to have_http_status(:bad_request)
+
+      msg = JSON.parse(response.body)
+      expect(msg["errors"].first).to eq(
+        "you can only use this when there are no users on the system"
+      )
+    end
+
+    it "returns the application token if everything went fine" do
+      # Destroy all users and create the portus one. This will check that it
+      # ignores the portus user when creating this new admin.
+      User.destroy_all
+      create(:user, username: "portus")
+
+      expect do
+        post "/api/v1/users/bootstrap", { user: user_data }, nil
+      end.to change { ApplicationToken.count }.from(0).to(1)
+
+      expect(response).to have_http_status(:created)
+
+      msg = JSON.parse(response.body)
+      expect(msg["plain_token"]).not_to be_empty
+    end
+
+    it "makes sure that the created user is an admin" do
+      User.destroy_all
+
+      post "/api/v1/users/bootstrap", { user: user_data }, nil
+      expect(response).to have_http_status(:created)
+
+      expect(User.first.admin?).to be_truthy
+    end
+
+    it "returns a 405 if first_user_admin was disabled" do
+      APP_CONFIG["first_user_admin"] = { "enabled" => false }
+      post "/api/v1/users/bootstrap", { user: user_data }, @header
+      expect(response).to have_http_status(:method_not_allowed)
+    end
+
+    it "returns a 400 when the supplied parameters have a bad format" do
+      User.destroy_all
+      data = user_data
+      data[:email] = "bad"
+
+      post "/api/v1/users/bootstrap", { user: data }, nil
+      expect(response).to have_http_status(:bad_request)
+
+      msg = JSON.parse(response.body)
+      expect(msg["errors"]["email"].first).to eq "is invalid"
+    end
   end
 end

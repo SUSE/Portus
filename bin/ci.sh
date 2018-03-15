@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 ##
 # Auxiliar functions
@@ -57,7 +57,7 @@ bundle exec rake test:git
 
 # Style and security checks
 bundle exec rubocop -V
-bundle exec rubocop -F
+bundle exec rubocop --extra-details --display-style-guide --display-cop-names
 
 # Compile assets
 bundle exec rake portus:assets:compile
