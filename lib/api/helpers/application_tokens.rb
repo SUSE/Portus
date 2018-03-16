@@ -22,10 +22,10 @@ module API
             status 201
             { plain_token: plain_token }
           else
-            bad_request!(application_token.errors)
+            unprocessable_entity!(application_token.errors)
           end
         else
-          bad_request!(user.errors)
+          unprocessable_entity!(user.errors)
         end
       end
     end

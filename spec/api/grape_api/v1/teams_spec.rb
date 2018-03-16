@@ -121,12 +121,24 @@ describe API::V1::Teams do
       expect(response).to have_http_status(:bad_request)
     end
 
+    it "returns a 400 for malformed JSON" do
+      @header = @header.merge(
+        "CONTENT_TYPE" => "application/json",
+        "ACCEPT"       => "application/json"
+      )
+      post "/api/v1/teams", "{", @header
+      expect(response).to have_http_status(:bad_request)
+
+      resp = JSON.parse(response.body)
+      expect(resp["message"]).to match(/There was a problem in the JSON you submitted/)
+    end
+
     it "returns 422 if invalid values" do
       post "/api/v1/teams", { name: "" }, @header
 
       parsed = JSON.parse(response.body)
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(parsed["errors"]).to include("Name can't be blank")
+      expect(parsed["message"]["name"].first).to include("can't be blank")
     end
 
     it "returns 403 if non-admins try to create a Team" do

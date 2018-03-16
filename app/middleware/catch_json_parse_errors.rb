@@ -14,7 +14,7 @@ class CatchJsonParseErrors
     error_output = "There was a problem in the JSON you submitted: #{error}"
     [
       400, { "Content-Type" => "application/json" },
-      [{ status: 400, error: error_output }.to_json]
+      [{ message: error_output }.to_json]
     ]
   end
 end

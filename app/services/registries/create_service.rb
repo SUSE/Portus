@@ -28,7 +28,7 @@ module Registries
     def check_uniqueness!
       return unless Registry.any?
       @valid = false
-      @messages[:uniqueness] = "You can only create one registry"
+      @messages[:uniqueness] = ["You can only create one registry"]
     end
   end
 end

@@ -88,8 +88,8 @@ describe API::V1::Users do
       it "returns errors" do
         post "/api/v1/users", { user: { username: "", email: "", password: "" } },
              @header
-        expect(response).to have_http_status(:bad_request)
-        expect(JSON.parse(response.body)["errors"]).not_to be_nil
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)["message"]).not_to be_nil
       end
 
       it "returns user error" do
@@ -104,7 +104,8 @@ describe API::V1::Users do
         "Accept":       "application/json"
       )
       post "/api/v1/users", '{"user":{"username"', headers
-      expect(JSON.parse(response.body)["error"]).not_to be nil
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)["message"]).not_to be nil
     end
   end
 
@@ -127,13 +128,12 @@ describe API::V1::Users do
     end
 
     context "with invalid params" do
-      it "returns dublicate usernaeme errors" do
+      it "returns duplicate username errors" do
         user = create :user
         user2 = create :user
-        put "/api/v1/users/#{user.id}", { user: { username: user2.username } },
-            @header
-        expect(response).to have_http_status(:bad_request)
-        expect(JSON.parse(response.body)["errors"]).not_to be_nil
+        put "/api/v1/users/#{user.id}", { user: { username: user2.username } }, @header
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)["message"]).not_to be_nil
       end
 
       it "returns status not found" do
@@ -186,12 +186,15 @@ describe API::V1::Users do
       expect(JSON.parse(response.body)).not_to be_nil
     end
 
-    it "returns errors" do
+    it "returns errors on existing application" do
       token = create :application_token
+
       post "/api/v1/users/#{token.user_id}/application_tokens", \
            { application: token.application }, @header
-      expect(response).to have_http_status(:bad_request)
-      expect(JSON.parse(response.body)["errors"]).not_to be_nil
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      resp = JSON.parse(response.body)
+      expect(resp["message"]["application"].first).to eq("has already been taken")
     end
 
     it "returns server error" do
@@ -199,6 +202,20 @@ describe API::V1::Users do
       post "/api/v1/users/#{token.user_id}/application_tokens",
            { application: nil }, @header
       expect(response).to have_http_status(:internal_server_error)
+    end
+
+    it "returns a 400 for malformed JSON" do
+      user = create :user
+
+      @header = @header.merge(
+        "CONTENT_TYPE" => "application/json",
+        "ACCEPT"       => "application/json"
+      )
+      post "/api/v1/users/#{user.id}/application_tokens", "{", @header
+      expect(response).to have_http_status(:bad_request)
+
+      resp = JSON.parse(response.body)
+      expect(resp["message"]).to match(/There was a problem in the JSON you submitted/)
     end
   end
 
@@ -226,13 +243,13 @@ describe API::V1::Users do
   end
 
   context "POST /api/v1/users/bootstrap" do
-    it "returns 400 if there is already a user available", focus: true do
+    it "returns 400 if there is already a user available" do
       create :user
       post "/api/v1/users/bootstrap", { user: user_data }, @header
       expect(response).to have_http_status(:bad_request)
 
       msg = JSON.parse(response.body)
-      expect(msg["errors"].first).to eq(
+      expect(msg["message"]).to eq(
         "you can only use this when there are no users on the system"
       )
     end
@@ -268,16 +285,16 @@ describe API::V1::Users do
       expect(response).to have_http_status(:method_not_allowed)
     end
 
-    it "returns a 400 when the supplied parameters have a bad format" do
+    it "returns a 422 when the supplied parameters have a bad format" do
       User.destroy_all
       data = user_data
       data[:email] = "bad"
 
       post "/api/v1/users/bootstrap", { user: data }, nil
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
 
       msg = JSON.parse(response.body)
-      expect(msg["errors"]["email"].first).to eq "is invalid"
+      expect(msg["message"]["email"].first).to eq "is invalid"
     end
   end
 end
