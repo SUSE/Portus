@@ -311,9 +311,9 @@ describe "Namespaces support" do
       expect(page).to have_content("Pull Viewer")
     end
 
-    context "when user_permission.push_images is disabled" do
+    context "when user_permission.push_images is restricted" do
       before do
-        APP_CONFIG["user_permission"]["push_images"]["enabled"] = false
+        APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-personal"
       end
 
       it "shows the proper visual aid for each role" do
