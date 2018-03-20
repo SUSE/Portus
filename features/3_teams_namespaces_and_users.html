@@ -287,8 +287,12 @@
 <p>Teams are the way in which an organization can manage sets of users. Each team
 owns a set of namespaces, which are used to group repositories. Besides grouping
 namespaces, teams are used to manage the permissions in which each team member
-can push/pull certain repositories. This is done through
-<a href="/features/3_teams_namespaces_and_users.html#team-roles">team roles</a>.</p>
+can push/pull certain repositories. This is done through <a href="/features/3_teams_namespaces_and_users.html#team-roles">team
+roles</a>, but you can
+further restrict push access by setting a <a href="/features/3_teams_namespaces_and_users.html#push-policies">push
+policy</a> (see a <a href="/features/3_teams_namespaces_and_users.html#summary-with-all-the-options">TL;DR
+at the bottom of this
+page</a>).</p>
 
 <p>The UI for managing teams is quite simple. First, you can go to the “Teams”
 page and you will see something similar to this:</p>
@@ -425,6 +429,150 @@ the top containers. Then, the admin should be seeing something similar to this:<
 <p>This page contains a list of all the users registered in the system. By
 toggling the switch under the “Admin” label, the admin can give admin
 permissions to different users.</p>
+
+<h2 id="push-policies">Push policies</h2>
+
+<p>Push policies are regulated in the <code class="highlighter-rouge">user_permission.push_images.policy</code> option
+described <a href="/docs/Configuring-Portus.html#granular-user-permissions">here</a>. It
+may take one of the following values:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">allow-teams</code>: this is the default value and it will simply apply all the
+rules that have been stated above on this page. That is, push policy will be
+regulated through team permissions. This way, Portus administrators and team
+owners and contributors will be able to push to the namespaces owned by a
+given team.</li>
+  <li><code class="highlighter-rouge">allow-personal</code>: this way Portus will restrict push access to only
+administrators of Portus. That being said, users will still have their own
+personal namespace at their disposal.</li>
+  <li><code class="highlighter-rouge">admin-only</code>: when used, it will restrict push access to only Portus
+administrators. Users won’t even have a personal namespace. Use this option if
+you want to ensure that only Portus administrators can submit Docker images to
+your private registry.</li>
+</ul>
+
+<p>Note that when either <code class="highlighter-rouge">allow-personal</code> or <code class="highlighter-rouge">admin-only</code> have been selected, then
+owners, contributors and viewers of a team have the same permissions on
+team-owned namespace: only pull access.</p>
+
+<h2 id="summary-with-all-the-options">Summary with all the options</h2>
+
+<h3 id="allow-teams">allow-teams</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Roles</th>
+      <th>Global namespace</th>
+      <th>Personal namespace</th>
+      <th>Team namespace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Admin</td>
+      <td>push/pull</td>
+      <td>push/pull (of any user)</td>
+      <td>push/pull</td>
+    </tr>
+    <tr>
+      <td>Owner</td>
+      <td>pull</td>
+      <td>push/pull</td>
+      <td>push/pull</td>
+    </tr>
+    <tr>
+      <td>Contributor</td>
+      <td>pull</td>
+      <td>push/pull</td>
+      <td>push/pull</td>
+    </tr>
+    <tr>
+      <td>Viewer</td>
+      <td>pull</td>
+      <td>push/pull</td>
+      <td>pull</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="allow-personal">allow-personal</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Roles</th>
+      <th>Global namespace</th>
+      <th>Personal namespace</th>
+      <th>Team namespace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Admin</td>
+      <td>push/pull</td>
+      <td>push/pull (of any user)</td>
+      <td>push/pull</td>
+    </tr>
+    <tr>
+      <td>Owner</td>
+      <td>pull</td>
+      <td>push/pull</td>
+      <td>pull</td>
+    </tr>
+    <tr>
+      <td>Contributor</td>
+      <td>pull</td>
+      <td>push/pull</td>
+      <td>pull</td>
+    </tr>
+    <tr>
+      <td>Viewer</td>
+      <td>pull</td>
+      <td>push/pull</td>
+      <td>pull</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="admin-only">admin-only</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Roles</th>
+      <th>Global namespace</th>
+      <th>Personal namespace</th>
+      <th>Team namespace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Admin</td>
+      <td>push/pull</td>
+      <td>push/pull (of any user)</td>
+      <td>push/pull</td>
+    </tr>
+    <tr>
+      <td>Owner</td>
+      <td>pull</td>
+      <td>pull</td>
+      <td>pull</td>
+    </tr>
+    <tr>
+      <td>Contributor</td>
+      <td>pull</td>
+      <td>pull</td>
+      <td>pull</td>
+    </tr>
+    <tr>
+      <td>Viewer</td>
+      <td>pull</td>
+      <td>pull</td>
+      <td>pull</td>
+    </tr>
+  </tbody>
+</table>
 
               </article>
             </div>

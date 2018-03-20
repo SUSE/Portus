@@ -343,6 +343,71 @@ $ export PORTUSCTL_API_SERVER="https://172.17.0.1"
 $ portusctl get users
 </code></pre></div></div>
 
+<h2 id="errors">Errors</h2>
+
+<h3 id="authorization-and-authentication">Authorization and authentication</h3>
+
+<p>In this regard there are two status codes to be aware of:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">401</code>: an authentication error. This means that you either forgot to provide
+the <code class="highlighter-rouge">PORTUS-AUTH</code> header, or the given credentials are wrong.</li>
+  <li><code class="highlighter-rouge">403</code>: an authorization error. This means that the user performing an action
+is not allowed to do it.</li>
+</ul>
+
+<h3 id="data-validation">Data validation</h3>
+
+<p>In regards to data validation we differentiate between two kinds of
+errors. First of all, we have type errors like:</p>
+
+<ul>
+  <li>Some mandatory fields are missing.</li>
+  <li>Some fields have a wrong type (e.g. a boolean value was expected but a weird
+string was given).</li>
+</ul>
+
+<p>These errors are responded with a <code class="highlighter-rouge">400</code> status code. The response body will be
+then like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reason for the error"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Finally, the other possible error is a semantic one: a given field has a wrong
+format (e.g. bad user email), a field was expected to be unique but it wasn’t,
+etc. These errors get back a <code class="highlighter-rouge">422</code> status code with the following response body:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"&lt;field1&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;error1&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"&lt;error2&gt;"</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="p">],</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="unknown-route-or-method-not-allowed">Unknown route or method not allowed</h3>
+
+<p>A <code class="highlighter-rouge">404</code> is returned whenever an unknown route is provided. This can happen in
+two ways:</p>
+
+<ol>
+  <li>The given path is simply non-existent.</li>
+  <li>The path required a resource identifier (e.g. a user ID), but an unknown ID
+was provided (e.g. there are no users with the provided ID).</li>
+</ol>
+
+<p>Sometimes it’s not that the route does not exist, but that the given method is
+now allowed at the moment. This can happen in some cases where the route is only
+available under some conditions. In this situation, a <code class="highlighter-rouge">405</code> will be sent, with a
+response body like so:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reason for the method being disabled"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="endpoints">Endpoints</h2>
 
 
@@ -635,12 +700,26 @@ $ portusctl get users
                   
                   
                 
+                  
+                  
+                
+                  
+                  
+                
 
                 <h4>Response Messages</h4>
 
                 <table cellspacing="0" cellpadding="0">
                 
                   
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
                   
                 
                   
@@ -656,6 +735,14 @@ $ portusctl get users
                   <tr>
                     <td class="swagger-response-code">403</td>
                     <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -1059,6 +1146,300 @@ $ portusctl get users
                   <tr>
                     <td class="swagger-response-code">403</td>
                     <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-registries" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/registries</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Allow users to create a registry. This will only work if no registry works yet.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>registry[name]</i> (string, <b>required</b>):
+                      The name of the registry.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>registry[hostname]</i> (string, <b>required</b>):
+                      The hostname of the registry.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>registry[use_ssl]</i> (boolean, <b>required</b>):
+                      Whether the registry uses SSL or not.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>registry[external_hostname]</i> (string):
+                      An external hostname of the registry, useful if behind a proxy with a different FQDN.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 201)</h4>
+                      <p>
+                        Create a registry.
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"external_hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"use_ssl"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-put">
+        <h4 id="spec-method-put-api-v1-registries-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">PUT</span>
+            <span class="swagger-method-route">/api/v1/registries/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Update registry.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>registry[name]</i> (string):
+                      The name of the registry.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>registry[hostname]</i> (string):
+                      The hostname of the registry.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>registry[use_ssl]</i> (boolean):
+                      Whether the registry uses SSL or not.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>registry[external_hostname]</i> (string):
+                      An external hostname of the registry, useful if behind a proxy with a different FQDN.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      .
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 200)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"external_hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"use_ssl"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -1739,6 +2120,90 @@ $ portusctl get users
         </div>
     </div>
     
+    <div class="swagger-method swagger-method-delete">
+        <h4 id="spec-method-delete-api-v1-repositories-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">DELETE</span>
+            <span class="swagger-method-route">/api/v1/repositories/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Delete repository.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      Repository ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">204</td>
+                    <td class="swagger-response-message">Delete repository.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
 </div>
 
   
@@ -1940,6 +2405,90 @@ $ portusctl get users
         </div>
     </div>
     
+    <div class="swagger-method swagger-method-delete">
+        <h4 id="spec-method-delete-api-v1-tags-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">DELETE</span>
+            <span class="swagger-method-route">/api/v1/tags/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Delete tag.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      Tag ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">204</td>
+                    <td class="swagger-response-message">Delete tag.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
 </div>
 
   
@@ -2093,12 +2642,26 @@ $ portusctl get users
                   
                   
                 
+                  
+                  
+                
+                  
+                  
+                
 
                 <h4>Response Messages</h4>
 
                 <table cellspacing="0" cellpadding="0">
                 
                   
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
                   
                 
                   
@@ -2114,6 +2677,14 @@ $ portusctl get users
                   <tr>
                     <td class="swagger-response-code">403</td>
                     <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -2632,6 +3203,9 @@ $ portusctl get users
                   
                   
                 
+                  
+                  
+                
 
                 <h4>Response Messages</h4>
 
@@ -2661,6 +3235,14 @@ $ portusctl get users
                   <tr>
                     <td class="swagger-response-code">403</td>
                     <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -2861,6 +3443,9 @@ $ portusctl get users
                   
                   
                 
+                  
+                  
+                
 
                 <h4>Response Messages</h4>
 
@@ -2890,6 +3475,14 @@ $ portusctl get users
                   <tr>
                     <td class="swagger-response-code">403</td>
                     <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -3086,6 +3679,9 @@ $ portusctl get users
                   
                   
                 
+                  
+                  
+                
 
                 <h4>Response Messages</h4>
 
@@ -3123,6 +3719,14 @@ $ portusctl get users
                   <tr>
                     <td class="swagger-response-code">404</td>
                     <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -3322,6 +3926,311 @@ $ portusctl get users
 </div>
 
   
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-users-bootstrap" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/users/bootstrap</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Use this method to create the first admin user. The response will include an application token so you can use this user right away. This method should be used when bootstrapping a Portus instance by using the REST API. Last but not least, it will respond with a 405 if the `first_user_admin` configuration value has been disabled.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>user[username]</i> (string, <b>required</b>):
+                      User name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[email]</i> (string, <b>required</b>):
+                      E-mail.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[password]</i> (string, <b>required</b>):
+                      Password.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[display_name]</i> (string):
+                      Display name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 201)</h4>
+                      <p>
+                        Create the first admin user.
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"plain_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">405</td>
+                    <td class="swagger-response-message">Method Not Allowed.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+
+  <h3 id="spec-vulnerabilities" class="swagger-tag">Vulnerabilities</h3>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-vulnerabilities" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/vulnerabilities</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Force the security scanner to go through all the tags again, even if they have been marked as scanned.</p>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">201</td>
+                    <td class="swagger-response-message">Force re-schedule for all tags.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-vulnerabilities-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/vulnerabilities/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Force the security scanner to scan again a given tag,even if it was already marked as scanned.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      .
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">201</td>
+                    <td class="swagger-response-message">Force re-schedule for the given tag.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
 
   <h3 id="spec-version" class="swagger-tag">Version</h3>
 
@@ -3355,9 +4264,7 @@ $ portusctl get users
                       </p>
                       
 <figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"api-versions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"strings"</span><span class="w">
-  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"api-versions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"git"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>

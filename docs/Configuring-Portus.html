@@ -660,7 +660,10 @@ the following options:</p>
     <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
 
   <span class="na">manage_namespace</span><span class="pi">:</span>
-    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span></code></pre></figure>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">push_images</span><span class="pi">:</span>
+    <span class="na">policy</span><span class="pi">:</span> <span class="s">allow-teams</span></code></pre></figure>
 
 <ul>
   <li><strong>change_visibility</strong>: allow users to change the visibility or their personal
@@ -672,6 +675,9 @@ defaults to true.</li>
   <li><strong>create/manage_namespace</strong>: allow users to create/modify namespaces if they
 are an owner of it. If this is disabled, only an admin will be able to do
 this. It defaults to true.</li>
+  <li><strong>push_images</strong>: set a push policy. Available options are: <code class="highlighter-rouge">allow-teams</code>,
+<code class="highlighter-rouge">allow-personal</code> and <code class="highlighter-rouge">admin-only</code>. You can read more about push policies
+<a href="/features/3_teams_namespaces_and_users.html">here</a>.</li>
 </ul>
 
 <h3 id="background-process">Background process</h3>
