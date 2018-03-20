@@ -39,13 +39,24 @@ describe API::V1::Registries do
       expect(resp["name"]).to eq(data[:registry][:name])
     end
 
+    it "returns a 400 for malformed JSON" do
+      allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
+
+      @header = @header.merge("CONTENT_TYPE" => "application/json", "ACCEPT" => "application/json")
+      post "/api/v1/registries", "{", @header
+      expect(response).to have_http_status(:bad_request)
+
+      resp = JSON.parse(response.body)
+      expect(resp["message"]).to match(/There was a problem in the JSON you submitted/)
+    end
+
     it "does not create a registry on a wrong use_ssl value" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
       post "/api/v1/registries", wrong_data, @header
       expect(response).to have_http_status(:bad_request)
 
       resp = JSON.parse(response.body)
-      msg = resp["errors"].first.last.first
+      msg = resp["message"].first.last.first
       expect(msg).to eq("is invalid")
     end
 
@@ -54,19 +65,19 @@ describe API::V1::Registries do
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
       post "/api/v1/registries", data, @header
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
-      expect(resp["errors"]["uniqueness"]).to eq("You can only create one registry")
+      expect(resp["message"]["uniqueness"].first).to eq("You can only create one registry")
     end
 
     it "returns an error on unreachable registry" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return("Not reachable")
       post "/api/v1/registries", data, @header
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
-      expect(resp["errors"]["hostname"].first).to eq("Not reachable")
+      expect(resp["message"]["hostname"].first).to eq("Not reachable")
     end
   end
 
@@ -106,10 +117,11 @@ describe API::V1::Registries do
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
       put "/api/v1/registries/#{r.id}", data, @header
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
-      expect(resp["errors"]["hostname"]).to eq("Registry is not empty, cannot change hostname")
+      msg  = "Registry is not empty, cannot change hostname"
+      expect(resp["message"]["hostname"].first).to eq(msg)
     end
 
     it "allows to update if there are repositories and you don't touch the hostname" do
@@ -132,10 +144,10 @@ describe API::V1::Registries do
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return("Not reachable")
       put "/api/v1/registries/#{r.id}", data, @header
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
-      expect(resp["errors"]["hostname"].first).to eq("Not reachable")
+      expect(resp["message"]["hostname"].first).to eq("Not reachable")
     end
   end
 

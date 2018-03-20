@@ -34,7 +34,8 @@ module API
              failure:  [
                [400, "Bad request", API::Entities::ApiErrors],
                [401, "Authentication fails"],
-               [403, "Authorization fails"]
+               [403, "Authorization fails"],
+               [422, "Unprocessable Entity", API::Entities::FullApiErrors]
              ]
 
         params do
@@ -57,8 +58,7 @@ module API
           if svc.valid?
             present obj, with: API::Entities::Registries
           else
-            status 400
-            { errors: svc.messages }
+            unprocessable_entity!(svc.messages)
           end
         end
 
@@ -68,7 +68,8 @@ module API
                [400, "Bad request", API::Entities::ApiErrors],
                [401, "Authentication fails"],
                [403, "Authorization fails"],
-               [404, "Not found"]
+               [404, "Not found"],
+               [422, "Unprocessable Entity", API::Entities::FullApiErrors]
              ],
              entity:   API::Entities::Registries,
              consumes: ["application/x-www-form-urlencoded", "application/json"]
@@ -91,8 +92,7 @@ module API
           if svc.valid?
             present obj, with: API::Entities::Registries
           else
-            status 400
-            { errors: svc.messages }
+            unprocessable_entity!(svc.messages)
           end
         end
 

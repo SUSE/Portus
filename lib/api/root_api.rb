@@ -49,7 +49,7 @@ module API
     # We are using the same formatter for any error that might be raised. The
     # _ignored parameter include (in order): backtrace, options, env and
     # original_exception.
-    error_formatter :json, ->(message, *_ignored) { { errors: message }.to_json }
+    error_formatter :json, ->(message, *_ignored) { { message: message }.to_json }
 
     helpers Pundit
     helpers ::API::Helpers

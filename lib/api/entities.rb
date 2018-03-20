@@ -7,8 +7,16 @@ module API
     # General entities
 
     class ApiErrors < Grape::Entity
-      expose :errors, documentation: {
-        type: "API::Entities::Messages", is_array: true
+      expose :message, documentation: {
+        type: String,
+        desc: "Error message"
+      }
+    end
+
+    class FullApiErrors < Grape::Entity
+      expose :message, documentation: {
+        type: Hash,
+        desc: "Detailed hash with the fields"
       }
     end
 

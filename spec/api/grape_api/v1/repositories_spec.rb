@@ -132,7 +132,7 @@ describe API::V1::Repositories do
       create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
       delete "/api/v1/repositories/#{repository.id}", nil, @header
       body = JSON.parse(response.body)
-      expect(body["errors"]).to include("could not remove taggg tag")
+      expect(body["message"]).to include("could not remove taggg tag")
       expect(response).to have_http_status(:unprocessable_entity)
     end
 

@@ -193,12 +193,24 @@ describe API::V1::Namespaces do
       expect(response).to have_http_status(:bad_request)
     end
 
+    it "returns a 400 for malformed JSON" do
+      @admin_header = @admin_header.merge(
+        "CONTENT_TYPE" => "application/json",
+        "ACCEPT"       => "application/json"
+      )
+      post "/api/v1/namespaces", "{", @admin_header
+      expect(response).to have_http_status(:bad_request)
+
+      resp = JSON.parse(response.body)
+      expect(resp["message"]).to match(/There was a problem in the JSON you submitted/)
+    end
+
     it "returns 422 if invalid values" do
       post "/api/v1/namespaces", { name: "", team: team.name }, @admin_header
 
       parsed = JSON.parse(response.body)
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(parsed["errors"]).to include("Name can't be blank")
+      expect(parsed["message"]["name"].first).to include("can't be blank")
     end
 
     it "returns 404 if team is hidden" do

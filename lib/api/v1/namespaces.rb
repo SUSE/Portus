@@ -54,8 +54,10 @@ module API
              entity:   API::Entities::Teams,
              consumes: ["application/x-www-form-urlencoded", "application/json"],
              failure:  [
+               [400, "Bad request", API::Entities::ApiErrors],
                [401, "Authentication fails"],
-               [403, "Authorization fails"]
+               [403, "Authorization fails"],
+               [422, "Unprocessable Entity", API::Entities::FullApiErrors]
              ]
 
         params do
@@ -76,7 +78,7 @@ module API
                     current_user: current_user,
                     type:         current_type
           else
-            unprocessable_entity!(namespace.errors.full_messages)
+            unprocessable_entity!(namespace.errors)
           end
         end
 

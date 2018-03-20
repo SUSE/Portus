@@ -10,7 +10,7 @@ module Registries
 
       check!
       if @valid
-        @messages.merge(@registry.errors.messages) unless @registry.save
+        @messages.merge(@registry.errors) unless @registry.save
       end
 
       @registry
@@ -28,7 +28,7 @@ module Registries
     def check_hostname!
       return if !Repository.any? || params[:hostname].blank?
       @valid = false
-      @messages[:hostname] = "Registry is not empty, cannot change hostname"
+      @messages[:hostname] = ["Registry is not empty, cannot change hostname"]
     end
   end
 end

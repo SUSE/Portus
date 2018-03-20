@@ -43,7 +43,8 @@ module API
                    failure:  [
                      [400, "Bad request", API::Entities::ApiErrors],
                      [401, "Authentication fails"],
-                     [403, "Authorization fails"]
+                     [403, "Authorization fails"],
+                     [422, "Unprocessable Entity", API::Entities::FullApiErrors]
                    ],
                    consumes: ["application/x-www-form-urlencoded", "application/json"]
 
@@ -81,7 +82,8 @@ module API
                failure:  [
                  [400, "Bad request", API::Entities::ApiErrors],
                  [401, "Authentication fails"],
-                 [403, "Authorization fails"]
+                 [403, "Authorization fails"],
+                 [422, "Unprocessable Entity", API::Entities::FullApiErrors]
                ],
                entity:   API::Entities::Users,
                consumes: ["application/x-www-form-urlencoded", "application/json"]
@@ -103,7 +105,7 @@ module API
             if user.valid?
               present user, with: API::Entities::Users
             else
-              bad_request!(user.errors)
+              unprocessable_entity!(user.errors)
             end
           end
 
@@ -114,7 +116,8 @@ module API
                  [400, "Bad request", API::Entities::ApiErrors],
                  [401, "Authentication fails"],
                  [403, "Authorization fails"],
-                 [404, "Not found"]
+                 [404, "Not found"],
+                 [422, "Unprocessable Entity", API::Entities::FullApiErrors]
                ],
                entity:   API::Entities::Users,
                consumes: ["application/x-www-form-urlencoded", "application/json"]
@@ -137,8 +140,7 @@ module API
             if user.valid?
               present user, with: API::Entities::Users
             else
-              status 400
-              { errors: user.errors }
+              unprocessable_entity!(user.errors)
             end
           end
 
