@@ -32,6 +32,8 @@ tags:
   description: Operations about teams
 - name: users
   description: Operations about users
+- name: vulnerabilities
+  description: Operations about vulnerabilities
 - name: version
   description: Operations about versions
 paths:
@@ -79,6 +81,7 @@ paths:
       produces:
       - application/json
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       parameters:
       - in: formData
@@ -101,10 +104,18 @@ paths:
           description: Create a namespace
           schema:
             "$ref": "#/definitions/Teams"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
         '401':
           description: Authentication fails
         '403':
           description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
       tags:
       - namespaces
       operationId: postApiV1Namespaces
@@ -208,6 +219,115 @@ paths:
       tags:
       - registries
       operationId: getApiV1Registries
+    post:
+      summary: Create a registry
+      description: Allow users to create a registry. This will only work if no registry
+        works yet
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: registry[name]
+        description: The name of the registry
+        type: string
+        required: true
+      - in: formData
+        name: registry[hostname]
+        description: The hostname of the registry
+        type: string
+        required: true
+      - in: formData
+        name: registry[use_ssl]
+        description: Whether the registry uses SSL or not
+        type: boolean
+        required: true
+      - in: formData
+        name: registry[external_hostname]
+        description: An external hostname of the registry, useful if behind a proxy
+          with a different FQDN
+        type: string
+        required: false
+      responses:
+        '201':
+          description: Create a registry
+          schema:
+            "$ref": "#/definitions/Registries"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - registries
+      operationId: postApiV1Registries
+  "/api/v1/registries/{id}":
+    put:
+      summary: Update registry
+      description: Update registry
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: registry[name]
+        description: The name of the registry
+        type: string
+        required: false
+      - in: formData
+        name: registry[hostname]
+        description: The hostname of the registry
+        type: string
+        required: false
+      - in: formData
+        name: registry[use_ssl]
+        description: Whether the registry uses SSL or not
+        type: boolean
+        required: false
+      - in: formData
+        name: registry[external_hostname]
+        description: An external hostname of the registry, useful if behind a proxy
+          with a different FQDN
+        type: string
+        required: false
+      - in: path
+        name: id
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Update registry
+          schema:
+            "$ref": "#/definitions/Registries"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - registries
+      operationId: putApiV1RegistriesId
   "/api/v1/registries/validate":
     get:
       summary: Validates the given registry
@@ -397,6 +517,30 @@ paths:
       tags:
       - repositories
       operationId: getApiV1RepositoriesId
+    delete:
+      summary: Delete repository
+      description: Delete repository
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Repository ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '204':
+          description: Delete repository
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - repositories
+      operationId: deleteApiV1RepositoriesId
   "/api/v1/tags":
     get:
       summary: Returns list of tags
@@ -444,6 +588,30 @@ paths:
       tags:
       - tags
       operationId: getApiV1TagsId
+    delete:
+      summary: Delete tag
+      description: Delete tag
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Tag ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '204':
+          description: Delete tag
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - tags
+      operationId: deleteApiV1TagsId
   "/api/v1/teams":
     get:
       summary: Returns list of teams
@@ -470,6 +638,7 @@ paths:
       produces:
       - application/json
       consumes:
+      - application/x-www-form-urlencoded
       - application/json
       parameters:
       - in: formData
@@ -487,10 +656,18 @@ paths:
           description: Create a team
           schema:
             "$ref": "#/definitions/Teams"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
         '401':
           description: Authentication fails
         '403':
           description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
       tags:
       - teams
       operationId: postApiV1Teams
@@ -640,6 +817,10 @@ paths:
           description: Authentication fails
         '403':
           description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
       tags:
       - users
       operationId: postApiV1UsersIdApplicationTokens
@@ -710,6 +891,10 @@ paths:
           description: Authentication fails
         '403':
           description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
       tags:
       - users
       operationId: postApiV1Users
@@ -783,6 +968,10 @@ paths:
           description: Authorization fails
         '404':
           description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
       tags:
       - users
       operationId: putApiV1UsersId
@@ -835,6 +1024,108 @@ paths:
       tags:
       - users
       operationId: getApiV1UsersId
+  "/api/v1/users/bootstrap":
+    post:
+      summary: Create the first admin user
+      description: Use this method to create the first admin user. The response will
+        include an application token so you can use this user right away. This method
+        should be used when bootstrapping a Portus instance by using the REST API.
+        Last but not least, it will respond with a 405 if the `first_user_admin` configuration
+        value has been disabled
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: user[username]
+        description: User name
+        type: string
+        required: true
+      - in: formData
+        name: user[email]
+        description: E-mail
+        type: string
+        required: true
+      - in: formData
+        name: user[password]
+        description: Password
+        type: string
+        required: true
+      - in: formData
+        name: user[display_name]
+        description: Display name
+        type: string
+        required: false
+      responses:
+        '201':
+          description: Create the first admin user
+          schema:
+            "$ref": "#/definitions/ApplicationTokens"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '405':
+          description: Method Not Allowed
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - users
+      operationId: postApiV1UsersBootstrap
+  "/api/v1/vulnerabilities":
+    post:
+      summary: Force re-schedule for all tags
+      description: Force the security scanner to go through all the tags again, even
+        if they have been marked as scanned
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      responses:
+        '201':
+          description: Force re-schedule for all tags
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+      tags:
+      - vulnerabilities
+      operationId: postApiV1Vulnerabilities
+  "/api/v1/vulnerabilities/{id}":
+    post:
+      summary: Force re-schedule for the given tag
+      description: Force the security scanner to scan again a given tag,even if it
+        was already marked as scanned
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '201':
+          description: Force re-schedule for the given tag
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+      tags:
+      - vulnerabilities
+      operationId: postApiV1VulnerabilitiesId
   "/api/v1/_ping":
     get:
       summary: Ping this API
@@ -972,6 +1263,28 @@ definitions:
         format: int32
         description: The number of namespaces that belong to this team
     description: Show teams by id
+  ApiErrors:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Error message
+    description: Use this method to create the first admin user. The response will
+      include an application token so you can use this user right away. This method
+      should be used when bootstrapping a Portus instance by using the REST API. Last
+      but not least, it will respond with a 405 if the `first_user_admin` configuration
+      value has been disabled
+  FullApiErrors:
+    type: object
+    properties:
+      message:
+        type: object
+        description: Detailed hash with the fields
+    description: Use this method to create the first admin user. The response will
+      include an application token so you can use this user right away. This method
+      should be used when bootstrapping a Portus instance by using the REST API. Last
+      but not least, it will respond with a 405 if the `first_user_admin` configuration
+      value has been disabled
   Repositories:
     type: object
     properties:
@@ -1037,7 +1350,7 @@ definitions:
       updated_at:
         type: string
         format: date-time
-    description: This will expose all accessible registries
+    description: Update registry
   Tags:
     type: object
     properties:
@@ -1125,25 +1438,16 @@ definitions:
         type: string
       plain_token:
         type: string
-    description: Create user's token
-  ApiErrors:
-    type: object
-    properties:
-      errors:
-        type: array
-        items:
-          "$ref": "#/definitions/Messages"
-    description: Update user
-  Messages:
-    type: object
-    properties:
-      message:
-        type: string
+    description: Use this method to create the first admin user. The response will
+      include an application token so you can use this user right away. This method
+      should be used when bootstrapping a Portus instance by using the REST API. Last
+      but not least, it will respond with a 405 if the `first_user_admin` configuration
+      value has been disabled
   Version:
     type: object
     properties:
       api-versions:
-        type: Array[String]
+        type: string
         description: Versions of the API supported
       git:
         type: string

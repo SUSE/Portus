@@ -10,8 +10,12 @@ longtitle: Fine-grained control of permissions
 Teams are the way in which an organization can manage sets of users. Each team
 owns a set of namespaces, which are used to group repositories. Besides grouping
 namespaces, teams are used to manage the permissions in which each team member
-can push/pull certain repositories. This is done through
-[team roles](/features/3_teams_namespaces_and_users.html#team-roles).
+can push/pull certain repositories. This is done through [team
+roles](/features/3_teams_namespaces_and_users.html#team-roles), but you can
+further restrict push access by setting a [push
+policy](/features/3_teams_namespaces_and_users.html#push-policies) (see a [TL;DR
+at the bottom of this
+page](/features/3_teams_namespaces_and_users.html#summary-with-all-the-options)).
 
 The UI for managing teams is quite simple. First, you can go to the "Teams"
 page and you will see something similar to this:
@@ -121,3 +125,55 @@ the top containers. Then, the admin should be seeing something similar to this:
 This page contains a list of all the users registered in the system. By
 toggling the switch under the "Admin" label, the admin can give admin
 permissions to different users.
+
+## Push policies
+
+Push policies are regulated in the `user_permission.push_images.policy` option
+described [here](/docs/Configuring-Portus.html#granular-user-permissions). It
+may take one of the following values:
+
+- `allow-teams`: this is the default value and it will simply apply all the
+  rules that have been stated above on this page. That is, push policy will be
+  regulated through team permissions. This way, Portus administrators and team
+  owners and contributors will be able to push to the namespaces owned by a
+  given team.
+- `allow-personal`: this way Portus will restrict push access to only
+  administrators of Portus. That being said, users will still have their own
+  personal namespace at their disposal.
+- `admin-only`: when used, it will restrict push access to only Portus
+  administrators. Users won't even have a personal namespace. Use this option if
+  you want to ensure that only Portus administrators can submit Docker images to
+  your private registry.
+
+Note that when either `allow-personal` or `admin-only` have been selected, then
+owners, contributors and viewers of a team have the same permissions on
+team-owned namespace: only pull access.
+
+## Summary with all the options
+
+### allow-teams
+
+| Roles       | Global namespace | Personal namespace      | Team namespace |
+|-------------+------------------+-------------------------+----------------|
+| Admin       | push/pull        | push/pull (of any user) | push/pull      |
+| Owner       | pull             | push/pull               | push/pull      |
+| Contributor | pull             | push/pull               | push/pull      |
+| Viewer      | pull             | push/pull               | pull           |
+
+### allow-personal
+
+| Roles       | Global namespace | Personal namespace      | Team namespace |
+|-------------+------------------+-------------------------+----------------|
+| Admin       | push/pull        | push/pull (of any user) | push/pull      |
+| Owner       | pull             | push/pull               | pull           |
+| Contributor | pull             | push/pull               | pull           |
+| Viewer      | pull             | push/pull               | pull           |
+
+### admin-only
+
+| Roles       | Global namespace | Personal namespace      | Team namespace |
+|-------------+------------------+-------------------------+----------------|
+| Admin       | push/pull        | push/pull (of any user) | push/pull      |
+| Owner       | pull             | pull                    | pull           |
+| Contributor | pull             | pull                    | pull           |
+| Viewer      | pull             | pull                    | pull           |

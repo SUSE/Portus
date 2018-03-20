@@ -404,6 +404,9 @@ user_permission:
 
   manage_namespace:
     enabled: true
+
+  push_images:
+    policy: allow-teams
 {% endhighlight %}
 
 - **change_visibility**: allow users to change the visibility or their personal
@@ -415,6 +418,9 @@ user_permission:
 - **create/manage_namespace**: allow users to create/modify namespaces if they
   are an owner of it. If this is disabled, only an admin will be able to do
   this. It defaults to true.
+- **push_images**: set a push policy. Available options are: `allow-teams`,
+  `allow-personal` and `admin-only`. You can read more about push policies
+  [here](/features/3_teams_namespaces_and_users.html).
 
 ### Background process
 

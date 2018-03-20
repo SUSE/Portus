@@ -61,4 +61,66 @@ $ export PORTUSCTL_API_SERVER="https://172.17.0.1"
 $ portusctl get users
 ```
 
+## Errors
+
+### Authorization and authentication
+
+In this regard there are two status codes to be aware of:
+
+- `401`: an authentication error. This means that you either forgot to provide
+  the `PORTUS-AUTH` header, or the given credentials are wrong.
+- `403`: an authorization error. This means that the user performing an action
+  is not allowed to do it.
+
+### Data validation
+
+In regards to data validation we differentiate between two kinds of
+errors. First of all, we have type errors like:
+
+- Some mandatory fields are missing.
+- Some fields have a wrong type (e.g. a boolean value was expected but a weird
+  string was given).
+
+These errors are responded with a `400` status code. The response body will be
+then like this:
+
+```json
+{
+  "message": "Reason for the error"
+}
+```
+
+Finally, the other possible error is a semantic one: a given field has a wrong
+format (e.g. bad user email), a field was expected to be unique but it wasn't,
+etc. These errors get back a `422` status code with the following response body:
+
+```json
+{
+  "message": {
+    "<field1>": ["<error1>", "<error2>", ...],
+    ...
+  }
+}
+```
+
+### Unknown route or method not allowed
+
+A `404` is returned whenever an unknown route is provided. This can happen in
+two ways:
+
+1. The given path is simply non-existent.
+2. The path required a resource identifier (e.g. a user ID), but an unknown ID
+   was provided (e.g. there are no users with the provided ID).
+
+Sometimes it's not that the route does not exist, but that the given method is
+now allowed at the moment. This can happen in some cases where the route is only
+available under some conditions. In this situation, a `405` will be sent, with a
+response body like so:
+
+```json
+{
+  "message": "Reason for the method being disabled"
+}
+```
+
 ## Endpoints
