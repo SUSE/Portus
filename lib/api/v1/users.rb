@@ -204,7 +204,13 @@ module API
 
         namespace do
           desc "Create the first admin user",
-               failure:  [[400, "Bad request", API::Entities::ApiErrors]],
+               failure:  [
+                 [400, "Bad request", API::Entities::ApiErrors],
+                 [401, "Authentication fails"],
+                 [403, "Authorization fails"],
+                 [405, "Method Not Allowed", API::Entities::ApiErrors],
+                 [422, "Unprocessable Entity", API::Entities::FullApiErrors]
+               ],
                detail:   "Use this method to create the first admin user. The" \
                          " response will include an application token so you can use this user" \
                          " right away. This method should be used when bootstrapping a Portus" \
