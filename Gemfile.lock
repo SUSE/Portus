@@ -81,6 +81,7 @@ GEM
     concurrent-ruby (1.0.5)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
+    crass (1.0.3)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
     descendants_tracker (0.0.4)
@@ -178,7 +179,8 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    loofah (2.0.3)
+    loofah (2.2.1)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.12)
     mail (2.6.6)
@@ -461,7 +463,6 @@ DEPENDENCIES
   json-schema
   jwt
   kaminari
-  loofah (= 2.0.3)
   minitest (= 5.10.1)
   multi_json (~> 1.12.1)
   mysql2 (= 0.4.10)
