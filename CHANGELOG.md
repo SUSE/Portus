@@ -1,3 +1,7 @@
+## 2.3.1
+
+- Upgraded loofah rubygem so we avoid hitting CVE-2018-8048.
+
 ## 2.3.0
 
 ### Highlight
