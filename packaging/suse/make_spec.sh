@@ -12,22 +12,6 @@ log()   { (>&2 echo ">>> [make_spec] $@") ; }
 debug() { log "DEBUG: $@" ; }
 error() { log "ERROR: $@" ; exit 1 ; }
 
-# Depending on the given gem, it will append its native build requirements.
-additional_native_build_requirements() {
-  # NOTE: all echo'ed strings must start with a "\n" character.
-  if [ $1 == "nokogiri" ];then
-    echo "\nBuildRequires: libxml2-devel libxslt-devel"
-  elif [ $1 == "mysql2" ];then
-    echo "\n%if 0%{?suse_version} <= 1320\nBuildRequires: libmysqlclient-devel < 10.1\nRequires: libmysqlclient18 < 10.1\n%else\nBuildRequires: libmysqlclient-devel\nRequires: libmysqlclient18\n%endif\nRecommends: mariadb"
-  elif [ $1 == "ethon" ];then
-    echo "\nBuildRequires: libcurl-devel\nRequires: libcurl4"
-  elif [ $1 == "ffi" ];then
-    echo "\nBuildRequires: libffi-devel"
-  elif [ $1 == "pg" ];then
-    echo "\nBuildRequires: postgresql-devel\nRequires: postgresql-devel"
-  fi
-}
-
 ##
 # Initialization
 
@@ -65,7 +49,6 @@ year=$(date +%Y)
 [ ! -d build ] || rm -rf build
 
 mkdir -p build/$packagename-$branch
-cp -v ../../Gemfile* build/$packagename-$branch
 cp -v ../../yarn.lock build/$packagename-$branch
 if ls patches/*.patch >/dev/null 2>&1 ;then
     cp -v patches/*.patch build/$packagename-$branch
@@ -90,37 +73,6 @@ pushd build/$packagename-$branch/
           patch -p1 < $p || exit -1
       done
   fi
-
-  # Generate the Gemfile.lock file while ignoring some unnecessary groups.
-  debug "Generate the Gemfile.lock for packaging"
-  export BUNDLE_GEMFILE=$PWD/Gemfile
-  cp Gemfile.lock Gemfile.lock.orig
-  bundle config build.nokogiri --use-system-libraries
-  bundle install --retry=3 --deployment --without test development
-
-  debug "Diff of old and new Gemfile.lock file"
-  diff Gemfile.lock Gemfile.lock.orig
-
-  debug "Getting requirements from Gemfile.lock"
-  IFS=$'\n' # do not split on spaces
-  build_requires="# Dependencies extracted from the defined Gemfile."
-
-  # Bundle's show command will list you the installed gems (the real ones, not
-  # the ones installed on the Gemfile.lock). We use tail to skip the first line,
-  # which is irrelevant. Then, with awk, we model the output to be "$gem
-  # $version", but this $version is inside of parenthesis, so we remove them
-  # with tr. This way, fetching the name and version is as easy as awk'ing again.
-  for gem in $(bundle show | tail -n +2 | awk '{ print $2 " " $3 }' | tr -d '()');do
-    gem_name=$(echo $gem | awk '{ print $1 }')
-    if [[ "$gem_name" == "bundler" ]]; then
-        gem_version="$BUNDLER_VERSION"
-    else
-        gem_version=$(echo $gem | awk '{ print $2 }')
-    fi
-
-    build_requires="$build_requires\nBuildRequires: %{rubygem $gem_name} = $gem_version"
-    build_requires="$build_requires$(additional_native_build_requirements $gem_name)"
-  done
 
   # Extract the JS dependencies. Yarn will list dependencies in the following
   # format (when in depth=0): "├─ NAME@VERSION". So, we have to replace @ by an
