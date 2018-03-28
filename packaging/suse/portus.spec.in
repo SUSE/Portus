@@ -18,6 +18,15 @@
 %define branch    __BRANCH__
 %define portusdir /srv/Portus
 
+%define fix_sheb() ( \
+  for i in $(grep '^#!/usr/bin/env ruby$' * -r | cut -d: -f1 | sort | uniq);do\
+    sed -e 's|^#!/usr/bin/env ruby$|#!/usr/bin/ruby.%{rb_suffix}|g' -i $i;\
+  done;\
+  for i in $(grep '^#!/usr/bin/ruby$' * -r | cut -d: -f1 | sort | uniq);do\
+     sed -e 's|^#!/usr/bin/ruby$|#!/usr/bin/ruby.ruby2.5|g' -i $i;\
+  done;\
+)
+
 Name:           portus
 Version:        __VERSION__
 Release:        0.0.1
@@ -33,10 +42,10 @@ Source1:        node_modules.tar.gz
 Source2:        yarn.lock
 __PATCHSOURCES__
 
-Requires:       rubygem(%{rb_default_ruby_abi}:gem2rpm)
+# Add gems as sources with the https://github.com/openSUSE/obs-service-bundle_gems
+
 Requires:       timezone
 Requires:       net-tools
-Requires:       portusctl
 %if 0%{?suse_version} >= 1210
 BuildRequires: systemd-rpm-macros
 %endif
@@ -58,11 +67,26 @@ BuildRequires:  yarn
 %define rb_build_abi      ruby:2.5.0
 %define rb_suffix         ruby2.5
 %define rb_ver            2.5.0
-BuildRequires:  %{rubydevel}
-BuildRequires:  %{rubygem gem2rpm}
 Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi}
 
-__RUBYGEMS_BUILD_REQUIRES__
+BuildRequires: libcurl-devel
+Requires: libcurl4
+BuildRequires: libffi-devel
+%if 0%{?suse_version} <= 1320
+BuildRequires: libmysqlclient-devel < 10.1
+Requires: libmysqlclient18 < 10.1
+%else
+BuildRequires: libmysqlclient-devel
+Requires: libmysqlclient18
+%endif
+Recommends: mariadb
+BuildRequires: libxml2-devel libxslt-devel
+BuildRequires: postgresql-devel
+Requires: postgresql-devel
+
+Requires: %rb_default_ruby_suffix
+BuildRequires:  %rb_default_ruby_suffix %{rb_default_ruby_suffix}-rubygem-gem2rpm
+BuildRequires:  %{rb_suffix}-devel
 
 __NODEJS_BUILD_PROVIDES__
 
@@ -87,25 +111,38 @@ tar xzvf node_modules.tar.gz
 
 # Deal with Ruby gems.
 install -d vendor/cache
-cp %{_libdir}/ruby/gems/%{rb_ver}/cache/*.gem vendor/cache
+cp %{_sourcedir}/*.gem vendor/cache
 
 # Deploy gems for compiling the assets.
+export GEM_HOME=$PWD/vendor GEM_PATH=$PWD/vendor PATH=$PWD/vendor/bin:$PWD/bin:$PATH
+# Install bundler in the build system
+gem.%{rb_suffix} install --no-rdoc --no-ri vendor/cache/bundler-*.gem
+
+%fix_sheb
+
 bundle config build.nokogiri --use-system-libraries
 bundle install --retry=3 --local --deployment --without test development
-gem.ruby2.5 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+gem.%{rb_suffix} install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+
+%fix_sheb
 
 # Compile assets
 PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
   INCLUDE_ASSETS_GROUP=yes RAILS_ENV=production NODE_ENV=production \
-  bundle exec rake portus:assets:compile
+  ./bin/bundle exec rake portus:assets:compile
 
 # Install the final gems (i.e. exclude the `assets` group from the final
 # bundle). Unfortunately, bundler does not have a way to remove gems from a
 # given group. So, we have to remove all of them, and then install the ones we
 # want...
 rm -r vendor/bundle/ruby/%{rb_ver}/*
-gem.ruby2.5 install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+gem.%{rb_suffix} install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+
+%fix_sheb
+
 bundle install --retry=3 --local --deployment --without test development assets
+
+%fix_sheb
 
 # Patch landing_page
 APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
@@ -153,11 +190,20 @@ mkdir %{buildroot}/%{portusdir}/log
 rm -rf %{buildroot}/%{portusdir}/tmp
 mkdir %{buildroot}/%{portusdir}/tmp
 
+install -d %{buildroot}/%{_sbindir}
+cp packaging/suse/bin/portusctl %{buildroot}/%{_sbindir}/
+
+# Man pages
+install -d %{buildroot}%{_mandir}/man1
+install -p -m 644 packaging/suse/portusctl/man/man1/*.1 %{buildroot}%{_mandir}/man1
+
 %fdupes %{buildroot}/%{portusdir}
 
 %files
 %defattr(-,root,root)
 %{portusdir}
+%exclude %{portusdir}/lib/man_pages.rb
+%exclude %{portusdir}/lib/tasks/man.rake
 %exclude %{portusdir}/packaging/suse/.gitignore
 %exclude %{portusdir}/packaging/suse/package_and_push_to_obs.sh
 %exclude %{portusdir}/packaging/suse/portus.spec.in
@@ -176,5 +222,8 @@ mkdir %{buildroot}/%{portusdir}/tmp
 %{portusdir}/log/
 %{portusdir}/tmp/
 %{portusdir}/db/
+%{_sbindir}/portusctl
+%{_mandir}/man1/portusctl-*.1.gz
+%{_mandir}/man1/portusctl.1.gz
 
 %changelog
