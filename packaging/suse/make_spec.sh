@@ -129,7 +129,7 @@ pushd build/$packagename-$branch/
   for js in $(NODE_ENV=production yarn -s list --depth=0 | tr "@" " "); do
     js_name=$(echo $js | awk '{ print $2 }')
     js_version=$(echo $js | awk '{ print $3 }')
-    js_provides="$js_provides\nProvides: bundled($js_name) = $js_version"
+    js_provides="$js_provides\nProvides: bundled(js($js_name)) = $js_version"
   done
 popd
 
