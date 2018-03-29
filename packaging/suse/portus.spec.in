@@ -63,6 +63,10 @@ Obsoletes:      Portus = 20151120162040
 BuildRequires:  nodejs6
 BuildRequires:  yarn
 
+# If we require yarn-packaging, this will auto create the provides
+# for the js libs
+BuildRequires:  yarn-packaging
+
 # Base ruby engine.
 %define rb_build_versions ruby25
 %define rb_build_abi      ruby:2.5.0
