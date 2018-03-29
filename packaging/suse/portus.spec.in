@@ -59,9 +59,11 @@ Obsoletes:      Portus < %{version}
 # This is the reason why we are obsoleting it
 Obsoletes:      Portus = 20151120162040
 
-# Javascript engine to build assets
+# Javascript engine to build assets. Note that yarn-packaging will automatically
+# create the provides for the JS libs
 BuildRequires:  nodejs6
 BuildRequires:  yarn
+BuildRequires:  yarn-packaging
 
 # Base ruby engine.
 %define rb_build_versions ruby25
