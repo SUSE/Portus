@@ -19,10 +19,10 @@
 %define portusdir /srv/Portus
 
 %define fix_sheb() ( \
-  for i in $(grep '^#!/usr/bin/env ruby$' * -r | cut -d: -f1 | sort | uniq);do\
+  for i in $(grep '^#!/usr/bin/env ruby$' * -r | cut -d: -f1 | uniq);do\
     sed -e 's|^#!/usr/bin/env ruby$|#!/usr/bin/ruby.%{rb_suffix}|g' -i $i;\
   done;\
-  for i in $(grep '^#!/usr/bin/ruby$' * -r | cut -d: -f1 | sort | uniq);do\
+  for i in $(grep '^#!/usr/bin/ruby$' * -r | cut -d: -f1 | uniq);do\
      sed -e 's|^#!/usr/bin/ruby$|#!/usr/bin/ruby.ruby2.5|g' -i $i;\
   done;\
 )
