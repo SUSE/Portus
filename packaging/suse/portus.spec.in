@@ -30,6 +30,7 @@ Source0:        %{branch}.tar.gz
 # Generated with `yarn install` which produces a reproduceable `node_modules`
 # directory thanks to the yarn.lock file defined in the Portus repo.
 Source1:        node_modules.tar.gz
+Source2:        yarn.lock
 __PATCHSOURCES__
 
 Requires:       rubygem(%{rb_default_ruby_abi}:gem2rpm)
