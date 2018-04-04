@@ -7,6 +7,36 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Portus 2.3 security releases</title>
+        <description>
+          
+          &lt;p&gt;As you have probably noticed, some weeks ago we released 2.3.1, and today we
+just released 2.3.2. These releases tackle two CVEs affecting a couple of
+dependencies from Portus:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-8048&quot;&gt;CVE-2018-8048&lt;/a&gt;:
+which affects the &lt;code class=&quot;highlighter-rouge&quot;&gt;loofah&lt;/code&gt; gem.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-3741&quot;&gt;CVE-2018-3741&lt;/a&gt;:
+which affects the &lt;code class=&quot;highlighter-rouge&quot;&gt;rails-html-sanitizer&lt;/code&gt; gem.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These releases are just about upgrading these two gems to secure versions: there
+are no code changes.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-docker-image&quot;&gt;The Docker image&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;2.3&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;latest&lt;/code&gt; tags from the &lt;a href=&quot;https://hub.docker.com/r/opensuse/portus/&quot;&gt;official Docker
+image&lt;/a&gt; are already pointing to the
+2.3.2 release, so a simple &lt;code class=&quot;highlighter-rouge&quot;&gt;docker pull&lt;/code&gt; should get you covered.&lt;/p&gt;
+
+        </description>
+        <pubDate>Wed, 04 Apr 2018 00:00:00 +0200</pubDate>
+        <link>/2018/04/04/portus-2.3-x.html</link>
+        <guid isPermaLink="true">/2018/04/04/portus-2.3-x.html</guid>
+      </item>
+    
+      <item>
         <title>Portus 2.3 released!</title>
         <description>
           
