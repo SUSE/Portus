@@ -45,9 +45,8 @@ be aware of the following requirements:
     work for you.
   - `PORTUS_CHECK_SSL_USAGE_ENABLED`: this is set to true by default, but you
     might want to set it to false in case you are not using SSL.
-  - `RAILS_SERVE_STATIC_FILES`: if you want Portus to serve assets directly
-    (e.g. you don't have a load balancer in front of the deployment), you will
-    want to set this to true.
+  - `RAILS_SERVE_STATIC_FILES`: whether you want Portus to serve assets directly
+    or not. You can read more about this [here](/docs/assets.html).
   - `CCONFIG_PREFIX`: set this to `PORTUS` just to be sure (it shouldn't be
     necessary, but some deployments have had weird bugs because of this in the
     past).
@@ -56,7 +55,9 @@ be aware of the following requirements:
     process.
 - Check the environment variables to be used for the
   [database](/docs/database.html).
-- You have to provide three environment variables which contain secret data:
+- You have to provide three environment variables which contain secret data
+  (read [this page](/docs/secrets.html) in order to know how to manage these
+  secrets in production):
   - `PORTUS_SECRET_KEY_BASE`: which will be used for to encrypt and sign
     sessions (you can read more about this
     [here](http://guides.rubyonrails.org/security.html)).

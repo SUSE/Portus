@@ -7,15 +7,13 @@ longtitle: How to configure Portus
 
 ## The config.yml file
 
-Before starting this application, you may want to configure some values that
-are evaluated during the initialization process of Portus. All these values are
-specified in the `config/config.yml` file. This file contains the default
-values for each setting. In order to change these settings, you should create
-the `config/config-local.yml` file and write your own values there. Note that
-if you have your own `config-local.yml` file, then the definitive values will
-be the result of a merge of both config files, where the settings of
-`config-local.yml` take precedence. For example, imagine the following
-situation:
+Before starting this application, you may want to configure some values that are
+evaluated during the initialization process of Portus. All these values are
+specified in the `config/config.yml` file. This file contains the default values
+for each setting, and you should *never* touch it. If you want to modify some of
+its values you have two options: creating a `config/config-local.yml` file with
+the values that you override the default ones, or to use **environment
+variables**. For example, imagine the following situation:
 
 {% highlight yaml %}
 # In config.yml
@@ -28,15 +26,10 @@ settings:
   a: false
 {% endhighlight %}
 
-The result of the previous example is that both `a` and `b` are false. Moreover,
-the path of the `config-local.yml` file can be tweaked through the
-`PORTUS_LOCAL_CONFIG_PATH` environment variable.
+The result of the previous example is that both `a` and `b` are false.
 
-## Override specific configuration options
-
-Besides the `config-local.yml` file, specific configuration options can be
-tweaked through environment variables. These environment variables follow a
-naming convention. Let's imagine the following configuration:
+In containerized deployments though, environment variables are usually more
+convenient. Let's imagine the following configuration:
 
 {% highlight yaml %}
 feature:
@@ -44,13 +37,23 @@ feature:
   value: "val"
 {% endhighlight %}
 
-In this case, the environment variables that can be used are `PORTUS_FEATURE_ENABLED` and `PORTUS_FEATURE_VALUE`. Therefore, the name of the environment variables always start with `PORTUS` and then they follow the name of the keys.
+In Portus we follow a **naming convention** for environment variables: first of
+all we have the `PORTUS_` prefix, and then we add each key in uppercase. So, for
+example, the previous example can be tweaked by setting:
+`PORTUS_FEATURE_ENABLED` and `PORTUS_FEATURE_VALUE`.
 
-Note that environment variables override even values from the `config-local.yml` file. To sum this up, you can assume that Portus follows the following preference when reading a configuration value (listed from max. preference to least):
+Note that environment variables override even values from the `config-local.yml`
+file. So, to sum this up, you can assume that Portus follows the following
+preference when reading a configuration value (listed from max. preference to
+least):
 
 1. Environment variables.
 2. The user-defined `config-local.yml` file.
 3. The default values from the `config.yml` file.
+
+Last but not least, some of these configuration values are quite delicate. This
+is why you should manage them with secrets, [as explained
+here](/docs/secrets.html).
 
 ## List of configuration options
 
@@ -94,11 +97,16 @@ order to do so just enable the `delete` option:
 {% highlight yaml %}
 delete:
   enabled: true
+  contributors: false
 {% endhighlight %}
 
 This option is **disabled** by default. This is because we want users enabling
 this if they are really sure about the feature itself and its requirements. For
 more information, read [this page](/features/removing_images.html).
+
+Moreover, this action can only be performed by team owners at first. You can
+change this by setting `contributors` to `true`, in which case contributors will
+also be able to remove images and tags.
 
 ### LDAP Support
 
