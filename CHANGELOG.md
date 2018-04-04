@@ -1,3 +1,7 @@
+## 2.3.2
+
+- Upgraded loofah and rails-html-sanitizer to fix CVE-2018-3741
+
 ## 2.3.1
 
 - Upgraded loofah rubygem so we avoid hitting CVE-2018-8048.
