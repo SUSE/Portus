@@ -121,6 +121,18 @@
             </li>
           
             <li>
+              <a href="/docs/assets.html">
+                Managing assets
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/secrets.html">
+                Using secrets
+              </a>
+            </li>
+          
+            <li>
               <a href="/docs/API.html">
                 Portus REST API
               </a>
@@ -147,6 +159,12 @@
             <li>
               <a href="/docs/versions.html">
                 Supported Docker Versions
+              </a>
+            </li>
+          
+            <li>
+              <a href="/docs/debugging.html">
+                Debugging Portus
               </a>
             </li>
           
@@ -326,9 +344,8 @@ relies on this setting. The default value for this will most probably <em>not</e
 work for you.</li>
       <li><code class="highlighter-rouge">PORTUS_CHECK_SSL_USAGE_ENABLED</code>: this is set to true by default, but you
 might want to set it to false in case you are not using SSL.</li>
-      <li><code class="highlighter-rouge">RAILS_SERVE_STATIC_FILES</code>: if you want Portus to serve assets directly
-(e.g. you don’t have a load balancer in front of the deployment), you will
-want to set this to true.</li>
+      <li><code class="highlighter-rouge">RAILS_SERVE_STATIC_FILES</code>: whether you want Portus to serve assets directly
+or not. You can read more about this <a href="/docs/assets.html">here</a>.</li>
       <li><code class="highlighter-rouge">CCONFIG_PREFIX</code>: set this to <code class="highlighter-rouge">PORTUS</code> just to be sure (it shouldn’t be
 necessary, but some deployments have had weird bugs because of this in the
 past).</li>
@@ -339,7 +356,9 @@ process.</li>
   </li>
   <li>Check the environment variables to be used for the
 <a href="/docs/database.html">database</a>.</li>
-  <li>You have to provide three environment variables which contain secret data:
+  <li>You have to provide three environment variables which contain secret data
+(read <a href="/docs/secrets.html">this page</a> in order to know how to manage these
+secrets in production):
     <ul>
       <li><code class="highlighter-rouge">PORTUS_SECRET_KEY_BASE</code>: which will be used for to encrypt and sign
 sessions (you can read more about this
@@ -456,6 +475,18 @@ variables to be set before starting the whole thing.</p>
         </li>
       
         <li>
+          <a href="/docs/assets.html">
+            Managing assets
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/secrets.html">
+            Using secrets
+          </a>
+        </li>
+      
+        <li>
           <a href="/docs/API.html">
             Portus REST API
           </a>
@@ -482,6 +513,12 @@ variables to be set before starting the whole thing.</p>
         <li>
           <a href="/docs/versions.html">
             Supported Docker Versions
+          </a>
+        </li>
+      
+        <li>
+          <a href="/docs/debugging.html">
+            Debugging Portus
           </a>
         </li>
       

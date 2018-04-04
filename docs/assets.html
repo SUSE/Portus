@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Security scanning</title>
+    <title>Managing assets</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="  Only available in 2.3 or later.">
+    <meta name="description" content="Managing assets">
 
     <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
     <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
@@ -300,80 +300,28 @@
             </div>
             <div class="row post">
               <article>
-                <div class="alert alert-info">
-  Only available in <strong>2.3 or later</strong>.
-</div>
+                <h2 id="managing-assets">Managing assets</h2>
 
-<h2 id="intro">Intro</h2>
+<p>In the <a href="https://hub.docker.com/r/opensuse/portus/">official image</a> assets have
+already been compiled. This means that they have already been compressed,
+optimized, etc. This is done in the build process of the RPM that will be used
+on the Docker image (check the
+<a href="https://github.com/SUSE/Portus/blob/master/packaging/suse/portus.spec.in">%build</a>
+section for all the gory details).</p>
 
-<p>You can setup a security scanner for your Portus instance. This way, Portus will
-display whether the images you have on your registry have known security
-vulnerabilities. This feature is disabled by default, but it can be configured
-through the following values:</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">security</span><span class="pi">:</span>
-  <span class="c1"># CoreOS Clair support (https://github.com/coreos/clair). This is only</span>
-  <span class="c1"># guaranteed to work for v2.0.x releases of Clair.</span>
-  <span class="na">clair</span><span class="pi">:</span>
-    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
-
-    <span class="c1"># Port where Clair exposes the health endpoint.</span>
-    <span class="c1"># See http://port.us.org/features/health.html</span>
-    <span class="na">health_port</span><span class="pi">:</span> <span class="s">6061</span>
-
-  <span class="c1"># zypper-docker can be run as a server with its `serve` command. This backend</span>
-  <span class="c1"># fetches the information as given by zypper-docker. Note that this feature</span>
-  <span class="c1"># from zypper-docker is experimental and only available through another branch</span>
-  <span class="c1"># than master.</span>
-  <span class="c1">#</span>
-  <span class="c1"># NOTE: support for this is experimental since this functionality has not</span>
-  <span class="c1"># been merged into master yet in zypper-docker.</span>
-  <span class="na">zypper</span><span class="pi">:</span>
-    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
-
-  <span class="c1"># This backend is only used for testing purposes, don't use it.</span>
-  <span class="na">dummy</span><span class="pi">:</span>
-    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
-</code></pre></div></div>
-
-<p>Portus supports having multiple scanners enabled at the same time.</p>
-
-<h2 id="coreos-clair">CoreOS Clair</h2>
-
-<div class="alert alert-info">
-  Clair support is only guaranteed to work for <strong>v2.0.x</strong> releases
-  of Clair.
-</div>
-
-<p><a href="https://coreos.com/clair/docs/latest/">CoreOS Clair</a> is an open source project
-for the static analysis of vulnerabilities in appc and docker containers. Portus
-only supports the analysis of docker images. In order to enable this backend,
-you have to pass the URL of your Clair server. For example (or simply with the
-<code class="highlighter-rouge">PORTUS_SECURITY_CLAIR_SERVER</code> environment variable):</p>
-
-<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">security</span><span class="pi">:</span>
-  <span class="na">clair</span><span class="pi">:</span>
-    <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">http://my.clair.server:6060"</span>
-</code></pre></div></div>
-
-<p>If you have enabled this backend, you should be able to see something like this
-in a repository:</p>
-
-<p><img src="/images/docs/security.png" alt="Repository page with vulnerabilities highlighted" /></p>
-
-<p>Clicking these links will take you to the tag’s page. For example:</p>
-
-<p><img src="/images/docs/tag-vulnerabilities.png" alt="Tag page with Clair vulnerabilities" /></p>
-
-<h2 id="others">Others</h2>
-
-<p>There are two other available backends:</p>
+<p>So, the only thing missing is to serve the produced assets. You have two ways of
+serving these assets: directly with <em>Rails</em>, or with a <em>load balancer</em>.</p>
 
 <ul>
-  <li><strong>zypper-docker</strong>: this is an experimental backend that uses a branch that is
-still under development in <a href="https://github.com/SUSE/zypper-docker">zypper-docker</a>.</li>
-  <li><strong>dummy</strong>: this should only be used for development purposes.</li>
+  <li>If you set the <code class="highlighter-rouge">RAILS_SERVE_STATIC_FILES</code> to <code class="highlighter-rouge">true</code>, then Rails will serve the
+assets directly. This means that you won’t need a load balancer in front of it
+to serve them</li>
+  <li>If you have a <em>load balancer</em> in place, then you just need to serve the assets
+that are stored in <code class="highlighter-rouge">/srv/Portus/public</code>.</li>
 </ul>
+
+<p>You can check examples of both deployments methods in the
+<a href="https://github.com/SUSE/Portus/tree/master/examples">examples</a> directory.</p>
 
               </article>
             </div>
