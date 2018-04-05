@@ -12,7 +12,10 @@ module API
 
         desc "Returns list of teams",
              tags:     ["teams"],
-             detail:   "This will expose all teams",
+             detail:   "This will expose all teams that the user is member of or has access to.
+                        That mean if the user is an admin, this will return all the teams created by
+                        all the users. If you want to check if the user is a member of a team, check
+                        the role attribute.",
              is_array: true,
              entity:   API::Entities::Teams,
              failure:  [
@@ -37,6 +40,7 @@ module API
         params do
           requires :name, type: String, documentation: { desc: "Team name" }
           optional :description, type: String, documentation: { desc: "Team description" }
+          optional :owner_id, type: Integer, documentation: { desc: "Team owner" }
         end
 
         post do

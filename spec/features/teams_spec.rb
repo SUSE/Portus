@@ -4,17 +4,21 @@ require "rails_helper"
 
 describe "Teams support" do
   let!(:registry) { create(:registry) }
-  let!(:user) { create(:admin) }
-  let!(:team) { create(:team, owners: [user]) }
+  let!(:admin) { create(:admin) }
+  let!(:another_user) { create(:user) }
+  let!(:team) { create(:team, owners: [admin]) }
+  let!(:team2) { create(:team, owners: [another_user]) }
 
   before do
-    login_as user, scope: :user
+    login_as admin, scope: :user
   end
 
   describe "teams#index", js: true do
-    it "A user cannot create an empty team" do
+    before do
       visit teams_path
+    end
 
+    it "A user cannot create an empty team" do
       find(".toggle-link-new-team").click
       wait_for_effect_on("#new-team-form")
 
@@ -26,8 +30,6 @@ describe "Teams support" do
     end
 
     it "A team cannot be created if the name has already been picked" do
-      visit teams_path
-
       find(".toggle-link-new-team").click
       wait_for_effect_on("#new-team-form")
 
@@ -41,9 +43,11 @@ describe "Teams support" do
     it "A team can be created from the index page" do
       teams_count = Team.count
 
-      visit teams_path
       find(".toggle-link-new-team").click
+      wait_for_effect_on("#new-team-form")
+
       fill_in "Name", with: "valid-team"
+      select admin.username, from: "team_owner_id"
       wait_for_ajax
 
       click_button "Add"
@@ -58,7 +62,6 @@ describe "Teams support" do
     end
 
     it 'The "Create new team" link has a toggle effect' do
-      visit teams_path
       expect(page).to have_css(".toggle-link-new-team i.fa-plus-circle")
       expect(page).not_to have_css(".toggle-link-new-team i.fa-minus-circle")
 
@@ -76,8 +79,6 @@ describe "Teams support" do
     end
 
     it "The name of each team is a link" do
-      visit teams_path
-
       expect(page).to have_link(team.name)
       find(".team_#{team.id} a").click
       expect(page).to have_current_path(team_path(team))
@@ -97,6 +98,53 @@ describe "Teams support" do
 
       expect(page).to have_css("td:nth-child(4)", text: "1")
       expect(page).not_to have_css("td:nth-child(4)", text: "2")
+    end
+
+    it "shows other teams" do
+      expect(page).to have_content("Other teams")
+    end
+
+    it "shows owner select" do
+      find(".toggle-link-new-team").click
+      wait_for_effect_on("#new-team-form")
+
+      expect(page).to have_css("#team_name")
+      expect(page).to have_css("#team_owner_id")
+    end
+
+    it "creates a team with a different owner" do
+      find(".toggle-link-new-team").click
+      wait_for_effect_on("#new-team-form")
+
+      fill_in "Name", with: "another"
+      select another_user.username, from: "team_owner_id"
+
+      click_button "Add"
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("Team 'another' was created successfully")
+      expect(page).to have_link("another")
+    end
+
+    context "when not admin" do
+      before do
+        login_as another_user, scope: :user
+        visit teams_path
+      end
+
+      it "doesn't show other teams" do
+        expect(page).not_to have_content("Other teams")
+      end
+
+      it "doesn't show owner select" do
+        find(".toggle-link-new-team").click
+        wait_for_effect_on("#new-team-form")
+
+        expect(page).to have_css("#team_name")
+        expect(page).not_to have_css("#team_owner_id")
+      end
     end
   end
 

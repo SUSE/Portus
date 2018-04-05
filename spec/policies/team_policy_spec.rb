@@ -5,11 +5,11 @@ require "spec_helper"
 describe TeamPolicy do
   subject { described_class }
 
+  let(:admin) { create(:admin) }
   let(:member) { create(:user) }
   let(:team) { create(:team, owners: [member]) }
 
   before do
-    @admin = create(:admin)
     create(:registry)
   end
 
@@ -23,12 +23,20 @@ describe TeamPolicy do
     end
 
     it "allows access to an admin even if he is not part of the team" do
-      expect(subject).to permit(@admin, team)
+      expect(subject).to permit(admin, team)
     end
   end
 
   describe "scope" do
-    it "returns only teams having the user as a memeber" do
+    it "returns all the non special teams if admin" do
+      # Another team not related with 'owner'
+      admin_team = create(:team, owners: [create(:admin)])
+
+      expected_list = [team, admin_team]
+      expect(Pundit.policy_scope(admin, Team).to_a).to match_array(expected_list)
+    end
+
+    it "returns only teams having the user as a member" do
       # Another team not related with 'owner'
       create(:team, owners: [create(:user)])
 

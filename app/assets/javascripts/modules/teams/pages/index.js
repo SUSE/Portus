@@ -15,7 +15,7 @@ $(() => {
 
   // eslint-disable-next-line no-new
   new Vue({
-    el: 'body[data-route="teams/index"] .vue-root',
+    el: '.vue-root',
 
     components: {
       ToggleLink,
@@ -28,6 +28,16 @@ $(() => {
         state: TeamsStore.state,
         teams: window.teams,
       };
+    },
+
+    computed: {
+      myTeams() {
+        return this.teams.filter(t => t.role);
+      },
+
+      otherTeams() {
+        return this.teams.filter(t => !t.role);
+      },
     },
 
     methods: {

@@ -4,6 +4,7 @@ require "rails_helper"
 
 describe API::V1::Teams do
   let!(:admin) { create(:admin) }
+  let!(:user) { create(:user) }
   let!(:token) { create(:application_token, user: admin) }
   let!(:user_token) { create(:application_token, user: create(:user)) }
   let!(:hidden_team) do
@@ -85,6 +86,10 @@ describe API::V1::Teams do
       { name: "qa team", description: "short test description" }
     end
 
+    let(:owner_valid_attributes) do
+      { name: "qa team", description: "short test description", owner_id: user.id }
+    end
+
     let(:invalid_attributes) do
       { admin: "not valid" }
     end
@@ -113,6 +118,24 @@ describe API::V1::Teams do
       expect(response).to have_http_status(:success)
       expect(team_parsed["id"]).to eq(team.id)
       expect(team_parsed["name"]).to eq(team.name)
+    end
+
+    it "creates a team with different owner" do
+      expect do
+        post "/api/v1/teams", owner_valid_attributes, @header
+      end.to change(Team, :count).by(1)
+
+      team = Team.last
+      team_parsed = JSON.parse(response.body)
+      expect(response).to have_http_status(:success)
+      expect(team_parsed["id"]).to eq(team.id)
+      expect(team_parsed["name"]).to eq(team.name)
+    end
+
+    it "returns 403 if current user is not admin when creating a team with different owner" do
+      post "/api/v1/teams", owner_valid_attributes, @user_header
+
+      expect(response).to have_http_status(:forbidden)
     end
 
     it "returns 400 if invalid params" do

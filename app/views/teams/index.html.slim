@@ -15,3 +15,4 @@
 - content_for :js_header do
   javascript:
     window.teams = #{raw @teams_serialized};
+    window.isAdmin = #{current_user.admin?};

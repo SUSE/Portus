@@ -37,7 +37,11 @@ class TeamPolicy
     end
 
     def resolve
-      user.teams.where(hidden: false)
+      if user.admin?
+        Team.all_non_special
+      else
+        user.teams.where(hidden: false)
+      end
     end
   end
 end
