@@ -69,7 +69,7 @@ module Portus
         uri, req = get_request("/v1/layers/#{digest}?features=false&vulnerabilities=true", "get")
         req["Accept"] = "application/json"
         begin
-          res = get_response_token(uri, req)
+          res = get_response_token(uri, req, clair_timeout)
         rescue *::Portus::Errors::NET => e
           Rails.logger.tagged("clair.get") { Rails.logger.debug e.message }
           return
@@ -94,8 +94,8 @@ module Portus
         req.body = layer_body(digest, parent).to_json
 
         begin
-          res = get_response_token(uri, req)
-        rescue SocketError, Errno::ECONNREFUSED => e
+          res = get_response_token(uri, req, clair_timeout)
+        rescue *::Portus::Errors::NET => e
           Rails.logger.tagged("clair.post") { Rails.logger.debug e.message }
           return
         end
@@ -143,6 +143,11 @@ module Portus
       # Returns a proper error message for the given JSON response.
       def error_message(msg)
         msg["Error"] && msg["Error"]["Message"] ? msg["Error"]["Message"] : msg
+      end
+
+      # Returns the integer value of timeouts for HTTP requests.
+      def clair_timeout
+        APP_CONFIG["security"]["clair"]["timeout"]
       end
     end
   end

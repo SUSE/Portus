@@ -147,13 +147,22 @@ module Portus
       [auth_args["Bearer realm"], query_params]
     end
 
-    # Performs an HTTP request to the given URI and request object. It returns an
-    # HTTP response that has been sent from the registry.
-    def get_response_token(uri, req)
+    # Performs an HTTP request to the given URI and request object. You may
+    # optionally pass a read and open timeout, otherwise the ones provided in
+    # the `registry` config will be used. It returns an HTTP response that has
+    # been sent from the registry.
+    def get_response_token(uri, req, timeout = nil)
+      open, read = if timeout
+                     [timeout, timeout]
+                   else
+                     [APP_CONFIG["registry"]["timeout"]["value"],
+                      APP_CONFIG["registry"]["read_timeout"]["value"]]
+                   end
+
       options = {
         use_ssl:      uri.scheme == "https",
-        open_timeout: APP_CONFIG["registry"]["timeout"]["value"].to_i,
-        read_timeout: APP_CONFIG["registry"]["read_timeout"]["value"].to_i
+        open_timeout: open.to_i,
+        read_timeout: read.to_i
       }
 
       Net::HTTP.start(uri.hostname, uri.port, options) do |http|
