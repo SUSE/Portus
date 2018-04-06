@@ -16,7 +16,8 @@ describe ::Portus::SecurityBackend::Clair do
   before do
     APP_CONFIG["security"] = {
       "clair" => {
-        "server" => "http://my.clair:6060"
+        "server"  => "http://my.clair:6060",
+        "timeout" => 900
       }, "zypper" => {
         "server" => ""
       }, "dummy" => {
@@ -128,6 +129,28 @@ describe ::Portus::SecurityBackend::Clair do
     # out. For this, then, we will manually stub requests so they raise the
     # expected error on this situation.
     stub_request(:post, "http://my.clair:6060/v1/layers").to_raise(Errno::ECONNREFUSED)
+    stub_request(:get, "http://my.clair:6060/v1/layers/#{digest}?" \
+                       "features=false&vulnerabilities=true").to_raise(Errno::ECONNREFUSED)
+
+    VCR.use_cassette("security/clair-is-unknown", record: :none) do
+      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      res = clair.vulnerabilities
+    end
+
+    expect(res[:clair]).to be_empty
+  end
+
+  it "does not raise an exception for timeouts on post" do
+    VCR.turn_on!
+    res = {}
+
+    # Digest as returned by the VCR tape.
+    digest = "sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2"
+
+    # Unfortunately VCR is not good with requests that are meant to time
+    # out. For this, then, we will manually stub requests so they raise the
+    # expected error on this situation.
+    stub_request(:post, "http://my.clair:6060/v1/layers").to_raise(Net::ReadTimeout)
     stub_request(:get, "http://my.clair:6060/v1/layers/#{digest}?" \
                        "features=false&vulnerabilities=true").to_raise(Errno::ECONNREFUSED)
 

@@ -218,7 +218,7 @@ registry:
   timeout:
     value: 2
 
-  #Set timeout in seconds for read response from registry.
+  # Set timeout in seconds for read response from registry.
   read_timeout:
     value: 120
 
@@ -282,6 +282,10 @@ security:
     # Port being used by Clair to report its status. Taking the default from
     # Clair.
     health_port: 6061
+
+    # Timeout for HTTP requests with Clair. Defaults to 900 seconds, which is
+    # the default for Clair too.
+    timeout: 900
 
   # zypper-docker can be run as a server with its `serve` command. This backend
   # fetches the information as given by zypper-docker. Note that this feature

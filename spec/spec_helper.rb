@@ -78,7 +78,8 @@ RSpec.configure do |config|
 
     APP_CONFIG["security"] = {
       "clair" => {
-        "server" => ""
+        "server"  => "",
+        "timeout" => 900
       }, "zypper" => {
         "server" => ""
       }, "dummy" => {
