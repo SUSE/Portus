@@ -43,10 +43,11 @@ module Portus
 
       # First get all the layers composing the given image.
       client = Registry.get.client
-      manifest = client.manifest(@repo, @tag)
+      layers = fetch_layers(client)
+      return unless layers
 
       params = {
-        layers:       manifest.last["layers"].map { |l| l["digest"] },
+        layers:       layers.map { |l| l["digest"] },
         token:        client.token,
         registry_url: client.base_url
       }
@@ -57,6 +58,17 @@ module Portus
         res[name] = b.vulnerabilities(params)
       end
       res
+    end
+
+    # Returns an array with the layers as given in the manifest. If an error
+    # occured then nil will be returned and the error will be logged.
+    def fetch_layers(rc)
+      ary = rc.manifest(@repo, @tag)
+      ary.last["layers"]
+    rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+           ::Portus::RegistryClient::ManifestError => e
+      Rails.logger.info e.to_s
+      nil
     end
   end
 end

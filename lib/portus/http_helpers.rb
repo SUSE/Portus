@@ -92,7 +92,7 @@ module Portus
         str += "\n"
       end
 
-      raise NotFoundError, str
+      raise ::Portus::Errors::NotFoundError, str
     end
 
     private
