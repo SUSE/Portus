@@ -52,8 +52,13 @@ module Portus
     #   - The manifest digest.
     #   - The manifest itself as a ruby hash.
     #
-    # It will raise either a ManifestNotFoundError or a RuntimeError if
-    # something goes wrong.
+    # Three different exceptions might be raised:
+    #
+    #   - ::Portus::RequestError: there was a request error with the registry
+    #     (e.g. a timeout).
+    #   - ::Portus::Errors::NotFoundError: the given manifest was not found.
+    #   - ::Portus::RegistryClient::ManifestError: there was an unknown problem
+    #     with the manifest.
     def manifest(repository, tag = "latest")
       res = safe_request("#{repository}/manifests/#{tag}", "get")
 
