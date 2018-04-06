@@ -190,6 +190,11 @@ class Cli < Thor
          type:    :numeric,
          default: 6061
 
+  option "security-clair-timeout",
+         desc:    "The timeout for HTTP requests targeting Clair",
+         type:    :numeric,
+         default: 900
+
   option "security-zypper-server",
          desc:    "The URL allowing Portus to access your zypper-docker server",
          default: ""
