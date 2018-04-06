@@ -346,6 +346,7 @@ security:
   clair:
     server: ""
     health_port: 6061
+    timeout: 900
 
   # zypper-docker can be run as a server with its `serve` command. This backend
   # fetches the information as given by zypper-docker. Note that this feature
