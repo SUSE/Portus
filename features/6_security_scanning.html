@@ -321,6 +321,9 @@ through the following values:</p>
     <span class="c1"># See http://port.us.org/features/health.html</span>
     <span class="na">health_port</span><span class="pi">:</span> <span class="s">6061</span>
 
+    <span class="c1"># Timeout for HTTP requests against Clair.</span>
+    <span class="na">timeout</span><span class="pi">:</span> <span class="s">900</span>
+
   <span class="c1"># zypper-docker can be run as a server with its `serve` command. This backend</span>
   <span class="c1"># fetches the information as given by zypper-docker. Note that this feature</span>
   <span class="c1"># from zypper-docker is experimental and only available through another branch</span>
@@ -364,6 +367,16 @@ in a repository:</p>
 <p>Clicking these links will take you to the tag’s page. For example:</p>
 
 <p><img src="/images/docs/tag-vulnerabilities.png" alt="Tag page with Clair vulnerabilities" /></p>
+
+<p>Besides the <code class="highlighter-rouge">server</code> option, there are two other options:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">health_port</code>: the port where Clair is serving the health status. You can
+check more about health checking
+<a href="/features/health.html#clair-and-its-health-check">here</a>.</li>
+  <li><code class="highlighter-rouge">timeout</code>: the timeout for HTTP requests against Clair. It defaults to 900
+seconds, which is the same default value as in Clair.</li>
+</ul>
 
 <h2 id="others">Others</h2>
 
