@@ -42,9 +42,11 @@ module Portus
           # progress.
           tag.update_vulnerabilities(scanned: Tag.statuses[:scan_working])
 
-          # Fetch vulnerabilities.
+          # Fetch vulnerabilities. If there was an error and nil was returned,
+          # simply skip this iteration.
           sec = ::Portus::Security.new(tag.repository.full_name, tag.name)
           vulns = sec.vulnerabilities
+          next unless vulns
 
           # And now update the tag with the vulnerabilities.
           dig = update_tag(tag, vulns)

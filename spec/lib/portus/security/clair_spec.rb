@@ -161,4 +161,28 @@ describe ::Portus::SecurityBackend::Clair do
 
     expect(res[:clair]).to be_empty
   end
+
+  it "returns nil when a timeout occurred when fetching the manifest" do
+    allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest)
+      .and_raise(::Portus::RequestError, exception: Net::ReadTimeout, message: "something")
+
+    clair = ::Portus::Security.new("coreos/dex", "unrelated")
+    expect(clair.vulnerabilities).to be_nil
+  end
+
+  it "returns nil when the manifest does not exist anymore on the registry" do
+    allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest)
+      .and_raise(::Portus::Errors::NotFoundError, "something")
+
+    clair = ::Portus::Security.new("coreos/dex", "unrelated")
+    expect(clair.vulnerabilities).to be_nil
+  end
+
+  it "returns nil when there was something wrong with the manifest" do
+    allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest)
+      .and_raise(::Portus::RegistryClient::ManifestError, "something")
+
+    clair = ::Portus::Security.new("coreos/dex", "unrelated")
+    expect(clair.vulnerabilities).to be_nil
+  end
 end
