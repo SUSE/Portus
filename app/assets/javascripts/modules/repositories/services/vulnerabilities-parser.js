@@ -15,7 +15,7 @@ const parse = function (vulnerabilities) {
       }
 
       vulnerabilities[backend].forEach((vul) => {
-        severities[vul.Severity] += 1;
+        severities[vul.severity] += 1;
         total += 1;
       });
     });

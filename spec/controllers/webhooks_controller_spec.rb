@@ -14,7 +14,7 @@
 #  enabled        :boolean          default(FALSE)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  name           :string(255)
+#  name           :string(255)      not null
 #
 # Indexes
 #
@@ -166,6 +166,7 @@ RSpec.describe WebhooksController, type: :controller do
     render_views
     let(:valid_attributes) do
       {
+        name:      "webhook",
         namespace: namespace.id,
         url:       "example.org"
       }
@@ -420,7 +421,7 @@ RSpec.describe WebhooksController, type: :controller do
 
     it "tracks webhook creation" do
       post_params = {
-        webhook:      { url: "example.org" },
+        webhook:      { url: "example.org", name: "webhook" },
         namespace_id: namespace,
         format:       :js
       }

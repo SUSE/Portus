@@ -6,6 +6,7 @@ class TagsController < ApplicationController
     authorize @tag
 
     @names = Tag.where(digest: @tag.digest).sort.map(&:name)
-    @vulnerabilities = @tag.fetch_vulnerabilities
+    vulns = @tag.fetch_vulnerabilities
+    @vulnerabilities = vulns ? vulns.group_by(&:scanner) : nil
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180207145522) do
+ActiveRecord::Schema.define(version: 20180411102022) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -98,6 +98,13 @@ ActiveRecord::Schema.define(version: 20180207145522) do
   add_index "repositories", ["name", "namespace_id"], name: "index_repositories_on_name_and_namespace_id", unique: true, using: :btree
   add_index "repositories", ["namespace_id"], name: "index_repositories_on_namespace_id", using: :btree
 
+  create_table "scan_results", force: :cascade do |t|
+    t.integer  "tag_id",           limit: 4
+    t.integer  "vulnerability_id", limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
   create_table "stars", force: :cascade do |t|
     t.integer  "user_id",       limit: 4
     t.integer  "repository_id", limit: 4
@@ -109,17 +116,16 @@ ActiveRecord::Schema.define(version: 20180207145522) do
   add_index "stars", ["user_id"], name: "index_stars_on_user_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name",            limit: 255,      default: "latest", null: false
-    t.integer  "repository_id",   limit: 4,                           null: false
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.integer  "user_id",         limit: 4
-    t.string   "digest",          limit: 255
-    t.string   "image_id",        limit: 255,      default: ""
-    t.boolean  "marked",                           default: false
-    t.string   "username",        limit: 255
-    t.integer  "scanned",         limit: 4,        default: 0
-    t.text     "vulnerabilities", limit: 16777215
+    t.string   "name",          limit: 255, default: "latest", null: false
+    t.integer  "repository_id", limit: 4,                      null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.integer  "user_id",       limit: 4
+    t.string   "digest",        limit: 255
+    t.string   "image_id",      limit: 255, default: ""
+    t.boolean  "marked",                    default: false
+    t.string   "username",      limit: 255
+    t.integer  "scanned",       limit: 4,   default: 0
   end
 
   add_index "tags", ["repository_id"], name: "index_tags_on_repository_id", using: :btree
@@ -177,6 +183,19 @@ ActiveRecord::Schema.define(version: 20180207145522) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
+  create_table "vulnerabilities", force: :cascade do |t|
+    t.string   "name",       limit: 255,                null: false
+    t.string   "scanner",    limit: 255,   default: "", null: false
+    t.string   "severity",   limit: 255,   default: "", null: false
+    t.string   "link",       limit: 255,   default: "", null: false
+    t.string   "fixed_by",   limit: 255,   default: "", null: false
+    t.text     "metadata",   limit: 65535
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+  end
+
+  add_index "vulnerabilities", ["name"], name: "index_vulnerabilities_on_name", unique: true, using: :btree
+
   create_table "webhook_deliveries", force: :cascade do |t|
     t.integer  "webhook_id",      limit: 4
     t.string   "uuid",            limit: 255
@@ -213,7 +232,7 @@ ActiveRecord::Schema.define(version: 20180207145522) do
     t.boolean  "enabled",                    default: false
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.string   "name",           limit: 255
+    t.string   "name",           limit: 255,                 null: false
   end
 
   add_index "webhooks", ["namespace_id"], name: "index_webhooks_on_namespace_id", using: :btree

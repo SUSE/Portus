@@ -157,6 +157,26 @@ describe "Feature: Repositories" do
       end
     end
 
+    context "vulnerabilities" do
+      let!(:tag) do
+        create(:tag, name: "tag0", repository: repository, scanned: Tag.statuses[:scan_done])
+      end
+      let!(:vulnerability)  { create(:vulnerability, name: "CVE-1234", scanner: "clair") }
+      let!(:vulnerability1) { create(:vulnerability, name: "CVE-5678", scanner: "dummy") }
+      let!(:scan_result)    { create(:scan_result, tag: tag, vulnerability: vulnerability) }
+      let!(:scan_result1)   { create(:scan_result, tag: tag, vulnerability: vulnerability1) }
+
+      before do
+        APP_CONFIG["security"]["dummy"]["server"] = "yeah"
+      end
+
+      it "reports vulnerabilities", js: true do
+        visit repository_path(repository)
+        wait_for_ajax
+        expect(page).to have_content("2 vulnerabilities")
+      end
+    end
+
     it "A user can star a repository", js: true do
       visit repository_path(repository)
       expect(page).to have_css("#toggle_star")

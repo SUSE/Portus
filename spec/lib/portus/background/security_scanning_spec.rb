@@ -11,7 +11,10 @@ describe ::Portus::Background::SecurityScanning do
 
   before do
     APP_CONFIG["security"] = {
-      "clair"  => { "server" => "http://localhost:6060" },
+      "clair"  => {
+        "server"  => "http://my.clair:6060",
+        "timeout" => 900
+      },
       "zypper" => { "server" => "" },
       "dummy"  => { "server" => "" }
     }
@@ -42,6 +45,55 @@ describe ::Portus::Background::SecurityScanning do
   end
 
   describe "#execute!" do
+    let!(:repository2) { create(:repository, name: "node", namespace: registry.global_namespace) }
+    let(:proper) do
+      {
+        clair: [
+          {
+            "Name"          => "CVE-2016-8859",
+            "NamespaceName" => "alpine:v3.4",
+            "Link"          => "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-8859",
+            "Severity"      => "High",
+            "FixedBy"       => "1.1.14-r13"
+          },
+          {
+            "Name"          => "CVE-2016-6301",
+            "NamespaceName" => "alpine:v3.4",
+            "Link"          => "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6301",
+            "Severity"      => "High",
+            "FixedBy"       => "1.24.2-r12"
+          }
+        ]
+      }.freeze
+    end
+
+    it "saves all data" do
+      # Data from the real image `node:8`
+      create(
+        :tag,
+        name:       "8",
+        user_id:    admin.id,
+        repository: repository2,
+        digest:     "sha256:021c1dba94d141972a13f62194fea0f8ef2a081cd9c03fd3f70a529886a8af11",
+        image_id:   "b87c2ad8344dd1c1fdfd09060a99ff5dbac4a1fe1a079ad871dfa228fc628e1c"
+      )
+
+      VCR.turn_on!
+      VCR.use_cassette("background/node", record: :none) do
+        subject.execute!
+      end
+
+      vul = Vulnerability.all.order(:id).first
+      expect(vul.name).to eq "CVE-2004-0230"
+      expect(vul.scanner).to eq "clair"
+      expect(vul.severity).to eq "Negligible"
+      expect(vul.link).not_to be_empty
+      expect(vul.metadata).not_to be_empty
+
+      # There's at least one vulnerability with the "FixedBy" attribute.
+      expect(Vulnerability.all.any? { |v| v.fixed_by.present? }).to be_truthy
+    end
+
     it "properly saves the vulnerabilities" do
       VCR.turn_on!
 
@@ -53,7 +105,8 @@ describe ::Portus::Background::SecurityScanning do
 
       tag.reload
       expect(tag.scanned).to eq Tag.statuses[:scan_done]
-      expect(tag.vulnerabilities).not_to be_empty
+      expect(tag.vulnerabilities.size).to eq 11
+      expect(tag.vulnerabilities.order(:id).first.name).to eq "CVE-2016-6301"
     end
 
     it "ignores it when a push has happened while fetching vulnerabilities" do
@@ -102,14 +155,14 @@ describe ::Portus::Background::SecurityScanning do
         tag1.reload
         expect(tag.scanned).to eq Tag.statuses[:scan_working]
         expect(tag1.scanned).to eq Tag.statuses[:scan_working]
-        ["something"]
+        proper
       end
 
       subject.execute!
 
       expect(count).to eq 1
       expect(Tag.all).to(be_all { |t| t.scanned == Tag.statuses[:scan_done] })
-      expect(Tag.all).to(be_all { |t| t.vulnerabilities == ["something"] })
+      expect(Tag.all).to(be_all { |t| t.vulnerabilities.size == 2 })
     end
 
     it "marks tags as not scanned if it does not fetch vulnerabilities properly" do

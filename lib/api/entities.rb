@@ -101,9 +101,11 @@ module API
               "0 (not scanned), 1 (work in progress) and 2 (scanning done)."
       }
       expose :vulnerabilities, documentation: {
-        is_array: true,
-        desc:     "An array of vulnerabilities for this tag, or null if the feature is not enabled"
-      }
+        desc: "A hash of vulnerabilities for this tag, or null if the feature is not enabled"
+      } do |t|
+        vulns = t.fetch_vulnerabilities
+        vulns&.group_by(&:scanner)
+      end
     end
 
     class Repositories < Grape::Entity
