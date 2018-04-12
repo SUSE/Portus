@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180411102022) do
+ActiveRecord::Schema.define(version: 20180412140442) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -184,14 +184,15 @@ ActiveRecord::Schema.define(version: 20180411102022) do
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "vulnerabilities", force: :cascade do |t|
-    t.string   "name",       limit: 255,                null: false
-    t.string   "scanner",    limit: 255,   default: "", null: false
-    t.string   "severity",   limit: 255,   default: "", null: false
-    t.string   "link",       limit: 255,   default: "", null: false
-    t.string   "fixed_by",   limit: 255,   default: "", null: false
-    t.text     "metadata",   limit: 65535
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.string   "name",        limit: 255,                null: false
+    t.string   "scanner",     limit: 255,   default: "", null: false
+    t.string   "severity",    limit: 255,   default: "", null: false
+    t.string   "link",        limit: 255,   default: "", null: false
+    t.string   "fixed_by",    limit: 255,   default: "", null: false
+    t.text     "metadata",    limit: 65535
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.text     "description", limit: 65535
   end
 
   add_index "vulnerabilities", ["name"], name: "index_vulnerabilities_on_name", unique: true, using: :btree

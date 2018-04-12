@@ -89,6 +89,7 @@ describe ::Portus::Background::SecurityScanning do
       expect(vul.severity).to eq "Negligible"
       expect(vul.link).not_to be_empty
       expect(vul.metadata).not_to be_empty
+      expect(vul.description).not_to be_empty
 
       # There's at least one vulnerability with the "FixedBy" attribute.
       expect(Vulnerability.all.any? { |v| v.fixed_by.present? }).to be_truthy
