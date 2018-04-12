@@ -164,7 +164,7 @@ http_interactions:
   recorded_at: Thu, 30 Nov 2017 15:41:58 GMT
 - request:
     method: post
-    uri: http://localhost:6060/v1/layers
+    uri: http://my.clair:6060/v1/layers
     body:
       encoding: UTF-8
       string: '{"Layer":{"Name":"sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2","NamespaceName":"","Path":"https://my.registry:5000/v2/repo/blobs/sha256:28c417e954d8f9d2439d5b9c7ea3dcb2fd31690bf2d79b94333d889ea26689d2","Headers":{"Authorization":"Bearer
@@ -199,7 +199,7 @@ http_interactions:
   recorded_at: Thu, 30 Nov 2017 15:41:58 GMT
 - request:
     method: post
-    uri: http://localhost:6060/v1/layers
+    uri: http://my.clair:6060/v1/layers
     body:
       encoding: UTF-8
       string: '{"Layer":{"Name":"sha256:faa8a552d0bddb391293b470084c91e7790c0d70fa17b69627a32729de105562","NamespaceName":"","Path":"https://my.registry:5000/v2/repo/blobs/sha256:faa8a552d0bddb391293b470084c91e7790c0d70fa17b69627a32729de105562","Headers":{"Authorization":"Bearer
@@ -234,7 +234,7 @@ http_interactions:
   recorded_at: Thu, 30 Nov 2017 15:41:58 GMT
 - request:
     method: post
-    uri: http://localhost:6060/v1/layers
+    uri: http://my.clair:6060/v1/layers
     body:
       encoding: UTF-8
       string: '{"Layer":{"Name":"sha256:acdc6057f492499eac1f4bcabe30e712d6fdf46c3b161be91294e6d3acc90004","NamespaceName":"","Path":"https://my.registry:5000/v2/repo/blobs/sha256:acdc6057f492499eac1f4bcabe30e712d6fdf46c3b161be91294e6d3acc90004","Headers":{"Authorization":"Bearer
@@ -269,7 +269,7 @@ http_interactions:
   recorded_at: Thu, 30 Nov 2017 15:41:58 GMT
 - request:
     method: post
-    uri: http://localhost:6060/v1/layers
+    uri: http://my.clair:6060/v1/layers
     body:
       encoding: UTF-8
       string: '{"Layer":{"Name":"sha256:6bda536f8dd6d360178e4e3871301bb9ed706eb2ed439be52d068aa3dec2fd00","NamespaceName":"","Path":"https://my.registry:5000/v2/repo/blobs/sha256:6bda536f8dd6d360178e4e3871301bb9ed706eb2ed439be52d068aa3dec2fd00","Headers":{"Authorization":"Bearer
@@ -304,7 +304,7 @@ http_interactions:
   recorded_at: Thu, 30 Nov 2017 15:41:58 GMT
 - request:
     method: get
-    uri: http://localhost:6060/v1/layers/sha256:6bda536f8dd6d360178e4e3871301bb9ed706eb2ed439be52d068aa3dec2fd00?features=false&vulnerabilities=true
+    uri: http://my.clair:6060/v1/layers/sha256:6bda536f8dd6d360178e4e3871301bb9ed706eb2ed439be52d068aa3dec2fd00?features=false&vulnerabilities=true
     body:
       encoding: US-ASCII
       string: ''

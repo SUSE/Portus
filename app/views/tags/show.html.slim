@@ -21,9 +21,9 @@
           ul
             - vulns.each do |v|
               li
-                a href="#{v['Link']}"
-                  = v["Name"]
-                |  (severity: #{v["Severity"]})
+                a href="#{v.link}"
+                  = v.name
+                |  (severity: #{v.severity})
 
       - else
         p No vulnerabilities found

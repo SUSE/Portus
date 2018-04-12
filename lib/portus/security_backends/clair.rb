@@ -55,8 +55,7 @@ module Portus
             next if name.blank? || known.include?(name)
 
             known << v["Name"]
-            # Skipping some fields that we don't use and can be very long...
-            res << v.except("Metadata", "Description")
+            res << v
           end
         end
         res.sort_by { |el| el["Name"] }

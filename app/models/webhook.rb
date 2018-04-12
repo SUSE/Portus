@@ -14,7 +14,7 @@
 #  enabled        :boolean          default(FALSE)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  name           :string(255)
+#  name           :string(255)      not null
 #
 # Indexes
 #

@@ -4,18 +4,17 @@
 #
 # Table name: tags
 #
-#  id              :integer          not null, primary key
-#  name            :string(255)      default("latest"), not null
-#  repository_id   :integer          not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  user_id         :integer
-#  digest          :string(255)
-#  image_id        :string(255)      default("")
-#  marked          :boolean          default(FALSE)
-#  username        :string(255)
-#  scanned         :integer          default(0)
-#  vulnerabilities :text(16777215)
+#  id            :integer          not null, primary key
+#  name          :string(255)      default("latest"), not null
+#  repository_id :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  user_id       :integer
+#  digest        :string(255)
+#  image_id      :string(255)      default("")
+#  marked        :boolean          default(FALSE)
+#  username      :string(255)
+#  scanned       :integer          default(0)
 #
 # Indexes
 #
@@ -27,13 +26,16 @@
 # name follows the format as defined in registry/api/v2/names.go from Docker's
 # Distribution project. The default name for a tag is "latest".
 class Tag < ActiveRecord::Base
-  serialize :vulnerabilities
-
   # NOTE: as a Hash because in Rails 5 we'll be able to pass a proper prefix.
   enum status: { scan_none: 0, scan_working: 1, scan_done: 2 }
 
+  # A tag belongs to a repository and has an author.
   belongs_to :repository
   belongs_to :author, class_name: "User", foreign_key: "user_id", inverse_of: "tags"
+
+  # A tag may have scan results which contain vulnerabilities.
+  has_many :scan_results, dependent: :destroy
+  has_many :vulnerabilities, -> { uniq }, through: :scan_results
 
   # We don't validate the tag, because we will fetch that from the registry,
   # and that's guaranteed to have a good format.
@@ -105,11 +107,13 @@ class Tag < ActiveRecord::Base
   # Updates the columns related to vulnerabilities with the given
   # attributes. This will apply to only this tag, or all tags sharing the same
   # digest (depending on whether the digest is known).
-  def update_vulnerabilities(attrs = {})
+  def update_vulnerabilities(scanned:, vulnerabilities: nil)
+    ScanResult.squash_data!(tag: self, vulnerabilities: vulnerabilities)
+
     if digest.blank?
-      update_columns(attrs)
+      update_columns(scanned: scanned)
     else
-      Tag.where(digest: digest).update_all(attrs)
+      Tag.where(digest: digest).update_all(scanned: scanned)
     end
   end
 
