@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import { required } from 'vuelidate/lib/validators';
+import { required, requiredIf } from 'vuelidate/lib/validators';
 
 import FormMixin from '~/shared/mixins/form';
 
@@ -17,6 +17,7 @@ export default {
     return {
       team: {
         name: '',
+        owner_id: null,
       },
       timeout: {
         name: null,
@@ -51,6 +52,12 @@ export default {
 
   validations: {
     team: {
+      owner_id: {
+        required: requiredIf(function () {
+          return window.isAdmin;
+        }),
+      },
+
       name: {
         required,
         available(value) {

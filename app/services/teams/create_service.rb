@@ -3,8 +3,8 @@
 module Teams
   class CreateService < ::BaseService
     def execute
-      @team = Team.new(params)
-      @team.owners << current_user
+      @team = Team.new(params.except(:owner_id))
+      @team.owners << owner
 
       create_activity! if @team.save
 
@@ -17,6 +17,22 @@ module Teams
       @team.create_activity(:create,
                             owner:      current_user,
                             parameters: { team: @team.name })
+    end
+
+    def owner
+      raise Pundit::NotAuthorizedError, "must be an admin" if cannot_set_owner?
+
+      if params[:owner_id]
+        user = User.find_by(id: params[:owner_id])
+        raise ActiveRecord::RecordNotFound unless user
+        user
+      else
+        current_user
+      end
+    end
+
+    def cannot_set_owner?
+      params[:owner_id] && !current_user.admin?
     end
   end
 end
