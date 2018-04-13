@@ -36,11 +36,11 @@ class RegistryMock < Registry
     o = nil
     if @should_fail
       def o.manifest(*_)
-        raise StandardError, "Some message"
+        raise ::Portus::RegistryClient::ManifestError, "Some message"
       end
 
       def o.tags(*_)
-        raise StandardError, "Some message"
+        raise ::Portus::RegistryClient::ManifestError, "Some message"
       end
     else
       def o.manifest(*_)

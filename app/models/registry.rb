@@ -106,6 +106,16 @@ class Registry < ActiveRecord::Base
     [namespace, repo, tag_name]
   end
 
+  # Returns a Repository object for the given event. It returns nil if no
+  # repository could be found from the given event.
+  def get_repository_from_event(event, fetch_tag = true)
+    ns, repo_name, = get_namespace_from_event(event, fetch_tag)
+    return if ns.nil?
+    repo = ns.repositories.find_by(name: repo_name)
+    return if repo.nil? || repo.marked?
+    repo
+  end
+
   # Checks whether this registry is reachable. If it is, then an empty string
   # is returned. Otherwise a string will be returned containing the reasoning
   # of the reachability failure.
@@ -139,9 +149,12 @@ class Registry < ActiveRecord::Base
       "application/vnd.docker.distribution.manifest.list.v2+json"
       get_tag_from_list(namespace, repo)
     else
-      raise "unsupported media type \"#{target["mediaType"]}\""
+      raise ::Portus::RegistryClient::UnsupportedMediaType,
+            "unsupported media type \"#{target["mediaType"]}\""
     end
-  rescue StandardError => e
+  rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+         ::Portus::RegistryClient::UnsupportedMediaType,
+         ::Portus::RegistryClient::ManifestError => e
     logger.info("Could not fetch the tag for target #{target}")
     logger.info("Reason: #{e.message}")
     nil
@@ -170,6 +183,9 @@ class Registry < ActiveRecord::Base
   # Fetch the tag of the image contained in the current event. The Manifest API
   # is used to fetch it, thus the repo name and the digest are needed (and
   # they are contained inside the event's target).
+  #
+  # This method calls `::Portus::RegistryClient#manifest` but does not rescue
+  # the possible exceptions. It's up to the called to rescue them.
   #
   # Returns the name of the tag if found, nil otherwise.
   def get_tag_from_manifest(target)

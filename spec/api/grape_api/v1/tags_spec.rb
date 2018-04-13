@@ -75,7 +75,7 @@ describe API::V1::Tags do
     it "returns 422 if unable to remove tag" do
       APP_CONFIG["delete"]["enabled"] = true
       allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
-        raise "I AM ERROR."
+        raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
       end
 
       tag = create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)

@@ -43,7 +43,7 @@ namespace :portus do
   task :update_tags, [:update] => [:environment] do |_, args|
     warn_user!
 
-    tags = tags_tp_update(args[:update])
+    tags = tags_to_update(args[:update])
 
     # And for each tag fetch its digest and update the DB.
     client = Registry.get.client
@@ -54,8 +54,9 @@ namespace :portus do
       begin
         id, digest, = client.manifest(t.repository.full_name, t.name)
         t.update(digest: digest, image_id: id)
-      rescue StandardError => e
-        puts "Could not get the manifest for #{repo_name}: #{e.message}"
+      rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+             ::Portus::RegistryClient::ManifestError => e
+        puts "Could not get the manifest for #{repo_name}: #{e}"
       end
     end
     puts

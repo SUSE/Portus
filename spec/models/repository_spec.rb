@@ -100,6 +100,8 @@ describe Repository do
       end
 
       it "updates the digest of an already existing tag" do
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(%w[id foo])
+
         event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
         described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
         expect(described_class.find_by(name: repository_name).tags.first.digest).to eq("foo")
@@ -245,7 +247,12 @@ describe Repository do
         @event["actor"]["name"] = "a_ghost"
       end
 
-      it "sends event to logger" do
+      it "does nothing" do
+        allow_any_instance_of(Registry).to(
+          receive(:get_namespace_from_event)
+            .and_return(["asd", repository_name, tag_name])
+        )
+
         expect do
           described_class.handle_push_event(@event)
         end.to change(described_class, :count).by(0)
@@ -264,7 +271,35 @@ describe Repository do
       end
 
       context "when the repository is not known by Portus" do
+        it "creates a repository even if the fetching of the manifest fails" do
+          # This code paths triggers the `manifest` call twice, but the first
+          # one is expected and handled by VCR. The second one is the one we
+          # want to raise an error.
+
+          # rubocop:disable Style/GlobalVars
+          $call_original = true
+          allow_any_instance_of(::Portus::RegistryClient).to(
+            receive(:manifest).and_wrap_original do |m, *args|
+              raise ::Portus::RegistryClient::ManifestError, "I AM ERROR" unless $call_original
+
+              $call_original = false
+              m.call(*args)
+            end
+          )
+          # rubocop:enable Style/GlobalVars
+
+          repository = nil
+          VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
+            repository = described_class.handle_push_event(@event)
+          end
+
+          expect(repository.name).to eq "busybox"
+          expect(repository.tags.size).to eq 1
+        end
+
         it "creates repository and tag objects" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
@@ -284,6 +319,8 @@ describe Repository do
         end
 
         it "creates the repo also for version 2 schema 2" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           repository = nil
           @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
 
@@ -305,6 +342,8 @@ describe Repository do
         end
 
         it "tracks the event" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
@@ -329,6 +368,8 @@ describe Repository do
         end
 
         it "creates a new tag" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
@@ -348,6 +389,8 @@ describe Repository do
         end
 
         it "tracks the event" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
             expect do
@@ -375,6 +418,8 @@ describe Repository do
         end
 
         it "preserves the previous namespace" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           event = @event
           event["target"]["repository"] = repository_namespaced_name
           event["target"]["url"] = get_url(repository_namespaced_name, tag_name)
@@ -419,6 +464,8 @@ describe Repository do
         end
 
         it "creates repository and tag objects when the repository is unknown to portus" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id digest])
+
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_namespaced_webhook", record: :none) do
             repository = described_class.handle_push_event(@event)
@@ -438,6 +485,8 @@ describe Repository do
         end
 
         it "creates a new tag when the repository is already known to portus" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           repository = create(:repository, name: repository_name, namespace: @namespace)
           repository.tags << Tag.new(name: "1.0.0")
 
@@ -458,6 +507,8 @@ describe Repository do
         end
 
         it "repo is unknown - manifest version 2, schema 2" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id digest])
+
           @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
 
           repository = nil
@@ -481,6 +532,8 @@ describe Repository do
         end
 
         it "repo exists - manifest version 2, schema 2" do
+          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+
           @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
           repository = create(:repository, name: repository_name, namespace: @namespace)
           repository.tags << Tag.new(name: "1.0.0")
