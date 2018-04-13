@@ -67,7 +67,8 @@ class Tag < ActiveRecord::Base
 
     begin
       Registry.get.client.delete(repository.full_name, dig, "manifests")
-    rescue StandardError => e
+    rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+           ::Portus::RegistryClient::RegistryError => e
       Rails.logger.error "Could not delete tag on the registry: #{e.message}"
       return false
     end
@@ -127,8 +128,9 @@ class Tag < ActiveRecord::Base
         _, dig, = client.manifest(repository.full_name, name)
         update_column(:digest, dig)
         dig
-      rescue StandardError => e
-        Rails.logger.error "Could not fetch manifest digest: #{e.message}"
+      rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+             ::Portus::RegistryClient::ManifestError => e
+        Rails.logger.error "Could not fetch manifest digest: #{e}"
         nil
       end
     else

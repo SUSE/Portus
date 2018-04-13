@@ -107,13 +107,11 @@ class Repository < ActiveRecord::Base
 
   # Handle a delete event.
   def self.handle_delete_event(event)
+    # Fetch the repo.
     registry = Registry.find_from_event(event)
     return if registry.nil?
-
-    # Fetch the repo.
-    ns, repo_name, = registry.get_namespace_from_event(event, false)
-    repo = ns.repositories.find_by(name: repo_name)
-    return if repo.nil? || repo.marked?
+    repo = registry.get_repository_from_event(event, false)
+    return if repo.nil?
 
     # Destroy tags and the repository if it's empty now.
     user = User.find_from_event(event)
@@ -162,8 +160,9 @@ class Repository < ActiveRecord::Base
     if digest.present?
       begin
         id, = Registry.get.client.manifest(repo, digest)
-      rescue StandardError => e
-        logger.warn "Could not fetch manifest for '#{repo}' with digest '#{digest}': " + e.message
+      rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+             ::Portus::RegistryClient::ManifestError => e
+        logger.warn "Could not fetch manifest for '#{repo}' with digest '#{digest}': " + e.to_s
       end
     end
 
@@ -214,10 +213,11 @@ class Repository < ActiveRecord::Base
       # Try to fetch the manifest digest of the tag.
       begin
         _, digest, = client.manifest(repository.full_name, tag)
-      rescue StandardError => e
+      rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+             ::Portus::RegistryClient::ManifestError => e
         logger.tagged("catalog") do
           logger.warn "Could not fetch manifest for '#{repository.full_name}' " \
-            "with tag '#{tag}': " + e.message
+            "with tag '#{tag}': " + e.to_s
         end
         next
       end
@@ -239,7 +239,8 @@ class Repository < ActiveRecord::Base
       # Try to fetch the manifest digest of the tag.
       begin
         id, digest, = client.manifest(repository.full_name, tag)
-      rescue ::Portus::RegistryClient::ManifestError, ::Portus::RequestError => e
+      rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+             ::Portus::RegistryClient::ManifestError => e
         Rails.logger.info e.to_s
         id = ""
         digest = ""
