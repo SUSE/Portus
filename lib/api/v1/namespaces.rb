@@ -11,11 +11,12 @@ module API
           authorization!(force_admin: false)
         end
 
-        helpers ::API::Helpers::Namespaces
-
         desc "Returns a list of namespaces",
              tags:     ["namespaces"],
-             detail:   "This will expose all accessible namespaces",
+             detail:   "This will expose all accessible namespaces by the user via either team
+                        membership or visibility. Keep in mind that if the user is an admin, this
+                        will return all the global, personal and other namespaces created by all
+                        the users",
              is_array: true,
              entity:   API::Entities::Namespaces,
              failure:  [
@@ -24,7 +25,7 @@ module API
              ]
 
         get do
-          present accessible_namespaces,
+          present policy_scope(Namespace),
                   with:         API::Entities::Namespaces,
                   current_user: current_user,
                   type:         current_type

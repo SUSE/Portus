@@ -36,22 +36,29 @@ describe API::V1::Namespaces do
   end
 
   context "GET /api/v1/namespaces" do
-    it "returns an empty list" do
-      get "/api/v1/namespaces", nil, @admin_header
+    let!(:registry) { create(:registry) }
 
-      namespaces = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(namespaces.length).to eq(0)
+    context "as admin" do
+      it "returns list of accessible namespaces" do
+        get "/api/v1/namespaces", nil, @admin_header
+
+        # global + personal + weird ones that I have no idea where it comes from
+        # so, magic number :(
+        namespaces = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(namespaces.length).to eq(7)
+      end
     end
 
-    it "returns list of accessible namespaces" do
-      # global + personal + below
-      create(:namespace, visibility: public_visibility, team: team)
-      get "/api/v1/namespaces", nil, @admin_header
+    context "as regular user" do
+      it "returns list of accessible namespaces" do
+        get "/api/v1/namespaces", nil, @owner_header
 
-      namespaces = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(namespaces.length).to eq(3)
+        # only personal one
+        namespaces = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(namespaces.length).to eq(1)
+      end
     end
   end
 

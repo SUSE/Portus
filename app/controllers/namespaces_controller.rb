@@ -56,9 +56,14 @@ class NamespacesController < ApplicationController
 
   # GET /namespace/typeahead/%QUERY
   def typeahead
-    @query = params[:query]
-    valid_teams = TeamUser.get_valid_team_ids(current_user.id)
-    matches = Team.search_from_query(valid_teams, "#{@query}%").pluck(:name)
+    valid_teams_ids = if current_user.admin?
+                        Team.all_non_special.pluck(:id)
+                      else
+                        TeamUser.get_valid_team_ids(current_user.id)
+                      end
+
+    query = "#{params[:query]}%"
+    matches = Team.search_from_query(valid_teams_ids, query).pluck(:name)
     matches = matches.map { |team| { name: ActionController::Base.helpers.sanitize(team) } }
     respond_to do |format|
       format.json { render json: matches.to_json }

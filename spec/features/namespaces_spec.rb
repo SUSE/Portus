@@ -189,19 +189,19 @@ describe "Namespaces support" do
     it "URL is updated when namespaces column is sorted", js: true do
       visit namespaces_path
 
-      expect(page).to have_css(".namespaces-panel:last-of-type th:nth-child(4)")
+      expect(page).to have_css(".member-namespaces-panel th:nth-child(4)")
 
       # sort asc & created_at
-      find(".namespaces-panel:last-of-type th:nth-child(4)").click
+      find(".member-namespaces-panel th:nth-child(4)").click
 
-      expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-asc")
+      expect(page).to have_css(".member-namespaces-panel th:nth-child(4) .fa-sort-amount-asc")
       path = namespaces_path(ns_sort_asc: true, ns_sort_by: "created_at")
       expect(page).to have_current_path(path)
 
       # sort desc & created_at
-      find(".namespaces-panel:last-of-type th:nth-child(4)").click
+      find(".member-namespaces-panel th:nth-child(4)").click
 
-      expect(page).to have_css(".namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
+      expect(page).to have_css(".member-namespaces-panel th:nth-child(4) .fa-sort-amount-desc")
       path = namespaces_path(ns_sort_asc: false, ns_sort_by: "created_at")
       expect(page).to have_current_path(path)
     end
@@ -225,18 +225,19 @@ describe "Namespaces support" do
 
       visit namespaces_path
 
-      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li:nth-child(3)")
+      expect(page).to have_content("Created at")
+      expect(page).to have_css(".member-namespaces-panel .pagination li:nth-child(3)")
 
       # page 2
-      find(".namespaces-panel:last-of-type .pagination li:nth-child(3) a").click
+      find(".member-namespaces-panel .pagination li:nth-child(3) a").click
 
-      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li.active:nth-child(3)")
+      expect(page).to have_css(".member-namespaces-panel .pagination li.active:nth-child(3)")
       expect(page).to have_current_path(namespaces_path(ns_page: 2))
 
       # page 1
-      find(".namespaces-panel:last-of-type .pagination li:nth-child(2) a").click
+      find(".member-namespaces-panel .pagination li:nth-child(2) a").click
 
-      expect(page).to have_css(".namespaces-panel:last-of-type .pagination li.active:nth-child(2)")
+      expect(page).to have_css(".member-namespaces-panel .pagination li.active:nth-child(2)")
       expect(page).to have_current_path(namespaces_path(ns_page: 1))
     end
   end

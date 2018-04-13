@@ -2,14 +2,12 @@
 
 require "portus/auth_from_token"
 require "api/helpers/errors"
-require "api/helpers/namespaces"
 
 module API
   module Helpers
     include ::Portus::AuthFromToken
 
     include Errors
-    include Namespaces
 
     # On success it will fill the @user instance variable with the currently
     # authenticated user for the API. Otherwise it will raise:
