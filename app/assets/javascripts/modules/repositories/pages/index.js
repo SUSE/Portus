@@ -18,7 +18,24 @@ $(() => {
     data() {
       return {
         repositories: window.repositories,
+        teamRepositoriesNames: window.teamRepositoriesNames,
       };
+    },
+
+    computed: {
+      teamRepositories() {
+        // eslint-disable-next-line
+        return this.repositories.filter((r) => {
+          return this.teamRepositoriesNames.indexOf(r.full_name) !== -1;
+        });
+      },
+
+      otherRepositories() {
+        // eslint-disable-next-line
+        return this.repositories.filter((r) => {
+          return this.teamRepositoriesNames.indexOf(r.full_name) === -1;
+        });
+      },
     },
   });
 });
