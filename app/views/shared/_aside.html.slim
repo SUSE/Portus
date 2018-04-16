@@ -31,6 +31,18 @@ aside
           | Admin
         - if current_page?(url_for controller: 'admin/dashboard', action: 'index')
           .list-selected
+      li.active
+        = link_to admin_users_path
+          i[class="fa fa-user"]
+          | Users
+        - if current_page?(url_for controller: 'admin/users', action: 'index')
+          .list-selected
+      li.active
+        = link_to admin_registries_path
+          i[class="fa fa-server"]
+          | Registries
+        - if current_page?(url_for controller: 'admin/registries', action: 'index')
+          .list-selected
     li.active
       = link_to help_index_path
         i[class="fa fa-life-ring"]
