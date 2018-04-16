@@ -2,7 +2,6 @@
 
 namespace :admin do
   resources :activities, only: [:index]
-  resources :dashboard, only: [:index]
   resources :registries, except: %i[show destroy]
   resources :namespaces, only: [:index]
   resources :users do

@@ -1,3 +1,21 @@
+.is-admin {
+  .recent-activities-panel {
+    .panel-heading {
+      padding-bottom: 0;
+    }
+  }
+
+  #activities-tabs,
+  .view-all-activities {
+    display: block;
+  }
+}
+
+#activities-tabs,
+.view-all-activities {
+  display: none;
+}
+
 .starred {
   .fa {
     color: $first-colour !important;

@@ -26,12 +26,6 @@ aside
         .list-selected
     - if current_user.admin?
       li.active
-        = link_to admin_dashboard_index_path
-          i[class="fa fa-cogs"]
-          | Admin
-        - if current_page?(url_for controller: 'admin/dashboard', action: 'index')
-          .list-selected
-      li.active
         = link_to admin_users_path
           i[class="fa fa-user"]
           | Users

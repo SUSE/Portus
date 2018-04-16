@@ -1,0 +1,11 @@
+- unless @portus_exists
+  .alert.alert-danger.fade.in.text-left.alert-dismissible
+    button.close data-dismiss="alert" type="button"
+      span aria-hidden="true" &times;
+      span.sr-only Close
+    .row
+      .alert-icon.pull-left
+        i.fa.fa-exclamation-circle.fa-3x
+      .pull-left
+        p
+          | The Portus user does not exist!
