@@ -50,6 +50,14 @@ module Portus
 
       # Simply fetches the catalog from the registry and calls
       # `update_registry!`.
+      #
+      # If an exception was raised when fetching the catalog (e.g. timeout),
+      # then it will handle it by logging such exception. Moreover, sometimes
+      # the given catalog object contains nil values for the `tags` field. This
+      # happens when there were exceptions being raised when fetching the list
+      # of tags for that particular repository. In these cases the
+      # `update_registry!` method will never remove them to avoid false
+      # positives.
       def execute!
         ::Registry.find_each do |registry|
           cat = registry.client.catalog
@@ -89,19 +97,23 @@ module Portus
       protected
 
       # This method updates the database of this application with the given
-      # registry contents.
+      # registry contents. If a repository had a blank `tags` field, then this
+      # method will not removed (because maybe the image is still uploading, or
+      # there was a temporary error when fetching the tags).
       def update_registry!(catalog)
         dangling_repos = Repository.all.pluck(:id)
 
         # In this loop we will create/update all the repos from the catalog.
         # Created/updated repos will be removed from the "repos" array.
         catalog.each do |r|
-          if r["tags"].blank?
-            Rails.logger.debug "skip upload not finished repo #{r["name"]}"
-          else
-            repository = Repository.create_or_update!(r)
-            dangling_repos.delete repository.id unless repository.nil?
-          end
+          repository = if r["tags"].blank?
+                         Rails.logger.debug "skipping repo with no tags: #{r["name"]}"
+                         Repository.from_catalog(r["name"])
+                       else
+                         Repository.create_or_update!(r)
+                       end
+
+          dangling_repos.delete repository.id unless repository.nil?
         end
 
         # At this point, the remaining items in the "repos" array are repos that

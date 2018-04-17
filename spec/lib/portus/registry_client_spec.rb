@@ -297,9 +297,14 @@ describe Portus::RegistryClient do
         )
 
         catalog = registry.catalog
-        expect(catalog.length).to be 1
+        expect(catalog.length).to be 2
         expect(catalog[0]["name"]).to eq "busybox"
         expect(catalog[0]["tags"]).to match_array(["latest"])
+
+        # The second repo failed at fetching tags. Thus, it will be set to nil
+        # to reflect this situation.
+        expect(catalog[1]["name"]).to eq "another"
+        expect(catalog[1]["tags"]).to be_nil
       end
     end
 
@@ -346,6 +351,29 @@ describe Portus::RegistryClient do
       expect(registry.fetch_link_test([])).to be_empty
       link = "<v2/_catalog?last=mssola%2Fbusybox89&n=100>; rel=\"next\""
       expect(registry.fetch_link_test(link)).to eq "v2/_catalog?last=mssola%2Fbusybox89&n=100"
+    end
+
+    it "returns nil for tags when an exception happened" do
+      create(:registry)
+      create(:admin, username: "portus")
+
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:tags) do
+        raise ::Portus::Errors::NotFoundError, "I AM ERROR"
+      end
+
+      VCR.use_cassette("registry/get_registry_catalog", record: :none) do
+        registry = described_class.new(
+          registry_server,
+          false,
+          "portus",
+          Rails.application.secrets.portus_password
+        )
+
+        catalog = registry.catalog
+        expect(catalog.length).to be 1
+        expect(catalog[0]["name"]).to eq "busybox"
+        expect(catalog[0]["tags"]).to be_nil
+      end
     end
   end
 
