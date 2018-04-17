@@ -1,8 +1,15 @@
 .panel.panel-default.repositories-panel
   .panel-heading
-    h5 Repositories
+    h5 Repositories via team membership
   .panel-body
-    <repositories-table :repositories="repositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}" :sortable="true" sort-by="name"></repositories-table>
+    <repositories-table :repositories="teamRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}" :sortable="true" sort-by="name"></repositories-table>
+
+- if (@repositories.count - @team_repositories.count) > 0
+  .panel.panel-default.repositories-panel
+    .panel-heading
+      h5 Other repositories
+    .panel-body
+      <repositories-table :repositories="otherRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}" :sortable="true" sort-by="name"></repositories-table>
 
 - content_for :js_body do
   script#js-repositories-table-tmpl type="text/x-template"
@@ -14,3 +21,4 @@
 - content_for :js_header do
   javascript:
     window.repositories = #{raw @repositories_serialized};
+    window.teamRepositoriesNames = #{raw @team_repositories};

@@ -100,6 +100,13 @@ describe "Feature: Repositories" do
       expect(page).to have_css(selector)
       expect(page).to have_current_path(repositories_path(page: 1))
     end
+
+    it "doesn't show 'other repositories' panel when empty" do
+      visit repositories_path
+
+      expect(page).to have_content(repository.name)
+      expect(page).not_to have_content("Other repositories")
+    end
   end
 
   describe "repository#show" do
