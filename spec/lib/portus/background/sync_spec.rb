@@ -165,7 +165,7 @@ describe ::Portus::Background::Sync do
     end
 
     describe "Database already filled with repos" do
-      let!(:registry)    { create(:registry) }
+      let!(:registry)    { create(:registry, "hostname" => "registry.test.lan") }
       let!(:owner)       { create(:user) }
       let!(:namespace)   { create(:namespace, registry: registry) }
       let!(:repo1)       { create(:repository, name: "repo1", namespace: namespace) }
@@ -226,6 +226,45 @@ describe ::Portus::Background::Sync do
         expect(tags.map(&:name)).to match_array(["latest"])
         tags = Repository.find_by(name: "repo2").tags
         expect(tags.map(&:name)).to match_array(%w[tag2 tag3])
+      end
+
+      it "does not remove a repository with nil tags on update-delete" do
+        APP_CONFIG["background"]["sync"]["strategy"] = "update-delete"
+
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+
+        # repo2 is not removed because it exists and the tags is nil. This
+        # happens when fetching tags raised a handled exception.
+        sync = SyncMock.new
+        sync.update_registry!([{ "name" => "busybox", "tags" => ["latest", "0.1"] },
+                               { "name" => "#{namespace.name}/repo1",  "tags" => ["latest"] },
+                               { "name" => "#{namespace.name}/repo2",  "tags" => nil }])
+
+        r = Repository.find_by(name: "repo2")
+        expect(r.tags.size).to eq 2
+      end
+
+      it "does not remove a repository when its tags raised an exception" do
+        APP_CONFIG["background"]["sync"]["strategy"] = "update-delete"
+
+        VCR.turn_on!
+
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:tags) do
+          raise ::Portus::Errors::NotFoundError, "I AM ERROR"
+        end
+
+        ns = Namespace.where(global: true).first
+        busybox = create(:repository, name: "busybox", namespace: ns)
+        create(:tag, name: "doesnotexist", repository: busybox)
+
+        VCR.use_cassette("registry/get_registry_catalog", record: :none) do
+          sync = SyncMock.new
+          sync.execute!
+        end
+
+        expect(Repository.count).to eq 1
+        expect(Repository.first.tags.size).to eq 1
       end
     end
 
