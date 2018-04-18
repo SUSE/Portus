@@ -78,7 +78,7 @@ describe Tag do
 
     it "returns false if the registry client could not delete the tag" do
       allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
-        raise "I AM ERROR."
+        raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
       end
 
       # That being said, the tag should be "marked".
@@ -185,7 +185,7 @@ describe Tag do
 
     it "returns nil if the client could not fetch the digest" do
       allow_any_instance_of(Portus::RegistryClient).to receive(:manifest) do
-        raise "I AM ERROR."
+        raise ::Portus::RegistryClient::ManifestError, "I AM ERROR."
       end
 
       tag = TagMock.create(name: "tag", repository: repository)

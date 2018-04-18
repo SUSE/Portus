@@ -125,7 +125,7 @@ describe API::V1::Repositories do
 
     it "returns 422 if unable to remove dependent tag" do
       allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
-        raise "I AM ERROR."
+        raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
       end
 
       repository = create(:repository, namespace: public_namespace)

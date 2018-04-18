@@ -15,6 +15,10 @@ module Portus
     # fetch has given a bad HTTP status code.
     class ManifestError < StandardError; end
 
+    # UnsupportedMediaType is the exception to be raised when the target
+    # mediaType given by the Registry is unsupported.
+    class UnsupportedMediaType < StandardError; end
+
     # Exception being raised when we get an error from the Registry API that we
     # don't know how to handle.
     class RegistryError < StandardError; end
@@ -84,6 +88,14 @@ module Portus
     # Returns an array of hashes which contain two keys:
     #   - name: a string containing the name of the repository.
     #   - tags: an array containing the available tags for the repository.
+    #
+    # Three different exceptions might be raised:
+    #
+    #   - ::Portus::RequestError: there was a request error with the registry
+    #     (e.g. a timeout).
+    #   - ::Portus::Errors::NotFoundError: the given manifest was not found.
+    #   - ::Portus::RegistryClient::RegistryError: there was an unknown problem
+    #     with the request.
     def catalog
       res = paged_response("_catalog", "repositories")
       add_tags(res)
@@ -91,14 +103,29 @@ module Portus
 
     # Returns an array containing the list of tags. If something goes wrong,
     # then it raises an exception.
+    #
+    # Three different exceptions might be raised:
+    #
+    #   - ::Portus::RequestError: there was a request error with the registry
+    #     (e.g. a timeout).
+    #   - ::Portus::Errors::NotFoundError: the given manifest was not found.
+    #   - ::Portus::RegistryClient::RegistryError: there was an unknown problem
+    #     with the request.
     def tags(repository)
       paged_response("#{repository}/tags/list", "tags")
     end
 
     # Deletes a blob/manifest of the specified image. Returns true if the
-    # request was successful, otherwise it raises an exception.
+    # request was successful, otherwise it raises an exception. Three different
+    # exceptions might be raised:
+    #
+    #   - ::Portus::RequestError: there was a request error with the registry
+    #     (e.g. a timeout).
+    #   - ::Portus::Errors::NotFoundError: the given manifest was not found.
+    #   - ::Portus::RegistryClient::RegistryError: there was an unknown problem
+    #     with the request.
     def delete(name, digest, object = "blobs")
-      res = perform_request("#{name}/#{object}/#{digest}", "delete")
+      res = safe_request("#{name}/#{object}/#{digest}", "delete")
       if res.code.to_i == 202
         true
       elsif res.code.to_i == 404 || res.code.to_i == 405
@@ -112,9 +139,12 @@ module Portus
 
     protected
 
-    # Returns all the items that could be extracted from the given link that
-    # are indexed by the given field in a successful response. If anything goes
-    # wrong, it raises an exception.
+    # Returns all the items that could be extracted from the given link that are
+    # indexed by the given field in a successful response.
+    #
+    # If anything goes wrong, it raises an exception: ::Portus::RequestError,
+    # ::Portus::Errors::NotFoundError or
+    # ::Portus::RegistryClient::RegistryError.
     def paged_response(link, field)
       res = []
       link += "?n=#{APP_CONFIG["registry"]["catalog_page"]["value"]}"
@@ -131,9 +161,12 @@ module Portus
     # an array of the items:
     #   - The parsed response body.
     #   - The link to the next page.
-    # On error it will raise the proper exception.
+    #
+    # On error it will raise the proper exception: ::Portus::RequestError,
+    # ::Portus::Errors::NotFoundError or
+    # ::Portus::RegistryClient::RegistryError.
     def get_page(link)
-      res = perform_request(link)
+      res = safe_request(link)
       if res.code.to_i == 200
         [JSON.parse(res.body), fetch_link(res["link"])]
       elsif res.code.to_i == 404
@@ -156,6 +189,10 @@ module Portus
     # problem while fetching a repository's tag, it will return an empty array.
     # Otherwise it will return an array with the results as specified in the
     # documentation of the `catalog` method.
+    #
+    # It rescues the exceptions that might be raised by `#tags`, so if a fetch
+    # fails for a particular repository, this method tries to fetch the tags for
+    # other methods.
     def add_tags(repositories)
       return [] if repositories.nil?
 
@@ -163,7 +200,8 @@ module Portus
       repositories.each do |repo|
         ts = tags(repo)
         result << { "name" => repo, "tags" => ts } if ts.present?
-      rescue StandardError => e
+      rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+             ::Portus::RegistryClient::RegistryError => e
         Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
       end
       result

@@ -38,7 +38,7 @@ describe "Tags::DestroyService" do
 
       it "stores error in attribute" do
         allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
-          raise "I AM ERROR."
+          raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
         end
 
         service.execute(tag)

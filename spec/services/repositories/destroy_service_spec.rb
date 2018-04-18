@@ -37,7 +37,7 @@ describe "Repositories::DestroyService" do
         create(:tag, name: "tag1", repository: repository, digest: "1")
 
         allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
-          raise "I AM ERROR."
+          raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
         end
 
         expect { service.execute(repository) }.to change(Repository, :count).by(0)
@@ -47,7 +47,7 @@ describe "Repositories::DestroyService" do
         create(:tag, name: "tag1", repository: repository, digest: "1")
 
         allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
-          raise "I AM ERROR."
+          raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
         end
 
         service.execute(repository)

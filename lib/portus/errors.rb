@@ -6,7 +6,7 @@ module Portus
     # Networking errors given usually on this application. This is useful to
     # catch a set of common networking issues on a single rescue statement.
     NET = [SocketError, OpenSSL::SSL::SSLError, Net::HTTPBadResponse,
-           Errno::ECONNRESET, Errno::ECONNREFUSED, Errno::EHOSTUNREACH,
+           Errno::ECONNRESET, Errno::ECONNREFUSED, Errno::EHOSTUNREACH, EOFError,
            Errno::ETIMEDOUT, Net::OpenTimeout, Net::ReadTimeout].freeze
 
     # Returns a string with a message representing the given exception.

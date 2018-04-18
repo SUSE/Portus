@@ -59,9 +59,10 @@ module Portus
           # the DB in an unknown state because of an update failure.
           ActiveRecord::Base.transaction { update_registry!(cat) }
           @executed = true
-        rescue EOFError, *::Portus::Errors::NET,
+        rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+               ::Portus::RegistryClient::ManifestError,
                ::Portus::Errors::NoBearerRealmException, ::Portus::Errors::AuthorizationError,
-               ::Portus::Errors::NotFoundError, ::Portus::Errors::CredentialsMissingError => e
+               ::Portus::Errors::CredentialsMissingError => e
           Rails.logger.warn "Exception: #{e.message}"
         end
       end
