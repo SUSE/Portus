@@ -1,0 +1,31 @@
+.panel.panel-default.recent-activities-panel
+  .panel-heading
+    .row
+      .col-sm-6
+        h5 Recent activities
+        ul#activities-tabs.nav.nav-tabs role="tablist"
+          li.active role="presentation"
+            a href="#personal-activities" aria-controls="personal-activities" role="tab" data-toggle="tab"
+              | Personal
+          li role="presentation"
+            a href="#admin-activities" aria-controls="starred" role="tab" data-toggle="tab"
+              | Admin
+
+      .col-sm-6.text-right.view-all-activities
+        = link_to admin_activities_path, class: "btn btn-link btn-xs" do
+          i.fa.fa-eye
+          '  View all activities
+  .panel-body
+    .tab-content
+      #personal-activities.tab-pane.active role="tabpanel"
+        ul.activity
+          - @recent_activities.each do |activity|
+            = render_activity(activity)
+      - if current_user.admin?
+        #admin-activities.tab-pane role="tabpanel"
+          - if @recent_activities.empty?
+            p No activities in the last 24 hours.
+          - else
+            ul.activity
+              - @admin_recent_activities.each do |activity|
+                = render_activity(activity)
