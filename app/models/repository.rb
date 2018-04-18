@@ -151,6 +151,20 @@ class Repository < ActiveRecord::Base
     [id, digest]
   end
 
+  # Returns the repository for the given full repository name. If it cannot be
+  # found, then it returns nil.
+  def self.from_catalog(name, create_if_missing = false)
+    # If the namespace does not exist, get out.
+    namespace, name = Namespace.get_from_name(name)
+    return if namespace.nil?
+
+    if create_if_missing
+      Repository.find_or_create_by!(name: name, namespace: namespace)
+    else
+      Repository.find_by(name: name, namespace: namespace)
+    end
+  end
+
   # Create or update the given repository in JSON format. The given repository
   # follows the same JSON format as in the one used by the Catalog API.
   # Therefore, it's a hash with two keys:
@@ -164,16 +178,12 @@ class Repository < ActiveRecord::Base
   #
   # Returns the final repository object.
   def self.create_or_update!(repo)
-    # If the namespace does not exist, get out.
-    namespace, name = Namespace.get_from_name(repo["name"])
-    return if namespace.nil?
+    repository = Repository.from_catalog(repo["name"], true)
+    return unless repository
+    tags = repository.tags.pluck(:name)
 
     # The portus user is the author for the created tags.
     portus = User.find_by(username: "portus")
-
-    # Add the needed tags.
-    repository = Repository.find_or_create_by!(name: name, namespace: namespace)
-    tags = repository.tags.pluck(:name)
 
     to_be_deleted_tags = tags - repo["tags"]
 

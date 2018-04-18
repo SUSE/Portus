@@ -85,9 +85,16 @@ module Portus
     # corresponding tags. If something goes wrong while fetching the repos from
     # the catalog (e.g. authorization error), it will raise an exception.
     #
-    # Returns an array of hashes which contain two keys:
-    #   - name: a string containing the name of the repository.
-    #   - tags: an array containing the available tags for the repository.
+    # Returns an array of hashes where each hash contains a `name` and a `tags`
+    # field. The given repository name is fully qualified and the `tags` field
+    # simply contains an array of strings for each tag.
+    #
+    # The list of tags for each repository is taken by calling `#tags`, and it
+    # handles the exceptions that might be raised. If an exception was raised
+    # when fetching the tags (e.g. a timeout), then it will set the `tags` field
+    # of the currently evaluated repository to nil. This is done this way
+    # because setting an empty value would be ambiguous, and leaving exception
+    # handling to upper layers might be confusing.
     #
     # Three different exceptions might be raised:
     #
@@ -185,24 +192,26 @@ module Portus
       link.strip[1, link.size - 2]
     end
 
-    # Adds the available tags for each of the given repositories. If there is a
-    # problem while fetching a repository's tag, it will return an empty array.
-    # Otherwise it will return an array with the results as specified in the
-    # documentation of the `catalog` method.
+    # Adds the available tags for each of the given repositories. If the given
+    # repository object is nil, then it returns an empty array.
     #
-    # It rescues the exceptions that might be raised by `#tags`, so if a fetch
-    # fails for a particular repository, this method tries to fetch the tags for
-    # other methods.
+    # The returned object on success (or partial success) is explained in the
+    # `#catalog` method.
     def add_tags(repositories)
       return [] if repositories.nil?
 
       result = []
       repositories.each do |repo|
-        ts = tags(repo)
-        result << { "name" => repo, "tags" => ts } if ts.present?
-      rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
-             ::Portus::RegistryClient::RegistryError => e
-        Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
+        ts = nil
+
+        begin
+          ts = tags(repo)
+        rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
+               ::Portus::RegistryClient::RegistryError => e
+          Rails.logger.debug "Could not get tags for repo: #{repo}: #{e.message}."
+        end
+
+        result << { "name" => repo, "tags" => ts }
       end
       result
     end
