@@ -171,7 +171,7 @@ class Repository < ActiveRecord::Base
   #   - name: the name of the repo to be created/updated.
   #   - tags: an array of strings with the actual tags of the repository.
   # This method will transparently create/remove the tags that the given
-  # repository is supposed to have.
+  # repository is supposed to have with the Portus user.
   #
   # Note that if the repo is said to be contained inside of a namespace that
   # does not really exist, then this method will do nothing.
@@ -182,25 +182,20 @@ class Repository < ActiveRecord::Base
     return unless repository
     tags = repository.tags.pluck(:name)
 
-    # The portus user is the author for the created tags.
-    portus = User.find_by(username: "portus")
-
-    to_be_deleted_tags = tags - repo["tags"]
-
+    # Create missing tags and update current ones.
     client = Registry.get.client
-
-    update_tags client, repository, repo["tags"] & tags
+    portus = User.find_by(username: "portus")
+    update_tags client, repository, portus, repo["tags"] & tags
     create_tags client, repository, portus, repo["tags"] - tags
 
     # Finally remove the tags that are left and return the repo.
+    to_be_deleted_tags = tags - repo["tags"]
     repository.tags.where(name: to_be_deleted_tags).find_each { |t| t.delete_by!(portus) }
     repository.reload
   end
 
-  # Update digest of already existing tags.
-  def self.update_tags(client, repository, tags)
-    portus = User.find_by(username: "portus")
-
+  # Update digest of already existing tags by using the Portus user.
+  def self.update_tags(client, repository, portus, tags)
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
@@ -223,10 +218,8 @@ class Repository < ActiveRecord::Base
     end
   end
 
-  # Create new tags.
-  def self.create_tags(client, repository, author, tags)
-    portus = User.find_by(username: "portus")
-
+  # Create new tags by using the Portus user.
+  def self.create_tags(client, repository, portus, tags)
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
@@ -241,7 +234,7 @@ class Repository < ActiveRecord::Base
       t = Tag.create!(
         name:       tag,
         repository: repository,
-        author:     author,
+        author:     portus,
         digest:     digest,
         image_id:   id
       )
