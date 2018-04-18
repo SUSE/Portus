@@ -9,7 +9,7 @@ class TeamsController < ApplicationController
 
   # GET /teams
   def index
-    @teams = policy_scope(Team).page(params[:page])
+    @teams = policy_scope(Team)
     @teams_serialized = API::Entities::Teams.represent(
       @teams,
       current_user: current_user,

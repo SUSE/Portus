@@ -1,6 +1,7 @@
 <namespaces-index-page
   :can-create-namespace="<%= can_create_namespace? %>"
   :user-namespace-id="<%= current_user.namespace_id %>"
+  :accessible-teams-ids="<%= current_user.teams.pluck(:id) %>"
   webhooks-path="webhooks"
   namespaces-path="<%= namespaces_path %>">
 </namespaces-index-page>

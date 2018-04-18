@@ -6,6 +6,7 @@ describe NamespacePolicy do
   subject { described_class }
 
   let!(:registry)   { create(:registry) }
+  let(:admin)       { create(:admin) }
   let(:user)        { create(:user) }
   let(:owner)       { create(:user) }
   let(:viewer)      { create(:user) }
@@ -267,35 +268,61 @@ describe NamespacePolicy do
     end
 
     it "shows namespaces controlled by teams the user is member of" do
-      expected = team.namespaces
-      expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
-
-      expect(Pundit.policy_scope(user, Namespace).to_a).to be_empty
+      team.namespaces.each do |n|
+        expect(Pundit.policy_scope(owner, Namespace).to_a).to include(n)
+        expect(Pundit.policy_scope(contributor, Namespace).to_a).to include(n)
+        expect(Pundit.policy_scope(viewer, Namespace).to_a).to include(n)
+      end
     end
 
-    it "always shows public namespaces" do
+    it "shows namespaces for admin even if not member" do
+      team.namespaces.each do |n|
+        expect(Pundit.policy_scope(admin, Namespace).to_a).to include(n)
+      end
+    end
+
+    it "does't show namespaces for regular user if not member" do
+      team.namespaces.each do |n|
+        expect(Pundit.policy_scope(user, Namespace).to_a).not_to include(n)
+      end
+    end
+
+    it "shows global namespaces to everyone" do
+      global = Namespace.where(global: true)
+
+      global.each do |n|
+        expect(Pundit.policy_scope(admin, Namespace).to_a).to include(n)
+        expect(Pundit.policy_scope(owner, Namespace).to_a).to include(n)
+        expect(Pundit.policy_scope(contributor, Namespace).to_a).to include(n)
+        expect(Pundit.policy_scope(viewer, Namespace).to_a).to include(n)
+        expect(Pundit.policy_scope(user, Namespace).to_a).to include(n)
+      end
+    end
+
+    it "shows public namespaces to everyone" do
       n = create(:namespace, visibility: :visibility_public)
       create(:team, namespaces: [n], owners: [owner])
-      expect(Pundit.policy_scope(user, Namespace).to_a).to match_array([n])
+
+      expect(Pundit.policy_scope(admin, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(owner, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(contributor, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(viewer, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(user, Namespace).to_a).to include(n)
     end
 
-    it "never shows public or personal namespaces" do
-      expect(Namespace.find_by(name: user.username)).not_to be_nil
-      create(:namespace, global: true, visibility: :visibility_public)
-      expect(Pundit.policy_scope(user, Namespace).to_a).to be_empty
-    end
-
-    it "does not show duplicates" do
-      # Namespaces controlled by the team that are also public are listed twice
-      expected = team.namespaces
-      expected.first.update(visibility: :visibility_public)
-      expect(Pundit.policy_scope(viewer, Namespace).to_a).to match_array(expected)
-    end
-
-    it "shows protected namespaces" do
+    it "shows protected namespaces to everyone" do
       n = create(:namespace, visibility: :visibility_protected)
       create(:team, namespaces: [n], owners: [owner])
-      expect(Pundit.policy_scope(user, Namespace)).to match_array([n])
+
+      expect(Pundit.policy_scope(admin, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(owner, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(contributor, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(viewer, Namespace).to_a).to include(n)
+      expect(Pundit.policy_scope(user, Namespace).to_a).to include(n)
+    end
+
+    it "shows personal namespaces for specific user" do
+      expect(Pundit.policy_scope(user, Namespace).to_a).to include(user.namespace)
     end
   end
 end

@@ -82,17 +82,23 @@ class NamespacePolicy
     end
 
     def resolve
-      scope
-        .joins(team: [:team_users])
-        .where(
-          "(namespaces.visibility = :public OR namespaces.visibility = :protected " \
-          "OR team_users.user_id = :user_id) AND " \
-          "namespaces.global = :global AND namespaces.id != :namespace_id",
-          public: Namespace.visibilities[:visibility_public],
-          protected: Namespace.visibilities[:visibility_protected],
-          user_id: user.id, global: false, namespace_id: user.namespace_id
-        )
-        .distinct
+      if user.admin?
+        global = scope.where(global: true)
+        normal = scope.not_portus
+                      .where(global: false)
+                      .order(created_at: :asc)
+        global + normal
+      else
+        scope
+          .joins(team: [:team_users])
+          .where(
+            "namespaces.visibility = :public OR namespaces.visibility = :protected " \
+            "OR team_users.user_id = :user_id",
+            public:    Namespace.visibilities[:visibility_public],
+            protected: Namespace.visibilities[:visibility_protected],
+            user_id:   user.id
+          )
+      end
     end
   end
 

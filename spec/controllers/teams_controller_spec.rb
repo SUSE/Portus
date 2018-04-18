@@ -88,11 +88,6 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     describe "GET #index" do
-      it "paginates teams" do
-        get :index
-        expect(assigns(:teams)).to respond_to(:total_pages)
-      end
-
       it "returns the informations about the teams the user is associated with" do
         # another team the user has nothing to do with
         create(:team)

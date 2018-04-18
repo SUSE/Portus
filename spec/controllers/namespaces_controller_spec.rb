@@ -310,34 +310,52 @@ describe NamespacesController, type: :controller do
   describe "typeahead" do
     render_views
 
-    it "does allow to search for valid teams by owner" do
-      testing_team = create(:team, name: "testing", owners: [owner])
-      sign_in owner
-      get :typeahead, query: "test", format: :json
-      expect(response.status).to eq(200)
-      teamnames = JSON.parse(response.body)
-      expect(teamnames.length).to eq(1)
-      expect(teamnames[0]["name"]).to eq(testing_team.name)
+    context "when admin" do
+      it "does allow to search for all the valid teams" do
+        create(:team, name: "testing", owners: [admin])
+        create(:team, name: "testing2", owners: [owner])
+
+        sign_in admin
+        get :typeahead, query: "test", format: :json
+
+        expect(response.status).to eq(200)
+        result = JSON.parse(response.body)
+        expect(result.length).to eq(2)
+        expect(result[0]["name"]).to eq("testing")
+        expect(result[1]["name"]).to eq("testing2")
+      end
     end
 
-    it "does not allow to search by viewers" do
-      create(:team, name: "testing", owners: [owner], viewers: [viewer])
-      sign_in viewer
-      get :typeahead, query: "test", format: :json
-      expect(response.status).to eq(200)
-      teamnames = JSON.parse(response.body)
-      expect(teamnames.length).to eq(0)
-    end
+    context "when regular user" do
+      it "does allow to search for valid teams by owner" do
+        testing_team = create(:team, name: "testing", owners: [owner])
+        sign_in owner
+        get :typeahead, query: "test", format: :json
+        expect(response.status).to eq(200)
+        teamnames = JSON.parse(response.body)
+        expect(teamnames.length).to eq(1)
+        expect(teamnames[0]["name"]).to eq(testing_team.name)
+      end
 
-    it "prevents XSS attacks" do
-      create(:team, name: "<script>alert(1)</script>", owners: [owner])
+      it "does not allow to search by viewers" do
+        create(:team, name: "testing", owners: [owner], viewers: [viewer])
+        sign_in viewer
+        get :typeahead, query: "test", format: :json
+        expect(response.status).to eq(200)
+        teamnames = JSON.parse(response.body)
+        expect(teamnames.length).to eq(0)
+      end
 
-      sign_in owner
-      get :typeahead, query: "<", format: :json
-      expect(response.status).to eq(200)
-      teamnames = JSON.parse(response.body)
+      it "prevents XSS attacks" do
+        create(:team, name: "<script>alert(1)</script>", owners: [owner])
 
-      expect(teamnames[0]["name"]).to eq("alert(1)")
+        sign_in owner
+        get :typeahead, query: "<", format: :json
+        expect(response.status).to eq(200)
+        teamnames = JSON.parse(response.body)
+
+        expect(teamnames[0]["name"]).to eq("alert(1)")
+      end
     end
   end
 

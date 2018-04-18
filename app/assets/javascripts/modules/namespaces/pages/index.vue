@@ -1,5 +1,7 @@
 <template>
   <div class="namespaces-index-page">
+    <new-namespace-form :state="state" form-state="newFormVisible"></new-namespace-form>
+
     <namespaces-panel :namespaces="specialNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="sns_">
       <h5 slot="name">
         <a data-placement="right"
@@ -13,15 +15,17 @@
         </a>
         Special namespaces
       </h5>
-    </namespaces-panel>
-
-    <new-namespace-form :state="state" form-state="newFormVisible"></new-namespace-form>
-
-    <namespaces-panel :namespaces="normalNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" :table-sortable="true">
-      <h5 slot="name">Namespaces you have access to</h5>
       <div slot="actions" v-if="canCreateNamespace">
         <toggle-link text="Create new namespace" :state="state" state-key="newFormVisible" class="toggle-link-new-namespace"></toggle-link>
       </div>
+    </namespaces-panel>
+
+    <namespaces-panel :namespaces="normalNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" :table-sortable="true" class="member-namespaces-panel">
+      <h5 slot="name">Namespaces you have access to through membership</h5>
+    </namespaces-panel>
+
+    <namespaces-panel :namespaces="otherNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="ons_" :table-sortable="true" v-if="otherNamespaces.length">
+      <h5 slot="name">Other namespaces</h5>
     </namespaces-panel>
   </div>
 </template>
@@ -54,6 +58,9 @@
       canCreateNamespace: {
         type: Boolean,
       },
+      accessibleTeamsIds: {
+        type: Array,
+      },
     },
 
     components: {
@@ -65,31 +72,50 @@
     data() {
       return {
         state: NamespacesStore.state,
-        normalNamespaces: [],
-        specialNamespaces: [],
+        namespaces: [],
       };
+    },
+
+    computed: {
+      otherNamespaces() {
+        // eslint-disable-next-line
+        return this.namespaces.filter((n) => {
+          return !n.global &&
+                 n.id !== this.userNamespaceId &&
+                 this.accessibleTeamsIds.indexOf(n.team_id) === -1;
+        });
+      },
+
+      normalNamespaces() {
+        // eslint-disable-next-line
+        return this.namespaces.filter((n) => {
+          return !n.global &&
+                 n.id !== this.userNamespaceId &&
+                 this.accessibleTeamsIds.indexOf(n.team_id) !== -1;
+        });
+      },
+
+      specialNamespaces() {
+        return this.namespaces.filter(n => n.global || n.id === this.userNamespaceId);
+      },
     },
 
     methods: {
       onCreate(namespace) {
-        const currentNamespaces = this.normalNamespaces;
+        const currentNamespaces = this.namespaces;
         const namespaces = [
           ...currentNamespaces,
           namespace,
         ];
 
-        set(this, 'normalNamespaces', namespaces);
+        set(this, 'namespaces', namespaces);
       },
 
       loadData() {
         NamespacesService.all().then((response) => {
           const namespaces = response.data;
 
-          const normal = namespaces.filter(n => !n.global && n.id !== this.userNamespaceId);
-          const special = namespaces.filter(n => n.global || n.id === this.userNamespaceId);
-
-          set(this, 'normalNamespaces', normal);
-          set(this, 'specialNamespaces', special);
+          set(this, 'namespaces', namespaces);
           set(this.state, 'isLoading', false);
         });
       },
