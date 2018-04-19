@@ -120,9 +120,10 @@ module API
       end
       expose :registry_hostname, documentation: {
         type: Integer,
-        desc: "The repository's registry hostname"
+        desc: "The repository's registry hostname. Prioritizes external hostname value" \
+              "if present, otherwise internal hostname is shown"
       }, if: { type: :internal } do |repository|
-        repository.registry.hostname
+        repository.registry.reachable_hostname
       end
       expose :stars, documentation: {
         type: Integer,
