@@ -49,6 +49,7 @@
       canDestroy: Boolean,
       securityEnabled: Boolean,
       state: Object,
+      tagsPath: String,
     },
 
     components: {
@@ -57,7 +58,6 @@
 
     data() {
       return {
-        tagsPath: '/tags',
         prefixID: 'sha256:',
         selected: false,
       };

@@ -141,4 +141,10 @@ module RepositoriesHelper
   def name_and_link(tr, activity)
     tr.is_a?(Namespace) ? [repo_name(activity), nil] : [tr.name, tr]
   end
+
+  # Returns the prefix tags path. This url doesn't exist in routes because it's not needed.
+  # This is only useful for the UI.
+  def tags_path
+    "#{Rails.application.config.relative_url_root}/tags"
+  end
 end
