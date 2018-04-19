@@ -64,6 +64,6 @@
 
     .table-responsive.tags
       <tags-not-loaded v-if="notLoaded"></tags-not-loaded>
-      <tags-table v-if="!isLoading && !notLoaded" :tags="tags" :can-destroy="#{can_destroy}" :state="state" :security-enabled="#{security_vulns_enabled?}"></tags-table>
+      <tags-table v-if="!isLoading && !notLoaded" :tags="tags" :can-destroy="#{can_destroy}" :state="state" :security-enabled="#{security_vulns_enabled?}" tags-path="#{tags_path}"></tags-table>
 
 = render "repositories/partials/comments"
