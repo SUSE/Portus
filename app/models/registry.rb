@@ -130,6 +130,13 @@ class Registry < ActiveRecord::Base
     e.message
   end
 
+  # Returns the hostname value that should be priotized and used by the user.
+  # In other words, whenever external hostname is present, that would be returned.
+  # Otherwise the internal hostname is returned.1
+  def reachable_hostname
+    external_hostname.presence || hostname
+  end
+
   protected
 
   # Fetch the tag being pushed through the given target object.

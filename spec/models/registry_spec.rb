@@ -107,6 +107,19 @@ describe Registry, type: :model do
     end
   end
 
+  describe "#reachable_hostname" do
+    let!(:registry) { create(:registry, use_ssl: true) }
+    let!(:registry_external) { create(:registry, external_hostname: "external", use_ssl: true) }
+
+    it "returns internal hostname when external not present" do
+      expect(registry.reachable_hostname).to eq registry.hostname
+    end
+
+    it "returns external hostname whenever is present" do
+      expect(registry_external.reachable_hostname).to eq registry_external.external_hostname
+    end
+  end
+
   describe "#reachable" do
     after :each do
       allow_any_instance_of(::Portus::RegistryClient).to receive(:perform_request).and_call_original
