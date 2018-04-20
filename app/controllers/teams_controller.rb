@@ -25,7 +25,12 @@ class TeamsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @team.hidden?
 
     authorize @team
-    @team_users = @team.team_users.enabled.page(params[:users_page]).per(10)
+    @available_roles = TeamUser.roles.keys.map(&:titleize)
+    @team_users_serialized = API::Entities::TeamMembers.represent(
+      @team.team_users.enabled,
+      current_user: current_user,
+      type:         :internal
+    )
     @team_namespaces_serialized = API::Entities::Namespaces.represent(
       @team.namespaces,
       current_user: current_user,

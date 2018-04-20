@@ -147,7 +147,7 @@ module API
       end
     end
 
-    # Teams & namespaces
+    # Teams & members
 
     class Teams < Grape::Entity
       expose :id, documentation: { type: Integer, desc: "Repository ID" }
@@ -180,6 +180,39 @@ module API
         t.namespaces.count
       end
     end
+
+    class TeamMembers < Grape::Entity
+      expose :id, documentation: { type: Integer, desc: "Team member ID" }
+      expose :team_id, documentation: { type: Integer, desc: "Team member team ID" }
+      expose :user_id, documentation: { type: Integer, desc: "Team member user ID" }
+      expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :role, documentation: {
+        type: String,
+        desc: "The role this of the team meber with in the team"
+      }
+      expose :display_name, documentation: {
+        type: String,
+        desc: "The team member's display name"
+      } do |t|
+        t.user.display_username
+      end
+      expose :admin, documentation: {
+        type: String,
+        desc: "Tells if the team member is an admin or not"
+      }, if: { type: :internal } do |t|
+        t.user.admin?
+      end
+      expose :current, documentation: {
+        type: String,
+        desc: "Tells if it's the current session user"
+      }, if: { type: :internal } do |t, options|
+        user = options[:current_user]
+
+        t.user.id == user.id
+      end
+    end
+
+    # Namespaces
 
     class Namespaces < Grape::Entity
       expose :id, documentation: { type: Integer, desc: "Namespace ID" }

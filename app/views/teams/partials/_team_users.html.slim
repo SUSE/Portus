@@ -1,0 +1,7 @@
+<new-team-member-form :state="teamsState" form-state="membersFormVisible" team-id="#{@team.id}"></new-team-member-form>
+
+<team-members-panel :members="members">
+  - if can_manage_team?(@team)
+    div slot="actions"
+      <toggle-link text="Add members" :state="teamsState" state-key="membersFormVisible" class="toggle-link-new-member"></toggle-link>
+</team-members-panel>

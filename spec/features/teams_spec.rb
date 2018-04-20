@@ -161,8 +161,6 @@ describe "Teams support" do
       wait_for_ajax
 
       expect(page).to have_content("Team '#{new_team_name}' was updated successfully")
-      expect(page).to have_css("#team_user_team[value='#{new_team_name}']", visible: false)
-      expect(page).to have_css("#namespace_team[value='#{new_team_name}']", visible: false)
       expect(find(".team_name").text).to eq(new_team_name)
     end
   end
@@ -277,72 +275,106 @@ describe "Teams support" do
     end
 
     it "An user can be added as a team member", js: true do
-      find("#add_team_user_btn").click
-      find("#team_user_role").select "Contributor"
-      find("#team_user_user").set another.username
-      find("#add_team_user_form .btn").click
+      find(".toggle-link-new-member").click
+
+      select "Contributor", from: "Role"
+      fill_in "User", with: another.username
+
+      expect(page).to have_button("Add")
+      click_button "Add"
 
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
-      expect(page).to have_content("User '#{another.username}' was added to the team")
-      expect(page).to have_css(".team-users-wrapper tbody tr:last-child .role", text: "Contributor")
+      expect(page).to have_content("User '#{another.username}' was successfully added to the team")
+      expect(page).to have_css(".team_member_#{TeamUser.last.id} .role", text: "Contributor")
     end
 
     it "An admin can only be added as a team owner", js: true do
-      find("#add_team_user_btn").click
-      find("#team_user_role").select "Contributor"
-      find("#team_user_user").set another_admin.username
-      find("#add_team_user_form .btn").click
+      find(".toggle-link-new-member").click
+
+      select "Contributor", from: "Role"
+      fill_in "User", with: another_admin.username
+
+      expect(page).to have_button("Add")
+      click_button "Add"
 
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content(
-        "User '#{another_admin.username}' was added to the team (promoted to
-        owner because it is a Portus admin)."
+        "User '#{another_admin.display_username}' was added to the team (promoted to
+        owner because it's a Portus admin)"
       )
-      expect(page).to have_css(".team-users-wrapper tbody tr:last-child .role", text: "Owner")
+      expect(page).to have_css(".team_member_#{TeamUser.last.id} .role", text: "Owner")
     end
 
     it "New team members have to exist on the system", js: true do
-      find("#add_team_user_btn").click
-      find("#team_user_role").select "Contributor"
-      find("#team_user_user").set "grumpy"
-      find("#add_team_user_form .btn").click
+      find(".toggle-link-new-member").click
+
+      select "Contributor", from: "Role"
+      fill_in "User", with: "grumpy"
+
+      wait_for_effect_on("#new-team-member-form")
+
+      expect(page).to have_content("Selected user does not exist or has already been added")
+      expect(page).to have_button("Add", disabled: true)
+    end
+
+    it "A team member can have his role updated", js: true do
+      tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles["viewer"])
+      visit team_path(team)
+
+      find(".team_member_#{tu.id} .edit-member-btn").click
+      # expect(page).to have_css("#select_role_#{tu.id}")
+      select "Contributor", from: "select_role_#{tu.id}"
+      find(".team_member_#{tu.id} .btn-primary").click
 
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
-      expect(page).to have_content("User cannot be found")
+      expect(page).to have_content("User '#{another.username}' was
+       successfully updated")
+      expect(page).to have_css(".team_member_#{tu.id} .role", text: "Contributor")
     end
 
     it "A team member can be kicked out from a team", js: true do
       tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles["viewer"])
       visit team_path(team)
 
-      find("#team_user_#{tu.id} .delete-team-user-btn").click
-      find(".popover-content .btn-primary").click
+      find(".team_member_#{tu.id} .delete-team-user-btn").click
+      find(".popover-content .yes").click
 
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
-      expect(page).to have_content("User '#{another.username}' was removed from the team")
+      expect(page).to have_content("User '#{another.username}' was
+       successfully removed from the team")
     end
 
     it "The only member of a team cannot be removed", js: true do
-      find("#team_users .delete-team-user-btn").click
-      find(".popover-content .btn-primary").click
+      find(".delete-team-user-btn").click
+      find(".popover-content .yes").click
 
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Cannot remove the only owner of the team")
+    end
+
+    it "A team owner (not admin) cannot manage team if feature not enabled", js: true do
+      APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
+
+      tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles["owner"])
+      login_as tu.user, scope: :user
+      visit team_path(team)
+
+      expect(page).to_not have_css(".delete-team-user-btn")
     end
   end
 end

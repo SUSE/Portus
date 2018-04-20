@@ -2,15 +2,7 @@
 
 = render "teams/partials/panel"
 
-- content_for :js_body do
-  script#js-new-team-form-tmpl type="text/x-template"
-    = render "teams/components/form"
-
-  script#js-teams-table-tmpl type="text/x-template"
-    = render "teams/components/table"
-
-  script#js-team-table-row-tmpl type="text/x-template"
-    = render "teams/components/table_row"
+= render "teams/partials/components_templates"
 
 - content_for :js_header do
   javascript:

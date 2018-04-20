@@ -8,7 +8,7 @@ import FormMixin from '~/shared/mixins/form';
 
 import NamespacesService from '../services/namespaces';
 
-const TYPEAHEAD_INPUT = '.remote .typeahead';
+const TYPEAHEAD_INPUT = '#new-namespace-form .remote .typeahead';
 
 const { set } = Vue;
 
