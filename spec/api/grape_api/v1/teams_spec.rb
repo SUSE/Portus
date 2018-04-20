@@ -6,7 +6,7 @@ describe API::V1::Teams do
   let!(:admin) { create(:admin) }
   let!(:user) { create(:user) }
   let!(:token) { create(:application_token, user: admin) }
-  let!(:user_token) { create(:application_token, user: create(:user)) }
+  let!(:user_token) { create(:application_token, user: user) }
   let!(:hidden_team) do
     create(:team,
            name:   "portus_global_team_1",
@@ -356,6 +356,98 @@ describe API::V1::Teams do
       team_creation_activity = PublicActivity::Activity.find_by(key: "team.create")
       expect(team_creation_activity.owner).to eq(admin)
       expect(team_creation_activity.trackable).to eq(team)
+    end
+  end
+
+  context "PUT /api/v1/teams/:id" do
+    let(:team_data) do
+      {
+        name:        "team",
+        description: "description"
+      }
+    end
+
+    it "updates team" do
+      team = create :team, name: "somerandomone", description: "lala"
+
+      put "/api/v1/teams/#{team.id}", { team: team_data }, @header
+      expect(response).to have_http_status(:success)
+
+      t = Team.find(team.id)
+      expect(t.name).to eq(team_data[:name])
+      expect(t.description).to eq(team_data[:description])
+    end
+
+    it "does not allow viewers or contributors to update" do
+      team = create :team,
+                    name:        "somerandomone",
+                    description: "lala",
+                    owners:      [admin],
+                    viewers:     [user]
+
+      put "/api/v1/teams/#{team.id}", { team: team_data }, @user_header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns duplicate team name" do
+      t = create :team
+      t2 = create :team
+
+      put "/api/v1/teams/#{t.id}", { team: { name: t2.name } }, @header
+      expect(response).to have_http_status(:bad_request)
+
+      data = JSON.parse(response.body)["errors"]
+      expect(data["name"]).to eq(["has already been taken"])
+    end
+
+    it "returns status not found" do
+      create :team
+      team_id = Team.maximum(:id) + 1
+      put "/api/v1/teams/#{team_id}", { team: team_data }, @header
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "does not allow a hidden team to be changed" do
+      put "/api/v1/teams/#{hidden_team.id}", { team: team_data }, @header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    context "non-admins are allowed to update teams" do
+      it "does allow to change the description by owners" do
+        team = create :team,
+                      name:        "somerandomone",
+                      description: "lala",
+                      owners:      [user]
+
+        put "/api/v1/teams/#{team.id}", { team: team_data }, @user_header
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context "non-admins are not allowed to update teams" do
+      before do
+        APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
+      end
+
+      it "prohibits owners from changing the description" do
+        team = create :team,
+                      name:        "somerandomone",
+                      description: "lala",
+                      owners:      [user]
+
+        put "/api/v1/teams/#{team.id}", { team: team_data }, @user_header
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "allows admins to change the description" do
+        team = create :team,
+                      name:        "somerandomone",
+                      description: "lala",
+                      owners:      [user]
+
+        put "/api/v1/teams/#{team.id}", { team: team_data }, @header
+        expect(response).to have_http_status(:success)
+      end
     end
   end
 end

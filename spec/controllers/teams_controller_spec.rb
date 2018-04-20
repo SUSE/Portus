@@ -92,60 +92,6 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  describe "PATCH #update" do
-    it "does not allow to change the description or the team name by viewers and contributers" do
-      disallowed_roles = %w[viewer contributer]
-      disallowed_roles.each do |role|
-        user = create(:user)
-        TeamUser.create(team: team, user: user, role: TeamUser.roles[role])
-        sign_in user
-        patch :update, id: team.id, team: { name:        "new name",
-                                            description: "new description" }, format: "js"
-        expect(response.status).to eq(401)
-      end
-    end
-
-    context "non-admins are allowed to update teams" do
-      it "does allow to change the description by owners" do
-        sign_in owner
-        patch :update, id: team.id, team: { name:        "new name",
-                                            description: "new description" }, format: "js"
-        expect(response.status).to eq(200)
-      end
-    end
-
-    context "non-admins are not allowed to update teams" do
-      before do
-        APP_CONFIG["user_permission"]["manage_team"]["enabled"] = false
-      end
-
-      it "prohibits owners from changing the description" do
-        sign_in owner
-
-        patch :update, id: team.id, team: { name:        "new name",
-                                            description: "new description" }, format: "js"
-        expect(response.status).to eq(401)
-      end
-
-      it "allows admins to change the description" do
-        admin = User.find_by(admin: true)
-        sign_in admin
-
-        patch :update, id: team.id, team: { name:        "new name",
-                                            description: "new description" }, format: "js"
-        expect(response.status).to eq(200)
-      end
-    end
-
-    it "does not allow a hidden team to be changed" do
-      sign_in owner
-
-      patch :update, id: hidden_team.id, team: { name:        "new name",
-                                                 description: "new description" }, format: "js"
-      expect(response.status).to eq(401)
-    end
-  end
-
   describe "typeahead" do
     it "does allow to search for valid users by owners" do
       sign_in owner

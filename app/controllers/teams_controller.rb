@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class TeamsController < ApplicationController
-  include ChangeNameDescription
-
-  before_action :set_team, only: %i[show update typeahead]
+  before_action :set_team, only: %i[show typeahead]
   after_action :verify_policy_scoped, only: :index
+
+  # TODO: remove
   respond_to :js, :html
 
   # GET /teams
@@ -36,13 +36,6 @@ class TeamsController < ApplicationController
       current_user: current_user,
       type:         :internal
     )
-  end
-
-  # PATCH/PUT /teams/1
-  # PATCH/PUT /teams/1.json
-  def update
-    p = params.require(:team).permit(:name, :description)
-    change_name_description(@team, :team, p, team: @team.name)
   end
 
   # GET /teams/1/typeahead/%QUERY

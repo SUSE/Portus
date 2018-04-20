@@ -14,16 +14,6 @@ module TeamsHelper
     current_user.admin? || APP_CONFIG.enabled?("user_permission.create_team")
   end
 
-  def role_within_team(team)
-    team_user = team.team_users.find_by(user_id: current_user.id)
-    if team_user
-      team_user.role.titleize
-    else
-      # That happens when the admin user access a team he's not part of
-      "-"
-    end
-  end
-
   # Render the namespace scope icon.
   def team_scope_icon(team)
     if team.team_users.enabled.count > 1

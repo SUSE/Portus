@@ -149,7 +149,7 @@ describe "Teams support" do
   end
 
   describe "teams#update" do
-    it "Team name can be updated", js: true do
+    it "Team name can be updated", focus: true, js: true do
       visit team_path(team)
 
       click_button "Edit team"

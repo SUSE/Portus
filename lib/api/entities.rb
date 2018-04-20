@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "api/helpers"
+
 module API
   # Entities is a module that groups all the classes to be used as Grape
   # entities.
@@ -150,9 +152,15 @@ module API
     # Teams & members
 
     class Teams < Grape::Entity
+      include ::API::Helpers::Teams
+
       expose :id, documentation: { type: Integer, desc: "Repository ID" }
       expose :name, documentation: { type: String, desc: "Repository name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :description, documentation: {
+        type: String,
+        desc: "The description of the team"
+      }
       expose :hidden, :updated_at, documentation: {
         type: "Boolean",
         desc: "Whether the team is visible to the final user or not"
@@ -161,11 +169,7 @@ module API
         type: String,
         desc: "The role this of the current user within this team"
       }, if: { type: :internal } do |team, options|
-        user = options[:current_user]
-
-        # TODO: partially taken from TeamsHelper. Avoid duplication!
-        team_user = team.team_users.find_by(user_id: user.id)
-        team_user&.role&.titleize
+        role_within_team(options[:current_user], team)
       end
       expose :users_count, documentation: {
         type: Integer,
@@ -222,9 +226,16 @@ module API
         type: String,
         desc: "The description of the namespace"
       }
+      expose :team, documentation: {
+        desc: "The ID and the name of the team containing this namespace"
+      } do |namespace|
+        namespace.team&.slice("id", "name")
+      end
+      # TODO: remove
       expose :team_name, documentation: {}, if: { type: :internal } do |n|
         n.team.name
       end
+      # TODO: remove
       expose :team_id, documentation: {
         type: Integer,
         desc: "The ID of the team containing this namespace"
