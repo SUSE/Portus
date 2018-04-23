@@ -1,30 +1,5 @@
-.team-details.panel-group ref="details"
-  - if can_manage_team?(@team)
-    .edit-team-form.collapse
-      = form_for @team, remote: true, html: {role: 'form'} do |f|
-        .panel.panel-default
-          .panel-heading
-            .input-group
-              = f.text_field(:name,
-                             class: 'form-control',
-                             placeholder: html_escape(@team.name),
-                             required: true,
-                             input_html: { tabindex: 1 })
-              .input-group-btn
-                button.btn.btn-xs.btn-link.edit-team-link type="button"
-                  i.fa.fa-close
-                  |  Edit team
-          .panel-body
-            = f.text_area(:description,
-                          class: 'form-control',
-                          placeholder: html_escape(@team.description),
-                          input_html: { tabindex: 2 })
-            br
-            = button_tag(type: 'submit', class: 'btn btn-primary pull-right') do
-              i.fa.fa-check
-              |  Save
-          .panel-footer
-  .panel.panel-default.team_information
+.team-details
+  .panel.panel-default
     .panel-heading
       .row
         .col-sm-6
@@ -38,21 +13,15 @@
                 i.fa.fa-info-circle
             strong
               span class="team_name"
-                '  #{@team.name}
-            |  team description
+                '  {{ team.name }}
+            |  team
 
         .col-sm-6.text-right
           - if can_manage_team?(@team)
-            button.btn.btn-link.btn-xs.edit-team-link
-              i.fa.fa-pencil
-              |  Edit team
-    .panel-body
-      .description
-        - if @team.description.blank?
-          p
-            'No description has been posted yet.
-        - else
-          = markdown(@team.description)
+            <toggle-link text="Edit team" :state="teamsState" state-key="editFormVisible" class="toggle-link-edit-team" true-icon="fa-close" false-icon="fa-pencil"></toggle-link>
 
-      .errors
-    .panel-footer
+    .panel-body
+      <team-info :team="team" v-if="!teamsState.editFormVisible"></team-info>
+
+      - if can_manage_team?(@team)
+        <team-edit-form :team="team" v-if="teamsState.editFormVisible" :visible="teamsState.editFormVisible"></team-edit-form>

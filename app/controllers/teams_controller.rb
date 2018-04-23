@@ -4,9 +4,6 @@ class TeamsController < ApplicationController
   before_action :set_team, only: %i[show typeahead]
   after_action :verify_policy_scoped, only: :index
 
-  # TODO: remove
-  respond_to :js, :html
-
   # GET /teams
   def index
     @teams = policy_scope(Team)
@@ -25,17 +22,22 @@ class TeamsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @team.hidden?
 
     authorize @team
-    @available_roles = TeamUser.roles.keys.map(&:titleize)
+    @available_roles = TeamUser.roles.keys.map(&:titleize).to_json
+    @team_serialized = API::Entities::Teams.represent(
+      @team,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     @team_users_serialized = API::Entities::TeamMembers.represent(
       @team.team_users.enabled,
       current_user: current_user,
       type:         :internal
-    )
+    ).to_json
     @team_namespaces_serialized = API::Entities::Namespaces.represent(
       @team.namespaces,
       current_user: current_user,
       type:         :internal
-    )
+    ).to_json
   end
 
   # GET /teams/1/typeahead/%QUERY

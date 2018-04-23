@@ -152,6 +152,7 @@ module API
     # Teams & members
 
     class Teams < Grape::Entity
+      include ::API::Helpers
       include ::API::Helpers::Teams
 
       expose :id, documentation: { type: Integer, desc: "Repository ID" }
@@ -161,6 +162,12 @@ module API
         type: String,
         desc: "The description of the team"
       }
+      expose :description_md, documentation: {
+        type: String,
+        desc: "The description of the team parsed by markdown"
+      }, if: { type: :internal } do |t|
+        markdown(t.description || "")
+      end
       expose :hidden, :updated_at, documentation: {
         type: "Boolean",
         desc: "Whether the team is visible to the final user or not"

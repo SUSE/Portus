@@ -32,6 +32,10 @@ function save(team) {
   return resource.save({}, team);
 }
 
+function update(team) {
+  return resource.update({ id: team.id }, { team });
+}
+
 function searchTeam(teamName, options = {}) {
   const params = Object.assign({ teamName }, options);
 
@@ -96,6 +100,7 @@ export default {
   get,
   all,
   save,
+  update,
   exists,
   destroyMember,
   updateMember,

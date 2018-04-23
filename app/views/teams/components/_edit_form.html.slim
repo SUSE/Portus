@@ -1,0 +1,14 @@
+= form_for :team, url: teams_path, html: {id: 'new-team-form', role: 'form', novalidate: true, ref: "form", "@submit.prevent" => "onSubmit"} do |f|
+  .form-group :class=="{ 'has-error': $v.teamCopy.name.$error }"
+    = f.label :name, {class: 'control-label'}
+    = f.text_field(:name, class: 'form-control', required: true, placeholder: "Team's name".html_safe, "@input" => "$v.teamCopy.name.$touch()", "v-model.trim" => "teamCopy.name")
+    span.help-block
+      span v-if="!$v.teamCopy.name.required"
+        | Name can't be blank
+      span v-if="!$v.teamCopy.name.available"
+        | Name is reserved or has already been taken
+  .form-group
+    = f.label :description, {class: 'control-label'}
+    = f.text_area(:description, class: 'form-control fixed-size', required: false, placeholder: "A short description of your team", "v-model" => "teamCopy.description")
+  .form-group
+    = f.submit('Save', class: 'btn btn-primary pull-right', ":disabled" => "$v.$invalid")

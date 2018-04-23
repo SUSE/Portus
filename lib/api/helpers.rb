@@ -5,6 +5,9 @@ require "api/helpers/errors"
 
 module API
   module Helpers
+    extend ActiveSupport::Concern
+
+    include ::ActionView::Helpers::SanitizeHelper
     include ::Portus::AuthFromToken
 
     include Errors
@@ -64,6 +67,28 @@ module API
       @permitted_params ||= declared(params,
                                      include_missing:           false,
                                      include_parent_namespaces: false)
+    end
+
+    # Render markdown to safe HTML.
+    # Images, unsafe link protocols and styles are not allowed to render.
+    # HTML-Tags will be filtered.
+    def markdown(text)
+      extensions = {
+        superscript:                  true,
+        disable_indented_code_blocks: true,
+        fenced_code_blocks:           true
+      }
+      render_options = {
+        filter_html:         true,
+        no_images:           true,
+        no_styles:           true,
+        safe_links_only:     true,
+        space_after_headers: true
+      }
+
+      renderer = Redcarpet::Render::HTML.new(render_options)
+      m = Redcarpet::Markdown.new(renderer, extensions)
+      sanitize(m.render(text))
     end
 
     # Helpers of teams

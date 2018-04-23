@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { required } from 'vuelidate/lib/validators';
 
 import { setTypeahead } from '~/utils/typeahead';
+import { handleHttpResponseError } from '~/utils/http';
 
 import NamespacesService from '../services/namespaces';
 
@@ -36,15 +37,7 @@ export default {
 
         this.$bus.$emit('namespaceUpdated', namespace);
         this.$alert.$show(`Namespace '${namespace.name}' was updated successfully`);
-      }).catch((response) => {
-        let errors = response.data;
-
-        if (Array.isArray(errors)) {
-          errors = errors.join('<br />');
-        }
-
-        this.$alert.$show(errors);
-      });
+      }).catch(handleHttpResponseError);
     },
   },
 

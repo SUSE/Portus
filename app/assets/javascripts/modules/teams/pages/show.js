@@ -2,6 +2,9 @@ import Vue from 'vue';
 
 import ToggleLink from '~/shared/components/toggle-link';
 
+import TeamEditForm from '../components/edit-form';
+import TeamInfo from '../components/info';
+
 import NamespacesPanel from '../../namespaces/components/panel';
 import NewNamespaceForm from '../../namespaces/components/new-form';
 
@@ -11,9 +14,6 @@ import TeamMembersPanel from '../components/members/panel';
 import NewTeamMemberForm from '../components/members/form';
 
 import TeamsStore from '../store';
-
-// legacy
-import TeamDetails from '../legacy-components/team-details';
 
 const { set } = Vue;
 
@@ -27,6 +27,8 @@ $(() => {
     el: 'body[data-route="teams/show"] .vue-root',
 
     components: {
+      TeamEditForm,
+      TeamInfo,
       NewNamespaceForm,
       NamespacesPanel,
       NewTeamMemberForm,
@@ -36,6 +38,7 @@ $(() => {
 
     data() {
       return {
+        team: window.team,
         teamsState: TeamsStore.state,
         namespaceState: NamespacesStore.state,
         namespaces: window.teamNamespaces,
@@ -97,6 +100,11 @@ $(() => {
           setTimeout(() => { window.location.href = this.teamsPath; }, 3000);
         }
       },
+
+      onTeamUpdate(team) {
+        set(this, 'team', team);
+        TeamsStore.setState('editFormVisible', false);
+      },
     },
 
     beforeMount() {
@@ -108,11 +116,7 @@ $(() => {
       this.$bus.$on('teamMemberAdded', member => this.onMemberAdd(member));
       this.$bus.$on('teamMemberDestroyed', teamMember => this.onMemberDestroy(teamMember));
       this.$bus.$on('teamMemberUpdated', teamMember => this.onMemberUpdate(teamMember));
-
-      // legacy
-      const $teamDetails = $(this.$refs.details);
-
-      this.teamDetails = new TeamDetails($teamDetails);
+      this.$bus.$on('teamUpdated', teamMember => this.onTeamUpdate(teamMember));
     },
   });
 });
