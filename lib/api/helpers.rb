@@ -72,7 +72,7 @@ module API
     end
 
     # Render markdown to safe HTML.
-    # Images, unsafe link protocols and styles are not allowed to render.
+    # Images, unsafe link protocols and styles are not allowed to be rendered.
     # HTML-Tags will be filtered.
     def markdown(text)
       return if text.blank?

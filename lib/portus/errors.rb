@@ -37,5 +37,9 @@ module Portus
 
     # Raised if this client does not have the credentials to perform an API call.
     class CredentialsMissingError < RuntimeError; end
+
+    # Used when a parameter of a request is invalid semantically speaking
+    # (e.g. an integer was passed instead of a string).
+    class UnprocessableEntity < RuntimeError; end
   end
 end

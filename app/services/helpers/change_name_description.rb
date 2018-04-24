@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Helpers
-  # TODO: documentation
+  # ChangeNameDescription adds a method which will properly handle updates on
+  # either the name or the description of the given object, while adding an
+  # activity for it.
   module ChangeNameDescription
     # Update the attributes name or description of a ActiveRecord-object.
     def change_name_description(object, symbol, params, activity_params = {})

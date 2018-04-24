@@ -25,6 +25,11 @@ module API
       header["Access-Control-Allow-Headers"] = "Content-Type, api_key, Authorization, portus-auth"
     end
 
+    ##
+    # Catching exceptions.
+
+    # Rails, Pundit & Grape exceptions.
+
     rescue_from ActiveRecord::RecordNotFound do
       not_found!
     end
@@ -41,7 +46,17 @@ module API
       forbidden!("Authorization fails")
     end
 
-    # global exception handler, used for error notifications
+    # Own exceptions.
+
+    rescue_from ::Portus::Errors::NotFoundError do |e|
+      not_found!(e.message)
+    end
+
+    rescue_from ::Portus::Errors::UnprocessableEntity do |e|
+      unprocessable_entity!(e.message)
+    end
+
+    # Global exception handler, used for error notifications
     rescue_from :all do |e|
       internal_server_error!(e)
     end
