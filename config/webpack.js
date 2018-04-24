@@ -64,8 +64,8 @@ var config = {
         include: path.join(ROOT_PATH, 'app/assets/javascripts'),
         loader: 'istanbul-instrumenter-loader',
         query: {
-          esModules: true,
-        },
+          esModules: true
+        }
       } : [],
       {
         test: /\.js$/,
@@ -103,7 +103,7 @@ if (IS_PRODUCTION) {
 if (IS_TEST) {
   // eslint-disable-next-line
   config.externals = [require('webpack-node-externals')()];
-  config.devtool = 'inline-cheap-module-source-map';
+  config.devtool = 'eval';
 }
 
 module.exports = config;

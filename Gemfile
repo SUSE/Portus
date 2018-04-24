@@ -100,10 +100,12 @@ end
 
 group :test do
   gem "capybara", "~> 2.14.3"
+  gem "chromedriver-helper"
   gem "codeclimate-test-reporter", group: :test, require: nil
   gem "docker-api", "~> 1.28.0"
   gem "json-schema"
   gem "poltergeist", "~> 1.15.0", require: false
+  gem "selenium-webdriver"
   gem "shoulda"
   gem "simplecov", "0.15.1", require: false
   gem "timecop"

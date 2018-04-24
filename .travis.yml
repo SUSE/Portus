@@ -21,8 +21,8 @@ before_install:
   - phantomjs --version
 
   # Use the latest stable Node.js
-  - nvm install stable
-  - nvm use stable
+  - nvm install 8.11.1
+  - nvm use 8.11.1
 
   # Install Yarn
   - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -44,6 +44,7 @@ before_install:
 before_script:
   - mysql -e 'create database portus_test;'
   - psql -c 'create database portus_test' -U postgres
+  - export DISPLAY=:99.0 && sh -e /etc/init.d/xvfb start && sleep 3
 
 script:
   - chmod +x bin/ci.sh && ./bin/ci.sh
@@ -73,3 +74,4 @@ addons:
     repo_token: 18a0cf6c35e0c801678f12f444051c33e0390ce0efa91ec06a2aa5068b10c19e
   mariadb: '10.2'
   postgresql: '9.6'
+  chrome: stable
