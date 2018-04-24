@@ -2,6 +2,7 @@
 
 require "portus/auth_from_token"
 require "api/helpers/errors"
+require "api/helpers/teams"
 
 module API
   module Helpers
@@ -11,6 +12,7 @@ module API
     include ::Portus::AuthFromToken
 
     include Errors
+    include Teams
 
     # On success it will fill the @user instance variable with the currently
     # authenticated user for the API. Otherwise it will raise:
@@ -73,6 +75,8 @@ module API
     # Images, unsafe link protocols and styles are not allowed to render.
     # HTML-Tags will be filtered.
     def markdown(text)
+      return if text.blank?
+
       extensions = {
         superscript:                  true,
         disable_indented_code_blocks: true,
@@ -89,22 +93,6 @@ module API
       renderer = Redcarpet::Render::HTML.new(render_options)
       m = Redcarpet::Markdown.new(renderer, extensions)
       sanitize(m.render(text))
-    end
-
-    # Helpers of teams
-    # TODO: move
-    module Teams
-      # Prettify the role of the given user within the given team. You can pass
-      # the value to be returned if this user does not belong to the team with
-      # the `empty` argument.
-      def role_within_team(user, team, empty = nil)
-        team_user = team.team_users.find_by(user_id: user.id)
-        if team_user
-          team_user.role.titleize
-        else
-          empty
-        end
-      end
     end
   end
 end

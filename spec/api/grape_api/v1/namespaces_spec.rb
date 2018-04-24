@@ -9,7 +9,7 @@ describe API::V1::Namespaces do
   let!(:viewer) { create(:user) }
   let!(:user) { create(:user) }
   let!(:admin_token) { create(:application_token, user: admin) }
-  let!(:owner_token) { create(:application_token, user: contributor) }
+  let!(:owner_token) { create(:application_token, user: owner) }
   let!(:contributor_token) { create(:application_token, user: contributor) }
   let!(:viewer_token) { create(:application_token, user: viewer) }
   let!(:user_token) { create(:application_token, user: user) }
@@ -291,9 +291,9 @@ describe API::V1::Namespaces do
       n2 = create :namespace, registry: registry
 
       put "/api/v1/namespaces/#{n.id}", { namespace: { name: n2.name } }, @admin_header
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
 
-      data = JSON.parse(response.body)["errors"]
+      data = JSON.parse(response.body)["message"]
       expect(data["name"]).to eq(["has already been taken"])
     end
 
@@ -325,9 +325,9 @@ describe API::V1::Namespaces do
       put "/api/v1/namespaces/#{namespace.id}",
           { namespace: { team: team.name + "a" } },
           @admin_header
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
 
-      data = JSON.parse(response.body)["errors"]
+      data = JSON.parse(response.body)["message"]
       expect(data["team"]).to eq(["'#{team.name}a' unknown."])
     end
 
@@ -347,17 +347,45 @@ describe API::V1::Namespaces do
 
     context "non-admins are allowed to update namespaces" do
       it "does allow to change the description by owners" do
-        namespace = create :namespace, team: team
-        put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @owner_header
+        namespace       = create :namespace, team: team
+        old_description = namespace.description
+
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @owner_header
+        end.to change(PublicActivity::Activity, :count).by(2)
         expect(response).to have_http_status(:success)
+
+        # Tracks the activity
+
+        namespace_description_activity = PublicActivity::Activity.find_by(
+          key: "namespace.change_namespace_description"
+        )
+        expect(namespace_description_activity.owner).to eq(owner)
+        expect(namespace_description_activity.trackable).to eq(namespace)
+        expect(namespace_description_activity.parameters[:old]).to eq(old_description)
+        expect(namespace_description_activity.parameters[:new]).to eq(namespace_data[:description])
       end
 
       it "changes the team if needed" do
         namespace = create :namespace, team: team
         team2 = create(:team)
 
-        put "/api/v1/namespaces/#{namespace.id}", { namespace: { team: team2.name } }, @owner_header
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}",
+              { namespace: { team: team2.name } },
+              @owner_header
+        end.to change(PublicActivity::Activity, :count).by(1)
         expect(response).to have_http_status(:success)
+
+        # Tracks the activity
+
+        namespace_change_team_activity = PublicActivity::Activity.find_by(
+          key: "namespace.change_team"
+        )
+        expect(namespace_change_team_activity.owner).to eq(owner)
+        expect(namespace_change_team_activity.trackable).to eq(namespace)
+        expect(namespace_change_team_activity.parameters[:old]).to eq(team.id)
+        expect(namespace_change_team_activity.parameters[:new]).to eq(team2.id)
       end
 
       # TODO: change visibility might be buggy
@@ -370,7 +398,9 @@ describe API::V1::Namespaces do
 
       it "does not allow to change the description by owners" do
         namespace = create :namespace, team: team
-        put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @owner_header
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @owner_header
+        end.to change(PublicActivity::Activity, :count).by(0)
         expect(response).to have_http_status(:forbidden)
       end
 
@@ -378,7 +408,11 @@ describe API::V1::Namespaces do
         namespace = create :namespace, team: team
         team2 = create(:team)
 
-        put "/api/v1/namespaces/#{namespace.id}", { namespace: { team: team2.name } }, @owner_header
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}",
+              { namespace: { team: team2.name } },
+              @owner_header
+        end.to change(PublicActivity::Activity, :count).by(0)
         expect(response).to have_http_status(:forbidden)
       end
 

@@ -54,7 +54,7 @@ class NamespacePolicy
 
   def update?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    (user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") ||
+    (user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
                      namespace.team.owners.exists?(user.id))) && push?
   end
 
@@ -69,7 +69,7 @@ class NamespacePolicy
   # Only owners and admins can change the team ownership.
   def change_team?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") ||
+    user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
                     namespace.team.owners.exists?(user.id))
   end
 

@@ -82,7 +82,7 @@
         return this.namespaces.filter((n) => {
           return !n.global &&
                  n.id !== this.userNamespaceId &&
-                 this.accessibleTeamsIds.indexOf(n.team_id) === -1;
+                 this.accessibleTeamsIds.indexOf(n.team.id) === -1;
         });
       },
 
@@ -91,7 +91,7 @@
         return this.namespaces.filter((n) => {
           return !n.global &&
                  n.id !== this.userNamespaceId &&
-                 this.accessibleTeamsIds.indexOf(n.team_id) !== -1;
+                 this.accessibleTeamsIds.indexOf(n.team.id) !== -1;
         });
       },
 

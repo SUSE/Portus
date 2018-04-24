@@ -20,7 +20,7 @@ export default {
     return {
       model: {
         namespace: {
-          team: this.namespace.team_name,
+          team: this.namespace.team.name,
           description: this.namespace.description,
         },
       },
@@ -50,7 +50,7 @@ export default {
             clearTimeout(this.timeout.team);
 
             // required already taking care of this
-            if (value === '' || value === this.namespace.team_name) {
+            if (value === '' || value === this.namespace.team.name) {
               return true;
             }
 

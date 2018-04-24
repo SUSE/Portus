@@ -155,8 +155,8 @@ module API
       include ::API::Helpers
       include ::API::Helpers::Teams
 
-      expose :id, documentation: { type: Integer, desc: "Repository ID" }
-      expose :name, documentation: { type: String, desc: "Repository name" }
+      expose :id, documentation: { type: Integer, desc: "Team ID" }
+      expose :name, documentation: { type: String, desc: "Team name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
       expose :description, documentation: {
         type: String,
@@ -166,7 +166,7 @@ module API
         type: String,
         desc: "The description of the team parsed by markdown"
       }, if: { type: :internal } do |t|
-        markdown(t.description || "")
+        markdown(t.description)
       end
       expose :hidden, :updated_at, documentation: {
         type: "Boolean",
@@ -226,6 +226,8 @@ module API
     # Namespaces
 
     class Namespaces < Grape::Entity
+      include ::API::Helpers
+
       expose :id, documentation: { type: Integer, desc: "Namespace ID" }
       expose :clean_name, as: :name, documentation: { type: String, desc: "Namespace name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
@@ -233,20 +235,17 @@ module API
         type: String,
         desc: "The description of the namespace"
       }
+      expose :description_md, documentation: {
+        type: String,
+        desc: "The description of the namespace parsed by markdown"
+      }, if: { type: :internal } do |n|
+        markdown(n.description)
+      end
       expose :team, documentation: {
         desc: "The ID and the name of the team containing this namespace"
       } do |namespace|
         namespace.team&.slice("id", "name")
       end
-      # TODO: remove
-      expose :team_name, documentation: {}, if: { type: :internal } do |n|
-        n.team.name
-      end
-      # TODO: remove
-      expose :team_id, documentation: {
-        type: Integer,
-        desc: "The ID of the team containing this namespace"
-      }
       expose :repositories_count, documentation: {
         type: Integer,
         desc: "The number of repositories that belong to this namespace"

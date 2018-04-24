@@ -370,12 +370,32 @@ describe API::V1::Teams do
     it "updates team" do
       team = create :team, name: "somerandomone", description: "lala"
 
-      put "/api/v1/teams/#{team.id}", { team: team_data }, @header
+      expect do
+        put "/api/v1/teams/#{team.id}", { team: team_data }, @admin_header
+      end.to change(PublicActivity::Activity, :count).by(2)
       expect(response).to have_http_status(:success)
 
       t = Team.find(team.id)
       expect(t.name).to eq(team_data[:name])
       expect(t.description).to eq(team_data[:description])
+
+      # Tracks activity
+
+      team_description_activity = PublicActivity::Activity.find_by(
+        key: "team.change_team_description"
+      )
+      expect(team_description_activity.owner).to eq(admin)
+      expect(team_description_activity.trackable).to eq(team)
+      expect(team_description_activity.parameters[:old]).to eq("lala")
+      expect(team_description_activity.parameters[:new]).to eq(team_data[:description])
+
+      team_name_activity = PublicActivity::Activity.find_by(
+        key: "team.change_team_name"
+      )
+      expect(team_name_activity.owner).to eq(admin)
+      expect(team_name_activity.trackable).to eq(team)
+      expect(team_name_activity.parameters[:old]).to eq("somerandomone")
+      expect(team_name_activity.parameters[:new]).to eq("team")
     end
 
     it "does not allow viewers or contributors to update" do
@@ -393,22 +413,22 @@ describe API::V1::Teams do
       t = create :team
       t2 = create :team
 
-      put "/api/v1/teams/#{t.id}", { team: { name: t2.name } }, @header
-      expect(response).to have_http_status(:bad_request)
+      put "/api/v1/teams/#{t.id}", { team: { name: t2.name } }, @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
 
-      data = JSON.parse(response.body)["errors"]
+      data = JSON.parse(response.body)["message"]
       expect(data["name"]).to eq(["has already been taken"])
     end
 
     it "returns status not found" do
       create :team
       team_id = Team.maximum(:id) + 1
-      put "/api/v1/teams/#{team_id}", { team: team_data }, @header
+      put "/api/v1/teams/#{team_id}", { team: team_data }, @admin_header
       expect(response).to have_http_status(:not_found)
     end
 
     it "does not allow a hidden team to be changed" do
-      put "/api/v1/teams/#{hidden_team.id}", { team: team_data }, @header
+      put "/api/v1/teams/#{hidden_team.id}", { team: team_data }, @admin_header
       expect(response).to have_http_status(:forbidden)
     end
 
@@ -445,7 +465,7 @@ describe API::V1::Teams do
                       description: "lala",
                       owners:      [user]
 
-        put "/api/v1/teams/#{team.id}", { team: team_data }, @header
+        put "/api/v1/teams/#{team.id}", { team: team_data }, @admin_header
         expect(response).to have_http_status(:success)
       end
     end

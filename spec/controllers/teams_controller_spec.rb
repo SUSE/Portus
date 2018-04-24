@@ -72,7 +72,7 @@ RSpec.describe TeamsController, type: :controller do
 
       expect(response.status).to eq 200
       expect(TeamUser.count).to be 6
-      expect(assigns(:team_users_serialized).count).to be 1
+      expect(JSON.parse(assigns(:team_users_serialized)).size).to be 1
     end
   end
 
@@ -142,52 +142,6 @@ RSpec.describe TeamsController, type: :controller do
       teams = JSON.parse(response.body)
       expect(teams.size).to eq(1)
       expect(teams.first["name"]).to eq(team.name)
-    end
-  end
-
-  describe "activity tracking" do
-    before do
-      sign_in owner
-    end
-
-    it "editing of a team description" do
-      old_description = team.description
-      expect do
-        patch :update, id: team.id, team: { name:        team.name,
-                                            description: "new description" }, format: "js"
-      end.to change(PublicActivity::Activity, :count).by(1)
-
-      team_description_activity = PublicActivity::Activity.find_by(
-        key: "team.change_team_description"
-      )
-      expect(team_description_activity.owner).to eq(owner)
-      expect(team_description_activity.trackable).to eq(team)
-      expect(team_description_activity.parameters[:old]).to eq(old_description)
-      expect(team_description_activity.parameters[:new]).to eq("new description")
-    end
-
-    it "editing of the team name" do
-      old_name = team.name
-      expect do
-        team_attributes = { name: "new name", description: team.description }
-        patch :update, id: team.id, team: team_attributes, format: "js"
-      end.to change(PublicActivity::Activity, :count).by(1)
-
-      team_name_activity = PublicActivity::Activity.find_by(
-        key: "team.change_team_name"
-      )
-      expect(team_name_activity.owner).to eq(owner)
-      expect(team_name_activity.trackable).to eq(team)
-      expect(team_name_activity.parameters[:old]).to eq(old_name)
-      expect(team_name_activity.parameters[:new]).to eq("new name")
-    end
-
-    it "does not track activity if team name exists" do
-      team2 = create(:team, owners: [owner])
-      expect do
-        team_attributes = { name: team2.name, description: team.description }
-        patch :update, id: team.id, team: team_attributes, format: "js"
-      end.not_to change(PublicActivity::Activity, :count)
     end
   end
 end

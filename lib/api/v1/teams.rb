@@ -87,10 +87,12 @@ module API
           authorize team, :update?
 
           if ts.execute
-            team.reload
+            present team.reload,
+                    with:         API::Entities::Teams,
+                    current_user: current_user,
+                    type:         current_type
           else
-            status 400
-            { errors: team.errors.messages }
+            unprocessable_entity!(team.errors.messages)
           end
         end
 

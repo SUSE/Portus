@@ -117,10 +117,12 @@ module API
           authorize namespace, :change_team? if ns.wants_to_change_team?
 
           if ns.execute
-            namespace.reload
+            present namespace.reload,
+                    with:         API::Entities::Namespaces,
+                    current_user: current_user,
+                    type:         current_type
           else
-            status 400
-            { errors: namespace.errors.messages }
+            unprocessable_entity!(namespace.errors.messages)
           end
         end
 
