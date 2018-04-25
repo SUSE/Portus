@@ -9,7 +9,7 @@ describe API::V1::Namespaces do
   let!(:viewer) { create(:user) }
   let!(:user) { create(:user) }
   let!(:admin_token) { create(:application_token, user: admin) }
-  let!(:owner_token) { create(:application_token, user: contributor) }
+  let!(:owner_token) { create(:application_token, user: owner) }
   let!(:contributor_token) { create(:application_token, user: contributor) }
   let!(:viewer_token) { create(:application_token, user: viewer) }
   let!(:user_token) { create(:application_token, user: user) }
@@ -262,6 +262,171 @@ describe API::V1::Namespaces do
 
       data = JSON.parse(response.body)
       expect(data["valid"]).to be_truthy
+    end
+  end
+
+  context "PUT /api/v1/namespaces/:id" do
+    let!(:registry) { create(:registry) }
+
+    let(:namespace_data) do
+      {
+        name:        "team",
+        description: "description"
+      }
+    end
+
+    it "updates namespace" do
+      namespace = create :namespace, name: "somerandomone", description: "lala"
+
+      put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @admin_header
+      expect(response).to have_http_status(:success)
+
+      n = Namespace.find(namespace.id)
+      expect(n.name).to eq(namespace_data[:name])
+      expect(n.description).to eq(namespace_data[:description])
+    end
+
+    it "returns duplicate namespace name" do
+      n = create :namespace, registry: registry
+      n2 = create :namespace, registry: registry
+
+      put "/api/v1/namespaces/#{n.id}", { namespace: { name: n2.name } }, @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      data = JSON.parse(response.body)["message"]
+      expect(data["name"]).to eq(["has already been taken"])
+    end
+
+    it "returns status not found" do
+      create :namespace
+      namespace_id = Namespace.maximum(:id) + 1
+      put "/api/v1/namespaces/#{namespace_id}", { namespace: namespace_data }, @admin_header
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "changes the team successfully" do
+      team = create :team
+      team2 = create :team
+      namespace = create :namespace, team: team
+
+      put "/api/v1/namespaces/#{namespace.id}",
+          { namespace: { team: team2.name } },
+          @admin_header
+      expect(response).to have_http_status(:success)
+
+      n = Namespace.find(namespace.id)
+      expect(n.team.id).to eq(team2.id)
+    end
+
+    it "fails to change to a non-existant team" do
+      team = create :team
+      namespace = create :namespace, team: team
+
+      put "/api/v1/namespaces/#{namespace.id}",
+          { namespace: { team: team.name + "a" } },
+          @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      data = JSON.parse(response.body)["message"]
+      expect(data["team"]).to eq(["'#{team.name}a' unknown."])
+    end
+
+    it "does not allow to change the team by viewers" do
+      namespace = create :namespace, team: team
+      team2 = create(:team)
+
+      put "/api/v1/namespaces/#{namespace.id}", { namespace: { team: team2.name } }, @viewer_header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "does not allow to change the description by viewers" do
+      namespace = create :namespace, team: team
+      put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @viewer_header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    context "non-admins are allowed to update namespaces" do
+      it "does allow to change the description by owners" do
+        namespace       = create :namespace, team: team
+        old_description = namespace.description
+
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @owner_header
+        end.to change(PublicActivity::Activity, :count).by(2)
+        expect(response).to have_http_status(:success)
+
+        # Tracks the activity
+
+        namespace_description_activity = PublicActivity::Activity.find_by(
+          key: "namespace.change_namespace_description"
+        )
+        expect(namespace_description_activity.owner).to eq(owner)
+        expect(namespace_description_activity.trackable).to eq(namespace)
+        expect(namespace_description_activity.parameters[:old]).to eq(old_description)
+        expect(namespace_description_activity.parameters[:new]).to eq(namespace_data[:description])
+      end
+
+      it "changes the team if needed" do
+        namespace = create :namespace, team: team
+        team2 = create(:team)
+
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}",
+              { namespace: { team: team2.name } },
+              @owner_header
+        end.to change(PublicActivity::Activity, :count).by(1)
+        expect(response).to have_http_status(:success)
+
+        # Tracks the activity
+
+        namespace_change_team_activity = PublicActivity::Activity.find_by(
+          key: "namespace.change_team"
+        )
+        expect(namespace_change_team_activity.owner).to eq(owner)
+        expect(namespace_change_team_activity.trackable).to eq(namespace)
+        expect(namespace_change_team_activity.parameters[:old]).to eq(team.id)
+        expect(namespace_change_team_activity.parameters[:new]).to eq(team2.id)
+      end
+
+      # TODO: change visibility might be buggy
+    end
+
+    context "non-admins are not allowed to update namespaces" do
+      before do
+        APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
+      end
+
+      it "does not allow to change the description by owners" do
+        namespace = create :namespace, team: team
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @owner_header
+        end.to change(PublicActivity::Activity, :count).by(0)
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "does not change the team" do
+        namespace = create :namespace, team: team
+        team2 = create(:team)
+
+        expect do
+          put "/api/v1/namespaces/#{namespace.id}",
+              { namespace: { team: team2.name } },
+              @owner_header
+        end.to change(PublicActivity::Activity, :count).by(0)
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      context "when option user_permission.push_images" do
+        before do
+          APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-personal"
+        end
+
+        it "raises an authorization error when trying to change to a non-existing team" do
+          namespace = create :namespace, team: team
+          put "/api/v1/namespaces/#{namespace.id}", { namespace: { team: "a" } }, @owner_header
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
     end
   end
 end

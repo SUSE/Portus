@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { required } from 'vuelidate/lib/validators';
 
 import { setTypeahead } from '~/utils/typeahead';
+import { handleHttpResponseError } from '~/utils/http';
 
 import NamespacesService from '../services/namespaces';
 
@@ -19,7 +20,7 @@ export default {
     return {
       model: {
         namespace: {
-          team: this.namespace.team_name,
+          team: this.namespace.team.name,
           description: this.namespace.description,
         },
       },
@@ -36,15 +37,7 @@ export default {
 
         this.$bus.$emit('namespaceUpdated', namespace);
         this.$alert.$show(`Namespace '${namespace.name}' was updated successfully`);
-      }).catch((response) => {
-        let errors = response.data;
-
-        if (Array.isArray(errors)) {
-          errors = errors.join('<br />');
-        }
-
-        this.$alert.$show(errors);
-      });
+      }).catch(handleHttpResponseError);
     },
   },
 
@@ -57,7 +50,7 @@ export default {
             clearTimeout(this.timeout.team);
 
             // required already taking care of this
-            if (value === '' || value === this.namespace.team_name) {
+            if (value === '' || value === this.namespace.team.name) {
               return true;
             }
 

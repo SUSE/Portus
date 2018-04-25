@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-resources :teams, only: %i[index show update] do
+resources :teams, only: %i[index show] do
   member do
     get "typeahead/:query" => "teams#typeahead", :defaults => { format: "json" }
   end

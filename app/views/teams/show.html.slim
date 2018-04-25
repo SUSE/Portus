@@ -7,8 +7,9 @@
 
 - content_for :js_header do
   javascript:
-    window.teamMembers = #{raw @team_users_serialized.to_json};
-    window.teamNamespaces = #{raw @team_namespaces_serialized.to_json};
-    window.availableRoles = #{raw @available_roles.to_json};
+    window.team = #{raw @team_serialized};
+    window.teamMembers = #{raw @team_users_serialized};
+    window.teamNamespaces = #{raw @team_namespaces_serialized};
+    window.availableRoles = #{raw @available_roles};
     window.manageTeamsEnabled = #{manage_teams_enabled?};
     window.teamsPath = '#{teams_path}';

@@ -152,8 +152,7 @@ describe "Teams support" do
     it "Team name can be updated", js: true do
       visit team_path(team)
 
-      click_button "Edit team"
-      expect(page).to have_css("form.edit_team")
+      find(".toggle-link-edit-team").click
 
       new_team_name = "New #{team.name}"
       fill_in "team[name]", with: new_team_name

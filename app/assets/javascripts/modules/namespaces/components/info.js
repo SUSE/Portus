@@ -1,5 +1,5 @@
 export default {
-  template: '#js-namespace-info-tmpl',
+  template: '<div v-html="description"></div>',
 
   props: ['namespace'],
 
@@ -9,7 +9,7 @@ export default {
         return 'No description has been posted yet';
       }
 
-      return this.namespace.description;
+      return this.namespace.description_md;
     },
   },
 };

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "api/helpers"
+
 module API
   # Entities is a module that groups all the classes to be used as Grape
   # entities.
@@ -150,9 +152,22 @@ module API
     # Teams & members
 
     class Teams < Grape::Entity
-      expose :id, documentation: { type: Integer, desc: "Repository ID" }
-      expose :name, documentation: { type: String, desc: "Repository name" }
+      include ::API::Helpers
+      include ::API::Helpers::Teams
+
+      expose :id, documentation: { type: Integer, desc: "Team ID" }
+      expose :name, documentation: { type: String, desc: "Team name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :description, documentation: {
+        type: String,
+        desc: "The description of the team"
+      }
+      expose :description_md, documentation: {
+        type: String,
+        desc: "The description of the team parsed by markdown"
+      }, if: { type: :internal } do |t|
+        markdown(t.description)
+      end
       expose :hidden, :updated_at, documentation: {
         type: "Boolean",
         desc: "Whether the team is visible to the final user or not"
@@ -161,11 +176,7 @@ module API
         type: String,
         desc: "The role this of the current user within this team"
       }, if: { type: :internal } do |team, options|
-        user = options[:current_user]
-
-        # TODO: partially taken from TeamsHelper. Avoid duplication!
-        team_user = team.team_users.find_by(user_id: user.id)
-        team_user&.role&.titleize
+        role_within_team(options[:current_user], team)
       end
       expose :users_count, documentation: {
         type: Integer,
@@ -215,6 +226,8 @@ module API
     # Namespaces
 
     class Namespaces < Grape::Entity
+      include ::API::Helpers
+
       expose :id, documentation: { type: Integer, desc: "Namespace ID" }
       expose :clean_name, as: :name, documentation: { type: String, desc: "Namespace name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
@@ -222,13 +235,17 @@ module API
         type: String,
         desc: "The description of the namespace"
       }
-      expose :team_name, documentation: {}, if: { type: :internal } do |n|
-        n.team.name
+      expose :description_md, documentation: {
+        type: String,
+        desc: "The description of the namespace parsed by markdown"
+      }, if: { type: :internal } do |n|
+        markdown(n.description)
       end
-      expose :team_id, documentation: {
-        type: Integer,
-        desc: "The ID of the team containing this namespace"
-      }
+      expose :team, documentation: {
+        desc: "The ID and the name of the team containing this namespace"
+      } do |namespace|
+        namespace.team&.slice("id", "name")
+      end
       expose :repositories_count, documentation: {
         type: Integer,
         desc: "The number of repositories that belong to this namespace"

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module TeamsHelper
+  include ::API::Helpers::Teams
+
   def manage_teams_enabled?
     APP_CONFIG.enabled?("user_permission.manage_team")
   end
@@ -12,16 +14,6 @@ module TeamsHelper
 
   def can_create_team?
     current_user.admin? || APP_CONFIG.enabled?("user_permission.create_team")
-  end
-
-  def role_within_team(team)
-    team_user = team.team_users.find_by(user_id: current_user.id)
-    if team_user
-      team_user.role.titleize
-    else
-      # That happens when the admin user access a team he's not part of
-      "-"
-    end
   end
 
   # Render the namespace scope icon.

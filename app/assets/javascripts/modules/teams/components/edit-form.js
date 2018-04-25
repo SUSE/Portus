@@ -1,8 +1,6 @@
 import Vue from 'vue';
 
-import { required, requiredIf } from 'vuelidate/lib/validators';
-
-import FormMixin from '~/shared/mixins/form';
+import { required } from 'vuelidate/lib/validators';
 
 import { handleHttpResponseError } from '~/utils/http';
 
@@ -11,16 +9,13 @@ import TeamsService from '../service';
 const { set } = Vue;
 
 export default {
-  template: '#js-team-new-form-tmpl',
+  template: '#js-team-edit-form-tmpl',
 
-  mixins: [FormMixin],
+  props: ['team', 'visible'],
 
   data() {
     return {
-      team: {
-        name: '',
-        owner_id: null,
-      },
+      teamCopy: {},
       timeout: {
         name: null,
       },
@@ -29,36 +24,36 @@ export default {
 
   methods: {
     onSubmit() {
-      TeamsService.save(this.team).then((response) => {
+      TeamsService.update(this.teamCopy).then((response) => {
         const team = response.data;
 
-        this.toggleForm();
-        this.$v.$reset();
-        set(this, 'team', {
-          name: '',
-        });
 
-        this.$bus.$emit('teamCreated', team);
-        this.$alert.$show(`Team '${team.name}' was created successfully`);
+        this.$bus.$emit('teamUpdated', team);
+        this.$alert.$show(`Team '${team.name}' was updated successfully`);
       }).catch(handleHttpResponseError);
+    },
+
+    copyOriginal() {
+      set(this, 'teamCopy', { ...this.team });
+    },
+  },
+
+  watch: {
+    visible: {
+      handler: 'copyOriginal',
+      immediate: true,
     },
   },
 
   validations: {
-    team: {
-      owner_id: {
-        required: requiredIf(function () {
-          return window.isAdmin;
-        }),
-      },
-
+    teamCopy: {
       name: {
         required,
         available(value) {
           clearTimeout(this.timeout.name);
 
           // required already taking care of this
-          if (value === '') {
+          if (value === '' || value === this.team.name) {
             return true;
           }
 

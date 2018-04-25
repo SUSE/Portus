@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 class TeamsController < ApplicationController
-  include ChangeNameDescription
-
-  before_action :set_team, only: %i[show update typeahead]
+  before_action :set_team, only: %i[show typeahead]
   after_action :verify_policy_scoped, only: :index
-  respond_to :js, :html
 
   # GET /teams
   def index
@@ -25,24 +22,22 @@ class TeamsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @team.hidden?
 
     authorize @team
-    @available_roles = TeamUser.roles.keys.map(&:titleize)
+    @available_roles = TeamUser.roles.keys.map(&:titleize).to_json
+    @team_serialized = API::Entities::Teams.represent(
+      @team,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     @team_users_serialized = API::Entities::TeamMembers.represent(
       @team.team_users.enabled,
       current_user: current_user,
       type:         :internal
-    )
+    ).to_json
     @team_namespaces_serialized = API::Entities::Namespaces.represent(
       @team.namespaces,
       current_user: current_user,
       type:         :internal
-    )
-  end
-
-  # PATCH/PUT /teams/1
-  # PATCH/PUT /teams/1.json
-  def update
-    p = params.require(:team).permit(:name, :description)
-    change_name_description(@team, :team, p, team: @team.name)
+    ).to_json
   end
 
   # GET /teams/1/typeahead/%QUERY

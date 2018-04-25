@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class NamespacesController < ApplicationController
-  include ChangeNameDescription
-
-  before_action :set_namespace, only: %i[change_visibility show update]
+  before_action :set_namespace, only: %i[change_visibility show]
 
   after_action :verify_authorized, except: %i[index typeahead]
   after_action :verify_policy_scoped, only: :index
@@ -29,29 +27,6 @@ class NamespacesController < ApplicationController
     ).to_json
 
     respond_with(@namespace)
-  end
-
-  # PATCH/PUT /namespace/1
-  # PATCH/PUT /namespace/1.json
-  def update
-    p = params.require(:namespace).permit(:name, :description, :team)
-
-    change_name_description(@namespace, :namespace, p)
-    change_team(p)
-
-    respond_to do |format|
-      format.json do
-        if @namespace.errors.any?
-          render json: @namespace.errors.full_messages, status: :unprocessable_entity
-        else
-          render json: API::Entities::Namespaces.represent(
-            @namespace,
-            current_user: current_user,
-            type:         :internal
-          )
-        end
-      end
-    end
   end
 
   # GET /namespace/typeahead/%QUERY
@@ -90,22 +65,6 @@ class NamespacesController < ApplicationController
   end
 
   private
-
-  def change_team(parameters)
-    # Update the team if needed/authorized.
-    return if parameters[:team].blank? || parameters[:team] == @namespace.team.name
-    authorize @namespace, :change_team?
-
-    @team = Team.find_by(name: parameters[:team])
-    if @team.nil?
-      @namespace.errors[:team_id] << "'#{parameters[:team]}' unknown."
-    else
-      @namespace.create_activity :change_team,
-                                 owner:      current_user,
-                                 parameters: { old: @namespace.team.id, new: @team.id }
-      @namespace.update(team: @team)
-    end
-  end
 
   # Normalizes visibility parameter
   def visibility_param

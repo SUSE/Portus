@@ -83,6 +83,49 @@ module API
           end
         end
 
+        # Update namespace with given :id.
+        desc "Update namespace",
+             params:   API::Entities::Namespaces.documentation.slice(:id),
+             failure:  [
+               [400, "Bad request.", API::Entities::ApiErrors],
+               [401, "Authentication fails."],
+               [403, "Authorization fails."],
+               [404, "Not found."]
+             ],
+             consumes: ["application/x-www-form-urlencoded", "application/json"]
+
+        params do
+          requires :namespace, type: Hash do
+            optional :all,
+                     only:  [:name],
+                     using: API::Entities::Namespaces.documentation.slice(:name)
+            optional :all,
+                     only:  [:description],
+                     using: API::Entities::Namespaces.documentation.slice(:description)
+            optional :all,
+                     only:  [:team],
+                     using: API::Entities::Namespaces.documentation.slice(:team)
+          end
+        end
+
+        put ":id" do
+          attrs = permitted_params.merge(id: params[:id])
+          ns = ::Namespaces::UpdateService.new(current_user, attrs)
+          namespace = ns.build
+
+          authorize namespace, :update?
+          authorize namespace, :change_team? if ns.wants_to_change_team?
+
+          if ns.execute
+            present namespace.reload,
+                    with:         API::Entities::Namespaces,
+                    current_user: current_user,
+                    type:         current_type
+          else
+            unprocessable_entity!(namespace.errors.messages)
+          end
+        end
+
         route_param :id, type: Integer, requirements: { id: /.*/ } do
           resource :repositories do
             desc "Returns the list of the repositories for the given namespace",

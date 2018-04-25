@@ -51,7 +51,7 @@ function save(namespace) {
 }
 
 function update(id, namespace) {
-  return oldResource.update({ id }, namespace);
+  return resource.update({ id }, namespace);
 }
 
 function teamExists(value) {
