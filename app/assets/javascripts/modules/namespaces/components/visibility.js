@@ -59,7 +59,7 @@ export default {
       set(this, 'onGoingRequest', true);
       set(this, 'newVisibility', visibility);
 
-      NamespacesService.changeVisibility(this.namespace.id, { visibility }).then(() => {
+      NamespacesService.update(this.namespace.id, { namespace: { visibility } }).then(() => {
         set(this.namespace, 'visibility', visibility);
         this.$alert.$show(`Visibility of '${this.namespace.name}' namespace updated`);
       }).catch(() => {

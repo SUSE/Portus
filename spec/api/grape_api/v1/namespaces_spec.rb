@@ -271,7 +271,8 @@ describe API::V1::Namespaces do
     let(:namespace_data) do
       {
         name:        "team",
-        description: "description"
+        description: "description",
+        visibility:  "public"
       }
     end
 
@@ -284,6 +285,19 @@ describe API::V1::Namespaces do
       n = Namespace.find(namespace.id)
       expect(n.name).to eq(namespace_data[:name])
       expect(n.description).to eq(namespace_data[:description])
+      expect(n.visibility).to eq("visibility_public")
+    end
+
+    # Private has a 0 value, and it might be tricky to handle on the server.
+    it "can change to private visibility" do
+      namespace = create :namespace, visibility: Namespace.visibilities[:visibility_public]
+
+      params = { namespace: { visibility: "private" } }
+      put "/api/v1/namespaces/#{namespace.id}", params, @admin_header
+      expect(response).to have_http_status(:success)
+
+      n = Namespace.find(namespace.id)
+      expect(n.visibility).to eq("visibility_private")
     end
 
     it "returns duplicate namespace name" do
@@ -322,13 +336,12 @@ describe API::V1::Namespaces do
       team = create :team
       namespace = create :namespace, team: team
 
-      put "/api/v1/namespaces/#{namespace.id}",
-          { namespace: { team: team.name + "a" } },
-          @admin_header
-      expect(response).to have_http_status(:unprocessable_entity)
+      params = { namespace: { team: team.name + "a" } }
+      put "/api/v1/namespaces/#{namespace.id}", params, @admin_header
+      expect(response).to have_http_status(:not_found)
 
-      data = JSON.parse(response.body)["message"]
-      expect(data["team"]).to eq(["'#{team.name}a' unknown."])
+      msg = JSON.parse(response.body)["message"]
+      expect(msg).to eq("unknown team '#{team.name}a'")
     end
 
     it "does not allow to change the team by viewers" do
@@ -345,6 +358,13 @@ describe API::V1::Namespaces do
       expect(response).to have_http_status(:forbidden)
     end
 
+    it "returns a 422 for unknown visibilities" do
+      namespace = create :namespace, team: team
+      bad_visibility = { namespace: { visibility: "whatever" } }
+      put "/api/v1/namespaces/#{namespace.id}", bad_visibility, @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
     context "non-admins are allowed to update namespaces" do
       it "does allow to change the description by owners" do
         namespace       = create :namespace, team: team
@@ -352,7 +372,7 @@ describe API::V1::Namespaces do
 
         expect do
           put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @owner_header
-        end.to change(PublicActivity::Activity, :count).by(2)
+        end.to change(PublicActivity::Activity, :count).by(3)
         expect(response).to have_http_status(:success)
 
         # Tracks the activity
@@ -388,12 +408,26 @@ describe API::V1::Namespaces do
         expect(namespace_change_team_activity.parameters[:new]).to eq(team2.id)
       end
 
-      # TODO: change visibility might be buggy
+      it "changes the visibility if needed" do
+        ns = create :namespace, team: team
+        put "/api/v1/namespaces/#{ns.id}", { namespace: { visibility: "public" } }, @owner_header
+        expect(response).to have_http_status(:success)
+
+        data = JSON.parse(response.body)
+        expect(data["visibility"].to_s).to eq "public"
+      end
+
+      it "does not allow changing things from other users" do
+        namespace = create :namespace, team: team
+        put "/api/v1/namespaces/#{namespace.id}", { namespace: namespace_data }, @user_header
+        expect(response).to have_http_status(:forbidden)
+      end
     end
 
     context "non-admins are not allowed to update namespaces" do
       before do
         APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
+        APP_CONFIG["user_permission"]["change_visibility"]["enabled"] = false
       end
 
       it "does not allow to change the description by owners" do
@@ -413,6 +447,12 @@ describe API::V1::Namespaces do
               { namespace: { team: team2.name } },
               @owner_header
         end.to change(PublicActivity::Activity, :count).by(0)
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "does not change the visibility" do
+        ns = create :namespace, team: team
+        put "/api/v1/namespaces/#{ns.id}", { namespace: { visibility: "public" } }, @owner_header
         expect(response).to have_http_status(:forbidden)
       end
 

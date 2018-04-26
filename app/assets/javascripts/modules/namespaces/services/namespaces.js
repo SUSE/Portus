@@ -14,22 +14,10 @@ const customActions = {
   },
 };
 
-const oldCustomActions = {
-  changeVisibility: {
-    method: 'PUT',
-    url: 'namespaces/{id}/change_visibility',
-  },
-};
-
-const oldResource = Vue.resource('namespaces{/id}.json', {}, oldCustomActions);
 const resource = Vue.resource('api/v1/namespaces{/id}', {}, customActions);
 
 function all(params = {}) {
   return resource.get({}, params);
-}
-
-function changeVisibility(id, params = {}) {
-  return oldResource.changeVisibility({ id }, params);
 }
 
 function searchTeam(teamName) {
@@ -75,7 +63,6 @@ export default {
   all,
   update,
   save,
-  changeVisibility,
   searchTeam,
   teamExists,
   validate,

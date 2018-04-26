@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NamespacesController < ApplicationController
-  before_action :set_namespace, only: %i[change_visibility show]
+  before_action :set_namespace, only: %i[show]
 
   after_action :verify_authorized, except: %i[index typeahead]
   after_action :verify_policy_scoped, only: :index
@@ -45,33 +45,7 @@ class NamespacesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /namespace/1/change_visibility.json
-  def change_visibility
-    authorize @namespace
-
-    # Update the visibility if needed
-    return if visibility_param == @namespace.visibility
-
-    return unless @namespace.update(visibility: visibility_param)
-
-    @namespace.create_activity :change_visibility,
-                               owner:      current_user,
-                               parameters: { visibility: @namespace.visibility }
-
-    respond_to do |format|
-      format.js { render :change_visibility }
-      format.json { render json: @namespace }
-    end
-  end
-
   private
-
-  # Normalizes visibility parameter
-  def visibility_param
-    value = params[:visibility]
-    value = "visibility_#{value}" unless value.start_with?("visibility_")
-    value
-  end
 
   def set_namespace
     @namespace = Namespace.find(params[:id])

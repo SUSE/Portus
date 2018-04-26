@@ -90,7 +90,8 @@ module API
                [400, "Bad request.", API::Entities::ApiErrors],
                [401, "Authentication fails."],
                [403, "Authorization fails."],
-               [404, "Not found."]
+               [404, "Not found."],
+               [422, "Unprocessable Entity", API::Entities::FullApiErrors]
              ],
              consumes: ["application/x-www-form-urlencoded", "application/json"]
 
@@ -105,6 +106,9 @@ module API
             optional :all,
                      only:  [:team],
                      using: API::Entities::Namespaces.documentation.slice(:team)
+            optional :all,
+                     only:  [:visibility],
+                     using: API::Entities::Namespaces.documentation.slice(:visibility)
           end
         end
 
@@ -115,6 +119,7 @@ module API
 
           authorize namespace, :update?
           authorize namespace, :change_team? if ns.wants_to_change_team?
+          authorize namespace, :change_visibility? if ns.wants_to_change_visibility?
 
           if ns.execute
             present namespace.reload,
