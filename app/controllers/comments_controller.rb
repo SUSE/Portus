@@ -2,7 +2,6 @@
 
 class CommentsController < ApplicationController
   before_action :set_repository
-  respond_to :js, :html
 
   # POST /repositories/1/comments
   # POST /repositories/1/comments.json
@@ -11,10 +10,18 @@ class CommentsController < ApplicationController
     @comment.author = current_user
     authorize @comment
 
-    if @comment.save
-      respond_with(@comment)
-    else
-      respond_with @comment.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @comment.save
+        @comment_serialized = API::Entities::Comments.represent(
+          @comment,
+          current_user: current_user,
+          type:         :internal
+        ).to_json
+
+        format.json { render json: @comment_serialized }
+      else
+        format.json { render json: @comment.errors.full_messages, status: :unprocessable_entity }
+      end
     end
   end
 

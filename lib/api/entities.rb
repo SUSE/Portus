@@ -149,11 +149,38 @@ module API
       end
     end
 
+    class Comments < Grape::Entity
+      include ::API::Helpers
+
+      expose :id, documentation: { type: Integer, desc: "Comment ID" }
+      expose :repository_id, documentation: { type: Integer, desc: "Repository ID" }
+      expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :body, documentation: {
+        type: String,
+        desc: "The body of the comment"
+      }
+      expose :body_md, documentation: {
+        type: String,
+        desc: "The body of the comment parsed by markdown"
+      }, if: { type: :internal } do |c|
+        markdown(c.body)
+      end
+      expose :author, documentation: {
+        desc: "The ID and the username of the comment author"
+      } do |c|
+        c.author&.slice("id", "username")
+      end
+      expose :destroyable, documentation: {
+        desc: "Boolean that tells if the current user can destroy or not the comment"
+      }, if: { type: :internal } do |c, options|
+        can_destroy_comment?(c, options[:current_user])
+      end
+    end
+
     # Teams & members
 
     class Teams < Grape::Entity
       include ::API::Helpers
-      include ::API::Helpers::Teams
 
       expose :id, documentation: { type: Integer, desc: "Team ID" }
       expose :name, documentation: { type: String, desc: "Team name" }
