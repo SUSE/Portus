@@ -58,7 +58,11 @@ paths:
   "/api/v1/namespaces":
     get:
       summary: Returns a list of namespaces
-      description: This will expose all accessible namespaces
+      description: |-
+        This will expose all accessible namespaces by the user via either team
+                                membership or visibility. Keep in mind that if the user is an admin, this
+                                will return all the global, personal and other namespaces created by all
+                                the users
       produces:
       - application/json
       responses:
@@ -143,6 +147,88 @@ paths:
       tags:
       - namespaces
       operationId: getApiV1NamespacesValidate
+  "/api/v1/namespaces/{id}":
+    put:
+      summary: Update namespace
+      description: Update namespace
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: namespace[name]
+        description: Namespace name
+        type: string
+        required: false
+      - in: formData
+        name: namespace[description]
+        description: The description of the namespace
+        type: string
+        required: false
+      - in: formData
+        name: namespace[team]
+        description: The ID and the name of the team containing this namespace
+        type: string
+        required: false
+      - in: formData
+        name: namespace[visibility]
+        description: The visibility of namespaces by other people
+        type: string
+        required: false
+      - in: path
+        name: id
+        description: Namespace ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Update namespace
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - namespaces
+      operationId: putApiV1NamespacesId
+    get:
+      summary: Show namespaces by id
+      description: Show namespaces by id
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Namespace ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Show namespaces by id
+          schema:
+            "$ref": "#/definitions/Namespaces"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - namespaces
+      operationId: getApiV1NamespacesId
   "/api/v1/namespaces/{id}/repositories":
     get:
       summary: Returns the list of the repositories for the given namespace
@@ -172,33 +258,6 @@ paths:
       tags:
       - namespaces
       operationId: getApiV1NamespacesIdRepositories
-  "/api/v1/namespaces/{id}":
-    get:
-      summary: Show namespaces by id
-      description: Show namespaces by id
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Namespace ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Show namespaces by id
-          schema:
-            "$ref": "#/definitions/Namespaces"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - namespaces
-      operationId: getApiV1NamespacesId
   "/api/v1/registries":
     get:
       summary: Returns a list of registries
@@ -615,7 +674,11 @@ paths:
   "/api/v1/teams":
     get:
       summary: Returns list of teams
-      description: This will expose all teams
+      description: |-
+        This will expose all teams that the user is member of or has access to.
+                                That mean if the user is an admin, this will return all the teams created by
+                                all the users. If you want to check if the user is a member of a team, check
+                                the role attribute.
       produces:
       - application/json
       responses:
@@ -651,6 +714,12 @@ paths:
         description: Team description
         type: string
         required: false
+      - in: formData
+        name: owner_id
+        description: Team owner
+        type: integer
+        format: int32
+        required: false
       responses:
         '201':
           description: Create a team
@@ -671,6 +740,77 @@ paths:
       tags:
       - teams
       operationId: postApiV1Teams
+  "/api/v1/teams/{id}":
+    put:
+      summary: Update team
+      description: Update team
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: team[name]
+        description: Team name
+        type: string
+        required: false
+      - in: formData
+        name: team[description]
+        description: The description of the team
+        type: string
+        required: false
+      - in: path
+        name: id
+        description: Team ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Update team
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - teams
+      operationId: putApiV1TeamsId
+    get:
+      summary: Show teams by id
+      description: Show teams by id
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Team ID
+        type: string
+        required: true
+      responses:
+        '200':
+          description: Show teams by id
+          schema:
+            "$ref": "#/definitions/Teams"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - teams
+      operationId: getApiV1TeamsId
   "/api/v1/teams/{id}/namespaces":
     get:
       summary: Returns the list of namespaces for the given team
@@ -680,7 +820,7 @@ paths:
       parameters:
       - in: path
         name: id
-        description: Repository ID
+        description: Team ID
         type: integer
         format: int32
         required: true
@@ -709,7 +849,7 @@ paths:
       parameters:
       - in: path
         name: id
-        description: Repository ID
+        description: Team ID
         type: integer
         format: int32
         required: true
@@ -729,23 +869,34 @@ paths:
       tags:
       - teams
       operationId: getApiV1TeamsIdMembers
-  "/api/v1/teams/{id}":
-    get:
-      summary: Show teams by id
-      description: Show teams by id
+    post:
+      summary: Adds a user as member in a team
+      description: Adds a user as member in a team
       produces:
+      - application/json
+      consumes:
       - application/json
       parameters:
       - in: path
         name: id
-        description: Team ID
+        description: Team id
+        type: string
+        required: true
+      - in: formData
+        name: role
+        description: Team member role
+        type: string
+        required: true
+      - in: formData
+        name: user
+        description: Team member username
         type: string
         required: true
       responses:
-        '200':
-          description: Show teams by id
+        '201':
+          description: Adds a user as member in a team
           schema:
-            "$ref": "#/definitions/Teams"
+            "$ref": "#/definitions/TeamMembers"
         '401':
           description: Authentication fails
         '403':
@@ -754,7 +905,90 @@ paths:
           description: Not found
       tags:
       - teams
-      operationId: getApiV1TeamsId
+      operationId: postApiV1TeamsIdMembers
+  "/api/v1/teams/{id}/members/{member_id}":
+    delete:
+      summary: Deletes a member from a team
+      description: Deletes a member from a team
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Team id
+        type: string
+        required: true
+      - in: path
+        name: member_id
+        description: Team member id
+        type: string
+        required: true
+      responses:
+        '400':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '204':
+          description: Deletes a member from a team
+          schema:
+            "$ref": "#/definitions/TeamMembers"
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+      tags:
+      - teams
+      operationId: deleteApiV1TeamsIdMembersMemberId
+    put:
+      summary: Updates a member from a team
+      description: Updates a member from a team
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Team id
+        type: string
+        required: true
+      - in: path
+        name: member_id
+        description: Team member id
+        type: integer
+        format: int32
+        required: true
+      - in: formData
+        name: role
+        description: Team member role
+        type: string
+        required: true
+      responses:
+        '200':
+          description: Updates a member from a team
+          schema:
+            "$ref": "#/definitions/TeamMembers"
+        '400':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+      tags:
+      - teams
+      operationId: putApiV1TeamsIdMembersMemberId
   "/api/v1/users/{id}/application_tokens":
     get:
       summary: Returns list of user's tokens
@@ -1195,12 +1429,12 @@ definitions:
       description:
         type: string
         description: The description of the namespace
-      team_name:
+      description_md:
         type: string
-      team_id:
-        type: integer
-        format: int32
-        description: The ID of the team containing this namespace
+        description: The description of the namespace parsed by markdown
+      team:
+        type: string
+        description: The ID and the name of the team containing this namespace
       repositories_count:
         type: integer
         format: int32
@@ -1238,16 +1472,22 @@ definitions:
       id:
         type: integer
         format: int32
-        description: Repository ID
+        description: Team ID
       name:
         type: string
-        description: Repository name
+        description: Team name
       created_at:
         type: string
         format: date-time
       updated_at:
         type: boolean
         description: Whether the team is visible to the final user or not
+      description:
+        type: string
+        description: The description of the team
+      description_md:
+        type: string
+        description: The description of the team parsed by markdown
       hidden:
         type: boolean
         description: Whether the team is visible to the final user or not
@@ -1310,7 +1550,8 @@ definitions:
       registry_hostname:
         type: integer
         format: int32
-        description: The repository's registry hostname
+        description: The repository's registry hostname. Prioritizes external hostname
+          valueif present, otherwise internal hostname is shown
       stars:
         type: integer
         format: int32
@@ -1383,10 +1624,8 @@ definitions:
         description: 'Whether vulnerabilities have been scanned or not. The values
           available are: 0 (not scanned), 1 (work in progress) and 2 (scanning done).'
       vulnerabilities:
-        type: array
-        items:
-          type: string
-        description: An array of vulnerabilities for this tag, or null if the feature
+        type: string
+        description: A hash of vulnerabilities for this tag, or null if the feature
           is not enabled
     description: Show tag by id
   Users:
@@ -1428,6 +1667,40 @@ definitions:
         type: string
         description: Display name
     description: Show user by id or email
+  TeamMembers:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: Team member ID
+      team_id:
+        type: integer
+        format: int32
+        description: Team member team ID
+      user_id:
+        type: integer
+        format: int32
+        description: Team member user ID
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      role:
+        type: string
+        description: The role this of the team meber with in the team
+      display_name:
+        type: string
+        description: The team member's display name
+      admin:
+        type: string
+        description: Tells if the team member is an admin or not
+      current:
+        type: string
+        description: Tells if it's the current session user
+    description: Adds a user as member in a team
   ApplicationTokens:
     type: object
     properties:
