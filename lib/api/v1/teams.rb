@@ -62,10 +62,10 @@ module API
         desc "Update team",
              params:   API::Entities::Teams.documentation.slice(:id),
              failure:  [
-               [400, "Bad request.", API::Entities::ApiErrors],
-               [401, "Authentication fails."],
-               [403, "Authorization fails."],
-               [404, "Not found."],
+               [400, "Bad request", API::Entities::ApiErrors],
+               [401, "Authentication fails"],
+               [403, "Authorization fails"],
+               [404, "Not found"],
                [422, "Unprocessable Entity", API::Entities::FullApiErrors]
              ],
              consumes: ["application/x-www-form-urlencoded", "application/json"]
@@ -137,9 +137,9 @@ module API
                  entity:  API::Entities::TeamMembers,
                  failure: [
                    [400, "Unprocessable Entity", API::Entities::ApiErrors],
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."],
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"],
                    [422, "Unprocessable Entity", API::Entities::ApiErrors]
                  ]
 
@@ -166,9 +166,9 @@ module API
                  entity:  API::Entities::TeamMembers,
                  failure: [
                    [400, "Unprocessable Entity", API::Entities::ApiErrors],
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."],
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"],
                    [422, "Unprocessable Entity", API::Entities::ApiErrors]
                  ]
 
@@ -198,9 +198,9 @@ module API
             desc "Adds a user as member in a team",
                  entity:  API::Entities::TeamMembers,
                  failure: [
-                   [401, "Authentication fails."],
-                   [403, "Authorization fails."],
-                   [404, "Not found."]
+                   [401, "Authentication fails"],
+                   [403, "Authorization fails"],
+                   [404, "Not found"]
                  ]
 
             params do

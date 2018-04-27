@@ -87,10 +87,10 @@ module API
         desc "Update namespace",
              params:   API::Entities::Namespaces.documentation.slice(:id),
              failure:  [
-               [400, "Bad request.", API::Entities::ApiErrors],
-               [401, "Authentication fails."],
-               [403, "Authorization fails."],
-               [404, "Not found."],
+               [400, "Bad request", API::Entities::ApiErrors],
+               [401, "Authentication fails"],
+               [403, "Authorization fails"],
+               [404, "Not found"],
                [422, "Unprocessable Entity", API::Entities::FullApiErrors]
              ],
              consumes: ["application/x-www-form-urlencoded", "application/json"]
