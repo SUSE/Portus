@@ -30,7 +30,7 @@ def open_id_fetch_options
 end
 
 def github_fetch_options
-  { scope: "user,read:org" }
+  { scope: "read:user,user:email,read:org" }
 end
 
 def gitlab_fetch_options
