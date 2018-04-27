@@ -3,6 +3,7 @@
 require "portus/auth_from_token"
 require "api/helpers/errors"
 require "api/helpers/teams"
+require "api/helpers/comments"
 
 module API
   module Helpers
@@ -13,6 +14,7 @@ module API
 
     include Errors
     include Teams
+    include Comments
 
     # On success it will fill the @user instance variable with the currently
     # authenticated user for the API. Otherwise it will raise:

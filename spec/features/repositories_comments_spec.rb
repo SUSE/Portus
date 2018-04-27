@@ -41,8 +41,7 @@ describe "Repositories comments support" do
 
       expect(page).to have_content("Nobody has left a comment")
 
-      find(".add-comment").click
-      wait_for_effect_on(".comment-form")
+      find(".toggle-link-new-comment").click
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -57,8 +56,7 @@ describe "Repositories comments support" do
 
       expect(page).to have_content("Nobody has left a comment")
 
-      find(".add-comment").click
-      wait_for_effect_on(".comment-form")
+      find(".toggle-link-new-comment").click
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -74,8 +72,7 @@ describe "Repositories comments support" do
 
       expect(page).to have_content("Nobody has left a comment")
 
-      find(".add-comment").click
-      wait_for_effect_on(".comment-form")
+      find(".toggle-link-new-comment").click
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -94,14 +91,11 @@ describe "Repositories comments support" do
     it "An user cannot comment an empty text", js: true do
       visit repository_path(visible_repository)
 
-      find(".add-comment").click
-      wait_for_effect_on(".comment-form")
+      find(".toggle-link-new-comment").click
 
-      click_button "Add"
-      wait_for_ajax
+      fill_in "comment_body", with: ""
 
-      expect(page).to have_content("Body can't be blank")
-      expect(page).to have_content("Nobody has left a comment")
+      expect(page).to have_content("Comment can't be blank")
     end
   end
 
@@ -114,8 +108,10 @@ describe "Repositories comments support" do
       expect(page).to have_content("Delete comment")
 
       expect(page).to have_content(comment.body)
-      find("#comment_#{comment.id} .destroy_comments_btn").click
-      click_link "Yes"
+      find("#comment_#{comment.id} .delete-comment-btn").click
+      find(".popover-content .yes").click
+      wait_for_ajax
+
       expect(page).not_to have_content(comment.body)
     end
 
@@ -135,8 +131,10 @@ describe "Repositories comments support" do
       expect(page).to have_content("Delete comment")
 
       expect(page).to have_content(comment.body)
-      find("#comment_#{comment.id} .destroy_comments_btn").click
-      click_link "Yes"
+      find("#comment_#{comment.id} .delete-comment-btn").click
+      find(".popover-content .yes").click
+      wait_for_ajax
+
       expect(page).not_to have_content(comment.body)
     end
   end

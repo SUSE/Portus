@@ -1,11 +1,13 @@
 import Vue from 'vue';
 
+import { handleHttpResponseError } from '~/utils/http';
+
 import LoadingIcon from '~/shared/components/loading-icon';
 
 import TagsTable from '../components/tags-table';
 import TagsNotLoaded from '../components/tags-not-loaded';
 import DeleteTagAction from '../components/delete-tag-action';
-import CommentsPanel from '../components/comments-panel';
+import CommentsWrapper from '../components/comments/wrapper';
 
 import RepositoriesService from '../services/repositories';
 import TagsService from '../services/tags';
@@ -30,6 +32,7 @@ $(() => {
       TagsTable,
       TagsNotLoaded,
       DeleteTagAction,
+      CommentsWrapper,
     },
 
     data() {
@@ -150,15 +153,8 @@ $(() => {
 
           this.$alert.$schedule('Repository removed with all its tags');
           window.location.href = namespaceHref;
-        }).catch((response) => {
-          let errors = response.data.errors || response.data.error;
-
-          if (Array.isArray(errors)) {
-            errors = errors.join('<br />');
-          }
-
-          this.$alert.$show(errors, false);
-        }).finally(() => set(this.state, 'isDeleting', false));
+        }).catch(handleHttpResponseError)
+          .finally(() => set(this.state, 'isDeleting', false));
       },
     },
 
@@ -174,9 +170,6 @@ $(() => {
 
       this.loadData();
       this.$bus.$on('deleteTags', () => this.deleteTags());
-
-      // eslint-disable-next-line no-new
-      new CommentsPanel($('.comments-wrapper'));
     },
   });
 });

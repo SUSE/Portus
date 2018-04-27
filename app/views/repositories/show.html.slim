@@ -17,7 +17,6 @@
     | /
     = @repository.name
 
-
   .btn-toolbar.pull-right
     .btn-group
       = link_to toggle_star_repository_path(@repository), method: :post,
@@ -66,4 +65,8 @@
       <tags-not-loaded v-if="notLoaded"></tags-not-loaded>
       <tags-table v-if="!isLoading && !notLoaded" :tags="tags" :can-destroy="#{can_destroy}" :state="state" :security-enabled="#{security_vulns_enabled?}" tags-path="#{tags_path}"></tags-table>
 
-= render "repositories/partials/comments"
+<comments-wrapper :state="state"></comments-wrapper>
+
+- content_for :js_header do
+  javascript:
+    window.comments = #{raw @comments_serialized};

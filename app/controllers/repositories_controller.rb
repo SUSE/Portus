@@ -24,6 +24,11 @@ class RepositoriesController < ApplicationController
     authorize @repository
     @tags = @repository.groupped_tags
     @repository_comments = @repository.comments.all
+    @comments_serialized = API::Entities::Comments.represent(
+      @repository.comments.all,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     respond_with(@repository)
   end
 

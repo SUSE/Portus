@@ -1,4 +1,4 @@
-.destroy_comments_btn {
+.delete-comment-btn {
   padding-top: 0px;
   padding-bottom: 0px;
   border: 0px;
@@ -29,10 +29,10 @@
     display: inline-block;
     vertical-align: top;
   }
-  .destroy_comments_btn {
+  .delete-comment-btn {
     display: none;
   }
-  &:hover .destroy_comments_btn {
+  &:hover .delete-comment-btn {
     display: inline-block;
   }
 }

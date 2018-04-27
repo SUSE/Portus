@@ -47,7 +47,7 @@ describe CommentsController, type: :controller do
     create(:repository, comments: [comment], namespace: private_namespace)
   end
 
-  let(:valid_attributes) do
+  let(:attributes) do
     { body: "short test comment" }
   end
 
@@ -61,7 +61,7 @@ describe CommentsController, type: :controller do
         sign_in owner
         expect do
           repository_id = invisible_repository.id
-          post :create, repository_id: repository_id, comment: valid_attributes, format: "js"
+          post :create, repository_id: repository_id, comment: attributes, format: :json
           expect(response.status).to eq 200
         end.to change(Comment, :count).by(1)
         expect(assigns(:comment).author.id).to eq owner.id
@@ -69,25 +69,25 @@ describe CommentsController, type: :controller do
 
       it "does allow everyone to write comments for a repository under a public namespace" do
         sign_in user
-        post :create, repository_id: visible_repository.id, comment: valid_attributes, format: :js
+        post :create, repository_id: visible_repository.id, comment: attributes, format: :json
         expect(response.status).to eq 200
       end
 
       it "allows logged-in users to write comments for a repository under a protected namespace" do
         sign_in user
-        post :create, repository_id: protected_repository.id, comment: valid_attributes, format: :js
+        post :create, repository_id: protected_repository.id, comment: attributes, format: :json
         expect(response.status).to eq 200
       end
 
       it "does allow the admin to write comments for every repository" do
         sign_in admin
-        post :create, repository_id: invisible_repository.id, comment: valid_attributes, format: :js
+        post :create, repository_id: invisible_repository.id, comment: attributes, format: :json
         expect(response.status).to eq 200
       end
 
       it "does not allow a user who has no access to the repository to write comments" do
         sign_in user
-        post :create, repository_id: invisible_repository.id, comment: valid_attributes, format: :js
+        post :create, repository_id: invisible_repository.id, comment: attributes, format: :json
         expect(response.status).to eq 401
       end
     end
@@ -96,7 +96,7 @@ describe CommentsController, type: :controller do
       it "does not allow invalid parameters" do
         sign_in owner
         repository_id = invisible_repository.id
-        post :create, repository_id: repository_id, comment: invalid_attributes, format: :js
+        post :create, repository_id: repository_id, comment: invalid_attributes, format: :json
         expect(assigns(:comment)).to be_a_new(Comment)
         expect(response.status).to eq 422
       end
@@ -107,21 +107,21 @@ describe CommentsController, type: :controller do
     it "deletes a comment" do
       sign_in owner
       expect do
-        delete :destroy, repository_id: commented_repository.id, id: comment.id, format: :js
+        delete :destroy, repository_id: commented_repository.id, id: comment.id, format: :json
       end.to change(Comment, :count).by(-1)
     end
 
     it "does allow to delete a comment if the user is admin" do
       sign_in admin
       expect do
-        delete :destroy, repository_id: commented_repository.id, id: comment.id, format: :js
+        delete :destroy, repository_id: commented_repository.id, id: comment.id, format: :json
       end.to change(Comment, :count).by(-1)
     end
 
     it "does not allow to delete the comment if the user is not the author" do
       sign_in user
       expect do
-        delete :destroy, repository_id: commented_repository.id, id: comment.id, format: :js
+        delete :destroy, repository_id: commented_repository.id, id: comment.id, format: :json
       end.to change(Comment, :count).by(0)
       expect(response.status).to eq 401
     end
