@@ -51,7 +51,8 @@ module API
                failure: [
                  [401, "Authentication fails"],
                  [403, "Authorization fails"],
-                 [404, "Not found"]
+                 [404, "Not found"],
+                 [422, "Unprocessable Entity", API::Entities::ApiErrors]
                ]
 
           delete do
@@ -61,7 +62,11 @@ module API
             service = ::Tags::DestroyService.new(current_user)
             destroyed = service.execute(tag)
 
-            error!({ "errors" => service.error }, 422, header) unless destroyed
+            if destroyed
+              status 204
+            else
+              unprocessable_entity!(service.error)
+            end
           end
         end
       end
