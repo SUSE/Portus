@@ -4,11 +4,13 @@
     <ul class="subtopics">
       {% assign docs = (site.docs | sort: 'order') %}
       {% for subtopic in docs %}
+        {% unless subtopic.hidden %}
         <li>
           <a href="{{ subtopic.url | prepend: site.baseurl }}">
             {{ subtopic.title }}
           </a>
         </li>
+        {% endunless %}
       {% endfor %}
     </ul>
     <li>Features</li>
