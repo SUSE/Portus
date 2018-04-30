@@ -111,7 +111,8 @@ module API
                failure: [
                  [401, "Authentication fails"],
                  [403, "Authorization fails"],
-                 [404, "Not found"]
+                 [404, "Not found"],
+                 [422, "Unprocessable Entity", API::Entities::ApiErrors]
                ]
 
           delete do
@@ -121,7 +122,11 @@ module API
             destroy_service = ::Repositories::DestroyService.new(current_user)
             destroyed = destroy_service.execute(repository)
 
-            error!(destroy_service.error, 422, header) unless destroyed
+            if destroyed
+              status 204
+            else
+              unprocessable_entity!(destroy_service.error)
+            end
           end
         end
       end
