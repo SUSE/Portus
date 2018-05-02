@@ -13,10 +13,11 @@ class WebhookPolicy < NamespacePolicy
   end
 
   def create?
-    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    create_or_manage?("create")
+  end
 
-    # Only admins and owners have WRITE access
-    user.admin? || namespace.team.owners.exists?(user.id)
+  def update?
+    create_or_manage?("manage")
   end
 
   def show?
@@ -26,8 +27,7 @@ class WebhookPolicy < NamespacePolicy
   end
 
   alias destroy? create?
-  alias toggle_enabled? create?
-  alias update? create?
+  alias toggle_enabled? update?
 
   class Scope
     attr_reader :user, :scope
@@ -55,5 +55,13 @@ class WebhookPolicy < NamespacePolicy
         scope.includes(:headers, :deliveries).where(namespace: namespaces)
       end
     end
+  end
+
+  protected
+
+  def create_or_manage?(perm)
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    user.admin? || (APP_CONFIG.enabled?("user_permission.#{perm}_webhook") &&
+      namespace.team.owners.exists?(user.id))
   end
 end

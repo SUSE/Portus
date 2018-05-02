@@ -68,6 +68,10 @@ RSpec.configure do |config|
       "manage_namespace"  => { "enabled" => true },
       # This allows non-admins to create namespaces
       "create_namespace"  => { "enabled" => true },
+      # This allows non-admins to modify webhooks
+      "manage_webhook"    => { "enabled" => true },
+      # This allows non-admins to create webhooks
+      "create_webhook"    => { "enabled" => true },
       # This allows non-admins to modify teams
       "manage_team"       => { "enabled" => true },
       # This allows non-admins to create teams
