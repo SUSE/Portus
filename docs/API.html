@@ -175,6 +175,12 @@
             </li>
           
             <li>
+              <a href="/docs/migrate-from-rpm.html">
+                Migrating from the RPM
+              </a>
+            </li>
+          
+            <li>
               <a href="/docs/release-schedule.html">
                 Release schedule
               </a>
@@ -573,7 +579,10 @@ response body like so:</p>
         </h4>
 
         <div class="swagger-method-details">
-          <p class="swagger-method-description">This will expose all accessible namespaces.</p>
+          <p class="swagger-method-description">This will expose all accessible namespaces by the user via either team
+                        membership or visibility. Keep in mind that if the user is an admin, this
+                        will return all the global, personal and other namespaces created by all
+                        the users.</p>
             
 
             
@@ -595,8 +604,8 @@ response body like so:</p>
     </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"team_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"team_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"repositories_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"webhooks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
@@ -703,6 +712,8 @@ response body like so:</p>
   </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
@@ -870,14 +881,154 @@ response body like so:</p>
 
 <div class="swagger-paths">
     
-    <div class="swagger-method swagger-method-get">
-        <h4 id="spec-method-get-api-v1-namespaces-{id}-repositories" class="swagger-method-title">
-            <span class="swagger-method-name">GET</span>
-            <span class="swagger-method-route">/api/v1/namespaces/{id}/repositories</span>
+    <div class="swagger-method swagger-method-put">
+        <h4 id="spec-method-put-api-v1-namespaces-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">PUT</span>
+            <span class="swagger-method-route">/api/v1/namespaces/{id}</span>
         </h4>
 
         <div class="swagger-method-details">
-          <p class="swagger-method-description">Returns the list of the repositories for the given namespace.</p>
+          <p class="swagger-method-description">Update namespace.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>namespace[name]</i> (string):
+                      Namespace name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>namespace[description]</i> (string):
+                      The description of the namespace.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>namespace[team]</i> (string):
+                      The ID and the name of the team containing this namespace.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>namespace[visibility]</i> (string):
+                      The visibility of namespaces by other people.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      Namespace ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">200</td>
+                    <td class="swagger-response-message">Update namespace.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-get">
+        <h4 id="spec-method-get-api-v1-namespaces-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">GET</span>
+            <span class="swagger-method-route">/api/v1/namespaces/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Show namespaces by id.</p>
             
             <div class="swagger-parameters">
                 <h4>Parameters</h4>
@@ -908,22 +1059,20 @@ response body like so:</p>
                         Format of the response:
                       </p>
                       
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"registry_hostname"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"stars"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"tags_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"strings"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"repositories_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"webhooks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"global"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
 
                     
                   
@@ -985,13 +1134,13 @@ response body like so:</p>
 <div class="swagger-paths">
     
     <div class="swagger-method swagger-method-get">
-        <h4 id="spec-method-get-api-v1-namespaces-{id}" class="swagger-method-title">
+        <h4 id="spec-method-get-api-v1-namespaces-{id}-repositories" class="swagger-method-title">
             <span class="swagger-method-name">GET</span>
-            <span class="swagger-method-route">/api/v1/namespaces/{id}</span>
+            <span class="swagger-method-route">/api/v1/namespaces/{id}/repositories</span>
         </h4>
 
         <div class="swagger-method-details">
-          <p class="swagger-method-description">Show namespaces by id.</p>
+          <p class="swagger-method-description">Returns the list of the repositories for the given namespace.</p>
             
             <div class="swagger-parameters">
                 <h4>Parameters</h4>
@@ -1022,20 +1171,22 @@ response body like so:</p>
                         Format of the response:
                       </p>
                       
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"team_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"team_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"repositories_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"webhooks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"global"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-</span><span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"registry_hostname"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"stars"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tags_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"strings"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span></code></pre></figure>
 
                     
                   
@@ -1738,9 +1889,7 @@ response body like so:</p>
     </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"scanned"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"strings"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
 
@@ -1851,9 +2000,7 @@ response body like so:</p>
     </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"scanned"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"strings"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
 
@@ -1971,9 +2118,7 @@ response body like so:</p>
   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"scanned"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"strings"</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+  </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
                     
@@ -2267,9 +2412,7 @@ response body like so:</p>
     </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"scanned"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"strings"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
 
@@ -2368,9 +2511,7 @@ response body like so:</p>
   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"scanned"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"strings"</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+  </span><span class="s2">"vulnerabilities"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
                     
@@ -2527,7 +2668,10 @@ response body like so:</p>
         </h4>
 
         <div class="swagger-method-details">
-          <p class="swagger-method-description">This will expose all teams.</p>
+          <p class="swagger-method-description">This will expose all teams that the user is member of or has access to.
+                        That mean if the user is an admin, this will return all the teams created by
+                        all the users. If you want to check if the user is a member of a team, check
+                        the role attribute..</p>
             
 
             
@@ -2548,6 +2692,8 @@ response body like so:</p>
     </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
@@ -2624,6 +2770,14 @@ response body like so:</p>
                       
                     </li>
                   
+                    <li>
+                      <i>owner_id</i> (integer):
+                      Team owner.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
                 </ul>
             </div>
             
@@ -2645,6 +2799,8 @@ response body like so:</p>
   </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
@@ -2721,6 +2877,240 @@ response body like so:</p>
 
 <div class="swagger-paths">
     
+    <div class="swagger-method swagger-method-put">
+        <h4 id="spec-method-put-api-v1-teams-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">PUT</span>
+            <span class="swagger-method-route">/api/v1/teams/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Update team.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>team[name]</i> (string):
+                      Team name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>team[description]</i> (string):
+                      The description of the team.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      Team ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">200</td>
+                    <td class="swagger-response-message">Update team.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-get">
+        <h4 id="spec-method-get-api-v1-teams-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">GET</span>
+            <span class="swagger-method-route">/api/v1/teams/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Show teams by id.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (string, <b>required</b>):
+                      Team ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 200)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespaces_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
     <div class="swagger-method swagger-method-get">
         <h4 id="spec-method-get-api-v1-teams-{id}-namespaces" class="swagger-method-title">
             <span class="swagger-method-name">GET</span>
@@ -2737,7 +3127,7 @@ response body like so:</p>
                   
                     <li>
                       <i>id</i> (integer, <b>required</b>):
-                      Repository ID.
+                      Team ID.
                       
                         This parameter has to be included as part of the path.
                       
@@ -2766,8 +3156,8 @@ response body like so:</p>
     </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"team_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"team_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"repositories_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"webhooks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
@@ -2851,7 +3241,7 @@ response body like so:</p>
                   
                     <li>
                       <i>id</i> (integer, <b>required</b>):
-                      Repository ID.
+                      Team ID.
                       
                         This parameter has to be included as part of the path.
                       
@@ -2940,23 +3330,14 @@ response body like so:</p>
         </div>
     </div>
     
-</div>
-
-  
-     
-
-
-
-<div class="swagger-paths">
-    
-    <div class="swagger-method swagger-method-get">
-        <h4 id="spec-method-get-api-v1-teams-{id}" class="swagger-method-title">
-            <span class="swagger-method-name">GET</span>
-            <span class="swagger-method-route">/api/v1/teams/{id}</span>
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-teams-{id}-members" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/teams/{id}/members</span>
         </h4>
 
         <div class="swagger-method-details">
-          <p class="swagger-method-description">Show teams by id.</p>
+          <p class="swagger-method-description">Adds a user as member in a team.</p>
             
             <div class="swagger-parameters">
                 <h4>Parameters</h4>
@@ -2965,9 +3346,25 @@ response body like so:</p>
                   
                     <li>
                       <i>id</i> (string, <b>required</b>):
-                      Team ID.
+                      Team id.
                       
                         This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>role</i> (string, <b>required</b>):
+                      Team member role.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user</i> (string, <b>required</b>):
+                      Team member username.
+                      
+                        This parameter is part of the data to be sent as a form.
                       
                     </li>
                   
@@ -2981,7 +3378,7 @@ response body like so:</p>
                   
                   
                     
-                      <h4>Response Class (status: 200)</h4>
+                      <h4>Response Class (status: 201)</h4>
                       <p>
                         
                         Format of the response:
@@ -2989,13 +3386,14 @@ response body like so:</p>
                       
 <figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"team_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"namespaces_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"current"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
                     
@@ -3039,6 +3437,267 @@ response body like so:</p>
                   <tr>
                     <td class="swagger-response-code">404</td>
                     <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-delete">
+        <h4 id="spec-method-delete-api-v1-teams-{id}-members-{member_id}" class="swagger-method-title">
+            <span class="swagger-method-name">DELETE</span>
+            <span class="swagger-method-route">/api/v1/teams/{id}/members/{member_id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Deletes a member from a team.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (string, <b>required</b>):
+                      Team id.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>member_id</i> (string, <b>required</b>):
+                      Team member id.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">204</td>
+                    <td class="swagger-response-message">Deletes a member from a team.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-put">
+        <h4 id="spec-method-put-api-v1-teams-{id}-members-{member_id}" class="swagger-method-title">
+            <span class="swagger-method-name">PUT</span>
+            <span class="swagger-method-route">/api/v1/teams/{id}/members/{member_id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Updates a member from a team.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (string, <b>required</b>):
+                      Team id.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>member_id</i> (integer, <b>required</b>):
+                      Team member id.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>role</i> (string, <b>required</b>):
+                      Team member role.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 200)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"team_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"current"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -4320,107 +4979,143 @@ response body like so:</p>
     <ul class="subtopics">
       
       
+        
         <li>
           <a href="/docs/first-steps.html">
             Docker and Portus for newcomers
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/Configuring-Portus.html">
             Configuring Portus
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/database.html">
             Configuring the database
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/How-to-setup-secure-registry.html">
             Configuring a secure private registry
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/deploy.html">
             Deploying Portus
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/Configuring-the-registry.html">
             Portus and your private registry
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/assets.html">
             Managing assets
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/secrets.html">
             Using secrets
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/API.html">
             Portus REST API
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/background.html">
             The background process
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/portusctl.html">
             portusctl
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/upgrading-portus.html">
             Upgrading Portus
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/versions.html">
             Supported Docker Versions
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/debugging.html">
             Debugging Portus
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/how_we_release.html">
             Portus Releases
           </a>
         </li>
+        
       
+        
+      
+        
         <li>
           <a href="/docs/release-schedule.html">
             Release schedule
           </a>
         </li>
+        
       
+        
         <li>
           <a href="/docs/FAQ.html">
             FAQ
           </a>
         </li>
+        
       
     </ul>
     <li>Features</li>

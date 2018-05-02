@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Recovering the password</title>
+    <title>Migrating from the RPM</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Recovering the password">
+    <meta name="description" content="Migrating from the RPM">
 
     <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
     <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
@@ -306,22 +306,55 @@
             </div>
             <div class="row post">
               <article>
-                <h2 id="recovering-the-password">Recovering the password</h2>
+                <h2 id="migrating-from-the-rpm">Migrating from the RPM</h2>
 
-<p>Users can recover their password with a straight-forward procedure. First of
-all, users have to click the <code class="highlighter-rouge">I forgot my password</code> link in the login form.</p>
+<p>During the development cycle of the 2.3 release, we started to focus more and
+more on containerized deployments. The <a href="https://hub.docker.com/r/opensuse/portus/">official openSUSE Docker
+image</a> got more attention and it
+started to be thinner and easier to deploy. Following current trends, we decided
+to make these kinds of deployments the preferred ones in the 2.3 release.</p>
 
-<p><img src="/images/docs/forgot.png" alt="Forgot" /></p>
+<p>The migration path from a pure RPM installation to a containerized one is not
+that big. That’s because the Docker image simply installs the RPM as produced in
+our <a href="https://build.opensuse.org/project/show/Virtualization:containers:Portus:2.3">OBS
+project</a>. So
+from the distribution point of view (and the tooling) nothing changes: the
+“only” change is to go from a bare metal installation to Docker containers.</p>
 
-<p>This will redirect users to a form that asks for their email. If users deliver
-their email, they’ll receive an email with further instructions. To sum it up,
-they will receive a link to this page:</p>
+<h2 id="backing-up">Backing up</h2>
 
-<p><img src="/images/docs/reset-password.png" alt="Reset password" /></p>
+<p>First of all, you should proceed as you would with any upgrade: back up your
+data. There are two main things you should back up: images stored in the
+registry and the database.</p>
 
-<p>In order for all this to work, you have to configure how Portus sends emails. If
-you want to know more about this, make sure to read
-<a href="/docs/Configuring-Portus.html#email-configuration">this</a>.</p>
+<p>The registry can store Docker images in remote locations with the support for
+Amazon S3, Microsoft Azure, etc. That being said, you can also store these
+images locally with the following configuration:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">storage</span><span class="pi">:</span>
+  <span class="na">filesystem</span><span class="pi">:</span>
+    <span class="na">rootdirectory</span><span class="pi">:</span> <span class="s">/my/location</span>
+</code></pre></div></div>
+
+<p>This configuration is stored in <code class="highlighter-rouge">/etc/registry/config.yml</code>, which was
+auto-generated if you used the <code class="highlighter-rouge">portusctl setup</code> command for setting up your RPM
+installation. So, now you have to back up the <code class="highlighter-rouge">/my/location</code> location as pointed
+out on the above example.</p>
+
+<p>Finally, you should back up the data stored on the MySQL/MariaDB instance.</p>
+
+<h2 id="running-containers">Running containers</h2>
+
+<p>At this point you can deploy Portus with Docker images. We maintain some
+examples that use <code class="highlighter-rouge">docker-compose</code>
+<a href="https://github.com/SUSE/Portus/tree/master/examples/compose">here</a> that might
+serve as inspiration. Moreover, if you are using Kubernetes, you might also be
+interested in the <a href="https://www.helm.sh/">Helm</a> Chart developed
+<a href="https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/portus">here</a>.</p>
+
+<p>Regardless of your deployment method, make sure to read some tips that we have
+written <a href="http://port.us.org/docs/deploy.html#containerized">here</a>. This will
+help you when configuring your deployment methods.</p>
 
               </article>
             </div>
