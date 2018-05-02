@@ -12,6 +12,11 @@ longtitle: How to upgrade Portus across different versions
   backup the contents of the database.
 </div>
 
+<div class="alert alert-warning">
+  <strong>RPM users</strong>: if you had installed Portus from the RPM, follow
+  <a href="/docs/migrate-from-rpm.html">these instructions</a> instead.
+</div>
+
 Puma is now the HTTP server being used. Make sure to use the
 `PORTUS_PUMA_TLS_KEY` and the `PORTUS_PUMA_TLS_CERT` environment variables to
 point puma to the right paths for the certificates. Moreover, if you are not
