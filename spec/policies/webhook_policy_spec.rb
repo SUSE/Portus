@@ -30,6 +30,55 @@ describe WebhookPolicy do
     @registry = create(:registry)
   end
 
+  context "owners can also create or update" do
+    permissions :create? do
+      it "allows an admin to create a webook" do
+        expect(subject).to permit(@admin, webhook)
+      end
+
+      it "allows an admin to create a webhook" do
+        expect(subject).to permit(owner, webhook)
+      end
+    end
+
+    permissions :update? do
+      it "allows an admin to update a webook" do
+        expect(subject).to permit(@admin, webhook)
+      end
+
+      it "allows an admin to update a webhook" do
+        expect(subject).to permit(owner, webhook)
+      end
+    end
+  end
+
+  context "only admins can create or update" do
+    before do
+      APP_CONFIG["user_permission"]["create_webhook"] = false
+      APP_CONFIG["user_permission"]["manage_webhook"] = false
+    end
+
+    permissions :create? do
+      it "allows an admin to create a webook" do
+        expect(subject).to permit(@admin, webhook)
+      end
+
+      it "does not allow an admin to create a webhook" do
+        expect(subject).not_to permit(owner, webhook)
+      end
+    end
+
+    permissions :update? do
+      it "allows an admin to update a webook" do
+        expect(subject).to permit(@admin, webhook)
+      end
+
+      it "does not allow an admin to update a webhook" do
+        expect(subject).not_to permit(owner, webhook)
+      end
+    end
+  end
+
   permissions :toggle_enabled? do
     it "allows admin to change it" do
       expect(subject).to permit(@admin, webhook)

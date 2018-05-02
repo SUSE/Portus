@@ -259,6 +259,18 @@ user_permission:
   manage_namespace:
     enabled: true
 
+  # Allow users to create webhooks if they are an owner of the namespace
+  # containing it. If this is disabled, only an admin will be able to do
+  # this. This defaults to true.
+  create_webhook:
+    enabled: true
+
+  # Allow users to manage webhooks if they are an owner of the namespace
+  # containing it. If this is disabled, only an admin will be able to do
+  # this. This defaults to true.
+  manage_webhook:
+    enabled: true
+
   # Define a push policy. There are three possible values:
   #   1. allow-teams (default): leaves push policy at the team level: owners and
   #      contributors can push. Portus administrators will also be able to push.
