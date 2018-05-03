@@ -21,9 +21,30 @@ project](https://build.opensuse.org/project/show/Virtualization:containers:Portu
 from the distribution point of view (and the tooling) nothing changes: the
 "only" change is to go from a bare metal installation to Docker containers.
 
+## Stopping Portus
+
+Prior to anything, we should stop Portus, which means stopping both the Portus Web UI, and
+the Portus crono service.
+
+On Version 2.2, and older versions, the Web UI is configured as a virtual host in apache2. Thus,
+in order to stop it, you need to disable that configuration. You can do that by running:
+
+```
+sudo mv /etc/apache2/vhosts.d/portus.conf /etc/apache2/vhosts.d/portus.conf.disabled
+```
+
+Having disabled the vhost configuration, you can stop the crono service by running:
+
+```
+sudo systemctl stop portus-crono
+```
+
+Once you have portus stopped, you can proceed to back up the data.
+
+
 ## Backing up
 
-First of all, you should proceed as you would with any upgrade: back up your
+After stopping portus, you should proceed as you would with any upgrade: back up your
 data. There are two main things you should back up: images stored in the
 registry and the database.
 
@@ -56,3 +77,19 @@ interested in the [Helm](https://www.helm.sh/) Chart developed
 Regardless of your deployment method, make sure to read some tips that we have
 written [here](http://port.us.org/docs/deploy.html#containerized). This will
 help you when configuring your deployment methods.
+
+## Removing old RPM
+
+Once you have the new portus container running, it is time to clean up by removing the old Portus RPM.
+You can do so by running:
+
+```
+zypper rm --clean-deps portus
+```
+
+The "clean-deps" option will remove dependencies that are not needed for any other package. This could
+be the case of rubygem-passenger-apache2. If you are unsure of this, run the previous command without the
+"clean-deps" option.
+
+
+
