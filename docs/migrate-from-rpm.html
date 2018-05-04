@@ -321,9 +321,27 @@ project</a>. So
 from the distribution point of view (and the tooling) nothing changes: the
 “only” change is to go from a bare metal installation to Docker containers.</p>
 
+<h2 id="stopping-portus">Stopping Portus</h2>
+
+<p>Prior to anything, we should stop Portus, which means stopping both the Portus Web UI, and
+the Portus crono service.</p>
+
+<p>On Version 2.2, and older versions, the Web UI is configured as a virtual host in apache2. Thus,
+in order to stop it, you need to disable that configuration. You can do that by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo mv /etc/apache2/vhosts.d/portus.conf /etc/apache2/vhosts.d/portus.conf.disabled
+</code></pre></div></div>
+
+<p>Having disabled the vhost configuration, you can stop the crono service by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl stop portus-crono
+</code></pre></div></div>
+
+<p>Once you have portus stopped, you can proceed to back up the data.</p>
+
 <h2 id="backing-up">Backing up</h2>
 
-<p>First of all, you should proceed as you would with any upgrade: back up your
+<p>After stopping portus, you should proceed as you would with any upgrade: back up your
 data. There are two main things you should back up: images stored in the
 registry and the database.</p>
 
@@ -355,6 +373,19 @@ interested in the <a href="https://www.helm.sh/">Helm</a> Chart developed
 <p>Regardless of your deployment method, make sure to read some tips that we have
 written <a href="http://port.us.org/docs/deploy.html#containerized">here</a>. This will
 help you when configuring your deployment methods.</p>
+
+<h2 id="removing-old-rpm">Removing old RPM</h2>
+
+<p>Once you have the new portus container running, it is time to clean up by removing the old Portus RPM.
+You can do so by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zypper rm --clean-deps portus
+</code></pre></div></div>
+
+<p>The “clean-deps” option will remove dependencies that are not needed for any other package. This could
+be the case of rubygem-passenger-apache2. If you are unsure of this, run the previous command without the
+“clean-deps” option.</p>
+
 
               </article>
             </div>
