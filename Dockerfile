@@ -8,16 +8,17 @@ WORKDIR /srv/Portus
 COPY Gemfile* ./
 
 # Let's explain this RUN command:
-#   1. First of all we refresh, since opensuse/ruby does a zypper clean -a in
-#      the end.
-#   2. Then we install dev. dependencies and the devel_basis pattern (used for
+#   1. First of all we add d:l:go repo to get the latest go version.
+#   2. Then refresh, since opensuse/ruby does zypper clean -a in the end.
+#   3. Then we install dev. dependencies and the devel_basis pattern (used for
 #      building stuff like nokogiri). With that we can run bundle install.
-#   3. We then proceed to remove unneeded clutter: first we remove some packages
+#   4. We then proceed to remove unneeded clutter: first we remove some packages
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
-RUN zypper ref && \
+RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go/openSUSE_Leap_42.3/devel:languages:go.repo && \
+    zypper --gpg-auto-import-keys ref && \
     zypper -n in --no-recommends ruby2.5-devel \
            libmysqlclient-devel postgresql-devel \
-           nodejs libxml2-devel libxslt1 git-core go1.9 && \
+           nodejs libxml2-devel libxslt1 git-core go1.10 && \
     zypper -n in --no-recommends -t pattern devel_basis && \
     gem install bundler --no-ri --no-rdoc -v 1.16.0 && \
     update-alternatives --install /usr/bin/bundle bundle /usr/bin/bundle.ruby2.5 3 && \

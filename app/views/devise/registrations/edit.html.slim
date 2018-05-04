@@ -5,7 +5,7 @@
         h5
           ' Public Profile
       .panel-body
-        = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'profile' }) do |f|
+        = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'profile', id: 'edit-public-profile' }) do |f|
           - unless current_user.email?
             p
               | Your profile is not complete. Please, submit an email to be used in this Portus instance.

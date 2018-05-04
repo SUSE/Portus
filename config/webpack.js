@@ -35,6 +35,13 @@ var config = {
       modules: false,
       assets: true,
     }),
+
+    // fix legacy jQuery plugins which depend on globals
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+    }),
   ],
 
   resolve: {
@@ -56,6 +63,9 @@ var config = {
         test: /\.(js|vue)/,
         include: path.join(ROOT_PATH, 'app/assets/javascripts'),
         loader: 'istanbul-instrumenter-loader',
+        query: {
+          esModules: true,
+        },
       } : [],
       {
         test: /\.js$/,

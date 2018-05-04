@@ -27,7 +27,6 @@ export default {
       TeamsService.update(this.teamCopy).then((response) => {
         const team = response.data;
 
-
         this.$bus.$emit('teamUpdated', team);
         this.$alert.$show(`Team '${team.name}' was updated successfully`);
       }).catch(handleHttpResponseError);

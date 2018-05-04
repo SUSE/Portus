@@ -102,6 +102,7 @@ export default {
   save,
   update,
   exists,
+  searchMember,
   destroyMember,
   updateMember,
   saveMember,
