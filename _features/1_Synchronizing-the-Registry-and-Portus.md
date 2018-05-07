@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Synchonizing the Registry and Portus
+title: Synchronizing the Registry and Portus
 longtitle: Synchronization with your private registry in order to fetch which images and tags are available
 order: 1
 ---
