@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "ostruct"
 require "rails_helper"
 
 class LdapMockAdapter
@@ -16,8 +17,20 @@ end
 
 class LdapFailedBindAdapter < LdapMockAdapter
   def bind_as(_)
+    raise Net::LDAP::Error, "Net::LDAP::Error exception" if ENV["LDAP_RAISE_EXCEPTION"] == "true"
     false
   end
+
+  # rubocop:disable Naming/AccessorMethodName
+  def get_operation_result
+    code = ENV["LDAP_OPERATION_CODE"] || 1
+
+    OpenStruct.new(
+      message: "a message",
+      code:    code.to_i
+    )
+  end
+  # rubocop:enable Naming/AccessorMethodName
 end
 
 class LdapSearchAdapter
@@ -168,7 +181,63 @@ describe Portus::LDAP do
     [["starttls", :start_tls], ["simple_tls", :simple_tls], ["lala", nil]].each do |e|
       APP_CONFIG["ldap"]["method"] = e[0]
       cfg = lm.load_configuration_test
-      expect(cfg.opts[:encryption]).to eq e[1]
+
+      enc = cfg.opts.fetch(:encryption, {})
+      expect(enc ? enc[:method] : enc).to eq e[1]
+    end
+  end
+
+  context "encryption" do
+    before do
+      APP_CONFIG["ldap"] = ldap_config
+    end
+
+    it "returns nil on plain" do
+      APP_CONFIG["ldap"]["encryption"] = {
+        "method" => "plain"
+      }
+
+      lm = LdapMock.new(username: "name", password: "1234")
+      cfg = lm.load_configuration_test
+
+      expect(cfg.opts[:encryption]).to be_nil
+    end
+
+    it "returns some default parameters when options are not given" do
+      APP_CONFIG["ldap"]["encryption"] = {
+        "method" => "start_tls"
+      }
+
+      lm = LdapMock.new(username: "name", password: "1234")
+      cfg = lm.load_configuration_test
+      expect(cfg.opts[:encryption][:method]).to eq :start_tls
+      expect(cfg.opts[:encryption][:tls_options]).to eq OpenSSL::SSL::SSLContext::DEFAULT_PARAMS
+    end
+
+    it "adds the CA file" do
+      APP_CONFIG["ldap"]["encryption"] = {
+        "method"  => "start_tls",
+        "options" => { "ca_file" => "/my/pem/file" }
+      }
+
+      lm = LdapMock.new(username: "name", password: "1234")
+      cfg = lm.load_configuration_test
+      expect(cfg.opts[:encryption][:method]).to eq :start_tls
+      expect(cfg.opts[:encryption][:tls_options][:ca_file]).to eq "/my/pem/file"
+      expect(cfg.opts[:encryption][:tls_options][:ssl_version]).to be_nil
+    end
+
+    it "adds the CA file and the SSL version" do
+      APP_CONFIG["ldap"]["encryption"] = {
+        "method"  => "start_tls",
+        "options" => { "ca_file" => "/my/pem/file", "ssl_version" => "TLSv1_1" }
+      }
+
+      lm = LdapMock.new(username: "name", password: "1234")
+      cfg = lm.load_configuration_test
+      expect(cfg.opts[:encryption][:method]).to eq :start_tls
+      expect(cfg.opts[:encryption][:tls_options][:ca_file]).to eq "/my/pem/file"
+      expect(cfg.opts[:encryption][:tls_options][:ssl_version]).to eq "TLSv1_1"
     end
   end
 
@@ -296,6 +365,11 @@ describe Portus::LDAP do
   end
 
   describe "#authenticate!" do
+    before do
+      ENV["LDAP_OPERATION_CODE"] = nil
+      ENV["LDAP_RAISE_EXCEPTION"] = nil
+    end
+
     it "raises an exception if ldap is not supported" do
       lm = LdapMock.new(username: "name", password: "1234")
       lm.authenticate!
@@ -307,7 +381,27 @@ describe Portus::LDAP do
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.bind_result = false
       lm.authenticate!
-      expect(lm.last_symbol).to be :ldap_bind_failed
+      expect(lm.last_symbol).to eq "a message (code 1)"
+    end
+
+    it "fails if the user was not found" do
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
+      ENV["LDAP_OPERATION_CODE"] = "0"
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      lm.bind_result = false
+      lm.authenticate!
+      expect(lm.last_symbol).to eq "Could not find user 'name'"
+    end
+
+    it "can rescue Net::LDAP::Error exceptions" do
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
+      ENV["LDAP_RAISE_EXCEPTION"] = "true"
+
+      lm = LdapMock.new(username: "name", password: "12341234")
+      lm.bind_result = false
+      lm.authenticate!
+      expect(lm.last_symbol).to eq "Net::LDAP::Error exception"
     end
 
     it "raises an exception if the user could not created" do
