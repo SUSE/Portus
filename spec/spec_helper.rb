@@ -100,6 +100,11 @@ RSpec.configure do |config|
       "contributors" => false
     }
 
+    APP_CONFIG["pagination"] = {
+      "limit"        => 10,
+      "before_after" => 2
+    }
+
     Rails.cache.write("portus-checks", nil)
   end
 

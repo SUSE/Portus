@@ -28,9 +28,15 @@ describe('tags-table', () => {
   ]);
 
   beforeEach(() => {
+    const $config = {
+      pagination: {
+        beforeAfter: 2,
+        limit: 3,
+      },
+    };
+
     wrapper = mount(TagsTable, {
       propsData: {
-        limit: 3,
         currentPage: 2,
         state: {
           selectedTags: [],
@@ -41,6 +47,7 @@ describe('tags-table', () => {
         securityEnabled: true,
       },
       mocks: {
+        $config,
         $bus: {
           $emit: sinon.spy(),
         },

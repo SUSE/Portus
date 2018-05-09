@@ -2,15 +2,19 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import Vuelidate from 'vuelidate';
 
-import EventBus from './plugins/eventbus';
-import Alert from './plugins/alert';
+import EventBus from '~/plugins/eventbus';
+import Alert from '~/plugins/alert';
+import Config from '~/plugins/config';
+
+import configObj from '~/config';
 
 Vue.use(Vuelidate);
 Vue.use(VueResource);
 Vue.use(EventBus);
 Vue.use(Alert);
+Vue.use(Config);
 
-Vue.http.options.root = window.API_URL;
+Vue.http.options.root = configObj.apiUrl;
 
 Vue.http.interceptors.push((_request, next) => {
   window.$.active = window.$.active || 0;

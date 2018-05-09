@@ -7,10 +7,6 @@ const { set } = Vue;
 
 export default {
   props: {
-    limit: {
-      type: Number,
-      default: 10,
-    },
     prefix: {
       type: String,
       default: '',
@@ -23,6 +19,7 @@ export default {
 
   data() {
     return {
+      limit: this.$config.pagination.limit,
       currentPage: 1,
     };
   },

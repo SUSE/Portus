@@ -34,7 +34,7 @@
 
     data() {
       return {
-        showMore: 2,
+        beforeAfter: this.$config.pagination.beforeAfter,
       };
     },
 
@@ -58,8 +58,8 @@
           return [];
         }
 
-        let minRange = this.currentPage - this.showMore;
-        let maxRange = this.currentPage + this.showMore;
+        let minRange = this.currentPage - this.beforeAfter;
+        let maxRange = this.currentPage + this.beforeAfter;
 
         const distanceLeft = Math.abs(1 - minRange);
         const distanceRight = Math.abs(this.totalPages - maxRange);

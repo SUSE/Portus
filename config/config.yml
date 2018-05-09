@@ -340,3 +340,12 @@ background:
     #     empty. This is the default value since it's deemed to be the most
     #     common use-case.
     strategy: initial
+
+# Pagination configuration
+pagination:
+  # Number of entries to be listed per page
+  limit: 10
+
+  # Number of pages to be showed before and after the current one
+  # e,g.: Prev 1 2 [3] 4 5 Next
+  before_after: 2
