@@ -1,0 +1,127 @@
+version: "2"
+
+services:
+  portus:
+    image: opensuse/portus:head
+    environment:
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_CHECK_SSL_USAGE_ENABLED=false
+
+      - CCONFIG_PREFIX=PORTUS
+
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_DATABASE=portus_production
+      - PORTUS_DB_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
+
+      # Secrets. It can possibly be handled better with Swarm's secrets.
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
+
+      # Since we have no nginx in insecure mode, portus have to
+      # serve the static files
+      - RAILS_SERVE_STATIC_FILES=true
+
+      # LDAP
+      - PORTUS_LDAP_ENABLED=true
+      - PORTUS_LDAP_HOSTNAME=ldap
+      - PORTUS_LDAP_PORT=389
+      - PORTUS_LDAP_UID=uid
+      - PORTUS_LDAP_BASE=dc=example,dc=org
+      - PORTUS_LDAP_FILTER=
+      - PORTUS_LDAP_AUTHENTICATION_ENABLED=true
+      - PORTUS_LDAP_AUTHENTICATION_BIND_DN=cn=admin,dc=example,dc=org
+      - PORTUS_LDAP_AUTHENTICATION_PASSWORD=admin
+      - PORTUS_LDAP_ENCRYPTION_METHOD=start_tls
+      - PORTUS_LDAP_ENCRYPTION_OPTIONS_CA_FILE=/ldap-certificates/ca.pem
+      - PORTUS_LDAP_ENCRYPTION_OPTIONS_SSL_VERSION=TLSv1_2
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+      - ldap
+    links:
+      - db
+      - ldap
+    volumes:
+      - ./secrets:/certificates:ro
+      - ./secrets/ldap:/ldap-certificates:ro
+
+  background:
+    image: opensuse/portus:head
+    depends_on:
+      - portus
+      - db
+    environment:
+      # Theoretically not needed, but cconfig's been buggy on this...
+      - CCONFIG_PREFIX=PORTUS
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+
+      # DB. The password for the database should definitely not be here. You are
+      # probably better off with Docker Swarm secrets.
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_DATABASE=portus_production
+      - PORTUS_DB_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
+
+      # Secrets. It can possibly be handled better with Swarm's secrets.
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
+
+      - PORTUS_BACKGROUND=true
+    links:
+      - db
+    volumes:
+      - ./secrets:/certificates:ro
+
+  db:
+    image: library/mariadb:10.0.23
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;' --innodb-flush-log-at-trx-commit=0
+    environment:
+      - MYSQL_DATABASE=portus_production
+
+      # Again, the password shouldn't be handled like this.
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - /var/lib/portus/mariadb:/var/lib/mysql
+
+  registry:
+    image: library/registry:2.6
+    environment:
+      # Authentication
+      REGISTRY_AUTH_TOKEN_REALM: http://${MACHINE_FQDN}:3000/v2/token
+      REGISTRY_AUTH_TOKEN_SERVICE: ${MACHINE_FQDN}:5000
+      REGISTRY_AUTH_TOKEN_ISSUER: ${MACHINE_FQDN}
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /secrets/portus.crt
+
+      # Portus endpoint
+      REGISTRY_NOTIFICATIONS_ENDPOINTS: >
+        - name: portus
+          url: http://${MACHINE_FQDN}:3000/v2/webhooks/events
+          timeout: 2000ms
+          threshold: 5
+          backoff: 1s
+    volumes:
+      - /var/lib/portus/registry:/var/lib/registry
+      - ./secrets:/secrets:ro
+      - ./registry/config.yml:/etc/docker/registry/config.yml:ro
+    ports:
+      - 5000:5000
+      - 5001:5001 # required to access debug service
+    links:
+      - portus:portus
+
+  ldap:
+    image: osixia/openldap:1.2.0
+    command: --copy-service
+    hostname: ldap
+    environment:
+      - LDAP_TLS_ENFORCE=true
+      - LDAP_TLS_CRT_FILENAME=ldap.crt
+      - LDAP_TLS_KEY_FILENAME=ldap.key
+      - LDAP_TLS_CA_CRT_FILENAME=ca.crt
+      - LDAP_TLS_VERIFY_CLIENT=try
+    volumes:
+      - ./secrets/ldap:/container/service/slapd/assets/certs:ro

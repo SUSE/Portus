@@ -12,6 +12,7 @@ module ::Portus
       background: LOCAL_IMAGE,
       db:         "library/mariadb:10.0.23",
       clair:      "quay.io/coreos/clair:v2.0.1",
+      ldap:       "osixia/openldap:1.2.0",
       portus:     LOCAL_IMAGE,
       postgres:   "library/postgres:10-alpine",
       registry:   "library/registry:2.6"
