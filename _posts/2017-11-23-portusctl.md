@@ -52,7 +52,7 @@ Two things happened at once that made us re-evaluate the purpose of this tool:
 While working on [SUSE CaaS
 Platform](https://www.suse.com/products/caas-platform/), we started to
 appreciate more and more one of the handier tools of Kubernetes:
-[kubectl](https://kubernetes.io/docs/user-guide/kubectl/). This tool is, in
+[kubectl](https://kubernetes.io/docs/reference/kubectl/overview/). This tool is, in
 short, a client of the REST API of Kubernetes. It has a very nice user
 experience, and we thought we could provide something similar for the Portus
 API.

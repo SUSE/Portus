@@ -469,6 +469,23 @@ background:
     use-case and the safest option. The idea behind this option is that you only
     want to synchronize when bootstrapping your instance.
 
+### Pagination
+
+**Note**: feature only available in Portus 2.4 or later.
+
+You can configure how pagination behaves regarding table entries and the pages
+component. The `limit` attribute refers to the number of entries per page that
+should be displayed and `before_after` to the number of pages to be displayed
+before and after the current page in the pages component. The default values are
+descibred as below:
+
+{% highlight yaml %}
+pagination:
+  limit: 10
+  before_after: 2
+{% endhighlight %}
+
+
 ## Deploying Portus in a Sub-URI
 
 In some deployments it might make sense to make Portus accessible through a
