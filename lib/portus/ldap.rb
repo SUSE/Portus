@@ -26,6 +26,7 @@ module Portus
   class LDAP < Devise::Strategies::Authenticatable
     # Re-implemented from Devise::Strategies::Authenticatable to authenticate
     # the user.
+    # rubocop:disable Metrics/PerceivedComplexity
     def authenticate!
       @ldap = load_configuration
 
@@ -37,14 +38,29 @@ module Portus
         # authentication process will fail without going to the any other
         # strategy. Otherwise, login the current user into Portus (and create
         # it if it doesn't exist).
-        @ldap.bind_as(bind_options) ? portus_login! : fail!(:ldap_bind_failed)
+        res = @ldap.bind_as(bind_options)
+        if res
+          portus_login!
+        else
+          msg = if @ldap.get_operation_result.code.zero?
+                  "Could not find user '#{username}'"
+                else
+                  "#{@ldap.get_operation_result.message} (code #{@ldap.get_operation_result.code})"
+                end
+          Rails.logger.tagged(:ldap) { Rails.logger.error("#{msg}.") }
+          fail!(msg)
+        end
       else
         # rubocop:disable Style/SignalException
         fail(:ldap_failed)
         # rubocop:enable Style/SignalException
       end
       # rubocop:enable Style/GuardClause
+    rescue Net::LDAP::Error => e
+      Rails.logger.tagged(:ldap) { Rails.logger.error("#{e.message}.") }
+      fail!(e.message)
     end
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # Returns true if LDAP has been enabled in the application, false
     # otherwise.
@@ -73,6 +89,7 @@ module Portus
     end
 
     def adapter_options
+      # TODO: add connect_timeout
       cfg = APP_CONFIG["ldap"]
       {
         host:       cfg["hostname"],
@@ -94,14 +111,37 @@ module Portus
       adapter.new(adapter_options)
     end
 
-    # Returns the encryption method to be used. Invalid encryption methods will
-    # be mapped to "plain".
+    # Returns the encryption hash to be used. If no encryption is being used,
+    # then nil is returned.
     def encryption(config)
-      case config["method"]
+      method = encryption_method(config)
+      return nil if method.blank?
+
+      {
+        method:      method,
+        tls_options: encryption_options(config)
+      }
+    end
+
+    # Returns the encryption method as a symbol or nil if none was provided.
+    def encryption_method(config)
+      method = config.fetch("encryption", {})["method"] || config["method"]
+      case method.to_s
+      when "start_tls", "simple_tls"
+        method.to_sym
       when "starttls"
         :start_tls
-      when "simple_tls"
-        :simple_tls
+      end
+    end
+
+    # Returns the encryption options to be used. If none was specified, then the
+    # default parameters will be returned (default CA from the host).
+    def encryption_options(config)
+      options = config.fetch("encryption", {})["options"]
+      return OpenSSL::SSL::SSLContext::DEFAULT_PARAMS if options.blank? || options["ca_file"].blank?
+
+      { ca_file: options["ca_file"] }.tap do |opt|
+        opt[:ssl_version] = options["ssl_version"] if options["ssl_version"].present?
       end
     end
 

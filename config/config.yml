@@ -51,9 +51,21 @@ ldap:
   hostname: "ldap_hostname"
   port: 389
 
-  # Available options: "plain", "simple_tls" and "starttls". The default is
-  # "plain", the recommended is "starttls".
+  # Available options: "plain", "simple_tls" and "start_tls".
+  # TODO: deprecated in favor of `encryption.method`.
   method: "plain"
+
+  # Encryption options
+  encryption:
+    # Available methods: "plain", "simple_tls" and "start_tls".
+    method: ""
+    options:
+      # The CA file to be accepted by the LDAP server. If none is provided, then
+      # the default parameters from the host will be sent.
+      ca_file: ""
+
+      # Protocol version.
+      ssl_version: "TLSv1_2"
 
   # The base where users are located (e.g. "ou=users,dc=example,dc=com").
   base: ""
