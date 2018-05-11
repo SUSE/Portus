@@ -89,12 +89,12 @@ module Portus
     end
 
     def adapter_options
-      # TODO: add connect_timeout
       cfg = APP_CONFIG["ldap"]
       {
-        host:       cfg["hostname"],
-        port:       cfg["port"],
-        encryption: encryption(cfg)
+        host:               cfg["hostname"],
+        port:               cfg["port"],
+        connection_timeout: cfg["timeout"],
+        encryption:         encryption(cfg)
       }.tap do |options|
         options.merge!(auth_options) if authentication?
       end
