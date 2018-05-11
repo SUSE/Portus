@@ -57,6 +57,16 @@ module ApplicationHelper
     User.not_portus.none? && APP_CONFIG.enabled?("first_user_admin") && Portus::LDAP.enabled?
   end
 
+  # Returns pagination limit config
+  def pagination_limit
+    APP_CONFIG["pagination"]["limit"]
+  end
+
+  # Returns pagination before after config
+  def pagination_before_after
+    APP_CONFIG["pagination"]["before_after"]
+  end
+
   # Render markdown to safe HTML.
   # Images, unsafe link protocols and styles are not allowed to render.
   # HTML-Tags will be filtered.

@@ -6,11 +6,16 @@ describe('table-pagination', () => {
   let wrapper;
 
   beforeEach(() => {
+    const $config = { pagination: { beforeAfter: 2 } };
+
     wrapper = mount(TablePagination, {
       propsData: {
         total: 10,
         itensPerPage: 3,
         currentPage: 1,
+      },
+      mocks: {
+        $config,
       },
     });
   });
