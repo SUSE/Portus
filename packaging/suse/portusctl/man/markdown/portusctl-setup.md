@@ -83,8 +83,20 @@ first time.
 
 **--ldap-method**
   The encryption method that the LDAP server is using. You have three options:
-  **plain** (default), **simple_tls** and **starttls**. Even if **plain** is the
-  default value, we strongly recommend using **starttls** in production environments.
+  **plain** (default), **simple_tls** and **starttls**. This has been
+  deprecated.
+
+**--ldap-encryption-method**:
+  The encryption method that the LDAP server is using. You have three options:
+  **plain** (default), **simple_tls** and **start_tls**.
+
+**--ldap-encryption-options-ca-file**:
+  The path to the CA file to be used for encrypted communications. If nothing is
+  provided, then it defaults to the ones from the host.
+
+**--ldap-encryption-options-ssl-version**:
+  The SSL version to be used on all communications. It uses 'TLSv1_2' by
+  default.
 
 **--ldap-base**
   The LDAP base to be considered when fetching users. It defaults to

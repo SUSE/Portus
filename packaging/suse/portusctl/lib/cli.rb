@@ -56,8 +56,17 @@ class Cli < Thor
   option "ldap-hostname", desc: "LDAP: server hostname"
   option "ldap-port", desc: "LDAP: server port", default: "389"
   option "ldap-method",
-         desc:    "LDAP: encryption method (recommended: starttls)",
+         desc:    "LDAP: encryption method",
          default: "plain"
+  option "ldap-encryption-method",
+         desc:    "LDAP: encryption method",
+         default: "plain"
+  option "ldap-encryption-options-ca-file",
+         desc:    "LDAP: path to the CA file to be passed",
+         default: ""
+  option "ldap-encryption-options-ssl-version",
+         desc:    "LDAP: SSL version to be used for communications",
+         default: "TLSv1_2"
   option "ldap-base", desc: "LDAP: base", default: "ou=users, dc=example, dc=com"
   option "ldap-filter", desc: "LDAP: filter users"
   option "ldap-uid", desc: "LDAP: uid", default: "uid"

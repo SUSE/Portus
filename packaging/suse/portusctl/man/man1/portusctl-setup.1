@@ -81,8 +81,20 @@ The port on which the LDAP server is listening.
 .TP
 \fB\-\-ldap\-method\fP
 The encryption method that the LDAP server is using. You have three options:
-\fBplain\fP (default), \fBsimple_tls\fP and \fBstarttls\fP\&. Even if \fBplain\fP is the
-default value, we strongly recommend using \fBstarttls\fP in production environments.
+\fBplain\fP (default), \fBsimple_tls\fP and \fBstarttls\fP\&. This has been
+deprecated.
+.TP
+\fB\-\-ldap\-encryption\-method\fP:
+The encryption method that the LDAP server is using. You have three options:
+\fBplain\fP (default), \fBsimple_tls\fP and \fBstart_tls\fP\&.
+.TP
+\fB\-\-ldap\-encryption\-options\-ca\-file\fP:
+The path to the CA file to be used for encrypted communications. If nothing is
+provided, then it defaults to the ones from the host.
+.TP
+\fB\-\-ldap\-encryption\-options\-ssl\-version\fP:
+The SSL version to be used on all communications. It uses 'TLSv1_2' by
+default.
 .TP
 \fB\-\-ldap\-base\fP
 The LDAP base to be considered when fetching users. It defaults to
