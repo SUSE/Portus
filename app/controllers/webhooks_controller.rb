@@ -16,21 +16,33 @@ class WebhooksController < ApplicationController
   def index
     authorize @namespace
     @webhooks = policy_scope(Webhook).where(namespace: @namespace).page(params[:page])
+    @webhooks_serialized = API::Entities::Webhooks.represent(
+      @webhooks,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
 
     respond_with(@namespace, @webhooks)
   end
 
-  # POST /namespaces/1/webhooks
   # POST /namespaces/1/webhooks.json
   def create
     @webhook = @namespace.webhooks.build(webhook_params)
     authorize @webhook
 
-    if @webhook.save
-      @webhook.create_activity :create, owner: current_user
-      respond_with @namespace, @webhook
-    else
-      respond_with @webhook.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @webhook.save
+        @webhook.create_activity :create, owner: current_user
+        @webhook_serialized = API::Entities::Webhooks.represent(
+          @webhook,
+          current_user: current_user,
+          type:         :internal
+        ).to_json
+
+        format.json { render json: @webhook_serialized }
+      else
+        format.json { render json: @webhook.errors.full_messages, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -67,24 +79,33 @@ class WebhooksController < ApplicationController
     respond_with @namespace, @webhook
   end
 
-  # PATCH/PUT /namespace/1/webhooks/1/toggle_enabled
+  # PUT /namespace/1/webhooks/1/toggle_enabled.json
   def toggle_enabled
     authorize @webhook
     @webhook.update_attribute(:enabled, !@webhook.enabled?)
+    new_state = @webhook.enabled? ? :enabled : :disabled
+    @webhook.create_activity new_state, owner: current_user
 
-    if @webhook.enabled?
-      @webhook.create_activity :enabled, owner: current_user
-    else
-      @webhook.create_activity :disabled, owner: current_user
+    respond_to do |format|
+      @webhook_serialized = API::Entities::Webhooks.represent(
+        @webhook,
+        current_user: current_user,
+        type:         :internal
+      ).to_json
+
+      format.json { render json: @webhook_serialized }
     end
-
-    render template: "webhooks/toggle_enabled", locals: { namespace: @namespace, webhook: @webhook }
   end
 
   private
 
   def set_namespace
     @namespace = Namespace.find(params[:namespace_id])
+    @namespace_serialized = API::Entities::Namespaces.represent(
+      @namespace,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
   end
 
   def set_webhook

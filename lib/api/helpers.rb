@@ -4,6 +4,7 @@ require "portus/auth_from_token"
 require "api/helpers/errors"
 require "api/helpers/teams"
 require "api/helpers/comments"
+require "api/helpers/webhooks"
 
 module API
   module Helpers
@@ -15,6 +16,7 @@ module API
     include Errors
     include Teams
     include Comments
+    include Webhooks
 
     # On success it will fill the @user instance variable with the currently
     # authenticated user for the API. Otherwise it will raise:

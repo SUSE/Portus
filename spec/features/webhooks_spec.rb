@@ -23,39 +23,33 @@ describe "Webhooks support" do
 
   describe "#index" do
     it "A user cannot create an empty webhook", js: true do
-      webhooks_count = namespace.webhooks.count
-
       visit namespace_webhooks_path(namespace)
-      find("#add_webhook_btn").click
+      find(".toggle-link-new-webhook").click
 
-      click_button "Create"
-      wait_for_ajax
-
-      expect(namespace.webhooks.count).to eql webhooks_count
-      expect(page).to have_current_path(namespace_webhooks_path(namespace))
+      expect(page).to have_button("Add", disabled: true)
     end
 
     it "A user can create a webhook from namespace's webhooks page", js: true do
       webhooks_count = namespace.webhooks.count
 
       visit namespace_webhooks_path(namespace)
-      find("#add_webhook_btn").click
-      wait_for_effect_on("#add_webhook_form")
+      find(".toggle-link-new-webhook").click
+      wait_for_effect_on("#new-webhook-form")
 
-      fill_in "Name", with: "name"
-      fill_in "Url", with: "http://url-here"
-      click_button "Create"
+      fill_in "Name", with: "webhook name"
+      fill_in "URL", with: "http://url-here"
+      click_button "Add"
 
       wait_for_ajax
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
-      expect(page).to have_content("Webhook 'name' has been created successfully")
+      expect(page).to have_content("Webhook 'webhook name' was created successfully")
 
       # Check that it created a link to it and that it's accessible.
       expect(namespace.webhooks.count).to eql webhooks_count + 1
-      expect(page).to have_link("http://url-here")
-      find(:link, "http://url-here").trigger(:click)
+      expect(page).to have_link("webhook name")
+      find(:link, "webhook name").trigger(:click)
 
       webhook = namespace.webhooks.find_by(url: "http://url-here")
       expect(page).to have_current_path(namespace_webhook_path(namespace, webhook))
@@ -64,50 +58,50 @@ describe "Webhooks support" do
     it 'The "Create new webhook" link has a toggle effect', js: true do
       visit namespace_webhooks_path(namespace)
 
-      expect(page).to have_css("#add_webhook_btn i.fa-plus-circle")
-      expect(page).not_to have_css("#add_webhook_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-webhook i.fa-plus-circle")
+      expect(page).not_to have_css(".toggle-link-new-webhook i.fa-minus-circle")
 
-      find("#add_webhook_btn").click
+      find(".toggle-link-new-webhook").click
 
-      expect(page).not_to have_css("#add_webhook_btn i.fa-plus-circle")
-      expect(page).to have_css("#add_webhook_btn i.fa-minus-circle")
+      expect(page).not_to have_css(".toggle-link-new-webhook i.fa-plus-circle")
+      expect(page).to have_css(".toggle-link-new-webhook i.fa-minus-circle")
 
-      find("#add_webhook_btn").click
+      find(".toggle-link-new-webhook").click
 
-      expect(page).to have_css("#add_webhook_btn i.fa-plus-circle")
-      expect(page).not_to have_css("#add_webhook_btn i.fa-minus-circle")
+      expect(page).to have_css(".toggle-link-new-webhook i.fa-plus-circle")
+      expect(page).not_to have_css(".toggle-link-new-webhook i.fa-minus-circle")
     end
 
     it "A user enables/disables webhook", js: true do
       visit namespace_webhooks_path(namespace)
       id = webhook.id
 
-      expect(page).to have_css("#webhook_#{id} .fa-toggle-on")
-      find("#webhook_#{id} .toggle").click
+      expect(page).to have_css(".webhook_#{id} .fa-toggle-on")
+      find(".webhook_#{id} .toggle").click
       wait_for_ajax
 
-      expect(page).to have_css("#webhook_#{id} .fa-toggle-off")
-      expect(page).to have_content("Webhook '#{webhook.url}' is now disabled")
+      expect(page).to have_css(".webhook_#{id} .fa-toggle-off")
+      expect(page).to have_content("Webhook '#{webhook.name}' is now disabled")
 
-      find("#webhook_#{id} .toggle").click
+      find(".webhook_#{id} .toggle").click
       wait_for_ajax
 
-      expect(page).to have_css("#webhook_#{id} .fa-toggle-on")
-      expect(page).to have_content("Webhook '#{webhook.url}' is now enabled")
+      expect(page).to have_css(".webhook_#{id} .fa-toggle-on")
+      expect(page).to have_content("Webhook '#{webhook.name}' is now enabled")
     end
 
     it "A user deletes a webhook", js: true do
       visit namespace_webhooks_path(namespace)
       id = webhook.id
 
-      expect(page).to have_link(webhook.url)
+      expect(page).to have_link(webhook.name)
 
-      find("#webhook_#{id} .delete-webhook-btn").click
-      find(".popover-content .btn-primary").click
+      find(".webhook_#{id} .delete-webhook-btn").click
+      find(".popover-content .yes").click
       wait_for_ajax
 
-      expect(page).not_to have_link(webhook.url)
-      expect(page).to have_content("Webhook '#{webhook.host}' has been removed successfully")
+      expect(page).not_to have_link(webhook.name)
+      expect(page).to have_content("Webhook '#{webhook.name}' was removed successfully")
     end
   end
 
