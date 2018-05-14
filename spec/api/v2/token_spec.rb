@@ -171,7 +171,8 @@ describe "/v2/token" do
 
     context "as LDAP user I can authenticate from Docker CLI" do
       before do
-        APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
+        APP_CONFIG["ldap"]["enabled"] = true
+        APP_CONFIG["ldap"]["base"] = ""
         allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_call_original
         allow_any_instance_of(Net::LDAP).to receive(:bind_as).and_return(true)
       end

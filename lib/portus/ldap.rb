@@ -106,7 +106,7 @@ module Portus
       return nil if !::Portus::LDAP.enabled? || params[:account] == "portus"
 
       fill_user_params!
-      return nil unless user_params_set?
+      return unless user_params_set?
 
       adapter.new(adapter_options)
     end
@@ -115,7 +115,7 @@ module Portus
     # then nil is returned.
     def encryption(config)
       method = encryption_method(config)
-      return nil if method.blank?
+      return if method.blank?
 
       {
         method:      method,
@@ -125,7 +125,7 @@ module Portus
 
     # Returns the encryption method as a symbol or nil if none was provided.
     def encryption_method(config)
-      method = config.fetch("encryption", {})["method"] || config["method"]
+      method = config["encryption"]["method"]
       case method.to_s
       when "start_tls", "simple_tls"
         method.to_sym
@@ -137,7 +137,7 @@ module Portus
     # Returns the encryption options to be used. If none was specified, then the
     # default parameters will be returned (default CA from the host).
     def encryption_options(config)
-      options = config.fetch("encryption", {})["options"]
+      options = config["encryption"]["options"]
       return OpenSSL::SSL::SSLContext::DEFAULT_PARAMS if options.blank? || options["ca_file"].blank?
 
       { ca_file: options["ca_file"] }.tap do |opt|

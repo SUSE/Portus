@@ -111,23 +111,12 @@ class PortusMock < Portus::LDAP
 end
 
 describe Portus::LDAP do
-  let(:ldap_config) do
-    {
-      "enabled"  => true,
-      "hostname" => "hostname",
-      "port"     => 389,
-      "base"     => "ou=users,dc=example,dc=com",
-      "uid"      => "uid"
-    }
-  end
-
   before do
+    APP_CONFIG["ldap"]["enabled"] = true
     allow_any_instance_of(described_class).to receive(:authenticate!).and_call_original
   end
 
   it "sets self.enabled? accordingly" do
-    expect(described_class).not_to be_enabled
-
     APP_CONFIG["ldap"] = {}
     expect(described_class).not_to be_enabled
 
@@ -148,14 +137,17 @@ describe Portus::LDAP do
   end
 
   it "loads the configuration properly" do
+    original = APP_CONFIG["ldap"].dup
+
+    APP_CONFIG["ldap"]["enabled"] = false
     lm = LdapMock.new(nil)
     expect(lm.load_configuration_test).to be nil
 
-    APP_CONFIG["ldap"] = { "enabled" => true }
+    APP_CONFIG["ldap"]["enabled"] = true
     expect(lm.load_configuration_test).to be nil
 
     # The Portus user does not authenticate through LDAP.
-    APP_CONFIG["ldap"] = ldap_config
+    APP_CONFIG["ldap"] = original
     lm = PortusMock.new(account: "portus", password: "1234")
     expect(lm.load_configuration_test).to be nil
 
@@ -178,20 +170,18 @@ describe Portus::LDAP do
     expect(cfg.opts).not_to have_key(:auth)
 
     # Test different encryption methods.
-    [["starttls", :start_tls], ["simple_tls", :simple_tls], ["lala", nil]].each do |e|
-      APP_CONFIG["ldap"]["method"] = e[0]
+    [["starttls", :start_tls], ["simple_tls", :simple_tls]].each do |e|
+      APP_CONFIG["ldap"]["encryption"]["method"] = e[0]
       cfg = lm.load_configuration_test
-
-      enc = cfg.opts.fetch(:encryption, {})
-      expect(enc ? enc[:method] : enc).to eq e[1]
+      expect(cfg.opts[:encryption][:method]).to eq e[1]
     end
+
+    APP_CONFIG["ldap"]["encryption"]["method"] = "lala"
+    cfg = lm.load_configuration_test
+    expect(cfg.opts[:encryption]).to be_nil
   end
 
   context "encryption" do
-    before do
-      APP_CONFIG["ldap"] = ldap_config
-    end
-
     it "returns nil on plain" do
       APP_CONFIG["ldap"]["encryption"] = {
         "method" => "plain"
@@ -244,7 +234,7 @@ describe Portus::LDAP do
   it "loads the auth configuration properly" do
     # auth configuration disabled
     auth = { "enabled" => false }
-    APP_CONFIG["ldap"] = { "enabled" => true, "authentication" => auth }
+    APP_CONFIG["ldap"]["authentication"] = auth
 
     lm = LdapMock.new(username: "name", password: "1234")
     cfg = lm.load_configuration_test
@@ -252,7 +242,7 @@ describe Portus::LDAP do
 
     # auth configuration enabled
     auth = { "enabled" => true, "bind_dn" => "foo", "password" => "pass" }
-    APP_CONFIG["ldap"] = { "enabled" => true, "authentication" => auth }
+    APP_CONFIG["ldap"]["authentication"] = auth
 
     lm = LdapMock.new(username: "name", password: "1234")
     cfg = lm.load_configuration_test
@@ -262,6 +252,8 @@ describe Portus::LDAP do
   end
 
   it "fetches the right bind options" do
+    original = APP_CONFIG["ldap"].dup
+
     APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "uid" }
     lm = LdapMock.new(username: "name", password: "1234")
     opts = lm.bind_options_test
@@ -269,7 +261,7 @@ describe Portus::LDAP do
     expect(opts[:filter].to_s).to eq "(uid=name)"
     expect(opts[:password]).to eq "1234"
 
-    APP_CONFIG["ldap"] = ldap_config
+    APP_CONFIG["ldap"] = original
     opts = lm.bind_options_test
     expect(opts.size).to eq 3
     expect(opts[:filter].to_s).to eq "(uid=name)"
@@ -368,16 +360,19 @@ describe Portus::LDAP do
     before do
       ENV["LDAP_OPERATION_CODE"] = nil
       ENV["LDAP_RAISE_EXCEPTION"] = nil
+
+      APP_CONFIG["ldap"]["enabled"] = true
+      APP_CONFIG["ldap"]["base"] = ""
     end
 
     it "raises an exception if ldap is not supported" do
+      APP_CONFIG["ldap"]["enabled"] = false
       lm = LdapMock.new(username: "name", password: "1234")
       lm.authenticate!
       expect(lm.last_symbol).to be :ldap_failed
     end
 
     it "fails if the user couldn't bind" do
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.bind_result = false
       lm.authenticate!
@@ -385,7 +380,6 @@ describe Portus::LDAP do
     end
 
     it "fails if the user was not found" do
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
       ENV["LDAP_OPERATION_CODE"] = "0"
 
       lm = LdapMock.new(username: "name", password: "12341234")
@@ -395,7 +389,6 @@ describe Portus::LDAP do
     end
 
     it "can rescue Net::LDAP::Error exceptions" do
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
       ENV["LDAP_RAISE_EXCEPTION"] = "true"
 
       lm = LdapMock.new(username: "name", password: "12341234")
@@ -405,14 +398,12 @@ describe Portus::LDAP do
     end
 
     it "raises an exception if the user could not created" do
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
       lm = LdapMock.new(username: "name", password: "1234")
       lm.authenticate!
       expect(lm.last_symbol).to eq "Password is too short (minimum is 8 characters)"
     end
 
     it "returns a success if it was successful" do
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "" }
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.authenticate!
       expect(lm.last_symbol).to be :ok
