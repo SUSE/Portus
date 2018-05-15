@@ -1,7 +1,7 @@
 import BaseComponent from '~/base/component';
 
-import WebhookDetails from '../components/webhook-details';
-import WebhookHeadersPanel from '../components/webhook-headers-panel';
+import WebhookDetails from '../components/legacy/webhook-details';
+import WebhookHeadersPanel from '../components/legacy/webhook-headers-panel';
 
 const WEBHOOK_DETAILS = '.webhook-details';
 const WEBHOOK_HEADERS_PANEL = '.webhook-headers-panel';

@@ -310,6 +310,43 @@ module API
       end
     end
 
+    class Webhooks < Grape::Entity
+      include ::API::Helpers
+
+      expose :id, documentation: { type: Integer, desc: "Webhook ID" }
+      expose :name, documentation: { type: String, desc: "Webhook name" }
+      expose :enabled, documentation: { type: "Boolean", desc: "Webhook name" }
+      expose :namespace_id, documentation: { type: Integer, desc: "Webhook namespace ID" }
+      expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :username, documentation: {
+        type: String,
+        desc: "Username for the request if authentication is needed"
+      }
+      expose :password, documentation: {
+        type: String,
+        desc: "Password for the request if authentication needed"
+      }
+      expose :url, documentation: { type: String, desc: "Webhook URL" }
+      expose :request_method, documentation: {
+        type: String,
+        desc: "Webhook request method type"
+      }
+      expose :content_type, documentation: {
+        type: String,
+        desc: "Webhook request content type"
+      }
+      expose :updatable, documentation: {
+        desc: "Boolean that tells if the current user can manage the webhook"
+      }, if: { type: :internal } do |webhook, options|
+        can_manage_webhook?(webhook, options[:current_user])
+      end
+      expose :destroyable, documentation: {
+        desc: "Boolean that tells if the current user can destroy the webhook"
+      }, if: { type: :internal } do |webhook, options|
+        can_destroy_webhook?(webhook, options[:current_user])
+      end
+    end
+
     class Version < Grape::Entity
       expose :"api-versions", documentation: {
         type: Array[String],

@@ -147,7 +147,7 @@ RSpec.describe WebhooksController, type: :controller do
   describe "PUT #toggle_enabled" do
     it "allows the owner of the team to change the enabled attribute" do
       sign_in owner
-      put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :js
+      put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :json
 
       webhook.reload
       expect(webhook).not_to be_enabled
@@ -156,7 +156,7 @@ RSpec.describe WebhooksController, type: :controller do
 
     it "blocks users that are not part of the team" do
       sign_in create(:user)
-      put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :js
+      put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :json
 
       expect(response.status).to eq 401
     end
@@ -239,7 +239,7 @@ RSpec.describe WebhooksController, type: :controller do
         @post_params = {
           webhook:      valid_attributes,
           namespace_id: namespace,
-          format:       :js
+          format:       :json
         }
       end
 
@@ -308,7 +308,7 @@ RSpec.describe WebhooksController, type: :controller do
         post_params = {
           webhook:      invalid_attributes,
           namespace_id: namespace,
-          format:       :js
+          format:       :json
         }
         post :create, post_params
         expect(assigns(:webhook)).to be_a_new(Webhook)
@@ -320,7 +320,7 @@ RSpec.describe WebhooksController, type: :controller do
           webhook:        invalid_attributes,
           namespace_id:   namespace,
           request_method: "PUT",
-          format:         :js
+          format:         :json
         }
         post :create, post_params
         expect(assigns(:webhook)).to be_a_new(Webhook)
@@ -332,7 +332,7 @@ RSpec.describe WebhooksController, type: :controller do
           webhook:      invalid_attributes,
           namespace_id: namespace,
           content_type: "text/plain",
-          format:       :js
+          format:       :json
         }
         post :create, post_params
         expect(assigns(:webhook)).to be_a_new(Webhook)
@@ -423,7 +423,7 @@ RSpec.describe WebhooksController, type: :controller do
       post_params = {
         webhook:      { url: "example.org", name: "webhook" },
         namespace_id: namespace,
-        format:       :js
+        format:       :json
       }
 
       expect do
@@ -440,7 +440,7 @@ RSpec.describe WebhooksController, type: :controller do
       webhook.update(enabled: false)
 
       expect do
-        put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :js
+        put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :json
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.last
@@ -453,7 +453,7 @@ RSpec.describe WebhooksController, type: :controller do
       webhook.update(enabled: true)
 
       expect do
-        put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :js
+        put :toggle_enabled, namespace_id: namespace.id, id: webhook.id, format: :json
       end.to change(PublicActivity::Activity, :count).by(1)
 
       activity = PublicActivity::Activity.last
@@ -468,7 +468,7 @@ RSpec.describe WebhooksController, type: :controller do
               id:           webhook.id,
               namespace_id: namespace.id,
               webhook:      { url: "port.us" },
-              format:       "js"
+              format:       :js
       end.to change(PublicActivity::Activity, :count).by(1)
     end
 
@@ -478,7 +478,7 @@ RSpec.describe WebhooksController, type: :controller do
                id:           webhook.id,
                namespace_id: namespace.id,
                webhook:      { url: "port.us" },
-               format:       "js"
+               format:       :json
       end.to change(PublicActivity::Activity, :count).by(1)
     end
   end

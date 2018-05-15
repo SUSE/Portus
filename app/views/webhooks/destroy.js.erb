@@ -1,8 +1,0 @@
-<% if @webhook.errors.any? %>
-  $('#float-alert p').html("<%= escape_javascript(@webhook.errors.full_messages.join('<br/>')) %>");
-  $('#float-alert').fadeIn(setTimeOutAlertDelay());
-<% else %>
-  $("#webhook_<%= @webhook.id %>").remove();
-  $('#float-alert p').html("Webhook '<%= @webhook.host %>' has been removed successfully");
-  $('#float-alert').fadeIn(setTimeOutAlertDelay());
-<% end %>
