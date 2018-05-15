@@ -1,7 +1,8 @@
 import Vue from 'vue';
 
 import WebhooksIndexPage from './pages/index';
-import WebhookShowPage from './pages/show';
+import WebhooksShowPage from './pages/show';
+import LegacyWebhookShowPage from './pages/legacy-show';
 
 $(() => {
   if (!$('body[data-controller="webhooks"]').length) {
@@ -14,6 +15,7 @@ $(() => {
 
     components: {
       WebhooksIndexPage,
+      WebhooksShowPage,
     },
   });
 });
@@ -26,6 +28,6 @@ $(() => {
 
   if (route === WEBHOOK_SHOW_ROUTE) {
     // eslint-disable-next-line
-    new WebhookShowPage($body);
+    new LegacyWebhookShowPage($body);
   }
 });

@@ -24,8 +24,13 @@ function toggleEnabled(namespaceId, id) {
   return oldResource.toggleEnabled({ namespaceId, id }, {});
 }
 
+function update(namespaceId, webhook) {
+  return oldResource.update({ namespaceId, id: webhook.id }, { webhook });
+}
+
 export default {
   destroy,
   save,
   toggleEnabled,
+  update,
 };

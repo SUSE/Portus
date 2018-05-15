@@ -22,8 +22,11 @@ describe "Webhooks support" do
   end
 
   describe "#index" do
-    it "A user cannot create an empty webhook", js: true do
+    before do
       visit namespace_webhooks_path(namespace)
+    end
+
+    it "A user cannot create an empty webhook", js: true do
       find(".toggle-link-new-webhook").click
 
       expect(page).to have_button("Add", disabled: true)
@@ -32,7 +35,6 @@ describe "Webhooks support" do
     it "A user can create a webhook from namespace's webhooks page", js: true do
       webhooks_count = namespace.webhooks.count
 
-      visit namespace_webhooks_path(namespace)
       find(".toggle-link-new-webhook").click
       wait_for_effect_on("#new-webhook-form")
 
@@ -56,8 +58,6 @@ describe "Webhooks support" do
     end
 
     it 'The "Create new webhook" link has a toggle effect', js: true do
-      visit namespace_webhooks_path(namespace)
-
       expect(page).to have_css(".toggle-link-new-webhook i.fa-plus-circle")
       expect(page).not_to have_css(".toggle-link-new-webhook i.fa-minus-circle")
 
@@ -73,7 +73,6 @@ describe "Webhooks support" do
     end
 
     it "A user enables/disables webhook", js: true do
-      visit namespace_webhooks_path(namespace)
       id = webhook.id
 
       expect(page).to have_css(".webhook_#{id} .fa-toggle-on")
@@ -91,12 +90,9 @@ describe "Webhooks support" do
     end
 
     it "A user deletes a webhook", js: true do
-      visit namespace_webhooks_path(namespace)
-      id = webhook.id
-
       expect(page).to have_link(webhook.name)
 
-      find(".webhook_#{id} .delete-webhook-btn").click
+      find(".webhook_#{webhook.id} .delete-webhook-btn").click
       find(".popover-content .yes").click
       wait_for_ajax
 
@@ -106,10 +102,20 @@ describe "Webhooks support" do
   end
 
   describe "#show" do
-    it "A user updates webhooks info", js: true do
+    before do
       visit namespace_webhook_path(namespace, webhook)
+    end
 
-      find(".edit-webhook-link").click
+    it "cannot update webhook if form is invalid", js: true do
+      find(".toggle-link-edit-webhook").click
+      fill_in "Name", with: ""
+
+      expect(page).to have_content("Name can't be blank")
+      expect(page).to have_button("Save", disabled: true)
+    end
+
+    it "A user updates webhooks info", js: true do
+      find(".toggle-link-edit-webhook").click
       fill_in "Name", with: "new_name"
       fill_in "webhook_url", with: "http://new-webhook-url"
       fill_in "Username", with: "new-username"
@@ -117,35 +123,31 @@ describe "Webhooks support" do
       click_button "Save"
       wait_for_ajax
 
-      expect(page).to have_content("new_name")
-      expect(page).to have_content("new-webhook-url webhook")
+      expect(page).to have_content("new_name webhook")
+      expect(page).to have_content("new-webhook-url")
       expect(page).to have_content("new-username")
-      expect(page).to have_content("***********")
-      expect(page).to have_content("Webhook 'new-webhook-url' has been updated successfully")
+      expect(page).to have_content("********")
+      expect(page).to have_content("Webhook 'new_name' was updated successfully")
     end
 
     it 'The "Edit webhook" link has a toggle effect', js: true do
-      visit namespace_webhook_path(namespace, webhook)
+      expect(page).to have_css(".toggle-link-edit-webhook .fa-pencil")
+      expect(page).not_to have_css(".toggle-link-edit-webhook .fa-close")
 
-      expect(page).to have_css(".edit-webhook-link .fa-pencil")
-      expect(page).not_to have_css(".edit-webhook-link .fa-close")
+      find(".toggle-link-edit-webhook").click
 
-      find(".edit-webhook-link").click
+      expect(page).not_to have_css(".toggle-link-edit-webhook .fa-pencil")
+      expect(page).to have_css(".toggle-link-edit-webhook .fa-close")
 
-      expect(page).not_to have_css(".edit-webhook-link .fa-pencil")
-      expect(page).to have_css(".edit-webhook-link .fa-close")
+      find(".toggle-link-edit-webhook").click
 
-      find(".edit-webhook-link").click
-
-      expect(page).to have_css(".edit-webhook-link .fa-pencil")
-      expect(page).not_to have_css(".edit-webhook-link .fa-close")
+      expect(page).to have_css(".toggle-link-edit-webhook .fa-pencil")
+      expect(page).not_to have_css(".toggle-link-edit-webhook .fa-close")
     end
 
     describe "webhook_header" do
       it "A user can create a header from webhook's page", js: true do
         webhook_headers_count = webhook.headers.count
-
-        visit namespace_webhook_path(namespace, webhook)
 
         find("#add_webhook_header_btn").click
         wait_for_effect_on("#add_webhook_header_form")
@@ -167,7 +169,6 @@ describe "Webhooks support" do
       it "A user cannot create a header that already exists", js: true do
         webhook_headers_count = webhook.headers.count
 
-        visit namespace_webhook_path(namespace, webhook)
         find("#add_webhook_header_btn").click
         wait_for_effect_on("#add_webhook_header_form")
 
@@ -185,13 +186,10 @@ describe "Webhooks support" do
       end
 
       it "A user deletes a webhook header", js: true do
-        visit namespace_webhook_path(namespace, webhook)
-        id = webhook_header.id
-
         expect(page).to have_content(webhook_header.name)
         expect(page).to have_content(webhook_header.value)
 
-        find("#webhook_header_#{id} .delete-webhook-header-btn").click
+        find("#webhook_header_#{webhook_header.id} .delete-webhook-header-btn").click
         find(".popover-content .btn-primary").click
 
         wait_for_ajax
@@ -204,8 +202,6 @@ describe "Webhooks support" do
       end
 
       it 'The "Create new header" link has a toggle effect', js: true do
-        visit namespace_webhook_path(namespace, webhook)
-
         expect(page).to have_css("#add_webhook_header_btn i.fa-plus-circle")
         expect(page).not_to have_css("#add_webhook_header_btn i.fa-minus-circle")
 
