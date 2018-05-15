@@ -401,7 +401,7 @@ RSpec.describe WebhooksController, type: :controller do
       sign_in owner
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
         url: "port.us"
-      }, format: "js"
+      }, format: :json
       expect(response.status).to eq(200)
     end
 
@@ -409,7 +409,7 @@ RSpec.describe WebhooksController, type: :controller do
       sign_in owner
       patch :update, id: webhook.id, namespace_id: namespace.id, webhook: {
         url: ""
-      }, format: "js"
+      }, format: :json
       expect(response.status).to eq(422)
     end
   end
@@ -468,7 +468,7 @@ RSpec.describe WebhooksController, type: :controller do
               id:           webhook.id,
               namespace_id: namespace.id,
               webhook:      { url: "port.us" },
-              format:       :js
+              format:       :json
       end.to change(PublicActivity::Activity, :count).by(1)
     end
 

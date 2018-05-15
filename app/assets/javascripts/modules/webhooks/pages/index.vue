@@ -41,11 +41,9 @@
     },
 
     data() {
-      const store = new WebhooksStore();
-
       return {
         webhooks: [...this.webhooksRef],
-        state: store.state,
+        state: WebhooksStore.state,
       };
     },
 
