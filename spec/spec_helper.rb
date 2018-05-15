@@ -105,6 +105,32 @@ RSpec.configure do |config|
       "before_after" => 2
     }
 
+    APP_CONFIG["ldap"] = {
+      "enabled"        => false,
+      "hostname"       => "hostname",
+      "port"           => 389,
+      "timeout"        => 5,
+      "encryption"     => {
+        "method"  => "",
+        "options" => {
+          "ca_file"     => "",
+          "ssl_version" => "TLSv1_2"
+        }
+      },
+      "base"           => "ou=users,dc=example,dc=com",
+      "filter"         => "",
+      "uid"            => "uid",
+      "authentication" => {
+        "enabled"  => false,
+        "bind_dn"  => "",
+        "password" => ""
+      },
+      "guess_email"    => {
+        "enabled" => false,
+        "attr"    => ""
+      }
+    }
+
     Rails.cache.write("portus-checks", nil)
   end
 

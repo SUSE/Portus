@@ -48,16 +48,17 @@ delete:
 ldap:
   enabled: false
 
+  # Hostname and port of your LDAP server.
   hostname: "ldap_hostname"
   port: 389
 
-  # Available options: "plain", "simple_tls" and "start_tls".
-  # TODO: deprecated in favor of `encryption.method`.
-  method: "plain"
+  # The connection timeout to be used for all LDAP requests measured in seconds.
+  timeout: 5
 
   # Encryption options
   encryption:
-    # Available methods: "plain", "simple_tls" and "start_tls".
+    # Available methods: "simple_tls" and "start_tls". If you leave this value
+    # empty (default), then no encryption will be enforced.
     method: ""
     options:
       # The CA file to be accepted by the LDAP server. If none is provided, then
