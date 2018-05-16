@@ -1,7 +1,7 @@
 import Alert from '~/shared/components/alert';
 
 export function handleHttpResponseError(response) {
-  const errors = response.data.message;
+  const errors = response.data.message || response.data;
   let messages = [];
 
   if (typeof errors === 'string') {

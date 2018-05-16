@@ -69,7 +69,7 @@
 
   import FormMixin from '~/shared/mixins/form';
 
-  import WebhooksService from '../service';
+  import WebhooksService from '../services/webhooks';
 
   const { set } = Vue;
 

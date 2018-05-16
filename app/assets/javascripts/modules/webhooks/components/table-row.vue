@@ -36,7 +36,7 @@
 
   import { handleHttpResponseError } from '~/utils/http';
 
-  import WebhooksService from '../service';
+  import WebhooksService from '../services/webhooks';
 
   const { set } = Vue;
 

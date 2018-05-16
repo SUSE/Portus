@@ -49,7 +49,7 @@ RSpec.describe WebhookHeadersController, type: :controller do
           webhook_id:     webhook.id,
           namespace_id:   namespace.id,
           webhook_header: { name: "foo", value: "bar" },
-          format:         :js
+          format:         :json
         }
       end
 
@@ -78,7 +78,7 @@ RSpec.describe WebhookHeadersController, type: :controller do
         id:           webhook_header.id,
         webhook_id:   webhook.id,
         namespace_id: namespace.id,
-        format:       :js
+        format:       :json
       }
     end
 
