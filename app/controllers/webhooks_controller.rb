@@ -4,7 +4,7 @@
 # Also, it manages their state, i.e. enabled/disabled.
 class WebhooksController < ApplicationController
   before_action :set_namespace
-  before_action :set_webhook, only: %i[update show destroy toggle_enabled]
+  before_action :set_webhook, except: %i[index create]
 
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: :index
@@ -13,7 +13,13 @@ class WebhooksController < ApplicationController
   # GET /namespaces/1/webhooks.json
   def index
     authorize @namespace
-    @webhooks = policy_scope(Webhook).where(namespace: @namespace).page(params[:page])
+
+    @namespace_serialized = API::Entities::Namespaces.represent(
+      @namespace,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
+    @webhooks = policy_scope(Webhook).where(namespace: @namespace)
     @webhooks_serialized = API::Entities::Webhooks.represent(
       @webhooks,
       current_user: current_user,
@@ -70,7 +76,16 @@ class WebhooksController < ApplicationController
   def show
     authorize @webhook
 
-    @deliveries = @webhook.deliveries.page(params[:page])
+    @webhook_serialized = API::Entities::Webhooks.represent(
+      @webhook,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
+    @webhook_headers = @webhook.headers
+    @webhook_headers_serialized = API::Entities::WebhookHeaders.represent(@webhook_headers).to_json
+    @deliveries = @webhook.deliveries
+    @deliveries_serialized = API::Entities::WebhookDeliveries.represent(@deliveries).to_json
+
     respond_with(@namespace, @webhook)
   end
 
@@ -107,22 +122,10 @@ class WebhooksController < ApplicationController
 
   def set_namespace
     @namespace = Namespace.find(params[:namespace_id])
-    @namespace_serialized = API::Entities::Namespaces.represent(
-      @namespace,
-      current_user: current_user,
-      type:         :internal
-    ).to_json
   end
 
   def set_webhook
     @webhook = @namespace.webhooks.find(params[:id])
-    @webhook_serialized = API::Entities::Webhooks.represent(
-      @webhook,
-      current_user: current_user,
-      type:         :internal
-    ).to_json
-    @webhook_headers = @webhook.headers
-    @webhook_headers_serialized = API::Entities::WebhookHeaders.represent(@webhook_headers).to_json
   end
 
   def webhook_params

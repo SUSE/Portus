@@ -15,6 +15,15 @@ class WebhookDeliveriesController < ApplicationController
     authorize webhook_delivery
 
     webhook_delivery.retrigger
-    render template: "webhooks/retrigger", locals: { webhook_delivery: webhook_delivery }
+
+    respond_to do |format|
+      @webhook_delivery_serialized = API::Entities::WebhookDeliveries.represent(
+        webhook_delivery,
+        current_user: current_user,
+        type:         :internal
+      ).to_json
+
+      format.json { render json: @webhook_delivery_serialized }
+    end
   end
 end

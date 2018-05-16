@@ -355,6 +355,30 @@ module API
       expose :created_at, :updated_at, documentation: { type: DateTime }
     end
 
+    class WebhookDeliveries < Grape::Entity
+      expose :id, documentation: { type: Integer, desc: "Webhook delivery ID" }
+      expose :uuid, documentation: { type: String, desc: "Webhook delivery UUID" }
+      expose :webhook_id, documentation: { type: Integer, desc: "Webhook delivery webhook ID" }
+      expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :status, documentation: { type: Integer, desc: "Webhook delivery HTTP status" }
+      expose :request_body, documentation: {
+        type: String,
+        desc: "Webhook delivery request body value"
+      }
+      expose :request_header, documentation: {
+        type: String,
+        desc: "Webhook delivery request header value"
+      }
+      expose :response_body, documentation: {
+        type: String,
+        desc: "Webhook delivery response body value"
+      }
+      expose :response_header, documentation: {
+        type: String,
+        desc: "Webhook delivery response header value"
+      }
+    end
+
     class Version < Grape::Entity
       expose :"api-versions", documentation: {
         type: Array[String],
