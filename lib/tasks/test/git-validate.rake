@@ -3,7 +3,7 @@
 require "English"
 
 # We will start reviewing commit from this one.
-FROM_SHA = "7164d92ed6602786d9519399a2ceb1bcc49facb8"
+FROM_SHA = "bef0fe19d3a5d1e215a4fbadd496ad61699e63f9"
 
 # Performs the given command, and optionally spits the output as it comes.
 def spawn_cmd(cmd:, output: true)
@@ -40,6 +40,7 @@ namespace :test do
     end
 
     path = Rails.root
+    puts "cd #{path} && git-validation -q -range #{FROM_SHA}..HEAD"
     status = spawn_cmd(cmd: "cd #{path} && git-validation -q -range #{FROM_SHA}..HEAD")
     exit status
   end

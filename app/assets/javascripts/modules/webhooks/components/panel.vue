@@ -18,7 +18,7 @@
     </div>
 
     <div slot="body">
-    <webhooks-table :webhooks="webhooks" :webhooks-path="webhooksPath" :can-create-webhook="canCreateWebhook" sort-by="name"></webhooks-table>
+      <webhooks-table :webhooks="webhooks" :webhooks-path="webhooksPath" :can-create-webhook="canCreateWebhook" sort-by="name"></webhooks-table>
     </div>
   </panel>
 </template>

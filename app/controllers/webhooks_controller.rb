@@ -3,8 +3,6 @@
 # WebhooksController manages the creation/removal/update of webhooks.
 # Also, it manages their state, i.e. enabled/disabled.
 class WebhooksController < ApplicationController
-  respond_to :html, :js
-
   before_action :set_namespace
   before_action :set_webhook, only: %i[update show destroy toggle_enabled]
 
@@ -51,11 +49,19 @@ class WebhooksController < ApplicationController
   def update
     authorize @webhook
 
-    if @webhook.update(webhook_params)
-      @webhook.create_activity :update, owner: current_user
-      respond_with @namespace, @webhook
-    else
-      respond_with @webhook.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @webhook.update(webhook_params)
+        @webhook.create_activity :update, owner: current_user
+        @webhook_serialized = API::Entities::Webhooks.represent(
+          @webhook,
+          current_user: current_user,
+          type:         :internal
+        ).to_json
+
+        format.json { render json: @webhook_serialized }
+      else
+        format.json { render json: @webhook.errors.full_messages, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -110,6 +116,11 @@ class WebhooksController < ApplicationController
 
   def set_webhook
     @webhook = @namespace.webhooks.find(params[:id])
+    @webhook_serialized = API::Entities::Webhooks.represent(
+      @webhook,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
   end
 
   def webhook_params
