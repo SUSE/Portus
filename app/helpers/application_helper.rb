@@ -49,12 +49,12 @@ module ApplicationHelper
 
   # Returns true of signup is enabled.
   def signup_enabled?
-    !Portus::LDAP.enabled? && APP_CONFIG.enabled?("signup")
+    APP_CONFIG.disabled?("ldap") && APP_CONFIG.enabled?("signup")
   end
 
   # Returns true if the login form should show the "first user admin" alert.
   def show_first_user_alert?
-    User.not_portus.none? && APP_CONFIG.enabled?("first_user_admin") && Portus::LDAP.enabled?
+    User.not_portus.none? && APP_CONFIG.enabled?("first_user_admin") && APP_CONFIG.enabled?("ldap")
   end
 
   # Returns pagination limit config

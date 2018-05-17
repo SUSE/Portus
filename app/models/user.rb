@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
                             ],
                             authentication_keys: [:username]]
 
-  enabled_devise_modules.delete(:validatable) if Portus::LDAP.enabled?
+  enabled_devise_modules.delete(:validatable) if APP_CONFIG.enabled?("ldap")
   devise(*enabled_devise_modules)
 
   APPLICATION_TOKENS_MAX = 5
@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
   # Special method used by Devise to require an email on signup. This is always
   # true except for LDAP.
   def email_required?
-    !(Portus::LDAP.enabled? && email.blank?)
+    !(APP_CONFIG.enabled?("ldap") && email.blank?)
   end
 
   # It adds an error if the username clashes with either a namespace or a team.

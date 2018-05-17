@@ -43,41 +43,42 @@ class LdapSearchAdapter
   end
 end
 
-class LdapOriginal < Portus::LDAP
+class LdapOriginal < Portus::LDAP::Authenticatable
   def adapter
     super
   end
 end
 
-class LdapMock < Portus::LDAP
-  attr_reader :params, :user, :last_symbol
+class LdapMock < Portus::LDAP::Authenticatable
+  attr_reader :params, :user, :fail_message
   attr_accessor :bind_result, :session
 
   def initialize(params)
     @params = { user: params }
     @bind_result = true
-    @last_symbol = :ok
+    @fail_message = ""
     @session = {}
+    @cfg = ::Portus::LDAP::Configuration.new(@params)
   end
 
   def load_configuration_test
-    load_configuration
+    initialized_adapter
   end
 
   def bind_options_test
-    bind_options
+    bind_options(@cfg)
   end
 
   def find_or_create_user_test!
-    find_or_create_user!
+    find_or_create_user!(@cfg)
   end
 
   def success!(user)
     @user = user
   end
 
-  def fail!(symbol)
-    @last_symbol = symbol
+  def fail!(msg)
+    @fail_message = msg
   end
 
   def setup_search_mock!(response)
@@ -86,10 +87,8 @@ class LdapMock < Portus::LDAP
 
   def guess_email_test(response)
     @ldap = LdapSearchAdapter.new(response)
-    guess_email
+    guess_email(@cfg)
   end
-
-  alias fail fail!
 
   protected
 
@@ -98,7 +97,7 @@ class LdapMock < Portus::LDAP
   end
 end
 
-class PortusMock < Portus::LDAP
+class PortusMock < Portus::LDAP::Authenticatable
   attr_reader :params
 
   def initialize(params)
@@ -110,56 +109,21 @@ class PortusMock < Portus::LDAP
   end
 end
 
-describe Portus::LDAP do
+describe ::Portus::LDAP::Authenticatable do
   before do
     APP_CONFIG["ldap"]["enabled"] = true
     allow_any_instance_of(described_class).to receive(:authenticate!).and_call_original
   end
 
-  it "sets self.enabled? accordingly" do
-    APP_CONFIG["ldap"] = {}
-    expect(described_class).not_to be_enabled
-
-    APP_CONFIG["ldap"] = { "enabled" => "lala" }
-    expect(described_class).not_to be_enabled
-
-    APP_CONFIG["ldap"] = { "enabled" => false }
-    expect(described_class).not_to be_enabled
-
-    APP_CONFIG["ldap"] = { "enabled" => true }
-    expect(described_class.enabled?).to be true
-  end
-
-  # Let's make code coverage happy
-  it "calls the right adapter" do
-    ldap = LdapOriginal.new(nil)
-    expect(ldap.adapter.to_s).to eq "Net::LDAP"
+  context "#adapter" do
+    # Let's make code coverage happy
+    it "calls the right adapter" do
+      ldap = LdapOriginal.new(nil)
+      expect(ldap.adapter.to_s).to eq "Net::LDAP"
+    end
   end
 
   it "loads the configuration properly" do
-    original = APP_CONFIG["ldap"].dup
-
-    APP_CONFIG["ldap"]["enabled"] = false
-    lm = LdapMock.new(nil)
-    expect(lm.load_configuration_test).to be nil
-
-    APP_CONFIG["ldap"]["enabled"] = true
-    expect(lm.load_configuration_test).to be nil
-
-    # The Portus user does not authenticate through LDAP.
-    APP_CONFIG["ldap"] = original
-    lm = PortusMock.new(account: "portus", password: "1234")
-    expect(lm.load_configuration_test).to be nil
-
-    # Empty password always returns an empty configuration
-    lm = LdapMock.new(username: "name", password: "")
-    expect(lm.load_configuration_test).to be nil
-
-    # Empty name always returns an empty configuration
-    lm = LdapMock.new(username: "", password: "1234")
-    expect(lm.load_configuration_test).to be nil
-
-    # Now we are good to go
     lm = LdapMock.new(username: "name", password: "1234")
     cfg = lm.load_configuration_test
 
@@ -369,14 +333,14 @@ describe Portus::LDAP do
       APP_CONFIG["ldap"]["enabled"] = false
       lm = LdapMock.new(username: "name", password: "1234")
       lm.authenticate!
-      expect(lm.last_symbol).to be :ldap_failed
+      expect(lm.fail_message).to be "LDAP is disabled"
     end
 
     it "fails if the user couldn't bind" do
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.bind_result = false
       lm.authenticate!
-      expect(lm.last_symbol).to eq "a message (code 1)"
+      expect(lm.fail_message).to eq "a message (code 1)"
     end
 
     it "fails if the user was not found" do
@@ -385,7 +349,7 @@ describe Portus::LDAP do
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.bind_result = false
       lm.authenticate!
-      expect(lm.last_symbol).to eq "Could not find user 'name'"
+      expect(lm.fail_message).to eq "Could not find user 'name'"
     end
 
     it "can rescue Net::LDAP::Error exceptions" do
@@ -394,19 +358,25 @@ describe Portus::LDAP do
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.bind_result = false
       lm.authenticate!
-      expect(lm.last_symbol).to eq "Net::LDAP::Error exception"
+      expect(lm.fail_message).to eq "Net::LDAP::Error exception"
     end
 
-    it "raises an exception if the user could not created" do
-      lm = LdapMock.new(username: "name", password: "1234")
+    it "fails when creating a user went wrong" do
+      allow_any_instance_of(User).to receive(:valid?).and_return(false)
+      allow_any_instance_of(User).to(
+        receive(:errors)
+          .and_return(OpenStruct.new(full_messages: ["error message"]))
+      )
+
+      lm = LdapMock.new(username: "cw-name", password: "1234")
       lm.authenticate!
-      expect(lm.last_symbol).to eq "Password is too short (minimum is 8 characters)"
+      expect(lm.fail_message).to eq "error message"
     end
 
     it "returns a success if it was successful" do
       lm = LdapMock.new(username: "name", password: "12341234")
       lm.authenticate!
-      expect(lm.last_symbol).to be :ok
+      expect(lm.fail_message).to be ""
       expect(lm.user.username).to eq "name"
     end
   end

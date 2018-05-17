@@ -47,7 +47,7 @@ describe PasswordsController do
 
   describe "LDAP support is enabled" do
     before do
-      APP_CONFIG["ldap"] = { "enabled" => true }
+      APP_CONFIG["ldap"]["enabled"] = true
     end
 
     it "redirects the user when trying to reach :new" do

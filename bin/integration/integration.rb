@@ -124,6 +124,13 @@ end
 yml["services"]["portus"]["environment"] << "PORTUS_LOG_LEVEL=debug"
 yml["services"]["background"]["environment"] << "PORTUS_LOG_LEVEL=debug"
 
+# Variables for the health command.
+yml["services"]["portus"]["environment"] << "PORTUS_HEALTH_QUIET=1"
+yml["services"]["portus"]["environment"] << "PORTUS_HEALTH_COMPONENT_1=database"
+if ENV["PORTUS_INTEGRATION_PROFILE"] == "ldap"
+  yml["services"]["portus"]["environment"] << "PORTUS_HEALTH_COMPONENT_2=ldap"
+end
+
 # Add profiles.
 yml["services"]["portus"]["volumes"] << "./profiles:/srv/Portus/spec/integration/profiles:ro"
 yml["services"]["portus"]["volumes"] << "./helpers:/srv/Portus/spec/integration/helpers:ro"

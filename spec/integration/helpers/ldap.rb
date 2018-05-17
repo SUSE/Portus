@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require "portus/ldap"
+require "portus/ldap/authenticatable"
 
 ##
 # Define a class that mocks stuff like `params` and exit methods.
 
-class IntegrationLDAP < Portus::LDAP
+class IntegrationLDAP < Portus::LDAP::Authenticatable
   attr_reader :params
   attr_accessor :session
 
   def initialize(params)
-    @params  = params
+    @params  = { user: params }
     @session = {}
   end
 
@@ -57,5 +57,5 @@ end
 ##
 # Try to authenticate!
 
-ldap = IntegrationLDAP.new(user: { username: ARGV.first.dup, password: ARGV[1].dup })
+ldap = IntegrationLDAP.new(username: ARGV.first.dup, password: ARGV[1].dup)
 ldap.authenticate!

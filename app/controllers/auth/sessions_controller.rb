@@ -9,7 +9,7 @@ class Auth::SessionsController < Devise::SessionsController
   # or LDAP support is enabled, work as usual. Otherwise, redirect always to
   # the signup page.
   def new
-    signup_allowed = !Portus::LDAP.enabled? && APP_CONFIG.enabled?("signup")
+    signup_allowed = APP_CONFIG.disabled?("ldap") && APP_CONFIG.enabled?("signup")
 
     if User.not_portus.any? || !signup_allowed
       @errors_occurred = flash[:alert].present?
@@ -28,7 +28,7 @@ class Auth::SessionsController < Devise::SessionsController
   def create
     super
 
-    if ::Portus::LDAP.enabled? && session[:first_login]
+    if APP_CONFIG.enabled?("ldap") && session[:first_login]
       session[:first_login] = nil
       session_flash(current_user, nil)
     else

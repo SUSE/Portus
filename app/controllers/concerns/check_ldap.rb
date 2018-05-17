@@ -14,6 +14,6 @@ module CheckLDAP
 
   # Redirect to the login page if LDAP is enabled.
   def check_ldap
-    redirect_to new_user_session_path if Portus::LDAP.enabled?
+    redirect_to new_user_session_path if APP_CONFIG.enabled?("ldap")
   end
 end

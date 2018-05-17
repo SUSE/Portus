@@ -249,7 +249,7 @@ Devise.setup do |config|
   # enabled. By default, the test suite mocks the Portus::LDAP class to make
   # the authenticate! method to fail directly. See the `spec/rails_helper.rb`
   # file.
-  if Portus::LDAP.enabled? || Rails.env.test?
+  if APP_CONFIG.enabled?("ldap") || Rails.env.test?
     config.warden do |manager|
       # Let's put LDAP in front of every other strategy.
       manager.default_strategies(scope: :user).unshift :ldap_authenticatable

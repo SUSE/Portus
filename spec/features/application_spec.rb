@@ -14,7 +14,7 @@ describe "Global application" do
     end
 
     it "redirects properly for accounts without email" do
-      APP_CONFIG["ldap"] = { "enabled" => true }
+      APP_CONFIG["ldap"]["enabled"] = true
       incomplete = create(:user, email: "")
       login_as incomplete, scope: :user
 
