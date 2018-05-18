@@ -111,7 +111,7 @@ class Webhook < ActiveRecord::Base
 
   # process_auth returns a basic auth string if username and password are provided.
   def process_auth
-    return if username.empty? || password.empty?
+    return if username.blank? || password.blank?
     "#{username}:#{password}"
   end
 

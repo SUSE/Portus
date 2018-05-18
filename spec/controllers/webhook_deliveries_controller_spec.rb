@@ -43,7 +43,14 @@ RSpec.describe WebhookDeliveriesController, type: :controller do
     end
 
     it "retriggers a webhook delivery" do
-      put :update, namespace_id: namespace.id, webhook_id: webhook.id, id: webhook_delivery.id
+      params = {
+        namespace_id: namespace.id,
+        webhook_id:   webhook.id,
+        id:           webhook_delivery.id,
+        format:       :json
+      }
+      put :update, params
+
       expect(response).to have_http_status(:success)
     end
   end

@@ -4,20 +4,16 @@
       <a data-placement="right"
         data-toggle="popover"
         data-container=".panel-heading"
-        data-content="A header is a HTTP header, i.e. is a key-value pair which is included in the HTTP request."
+        data-content="A delivery is created once a webhook has been triggered. They are not re-created but updated after retriggering."
         data-original-title="What's this?"
         tabindex="0">
         <i class="fa fa-info-circle"></i>
       </a>
-      Headers
+      Deliveries
     </h5>
 
-    <div slot="heading-right" v-if="webhook.updatable">
-      <toggle-link text="Create new header" :state="state" state-key="newHeaderFormVisible" class="toggle-link-new-webhook-header"></toggle-link>
-    </div>
-
     <div slot="body">
-      <webhook-headers-table :webhook="webhook" :headers="headers" sort-by="name" prefix="wb_"></webhook-headers-table>
+      <webhook-deliveries-table :webhook="webhook" :deliveries="deliveries" sort-by="name" prefix="wd_"></webhook-deliveries-table>
     </div>
   </panel>
 </template>
@@ -26,25 +22,22 @@
   import Panel from '~/shared/components/panel';
   import ToggleLink from '~/shared/components/toggle-link';
 
-  import WebhookHeadersTable from './table';
+  import WebhookDeliveriesTable from './table';
 
   export default {
     props: {
       webhook: {
         type: Object,
       },
-      headers: {
+      deliveries: {
         type: Array,
-      },
-      state: {
-        type: Object,
       },
     },
 
     components: {
       Panel,
       ToggleLink,
-      WebhookHeadersTable,
+      WebhookDeliveriesTable,
     },
   };
 </script>

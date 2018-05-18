@@ -64,21 +64,9 @@ RSpec.describe WebhooksController, type: :controller do
         [Webhook.find_by(namespace: namespace)]
       )
     end
-
-    it "paginates webhooks" do
-      get :index, { namespace_id: namespace }, valid_session
-      expect(assigns(:webhooks)).to respond_to(:total_pages)
-    end
   end
 
   describe "GET #show" do
-    it "paginates webhook deliveries" do
-      sign_in owner
-      get :show, namespace_id: namespace.id, id: webhook.id
-
-      expect(assigns(:deliveries)).to respond_to(:total_pages)
-    end
-
     it "allows team members to view the page" do
       sign_in owner
       get :show, namespace_id: namespace.id, id: webhook.id
