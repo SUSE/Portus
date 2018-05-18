@@ -2,8 +2,6 @@
 
 # WebhookHeadersController manages the creation/removal of webhook headers.
 class WebhookHeadersController < ApplicationController
-  respond_to :html, :js
-
   before_action :set_namespace
   before_action :set_webhook
 
@@ -15,10 +13,19 @@ class WebhookHeadersController < ApplicationController
     @webhook_header = @webhook.headers.build(webhook_header_params)
     authorize @webhook_header
 
-    if @webhook_header.save
-      respond_with @namespace, @webhook, @webhook_header
-    else
-      respond_with @webhook_header.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @webhook_header.save
+        @webhook_header_serialized = API::Entities::WebhookHeaders.represent(
+          @webhook_header,
+          current_user: current_user,
+          type:         :internal
+        ).to_json
+
+        format.json { render json: @webhook_header_serialized }
+      else
+        errors = @webhook_header.errors.full_messages
+        format.json { render json: errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -26,11 +33,11 @@ class WebhookHeadersController < ApplicationController
   # DELETE /namespaces/1/webhooks/1/headers/1.json
   def destroy
     @webhook_header = @webhook.headers.find(params[:id])
-
     authorize @webhook_header
 
     @webhook_header.destroy
-    respond_with @namespace, @webhook, @webhook_header
+
+    render nothing: true
   end
 
   private

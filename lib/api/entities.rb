@@ -347,6 +347,14 @@ module API
       end
     end
 
+    class WebhookHeaders < Grape::Entity
+      expose :id, documentation: { type: Integer, desc: "Webhook header ID" }
+      expose :name, documentation: { type: String, desc: "Webhook header name" }
+      expose :value, documentation: { type: String, desc: "Webhook header value" }
+      expose :webhook_id, documentation: { type: Integer, desc: "Webhook header webhook ID" }
+      expose :created_at, :updated_at, documentation: { type: DateTime }
+    end
+
     class Version < Grape::Entity
       expose :"api-versions", documentation: {
         type: Array[String],

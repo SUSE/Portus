@@ -121,6 +121,8 @@ class WebhooksController < ApplicationController
       current_user: current_user,
       type:         :internal
     ).to_json
+    @webhook_headers = @webhook.headers
+    @webhook_headers_serialized = API::Entities::WebhookHeaders.represent(@webhook_headers).to_json
   end
 
   def webhook_params

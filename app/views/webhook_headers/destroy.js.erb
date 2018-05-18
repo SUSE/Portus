@@ -1,8 +1,0 @@
-<% if @webhook_header.errors.any? %>
-  $('#float-alert p').html("<%= escape_javascript(@webhook_header.errors.full_messages.join('<br/>')) %>");
-  $('#float-alert').fadeIn(setTimeOutAlertDelay());
-<% else %>
-  $("#webhook_header_<%= @webhook_header.id %>").remove();
-  $('#float-alert p').html("Header '<%= @webhook_header.name %>' was removed successfully");
-  $('#float-alert').fadeIn(setTimeOutAlertDelay());
-<% end %>

@@ -7,6 +7,7 @@ class WebhooksStore {
     this.state = {
       newFormVisible: false,
       editFormVisible: false,
+      newHeaderFormVisible: false,
     };
   }
 

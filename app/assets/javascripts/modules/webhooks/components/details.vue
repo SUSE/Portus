@@ -4,10 +4,10 @@
       <a data-placement="right"
         data-toggle="popover"
         data-container=".panel-heading"
-        data-content="<b>Name</b>: Name of the webhook.<br>\
-        <b>Request method</b>: URL endpoint where the HTTP request is sent to.<br/>\
-        <b>Content type</b>: Description of the webhook request content.<br/>\
-        <b>Username</b>: Username used for basic HTTP auth.<br/>\
+        data-content="<b>Name</b>: Name of the webhook.<br>
+        <b>Request method</b>: URL endpoint where the HTTP request is sent to.<br/>
+        <b>Content type</b>: Description of the webhook request content.<br/>
+        <b>Username</b>: Username used for basic HTTP auth.<br/>
         <b>Password</b>: Password used for basic HTTP auth."
         data-original-title="What's this?"
         tabindex="0"
