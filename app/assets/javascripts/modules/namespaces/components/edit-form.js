@@ -7,6 +7,8 @@ import { handleHttpResponseError } from '~/utils/http';
 
 import NamespacesService from '../services/namespaces';
 
+import VisibilityChooser from './visibility-chooser';
+
 const TYPEAHEAD_INPUT = '.remote .typeahead';
 
 const { set } = Vue;
@@ -16,12 +18,17 @@ export default {
 
   props: ['namespace'],
 
+  components: {
+    VisibilityChooser,
+  },
+
   data() {
     return {
       model: {
         namespace: {
           team: this.namespace.team.name,
           description: this.namespace.description,
+          visibility: this.namespace.visibility,
         },
       },
       timeout: {
