@@ -340,7 +340,7 @@ work with it more seriously.&lt;/li&gt;
 &lt;p&gt;While working on &lt;a href=&quot;https://www.suse.com/products/caas-platform/&quot;&gt;SUSE CaaS
 Platform&lt;/a&gt;, we started to
 appreciate more and more one of the handier tools of Kubernetes:
-&lt;a href=&quot;https://kubernetes.io/docs/user-guide/kubectl/&quot;&gt;kubectl&lt;/a&gt;. This tool is, in
+&lt;a href=&quot;https://kubernetes.io/docs/reference/kubectl/overview/&quot;&gt;kubectl&lt;/a&gt;. This tool is, in
 short, a client of the REST API of Kubernetes. It has a very nice user
 experience, and we thought we could provide something similar for the Portus
 API.&lt;/p&gt;

@@ -197,7 +197,7 @@
           
             <li>
               <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
-                Synchonizing the Registry and Portus
+                Synchronizing the Registry and Portus
               </a>
             </li>
           
@@ -754,6 +754,20 @@ want to synchronize when bootstrapping your instance.</li>
   </li>
 </ul>
 
+<h3 id="pagination">Pagination</h3>
+
+<p><strong>Note</strong>: feature only available in Portus 2.4 or later.</p>
+
+<p>You can configure how pagination behaves regarding table entries and the pages
+component. The <code class="highlighter-rouge">limit</code> attribute refers to the number of entries per page that
+should be displayed and <code class="highlighter-rouge">before_after</code> to the number of pages to be displayed
+before and after the current page in the pages component. The default values are
+descibred as below:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">pagination</span><span class="pi">:</span>
+  <span class="na">limit</span><span class="pi">:</span> <span class="s">10</span>
+  <span class="na">before_after</span><span class="pi">:</span> <span class="s">2</span></code></pre></figure>
+
 <h2 id="deploying-portus-in-a-sub-uri">Deploying Portus in a Sub-URI</h2>
 
 <p>In some deployments it might make sense to make Portus accessible through a
@@ -918,7 +932,7 @@ serve Portus from the specified subdirectory.</p>
       
         <li>
           <a href="/features/1_Synchronizing-the-Registry-and-Portus.html">
-            Synchonizing the Registry and Portus
+            Synchronizing the Registry and Portus
           </a>
         </li>
       
