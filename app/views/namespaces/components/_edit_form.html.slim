@@ -10,6 +10,11 @@
         span v-if="!$v.model.namespace.team.available"
           | Selected team does not exist
   .form-group
+    = f.label :visibility, class: 'control-label'
+    div
+      <visibility-chooser :is-global="namespace.global" :visibility.sync="model.namespace.visibility" :can-change="namespace.permissions.visibility"></visibility-chooser>
+
+  .form-group
     = f.label :description, class: 'control-label'
     = f.text_area :description, class: 'form-control fixed-size', placeholder: "A short description of your namespace", "v-model" => "model.namespace.description"
   .form-group
