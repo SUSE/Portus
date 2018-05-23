@@ -12,7 +12,7 @@ longtitle: How to setup a secure private registry
 The Docker Registry is a service that can talk to the docker daemon in order to
 upload and download docker images. Since version 2, the docker registry is
 called Distribution, and you can find the documentation
-[here](https://www.docker.com/docker-registry).
+[here](https://docs.docker.com/registry).
 
 There are multiple ways to deploy your own private registry. This page
 [explains](https://docs.docker.com/registry/deploying/) how to do this. From a
