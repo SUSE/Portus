@@ -1,5 +1,5 @@
 <template>
-  <form id="new-webhook-form" role="form" class="form-horizontal" ref="form" @submit.prevent="onSubmit">
+  <form id="edit-webhook-form" role="form" class="form-horizontal" ref="form" @submit.prevent="onSubmit">
     <div class="form-group has-feedback" :class="{ 'has-error': $v.webhookCopy.name.$error }">
       <label for="webhook_name" class="control-label col-md-2">Name</label>
       <div class="col-md-7">
@@ -50,6 +50,15 @@
       <label for="webhook_password" class="control-label col-md-2">Password</label>
       <div class="col-md-7">
         <input placeholder="Password for authentication" type="text" name="webhook[password]" id="webhook_password" class="form-control" v-model.trim="webhookCopy.password">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="webhook_enabled" class="control-label col-md-2">Enabled</label>
+      <div class="col-md-7">
+        <span @click.prevent="webhookCopy.enabled=!webhookCopy.enabled" >
+          <i class="fa fa-2x fa-toggle-on toggle" title="Click to disable" v-if="webhookCopy.enabled"></i>
+          <i class="fa fa-2x fa-toggle-off toggle" title="Click to enable" v-else></i>
+        </span>
       </div>
     </div>
     <div class="form-group">
