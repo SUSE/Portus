@@ -28,6 +28,18 @@ describe API::V1::Health do
         expect(response.status).to eq 503
       end
 
+      it "reached a RequestError when trying to connect to the registry" do
+        create(:registry, hostname: "whatever", use_ssl: false)
+
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:reachable?)
+          .and_raise(::Portus::RequestError, exception: Net::ReadTimeout, message: "something")
+
+        get "/api/v1/health"
+        expect(response.status).to eq 503
+        data = JSON.parse(response.body)
+        expect(data["registry"]["msg"]).to eq "Class: something"
+      end
+
       it "has both the DB and the registry" do
         create(:registry, hostname: "registry.mssola.cat", use_ssl: true)
 

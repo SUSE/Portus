@@ -15,8 +15,8 @@ module Portus
 
         res = ::Registry.get.client.reachable?
         ["registry is#{res ? "" : " not"} reachable", res]
-
-        # TODO: rescue ::Portus::RequestError instead of simply bailing
+      rescue ::Portus::RequestError => e
+        [e.to_s, false]
       end
     end
   end
