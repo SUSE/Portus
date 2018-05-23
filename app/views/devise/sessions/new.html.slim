@@ -5,11 +5,11 @@ section.row-0
       = render 'shared/notifications'
       = image_tag 'layout/portus-logo-login-page.png', class: 'login-picture'
       = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-        - if Portus::LDAP.enabled? || APP_CONFIG.enabled?("oauth.local_login")
+        - if APP_CONFIG.enabled?("ldap") || APP_CONFIG.enabled?("oauth.local_login")
           = f.text_field :username, class: 'input form-control input-lg first', placeholder: 'Username', autofocus: true, required: true
           = f.password_field :password, class: 'input form-control input-lg last', placeholder: 'Password', autocomplete: 'off', required: true
           = f.button id: "login-btn", class: 'classbutton btn btn-primary btn-block btn-lg' do
-            - if Portus::LDAP.enabled?
+            - if APP_CONFIG.enabled?("ldap")
               i.fa.fa-check
               ' LDAP Login
             - else
@@ -25,7 +25,7 @@ section.row-0
                 = link_to "Explore", explore_index_path, id: "explore", class: 'btn btn-link', title: "Explore existing images from this registry"
             .col-sm-4.forgot-password
               = link_to "I forgot my password", new_user_password_path, class: 'btn btn-link'
-          - elsif !Portus::LDAP.enabled?
+          - elsif APP_CONFIG.disabled?("ldap")
             - if APP_CONFIG.enabled?("anonymous_browsing")
               .col-sm-6.explore
                 = link_to "Explore", explore_index_path, id: "explore", class: 'btn btn-link', title: "Explore existing images from this registry"

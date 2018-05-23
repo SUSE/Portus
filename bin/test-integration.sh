@@ -50,30 +50,16 @@ start_containers() {
         LDAP=0
 
         while [ $RETRY -ne 0 ]; do
-            msg=$(SKIP_MIGRATION=1 docker exec $CNAME portusctl exec rails r /srv/Portus/bin/check_services.rb)
-            case $(echo "$msg" | grep DB) in
-                "DB_READY")
-                    DB=1
-                    ;;
-                *)
-                    echo "Database is not ready yet:"
-                    echo $msg
-                    ;;
-            esac
-
-            case $(echo "$msg" | grep LDAP) in
-                "LDAP_DISABLED"|"LDAP_OK")
-                    LDAP=1
-                    ;;
-                *)
-                    echo "LDAP is not ready yet"
-                    ;;
-            esac
-
-            if (( "$DB" == "1" )) && (( "$LDAP" == "1" )); then
-                echo "Let's go!"
+            set +e
+            docker exec $CNAME portusctl exec rails r /srv/Portus/bin/health.rb
+            if [ $? -eq "0" ]; then
+                set -e
+                echo "We are all set, let's go!"
                 break
+            else
+                echo "Waiting for services to be ready..."
             fi
+            set -e
 
             if [ "$COUNT" -ge "$TIMEOUT" ]; then
                 echo "[integration] Timeout  reached, exiting with error"

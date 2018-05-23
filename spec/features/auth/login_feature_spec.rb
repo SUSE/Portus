@@ -18,7 +18,7 @@ describe "Login feature" do
   it "does show a warning for the admin creation in LDAP support" do
     User.delete_all
     APP_CONFIG["first_user_admin"] = { "enabled" => false }
-    APP_CONFIG["ldap"] = { "enabled" => true }
+    APP_CONFIG["ldap"]["enabled"] = true
     visit new_user_session_path
 
     expect(page).not_to have_content("The first user to be created will have admin permissions !")
@@ -37,7 +37,7 @@ describe "Login feature" do
   end
 
   it "Skips validation of minimum password length when authenticating via LDAP" do
-    APP_CONFIG["ldap"] = { "enabled" => true }
+    APP_CONFIG["ldap"]["enabled"] = true
 
     # Skipping validation for LDAP users is configured when the user model is first interpreted
     # Use a clean room to guard against side effects
@@ -111,7 +111,7 @@ describe "Login feature" do
 
   it "Login form is enabled when local_login is enabled" do
     APP_CONFIG["oauth"]["local_login"] = { "enabled" => true }
-    APP_CONFIG["ldap"] = { "enabled" => false }
+    APP_CONFIG["ldap"]["enabled"] = false
 
     visit root_path
     expect(page).to have_current_path(root_path)
@@ -121,7 +121,7 @@ describe "Login feature" do
 
   it "Login form is enabled when ldap is enabled" do
     APP_CONFIG["oauth"]["local_login"] = { "enabled" => false }
-    APP_CONFIG["ldap"] = { "enabled" => true }
+    APP_CONFIG["ldap"]["enabled"] = true
 
     visit root_path
     expect(page).to have_current_path(root_path)
@@ -131,7 +131,7 @@ describe "Login feature" do
 
   it "Login form is disabled when both local_login and ldap are disabled" do
     APP_CONFIG["oauth"]["local_login"] = { "enabled" => false }
-    APP_CONFIG["ldap"] = { "enabled" => false }
+    APP_CONFIG["ldap"]["enabled"] = false
 
     visit root_path
     expect(page).to have_current_path(root_path)

@@ -30,7 +30,7 @@ CONFIGURED_DB_ADAPTER = ENV["PORTUS_DB_ADAPTER"]
 #
 #   allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_call_original
 #
-Portus::LDAP.class_eval do
+Portus::LDAP::Authenticatable.class_eval do
   def fake_authenticate!
     # rubocop:disable Style/SignalException
     fail(:invalid_login)
@@ -49,6 +49,9 @@ RSpec.configure do |config|
 
   # By default, LDAP will be faked away.
   config.before do
-    allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_return(:fake_authenticate!)
+    allow_any_instance_of(Portus::LDAP::Authenticatable).to(
+      receive(:authenticate!)
+        .and_return(:fake_authenticate!)
+    )
   end
 end

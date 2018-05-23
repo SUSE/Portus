@@ -91,7 +91,7 @@ describe "Signup feature" do
 
   it "always redirects to the signin page when there are no users but LDAP is enabled" do
     User.delete_all
-    APP_CONFIG["ldap"] = { "enabled" => true }
+    APP_CONFIG["ldap"]["enabled"] = true
 
     visit new_user_session_url
     expect(current_url).to eq new_user_session_url

@@ -70,7 +70,7 @@ describe User do
   it "#email_required?" do
     expect(subject.email_required?).to be true
 
-    APP_CONFIG["ldap"] = { "enabled" => true }
+    APP_CONFIG["ldap"]["enabled"] = true
     incomplete = create(:user, email: "")
 
     expect(subject.email_required?).to be true
@@ -91,7 +91,7 @@ describe User do
     let!(:user)   { create(:user, username: "username001") }
 
     it "find user by username" do
-      APP_CONFIG["ldap"] = { "enabled" => false }
+      APP_CONFIG["ldap"]["enabled"] = false
       event = { "actor" => { "name" => "username001" } }
       expect(described_class.find_from_event(event)).not_to be_nil
     end

@@ -173,7 +173,10 @@ describe "/v2/token" do
       before do
         APP_CONFIG["ldap"]["enabled"] = true
         APP_CONFIG["ldap"]["base"] = ""
-        allow_any_instance_of(Portus::LDAP).to receive(:authenticate!).and_call_original
+        allow_any_instance_of(Portus::LDAP::Authenticatable).to(
+          receive(:authenticate!)
+            .and_call_original
+        )
         allow_any_instance_of(Net::LDAP).to receive(:bind_as).and_return(true)
       end
 

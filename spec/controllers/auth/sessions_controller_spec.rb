@@ -7,7 +7,7 @@ describe Auth::SessionsController do
     before do
       request.env["devise.mapping"] = Devise.mappings[:user]
       APP_CONFIG["signup"] = { "enabled" => true }
-      APP_CONFIG["ldap"] = { "enabled" => true }
+      APP_CONFIG["ldap"]["enabled"] = true
     end
 
     it "sets the session hash on LDAP when it's the first time" do
