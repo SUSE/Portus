@@ -12,6 +12,10 @@
 }
 
 .table {
+  &.no-margin {
+    margin: 0;
+  }
+
   .fa-sort,
   .fa-sort-amount-asc,
   .fa-sort-amount-asc {

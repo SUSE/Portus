@@ -1,5 +1,5 @@
 <template>
-  <table class="table">
+  <table class="table no-margin">
     <colgroup>
       <col class="col-20">
       <col class="col-80">
