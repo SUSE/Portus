@@ -25,6 +25,10 @@
         <th>Password</th>
         <td>{{ password }}</td>
       </tr>
+      <tr>
+        <th>Status</th>
+        <td>{{ status }}</td>
+      </tr>
     </tbody>
   </table>
 </template>
@@ -52,6 +56,14 @@
         }
 
         return '—';
+      },
+
+      status() {
+        if (this.webhook.enabled) {
+          return 'Enabled';
+        }
+
+        return 'Disabled';
       },
     },
   };

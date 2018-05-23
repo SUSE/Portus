@@ -135,7 +135,8 @@ class WebhooksController < ApplicationController
       :request_method,
       :content_type,
       :username,
-      :password
+      :password,
+      :enabled
     )
   end
 end
