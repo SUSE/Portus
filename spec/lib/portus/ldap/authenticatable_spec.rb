@@ -109,7 +109,35 @@ class PortusMock < Portus::LDAP::Authenticatable
   end
 end
 
-describe ::Portus::LDAP::Authenticatable do
+# AuthenticatableMock is a thin layer on top of ::Portus::LDAP::Authenticatable,
+# that allows you to define the request parameters. It also allows you to access
+# the `session` object. Therefore, this class is designed to mock as least as
+# possible.
+class AuthenticatableMock < ::Portus::LDAP::Authenticatable
+  attr_accessor :params
+  attr_accessor :session
+
+  # Sets the request parameters and initializes the session.
+  def initialize(params)
+    @session = {}
+    @params = params
+    super
+  end
+end
+
+# assert_guess_email uses AuthenticatableMock with the given `params` object and
+# checks that the created user has the given `email`. You can also pass the
+# attribute to be used as the configuration for `ldap.guess_email.attr`.
+def assert_guess_email(params, email, attr = "")
+  APP_CONFIG["ldap"]["guess_email"]["attr"] = attr
+
+  lm = AuthenticatableMock.new(params)
+  lm.authenticate!
+
+  email.nil? ? expect(User.first.email).to(be_nil) : expect(User.first.email).to(eq(email))
+end
+
+describe ::Portus::LDAP::Authenticatable, focus: true do
   before do
     APP_CONFIG["ldap"]["enabled"] = true
     allow_any_instance_of(described_class).to receive(:authenticate!).and_call_original
@@ -394,8 +422,12 @@ describe ::Portus::LDAP::Authenticatable do
     let(:multiple_dn) do
       [
         {
-          "dn"    => ["ou=users,dc=example,dc=com", "ou=accounts,dc=example,dc=com"],
+          "dn"    => ["ou=users,dc=example,dc=com"],
           "email" => "user@example.com"
+        },
+        {
+          "dn"    => ["ou=accounts,dc=example,dc=com"],
+          "email" => "another@example.com"
         }
       ]
     end
@@ -418,68 +450,55 @@ describe ::Portus::LDAP::Authenticatable do
       ]
     end
 
-    it "returns a nil email if disabled" do
-      ge = { "enabled" => false, "attr" => "" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+    let(:params) do
+      { user: { username: "name", password: "12341234" } }
+    end
 
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(valid_response)).to be_nil
+    before do
+      allow_any_instance_of(Net::LDAP).to receive(:bind_as).and_return(true)
+
+      APP_CONFIG["ldap"]["enabled"]     = true
+      APP_CONFIG["ldap"]["guess_email"] = { "enabled" => true, "attr" => "" }
     end
 
     it "returns a nil email if no records have been found" do
-      ge = { "enabled" => true, "attr" => "" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return([])
+      assert_guess_email(params, nil)
+    end
 
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test([])).to be_nil
+    it "returns nil if search fails" do
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(nil)
+      assert_guess_email(params, nil)
     end
 
     it "returns a nil email if more than one dn gets returned" do
-      ge = { "enabled" => true, "attr" => "" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
-
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(multiple_dn)).to be_nil
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(multiple_dn)
+      assert_guess_email(params, nil)
     end
 
     it "returns a nil email if the dc hostname could not be guessed" do
-      ge = { "enabled" => true, "attr" => "" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
-
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(empty_dc)).to be_nil
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(empty_dc)
+      assert_guess_email(params, nil)
     end
 
     it "returns a valid email if the dc can be guessed" do
-      ge = { "enabled" => true, "attr" => "" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
-
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(valid_response)).to eq "name@example.com"
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(valid_response)
+      assert_guess_email(params, "name@example.com")
     end
 
     it "returns a nil email if the specified attribute does not exist" do
-      ge = { "enabled" => true, "attr" => "non_existing" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
-
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(valid_response)).to be_nil
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(valid_response)
+      assert_guess_email(params, nil, "non_existing")
     end
 
     it "returns a valid email if the given attribute exists" do
-      ge = { "enabled" => true, "attr" => "email" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
-
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(valid_response)).to eq "user@example.com"
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(valid_response)
+      assert_guess_email(params, "user@example.com", "email")
     end
 
     it "returns a the first vaild email if the given attr has a list" do
-      ge = { "enabled" => true, "attr" => "email" }
-      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "guess_email" => ge }
-
-      lm = LdapMock.new(username: "name", password: "12341234")
-      expect(lm.guess_email_test(multiple_emails)).to eq "user1@example.com"
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(multiple_emails)
+      assert_guess_email(params, "user1@example.com", "email")
     end
   end
 end
