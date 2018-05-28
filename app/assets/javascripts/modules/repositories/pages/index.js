@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import RepositoriesTable from '../components/table';
+import RepositoriesPanel from '../components/panel';
 
 $(() => {
   if (!$('body[data-route="repositories/index"]').length) {
@@ -12,7 +12,7 @@ $(() => {
     el: 'body[data-route="repositories/index"] .vue-root',
 
     components: {
-      RepositoriesTable,
+      RepositoriesPanel,
     },
 
     data() {
