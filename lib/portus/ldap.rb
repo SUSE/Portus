@@ -232,7 +232,7 @@ module Portus
       return nil if cfg.nil? || !cfg["enabled"]
 
       record = @ldap.search(search_options)
-      return nil if record.size != 1
+      return nil if record.blank? || record.size != 1
       record = record.first
 
       cfg["attr"].empty? ? guess_from_dn(record["dn"]) : guess_from_attr(record, cfg["attr"])
