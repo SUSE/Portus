@@ -44,6 +44,30 @@ module Helpers
       admin:    true
     )
   end
+
+  # Unfortunately vue-multiselect component is not very friendly regarding
+  # interactions without being in the vue/node testing world.
+  def fill_vue_multiselect(element, text)
+    execute_script("document.querySelector('#{element}').dispatchEvent(new Event('focus'))")
+    execute_script("document.querySelector('#{element} .multiselect__input').value = '#{text}'")
+    execute_script("document.querySelector('#{element} .multiselect__input')
+                    .dispatchEvent(new Event('input'))")
+    wait_for_ajax
+  end
+
+  def deselect_vue_multiselect(element, text)
+    fill_vue_multiselect(element, text)
+    expect(page).to have_css("#{element} .multiselect__option--selected")
+    execute_script("document.querySelector('#{element} .multiselect__option--selected')
+                    .dispatchEvent(new Event('click'))")
+  end
+
+  def select_vue_multiselect(element, text)
+    fill_vue_multiselect(element, text)
+    expect(page).to have_css("#{element} .multiselect__option--highlight")
+    execute_script("document.querySelector('#{element} .multiselect__option--highlight')
+                    .dispatchEvent(new Event('click'))")
+  end
 end
 
 RSpec.configure { |config| config.include Helpers }

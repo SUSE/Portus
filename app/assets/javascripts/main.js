@@ -1,5 +1,4 @@
-import Alert from '~/shared/components/alert';
-
+import 'jquery';
 import 'jquery-ujs';
 
 // Bootstrap
@@ -27,6 +26,8 @@ import './modules/repositories';
 import './modules/namespaces';
 import './modules/teams';
 import './modules/webhooks';
+
+import Alert from './shared/components/alert';
 
 import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects';
 

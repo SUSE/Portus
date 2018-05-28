@@ -23,9 +23,6 @@ describe "Application tokens" do
       click_button "Create"
       wait_for_ajax
 
-      expect(user.application_tokens.count).to be(1)
-      expect(page).to have_current_path(edit_user_registration_path)
-
       expect(page).to have_content("was created successfully")
       expect(page).to have_content("awesome-application")
     end

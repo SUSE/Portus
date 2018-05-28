@@ -1,14 +1,12 @@
 import Vue from 'vue';
+import VueMultiselect from 'vue-multiselect';
 
 import { required } from 'vuelidate/lib/validators';
 
-import { setTypeahead } from '~/utils/typeahead';
 import { handleHttpResponseError } from '~/utils/http';
 
 import FormMixin from '~/shared/mixins/form';
 import TeamsService from '../../service';
-
-const TYPEAHEAD_INPUT = '#new-team-member-form .remote .typeahead';
 
 const { set } = Vue;
 
@@ -19,8 +17,16 @@ export default {
 
   mixins: [FormMixin],
 
+  components: {
+    VueMultiselect,
+  },
+
   data() {
     return {
+      members: [],
+      selectedMember: null,
+      isTouched: false,
+      isLoading: false,
       member: {
         role: window.availableRoles[0].toLowerCase(),
         user: '',
@@ -54,52 +60,38 @@ export default {
         this.$bus.$emit('teamMemberAdded', member);
       }).catch(handleHttpResponseError);
     },
+
+    searchMember(query) {
+      if (!query) {
+        return;
+      }
+
+      set(this, 'isLoading', true);
+      TeamsService.searchMember(this.teamId, query).then((response) => {
+        set(this, 'members', response.data);
+      }).catch(() => {
+        void 0;
+      }).finally(() => set(this, 'isLoading', false));
+    },
+
+    onSelect(member) {
+      set(this.member, 'user', member.name);
+    },
+
+    onRemove() {
+      set(this.member, 'user', '');
+    },
+
+    onTouch() {
+      this.$v.member.user.$touch();
+    },
   },
 
   validations: {
     member: {
       user: {
         required,
-        available(value) {
-          clearTimeout(this.timeout.user);
-
-          // required already taking care of this
-          if (value === '') {
-            return true;
-          }
-
-          return new Promise((resolve) => {
-            const searchTeam = () => {
-              const promise = TeamsService.memberExists(this.teamId, value);
-
-              promise.then((exists) => {
-                // leave it for the back-end
-                if (exists === null) {
-                  resolve(true);
-                }
-
-                // if exists, valid
-                resolve(exists);
-              });
-            };
-
-            this.timeout.user = setTimeout(searchTeam, 1000);
-          });
-        },
       },
     },
-  },
-
-  mounted() {
-    const $user = setTypeahead(TYPEAHEAD_INPUT, `/teams/${this.teamId}/typeahead/%QUERY`);
-
-    // workaround because of typeahead
-    const updateTeam = () => {
-      set(this.member, 'user', $user.val());
-    };
-
-    $user.on('typeahead:selected', updateTeam);
-    $user.on('typeahead:autocompleted', updateTeam);
-    $user.on('change', updateTeam);
   },
 };

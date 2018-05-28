@@ -277,7 +277,7 @@ describe "Teams support" do
       find(".toggle-link-new-member").click
 
       select "Contributor", from: "Role"
-      fill_in "User", with: another.username
+      select_vue_multiselect(".team_user_user", another.username)
 
       expect(page).to have_button("Add")
       click_button "Add"
@@ -286,7 +286,7 @@ describe "Teams support" do
       wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
-      expect(page).to have_content("User '#{another.username}' was successfully added to the team")
+      expect(page).to have_content("'#{another.username}' was successfully added to the team")
       expect(page).to have_css(".team_member_#{TeamUser.last.id} .role", text: "Contributor")
     end
 
@@ -294,7 +294,7 @@ describe "Teams support" do
       find(".toggle-link-new-member").click
 
       select "Contributor", from: "Role"
-      fill_in "User", with: another_admin.username
+      select_vue_multiselect(".team_user_user", another_admin.username)
 
       expect(page).to have_button("Add")
       click_button "Add"
@@ -314,11 +314,9 @@ describe "Teams support" do
       find(".toggle-link-new-member").click
 
       select "Contributor", from: "Role"
-      fill_in "User", with: "grumpy"
+      fill_vue_multiselect(".team_user_user", "grumpy")
 
-      wait_for_effect_on("#new-team-member-form")
-
-      expect(page).to have_content("Selected user does not exist or has already been added")
+      expect(page).to have_content("Oops! No username found.")
       expect(page).to have_button("Add", disabled: true)
     end
 

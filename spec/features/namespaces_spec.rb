@@ -69,10 +69,10 @@ describe "Namespaces support" do
       wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: Namespace.first.name
-      fill_in "Team", with: Team.where(hidden: true).first.name
+      fill_vue_multiselect(".namespace_team", Team.where(hidden: true).first.name)
       wait_for_ajax
 
-      expect(page).to have_content("Selected team does not exist")
+      expect(page).to have_content("Oops! No team found.")
       expect(page).to have_button("Create", disabled: true)
     end
 
@@ -84,7 +84,7 @@ describe "Namespaces support" do
       wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: "valid-namespace"
-      fill_in "Team", with: namespace.team.name
+      select_vue_multiselect(".namespace_team", namespace.team.name)
       click_button "Create"
 
       wait_for_ajax
@@ -129,7 +129,7 @@ describe "Namespaces support" do
       wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: "valid-namespace"
-      fill_in "Team", with: namespace.team.name
+      select_vue_multiselect(".namespace_team", namespace.team.name)
 
       expect(page).not_to have_css(".toggle-link-new-namespace i.fa-plus-circle")
       expect(page).to have_css(".toggle-link-new-namespace i.fa-minus-circle")
@@ -247,17 +247,17 @@ describe "Namespaces support" do
       visit namespace_path(namespace.id)
       find(".toggle-link-edit-namespace").click
 
-      fill_in "Team", with: "unknown"
+      fill_vue_multiselect(".namespace_team", "unknown")
       wait_for_ajax
 
-      expect(page).to have_content("Selected team does not exist")
+      expect(page).to have_content("Oops! No team found.")
     end
 
     it "user removes the team", js: true do
       visit namespace_path(namespace.id)
       find(".toggle-link-edit-namespace").click
 
-      fill_in "Team", with: ""
+      deselect_vue_multiselect(".namespace_team", namespace.team.name)
 
       expect(page).to have_content("Team can't be blank")
     end
@@ -268,7 +268,7 @@ describe "Namespaces support" do
       visit namespace_path(namespace.id)
       find(".toggle-link-edit-namespace").click
 
-      fill_in "Team", with: new_team.name
+      select_vue_multiselect(".namespace_team", new_team.name)
       wait_for_ajax
 
       click_button "Save"
