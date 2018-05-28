@@ -30,6 +30,7 @@ module Portus
     # file. Take a look at this file in order to read more on the different
     # configurable values.
     class Authenticatable < Devise::Strategies::Authenticatable
+      include ::Portus::LDAP::Adapter
       include ::Portus::LDAP::Connection
       include ::Portus::LDAP::Errors
       include ::Portus::LDAP::Login
@@ -38,8 +39,11 @@ module Portus
       # the user.
       def authenticate!
         fill_user_params!
-        cfg = ::Portus::LDAP::Configuration.new(params)
-        portus_login!(cfg) if bind_as(cfg)
+
+        cfg        = ::Portus::LDAP::Configuration.new(params)
+        connection = initialized_adapter
+
+        portus_login!(connection, cfg) if bind_as(connection, cfg)
       rescue ::Portus::LDAP::Error, Net::LDAP::Error => e
         logged_failure!(e.message)
       end

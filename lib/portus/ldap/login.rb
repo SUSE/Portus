@@ -9,8 +9,8 @@ module Portus
       # Fetch the user assumed from `cfg` and log it. If the user does not
       # exist yet, it will be created and the `session[:first_login]` value will
       # be set to true, so the sessions controller can act accordingly.
-      def portus_login!(cfg)
-        user, created = find_or_create_user!(cfg)
+      def portus_login!(connection, cfg)
+        user, created = find_or_create_user!(connection, cfg)
         if user.valid?
           session[:first_login] = true if created
           success!(user)
@@ -24,14 +24,14 @@ module Portus
       # Retrieve the given user as an LDAP user. If it doesn't exist, create it
       # with the parameters given in `cfg`. Returns two objects: the user object
       # and a boolean set to true if the returned user was just created.
-      def find_or_create_user!(cfg)
+      def find_or_create_user!(connection, cfg)
         user = User.find_by(username: cfg.username)
         created = false
 
         # The user does not exist in Portus yet, let's create it.
         unless user
-          em = guess_email(cfg)
-          em = nil if User.exists?(email: em)
+          em = guess_email(connection, cfg)
+          em = nil if em && User.exists?(email: em)
 
           user = User.create(
             username: cfg.username,
@@ -47,12 +47,12 @@ module Portus
       # If the "ldap.guess_email" option is enabled, try to guess the email for
       # the user as specified in the configuration. Returns an nil if nothing
       # could be guessed.
-      def guess_email(configuration)
+      def guess_email(connection, configuration)
         cfg = APP_CONFIG["ldap"]["guess_email"]
-        return nil if cfg.nil? || !cfg["enabled"]
+        return if cfg.nil? || !cfg["enabled"]
 
-        record = @ldap.search(search_options(configuration))
-        return nil if record.size != 1
+        record = connection.search(search_options(configuration))
+        return if record&.size != 1
         record = record.first
 
         if cfg["attr"].empty?
