@@ -4,8 +4,12 @@
       {{ title }}
     </h5>
 
+    <div slot="heading-right">
+      <slot name="heading-right"></slot>
+    </div>
+
     <div slot="body">
-      <repositories-table :repositories="repositories" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath" :sortable="true" sort-by="name"></repositories-table>
+      <repositories-table :repositories="repositories" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath" :sortable="true" sort-by="name" :show-namespaces="showNamespaces"></repositories-table>
     </div>
   </panel>
 </template>

@@ -1,42 +1,75 @@
 <template>
   <div class="namespaces-show-page">
-    <panel>
-      <div slot="heading-left">
-        <h5>
-          <a data-placement="right"
-            data-toggle="popover"
-            data-container=".panel-heading"
-            data-content="<p>Information about the namespace.</p>"
-            data-original-title="What's this?"
-            tabindex="0"
-            data-html="true">
-            <i class="fa fa-info-circle"></i>
-          </a>
-          <strong> {{ namespace.name }} </strong>
-          namespace
-        </h5>
-      </div>
-
+    <namespace-details-panel :namespace="namespace" :state="state" :teams-path="teamsPath" :webhooks-path="webhooksPath"></namespace-details-panel>
+    <repositories-panel title="Namespace's repositories" :repositories="repositories" :show-namespaces="false" :repositories-path="repositoriesPath">
       <div slot="heading-right">
-        <toggle-link text="Edit namespace" :state="state" state-key="editFormVisible" class="toggle-link-edit-namespace" false-icon="fa-pencil" true-icon="fa-close" v-if="canManageNamespace"></toggle-link>
+        <div v-if="namespace.permissions.push"
+          class="circle-label permissions-label circle-label-sm"
+          data-placement="left"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="You can push images"
+          data-original-title="What can I do?"
+          tabindex="0" data-html="true">
+          <i class="fa fa-arrow-up"></i>
+          Push
+        </div>
+        <div v-if="namespace.permissions.pull"
+          class="circle-label permissions-label circle-label-sm"
+          data-placement="left"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="You can pull images"
+          data-original-title="What can I do?"
+          tabindex="0" data-html="true">
+          <i class="fa fa-arrow-down"></i>
+          Pull
+        </div>
+        <div v-if="namespace.permissions.role == 'owner'"
+          class="circle-label permissions-label circle-label-sm"
+          data-placement="left"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="You are an owner of this namespace"
+          data-original-title="What's my role?"
+          tabindex="0" data-html="true">
+          <i class="fa fa-male"></i>
+          Owner
+        </div>
+        <div v-if="namespace.permissions.role == 'contributor'"
+          class="circle-label permissions-label circle-label-sm"
+          data-placement="left"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="You are a contributor in this namespace"
+          data-original-title="What's my role?"
+          tabindex="0" data-html="true">
+          <i class="fa fa-exchange"></i>
+          Contr.
+        </div>
+        <div v-if="namespace.permissions.role == 'viewer'"
+          class="circle-label permissions-label circle-label-sm"
+          data-placement="left"
+          data-toggle="popover"
+          data-container=".panel-heading"
+          data-content="You are a viewer in this namespace"
+          data-original-title="What's my role?"
+          tabindex="0" data-html="true">
+          <i class="fa fa-eye"></i>
+          Viewer
+        </div>
       </div>
-
-      <div slot="body">
-        <namespace-info :namespace="namespace" v-if="!state.editFormVisible"></namespace-info>
-        <edit-namespace-form :namespace="namespace" v-if="state.editFormVisible"></edit-namespace-form>
-      </div>
-    </panel>
+    </repositories-panel>
   </div>
 </template>
 
 <script>
   import Vue from 'vue';
 
-  import ToggleLink from '~/shared/components/toggle-link';
-  import Panel from '~/shared/components/panel';
+  import RepositoriesPanel from '~/modules/repositories/components/panel';
+  import WebhooksPanel from '~/modules/webhooks/components/panel';
 
-  import NamespaceInfo from '../components/info';
-  import EditNamespaceForm from '../components/edit-form';
+  import NamespaceDetailsPanel from '../components/details';
 
   import NamespacesStore from '../store';
 
@@ -44,25 +77,34 @@
 
   export default {
     props: {
-      namespaceJson: {
+      namespaceRef: {
+        type: Object,
+      },
+      repositoriesRef: {
+        type: Array,
+      },
+      repositoriesPath: {
         type: String,
       },
-      canManageNamespace: {
-        type: Boolean,
+      teamsPath: {
+        type: String,
+      },
+      webhooksPath: {
+        type: String,
       },
     },
 
     components: {
-      NamespaceInfo,
-      EditNamespaceForm,
-      ToggleLink,
-      Panel,
+      NamespaceDetailsPanel,
+      RepositoriesPanel,
+      WebhooksPanel,
     },
 
     data() {
       return {
         state: NamespacesStore.state,
-        namespace: JSON.parse(this.namespaceJson),
+        namespace: { ...this.namespaceRef },
+        repositories: [...this.repositoriesRef],
       };
     },
 

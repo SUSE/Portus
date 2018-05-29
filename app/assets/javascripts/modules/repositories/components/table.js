@@ -20,6 +20,9 @@ export default {
     namespacesPath: {
       type: String,
     },
+    showNamespaces: {
+      type: Boolean,
+    },
     prefix: {
       type: String,
       default: '',

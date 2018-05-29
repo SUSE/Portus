@@ -3,8 +3,6 @@ import Vue from 'vue';
 import NamespacesIndexPage from './pages/index';
 import NamespacesShowPage from './pages/show';
 
-import TeamLink from './components/team-link';
-
 $(() => {
   if (!$('body[data-controller="namespaces"]').length) {
     return;
@@ -17,9 +15,6 @@ $(() => {
     components: {
       NamespacesIndexPage,
       NamespacesShowPage,
-
-      // repositories panel is not a component yet
-      TeamLink,
     },
   });
 });

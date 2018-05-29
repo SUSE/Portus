@@ -298,8 +298,8 @@ describe "Namespaces support" do
     end
   end
 
-  describe "#show" do
-    it "shows the proper visual aid for each role", js: true do
+  describe "#show", js: true do
+    it "shows the proper visual aid for each role" do
       visit namespace_path(namespace.id)
       expect(page).to have_content("Push Pull Owner")
 
@@ -330,14 +330,6 @@ describe "Namespaces support" do
         visit namespace_path(namespace.id)
         expect(page).to have_content("Pull Viewer")
       end
-    end
-
-    it "An user sees dropdown for 'Show webhooks'", js: true do
-      visit namespace_path(namespace.id)
-
-      expect(page).not_to have_content("Show webhooks")
-      find("[data-toggle='dropdown']").click
-      expect(page).to have_content("Show webhooks")
     end
   end
 end

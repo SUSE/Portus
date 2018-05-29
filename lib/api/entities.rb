@@ -295,17 +295,21 @@ module API
         type: "Boolean",
         desc: "Whether this is the global namespace or not"
       }
+      expose :updatable, documentation: {
+        desc: "Boolean that tells if the current user can manage the namespace"
+      }, if: { type: :internal } do |namespace, options|
+        can_manage_namespace?(namespace, options[:current_user])
+      end
       expose :permissions, documentation: {
         desc: "Different permissions for the current user"
       }, if: { type: :internal } do |namespace, options|
         user = options[:current_user]
-        # TODO: taken from NamespacesHelper. Avoid duplication! (e.g. owner?)
         {
-          webhooks:   user.admin? ||
-            namespace.team.users.include?(user),
-          visibility: user.admin? ||
-            (namespace.team.owners.exists?(user.id) &&
-              APP_CONFIG.enabled?("user_permission.change_visibility"))
+          role:       role(namespace, user),
+          pull:       can_pull?(namespace, user),
+          push:       can_push?(namespace, user),
+          webhooks:   user.admin? || role(namespace, user).present?,
+          visibility: can_change_visibility?(namespace, user)
         }
       end
     end

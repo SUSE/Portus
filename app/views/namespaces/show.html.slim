@@ -1,11 +1,11 @@
-<namespaces-show-page :can-manage-namespace="#{can_manage_namespace?(@namespace)}" namespace-json='#{raw @namespace_serialized}'>
-</namespaces-show-page>
-
-= render "namespaces/partials/repositories"
+<namespaces-show-page :namespace-ref="#{@namespace_serialized}" :repositories-ref="#{@repositories_serialized}" repositories-path="#{repositories_path}" webhooks-path="#{namespace_webhooks_path(@namespace)}" teams-path="#{teams_path}"></namespaces-show-page>
 
 - content_for :js_body do
   script#js-edit-namespace-form-tmpl type="text/x-template"
     = render "namespaces/components/edit_form"
 
-  script#js-namespace-team-link-tmpl type="text/x-template"
-    = render "namespaces/components/team_link"
+  script#js-repositories-table-tmpl type="text/x-template"
+    = render "repositories/components/table"
+
+  script#js-repository-table-row-tmpl type="text/x-template"
+    = render "repositories/components/table_row"

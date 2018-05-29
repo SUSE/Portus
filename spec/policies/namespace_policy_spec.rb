@@ -261,6 +261,122 @@ describe NamespacePolicy do
     end
   end
 
+  permissions :update? do
+    context "feature enabled" do
+      before do
+        APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = true
+      end
+
+      it "allows access to admin" do
+        expect(subject).to permit(@admin, namespace)
+      end
+
+      it "allows access to user with owner role" do
+        expect(subject).to permit(owner, namespace)
+      end
+
+      it "disallows access to user with contributor role" do
+        expect(subject).not_to permit(contributor, namespace)
+      end
+
+      it "disallows access to user with viewer role" do
+        expect(subject).not_to permit(viewer, namespace)
+      end
+
+      it "disallows access to user who is not logged in" do
+        expect do
+          subject.new(nil, namespace).update?
+        end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+      end
+    end
+
+    context "feature disabled" do
+      before do
+        APP_CONFIG["user_permission"]["manage_namespace"]["enabled"] = false
+      end
+
+      it "allows access to admin" do
+        expect(subject).to permit(@admin, namespace)
+      end
+
+      it "disallows access to user with owner role" do
+        expect(subject).not_to permit(owner, namespace)
+      end
+
+      it "disallows access to user with contributor role" do
+        expect(subject).not_to permit(contributor, namespace)
+      end
+
+      it "disallows access to user with viewer role" do
+        expect(subject).not_to permit(viewer, namespace)
+      end
+
+      it "disallows access to user who is not logged in" do
+        expect do
+          subject.new(nil, namespace).update?
+        end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+      end
+    end
+  end
+
+  permissions :create? do
+    context "feature enabled" do
+      before do
+        APP_CONFIG["user_permission"]["create_namespace"]["enabled"] = true
+      end
+
+      it "allows access to admin" do
+        expect(subject).to permit(@admin, nil)
+      end
+
+      it "allows access to user with owner role" do
+        expect(subject).to permit(owner, team.namespaces.build)
+      end
+
+      it "allows access to user with contributor role" do
+        expect(subject).to permit(contributor, team.namespaces.build)
+      end
+
+      it "disallows access to user with viewer role" do
+        expect(subject).not_to permit(viewer, team.namespaces.build)
+      end
+
+      it "disallows access to user who is not logged in" do
+        expect do
+          subject.new(nil, nil).update?
+        end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+      end
+    end
+
+    context "feature disabled" do
+      before do
+        APP_CONFIG["user_permission"]["create_namespace"]["enabled"] = false
+      end
+
+      it "allows access to admin" do
+        expect(subject).to permit(@admin, nil)
+      end
+
+      it "disallows access to user with owner role" do
+        expect(subject).not_to permit(owner, team.namespaces.build)
+      end
+
+      it "disallows access to user with contributor role" do
+        expect(subject).not_to permit(contributor, team.namespaces.build)
+      end
+
+      it "disallows access to user with viewer role" do
+        expect(subject).not_to permit(viewer, team.namespaces.build)
+      end
+
+      it "disallows access to user who is not logged in" do
+        expect do
+          subject.new(nil, nil).create?
+        end.to raise_error(Pundit::NotAuthorizedError, /must be logged in/)
+      end
+    end
+  end
+
   describe "scope" do
     before do
       # force creation of namespace

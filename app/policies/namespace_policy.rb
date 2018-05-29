@@ -22,7 +22,7 @@ class NamespacePolicy
     # All the members of the team have READ access or anyone if
     # the namespace is public
     # Everybody can pull from the global namespace
-    namespace.global? || user.admin? || namespace.team.users.exists?(user.id)
+    namespace.global? || user.admin? || member?
   end
 
   alias show? pull?
@@ -44,7 +44,7 @@ class NamespacePolicy
   def index?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
 
-    user.admin? || namespace.team.users.exists?(user.id)
+    user.admin? || member?
   end
 
   def create?
@@ -55,7 +55,7 @@ class NamespacePolicy
   def update?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     (user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
-                     namespace.team.owners.exists?(user.id))) && push?
+                     owner?)) && push?
   end
 
   alias all? push?
@@ -63,14 +63,30 @@ class NamespacePolicy
   def change_visibility?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     user.admin? || (APP_CONFIG.enabled?("user_permission.change_visibility") &&
-                    !namespace.global? && namespace.team.owners.exists?(user.id))
+                    !namespace.global? && owner?)
   end
 
   # Only owners and admins can change the team ownership.
   def change_team?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
-                    namespace.team.owners.exists?(user.id))
+                    owner?)
+  end
+
+  def owner?
+    namespace.team.owners.exists?(user.id)
+  end
+
+  def contributor?
+    namespace.team.contributors.exists?(user.id)
+  end
+
+  def viewer?
+    namespace.team.viewers.exists?(user.id)
+  end
+
+  def member?
+    namespace.team.users.exists?(user.id)
   end
 
   class Scope

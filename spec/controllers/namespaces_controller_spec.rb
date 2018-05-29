@@ -64,13 +64,6 @@ describe NamespacesController, type: :controller do
   describe "GET #show" do
     let!(:portus) { create(:admin, username: "portus") }
 
-    it "paginates repositories" do
-      sign_in owner
-      get :show, id: namespace.id
-
-      expect(assigns(:repositories)).to respond_to(:total_pages)
-    end
-
     it "allows team members to view the page" do
       sign_in owner
       get :show, id: namespace.id
