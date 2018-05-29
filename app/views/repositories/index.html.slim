@@ -1,15 +1,7 @@
-.panel.panel-default.repositories-panel
-  .panel-heading
-    h5 Repositories via team membership
-  .panel-body
-    <repositories-table :repositories="teamRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}" :sortable="true" sort-by="name"></repositories-table>
+<repositories-panel title="Repositories via team membership" :repositories="teamRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}"></repositories-panel>
 
 - if (@repositories.count - @team_repositories.count) > 0
-  .panel.panel-default.repositories-panel
-    .panel-heading
-      h5 Other repositories
-    .panel-body
-      <repositories-table :repositories="otherRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}" :sortable="true" sort-by="name"></repositories-table>
+  <repositories-panel title="Other repositories" :repositories="otherRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}"></repositories-panel>
 
 - content_for :js_body do
   script#js-repositories-table-tmpl type="text/x-template"
