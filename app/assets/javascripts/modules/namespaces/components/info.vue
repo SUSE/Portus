@@ -5,7 +5,7 @@
       <col class="col-80">
     </colgroup>
     <tbody>
-      <tr v-if="!namespace.global">
+      <tr v-if="!namespace.global && !namespace.team.hidden">
         <th class="v-align-top">Team</th>
         <td><a :href="teamHref">{{ namespace.team.name }}</a></td>
       </tr>

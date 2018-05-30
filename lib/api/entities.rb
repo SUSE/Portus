@@ -271,7 +271,7 @@ module API
       expose :team, documentation: {
         desc: "The ID and the name of the team containing this namespace"
       } do |namespace|
-        namespace.team&.slice("id", "name")
+        namespace.team&.slice("id", "name", "hidden")
       end
       expose :repositories_count, documentation: {
         type: Integer,
