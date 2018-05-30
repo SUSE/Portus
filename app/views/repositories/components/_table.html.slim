@@ -1,5 +1,7 @@
 .table-responsive
   table.table.table-striped.table-hover.no-margin :class=="{'table-sortable': sortable}"
+    colgroup
+      col class="col-60"
     thead
       tr
         th @click=="sort('name')"
@@ -11,7 +13,7 @@
           }
           | Repository
 
-        th @click=="sort('namespace.name')"
+        th @click=="sort('namespace.name')" v-if="showNamespaces"
           i.fa.fa-fw.fa-sort{
             :class=="{
               'fa-sort-amount-asc': sorting.by === 'namespace.name' && sorting.asc,
@@ -26,7 +28,7 @@
               'fa-sort-amount-desc': sorting.by === 'tags_count' && !sorting.asc,
             }"
           }
-          | # Tags
+          | Tags
         th @click=="sort('updated_at')"
           i.fa.fa-fw.fa-sort{
             :class=="{
@@ -36,6 +38,6 @@
           }
           | Updated at
     tbody
-      <repository-table-row v-for="repository in filteredRepositories" :key="repository.id" :repository="repository" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath"></repository-table-row>
+      <repository-table-row v-for="repository in filteredRepositories" :key="repository.id" :repository="repository" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath" :show-namespaces="showNamespaces"></repository-table-row>
 
   <table-pagination :total.sync="repositories.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>

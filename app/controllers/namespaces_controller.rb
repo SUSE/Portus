@@ -19,9 +19,13 @@ class NamespacesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @namespace.portus?
 
     authorize @namespace
-    @repositories = @namespace.repositories.page(params[:page])
     @namespace_serialized = API::Entities::Namespaces.represent(
       @namespace,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
+    @repositories_serialized = API::Entities::Repositories.represent(
+      @namespace.repositories,
       current_user: current_user,
       type:         :internal
     ).to_json

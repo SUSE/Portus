@@ -5,6 +5,10 @@
       <col class="col-80">
     </colgroup>
     <tbody>
+      <tr v-if="!namespace.global">
+        <th class="v-align-top">Team</th>
+        <td><a :href="teamHref">{{ namespace.team.name }}</a></td>
+      </tr>
       <tr>
         <th>Visibility</th>
         <td v-if="is('private')" :title="privateTitle" class="visibility-info">
@@ -16,6 +20,10 @@
         <td v-if="is('public')" title="Anyone can pull images from this namespace"  class="visibility-info">
           <i class="fa fa-fw fa-lock" ></i> Public
         </td>
+      </tr>
+      <tr v-if="!!namespace.permissions.role">
+        <th class="v-align-top">Webhooks</th>
+        <td><a :href="webhooksPath">{{ namespace.webhooks_count }} (click to view)</a></td>
       </tr>
       <tr>
         <th class="v-align-top">Description</th>
@@ -30,6 +38,12 @@
     props: {
       namespace: {
         type: Object,
+      },
+      teamsPath: {
+        type: String,
+      },
+      webhooksPath: {
+        type: String,
       },
     },
 
@@ -48,6 +62,10 @@
         }
 
         return 'Team members can pull images from this namespace';
+      },
+
+      teamHref() {
+        return `${this.teamsPath}/${this.namespace.team.id}`;
       },
     },
 

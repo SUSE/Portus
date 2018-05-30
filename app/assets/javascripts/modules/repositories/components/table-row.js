@@ -3,7 +3,7 @@ import moment from 'moment';
 export default {
   template: '#js-repository-table-row-tmpl',
 
-  props: ['repository', 'repositoriesPath', 'namespacesPath'],
+  props: ['repository', 'repositoriesPath', 'namespacesPath', 'showNamespaces'],
 
   computed: {
     scopeClass() {

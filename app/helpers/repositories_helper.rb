@@ -3,19 +3,21 @@
 # Rendering push activities can be tricky, since tags can come on go, and with
 # them, dangling repositories that used to contain them. Because of this, this
 # helper renders the proper HTML for push activities, while being safe at it.
+# rubocop:disable Metrics/ModuleLength
 module RepositoriesHelper
   include ActivitiesHelper
 
   def render_repository_information(repository)
+    user = current_user
     content_tag(:ul) do
-      concat content_tag(:li, "You can push images") if can_push?(repository.namespace)
-      concat content_tag(:li, "You can pull images") if can_pull?(repository.namespace)
+      concat content_tag(:li, "You can push images") if can_push?(repository.namespace, user)
+      concat content_tag(:li, "You can pull images") if can_pull?(repository.namespace, user)
 
-      if owner?(repository.namespace)
+      if owner?(repository.namespace, user)
         concat content_tag(:li, "You are an owner of this repository")
-      elsif contributor?(repository.namespace)
+      elsif contributor?(repository.namespace, user)
         concat content_tag(:li, "You are a contributor in this repository")
-      elsif viewer?(repository.namespace)
+      elsif viewer?(repository.namespace, user)
         concat content_tag(:li, "You are a viewer in this repository")
       end
     end
@@ -49,6 +51,18 @@ module RepositoriesHelper
   end
 
   protected
+
+  def owner?(namespace, user)
+    role(namespace, user) == :owner
+  end
+
+  def contributor?(namespace, user)
+    role(namespace, user) == :contributor
+  end
+
+  def viewer?(namespace, user)
+    role(namespace, user) == :viewer
+  end
 
   # General method for rendering an activity regarding repositories.
   def render_repo_activity(activity, action)
@@ -148,3 +162,4 @@ module RepositoriesHelper
     "#{Rails.application.config.relative_url_root}/tags"
   end
 end
+# rubocop:enable Metrics/ModuleLength
