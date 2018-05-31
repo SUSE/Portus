@@ -1,3 +1,38 @@
+## 2.3.3
+
+- 93df51cce0da ldap: don't crash on search when guessing an email (#1832)
+- 45814babef7e packaging: added new encryption options for LDAP
+- 4892eb1dc5ce ldap: fixed a couple of bugs around SSL support (#1746, #1774, bsc#1073232)
+- dc769adcddfe devise: use a more fine-grained scope for Github (#1790)
+- ae07ec4ca2cd sync: do not remove repositories on some errors (#1293, #1599)
+- 17e82c0791ba lib: be explicit on the exceptions to be rescued
+- 88553b817552 portusctl: added Clair timeout to the options
+- fed2818e8a96 security: fetch the manifest more safely (#1743)
+- 943c7627feab security: don't crash on clair timeouts (#1751)
+
+### Words of warning
+
+Commits 45814babef7e and 4892eb1dc5ce introduce some new options for LDAP. In
+particular, the following options have been added inside of the `ldap`
+configuration:
+
+```yaml
+  # Encryption options
+  encryption:
+    # Available methods: "plain", "simple_tls" and "start_tls".
+    method: ""
+    options:
+      # The CA file to be accepted by the LDAP server. If none is provided, then
+      # the default parameters from the host will be sent.
+      ca_file: ""
+
+      # Protocol version.
+      ssl_version: "TLSv1_2"
+```
+
+Notice that the old `ldap.method` is getting deprecated and in later versions it
+will be removed. Thus, you should use these options from now on.
+
 ## 2.3.2
 
 - Upgraded loofah and rails-html-sanitizer to fix CVE-2018-3741
