@@ -200,7 +200,7 @@ GEM
     mysql2 (0.4.10)
     nenv (0.3.0)
     net-ldap (0.16.1)
-    nokogiri (1.8.1)
+    nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
