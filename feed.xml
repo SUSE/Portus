@@ -7,6 +7,75 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Portus 2.3.3 released</title>
+        <description>
+          
+          &lt;p&gt;It’s been quite some time since we released 2.3.2, so it’s about time to
+introduce a new patch-level release: 2.3.3! This release comes with a set of
+important bug fixes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We have fixed a couple of bugs around SSL support for LDAP connections (which
+had some side-effects as well like
+&lt;a href=&quot;https://github.com/SUSE/Portus/issues/1746&quot;&gt;#1746&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/SUSE/Portus/issues/1774&quot;&gt;#1774&lt;/a&gt;).&lt;/li&gt;
+  &lt;li&gt;We have fixed another bug on LDAP support, in which sometimes Portus crashed
+when trying to guess an email (see
+&lt;a href=&quot;https://github.com/SUSE/Portus/issues/1832&quot;&gt;#1832&lt;/a&gt;).&lt;/li&gt;
+  &lt;li&gt;Portus will now use a more fine-grained scope for Github authentications (see
+&lt;a href=&quot;https://github.com/SUSE/Portus/issues/1790&quot;&gt;#1790&lt;/a&gt;).&lt;/li&gt;
+  &lt;li&gt;Clair support has been enhanced, so it performs better on flaky connections
+(e.g. connections with frequent time outs). See
+&lt;a href=&quot;https://github.com/SUSE/Portus/issues/1743&quot;&gt;#1743&lt;/a&gt; and
+&lt;a href=&quot;https://github.com/SUSE/Portus/issues/1751&quot;&gt;#1751&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;The synchronization task from the background process has been improved so
+Portus won’t remove all repositories when some errors happen.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://hub.docker.com/r/opensuse/portus/&quot;&gt;2.3 tag from the official Docker
+image&lt;/a&gt; has already been updated, so
+you can already pull this image and benefit from these fixes.&lt;/p&gt;
+
+&lt;h3 id=&quot;words-of-warning&quot;&gt;Words of warning&lt;/h3&gt;
+
+&lt;p&gt;Commits
+&lt;a href=&quot;https://github.com/SUSE/Portus/commit/45814babef7e99a3ade7ee734a0be4a6f0f5f078&quot;&gt;45814babef7e&lt;/a&gt;
+and
+&lt;a href=&quot;https://github.com/SUSE/Portus/commit/4892eb1dc5cef9768d6e3d336c17568667d23079&quot;&gt;4892eb1dc5ce&lt;/a&gt;
+introduce some new options for LDAP. In particular, the following options have
+been added inside of the &lt;code class=&quot;highlighter-rouge&quot;&gt;ldap&lt;/code&gt; configuration:&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c1&quot;&gt;# Encryption options&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;encryption&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Available methods: &quot;plain&quot;, &quot;simple_tls&quot; and &quot;start_tls&quot;.&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# The CA file to be accepted by the LDAP server. If none is provided, then&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# the default parameters from the host will be sent.&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;ca_file&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;# Protocol version.&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;ssl_version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;TLSv1_2&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice that the old &lt;code class=&quot;highlighter-rouge&quot;&gt;ldap.method&lt;/code&gt; is getting deprecated and in later versions it
+will be removed. Thus, you should use these options from now on.&lt;/p&gt;
+
+&lt;h3 id=&quot;whats-next&quot;&gt;What’s next&lt;/h3&gt;
+
+&lt;p&gt;All these fixes are also available inside of the
+&lt;a href=&quot;https://github.com/SUSE/Portus/commits/master&quot;&gt;master&lt;/a&gt; branch, together with a
+bunch of new features and shiny improvements. We expect to start the release
+process for &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4&lt;/code&gt; between the end of June and the beginning of July. So… stay
+tuned!&lt;/p&gt;
+
+        </description>
+        <pubDate>Thu, 31 May 2018 00:00:00 +0200</pubDate>
+        <link>/2018/05/31/portus-2.3.3.html</link>
+        <guid isPermaLink="true">/2018/05/31/portus-2.3.3.html</guid>
+      </item>
+    
+      <item>
         <title>Portus 2.3 security releases</title>
         <description>
           
