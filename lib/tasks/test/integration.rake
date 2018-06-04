@@ -19,13 +19,6 @@ SUPPORTED_REGISTRIES = [
 ].freeze
 
 PRODUCTION = [
-  # Stable release: 2.3
-  {
-    background: "opensuse/portus:2.3",
-    portus:     "opensuse/portus:2.3"
-  },
-
-  # Master.
   {
     background: "opensuse/portus:head",
     portus:     "opensuse/portus:head"
