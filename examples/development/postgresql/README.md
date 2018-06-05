@@ -19,5 +19,6 @@ $ docker-compose -f docker-compose.postgres.yml up
 
 If you want to run PostgreSQL and Portus in production, having to call `bundle`
 when bringing up the containers is a bad idea. Instead, create a new Docker
-image that derives from the [official Portus image](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus) and install the `pg` gem
+image that derives from the [official Portus
+image](https://hub.docker.com/r/opensuse/portus/) and install the `pg` gem
 there.

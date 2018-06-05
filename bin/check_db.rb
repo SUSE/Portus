@@ -8,9 +8,6 @@
 #   * `DB_MISSING`: the database has not been created.
 #   * `DB_DOWN`: cannot connect to the database.
 #   * `DB_UNKNOWN`: unknown error.
-#
-# Originally included in the https://github.com/openSUSE/docker-containers
-# repository under the same license.
 
 require "portus/db"
 

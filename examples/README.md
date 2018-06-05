@@ -1,9 +1,10 @@
 # Deploying Portus
 
 In this directory we've compiled the files of different deployment
-strategies. All these examples are based on the
-[official Portus image](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus),
-and they all should work in Portus 2.3 and later.
+strategies. All these examples are based on the [official Portus
+image](https://hub.docker.com/r/opensuse/portus/), and they only work for Portus
+2.3 and later. Support for older versions is not possible without creating new
+directories and configuration files.
 
 For now we have:
 
