@@ -317,8 +317,8 @@
 
 <p>The <strong>recommended</strong> way to deploy Portus is with the <a href="https://hub.docker.com/r/opensuse/portus/">official Docker
 image</a>. This image is built from the
-<a href="https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus">openSUSE/docker-containers</a>
-repository. Long story short, this image downloads the <a href="https://build.opensuse.org/project/show/Virtualization:containers:Portus">official
+<a href="https://github.com/SUSE/Portus/tree/master/docker">main</a> repository. Long story
+short, this image downloads the <a href="https://build.opensuse.org/project/show/Virtualization:containers:Portus">official
 RPM</a>
 and provides an <code class="highlighter-rouge">init</code> script which is good for any kind of container
 deployment.</p>
@@ -428,10 +428,9 @@ application. You have an example of an <a href="https://github.com/SUSE/Portus/b
 here</a>. This
 example relies on Puma, and you might want to use the <a href="https://github.com/SUSE/Portus/blob/master/config/puma.rb">default Puma
 configuration</a>. The
-<a href="https://github.com/openSUSE/docker-containers/blob/master/derived_images/portus/init">init
-file</a>
-from the official Docker image might give you some ideas on the environment
-variables to be set before starting the whole thing.</p>
+<a href="https://github.com/SUSE/Portus/blob/master/docker/init">init file</a> from the
+official Docker image might give you some ideas on the environment variables to
+be set before starting the whole thing.</p>
 
               </article>
             </div>
