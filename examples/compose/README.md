@@ -6,11 +6,10 @@ ways:
 - A production-ready setup where all communication is encrypted.
 - A version which doesn't use encryption for simplicity.
 
-As explained in the [README file](../README.md) above, this example uses
-the
-[official Portus image](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus),
-so it has nothing to do with the docker-compose setup used for development in
-the root directory.
+As explained in the [README file](../README.md) above, this example uses the
+[official Portus image](https://hub.docker.com/r/opensuse/portus/), so it has
+nothing to do with the docker-compose setup used for development in the root
+directory.
 
 ## The hostname
 
