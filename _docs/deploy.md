@@ -16,8 +16,8 @@ longtitle: How Portus can be deployed
 
 The **recommended** way to deploy Portus is with the [official Docker
 image](https://hub.docker.com/r/opensuse/portus/). This image is built from the
-[openSUSE/docker-containers](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus)
-repository. Long story short, this image downloads the [official
+[main](https://github.com/SUSE/Portus/tree/master/docker) repository. Long story
+short, this image downloads the [official
 RPM](https://build.opensuse.org/project/show/Virtualization:containers:Portus)
 and provides an `init` script which is good for any kind of container
 deployment.
@@ -116,7 +116,6 @@ application. You have an example of an [NGinx configuration
 here](https://github.com/SUSE/Portus/blob/master/examples/compose/nginx/nginx.conf). This
 example relies on Puma, and you might want to use the [default Puma
 configuration](https://github.com/SUSE/Portus/blob/master/config/puma.rb). The
-[init
-file](https://github.com/openSUSE/docker-containers/blob/master/derived_images/portus/init)
-from the official Docker image might give you some ideas on the environment
-variables to be set before starting the whole thing.
+[init file](https://github.com/SUSE/Portus/blob/master/docker/init) from the
+official Docker image might give you some ideas on the environment variables to
+be set before starting the whole thing.

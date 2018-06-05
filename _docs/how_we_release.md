@@ -46,7 +46,7 @@ that the RPMs produced by these two different projects are the ones that will
 also be used in the [official Docker
 images](https://hub.docker.com/r/opensuse/portus/). You can find more
 information about these pages
-[here](https://github.com/openSUSE/docker-containers/tree/master/derived_images/portus).
+[here](https://github.com/SUSE/Portus/tree/master/docker).
 
 ## Scripts
 
