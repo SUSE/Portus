@@ -1,0 +1,108 @@
+#!/bin/bash
+
+# This script will ensure Portus' database is ready to be used. It will keep
+# waiting for the db to be usable, but the script will exit with an error
+# after a certain amount of failed attempts.
+#
+# The script will automatically import all the SSL certificates from
+# `/certificates` into the final system. This is needed to talk with the
+# registry API when this one is protected by TLS.
+#
+# Finally the script will start apache running Portus via mod_rails.
+
+set -e
+
+setup_database() {
+  set +e
+
+  TIMEOUT=90
+  COUNT=0
+  RETRY=1
+
+  while [ $RETRY -ne 0 ]; do
+    case $(portusctl exec rails r /srv/Portus/bin/check_db.rb | grep DB) in
+      "DB_DOWN")
+        if [ "$COUNT" -ge "$TIMEOUT" ]; then
+          printf " [FAIL]\n"
+          echo "Timeout reached, exiting with error"
+          exit 1
+        fi
+        echo "Waiting for mariadb to be ready in 5 seconds"
+        sleep 5
+        COUNT=$((COUNT+5))
+        ;;
+      "DB_EMPTY"|"DB_MISSING")
+        # create db, apply schema and seed
+        echo "Initializing database"
+        portusctl exec rake db:setup
+        if [ $? -ne 0 ]; then
+            echo "Error at setup time"
+            exit 1
+        fi
+        ;;
+      "DB_READY")
+        echo "Database ready"
+        break
+        ;;
+    esac
+  done
+  set -e
+}
+
+# Usage: file_env 'XYZ_DB_PASSWORD' 'example'. This code is taken from:
+# https://github.com/docker-library/postgres/blob/master/docker-entrypoint.sh
+file_env() {
+    local var="$1"
+    local fileVar="${var}_FILE"
+    local def="${2:-}"
+    if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
+        echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
+        exit 1
+    fi
+    local val="$def"
+    if [ "${!var:-}" ]; then
+        val="${!var}"
+    elif [ "${!fileVar:-}" ]; then
+        val="$(< "${!fileVar}")"
+    fi
+    export "$var"="$val"
+    unset "$fileVar"
+}
+
+# Setup environment variables from secrets.
+secrets=( PORTUS_DB_PASSWORD PORTUS_PASSWORD PORTUS_SECRET_KEY_BASE
+          PORTUS_EMAIL_SMTP_PASSWORD PORTUS_LDAP_AUTHENTICATION_PASSWORD )
+for s in "${secrets[@]}"; do
+    if [[ -z "${!s}" ]]; then
+        file_env "$s"
+    fi
+done
+
+# Ensure additional certificates (e.g. docker registry) are known.
+update-ca-certificates
+
+# Further settings
+export PORTUS_PUMA_HOST="0.0.0.0:3000"
+export RACK_ENV="production"
+export RAILS_ENV="production"
+export CCONFIG_PREFIX="PORTUS"
+
+if [ -z "$PORTUS_GEM_GLOBAL" ]; then
+    export GEM_PATH="/srv/Portus/vendor/bundle/ruby/2.5.0"
+fi
+
+# On debug, print the environment in which we'll call Portus.
+if [ "$PORTUS_LOG_LEVEL" == "debug" ]; then
+    printenv
+fi
+
+# Go to the Portus directory and execute the proper command.
+cd /srv/Portus
+if [ ! -z "$PORTUS_BACKGROUND" ]; then
+    portusctl exec rails r /srv/Portus/bin/background.rb
+elif [ -z "$PORTUS_INIT_COMMAND" ]; then
+    setup_database
+    portusctl exec "pumactl -F /srv/Portus/config/puma.rb start"
+else
+    portusctl exec "$PORTUS_INIT_COMMAND"
+fi

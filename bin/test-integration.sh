@@ -17,8 +17,8 @@ export RNAME="integration_registry"
 
 # Download the `init` script if possible.
 if [ ! -f "$ROOT_DIR/bin/integration/init" ]; then
-    echo "[integration] Init file does not exist, downloading into '$ROOT_DIR/bin/integration/init'"
-    wget -O $ROOT_DIR/bin/integration/init https://raw.githubusercontent.com/openSUSE/docker-containers/master/derived_images/portus/init
+    echo "[integration] Init file does not exist, creating '$ROOT_DIR/bin/integration/init'"
+    cp $ROOT_DIR/docker/init $ROOT_DIR/bin/integration/init
 fi
 chmod +x $ROOT_DIR/bin/integration/init
 
