@@ -1,7 +1,4 @@
-<repositories-panel title="Repositories via team membership" :repositories="teamRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}"></repositories-panel>
-
-- if (@repositories.count - @team_repositories.count) > 0
-  <repositories-panel title="Other repositories" :repositories="otherRepositories" repositories-path="#{repositories_path}" namespaces-path="#{namespaces_path}"></repositories-panel>
+<repositories-index-page :team-repositories-ref="#{@team_repositories_serialized}" :other-repositories-ref="#{@other_repositories_serialized}" namespaces-path="#{namespaces_path}" repositories-path="#{repositories_path}"></repositories-index-page>
 
 - content_for :js_body do
   script#js-repositories-table-tmpl type="text/x-template"
@@ -9,8 +6,3 @@
 
   script#js-repository-table-row-tmpl type="text/x-template"
     = render "repositories/components/table_row"
-
-- content_for :js_header do
-  javascript:
-    window.repositories = #{raw @repositories_serialized};
-    window.teamRepositoriesNames = #{raw @team_repositories};
