@@ -1,10 +1,3 @@
-<new-team-form :state="state" form-state="newFormVisible"></new-team-form>
-
-= render "teams/partials/panel"
+<teams-index-page :teams-ref="#{@teams_serialized}" teams-path="#{teams_path}" :is-admin="#{current_user.admin?}" :can-create="#{can_create_team?}">
 
 = render "teams/partials/components_templates"
-
-- content_for :js_header do
-  javascript:
-    window.teams = #{raw @teams_serialized};
-    window.isAdmin = #{current_user.admin?};
