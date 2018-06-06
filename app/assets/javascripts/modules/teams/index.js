@@ -1,11 +1,10 @@
 import Vue from 'vue';
 
 import TeamsIndexPage from './pages/index';
-
-import './pages/show';
+import TeamsShowPage from './pages/show';
 
 $(() => {
-  if (!$('body[data-route="teams/index"]').length) {
+  if (!$('body[data-controller="teams"]').length) {
     return;
   }
 
@@ -15,6 +14,7 @@ $(() => {
 
     components: {
       TeamsIndexPage,
+      TeamsShowPage,
     },
   });
 });

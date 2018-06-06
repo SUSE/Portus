@@ -160,7 +160,7 @@ describe "Teams support" do
       wait_for_ajax
 
       expect(page).to have_content("Team '#{new_team_name}' was updated successfully")
-      expect(find(".team_name").text).to eq(new_team_name)
+      expect(find(".team-name").text).to eq(new_team_name)
     end
   end
 

@@ -4,9 +4,10 @@ import Comparator from '~/utils/comparator';
 
 import TableSortableMixin from '~/shared/mixins/table-sortable';
 import TablePaginatedMixin from '~/shared/mixins/table-paginated';
-import MembersPermissions from '../../mixins/members-permissions';
 
 import TeamMembersTableRow from './table-row';
+
+import TeamsStore from '../../store';
 
 export default {
   template: '#js-team-members-table-tmpl',
@@ -19,16 +20,24 @@ export default {
       type: String,
       default: 'tm_',
     },
+    currentMember: {
+      type: Object,
+    },
   },
 
   mixins: [
     TableSortableMixin,
     TablePaginatedMixin,
-    MembersPermissions,
   ],
 
   components: {
     TeamMembersTableRow,
+  },
+
+  data() {
+    return {
+      state: TeamsStore.state,
+    };
   },
 
   computed: {
@@ -51,6 +60,12 @@ export default {
       const slicedMembers = sortedMembers.slice(this.offset, this.limit * this.currentPage);
 
       return slicedMembers;
+    },
+
+    canManage() {
+      return this.currentMember.admin ||
+             (this.state.manageTeamsEnabled &&
+              this.currentMember.role === 'owner');
     },
   },
 };

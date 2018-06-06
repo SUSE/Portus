@@ -17,7 +17,7 @@ class TeamsController < ApplicationController
 
   # GET /teams/1
   # GET /teams/1.json
-  # TODO: remove the JSON part in favor of the API
+  # rubocop:disable Metrics/MethodLength
   def show
     raise ActiveRecord::RecordNotFound if @team.hidden?
 
@@ -38,7 +38,13 @@ class TeamsController < ApplicationController
       current_user: current_user,
       type:         :internal
     ).to_json
+    @current_member_serialized = API::Entities::TeamMembers.represent(
+      @team.team_users.find_by(user_id: current_user.id),
+      current_user: current_user,
+      type:         :internal
+    ).to_json
   end
+  # rubocop:enable Metrics/MethodLength
 
   # GET /teams/1/typeahead/%QUERY
   def typeahead

@@ -12,8 +12,8 @@
             i.fa.fa-info-circle
           '  Members
       .col-sm-6.text-right
-        <slot name="actions"></slot>
+        <toggle-link text="Add members" :state="state" state-key="membersFormVisible" class="toggle-link-new-member"></toggle-link>
 
   .panel-body
     .table-responsive
-      <team-members-table :members="members" sort-by="id"></team-members-table>
+      <team-members-table :members="members" sort-by="id" :current-member="currentMember"></team-members-table>

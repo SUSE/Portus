@@ -7,13 +7,8 @@ module TeamsHelper
     APP_CONFIG.enabled?("user_permission.manage_team")
   end
 
-  def can_manage_team?(team)
-    current_user.admin? || (team.owners.exists?(current_user.id) &&
-                            manage_teams_enabled?)
-  end
-
   def can_create_team?
-    current_user.admin? || APP_CONFIG.enabled?("user_permission.create_team")
+    TeamPolicy.new(current_user, nil).create?
   end
 
   # Render the namespace scope icon.

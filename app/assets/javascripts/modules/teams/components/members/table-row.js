@@ -3,22 +3,20 @@ import Vue from 'vue';
 import { handleHttpResponseError } from '~/utils/http';
 
 import TeamsService from '../../service';
-import MembersPermissions from '../../mixins/members-permissions';
+import TeamsStore from '../../store';
 
 const { set } = Vue;
 
 export default {
   template: '#js-team-members-table-row-tmpl',
 
-  props: ['member'],
-
-  mixins: [MembersPermissions],
+  props: ['member', 'canManage'],
 
   data() {
     return {
       editing: false,
       selectedRole: this.member.role,
-      availableRoles: window.availableRoles,
+      availableRoles: TeamsStore.state.availableRoles,
     };
   },
 
