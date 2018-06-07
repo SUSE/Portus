@@ -9,6 +9,7 @@ class TeamsStore {
       newFormVisible: false,
       editFormVisible: false,
       currentMember: {},
+      availableRoles: [],
     };
   }
 

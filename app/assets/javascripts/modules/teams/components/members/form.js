@@ -8,6 +8,8 @@ import { handleHttpResponseError } from '~/utils/http';
 import FormMixin from '~/shared/mixins/form';
 import TeamsService from '../../service';
 
+import TeamsStore from '../../store';
+
 const { set } = Vue;
 
 export default {
@@ -22,13 +24,16 @@ export default {
   },
 
   data() {
+    const initialRole = TeamsStore.state.availableRoles[0].toLowerCase();
+
     return {
       members: [],
       selectedMember: null,
       isTouched: false,
       isLoading: false,
+      initialRole,
       member: {
-        role: window.availableRoles[0].toLowerCase(),
+        role: initialRole,
         user: '',
       },
       timeout: {
@@ -48,9 +53,11 @@ export default {
         this.toggleForm();
         this.$v.$reset();
         set(this, 'member', {
-          role: window.availableRoles[0].toLowerCase(),
+          role: this.initialRole,
           user: '',
         });
+        set(this, 'selectedMember', '');
+        set(this, 'members', []);
 
         if (member.admin) {
           this.$alert.$show(`User '${member.display_name}' was added to the team (promoted to owner because it's a Portus admin)`);

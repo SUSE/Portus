@@ -205,6 +205,11 @@ module API
       }, if: { type: :internal } do |team, options|
         role_within_team(options[:current_user], team)
       end
+      expose :updatable, documentation: {
+        desc: "Boolean that tells if the current user can manage the team"
+      }, if: { type: :internal } do |team, options|
+        can_manage_team?(team, options[:current_user])
+      end
       expose :users_count, documentation: {
         type: Integer,
         desc: "The number of enabled users that belong to this team"

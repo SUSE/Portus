@@ -3,8 +3,9 @@
     .row
       .col-sm-6
         <slot name="name"></slot>
-      .col-sm-6.text-right
-        <slot name="actions"></slot>
+
+      .col-sm-6.text-right v-if="canCreate"
+        <toggle-link text="Create new namespace" :state="state" state-key="newFormVisible" class="toggle-link-new-namespace"></toggle-link>
 
   .panel-body
     <loading-icon v-if="state.isLoading"></loading-icon>

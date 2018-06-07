@@ -15,6 +15,10 @@ module API
           empty
         end
       end
+
+      def can_manage_team?(team, user)
+        TeamPolicy.new(user, team).update?
+      end
     end
   end
 end

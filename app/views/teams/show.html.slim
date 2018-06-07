@@ -1,15 +1,4 @@
-= render 'teams/partials/team_details'
-= render 'teams/partials/team_users'
-= render 'teams/partials/namespaces'
+<teams-show-page :team-ref="#{@team_serialized}" :namespaces-ref="#{@team_namespaces_serialized}" :members-ref="#{@team_users_serialized}" namespaces-path="#{namespaces_path}" :current-member-ref="#{@current_member_serialized}" :manage-teams-enabled="#{manage_teams_enabled?}" :available-roles="#{@available_roles}"></teams-show-page>
 
 = render 'teams/partials/components_templates'
 = render 'namespaces/partials/components_templates'
-
-- content_for :js_header do
-  javascript:
-    window.team = #{raw @team_serialized};
-    window.teamMembers = #{raw @team_users_serialized};
-    window.teamNamespaces = #{raw @team_namespaces_serialized};
-    window.availableRoles = #{raw @available_roles};
-    window.manageTeamsEnabled = #{manage_teams_enabled?};
-    window.teamsPath = '#{teams_path}';

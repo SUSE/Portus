@@ -15,12 +15,12 @@ tr :class="scopeClass"
           i.fa.fa-check
           |  Save
 
-    td v-if="canManageMembers"
+    td v-if="canManage"
       button.btn.btn-default.edit-member-btn @click.prevent="enterEditMode" v-if="!editing"
         i.fa.fa-pencil.fa-lg
       button.btn.btn-default.edit-member-btn @click.prevent="leaveEditMode" v-if="editing"
         i.fa.fa-close.fa-lg
-    td v-if="canManageMembers"
+    td v-if="canManage"
       a[class="btn btn-default delete-team-user-btn"
         data-placement="left"
         data-toggle="popover"

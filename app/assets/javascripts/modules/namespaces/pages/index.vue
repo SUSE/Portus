@@ -2,7 +2,7 @@
   <div class="namespaces-index-page">
     <new-namespace-form :state="state" form-state="newFormVisible"></new-namespace-form>
 
-    <namespaces-panel :namespaces="specialNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="sns_">
+    <namespaces-panel :namespaces="specialNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="sns_" :can-create="canCreateNamespace">
       <h5 slot="name">
         <a data-placement="right"
           data-toggle="popover"
@@ -15,9 +15,6 @@
         </a>
         Special namespaces
       </h5>
-      <div slot="actions" v-if="canCreateNamespace">
-        <toggle-link text="Create new namespace" :state="state" state-key="newFormVisible" class="toggle-link-new-namespace"></toggle-link>
-      </div>
     </namespaces-panel>
 
     <namespaces-panel :namespaces="normalNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" :table-sortable="true" class="member-namespaces-panel">
