@@ -70,8 +70,15 @@ Finally, you should back up the data stored on the MySQL/MariaDB instance.
 At this point you can deploy Portus with Docker images. We maintain some
 examples that use `docker-compose`
 [here](https://github.com/SUSE/Portus/tree/master/examples/compose) that might
-serve as inspiration. Moreover, if you are using Kubernetes, you might also be
-interested in the [Helm](https://www.helm.sh/) Chart developed
+serve as inspiration. These examples are a convenient way of running a similar
+plain docker command like:
+
+```
+$ docker run -d -v <path-to-certs>:/certificates:ro -p 3000:3000 <list-of-env-variables> opensuse/portus:2.3
+```
+
+Moreover, if you are using Kubernetes, you might also be interested in the
+[Helm](https://www.helm.sh/) Chart developed
 [here](https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/portus).
 
 Regardless of your deployment method, make sure to read some tips that we have
@@ -90,6 +97,3 @@ zypper rm --clean-deps portus
 The "clean-deps" option will remove dependencies that are not needed for any other package. This could
 be the case of rubygem-passenger-apache2. If you are unsure of this, run the previous command without the
 "clean-deps" option.
-
-
-
