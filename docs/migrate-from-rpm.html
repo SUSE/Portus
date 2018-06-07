@@ -366,8 +366,14 @@ out on the above example.</p>
 <p>At this point you can deploy Portus with Docker images. We maintain some
 examples that use <code class="highlighter-rouge">docker-compose</code>
 <a href="https://github.com/SUSE/Portus/tree/master/examples/compose">here</a> that might
-serve as inspiration. Moreover, if you are using Kubernetes, you might also be
-interested in the <a href="https://www.helm.sh/">Helm</a> Chart developed
+serve as inspiration. These examples are a convenient way of running a similar
+plain docker command like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ docker run -d -v &lt;path-to-certs&gt;:/certificates:ro -p 3000:3000 &lt;list-of-env-variables&gt; opensuse/portus:2.3
+</code></pre></div></div>
+
+<p>Moreover, if you are using Kubernetes, you might also be interested in the
+<a href="https://www.helm.sh/">Helm</a> Chart developed
 <a href="https://github.com/kubic-project/caasp-services/tree/master/contrib/helm-charts/portus">here</a>.</p>
 
 <p>Regardless of your deployment method, make sure to read some tips that we have
@@ -385,7 +391,6 @@ You can do so by running:</p>
 <p>The “clean-deps” option will remove dependencies that are not needed for any other package. This could
 be the case of rubygem-passenger-apache2. If you are unsure of this, run the previous command without the
 “clean-deps” option.</p>
-
 
               </article>
             </div>
