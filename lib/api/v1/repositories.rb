@@ -103,7 +103,10 @@ module API
           get do
             repo = Repository.find(params[:id])
             authorize repo, :show?
-            present repo, with: API::Entities::Repositories, type: current_type
+            present repo,
+                    with:         API::Entities::Repositories,
+                    current_user: current_user,
+                    type:         current_type
           end
 
           desc "Delete repository",

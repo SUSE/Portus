@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import Tag from '~/modules/repositories/components/tag';
+import Tag from '~/modules/repositories/components/tags/tag';
 
 export default {
   template: '#js-result-item-tmpl',

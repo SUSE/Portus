@@ -111,6 +111,8 @@ module API
     end
 
     class Repositories < Grape::Entity
+      include ::API::Helpers
+
       expose :id, documentation: { type: Integer, desc: "Repository ID" }
       expose :name, documentation: { type: String, desc: "Repository name" }
       expose :full_name, documentation: { type: String, desc: "Repository full name" }
@@ -146,6 +148,17 @@ module API
         repository.groupped_tags.map do |k1|
           API::Entities::Tags.represent(k1)
         end
+      end
+      expose :starred, documentation: {
+        desc: "Boolean that tells if the current user starred the repository"
+      }, if: { type: :internal } do |repository, options|
+        repository.starred_by?(options[:current_user])
+      end
+      expose :destroyable, documentation: {
+        desc: "Boolean that tells if the current user can destroy or not the repository"
+      }, if: { type: :internal } do |repository, options|
+        user = options[:current_user]
+        can_destroy_repository?(repository, user) if user
       end
     end
 

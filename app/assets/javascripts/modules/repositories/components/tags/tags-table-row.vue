@@ -37,7 +37,7 @@
 <script>
   import Tag from './tag';
 
-  import VulnerabilitiesParser from '../services/vulnerabilities-parser';
+  import VulnerabilitiesParser from '../../services/vulnerabilities-parser';
 
   const NOT_SCANNED = 0;
   const SCAN_DONE = 2;
@@ -81,7 +81,11 @@
       },
 
       shortFormatID() {
-        return this.tag[0].image_id.substring(0, 12);
+        if (this.tag[0].image_id) {
+          return this.tag[0].image_id.substring(0, 12);
+        }
+
+        return '';
       },
 
       tagLink() {

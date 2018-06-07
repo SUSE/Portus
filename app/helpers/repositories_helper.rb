@@ -9,6 +9,7 @@ module RepositoriesHelper
 
   def render_repository_information(repository)
     user = current_user
+
     content_tag(:ul) do
       concat content_tag(:li, "You can push images") if can_push?(repository.namespace, user)
       concat content_tag(:li, "You can pull images") if can_pull?(repository.namespace, user)
@@ -31,11 +32,6 @@ module RepositoriesHelper
   # Renders a delete activity, that is, a repository/tag has been deleted.
   def render_delete_activity(activity)
     render_repo_activity(activity, "deleted")
-  end
-
-  # Returns true if the user can remove the given repository.
-  def can_destroy_repository?(repository)
-    RepositoryPolicy.new(current_user, repository).destroy?
   end
 
   # Returns if any security module is enabled

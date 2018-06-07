@@ -1,6 +1,6 @@
 <template>
   <div>
-    <comments-form :state="state" form-state="commentFormVisible"></comments-form>
+    <comments-form :state="state" form-state="commentFormVisible" :repository="repository"></comments-form>
     <comments-panel :comments="comments" :state="state"></comments-panel>
   </div>
 </template>
@@ -14,11 +14,11 @@
   const { set } = Vue;
 
   export default {
-    props: ['state'],
+    props: ['state', 'commentsRef', 'repository'],
 
     data() {
       return {
-        comments: window.comments || [],
+        comments: [...this.commentsRef],
       };
     },
 

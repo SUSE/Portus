@@ -1,11 +1,10 @@
 import Vue from 'vue';
 
 import RepositoriesIndexPage from './pages/index';
-
-import './pages/show';
+import RepositoriesShowPage from './pages/show';
 
 $(() => {
-  if (!$('body[data-route="repositories/index"]').length) {
+  if (!$('body[data-controller="repositories"]').length) {
     return;
   }
 
@@ -15,6 +14,7 @@ $(() => {
 
     components: {
       RepositoriesIndexPage,
+      RepositoriesShowPage,
     },
   });
 });
