@@ -6,7 +6,8 @@ import UsersEditPage from './pages/edit';
 import UsersSignUpPage from './pages/sign-up';
 import UsersSignInPage from './pages/sign-in';
 
-const USERS_EDIT_ROUTE = 'auth/registrations/edit';
+const USERS_SELF_EDIT_ROUTE = 'auth/registrations/edit';
+const USERS_EDIT_ROUTE = 'admin/users/edit';
 const USERS_SIGN_IN_ROUTE = 'auth/sessions/new';
 const USERS_SIGN_UP_ROUTE = 'auth/registrations/new';
 
@@ -24,7 +25,7 @@ $(() => {
       new UsersSignInPage($body);
   }
 
-  if (route === USERS_EDIT_ROUTE) {
+  if (route === USERS_SELF_EDIT_ROUTE || route === USERS_EDIT_ROUTE) {
     // eslint-disable-next-line no-new
     new Vue({
       el: '.vue-root',

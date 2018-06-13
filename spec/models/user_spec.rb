@@ -27,6 +27,7 @@
 #  display_name           :string(255)
 #  provider               :string(255)
 #  uid                    :string(255)
+#  bot                    :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -64,6 +65,17 @@ describe User do
       user = build(:user, username: name)
       expect(user.save).to be_truthy
       expect(user.errors).to be_empty
+    end
+  end
+
+  describe "after creation" do
+    it "does not create a namespace if it's a bot" do
+      create(:registry)
+
+      user = create(:user)
+      expect(user.namespace).to_not be_nil
+      bot = create(:user, bot: true)
+      expect(bot.namespace).to be_nil
     end
   end
 

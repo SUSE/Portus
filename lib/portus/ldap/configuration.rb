@@ -39,9 +39,11 @@ module Portus
       # something about the current accounts telling us to not go through LDAP
       # (e.g. portus user). Otherwise it returns true.
       def check_account(account)
-        # NOTE: this method will get expanded with #1856
         if account == "portus"
           @reason = "Portus user does not go through LDAP"
+          false
+        elsif @username.present? && User.find_by(username: @username)&.bot
+          @reason = "Bot user is not expected to be present on LDAP"
           false
         else
           true

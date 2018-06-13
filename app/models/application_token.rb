@@ -42,7 +42,7 @@ class ApplicationToken < ActiveRecord::Base
 
   class << self
     # Create new application token and generate plain token, salt, nash.
-    # If usre_id passed then created token belongs to the user.
+    # If user_id passed then created token belongs to the user.
     #
     # Return array with application_token and plain_token.
     def create_token(current_user:, user_id: nil, params:)

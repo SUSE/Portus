@@ -33,8 +33,8 @@ module API
                        using: API::Entities::Users.documentation.slice(:username, :email)
               requires :password, type: String, documentation: { desc: "Password" }
               optional :all,
-                       only:  [:display_name],
-                       using: API::Entities::Users.documentation.slice(:display_name)
+                       only:  %i[display_name bot],
+                       using: API::Entities::Users.documentation.slice(:display_name, :bot)
             end
           end
 

@@ -8,7 +8,7 @@ div [id="#{float == true ? 'float' : 'fixed'}-alert" class="#{messages && messag
         i.fa.fa-3x class=(alert == 'alert' ? 'fa-exclamation-circle' : 'fa-info-circle')
       p
         - if messages.is_a?(String)
-          = messages
+          = messages.html_safe
         - elsif messages.is_a?(Array)
           - if messages.size == 1
             = messages[0]

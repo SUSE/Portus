@@ -37,7 +37,7 @@ module Portus
             username: cfg.username,
             email:    em,
             password: cfg.password,
-            admin:    User.not_portus.none?
+            admin:    User.not_portus.where(bot: false).none?
           )
           created = user.persisted?
         end

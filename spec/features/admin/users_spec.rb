@@ -27,6 +27,32 @@ describe "Admin - Users panel" do
       expect(page).to have_content("User 'username' was created successfully")
     end
 
+    it "admin creates a bot" do
+      visit new_admin_user_path
+
+      fill_in "Username",              with: "username"
+      fill_in "Email",                 with: "email@email.com"
+      fill_in "user[password]",        with: "password123"
+      fill_in "Password confirmation", with: "password123"
+      check "Bot"
+
+      expect do
+        click_button("Create")
+      end.to(change { ApplicationToken.all.size }.from(0).to(1))
+
+      user = User.find_by(username: "username")
+      expect(user.bot).to be_truthy
+
+      expect(page).to have_current_path(admin_users_path)
+      expect(page).to have_content("Bot 'username' was created successfully")
+
+      # A new application token has been associated to this bot, but the
+      # activity belongs to the admin.
+      at = ApplicationToken.first
+      expect(at.user_id).to eq user.id
+      expect(PublicActivity::Activity.first.owner_id).to eq admin.id
+    end
+
     it "admin adds back a removed user" do
       expect(page).to have_css("#user_#{user.id}")
 
@@ -122,8 +148,8 @@ describe "Admin - Users panel" do
     end
   end
 
-  describe "Edit user" do
-    it "allows the admin to update a user", js: true do
+  describe "Edit user", js: true do
+    it "allows the admin to update a user" do
       visit edit_admin_user_path(user)
 
       fill_in "Email", with: "another@example.com"
@@ -133,7 +159,40 @@ describe "Admin - Users panel" do
       expect(page).to have_content("User '#{user.username}' was updated successfully")
     end
 
-    it "disallows the admin to update a user with a wrong name", js: true do
+    it "allows admin to create bot application token" do
+      bot = create(:user, bot: true)
+      visit edit_admin_user_path(bot)
+
+      find(".toggle-link-new-app-token").click
+      wait_for_effect_on("#new-app-token-form")
+
+      expect(focused_element_id).to eq "application_token_application"
+      fill_in "Application", with: "awesome-application"
+
+      click_button "Create"
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("was created successfully")
+      expect(page).to have_content("awesome-application")
+    end
+
+    it "allows admin to remove bot application token" do
+      bot = create(:user, bot: true)
+      token = create(:application_token, user: bot)
+      visit edit_admin_user_path(bot)
+
+      find(".application_token_#{token.id} button").click
+      find(".popover-content .yes").click
+      wait_for_ajax
+      wait_for_effect_on("#float-alert")
+
+      expect(page).to have_css("#float-alert")
+      expect(page).to have_content("was removed successfully")
+    end
+
+    it "disallows the admin to update a user with a wrong name" do
       visit edit_admin_user_path(user)
 
       fill_in "Email", with: admin.email

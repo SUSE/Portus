@@ -82,6 +82,12 @@ describe API::V1::Users do
         expect(response).to have_http_status(:created)
         expect(User.find_by(email: user_data[:email])).not_to be_nil
       end
+
+      it "creates a new bot" do
+        data = user_data.merge(bot: true)
+        post "/api/v1/users", { user: data }, @header
+        expect(User.find_by(email: data[:email]).bot).to be_truthy
+      end
     end
 
     context "with invalid params" do
