@@ -6,28 +6,21 @@ RSpec.describe ApplicationHelper, type: :helper do
   describe "#user_image_tag" do
     let(:user) { create(:user, email: "user@example.com") }
 
-    # Mocking the gravatar_image_tag
-    def gravatar_image_tag(email)
-      email
-    end
-
-    it "uses the gravatar image tag if enabled" do
-      APP_CONFIG["gravatar"] = { "enabled" => true }
-      expect(user_image_tag(user)).to eq "user@example.com"
-    end
-
     it "uses the fa icon if gravatar support is disabled" do
-      APP_CONFIG["gravatar"] = { "enabled" => false }
       expect(user_image_tag(user)).to eq(
         '<i class="fa fa-user user-picture"></i>'
       )
     end
 
     it "uses the fa icon if the user had no email set" do
-      APP_CONFIG["gravatar"] = { "enabled" => false }
       expect(user_image_tag(nil)).to eq(
         '<i class="fa fa-user user-picture"></i>'
       )
+    end
+
+    it "uses the gravatar image tag if enabled" do
+      APP_CONFIG["gravatar"] = { "enabled" => true }
+      expect(user_image_tag(user)).to start_with("<img src=\"http")
     end
   end
 

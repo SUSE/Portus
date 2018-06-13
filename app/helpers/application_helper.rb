@@ -32,11 +32,9 @@ module ApplicationHelper
   end
 
   # Render the user profile picture depending on the gravatar configuration.
-  def user_image_tag(owner)
-    email = owner.nil? ? nil : owner.email
-
-    if APP_CONFIG.enabled?("gravatar") && !email.nil? && !email.empty?
-      gravatar_image_tag(email)
+  def user_image_tag(user)
+    if user&.avatar_url.present?
+      content_tag :img, nil, src: user.avatar_url
     else
       content_tag :i, nil, class: "fa fa-user user-picture"
     end
