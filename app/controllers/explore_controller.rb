@@ -8,9 +8,7 @@ class ExploreController < ActionController::Base
   before_action :feature_enabled, only: [:index]
 
   include Headers
-
   include Pundit
-  rescue_from Pundit::NotAuthorizedError, with: :deny_access
 
   layout "authentication"
 

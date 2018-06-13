@@ -10,11 +10,23 @@ const tagsCustomActions = {
   },
 };
 
+const repositoryCustomActions = {
+  toggleStar: {
+    method: 'POST',
+    url: 'repositories/{id}/toggle_star.json',
+  },
+};
+
+const oldResource = Vue.resource('repositories{/id}', {}, repositoryCustomActions);
 const resource = Vue.resource('api/v1/repositories{/id}');
 const tagsResource = Vue.resource('api/v1/repositories{/repositoryId}/tags', {}, tagsCustomActions);
 
 function get(id) {
   return resource.get({ id });
+}
+
+function toggleStar(id) {
+  return oldResource.toggleStar({ id }, {});
 }
 
 function remove(id) {
@@ -28,5 +40,6 @@ function groupedTags(repositoryId) {
 export default {
   get,
   groupedTags,
+  toggleStar,
   remove,
 };

@@ -6,6 +6,7 @@ require "api/helpers/teams"
 require "api/helpers/comments"
 require "api/helpers/webhooks"
 require "api/helpers/namespaces"
+require "api/helpers/repositories"
 
 module API
   module Helpers
@@ -19,6 +20,7 @@ module API
     include Comments
     include Webhooks
     include Namespaces
+    include Repositories
 
     # On success it will fill the @user instance variable with the currently
     # authenticated user for the API. Otherwise it will raise:

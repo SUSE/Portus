@@ -1,6 +1,6 @@
 import { mount } from 'vue-test-utils';
 
-import TagsTableRow from '~/modules/repositories/components/tags-table-row';
+import TagsTableRow from '~/modules/repositories/components/tags/tags-table-row';
 
 import sinon from 'sinon';
 

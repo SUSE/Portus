@@ -1,6 +1,6 @@
 import { mount } from 'vue-test-utils';
 
-import DeleteTagAction from '~/modules/repositories/components/delete-tag-action';
+import DeleteTagAction from '~/modules/repositories/components/tags/delete-tag-action';
 
 import sinon from 'sinon';
 

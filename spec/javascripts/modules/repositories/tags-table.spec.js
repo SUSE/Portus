@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 import range from '~/utils/range';
 
-import TagsTable from '~/modules/repositories/components/tags-table';
+import TagsTable from '~/modules/repositories/components/tags/tags-table';
 
 describe('tags-table', () => {
   let wrapper;

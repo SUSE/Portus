@@ -4,7 +4,6 @@ require "rails_helper"
 
 describe "Explore feature" do
   let!(:registry) { create(:registry) }
-  let!(:user)     { create(:user) }
 
   before do
     # Default value
@@ -31,10 +30,10 @@ describe "Explore feature" do
 
   context "Explore" do
     let!(:registry)   { create(:registry, hostname: "registry.test.lan") }
-    let!(:user)       { create(:admin) }
+    let!(:admin)      { create(:admin) }
     let!(:repository) { create(:repository, namespace: registry.global_namespace, name: "repo") }
-    let!(:tag)        { create(:tag, name: "tag0", repository: repository, author: user) }
-    let!(:tag1)       { create(:tag, name: "tag1", repository: repository, author: user) }
+    let!(:tag)        { create(:tag, name: "tag0", repository: repository, author: admin) }
+    let!(:tag1)       { create(:tag, name: "tag1", repository: repository, author: admin) }
 
     before do
       visit explore_index_path

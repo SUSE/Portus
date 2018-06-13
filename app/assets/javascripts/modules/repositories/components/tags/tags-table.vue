@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover no-margin">
       <colgroup>
         <col width="10" v-if="canDestroy">
         <col class="col-45">

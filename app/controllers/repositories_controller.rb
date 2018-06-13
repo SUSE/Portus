@@ -28,6 +28,7 @@ class RepositoriesController < ApplicationController
   def show
     authorize @repository
     @tags = @repository.groupped_tags
+    serialize_repository
     @repository_comments = @repository.comments.all
     @comments_serialized = API::Entities::Comments.represent(
       @repository.comments.all,
@@ -39,13 +40,27 @@ class RepositoriesController < ApplicationController
 
   # POST /repositories/toggle_star
   def toggle_star
-    @repository.toggle_star current_user
-    render template: "repositories/star", locals: { user: current_user }
+    respond_to do |format|
+      if @repository.toggle_star(current_user)
+        serialize_repository
+        format.json { render json: @repository_serialized }
+      else
+        format.json { render json: @repository.errors.full_messages, status: :unprocessable_entity }
+      end
+    end
   end
 
   protected
 
   def set_repository
     @repository = Repository.find(params[:id])
+  end
+
+  def serialize_repository
+    @repository_serialized = API::Entities::Repositories.represent(
+      @repository,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
   end
 end

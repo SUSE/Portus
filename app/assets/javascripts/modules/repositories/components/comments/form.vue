@@ -30,6 +30,8 @@
   import CommentsService from '../../services/comments';
 
   export default {
+    props: ['repository'],
+
     mixins: [FormMixin],
 
     data() {
@@ -42,7 +44,7 @@
 
     methods: {
       onSubmit() {
-        CommentsService.save(this.state.repository.id, this.comment).then((response) => {
+        CommentsService.save(this.repository.id, this.comment).then((response) => {
           const comment = response.data;
 
           this.toggleForm();

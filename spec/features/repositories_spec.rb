@@ -10,9 +10,9 @@ end
 describe "Feature: Repositories" do
   let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:user) { create(:admin) }
-  let!(:user2) { create(:user) }
-  let!(:user3) { create(:user) }
-  let!(:team) { create(:team, owners: [user], contributors: [user2], viewers: [user3]) }
+  let!(:contributor) { create(:user) }
+  let!(:viewer) { create(:user) }
+  let!(:team) { create(:team, owners: [user], contributors: [contributor], viewers: [viewer]) }
   let!(:namespace) { create(:namespace, team: team, name: "user") }
   let!(:repository) { create(:repository, namespace: namespace, name: "busybox") }
   let!(:starred_repo) { create(:repository, namespace: namespace) }
@@ -109,9 +109,10 @@ describe "Feature: Repositories" do
     end
   end
 
-  describe "repository#show" do
+  describe "repository#show", js: true do
     it "Visual aid for each role is shown properly" do
       visit repository_path(repository)
+      expect(page).to have_css(".repository-information-icon")
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
@@ -119,8 +120,9 @@ describe "Feature: Repositories" do
       expect(info).not_to have_content("You are a contributor in this repository")
       expect(info).not_to have_content("You are a viewer in this repository")
 
-      login_as user2, scope: :user
+      login_as contributor, scope: :user
       visit repository_path(repository)
+      expect(page).to have_css(".repository-information-icon")
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
@@ -128,8 +130,9 @@ describe "Feature: Repositories" do
       expect(info).not_to have_content("You are an owner of this repository")
       expect(info).not_to have_content("You are a viewer in this repository")
 
-      login_as user3, scope: :user
+      login_as viewer, scope: :user
       visit repository_path(repository)
+      expect(page).to have_css(".repository-information-icon")
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are a viewer in this repository")
@@ -153,7 +156,7 @@ describe "Feature: Repositories" do
         expect(info).not_to have_content("You are a contributor in this repository")
         expect(info).not_to have_content("You are a viewer in this repository")
 
-        login_as user2, scope: :user
+        login_as contributor, scope: :user
         visit repository_path(repository)
         info = page.find(".repository-information-icon")["data-content"]
         expect(info).not_to have_content("You can push images")
@@ -177,14 +180,14 @@ describe "Feature: Repositories" do
         APP_CONFIG["security"]["dummy"]["server"] = "yeah"
       end
 
-      it "reports vulnerabilities", js: true do
+      it "reports vulnerabilities" do
         visit repository_path(repository)
         wait_for_ajax
         expect(page).to have_content("2 vulnerabilities")
       end
     end
 
-    it "A user can star a repository", js: true do
+    it "A user can star a repository" do
       visit repository_path(repository)
       expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
@@ -197,7 +200,7 @@ describe "Feature: Repositories" do
       expect(repo.stars.count).to be 1
     end
 
-    it "A user can unstar a repository", js: true do
+    it "A user can unstar a repository" do
       visit repository_path(starred_repo)
       expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
@@ -216,7 +219,7 @@ describe "Feature: Repositories" do
                image_id: "Image", created_at: idx.hours.ago)
       end
 
-      expectations = [["tag0"], ["tag1"], %w[tag2 tag3], ["tag4"], ["tag5"]]
+      expectations = [%w[tag0 tag1], %w[tag2 tag3], ["tag4"], ["tag5"]]
 
       visit repository_path(repository)
 
@@ -226,7 +229,9 @@ describe "Feature: Repositories" do
         # Skip the header.
         next if idx == 0
 
-        expectations[idx - 1].each { |tag| expect(row.text).to include(tag) }
+        expectations[idx - 1].each do |tag|
+          expect(row.text).to include(tag)
+        end
       end
     end
 
@@ -248,12 +253,12 @@ describe "Feature: Repositories" do
         visit repository_path(repository)
         expect(page).to have_content("Delete repository")
 
-        login_as user2, scope: :user
+        login_as contributor, scope: :user
         visit repository_path(repository)
         expect(page).not_to have_content("Delete repository")
       end
 
-      it "A user can delete a repository", js: true do
+      it "A user can delete a repository" do
         visit repository_path(repository)
 
         repository_count = Repository.count
@@ -263,7 +268,7 @@ describe "Feature: Repositories" do
         expect(Repository.count).to be(repository_count - 1)
       end
 
-      it "A user deletes a tag", js: true do
+      it "A user deletes a tag" do
         %w[lorem ipsum].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
           image_id: "Image", created_at: idx.hours.ago, updated_at: idx.hours.ago)
@@ -281,7 +286,7 @@ describe "Feature: Repositories" do
         end
       end
 
-      it "A user deletes tags", js: true do
+      it "A user deletes tags" do
         %w[lorem ipsum ipsum].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
           image_id: "Image", created_at: idx.hours.ago, updated_at: idx.hours.ago)
@@ -298,7 +303,7 @@ describe "Feature: Repositories" do
         end
       end
 
-      it "A user deletes a repository by deleting all tags", js: true do
+      it "A user deletes a repository by deleting all tags" do
         %w[lorem ipsum].each_with_index do |digest, idx|
           create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
           image_id: "Image", created_at: idx.hours.ago)

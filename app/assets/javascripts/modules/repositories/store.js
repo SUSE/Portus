@@ -3,9 +3,9 @@ export default class RepositoriesStore {
     this.state = {
       commentFormVisible: false,
       isDeleting: false,
-      repository: {},
+      isLoading: true,
+      notLoaded: false,
+      selectedTags: [],
     };
-
-    this.state.selectedTags = [];
   }
 }

@@ -26,9 +26,10 @@ Vue.http.interceptors.push((_request, next) => {
 });
 
 Vue.http.interceptors.push((request, next) => {
-  if ($.rails) {
-    // eslint-disable-next-line no-param-reassign
-    request.headers.set('X-CSRF-Token', $.rails.csrfToken());
+  const tokenEl = document.querySelector('meta[name=csrf-token]');
+
+  if (tokenEl !== null) {
+    request.headers.set('X-CSRF-Token', tokenEl.getAttribute('content'));
   }
   next();
 });

@@ -55,19 +55,27 @@ describe RepositoriesController, type: :controller do
 
   describe "POST #toggle_star" do
     it "Succeeds when calling star" do
-      repository = create(:repository)
-      post :toggle_star, { id: repository.to_param, format: :erb }, valid_session
+      repository = create(:repository, namespace: public_namespace)
+      post :toggle_star, { id: repository.id, format: :json }, valid_session
 
       expect(assigns(:repository)).to eq(repository)
       expect(response.status).to eq 200
     end
 
     it "Succeeds when calling unstar" do
-      repository = create(:repository, :starred)
-      post :toggle_star, { id: repository.to_param, format: :erb }, valid_session
+      repository = create(:repository, :starred, namespace: public_namespace)
+      post :toggle_star, { id: repository.id, format: :json }, valid_session
 
       expect(assigns(:repository)).to eq(repository)
       expect(response.status).to eq 200
+    end
+
+    it "returns 422 when fails to star/unstar" do
+      allow_any_instance_of(Repository).to receive(:toggle_star).and_return(false)
+      repository = create(:repository, namespace: public_namespace)
+      post :toggle_star, { id: repository.id, format: :json }, valid_session
+
+      expect(response.status).to eq 422
     end
   end
 end
