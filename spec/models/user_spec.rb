@@ -273,6 +273,24 @@ describe User do
     end
   end
 
+  describe "#avatar_url" do
+    let(:user) { build(:user, username: "user") }
+    let(:user2) { build(:user, username: "user", email: "") }
+
+    it "returns nil if the feature is disabled" do
+      expect(user.avatar_url).to be_nil
+    end
+
+    it "returns nil if email is blank" do
+      expect(user2.avatar_url).to be_nil
+    end
+
+    it "returns the avatar url if the feature is enabled" do
+      APP_CONFIG["gravatar"] = { "enabled" => true }
+      expect(user.avatar_url).to start_with("http")
+    end
+  end
+
   describe "#destroy" do
     let!(:registry)   { create(:registry, hostname: "registry.test.lan") }
     let!(:user)       { create(:admin, username: "admin") }

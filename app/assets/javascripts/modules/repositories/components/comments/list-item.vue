@@ -2,7 +2,8 @@
   <div class="comment-row" :id="commentId">
     <div class="comment-thumbnail">
       <div class="user-image">
-        <img :src="comment.author.avatar" />
+        <img :src="comment.author.avatar_url" v-if="comment.author.avatar_url" />
+        <i class="fa fa-user user-picture" v-else></i>
       </div>
     </div>
     <div class="comment-content">

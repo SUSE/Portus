@@ -95,6 +95,11 @@ class User < ActiveRecord::Base
     username == "portus"
   end
 
+  # Returns avatar url if gravatar is enabled and email not blank
+  def avatar_url
+    GravatarImageTag.gravatar_url(email) if APP_CONFIG.enabled?("gravatar") && email.present?
+  end
+
   # Returns the username to be displayed.
   def display_username
     return username unless APP_CONFIG.enabled?("display_name")

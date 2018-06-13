@@ -181,7 +181,7 @@ module API
       expose :author, documentation: {
         desc: "The ID and the username of the comment author"
       } do |c|
-        c.author&.slice("id", "username")
+        c.author&.slice("id", "username", "avatar_url")
       end
       expose :destroyable, documentation: {
         desc: "Boolean that tells if the current user can destroy or not the comment"
