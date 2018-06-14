@@ -53,3 +53,8 @@ function setup() {
     [ $status -eq 1 ]
     [[ "${lines[-2]}" =~ "No Such Object (code 32)" ]]
 }
+
+@test "LDAP: portus user is skipped" {
+    ruby_puts "Registry.get.client.catalog.inspect"
+    [ $status -eq 0 ]
+}

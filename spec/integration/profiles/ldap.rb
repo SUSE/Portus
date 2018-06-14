@@ -4,6 +4,7 @@ require "net/ldap"
 require_relative "shared"
 
 clean_db!
+create_registry!
 
 ##
 # Set parameters and initialize LDAP object.
