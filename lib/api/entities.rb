@@ -55,8 +55,8 @@ module API
     end
 
     class ApplicationTokens < Grape::Entity
-      expose :id, unless: { type: :create }, documentation: { type: Integer }
-      expose :application, unless: { type: :create }
+      expose :id, documentation: { type: Integer }
+      expose :application, documentation: { type: String }
       expose :plain_token, if: { type: :create }
     end
 

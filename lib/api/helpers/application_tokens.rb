@@ -20,7 +20,11 @@ module API
 
           if application_token.errors.empty?
             status 201
-            { plain_token: plain_token }
+            {
+              id:          application_token.id,
+              application: application_token.application,
+              plain_token: plain_token
+            }
           else
             unprocessable_entity!(application_token.errors)
           end

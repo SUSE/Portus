@@ -10,7 +10,7 @@ export function handleHttpResponseError(response) {
     messages = errors;
   } else if (Object.prototype.toString.call(errors) === '[object Object]') {
     Object.keys(errors).forEach((k) => {
-      const keyCapitalized = k.charAt(0).toUppercase() + k.substr(1);
+      const keyCapitalized = k.charAt(0).toUpperCase() + k.substr(1);
       messages = messages.concat(errors[k].map(m => `${keyCapitalized} ${m}`));
     });
   }
