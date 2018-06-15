@@ -27,45 +27,7 @@
             .actions
               = f.submit('Update', class: 'btn btn-primary', disabled: true)
 
-    .app-token-wrapper
-      #add_application_token_form.collapse
-        = form_for :application_token, url: application_tokens_path, remote: true, html: {id: 'new-application-token-form', class: 'form-horizontal', role: 'form'} do |f|
-            .form-group
-              = f.label :application, {class: 'control-label col-md-2'}
-              .col-md-7
-                = f.text_field(:application, class: 'form-control', required: true, placeholder: "Name")
-            .form-group
-              .col-md-offset-2.col-md-7
-                = f.submit('Create', class: 'btn btn-primary')
-
-      .panel.panel-default
-        .panel-heading
-          .row
-            .col-sm-6
-              h5
-                ' Application tokens
-            .col-sm-6.text-right
-              - if current_user.application_tokens.count >= User::APPLICATION_TOKENS_MAX
-                a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[disabled="disabled" role="button"]
-                  i.fa.fa-plus-circle
-                  |  Create new token
-              - else
-                a#add_application_token_btn.btn.btn-xs.btn-link.js-toggle-button[role="button"]
-                  i.fa.fa-plus-circle
-                  |  Create new token
-        .panel-body
-          .table-responsive
-            table.table.table-striped.table-hover
-              colgroup
-                col.col-90
-                col.col-10
-              thead
-                tr
-                  th Application
-                  th Remove
-              tbody#application_tokens
-                - current_user.application_tokens.each do |token|
-                  = render partial: 'application_tokens/application_token', locals: {application_token: token}
+    <app-tokens-wrapper :user-id="#{current_user.id}" :app-tokens-ref="#{@app_tokens_serialized}" :max-tokens="#{User::APPLICATION_TOKENS_MAX}"></app-tokens-wrapper>
 
     - if current_user.email?
       - unless current_user.admin? && @admin_count == 1

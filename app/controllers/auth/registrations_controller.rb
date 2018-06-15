@@ -37,6 +37,16 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
   def edit
     @admin_count = User.admins.count
+    @user_serialized = API::Entities::Users.represent(
+      current_user,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
+    @app_tokens_serialized = API::Entities::ApplicationTokens.represent(
+      current_user.application_tokens,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     super
   end
 
