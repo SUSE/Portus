@@ -13,17 +13,20 @@ describe ::Portus::LDAP::Configuration do
       params = { user: { username: "name", password: "1234" } }
       cfg = ::Portus::LDAP::Configuration.new(params)
       expect(cfg.enabled?).to be_falsey
+      expect(cfg.reason_message).to eq "LDAP is not enabled"
     end
 
     it "returns false if we are talking about the portus user" do
       cfg = ::Portus::LDAP::Configuration.new(account: "portus", password: "1234")
       expect(cfg.enabled?).to be_falsey
+      expect(cfg.reason_message).to eq "Portus user does not go through LDAP"
     end
 
     it "returns true otherwise" do
       params = { user: { username: "name", password: "" } }
       cfg = ::Portus::LDAP::Configuration.new(params)
       expect(cfg.enabled?).to be_truthy
+      expect(cfg.reason_message).to eq ""
     end
   end
 

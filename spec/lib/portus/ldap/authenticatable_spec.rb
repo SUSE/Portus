@@ -8,13 +8,14 @@ require "rails_helper"
 # the `session` object. Therefore, this class is designed to mock as least as
 # possible.
 class AuthenticatableMock < ::Portus::LDAP::Authenticatable
-  attr_accessor :params, :session, :fail_message
+  attr_accessor :params, :session, :fail_message, :soft
 
   # Sets the request parameters and initializes the session.
   def initialize(params)
     @session      = {}
     @params       = params
     @fail_message = ""
+    @soft         = true
 
     super
   end
@@ -26,9 +27,15 @@ class AuthenticatableMock < ::Portus::LDAP::Authenticatable
     bind_options(cfg)
   end
 
+  def fail(msg)
+    @fail_message = msg
+    @soft         = true
+  end
+
   # Mock the `fail!` message so we can capture it.
   def fail!(msg)
     @fail_message = msg
+    @soft         = false
   end
 end
 
@@ -304,7 +311,8 @@ describe ::Portus::LDAP::Authenticatable do
       lm = AuthenticatableMock.new(params)
       lm.authenticate!
 
-      expect(lm.fail_message).to eq "LDAP is disabled"
+      expect(lm.fail_message).to eq "LDAP is not enabled"
+      expect(lm.soft).to be_truthy
     end
 
     it "fails if the user couldn't bind" do
@@ -316,6 +324,7 @@ describe ::Portus::LDAP::Authenticatable do
       lm.authenticate!
 
       expect(lm.fail_message).to eq "a message"
+      expect(lm.soft).to be_falsey
     end
 
     it "fails if the user was not found" do
@@ -349,6 +358,15 @@ describe ::Portus::LDAP::Authenticatable do
       lm.authenticate!
 
       expect(lm.fail_message).to eq "error message"
+    end
+
+    it "returns fails 'softly' for the portus user" do
+      params = { account: "portus", user: { username: "portus", password: "1234" } }
+
+      lm = AuthenticatableMock.new(params)
+      lm.authenticate!
+      expect(lm.fail_message).to eq "Portus user does not go through LDAP"
+      expect(lm.soft).to be_truthy
     end
 
     it "returns a success if it was successful" do

@@ -40,10 +40,17 @@ module Portus
       def authenticate!
         fill_user_params!
 
-        cfg        = ::Portus::LDAP::Configuration.new(params)
-        connection = initialized_adapter
-
-        portus_login!(connection, cfg) if bind_as(connection, cfg)
+        cfg = ::Portus::LDAP::Configuration.new(params)
+        # rubocop:disable Style/GuardClause
+        if cfg.enabled?
+          connection = initialized_adapter
+          portus_login!(connection, cfg) if bind_as(connection, cfg)
+        else
+          # rubocop:disable Style/SignalException
+          fail cfg.reason_message
+          # rubocop:enable Style/SignalException
+        end
+        # rubocop:enable Style/GuardClause
       rescue ::Portus::LDAP::Error, Net::LDAP::Error => e
         logged_failure!(e.message)
       end
