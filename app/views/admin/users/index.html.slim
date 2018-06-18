@@ -12,7 +12,8 @@
     .table-responsive
       table.table.table-stripped.table-hover
         col.col-20
-        col.col-30
+        col.col-20
+        col.col-10
         col.col-10
         col.col-10
         col.col-10
@@ -26,6 +27,7 @@
             th Namespaces
             th Teams
             th Enabled
+            th Bot
             th Remove
         tbody
           - @users.each do |user|
@@ -59,6 +61,7 @@
                     rel="nofollow"
                     href=url_for(toggle_enabled_path(user))]
                       i.fa.fa-lg[class="fa-toggle-#{user.enabled? ? 'on': 'off'}"]
+              td= user.bot
               td.remove-btn
                 - if current_user == user
                     a[class="btn btn-default" disabled=true]

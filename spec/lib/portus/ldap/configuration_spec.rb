@@ -22,6 +22,14 @@ describe ::Portus::LDAP::Configuration do
       expect(cfg.reason_message).to eq "Portus user does not go through LDAP"
     end
 
+    it "returns false if the user is a bot" do
+      create(:user, username: "bot", bot: true)
+      params = { user: { username: "bot", password: "" } }
+      cfg = ::Portus::LDAP::Configuration.new(params)
+      expect(cfg.enabled?).to be_falsey
+      expect(cfg.reason_message).to eq "Bot user is not expected to be present on LDAP"
+    end
+
     it "returns true otherwise" do
       params = { user: { username: "name", password: "" } }
       cfg = ::Portus::LDAP::Configuration.new(params)

@@ -79,6 +79,15 @@ describe API::V1::Users do
         raise_exception(ActiveRecord::RecordNotFound)
     end
 
+    it "deletes bot application token if admin" do
+      bot = create(:user, bot: true)
+      token = create(:application_token, user: bot)
+      delete "/api/v1/users/application_tokens/#{token.id}", nil, @header
+      expect(response).to have_http_status(:no_content)
+      expect { ApplicationToken.find(token.id) }.to \
+        raise_exception(ActiveRecord::RecordNotFound)
+    end
+
     it "returns status 404" do
       token_id = ApplicationToken.maximum(:id) + 1
       delete "/api/v1/users/application_tokens/#{token_id}", nil, @header

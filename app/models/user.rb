@@ -27,6 +27,7 @@
 #  display_name           :string(255)
 #  provider               :string(255)
 #  uid                    :string(255)
+#  bot                    :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -60,7 +61,7 @@ class User < ActiveRecord::Base
   # Actions performed before/after create.
   validates :username, presence: true, uniqueness: true
   validate :private_namespace_and_team_available, on: :create
-  after_create :create_personal_namespace!
+  after_create :create_personal_namespace!, if: :needs_namespace?
 
   # Actions performed before destroy
   before_destroy :update_tags!
@@ -110,13 +111,7 @@ class User < ActiveRecord::Base
   # also be created for each user of the system when a registry is saved in the
   # system.
   def create_personal_namespace!
-    # the registry is not configured yet, we cannot create the namespace
-    return unless Registry.any?
-
-    # Leave early if the namespace already exists. This is fine because the
-    # `private_namespace_and_team_available` method has already checked that
-    # the name of the namespace is fine and that it doesn't clash.
-    return unless namespace_id.nil?
+    return unless needs_namespace?
 
     namespace_name = Namespace.make_valid(username)
     team_name = Team.make_valid(username)
@@ -250,6 +245,15 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  # Returns true if the current user needs a namespace. This is not the case in
+  # the following situations:
+  #   1. A registry has not been created yet.
+  #   2. A namespace has already been created for this user.
+  #   3. It's not a regular user, but a bot.
+  def needs_namespace?
+    Registry.any? && namespace_id.nil? && !bot
+  end
 
   # Get username from provider's data.
   def extract_username(data)

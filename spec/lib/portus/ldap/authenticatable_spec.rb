@@ -360,12 +360,22 @@ describe ::Portus::LDAP::Authenticatable do
       expect(lm.fail_message).to eq "error message"
     end
 
-    it "returns fails 'softly' for the portus user" do
+    it "fails 'softly' for the portus user" do
       params = { account: "portus", user: { username: "portus", password: "1234" } }
 
       lm = AuthenticatableMock.new(params)
       lm.authenticate!
       expect(lm.fail_message).to eq "Portus user does not go through LDAP"
+      expect(lm.soft).to be_truthy
+    end
+
+    it "fails 'softly' for bots" do
+      create(:user, username: "bot", bot: true)
+      params = { user: { username: "bot", password: "1234" } }
+
+      lm = AuthenticatableMock.new(params)
+      lm.authenticate!
+      expect(lm.fail_message).to eq "Bot user is not expected to be present on LDAP"
       expect(lm.soft).to be_truthy
     end
 

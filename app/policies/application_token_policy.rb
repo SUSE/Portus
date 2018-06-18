@@ -10,6 +10,7 @@ class ApplicationTokenPolicy
   end
 
   def destroy?
-    user.id == application_token.user_id
+    user.id == application_token.user_id ||
+      user.admin? && application_token.user.bot
   end
 end

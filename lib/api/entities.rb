@@ -48,10 +48,14 @@ module API
       expose :current_sign_in_at, documentation: { type: DateTime }
       expose :last_sign_in_at, documentation: { type: DateTime }
       expose :created_at, :updated_at, documentation: { type: DateTime }
-      expose :admin, :enabled, documentation: { type: "boolean" }
+      expose :admin, :enabled, documentation: { type: ::Grape::API::Boolean }
       expose :locked_at, documentation: { type: DateTime }
       expose :namespace_id, documentation: { type: Integer }
       expose :display_name, documentation: { type: String, desc: "Display name" }
+      expose :bot, documentation: {
+        type: ::Grape::API::Boolean,
+        desc: "Whether this is a bot or not"
+      }
     end
 
     class ApplicationTokens < Grape::Entity

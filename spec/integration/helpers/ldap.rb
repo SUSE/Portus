@@ -14,11 +14,14 @@ class IntegrationLDAP < Portus::LDAP::Authenticatable
     @session = {}
   end
 
-  def fail(_obj)
-    exit 1
+  def fail(obj)
+    puts "Soft fail: #{obj}"
+    exit 0
   end
 
-  alias fail! fail
+  def fail!(_obj)
+    exit 1
+  end
 
   def success!(user)
     puts "name: #{user.username}, email: #{user.email}, " \

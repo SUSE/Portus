@@ -58,3 +58,9 @@ function setup() {
     ruby_puts "Registry.get.client.catalog.inspect"
     [ $status -eq 0 ]
 }
+
+@test "LDAP: portus user is skipped" {
+    helper_runner ldap.rb pfabra giecftw1918
+    [ $status -eq 0 ]
+    [[ "${lines[-1]}" =~ "Soft fail: Bot user is not expected to be present on LDAP" ]]
+}
