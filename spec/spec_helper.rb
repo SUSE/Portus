@@ -96,8 +96,13 @@ RSpec.configure do |config|
     }
 
     APP_CONFIG["delete"] = {
-      "enabled"      => false,
-      "contributors" => false
+      "enabled"           => false,
+      "contributors"      => false,
+      "garbage_collector" => {
+        "enabled"    => false,
+        "older_than" => 30,
+        "tag"        => ""
+      }
     }
 
     APP_CONFIG["pagination"] = {
