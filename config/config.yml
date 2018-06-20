@@ -42,6 +42,26 @@ delete:
   # Allow contributors to delete images and tags
   contributors: false
 
+  # The garbage collector will run when enabled in the background process, and
+  # it will only delete tags matching the given conditions.
+  garbage_collector:
+    enabled: false
+
+    # Remove images older than a specific value. This value is interpreted as
+    # the number of days.
+    older_than: 30
+
+    # Provide a string containing a regular expression. If you provide a
+    # valid regular expression, garbage collector will only be applied into tags
+    # matching a given name.
+    #
+    # Valid values might be:
+    #   - "jenkins": if you anticipate that you will always have a tag with a
+    #     specific name, you can simply use that.
+    #   - "build-\\d+": your tag follows a format like "build-1234" (note that
+    #     we need to specify "\\d" and not just "\d").
+    tag: ""
+
 # LDAP support. If enabled, then only users of the specified LDAP server will
 # be able to use Portus. Take a look at the documentation of LDAP support in our
 # online docs: http://port.us.org/features/2_LDAP-support.html.
