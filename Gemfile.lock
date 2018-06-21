@@ -386,7 +386,7 @@ GEM
     slim (3.0.9)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 1.3.3, < 2.1)
-    sprockets (3.7.1)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
@@ -512,7 +512,7 @@ DEPENDENCIES
   shoulda
   simplecov (= 0.15.1)
   slim (~> 3.0.8)
-  sprockets (= 3.7.1)
+  sprockets (= 3.7.2)
   sprockets-rails (~> 3.2.0)
   temple (= 0.7.7)
   timecop
