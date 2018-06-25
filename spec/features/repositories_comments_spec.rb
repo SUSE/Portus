@@ -35,8 +35,8 @@ describe "Repositories comments support" do
     login_as user, scope: :user
   end
 
-  describe "comment#create" do
-    it "An user comments on a repository under a public namespace", js: true do
+  describe "comment#create", js: true do
+    it "An user comments on a repository under a public namespace" do
       visit repository_path(visible_repository)
 
       expect(page).to have_content("Nobody has left a comment")
@@ -51,12 +51,13 @@ describe "Repositories comments support" do
       expect(page).not_to have_content("Nobody has left a comment")
     end
 
-    it "An user comments on a repository under a protected namespace", js: true do
+    it "An user comments on a repository under a protected namespace" do
       visit repository_path(protected_repository)
 
       expect(page).to have_content("Nobody has left a comment")
 
       find(".toggle-link-new-comment").click
+      expect(page).to have_button("Add")
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -66,13 +67,14 @@ describe "Repositories comments support" do
       expect(page).not_to have_content("Nobody has left a comment")
     end
 
-    it "An admin comments on any repository", js: true do
+    it "An admin comments on any repository" do
       login_as admin, scope: :user
       visit repository_path(invisible_repository)
 
       expect(page).to have_content("Nobody has left a comment")
 
       find(".toggle-link-new-comment").click
+      expect(page).to have_button("Add")
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
@@ -82,25 +84,25 @@ describe "Repositories comments support" do
       expect(page).not_to have_content("Nobody has left a comment")
     end
 
-    it "An user cannot comment on a repository without access", js: true do
+    it "An user cannot comment on a repository without access" do
       visit repository_path(invisible_repository)
 
       expect(page).to have_content("You are not authorized to access this page")
     end
 
-    it "An user cannot comment an empty text", js: true do
+    it "An user cannot comment an empty text" do
       visit repository_path(visible_repository)
 
       find(".toggle-link-new-comment").click
 
-      fill_in "comment_body", with: ""
+      fill_in "comment[body]", with: ""
 
       expect(page).to have_content("Comment can't be blank")
     end
   end
 
-  describe "comment#delete" do
-    it "An user deletes his own comment", js: true do
+  describe "comment#delete", js: true do
+    it "An user deletes his own comment" do
       login_as owner, scope: :user
       visit repository_path(commented_repository)
 
@@ -115,7 +117,7 @@ describe "Repositories comments support" do
       expect(page).not_to have_content(comment.body)
     end
 
-    it "An user cannot delete other users' comment", js: true do
+    it "An user cannot delete other users' comment" do
       visit repository_path(commented_repository)
 
       expect(page).to have_content(comment.body)
@@ -123,7 +125,7 @@ describe "Repositories comments support" do
       expect(page).not_to have_content("Delete comment")
     end
 
-    it "An admin deletes any comment", js: true do
+    it "An admin deletes any comment" do
       login_as admin, scope: :user
       visit repository_path(commented_repository)
 

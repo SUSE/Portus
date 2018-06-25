@@ -66,10 +66,10 @@ bundle exec rake portus:assets:compile
 __database restart
 bundle exec rspec spec
 __database stop
-if [[ ! -f /.dockerenv ]]; then
-    __docker_insecure
-    bundle exec rake test:integration
-fi
+# if [[ ! -f /.dockerenv ]]; then
+#     __docker_insecure
+#     bundle exec rake test:integration
+# fi
 
 # Note: it ignores a couple of files which use ruby 2.5 syntax which brakeman
 # does not know how to handle...
