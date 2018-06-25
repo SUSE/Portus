@@ -1,5 +1,5 @@
 <template>
-  <a type="button" class="btn btn-xs btn-link toggle-link" @click="toggle">
+  <a type="button" class="btn btn-xs btn-link toggle-link" @click.prevent="toggle">
     <i class="fa" :class="icon"></i> {{ text }}
   </a>
 </template>

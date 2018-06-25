@@ -21,7 +21,7 @@ describe "Admin - Registries panel" do
       visit new_admin_registry_path
 
       fill_in "registry_name", with: "registry"
-      fill_in "registry_name", with: ""
+      clear_field("#registry_name")
 
       expect(page).to have_content("Name can't be blank")
       expect(page).to have_button("Create", disabled: true)
@@ -31,7 +31,7 @@ describe "Admin - Registries panel" do
       visit new_admin_registry_path
 
       fill_in "registry_hostname", with: "registry"
-      fill_in "registry_hostname", with: ""
+      clear_field("#registry_hostname")
 
       expect(page).to have_content("Hostname can't be blank")
       expect(page).to have_button("Create", disabled: true)
@@ -86,7 +86,6 @@ describe "Admin - Registries panel" do
       expect(page).not_to have_css("#advanced.collapse.in")
 
       click_button "Show Advanced"
-      wait_for_effect_on("#advanced")
 
       expect(page).to have_content("External Registry Name")
       expect(page).to have_css("#advanced.collapse.in")
@@ -96,13 +95,11 @@ describe "Admin - Registries panel" do
       visit new_admin_registry_path
 
       click_button "Show Advanced"
-      wait_for_effect_on("#advanced")
 
       expect(page).to have_content("External Registry Name")
       expect(page).to have_css("#advanced.collapse.in")
 
       click_button "Hide Advanced"
-      wait_for_effect_on("#advanced")
 
       expect(page).not_to have_css("#advanced.collapse.in")
       expect(page).not_to have_content("External Registry Name")
@@ -140,7 +137,6 @@ describe "Admin - Registries panel" do
       expect(page).not_to have_css("#advanced")
 
       click_button "Show Advanced"
-      wait_for_effect_on("#advanced")
 
       expect(page).to have_content("External Registry Name")
       expect(page).to have_css("#advanced.collapse.in")
@@ -148,13 +144,11 @@ describe "Admin - Registries panel" do
 
     it "hides advanced options when clicking on Hide Advanced" do
       click_button "Show Advanced"
-      wait_for_effect_on("#advanced")
 
       expect(page).to have_content("External Registry Name")
       expect(page).to have_css("#advanced.collapse.in")
 
       click_button "Hide Advanced"
-      wait_for_effect_on("#advanced")
 
       expect(page).not_to have_css("#advanced.collapse.in")
       expect(page).not_to have_content("External Registry Name")

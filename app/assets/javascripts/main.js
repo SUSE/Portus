@@ -38,6 +38,9 @@ $(function () {
 
   refreshFloatAlertPosition();
 
+  // disable effects during tests
+  $.fx.off = $('body').data('disable-effects');
+
   // necessary to be compatible with the js rendered
   // on the server-side via jquery-ujs
   window.setTimeOutAlertDelay = setTimeOutAlertDelay;

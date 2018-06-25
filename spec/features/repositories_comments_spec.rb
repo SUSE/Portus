@@ -93,7 +93,8 @@ describe "Repositories comments support" do
 
       find(".toggle-link-new-comment").click
 
-      fill_in "comment_body", with: ""
+      fill_in "comment_body", with: "comment"
+      clear_field("#comment_body")
 
       expect(page).to have_content("Comment can't be blank")
     end

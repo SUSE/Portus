@@ -164,14 +164,12 @@ describe "Admin - Users panel" do
       visit edit_admin_user_path(bot)
 
       find(".toggle-link-new-app-token").click
-      wait_for_effect_on("#new-app-token-form")
 
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -186,7 +184,6 @@ describe "Admin - Users panel" do
       find(".application_token_#{token.id} button").click
       find(".popover-content .yes").click
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was removed successfully")

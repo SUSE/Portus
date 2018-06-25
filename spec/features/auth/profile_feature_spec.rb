@@ -72,8 +72,7 @@ describe "Update password feature" do
 
       expect(page).to have_content("Profile updated successfully!")
       expect(page).to have_button("Update", disabled: true)
-      # fill_in does not trigger keyUp event, so using clear_field instead
-      clear_field("Display name")
+      clear_field("#user_display_name")
       expect(page).to have_button("Update")
     end
   end

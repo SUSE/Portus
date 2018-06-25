@@ -15,11 +15,6 @@ module WaitForEvents
     wait_until_zero("$.active")
   end
 
-  # Wait for all the effects on the given selector to have concluded.
-  def wait_for_effect_on(selector)
-    wait_until_zero("$('#{selector}').queue().length")
-  end
-
   # This method will loop until the given block evaluates to true. It will
   # respect to default timeout as specifyied by Capybara.
   def wait_until

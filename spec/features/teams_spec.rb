@@ -20,10 +20,9 @@ describe "Teams support" do
 
     it "A user cannot create an empty team" do
       find(".toggle-link-new-team").click
-      wait_for_effect_on("#new-team-form")
 
-      fill_in "Name", with: Team.first.name
-      fill_in "Name", with: ""
+      fill_in "Name", with: "name"
+      clear_field("#team_name")
 
       expect(page).to have_content("Name can't be blank")
       expect(page).to have_button("Add", disabled: true)
@@ -31,7 +30,6 @@ describe "Teams support" do
 
     it "A team cannot be created if the name has already been picked" do
       find(".toggle-link-new-team").click
-      wait_for_effect_on("#new-team-form")
 
       fill_in "Name", with: Team.last.name
       wait_for_ajax
@@ -44,7 +42,6 @@ describe "Teams support" do
       teams_count = Team.count
 
       find(".toggle-link-new-team").click
-      wait_for_effect_on("#new-team-form")
 
       fill_in "Name", with: "valid-team"
       select admin.username, from: "team_owner_id"
@@ -52,30 +49,12 @@ describe "Teams support" do
 
       click_button "Add"
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Team 'valid-team' was created successfully")
       expect(page).to have_link("valid-team")
       expect(page).to have_current_path(teams_path)
       expect(Team.count).to eql(teams_count + 1)
-    end
-
-    it 'The "Create new team" link has a toggle effect' do
-      expect(page).to have_css(".toggle-link-new-team i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-team i.fa-minus-circle")
-
-      find(".toggle-link-new-team").click
-      wait_for_effect_on("#new-team-form")
-
-      expect(page).not_to have_css(".toggle-link-new-team i.fa-plus-circle")
-      expect(page).to have_css(".toggle-link-new-team i.fa-minus-circle")
-
-      find(".toggle-link-new-team").click
-      wait_for_effect_on("#new-team-form")
-
-      expect(page).to have_css(".toggle-link-new-team i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-team i.fa-minus-circle")
     end
 
     it "The name of each team is a link" do
@@ -106,7 +85,6 @@ describe "Teams support" do
 
     it "shows owner select" do
       find(".toggle-link-new-team").click
-      wait_for_effect_on("#new-team-form")
 
       expect(page).to have_css("#team_name")
       expect(page).to have_css("#team_owner_id")
@@ -114,14 +92,12 @@ describe "Teams support" do
 
     it "creates a team with a different owner" do
       find(".toggle-link-new-team").click
-      wait_for_effect_on("#new-team-form")
 
       fill_in "Name", with: "another"
       select another_user.username, from: "team_owner_id"
 
       click_button "Add"
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Team 'another' was created successfully")
@@ -140,7 +116,6 @@ describe "Teams support" do
 
       it "doesn't show owner select" do
         find(".toggle-link-new-team").click
-        wait_for_effect_on("#new-team-form")
 
         expect(page).to have_css("#team_name")
         expect(page).not_to have_css("#team_owner_id")
@@ -188,7 +163,6 @@ describe "Teams support" do
       expect(page).to have_css("#new-namespace-form", visible: false)
 
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
       expect(page).to have_css("#new-namespace-form")
 
@@ -197,14 +171,13 @@ describe "Teams support" do
       click_button "Create"
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Namespace 'new-namespace' was created successfully")
 
       expect(Namespace.count).to eql namespaces_count + 1
       expect(page).to have_link("new-namespace")
-      find(:link, "new-namespace").trigger(:click)
+      find(:link, "new-namespace").click
 
       namespace = Namespace.find_by(name: "new-namespace")
       expect(page).to have_current_path(namespace_path(namespace))
@@ -292,7 +265,6 @@ describe "Teams support" do
       click_button "Add"
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("'#{another.username}' was successfully added to the team")
@@ -309,7 +281,6 @@ describe "Teams support" do
       click_button "Add"
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content(
@@ -339,7 +310,6 @@ describe "Teams support" do
       find(".team_member_#{tu.id} .btn-primary").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("User '#{another.username}' was
@@ -355,7 +325,6 @@ describe "Teams support" do
       find(".popover-content .yes").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("User '#{another.username}' was
@@ -367,7 +336,6 @@ describe "Teams support" do
       find(".popover-content .yes").click
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Cannot remove the only owner of the team")
