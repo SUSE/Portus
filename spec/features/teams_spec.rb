@@ -172,6 +172,15 @@ describe "Teams support" do
       visit team_path(team)
     end
 
+    # TODO: move this test to a component level one instead of feature once
+    # form component is migrated to a vue file
+    it "hides team field if team is defined", js: true do
+      find(".toggle-link-new-namespace").click
+
+      expect(page).to have_css("#namespace_name")
+      expect(page).not_to have_css(".namespace_team")
+    end
+
     it "A namespace can be created from the team page", js: true do
       namespaces_count = Namespace.count
 

@@ -49,6 +49,17 @@ describe "Namespaces support" do
       expect(page).to have_button("Create", disabled: true)
     end
 
+    # TODO: move this test to a component level one instead of feature once
+    # form component is migrated to a vue file
+    it "shows team field if no team", js: true do
+      visit namespaces_path
+
+      find(".toggle-link-new-namespace").click
+      wait_for_effect_on("#new-namespace-form")
+
+      expect(page).to have_css(".namespace_team")
+    end
+
     it "An user cannot create a namespace that already exists", js: true do
       visit namespaces_path
 
