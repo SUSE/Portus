@@ -36,14 +36,12 @@ describe "Webhooks support", js: true do
       webhooks_count = namespace.webhooks.count
 
       find(".toggle-link-new-webhook").click
-      wait_for_effect_on("#new-webhook-form")
 
       fill_in "Name", with: "webhook name"
       fill_in "URL", with: "http://url-here"
       click_button "Add"
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Webhook 'webhook name' was created successfully")
@@ -51,25 +49,10 @@ describe "Webhooks support", js: true do
       # Check that it created a link to it and that it's accessible.
       expect(namespace.webhooks.count).to eql webhooks_count + 1
       expect(page).to have_link("webhook name")
-      find(:link, "webhook name").trigger(:click)
+      find(:link, "webhook name").click
 
       webhook = namespace.webhooks.find_by(url: "http://url-here")
       expect(page).to have_current_path(namespace_webhook_path(namespace, webhook))
-    end
-
-    it 'The "Create new webhook" link has a toggle effect' do
-      expect(page).to have_css(".toggle-link-new-webhook i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-webhook i.fa-minus-circle")
-
-      find(".toggle-link-new-webhook").click
-
-      expect(page).not_to have_css(".toggle-link-new-webhook i.fa-plus-circle")
-      expect(page).to have_css(".toggle-link-new-webhook i.fa-minus-circle")
-
-      find(".toggle-link-new-webhook").click
-
-      expect(page).to have_css(".toggle-link-new-webhook i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-webhook i.fa-minus-circle")
     end
 
     it "A user enables/disables webhook" do
@@ -108,7 +91,7 @@ describe "Webhooks support", js: true do
 
     it "cannot update webhook if form is invalid" do
       find(".toggle-link-edit-webhook").click
-      fill_in "Name", with: ""
+      clear_field("#webhook_name")
 
       expect(page).to have_content("Name can't be blank")
       expect(page).to have_button("Save", disabled: true)
@@ -150,14 +133,12 @@ describe "Webhooks support", js: true do
         webhook_headers_count = webhook.headers.count
 
         find(".toggle-link-new-webhook-header").click
-        wait_for_effect_on("#new-webhook-header-form")
 
         fill_in "Name", with: "cool-header"
         fill_in "Value", with: "cool-value"
         click_button "Add"
 
         wait_for_ajax
-        wait_for_effect_on("#float-alert")
 
         expect(page).to have_css("#float-alert")
         expect(page).to have_content("cool-header")
@@ -170,7 +151,6 @@ describe "Webhooks support", js: true do
         webhook_headers_count = webhook.headers.count
 
         find(".toggle-link-new-webhook-header").click
-        wait_for_effect_on("#new-webhook-header-form")
 
         expect(focused_element_id).to eq "header_name"
         fill_in "Name", with: webhook_header.name
@@ -178,7 +158,6 @@ describe "Webhooks support", js: true do
         click_button "Add"
 
         wait_for_ajax
-        wait_for_effect_on("#float-alert")
 
         expect(page).to have_css("#float-alert")
         expect(page).to have_content("Name has already been taken")
@@ -196,21 +175,6 @@ describe "Webhooks support", js: true do
         expect(page).to have_content("Header '#{webhook_header.name}' was removed successfully")
         expect(page).not_to have_content(webhook_header.name)
         expect(page).not_to have_content(webhook_header.value)
-      end
-
-      it 'The "Create new header" link has a toggle effect' do
-        expect(page).to have_css(".toggle-link-new-webhook-header i.fa-plus-circle")
-        expect(page).not_to have_css(".toggle-link-new-webhook-header i.fa-minus-circle")
-
-        find(".toggle-link-new-webhook-header").click
-
-        expect(page).not_to have_css(".toggle-link-new-webhook-header i.fa-plus-circle")
-        expect(page).to have_css(".toggle-link-new-webhook-header i.fa-minus-circle")
-
-        find(".toggle-link-new-webhook-header").click
-
-        expect(page).to have_css(".toggle-link-new-webhook-header i.fa-plus-circle")
-        expect(page).not_to have_css(".toggle-link-new-webhook-header i.fa-minus-circle")
       end
     end
   end

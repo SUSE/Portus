@@ -13,14 +13,12 @@ describe "Application tokens" do
     it "As an user I can create a new token", js: true do
       visit edit_user_registration_path
       find(".toggle-link-new-app-token").click
-      wait_for_effect_on("#new-app-token-form")
 
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -32,14 +30,12 @@ describe "Application tokens" do
 
       visit edit_user_registration_path
       find(".toggle-link-new-app-token").click
-      wait_for_effect_on("#new-app-token-form")
 
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Application has already been taken")
@@ -50,14 +46,12 @@ describe "Application tokens" do
 
       visit edit_user_registration_path
       find(".toggle-link-new-app-token").click
-      wait_for_effect_on("#new-app-token-form")
 
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -82,7 +76,6 @@ describe "Application tokens" do
       find(".application_token_#{token.id} button").click
       find(".popover-content .yes").click
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was removed successfully")

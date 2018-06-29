@@ -29,7 +29,7 @@ module Helpers
   # Clears a field value. `fill_in` also does the job but
   # it doesn't trigger keyUp event, for example
   def clear_field(field)
-    find_field(field).send_keys([:control, "a"], :backspace)
+    find(field).native.send_keys([:control, "a"], :backspace)
   end
 
   # Creates the Portus user. The Portus user cannot be created with neither the

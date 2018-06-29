@@ -19,7 +19,6 @@ describe "Namespaces support" do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
       expect(page).to have_button("Create", disabled: true)
     end
@@ -28,10 +27,9 @@ describe "Namespaces support" do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
-      fill_in "Name", with: Namespace.first.name
-      fill_in "Name", with: ""
+      fill_in "Name", with: "something"
+      clear_field("#namespace_name")
 
       expect(page).to have_content("Name can't be blank")
       expect(page).to have_button("Create", disabled: true)
@@ -41,7 +39,6 @@ describe "Namespaces support" do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: "!@#!@#"
 
@@ -55,7 +52,6 @@ describe "Namespaces support" do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
       expect(page).to have_css(".namespace_team")
     end
@@ -64,7 +60,6 @@ describe "Namespaces support" do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: Namespace.first.name
       wait_for_ajax
@@ -77,7 +72,6 @@ describe "Namespaces support" do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: Namespace.first.name
       fill_vue_multiselect(".namespace_team", Team.where(hidden: true).first.name)
@@ -92,14 +86,12 @@ describe "Namespaces support" do
 
       visit namespaces_path
       find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
 
       fill_in "Name", with: "valid-namespace"
       select_vue_multiselect(".namespace_team", namespace.team.name)
       click_button "Create"
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Namespace 'valid-namespace' was created successfully")
@@ -107,50 +99,10 @@ describe "Namespaces support" do
       # Check that it created a link to it and that it's accessible.
       expect(Namespace.count).to eql namespaces_count + 1
       expect(page).to have_link("valid-namespace")
-      find(:link, "valid-namespace").trigger(:click)
+      find(:link, "valid-namespace").click
 
       namespace = Namespace.find_by(name: "valid-namespace")
       expect(page).to have_current_path(namespace_path(namespace))
-    end
-
-    it 'The "Create new namespace" link has a toggle effect', js: true do
-      visit namespaces_path
-      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
-
-      find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
-
-      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).to have_css(".toggle-link-new-namespace i.fa-minus-circle")
-
-      find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
-
-      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
-    end
-
-    it 'The "Create new namespace" keeps icon after add new namespace', js: true do
-      visit namespaces_path
-      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
-
-      find(".toggle-link-new-namespace").click
-      wait_for_effect_on("#new-namespace-form")
-
-      fill_in "Name", with: "valid-namespace"
-      select_vue_multiselect(".namespace_team", namespace.team.name)
-
-      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).to have_css(".toggle-link-new-namespace i.fa-minus-circle")
-
-      click_button "Create"
-      wait_for_ajax
-      wait_for_effect_on("#new-namespace-form")
-
-      expect(page).to have_css(".toggle-link-new-namespace i.fa-plus-circle")
-      expect(page).not_to have_css(".toggle-link-new-namespace i.fa-minus-circle")
     end
 
     it "The namespace visibility can be changed", js: true do
@@ -285,7 +237,6 @@ describe "Namespaces support" do
       click_button "Save"
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
@@ -301,7 +252,6 @@ describe "Namespaces support" do
       click_button "Save"
 
       wait_for_ajax
-      wait_for_effect_on("#float-alert")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Cool description")

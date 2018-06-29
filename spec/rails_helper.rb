@@ -7,9 +7,6 @@ ENV["NODE_ENV"]  ||= "test"
 require "spec_helper"
 require File.expand_path("../config/environment", __dir__)
 require "rspec/rails"
-require "devise"
-require "ffaker"
-require "factory_girl_rails"
 require "pundit/rspec"
 
 # Raise exception for pending migrations after reading the schema.
@@ -42,6 +39,7 @@ RSpec.configure do |config|
   # If we want Capybara + DatabaseCleaner + Poltergeist to work correctly, we
   # have to just set this to false.
   config.use_transactional_fixtures = false
+  config.use_instantiated_fixtures  = false
 
   config.infer_spec_type_from_file_location!
   config.include FactoryGirl::Syntax::Methods

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="comments-wrapper">
     <comments-form :state="state" form-state="commentFormVisible" :repository="repository"></comments-form>
     <comments-panel :comments="comments" :state="state"></comments-panel>
   </div>

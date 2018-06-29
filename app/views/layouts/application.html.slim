@@ -32,7 +32,7 @@ html
     = javascript_include_tag(*webpack_asset_paths("application"))
     = yield :js_header
 
-  body data-controller="#{js_controller}" data-route="#{js_route}" class="#{'is-admin' if current_user.admin?}"
+  body data-controller="#{js_controller}" data-route="#{js_route}" class="#{'is-admin' if current_user.admin?}" data-disable-effects="#{Rails.env.test?}"
     .vue-root
       header
         = render 'shared/header'
