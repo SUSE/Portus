@@ -13,7 +13,7 @@ div ref="form" class="collapse"
             span.error-message v-for="(error, index) in errors.name" :key="index"
               | Name {{ error }}
 
-    .form-group.has-feedback :class=="{ 'has-error': $v.namespace.team.$error }" v-if="!namespace.team"
+    .form-group.has-feedback :class=="{ 'has-error': $v.namespace.team.$error }" v-if="!teamName"
       = f.label :team, { class: "control-label col-md-2" }
       .col-md-7
         vue-multiselect{
