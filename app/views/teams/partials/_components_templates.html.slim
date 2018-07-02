@@ -11,17 +11,3 @@
 
     script#js-team-member-form-tmpl type="text/x-template"
       = render "teams/components/members/form"
-
-    script#js-team-edit-form-tmpl type="text/x-template"
-      = render "teams/components/edit_form"
-
-- if action_name == 'index'
-  - content_for :js_body do
-    script#js-team-new-form-tmpl type="text/x-template"
-      = render "teams/components/form"
-
-    script#js-teams-table-tmpl type="text/x-template"
-      = render "teams/components/table"
-
-    script#js-team-table-row-tmpl type="text/x-template"
-      = render "teams/components/table_row"
