@@ -12,6 +12,11 @@ class TeamsController < ApplicationController
       current_user: current_user,
       type:         :internal
     ).to_json
+    @owners_serialized = API::Entities::Users.represent(
+      User.enabled,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     respond_with(@teams)
   end
 

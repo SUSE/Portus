@@ -1,6 +1,6 @@
 <template>
   <div class="teams-index-page">
-    <new-team-form :state="state" form-state="newFormVisible"></new-team-form>
+    <new-team-form :state="state" form-state="newFormVisible" :owners="owners" :is-admin="isAdmin" :current-user-id="currentUserId"></new-team-form>
     <teams-panel title="Teams you are member of" :teams="myTeams" :teams-path="teamsPath" :can-create="canCreate" :state="state"></teams-panel>
     <teams-panel title="Other teams" :teams="otherTeams" :teams-path="teamsPath" v-if="isAdmin && otherTeams.length > 0"></teams-panel>
   </div>
@@ -24,11 +24,17 @@
       teamsPath: {
         type: String,
       },
+      ownersRef: {
+        type: Array,
+      },
       isAdmin: {
         type: Boolean,
       },
       canCreate: {
         type: Boolean,
+      },
+      currentUserId: {
+        type: Number,
       },
     },
 
@@ -41,6 +47,7 @@
       return {
         state: TeamsStore.state,
         teams: [...this.teamsRef],
+        owners: [...this.ownersRef],
       };
     },
 
