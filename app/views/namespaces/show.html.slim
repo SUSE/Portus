@@ -1,9 +1,6 @@
 <namespaces-show-page :namespace-ref="#{@namespace_serialized}" :repositories-ref="#{@repositories_serialized}" repositories-path="#{repositories_path}" webhooks-path="#{namespace_webhooks_path(@namespace)}" teams-path="#{teams_path}"></namespaces-show-page>
 
 - content_for :js_body do
-  script#js-edit-namespace-form-tmpl type="text/x-template"
-    = render "namespaces/components/edit_form"
-
   script#js-repositories-table-tmpl type="text/x-template"
     = render "repositories/components/table"
 
