@@ -1,8 +1,6 @@
 import Vue from 'vue';
 
-import ResultItem from '../components/result-item';
-
-const { set } = Vue;
+import Result from '../components/result';
 
 $(() => {
   if (!$('body[data-route="explore/index"]').length) {
@@ -14,17 +12,7 @@ $(() => {
     el: 'body[data-route="explore/index"] .vue-root',
 
     components: {
-      ResultItem,
-    },
-
-    data() {
-      return {
-        repositories: [],
-      };
-    },
-
-    mounted() {
-      set(this, 'repositories', window.repositories);
+      Result,
     },
   });
 });
