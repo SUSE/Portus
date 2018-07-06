@@ -6,6 +6,8 @@ import EventBus from '~/plugins/eventbus';
 import Alert from '~/plugins/alert';
 import Config from '~/plugins/config';
 
+import CSRF from '~/utils/csrf';
+
 import configObj from '~/config';
 
 Vue.use(Vuelidate);
@@ -26,11 +28,12 @@ Vue.http.interceptors.push((_request, next) => {
 });
 
 Vue.http.interceptors.push((request, next) => {
-  const tokenEl = document.querySelector('meta[name=csrf-token]');
+  const token = CSRF.token();
 
-  if (tokenEl !== null) {
-    request.headers.set('X-CSRF-Token', tokenEl.getAttribute('content'));
+  if (token !== null) {
+    request.headers.set('X-CSRF-Token', token);
   }
+
   next();
 });
 
