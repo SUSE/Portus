@@ -46,8 +46,12 @@ class Admin::RegistriesController < Admin::BaseController
   # Note that the admin will only be able to edit the hostname if there are no
   # repositories.
   def edit
-    @registry            = Registry.find(params[:id])
     @can_change_hostname = !Repository.any?
+    @registry            = Registry.find(params[:id])
+    @registry_serialized = API::Entities::Registries.represent(
+      @registry,
+      current_user: current_user
+    ).to_json
   end
 
   # PUT /admin/registries/1

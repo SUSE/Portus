@@ -1,12 +1,1 @@
-.panel.panel-default
-  .panel-heading
-    h5
-      'Registry:
-      strong
-        = @registry.name
-  .panel-body
-    <registry-form :can-change-hostname="#{@can_change_hostname}"></registry-form>
-
-- content_for :js_body do
-  script#js-registry-form-tmpl type="text/x-template"
-    = render partial: 'admin/registries/components/form', locals: { form_url: admin_registry_path(@registry), submit_name: "Update" }
+<admin-registries-edit-page :can-change-hostname="#{@can_change_hostname}" :registry="#{@registry_serialized}" :show-force="#{!flash[:alert].nil? && !flash[:alert].empty?}" url="#{admin_registry_path(@registry)}"></admin-registries-edit-page>
