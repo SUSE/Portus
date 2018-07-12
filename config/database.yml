@@ -31,6 +31,9 @@ default: &default
   <% if ENV["PORTUS_DB_TIMEOUT"] %>
   timeout: <%= ENV['PORTUS_DB_TIMEOUT'] %>
   <% end %>
+  <% if ENV['PORTUS_DB_SOCKET'] %>
+  socket:  <%= ENV['PORTUS_DB_SOCKET'] %>
+  <% end %>
 
 <%= Rails.env.downcase %>:
   <<: *default
