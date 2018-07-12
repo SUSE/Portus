@@ -16,7 +16,7 @@ workers ENV.fetch("PORTUS_PUMA_WORKERS") { 2 }.to_i
 #     purposes inside of a container.
 #  3. UNIX socket. This is the default and it's good for development purposes if
 #     you are not using a container setup.
-if ENV["PORTUS_PUMA_HOST"]
+if ENV["PORTUS_PUMA_HOST"] && ENV["PORTUS_PUMA_USE_UNIX_SOCKET"] != "true"
   if ENV["PORTUS_PUMA_TLS_KEY"]
     host, port = ENV["PORTUS_PUMA_HOST"].split(":")
     port ||= "3000"
