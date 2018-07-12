@@ -4,7 +4,8 @@
 
 # Checks whether it's running inside of a Docker container or not
 def dockerized?
-  File.read("/proc/1/cgroup").include?("docker")
+  cgroup = File.read("/proc/1/cgroup")
+  cgroup.include?("docker") || cgroup.include?("kubepod")
 end
 
 # This one is set by the bash wrapper we deliver with our RPM
