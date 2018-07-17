@@ -69,7 +69,7 @@
       retrigger() {
         const namespaceId = this.webhook.namespace_id;
         const webhookId = this.webhook.id;
-        const id = this.delivery.id;
+        const { id } = this.delivery;
 
         set(this, 'ongoingRequest', true);
         WebhookDeliveriesService.retrigger(namespaceId, webhookId, id).then((response) => {

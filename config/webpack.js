@@ -1,16 +1,26 @@
-/* eslint-disable quote-props, comma-dangle */
-// This file is based on Gitlab's config/webpack.config.js file.
+/* eslint-disable quote-props, comma-dangle, import/no-extraneous-dependencies */
+// This file was based on Gitlab's config/webpack.config.js file.
 
 const path = require('path');
 const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const ROOT_PATH = path.resolve(__dirname, '..');
+const CACHE_PATH = path.join(ROOT_PATH, 'tmp/cache');
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
 const IS_TEST = process.env.NODE_ENV === 'test';
 
+const VUE_VERSION = require('vue/package.json').version;
+const VUE_LOADER_VERSION = require('vue-loader/package.json').version;
+
+const devtool = IS_PRODUCTION ? 'source-map' : 'cheap-module-eval-source-map';
+
 var config = {
+  mode: IS_PRODUCTION ? 'production' : 'development',
+
   context: path.join(ROOT_PATH, 'app/assets/javascripts'),
 
   entry: {
@@ -21,8 +31,6 @@ var config = {
     path: path.join(ROOT_PATH, 'public/assets/webpack'),
     publicPath: '/assets/webpack/',
     filename: IS_PRODUCTION ? '[name]-[chunkhash].js' : '[name].js',
-    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
-    devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]',
   },
 
   plugins: [
@@ -35,6 +43,8 @@ var config = {
       modules: false,
       assets: true,
     }),
+
+    new VueLoaderPlugin(),
 
     // fix legacy jQuery plugins which depend on globals
     new webpack.ProvidePlugin({
@@ -55,55 +65,73 @@ var config = {
     },
   },
 
-  devtool: 'inline-source-map',
+  devtool,
 
   module: {
-    loaders: [].concat(
-      IS_TEST ? {
-        test: /\.(js|vue)/,
-        include: path.join(ROOT_PATH, 'app/assets/javascripts'),
-        loader: 'istanbul-instrumenter-loader',
-        query: {
-          esModules: true,
-        },
-      } : [],
+    rules: [
       {
         test: /\.js$/,
-        exclude: /(node_modules|vendor\/assets)/,
+        exclude: file => /node_modules|vendor[\\/]assets/.test(file) && !/\.vue\.js/.test(file),
         loader: 'babel-loader',
+        options: {
+          cacheDirectory: path.join(CACHE_PATH, 'babel-loader'),
+        },
       },
       {
         test: /\.vue$/,
         exclude: /(node_modules|vendor\/assets)/,
         loader: 'vue-loader',
-      }
-    ),
+        options: {
+          cacheDirectory: path.join(CACHE_PATH, 'vue-loader'),
+          cacheIdentifier: [
+            process.env.NODE_ENV || 'development',
+            webpack.version,
+            VUE_VERSION,
+            VUE_LOADER_VERSION,
+          ].join('|'),
+        },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+        ],
+      },
+    ],
   },
 };
 
 if (IS_PRODUCTION) {
-  config.devtool = 'source-map';
+  config.optimization = {
+    minimizer: [
+      new UglifyJSPlugin({
+        sourceMap: true,
+      }),
+    ],
+  };
   config.plugins.push(
     new webpack.NoEmitOnErrorsPlugin(),
+
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-    }),
+
     new webpack.DefinePlugin({
       'process.env': { NODE_ENV: JSON.stringify('production') },
     }),
+
     new CompressionPlugin({
       asset: '[path].gz[query]',
-    }));
+    })
+  );
 }
 
 if (IS_TEST) {
   // eslint-disable-next-line
   config.externals = [require('webpack-node-externals')()];
-  config.devtool = 'inline-cheap-module-source-map';
+  config.devtool = 'eval-source-map';
 }
 
 module.exports = config;

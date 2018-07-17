@@ -16,13 +16,13 @@ $(() => {
   const route = $body.data('route');
 
   if (route === USERS_SIGN_UP_ROUTE) {
-     // eslint-disable-next-line
-      new UsersSignUpPage($body);
+    // eslint-disable-next-line
+    new UsersSignUpPage($body);
   }
 
   if (route === USERS_SIGN_IN_ROUTE) {
-     // eslint-disable-next-line
-      new UsersSignInPage($body);
+    // eslint-disable-next-line
+    new UsersSignInPage($body);
   }
 
   if (route === USERS_SELF_EDIT_ROUTE || route === USERS_EDIT_ROUTE) {

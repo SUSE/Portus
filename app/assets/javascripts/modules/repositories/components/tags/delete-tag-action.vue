@@ -14,8 +14,8 @@
     computed: {
       tagNormalized() {
         const moreThanOne = this.state.selectedTags.length > 1;
-        const hasMultiple = this.state.selectedTags.length &&
-          this.state.selectedTags[0].multiple;
+        const hasMultiple = this.state.selectedTags.length
+                         && this.state.selectedTags[0].multiple;
 
         if (moreThanOne || hasMultiple) {
           return 'tags';

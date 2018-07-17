@@ -29,8 +29,8 @@
   import Panel from '~/shared/components/panel';
   import ToggleLink from '~/shared/components/toggle-link';
 
-  import NamespaceInfo from '../components/info';
-  import EditNamespaceForm from '../components/edit-form';
+  import NamespaceInfo from './info';
+  import EditNamespaceForm from './edit-form';
 
   export default {
     props: {

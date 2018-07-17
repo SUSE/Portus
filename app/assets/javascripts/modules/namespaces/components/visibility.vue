@@ -40,8 +40,8 @@
 
     methods: {
       showLoading(visibility) {
-        return this.onGoingRequest &&
-          visibility === this.newVisibility;
+        return this.onGoingRequest
+            && visibility === this.newVisibility;
       },
 
       change(visibility) {

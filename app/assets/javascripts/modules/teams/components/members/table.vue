@@ -107,9 +107,11 @@
       },
 
       canManage() {
-        return this.currentMember.admin ||
-              (this.state.manageTeamsEnabled &&
-                this.currentMember.role === 'owner');
+        const enabledAndOwner = this.state.manageTeamsEnabled
+                             && this.currentMember.role === 'owner';
+
+        return this.currentMember.admin
+            || enabledAndOwner;
       },
     },
   };

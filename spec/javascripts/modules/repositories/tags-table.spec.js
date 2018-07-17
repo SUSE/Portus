@@ -1,4 +1,4 @@
-import { mount } from 'vue-test-utils';
+import { mount } from '@vue/test-utils';
 
 import sinon from 'sinon';
 
@@ -16,7 +16,7 @@ describe('tags-table', () => {
         id: i,
         name: 'vitoravelino',
       },
-      digest: 'sha256:4cee1979ba0bf7db9fc5d28fb7b798ca69ae95a47c5fecf46327720df4ff352d',
+      digest: `sha256:${i}cee1979ba0bf7db9fc5d28fb7b798ca69ae95a47c5fecf46327720df4ff352d`,
       image_id: '5b0d59026729b68570d99bc4f3f7c31a2e4f2a5736435641565d93e7c25bd2c3',
       created_at: '2018-02-06T12:54:31.000Z',
       updated_at: '2018-02-06T12:54:31.000Z',

@@ -61,8 +61,14 @@ export default {
       queryObject[this.prefix + 'sort_by'] = this.sorting.by;
 
       const queryParams = queryString.stringify(queryObject);
-      const url = [location.protocol, '//', location.host, location.pathname].join('');
-      history.pushState('', '', `${url}?${queryParams}`);
+      const url = [
+        window.location.protocol,
+        '//',
+        window.location.host,
+        window.location.pathname,
+      ].join('');
+
+      window.history.pushState('', '', `${url}?${queryParams}`);
     },
   },
 
