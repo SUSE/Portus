@@ -18,23 +18,21 @@ Vue.use(Config);
 
 Vue.http.options.root = configObj.apiUrl;
 
-Vue.http.interceptors.push((_request, next) => {
+Vue.http.interceptors.push((_request) => {
   window.$.active = window.$.active || 0;
   window.$.active += 1;
 
-  next(() => {
+  return function () {
     window.$.active -= 1;
-  });
+  };
 });
 
-Vue.http.interceptors.push((request, next) => {
+Vue.http.interceptors.push((request) => {
   const token = CSRF.token();
 
   if (token !== null) {
     request.headers.set('X-CSRF-Token', token);
   }
-
-  next();
 });
 
 // we are not a SPA and when user clicks on back/forward
