@@ -54,7 +54,7 @@ gem "ice_nine", "~> 0.11.2"
 gem "minitest", "= 5.10.1"
 gem "multi_json", "~> 1.12.1"
 gem "rails-dom-testing", "~> 1.0.8"
-gem "sprockets", "= 3.7.1"
+gem "sprockets", "= 3.7.2"
 gem "sprockets-rails", "~> 3.2.0"
 gem "temple", "= 0.7.7"
 
