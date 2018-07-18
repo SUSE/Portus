@@ -99,11 +99,7 @@ class NamespacePolicy
 
     def resolve
       if user.admin?
-        global = scope.where(global: true)
-        normal = scope.not_portus
-                      .where(global: false)
-                      .order(created_at: :asc)
-        global + normal
+        scope.not_portus.order(created_at: :asc)
       else
         scope
           .joins(team: [:team_users])
