@@ -21,8 +21,8 @@ export default {
     },
 
     canChangeVibisility() {
-      return this.namespace.permissions.visibility &&
-        !this.onGoingRequest;
+      return this.namespace.permissions.visibility
+          && !this.onGoingRequest;
     },
 
     privateTitle() {

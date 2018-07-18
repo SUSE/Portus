@@ -29,8 +29,8 @@
   import Panel from '~/shared/components/panel';
   import ToggleLink from '~/shared/components/toggle-link';
 
-  import TeamEditForm from '../components/edit-form';
-  import TeamInfo from '../components/info';
+  import TeamEditForm from './edit-form';
+  import TeamInfo from './info';
 
   export default {
     props: {

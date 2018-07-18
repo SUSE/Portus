@@ -64,14 +64,14 @@ function searchMember(teamId, name) {
 
 function destroyMember(member) {
   const teamId = member.team_id;
-  const id = member.id;
+  const { id } = member;
 
   return membersResource.delete({ teamId, id });
 }
 
 function updateMember(member, role) {
   const teamId = member.team_id;
-  const id = member.id;
+  const { id } = member;
 
   return membersResource.update({ teamId, id }, { role });
 }

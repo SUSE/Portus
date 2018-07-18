@@ -77,18 +77,18 @@
       otherNamespaces() {
         // eslint-disable-next-line
         return this.namespaces.filter((n) => {
-          return !n.global &&
-                 n.id !== this.userNamespaceId &&
-                 this.accessibleTeamsIds.indexOf(n.team.id) === -1;
+          return !n.global
+              && n.id !== this.userNamespaceId
+              && this.accessibleTeamsIds.indexOf(n.team.id) === -1;
         });
       },
 
       normalNamespaces() {
         // eslint-disable-next-line
         return this.namespaces.filter((n) => {
-          return !n.global &&
-                 n.id !== this.userNamespaceId &&
-                 this.accessibleTeamsIds.indexOf(n.team.id) !== -1;
+          return !n.global
+              && n.id !== this.userNamespaceId
+              && this.accessibleTeamsIds.indexOf(n.team.id) !== -1;
         });
       },
 

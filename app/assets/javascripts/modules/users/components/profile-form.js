@@ -23,8 +23,8 @@ class UsersProfileForm extends BaseComponent {
     const displayName = this.$displayName.val();
 
     const emailInvalid = !email;
-    const noChanges = email === this.originalEmail &&
-                      displayName === this.originalDisplayName;
+    const noChanges = email === this.originalEmail
+                   && displayName === this.originalDisplayName;
 
     if (emailInvalid || noChanges) {
       this.$submit.attr('disabled', 'disabled');

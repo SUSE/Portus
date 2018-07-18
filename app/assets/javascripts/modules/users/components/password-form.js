@@ -28,8 +28,8 @@ class UsersPasswordForm extends BaseComponent {
 
     const currentPasswordInvalid = !currentPassword;
     const newPasswordInvalid = !newPassword;
-    const newPasswordConfirmationInvalid = !newPasswordConfirmation ||
-      newPassword !== newPasswordConfirmation;
+    const newPasswordConfirmationInvalid = !newPasswordConfirmation
+                                        || newPassword !== newPasswordConfirmation;
 
     if (currentPasswordInvalid || newPasswordInvalid || newPasswordConfirmationInvalid) {
       this.$submit.attr('disabled', 'disabled');

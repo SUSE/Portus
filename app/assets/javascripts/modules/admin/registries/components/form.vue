@@ -1,11 +1,11 @@
 <template>
   <form :action="url" method="post" class="form-horizontal" role="form">
-    <input type="hidden" name="_method" value="patch" v-if="registry.id">
-    <input type="hidden" name="authenticity_token" :value="csrf">
+    <input type="hidden" name="_method" value="patch" v-if="registry.id" />
+    <input type="hidden" name="authenticity_token" :value="csrf" />
     <div class="form-group" :class="{ 'has-error': $v.registryCopy.name.$error }">
       <label class="control-label col-md-2" for="registry_name">Name</label>
       <div class="col-md-7">
-        <input type="text" name="registry[name]" id="registry_name" class="form-control" autofocus="true" :value="registry.name" ref="name" v-model.trim="registryCopy.name" @input="$v.registryCopy.name.$touch()" />
+        <input type="text" name="registry[name]" id="registry_name" class="form-control" autofocus="true" ref="name" v-model.trim="registryCopy.name" @input="$v.registryCopy.name.$touch()" />
         <span class="help-block">
           <span v-if="!$v.registryCopy.name.required">Name can't be blank</span>
           <span v-for="(error, index) in errors.name" :key="index">Name {{ error }}</span>
@@ -44,7 +44,7 @@
     <div class="form-group has-error" v-if="display.force && canChangeHostname">
       <label for="force" class="control-label col-md-2" title="Force the creation of the registry, even if it's not reachable.">Skip remote checks</label>
       <div class="col-md-7">
-        <input type="checkbox" name="force" id="force" value="true" v-model="registryCopy.force "/>
+        <input type="checkbox" name="force" id="force" value="true" v-model="registryCopy.force" />
       </div>
     </div>
     <div class="form-group">
@@ -153,11 +153,11 @@
 
     methods: {
       isReachableError(error) {
-        return error.indexOf('Error') !== -1 ||
-              error.indexOf('connection') !== -1 ||
-              error.indexOf('SSLError') !== -1 ||
-              error.indexOf('OpenTimeout') !== -1 ||
-              error.indexOf('SSLError') !== -1;
+        return error.indexOf('Error') !== -1
+            || error.indexOf('connection') !== -1
+            || error.indexOf('SSLError') !== -1
+            || error.indexOf('OpenTimeout') !== -1
+            || error.indexOf('SSLError') !== -1;
       },
 
       hasReachableError() {
@@ -198,10 +198,10 @@
         const hostnameRequiredInvalid = !this.$v.registryCopy.hostname.required;
         const hostnameReachableInvalid = this.hasReachableError() && !this.registryCopy.force;
 
-        return nameInvalid ||
-              hostnameRequiredInvalid ||
-              hostnameReachableInvalid ||
-              this.$v.$pending;
+        return nameInvalid
+            || hostnameRequiredInvalid
+            || hostnameReachableInvalid
+            || this.$v.$pending;
       },
 
       showHide() {

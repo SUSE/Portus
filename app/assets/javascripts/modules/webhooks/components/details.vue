@@ -32,8 +32,8 @@
   import Panel from '~/shared/components/panel';
   import ToggleLink from '~/shared/components/toggle-link';
 
-  import WebhookInfo from '../components/info';
-  import EditWebhookForm from '../components/edit-form';
+  import WebhookInfo from './info';
+  import EditWebhookForm from './edit-form';
 
   export default {
     props: {
