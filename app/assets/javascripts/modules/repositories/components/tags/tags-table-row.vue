@@ -22,7 +22,7 @@
       </span>
     </td>
 
-    <td>{{ tag[0].updated_at }}</td>
+    <td>{{ pushedAt }}</td>
 
     <td class="vulns" v-if="securityEnabled">
       <span v-if="scanPending">Pending</span>
@@ -35,6 +35,8 @@
 </template>
 
 <script>
+  import moment from 'moment';
+
   import Tag from './tag';
 
   import VulnerabilitiesParser from '../../services/vulnerabilities-parser';
@@ -98,6 +100,10 @@
         // TODO: proper doughnut chart
         // https://github.com/apertureless/vue-chartjs
         return vulns.total;
+      },
+
+      pushedAt() {
+        return moment(this.tag[0].updated_at).format('MMMM DD, YYYY HH:mm');
       },
     },
 
