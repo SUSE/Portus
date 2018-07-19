@@ -135,15 +135,15 @@ popd
 
 debug "Creating ${packagename}.spec based on ${packagename}.spec.in"
 cp ${packagename}.spec.in ${packagename}.spec
-sed -e "s/__BRANCH__/$branch/g" -i ${packagename}.spec
-sed -e "s/__RUBYGEMS_BUILD_REQUIRES__/$build_requires/g" -i ${packagename}.spec
-sed -e "s/__NODEJS_BUILD_PROVIDES__/$js_provides/g" -i ${packagename}.spec
-sed -e "s/__DATE__/$date/g" -i ${packagename}.spec
-sed -e "s/__COMMIT__/$commit/g" -i ${packagename}.spec
-sed -e "s/__VERSION__/$version/g" -i ${packagename}.spec
-sed -e "s/__CURRENT_YEAR__/$year/g" -i ${packagename}.spec
-sed -e "s/__PATCHSOURCES__/$patchsources/g" -i ${packagename}.spec
-sed -e "s/__PATCHEXECS__/$patchexecs/g" -i ${packagename}.spec
+sed -e "s|__BRANCH__|$branch|g" -i ${packagename}.spec
+sed -e "s|__RUBYGEMS_BUILD_REQUIRES__|$build_requires|g" -i ${packagename}.spec
+sed -e "s|__NODEJS_BUILD_PROVIDES__|$js_provides|g" -i ${packagename}.spec
+sed -e "s|__DATE__|$date|g" -i ${packagename}.spec
+sed -e "s|__COMMIT__|$commit|g" -i ${packagename}.spec
+sed -e "s|__VERSION__|$version|g" -i ${packagename}.spec
+sed -e "s|__CURRENT_YEAR__|$year|g" -i ${packagename}.spec
+sed -e "s|__PATCHSOURCES__|$patchsources|g" -i ${packagename}.spec
+sed -e "s|__PATCHEXECS__|$patchexecs|g" -i ${packagename}.spec
 
 if [ -f ${packagename}.spec ];then
   echo "Done!"
