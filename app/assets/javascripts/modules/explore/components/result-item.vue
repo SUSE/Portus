@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import moment from 'moment';
+  import dayjs from 'dayjs';
 
   import Tag from '~/modules/repositories/components/tags/tag';
 
@@ -36,7 +36,7 @@
 
     computed: {
       updatedAt() {
-        return moment(this.repository.updated_at).fromNow();
+        return dayjs(this.repository.updated_at).fromNow();
       },
     },
   };

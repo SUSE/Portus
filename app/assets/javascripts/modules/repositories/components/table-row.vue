@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import moment from 'moment';
+  import dayjs from 'dayjs';
 
   export default {
     template: '#js-repository-table-row-tmpl',
@@ -33,7 +33,7 @@
       },
 
       updatedAt() {
-        return moment(this.repository.updated_at).format('MMMM DD, YYYY HH:mm');
+        return dayjs(this.repository.updated_at).format('MMMM DD, YYYY HH:mm');
       },
     },
   };

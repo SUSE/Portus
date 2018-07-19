@@ -40,16 +40,17 @@
     "stats-webpack-plugin": "^0.6.2",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "webpack": "^4.16.1",
+    "webpack-bundle-analyzer": "^2.13.1",
     "webpack-cli": "^3.0.8",
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.6",
     "core-js": "^2.5.7",
+    "dayjs": "^1.7.4",
     "jquery": "^3.3.1",
     "jquery-ujs": "^1.2.1",
     "lodash": "^4.17.10",
-    "moment": "^2.22.2",
     "query-string": "^5.1.1",
     "vue": "^2.5.16",
     "vue-loader": "^15.2.4",
