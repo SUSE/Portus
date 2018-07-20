@@ -49,7 +49,7 @@ services:
       - db
 
   webpack:
-    image: kkarczmarczyk/node-yarn:6.9-slim
+    image: kkarczmarczyk/node-yarn:latest
     command: bash /srv/Portus/examples/development/compose/bootstrap-webpack
     working_dir: /srv/Portus
     volumes:
