@@ -3,6 +3,7 @@ class RepositoriesStore {
     this.state = {
       newFormVisible: false,
       editFormVisible: false,
+      isDeleting: false,
       isLoading: false,
       notLoaded: false,
       onGoingVisibilityRequest: false,

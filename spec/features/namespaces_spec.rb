@@ -19,7 +19,6 @@ describe "Namespaces support" do
       visit namespaces_path
 
       find(".toggle-link-new-namespace").click
-
       expect(page).to have_button("Create", disabled: true)
     end
 
@@ -291,6 +290,19 @@ describe "Namespaces support" do
         visit namespace_path(namespace.id)
         expect(page).to have_content("Pull Viewer")
       end
+    end
+  end
+
+  describe "#destroy", js: true do
+    it "destroys the namespace" do
+      APP_CONFIG["delete"] = { "enabled" => true }
+      visit namespace_path(namespace)
+
+      expect(page).to have_css(".namespace-delete-btn")
+      find(".namespace-delete-btn").click
+      find(".popover-content .yes").click
+      expect(page).to have_content("Namespace removed with all its repositories")
+      expect(page).not_to have_link(namespace.clean_name)
     end
   end
 end

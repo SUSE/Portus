@@ -52,6 +52,15 @@ class NamespacePolicy
     (APP_CONFIG.enabled?("user_permission.create_namespace") || user.admin?) && push?
   end
 
+  def destroy?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
+    is_owner               = @namespace.team.owners.exists?(user.id)
+    can_contributor_delete = APP_CONFIG["delete"]["contributors"] &&
+                             @namespace.team.contributors.exists?(user.id)
+    delete_enabled? && (@user.admin? || is_owner || can_contributor_delete)
+  end
+
   def update?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     (user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
@@ -115,6 +124,12 @@ class NamespacePolicy
   end
 
   protected
+
+  # Returns true if delete is enabled and delete is generally allowed for the
+  # given namespace.
+  def delete_enabled?
+    APP_CONFIG.enabled?("delete") && !@namespace.global?
+  end
 
   # Returns true if the given push policy allows the push. This method assumes
   # that the current user is not an admin.

@@ -1,17 +1,14 @@
 li
   .activitie-container
-    .activity-type.create-namespace
+    .activity-type.repo-deleted
       i.fa.fa-ship
     .user-image
       = user_image_tag(activity.owner)
     .description
       h6
         strong
-          = "#{activity_owner(activity)} created "
-        = render_namespace_name(activity, true)
-        = " namespace under "
-        = render_namespace_team(activity)
-        = " team"
+          = " #{activity_owner(activity)} removed namespace "
+          = "'#{activity.parameters[:namespace_name]}'"
       small
         i.fa.fa-clock-o
         = activity_time_tag activity.created_at

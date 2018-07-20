@@ -24,6 +24,7 @@
 class Namespace < ActiveRecord::Base
   include PublicActivity::Common
   include SearchCop
+  include ::Activity::Fallback
 
   search_scope :search do
     attributes :name, :description
@@ -122,7 +123,6 @@ class Namespace < ActiveRecord::Base
     # To avoid any name conflict we append an incremental number to the end
     # of the name returns it as the name that will be used on both Namespace
     # and Team on the User#create_personal_namespace! method
-    # TODO: workaround until we implement the namespace/team removal
     increment = 0
     original_name = name
     while Namespace.exists?(name: name)
@@ -139,5 +139,41 @@ class Namespace < ActiveRecord::Base
   # or the name of the namespace itself otherwise.
   def clean_name
     global? ? registry.hostname : name
+  end
+
+  # Tries to delete a namespace and, on success, it will create delete
+  # activities and update related ones. This method assumes that all
+  # repositories and tags under this namespace have already been destroyed.
+  def delete_by!(actor)
+    destroy ? create_delete_activities!(actor) : false
+  end
+
+  protected
+
+  def create_delete_activities!(actor)
+    # Set the namespace name in the parameters field.
+    # TODO(2.5): this could be more performant in PostgreSQL if we used its
+    # `jsonb_set` function. Plus, in Rails 5 there might be some improvements
+    # that might help on this.
+    ActiveRecord::Base.transaction do
+      PublicActivity::Activity.where(trackable: self).find_each do |act|
+        act.parameters[:namespace_name] = clean_name
+        act.save
+      end
+    end
+
+    fallback_activity(Registry, registry.id)
+
+    # Add a "delete" activity"
+    registry.create_activity(
+      :delete,
+      owner:      actor,
+      recipient:  self,
+      parameters: {
+        namespace_name: clean_name,
+        team_name:      team.name,
+        registry_id:    registry.id
+      }
+    )
   end
 end

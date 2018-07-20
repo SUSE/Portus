@@ -14,6 +14,7 @@ class PublicActivity::ActivityPolicy
       public_visibility = Namespace.visibilities[:visibility_public]
 
       team_activities(teams_ids, count)
+        .union_all(registry_activities(count))
         .union_all(namespace_activities(teams_ids, public_visibility, count))
         .union_all(repository_activities(teams_ids, public_visibility, count))
         .union_all(application_token_activities(count))
@@ -22,6 +23,14 @@ class PublicActivity::ActivityPolicy
     end
 
     protected
+
+    def registry_activities(count)
+      @scope
+        .where("activities.trackable_type = ? AND activities.trackable_id IN (?)",
+               "Registry", Registry.get&.id)
+        .order(id: :desc)
+        .limit(count)
+    end
 
     # Show Team events only if user is a member of the team
     def team_activities(teams_ids, count)

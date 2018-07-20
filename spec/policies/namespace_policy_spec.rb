@@ -225,6 +225,39 @@ describe NamespacePolicy do
   permissions :push?, &push_all
   permissions :all?, &push_all
 
+  permissions :destroy? do
+    before do
+      APP_CONFIG["delete"]["enabled"] = true
+    end
+
+    it "does not allow if delete is disabled" do
+      APP_CONFIG["delete"]["enabled"] = false
+      expect(subject).not_to permit(@admin, namespace)
+    end
+
+    it "allows to delete for admin" do
+      expect(subject).to permit(@admin, namespace)
+    end
+
+    it "allows an onwer to delete the namespace" do
+      expect(subject).to permit(owner, namespace)
+    end
+
+    it "disallows a contributor to delete the namespace" do
+      expect(subject).not_to permit(contributor, namespace)
+    end
+
+    it "allows a contributor to delete the namespace when configured" do
+      APP_CONFIG["delete"]["contributors"] = true
+      expect(subject).to permit(contributor, namespace)
+    end
+
+    it "disallows everyone to destroy a global namespace" do
+      global = Namespace.find_by(global: true)
+      expect(subject).to_not permit(@admin, global)
+    end
+  end
+
   permissions :change_visibility? do
     it "allows admin to change it" do
       expect(subject).to permit(@admin, namespace)

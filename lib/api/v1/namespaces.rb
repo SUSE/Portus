@@ -131,6 +131,25 @@ module API
           end
         end
 
+        desc "Delete namespace",
+             params:  API::Entities::Namespaces.documentation.slice(:id),
+             failure: [
+               [401, "Authentication fails"],
+               [403, "Authorization fails"],
+               [404, "Not found"],
+               [422, "Unprocessable Entity", API::Entities::ApiErrors]
+             ]
+
+        delete ":id" do
+          namespace = Namespace.find(params[:id])
+          authorize namespace, :destroy?
+
+          service = ::Namespaces::DestroyService.new(current_user)
+          destroyed = service.execute(namespace)
+
+          destroyed ? status(204) : unprocessable_entity!(service.error)
+        end
+
         route_param :id, type: Integer, requirements: { id: /.*/ } do
           resource :repositories do
             desc "Returns the list of the repositories for the given namespace",

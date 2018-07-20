@@ -100,15 +100,15 @@ RSpec.describe RepositoriesHelper, type: :helper do
       global = registry.global_namespace.id
 
       expectations = [
-        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a>/"\
           "<a href=\"/repositories/#{repo.id}\">repo:latest</a>",
-        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a>/"\
           "<a href=\"/repositories/#{repo.id}\">repo</a>",
         "<strong>#{nameo} pushed </strong><span>a repository</span>",
-        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a>/"\
           "<a href=\"/repositories/#{repo2.id}\">repo2:0.3</a>",
-        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{namespace.id}\">namespace</a> "\
-          "/ <a href=\"/repositories/#{repo3.id}\">repo3:0.4</a>"
+        "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{namespace.id}\">namespace</a>"\
+          "/<a href=\"/repositories/#{repo3.id}\">repo3:0.4</a>"
       ]
 
       idx = 0
@@ -127,14 +127,14 @@ RSpec.describe RepositoriesHelper, type: :helper do
 
       idx = 0
 
-      na = "<strong>Someone pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+      na = "<strong>Someone pushed </strong><a href=\"/namespaces/#{global}\">registry:5000</a>/"\
            "<a href=\"/repositories/#{repo.id}\">repo:0.1</a>"
       expectations = expectations.unshift na
 
       # Changes because of the Catalog job.
       expectations[4] = "<strong>#{nameo} pushed </strong><a href=\"/namespaces/#{global}\">"\
-        "registry:5000</a> / <span>repo2:0.3</span>"
-      expectations[5] = "<strong>#{nameo} pushed </strong><span>namespace</span> / <span>repo"\
+        "registry:5000</a>/<span>repo2:0.3</span>"
+      expectations[5] = "<strong>#{nameo} pushed </strong><span>namespace</span>/<span>repo"\
           "3:0.4</span>"
 
       # Push activities
@@ -147,14 +147,14 @@ RSpec.describe RepositoriesHelper, type: :helper do
 
       idx = 0
       expectations = [
-        "<strong>Someone deleted </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+        "<strong>Someone deleted </strong><a href=\"/namespaces/#{global}\">registry:5000</a>/"\
           "<a href=\"/repositories/#{repo.id}\">repo:latest</a>",
-        "<strong>Someone deleted </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+        "<strong>Someone deleted </strong><a href=\"/namespaces/#{global}\">registry:5000</a>/"\
           "<span>repo2:0.3</span>",
-        "<strong>Someone deleted </strong><span>namespace</span> / <span>repo3:0.4</span>",
-        "<strong>Someone deleted </strong><a href=\"/namespaces/#{global}\">registry:5000</a> / "\
+        "<strong>Someone deleted </strong><span>namespace</span>/<span>repo3:0.4</span>",
+        "<strong>Someone deleted </strong><a href=\"/namespaces/#{global}\">registry:5000</a>/"\
             "<span>repo2</span>",
-        "<strong>Someone deleted </strong><span>namespace</span> / <span>repo3</span>"
+        "<strong>Someone deleted </strong><span>namespace</span>/<span>repo3</span>"
       ]
 
       # Delete Activities

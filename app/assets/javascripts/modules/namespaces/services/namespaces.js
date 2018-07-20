@@ -58,11 +58,16 @@ function teamExists(value) {
     .catch(() => null);
 }
 
+function remove(id) {
+  return resource.delete({ id });
+}
+
 export default {
   get,
   all,
   update,
   save,
+  remove,
   searchTeam,
   teamExists,
   validate,
