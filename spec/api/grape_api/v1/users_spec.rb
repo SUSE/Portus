@@ -141,6 +141,15 @@ describe API::V1::Users do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    context "portus user" do
+      it "does not allow portus user to be updated" do
+        create :user, username: "portus", email: "portus@portus.com"
+        portus = User.find_by(username: "portus")
+        put "/api/v1/users/#{portus.id}", { user: user_data }, @header
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
   end
 
   context "DELETE /api/v1/users/:id" do
