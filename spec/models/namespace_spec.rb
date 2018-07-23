@@ -67,9 +67,11 @@ describe Namespace do
   end
 
   context "is portus" do
-    let!(:registry)    { create(:registry) }
-    let!(:owner)       { create(:user) }
-    let!(:portus)      { create(:admin, username: "portus") }
+    let!(:registry) { create(:registry) }
+    let!(:owner)    { create(:user) }
+    let(:portus)    { User.find_by(username: "portus") }
+
+    before { User.create_portus_user! }
 
     it "returns true when the given namespace belongs to portus" do
       expect(described_class.find_by(name: portus.username)).to be_portus

@@ -13,7 +13,9 @@ RSpec.describe Admin::NamespacesController, type: :controller do
     end
 
     describe "GET #index" do
-      let!(:portus) { create(:admin, username: "portus") }
+      before { User.create_portus_user! }
+
+      let(:portus) { User.find_by(username: "portus") }
 
       context "pagination" do
         it "paginates namespaces" do

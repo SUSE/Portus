@@ -302,14 +302,7 @@ describe "/v2/token" do
           }
         end
 
-        before do
-          User.create!(
-            username: "portus",
-            password: Rails.application.secrets.portus_password,
-            email:    "portus@portus.com",
-            admin:    true
-          )
-        end
+        before { User.create_portus_user! }
 
         it "allows portus to access the Catalog API" do
           get v2_token_url, valid_request, valid_portus_auth_header
