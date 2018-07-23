@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
   # Actions performed before/after create.
   validates :username, presence: true, uniqueness: true
   validate :private_namespace_and_team_available, on: :create
+  validate :portus_user_validation, on: :update
   after_create :create_personal_namespace!, if: :needs_namespace?
 
   # Actions performed before destroy
@@ -84,6 +85,13 @@ class User < ActiveRecord::Base
     !(APP_CONFIG.enabled?("ldap") && email.blank?)
   end
 
+  # Adds an error if the user to be updated is the portus one. This is a
+  # validation on update, so it can be skipped when strictly required.
+  def portus_user_validation
+    return unless portus? || portus?(username_was)
+    errors.add(:username, "cannot be updated")
+  end
+
   # It adds an error if the username clashes with either a namespace or a team.
   def private_namespace_and_team_available
     ns = Namespace.make_valid(username)
@@ -91,9 +99,11 @@ class User < ActiveRecord::Base
     errors.add(:username, "'#{username}' cannot be transformed into a valid namespace name")
   end
 
-  # Returns true if the current user is the Portus user.
-  def portus?
-    username == "portus"
+  # Returns true if the current user is the Portus user. You can provide a value
+  # as an alternative to the value of `username`.
+  def portus?(field = nil)
+    f = field.nil? ? username : field
+    f == "portus"
   end
 
   # Returns avatar url if gravatar is enabled and email not blank
