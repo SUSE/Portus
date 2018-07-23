@@ -20,10 +20,5 @@ def create_registry!
   Registry.create!(name: "registry", hostname: hostname, use_ssl: false)
   ENV["PORTUS_INTEGRATION_HOSTNAME"] = nil
 
-  User.create!(
-    username: "portus",
-    password: Rails.application.secrets.portus_password,
-    email:    "portus@portus.com",
-    admin:    true
-  )
+  User.create_portus_user!
 end

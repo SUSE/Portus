@@ -99,8 +99,9 @@ describe ::Portus::Background::GarbageCollector do
 
   describe "#execute!" do
     let!(:registry)   { create(:registry, hostname: "registry.test.lan") }
-    let!(:portus)     { create(:admin, username: "portus") }
     let!(:repository) { create(:repository, namespace: registry.global_namespace, name: "repo") }
+
+    before { User.create_portus_user! }
 
     it "removes tags" do
       allow_any_instance_of(Tag).to(receive(:fetch_digest).and_return("1234"))

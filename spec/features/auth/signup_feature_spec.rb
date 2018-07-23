@@ -38,7 +38,7 @@ describe "Signup feature" do
 
   it "The portus user does not interfere with regular admin creation" do
     User.delete_all
-    create_portus_user!
+    User.create_portus_user!
 
     visit new_user_registration_url
 
@@ -102,7 +102,7 @@ describe "Signup feature" do
 
   it "I am redirected to the signup page if only the portus user exists" do
     User.delete_all
-    create(:admin, username: "portus")
+    User.create_portus_user!
 
     visit new_user_session_url
     expect(current_url).to eq new_user_registration_url
