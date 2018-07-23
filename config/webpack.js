@@ -7,11 +7,13 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const ROOT_PATH = path.resolve(__dirname, '..');
 const CACHE_PATH = path.join(ROOT_PATH, 'tmp/cache');
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
 const IS_TEST = process.env.NODE_ENV === 'test';
+const { WEBPACK_REPORT } = process.env;
 
 const VUE_VERSION = require('vue/package.json').version;
 const VUE_LOADER_VERSION = require('vue-loader/package.json').version;
@@ -52,7 +54,17 @@ var config = {
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
     }),
-  ],
+
+    new webpack.IgnorePlugin(/^\.\/jquery$/, /jquery-ujs$/),
+
+    WEBPACK_REPORT && new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      generateStatsFile: true,
+      openAnalyzer: false,
+      reportFilename: path.join(ROOT_PATH, 'webpack-report/index.html'),
+      statsFilename: path.join(ROOT_PATH, 'webpack-report/stats.json'),
+    }),
+  ].filter(Boolean),
 
   resolve: {
     extensions: ['.js', '.vue'],
@@ -107,7 +119,14 @@ if (IS_PRODUCTION) {
     minimizer: [
       new UglifyJSPlugin({
         sourceMap: true,
-      }),
+        cache: true,
+        parallel: true,
+        uglifyOptions: {
+          output: {
+            comments: false
+          }
+        }
+      })
     ],
   };
   config.plugins.push(
@@ -122,9 +141,7 @@ if (IS_PRODUCTION) {
       'process.env': { NODE_ENV: JSON.stringify('production') },
     }),
 
-    new CompressionPlugin({
-      asset: '[path].gz[query]',
-    })
+    new CompressionPlugin()
   );
 }
 

@@ -30,7 +30,7 @@
 
 <script>
   import Vue from 'vue';
-  import moment from 'moment';
+  import dayjs from 'dayjs';
 
   import { handleHttpResponseError } from '~/utils/http';
 
@@ -61,7 +61,7 @@
       },
 
       updatedAt() {
-        return moment(this.delivery.updated_at).fromNow();
+        return dayjs(this.delivery.updated_at).fromNow();
       },
     },
 

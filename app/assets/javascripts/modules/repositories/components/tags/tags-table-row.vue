@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import moment from 'moment';
+  import dayjs from 'dayjs';
 
   import Tag from './tag';
 
@@ -103,7 +103,7 @@
       },
 
       pushedAt() {
-        return moment(this.tag[0].updated_at).format('MMMM DD, YYYY HH:mm');
+        return dayjs(this.tag[0].updated_at).format('MMMM DD, YYYY HH:mm');
       },
     },
 

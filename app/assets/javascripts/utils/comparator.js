@@ -9,7 +9,7 @@ const dateComparator = (a, b) => new Date(a) - new Date(b);
 function of(value) {
   let type = typeof value;
 
-  if (dateutil.isValid(value)) {
+  if (dateutil.isISO8601(value)) {
     type = 'date';
   }
 

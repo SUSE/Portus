@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import moment from 'moment';
+  import dayjs from 'dayjs';
 
   import CommentsService from '../../services/comments';
 
@@ -47,7 +47,7 @@
       },
 
       createdAt() {
-        return moment(this.comment.created_at).fromNow();
+        return dayjs(this.comment.created_at).fromNow();
       },
     },
 

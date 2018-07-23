@@ -1,4 +1,3 @@
-import 'jquery';
 import 'jquery-ujs';
 
 // Bootstrap
@@ -27,9 +26,14 @@ import './modules/namespaces';
 import './modules/teams';
 import './modules/webhooks';
 
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
 import Alert from './shared/components/alert';
 
 import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects';
+
+dayjs.extend(relativeTime);
 
 // Actions to be done to initialize any page.
 $(function () {

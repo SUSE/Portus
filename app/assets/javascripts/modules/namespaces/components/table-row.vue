@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import moment from 'moment';
+  import dayjs from 'dayjs';
 
   import NamespaceVisibility from './visibility';
 
@@ -43,7 +43,7 @@
       },
 
       createdAt() {
-        return moment(this.namespace.created_at).format('MMMM DD, YYYY HH:mm');
+        return dayjs(this.namespace.created_at).format('MMMM DD, YYYY HH:mm');
       },
     },
   };
