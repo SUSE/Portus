@@ -7,7 +7,7 @@ layout: blogpost
 Another [hackweek](https://en.opensuse.org/Portal:Hackweek), another new cool
 project. At SUSE we are proud to get our hands dirty with hackweeks from time to
 time. This is how [Portus was
-born](https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/),
+born](https://flavio.castelli.me/2015/04/23/introducing-portus-an-authorization-service-and-front-end-for-docker-registry/),
 and how we've introduced some nice features like [security
 scanning](/2017/07/19/security-scanning.html). This time, however, we wanted to
 have some fun with one of our tools: **portusctl**.
