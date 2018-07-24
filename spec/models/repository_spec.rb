@@ -560,7 +560,6 @@ describe Repository do
   describe "create_or_update" do
     let!(:registry)    { create(:registry) }
     let!(:owner)       { create(:user) }
-    let!(:portus)      { create(:user, username: "portus") }
     let!(:team)        { create(:team, owners: [owner]) }
     let!(:namespace)   { create(:namespace, team: team) }
     let!(:repo1)       { create(:repository, name: "repo1", namespace: namespace) }
@@ -586,6 +585,8 @@ describe Repository do
       end
 
       allow(described_class).to receive(:id_and_digest_from_event).and_return(%w[id digest])
+
+      User.create_portus_user!
     end
 
     it "adds and deletes tags accordingly" do
@@ -645,13 +646,14 @@ describe Repository do
   describe "Groupped tags" do
     let!(:registry)   { create(:registry) }
     let!(:owner)      { create(:user) }
-    let!(:portus)     { create(:user, username: "portus") }
     let!(:team)       { create(:team, owners: [owner]) }
     let!(:namespace)  { create(:namespace, team: team) }
     let!(:repo)        { create(:repository, namespace: namespace) }
     let!(:tag1)        { create(:tag, repository: repo, digest: "1234") }
     let!(:tag2)        { create(:tag, repository: repo, digest: tag1.digest) }
     let!(:tag3)        { create(:tag, repository: repo, digest: "5678", created_at: 2.hours.ago) }
+
+    before { User.create_portus_user! }
 
     it "groups tags as expected" do
       tags = repo.groupped_tags
@@ -670,13 +672,14 @@ describe Repository do
   describe "handle delete event" do
     let!(:registry)   { create(:registry) }
     let!(:owner)      { create(:user) }
-    let!(:portus)     { create(:user, username: "portus") }
     let!(:team)       { create(:team, owners: [owner]) }
     let!(:namespace)  { create(:namespace, team: team, registry: registry) }
     let!(:repo)       { create(:repository, namespace: namespace) }
     let!(:tag1)       { create(:tag, repository: repo, digest: "1234") }
     let!(:tag2)       { create(:tag, repository: repo, digest: tag1.digest) }
     let!(:tag3)       { create(:tag, repository: repo, digest: "5678") }
+
+    before { User.create_portus_user! }
 
     let!(:event) do
       {

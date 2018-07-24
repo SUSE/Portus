@@ -31,19 +31,6 @@ module Helpers
   def clear_field(field)
     find_field(field).send_keys([:control, "a"], :backspace)
   end
-
-  # Creates the Portus user. The Portus user cannot be created with neither the
-  # "user" factory nor the "admin" one. This is because in the application this
-  # same user is created in a special way (directly, without associating a
-  # namespace to it, etc.).
-  def create_portus_user!
-    User.create!(
-      username: "portus",
-      password: Rails.application.secrets.portus_password,
-      email:    "portus@portus.com",
-      admin:    true
-    )
-  end
 end
 
 RSpec.configure { |config| config.include Helpers }

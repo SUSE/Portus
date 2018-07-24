@@ -14,7 +14,7 @@ describe "Admin - Dashboard" do
   end
 
   it "The dashboard does not count the Portus user" do
-    create_portus_user!
+    User.create_portus_user!
     visit admin_dashboard_index_path
 
     # 3 users: admin, user and the one created by the registry.
@@ -24,7 +24,7 @@ describe "Admin - Dashboard" do
   it "Warn the admin that the portus user does not exist" do
     expect(page).to have_content("The Portus user does not exist!")
 
-    create_portus_user!
+    User.create_portus_user!
     visit admin_dashboard_index_path
 
     expect(page).not_to have_content("The Portus user does not exist!")

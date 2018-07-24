@@ -60,7 +60,9 @@ class User < ActiveRecord::Base
   # Actions performed before/after create.
   validates :username, presence: true, uniqueness: true
   validate :private_namespace_and_team_available, on: :create
+  validate :portus_user_validation, on: :update
   after_create :create_personal_namespace!
+  after_create :no_skip_validation!
 
   # Actions performed before destroy
   before_destroy :update_tags!
@@ -77,10 +79,37 @@ class User < ActiveRecord::Base
   scope :enabled,    -> { not_portus.where enabled: true }
   scope :admins,     -> { not_portus.where enabled: true, admin: true }
 
+  class <<self
+    attr_accessor :skip_portus_validation
+  end
+
+  # Creates the Portus hidden user.
+  def self.create_portus_user!
+    User.skip_portus_validation = true
+    User.create!(
+      username: "portus",
+      password: Rails.application.secrets.portus_password,
+      email:    "portus@portus.com",
+      admin:    true
+    )
+  end
+
   # Special method used by Devise to require an email on signup. This is always
   # true except for LDAP.
   def email_required?
     !(Portus::LDAP.enabled? && email.blank?)
+  end
+
+  # Adds an error if the user to be updated is the portus one. This is a
+  # validation on update, so it can be skipped when strictly required.
+  def portus_user_validation
+    if User.skip_portus_validation
+      User.skip_portus_validation = nil
+      return
+    end
+
+    return unless portus? || portus?(username_was)
+    errors.add(:username, "cannot be updated")
   end
 
   # It adds an error if the username clashes with either a namespace or a team.
@@ -90,9 +119,11 @@ class User < ActiveRecord::Base
     errors.add(:username, "'#{username}' cannot be transformed into a valid namespace name")
   end
 
-  # Returns true if the current user is the Portus user.
-  def portus?
-    username == "portus"
+  # Returns true if the current user is the Portus user. You can provide a value
+  # as an alternative to the value of `username`.
+  def portus?(field = nil)
+    f = field.nil? ? username : field
+    f == "portus"
   end
 
   # Returns the username to be displayed.
@@ -128,7 +159,11 @@ class User < ActiveRecord::Base
       description: default_description,
       registry:    Registry.get # TODO: fix once we handle more registries
     )
-    update_attributes(namespace: namespace)
+
+    # Skipping validation on purpose, so after creating the portus hidden user,
+    # a namespace can be assigned to it even if updates are forbidden
+    # afterwards.
+    update_attribute("namespace", namespace)
   end
 
   # Find the user that can be guessed from the given push event.
@@ -245,6 +280,11 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  # Validations can no longer be skipped after calling this method.
+  def no_skip_validation!
+    User.skip_portus_validation = nil
+  end
 
   # Get username from provider's data.
   def extract_username(data)

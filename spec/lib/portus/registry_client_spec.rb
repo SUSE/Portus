@@ -242,7 +242,7 @@ describe Portus::RegistryClient do
   context "fetching Catalog from registry" do
     it "returns the available catalog" do
       create(:registry)
-      create(:admin, username: "portus")
+      User.create_portus_user!
 
       VCR.use_cassette("registry/get_registry_catalog", record: :none) do
         registry = described_class.new(
@@ -261,7 +261,7 @@ describe Portus::RegistryClient do
 
     it "returns the available catalog even if it has more than 100 repos" do
       create(:registry)
-      create(:admin, username: "portus")
+      User.create_portus_user!
 
       VCR.use_cassette("registry/catalog_lots_of_repos", record: :none) do
         WebMock.disable_net_connect!
@@ -286,7 +286,7 @@ describe Portus::RegistryClient do
 
     it "does not remove all repos just because one of them is failing" do
       create(:registry)
-      create(:admin, username: "portus")
+      User.create_portus_user!
 
       VCR.use_cassette("registry/get_registry_one_fails", record: :none) do
         registry = described_class.new(
@@ -355,7 +355,7 @@ describe Portus::RegistryClient do
 
     it "returns nil for tags when an exception happened" do
       create(:registry)
-      create(:admin, username: "portus")
+      User.create_portus_user!
 
       allow_any_instance_of(::Portus::RegistryClient).to receive(:tags) do
         raise ::Portus::Errors::NotFoundError, "I AM ERROR"
@@ -380,7 +380,7 @@ describe Portus::RegistryClient do
   context "fetching lists from the catalog" do
     it "returns the available tags even if there are more than 100 of them" do
       create(:registry)
-      create(:admin, username: "portus")
+      User.create_portus_user!
 
       VCR.use_cassette("registry/catalog_lots_of_tags", record: :none) do
         registry = described_class.new(

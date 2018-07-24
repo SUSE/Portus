@@ -97,6 +97,18 @@ describe User do
     end
   end
 
+  describe ".create_portus_user" do
+    it "creates the portus user" do
+      described_class.create_portus_user!
+      expect(User.first.username).to eq "portus"
+    end
+
+    it "sets `skip_portus_validation` back to nil" do
+      described_class.create_portus_user!
+      expect(User.skip_portus_validation).to be_nil
+    end
+  end
+
   describe "#create_personal_namespace!" do
     context "no registry defined yet" do
       before do

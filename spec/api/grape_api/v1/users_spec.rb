@@ -141,6 +141,15 @@ describe API::V1::Users do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    context "portus user" do
+      it "does not allow portus user to be updated" do
+        User.create_portus_user!
+        portus = User.find_by(username: "portus")
+        put "/api/v1/users/#{portus.id}", { user: user_data }, @header
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
   end
 
   context "DELETE /api/v1/users/:id" do

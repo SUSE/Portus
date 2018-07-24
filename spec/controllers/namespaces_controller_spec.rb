@@ -62,7 +62,9 @@ describe NamespacesController, type: :controller do
   end
 
   describe "GET #show" do
-    let!(:portus) { create(:admin, username: "portus") }
+    before { User.create_portus_user! }
+
+    let(:portus) { User.find_by(username: "portus") }
 
     it "paginates repositories" do
       sign_in owner
