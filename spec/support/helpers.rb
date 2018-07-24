@@ -32,19 +32,6 @@ module Helpers
     find(field).native.send_keys([:control, "a"], :backspace)
   end
 
-  # Creates the Portus user. The Portus user cannot be created with neither the
-  # "user" factory nor the "admin" one. This is because in the application this
-  # same user is created in a special way (directly, without associating a
-  # namespace to it, etc.).
-  def create_portus_user!
-    User.create!(
-      username: "portus",
-      password: Rails.application.secrets.portus_password,
-      email:    "portus@portus.com",
-      admin:    true
-    )
-  end
-
   # Unfortunately vue-multiselect component is not very friendly regarding
   # interactions without being in the vue/node testing world.
   def fill_vue_multiselect(element, text)

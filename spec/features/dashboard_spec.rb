@@ -39,7 +39,7 @@ describe "Dashboard page" do
 
   describe "Portus user" do
     it "The dashboard does not count the Portus user" do
-      create_portus_user!
+      User.create_portus_user!
       visit authenticated_root_path
 
       # 4 users: user, another_user, regular_user, and the one created by the registry.
@@ -49,7 +49,7 @@ describe "Dashboard page" do
     it "warns the admin that the portus user does not exist" do
       expect(page).to have_content("The Portus user does not exist!")
 
-      create_portus_user!
+      User.create_portus_user!
       visit authenticated_root_path
 
       expect(page).not_to have_content("The Portus user does not exist!")

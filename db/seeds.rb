@@ -8,9 +8,4 @@ if User.any?
 end
 
 Rails.logger.info "Adding the \"portus\" user"
-User.create!(
-  username: "portus",
-  password: Rails.application.secrets.portus_password,
-  email:    "portus@portus.com",
-  admin:    true
-)
+User.create_portus_user!

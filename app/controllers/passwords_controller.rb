@@ -5,6 +5,8 @@
 class PasswordsController < Devise::PasswordsController
   layout "authentication"
 
+  before_action :check_portus, only: %i[create]
+
   include CheckLDAP
 
   # Re-implemented from Devise to respond with a proper message on error.
@@ -54,5 +56,15 @@ class PasswordsController < Devise::PasswordsController
   # Prevents redirect loops
   def after_resetting_password_path_for(resource)
     signed_in_root_path(resource)
+  end
+
+  # Prevents the portus user from resetting the password.
+  def check_portus
+    user = User.find_by(email: resource_params["email"])
+    return if user.nil? || !user.portus?
+
+    redirect_to new_user_session_path,
+                alert: "Action not allowed on this user",
+                float: true
   end
 end
