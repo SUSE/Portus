@@ -359,7 +359,7 @@ PACKAGE                                   IMAGE1 (opensuse:42.2)        IMAGE2 (
           
           &lt;p&gt;Another &lt;a href=&quot;https://en.opensuse.org/Portal:Hackweek&quot;&gt;hackweek&lt;/a&gt;, another new cool
 project. At SUSE we are proud to get our hands dirty with hackweeks from time to
-time. This is how &lt;a href=&quot;https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/&quot;&gt;Portus was
+time. This is how &lt;a href=&quot;https://flavio.castelli.me/2015/04/23/introducing-portus-an-authorization-service-and-front-end-for-docker-registry/&quot;&gt;Portus was
 born&lt;/a&gt;,
 and how we’ve introduced some nice features like &lt;a href=&quot;/2017/07/19/security-scanning.html&quot;&gt;security
 scanning&lt;/a&gt;. This time, however, we wanted to
@@ -469,10 +469,13 @@ API, and &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; 
         <title>Security scanning</title>
         <description>
           
-          &lt;p&gt;One of the perks of working at SUSE are &lt;a href=&quot;https://en.opensuse.org/Portal:Hackweek&quot;&gt;hackweeks&lt;/a&gt;. A hackweek is a period
-of 5 days in which every employee is free to work on whatever they want. Portus
-was born this way, as Flavio explained in his &lt;a href=&quot;https://flavio.castelli.me/2015/04/23/introducing-portus-a-user-interface-for-docker-registry/&quot;&gt;blog post&lt;/a&gt;, and we are happy
-to say that the feature announced today was also started this way.&lt;/p&gt;
+          &lt;p&gt;One of the perks of working at SUSE are
+&lt;a href=&quot;https://en.opensuse.org/Portal:Hackweek&quot;&gt;hackweeks&lt;/a&gt;. A hackweek is a period of
+5 days in which every employee is free to work on whatever they want. Portus was
+born this way, as Flavio explained in his &lt;a href=&quot;https://flavio.castelli.me/2015/04/23/introducing-portus-an-authorization-service-and-front-end-for-docker-registry/&quot;&gt;blog
+post&lt;/a&gt;,
+and we are happy to say that the feature announced today was also started this
+way.&lt;/p&gt;
 
 &lt;h2 id=&quot;adding-security-features-into-portus&quot;&gt;Adding security features into Portus&lt;/h2&gt;
 

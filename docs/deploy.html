@@ -363,15 +363,18 @@ process.</li>
   <li>Check the environment variables to be used for the
 <a href="/docs/database.html">database</a>.</li>
   <li>You have to provide three environment variables which contain secret data
-(read <a href="/docs/secrets.html">this page</a> in order to know how to manage these
-secrets in production):
+(read <a href="/docs/secrets.html">this page</a> in order to know how to manage/update
+these secrets in production):
     <ul>
       <li><code class="highlighter-rouge">PORTUS_SECRET_KEY_BASE</code>: which will be used for to encrypt and sign
 sessions (you can read more about this
 <a href="http://guides.rubyonrails.org/security.html">here</a>).</li>
       <li><code class="highlighter-rouge">PORTUS_KEY_PATH</code>: used to generate the private key for JWT requests (how
 Portus communicates with the Registry safely).</li>
-      <li><code class="highlighter-rouge">PORTUS_PASSWORD</code>: the password of the special <code class="highlighter-rouge">portus</code> user.</li>
+      <li><code class="highlighter-rouge">PORTUS_PASSWORD</code>: the password of the special <code class="highlighter-rouge">portus</code> user (used for
+maintenance purposes). You cannot change the password of this hidden user as
+you would do with other users. Instead, you have to update this secret and
+restart Portus.</li>
     </ul>
   </li>
 </ul>
