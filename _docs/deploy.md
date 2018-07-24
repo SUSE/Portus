@@ -56,14 +56,17 @@ be aware of the following requirements:
 - Check the environment variables to be used for the
   [database](/docs/database.html).
 - You have to provide three environment variables which contain secret data
-  (read [this page](/docs/secrets.html) in order to know how to manage these
-  secrets in production):
+  (read [this page](/docs/secrets.html) in order to know how to manage/update
+  these secrets in production):
   - `PORTUS_SECRET_KEY_BASE`: which will be used for to encrypt and sign
     sessions (you can read more about this
     [here](http://guides.rubyonrails.org/security.html)).
   - `PORTUS_KEY_PATH`: used to generate the private key for JWT requests (how
     Portus communicates with the Registry safely).
-  - `PORTUS_PASSWORD`: the password of the special `portus` user.
+  - `PORTUS_PASSWORD`: the password of the special `portus` user (used for
+    maintenance purposes). You cannot change the password of this hidden user as
+    you would do with other users. Instead, you have to update this secret and
+    restart Portus.
 
 Finally, you might want to take a look at some of the examples based on
 docker-compose that we have implemented

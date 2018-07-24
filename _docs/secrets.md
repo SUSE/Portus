@@ -27,3 +27,9 @@ its secrets. In Portus you have two options:
    support a special syntax: you can add the `_FILE` suffix to it to indicate
    the path of the secret. So, for example, `PORTUS_DB_PASSWORD_FILE` would
    indicate the path of the secret for the database password.
+
+<div class="alert alert-warning">
+  <strong>Note well</strong>: all these secrets are loaded during
+  <strong>initialization</strong>. Hence, if you want to <strong>update</strong>
+  any of them, you will have to restart Portus.
+</div>
