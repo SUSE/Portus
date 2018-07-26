@@ -154,6 +154,46 @@ describe Auth::OmniauthCallbacksController do
     end
   end
 
+  describe "GET custom #gitlab" do
+    before do
+      APP_CONFIG["oauth"] = { "gitlab" => { "server": "https://gitlab.com",
+                                            "domain" => "", "group" => "" } }
+      OmniAuth.config.add_mock(:gitlab,
+                               provider:    "gitlab",
+                               uid:         "12345",
+                               credentials: { token: "1234567890" },
+                               info:        { email: "test@mail.net" })
+      request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:gitlab]
+      create :user, email: "test@mail.net"
+    end
+
+    context "CUSTOMGITLAB: with group is setted," do
+      it "when group matches, sign in and redirect to /" do
+        APP_CONFIG["oauth"]["gitlab"]["group"] = "group"
+        VCR.use_cassette "api_gitlab_groups" do
+          get :gitlab
+        end
+        expect(response).to redirect_to authenticated_root_url
+        expect(subject.current_user).not_to eql nil
+      end
+
+      it "when group not match, redirect to /users/sign_in" do
+        APP_CONFIG["oauth"]["gitlab"]["group"] = "wrong_group"
+        VCR.use_cassette "api_gitlab_groups" do
+          get :gitlab
+        end
+        expect(response).to redirect_to new_user_session_url
+        expect(subject.current_user).to be nil
+      end
+    end
+
+    it "when group isn't setted, sign in and redirect to /" do
+      get :gitlab
+      expect(response).to redirect_to authenticated_root_url
+      expect(subject.current_user).not_to eql nil
+    end
+  end
+
   describe "GET #gitlab" do
     before do
       APP_CONFIG["oauth"] = { "gitlab" => { "domain" => "", "group" => "" } }
