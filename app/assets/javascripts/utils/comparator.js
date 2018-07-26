@@ -14,6 +14,7 @@ function of(value) {
   }
 
   switch (type) {
+    case 'boolean':
     case 'number':
       return numberComparator;
     case 'date':

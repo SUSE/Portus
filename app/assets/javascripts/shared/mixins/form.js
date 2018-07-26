@@ -1,5 +1,7 @@
 import Vue from 'vue';
 
+const touchMap = {};
+
 const { set } = Vue;
 
 export default {
@@ -28,6 +30,14 @@ export default {
 
         layout_resizer();
       });
+    },
+
+    delayTouch($v, timeout = 1000) {
+      $v.reset();
+      if (touchMap[$v]) {
+        clearTimeout(touchMap[$v]);
+      }
+      touchMap[$v] = setTimeout($v.$touch, timeout);
     },
   },
 
