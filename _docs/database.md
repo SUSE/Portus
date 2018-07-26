@@ -54,6 +54,7 @@ Besides this, you can further configure this with other options:
 - `PORTUS_DB_PORT`: an alternative port for the database.
 - `PORTUS_DB_POOL`: the number of pool connections.
 - `PORTUS_DB_TIMEOUT`: the timeout for requests.
+- `PORTUS_DB_SOCKET`: the socket to be used for the database.
 
 When not provided, the options above take the default value of the database
 backend.
