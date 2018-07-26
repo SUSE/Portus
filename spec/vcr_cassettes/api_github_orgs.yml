@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.github.com/user/orgs?access_token=1234567890
+    uri: https://api.github.com/user/orgs?access_token=1234567890&page=1
     body:
       encoding: US-ASCII
       string: ''
@@ -55,9 +55,73 @@ http_interactions:
       - '0.008503'
       X-Github-Request-Id:
       - EB40:69AA:32F133B:7180EE4:597A1020
+      Link:
+      - '<https://api.github.com/user/orgs?page=1&per_page=1>; rel="prev", <https://api.github.com/user/orgs?page=3&per_page=1>; rel="next", <https://api.github.com/user/orgs?page=17&per_page=1>; rel="last", <https://api.github.com/user/orgs?page=1&per_page=1>; rel="first"'
     body:
       encoding: UTF-8
       string: '[{"login":"org"}]'
+    http_version:
+  recorded_at: Thu, 27 Jul 2017 16:09:04 GMT
+- request:
+    method: get
+    uri: https://api.github.com/user/orgs?access_token=1234567890&page=2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.1
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: Ok
+    headers:
+      Server:
+      - GitHub.com
+      Date:
+      - Thu, 27 Jul 2017 16:09:04 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      # Content-Length:
+      # - '83'
+      # Status:
+      # - 401 Unauthorized
+      X-Github-Media-Type:
+      - github.v3; format=json
+      X-Ratelimit-Limit:
+      - '60'
+      X-Ratelimit-Remaining:
+      - '59'
+      X-Ratelimit-Reset:
+      - '1501175344'
+      Access-Control-Expose-Headers:
+      - ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset,
+        X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Runtime-Rack:
+      - '0.008503'
+      X-Github-Request-Id:
+      - EB40:69AA:32F133B:7180EE4:597A1020
+      Link:
+      - '<https://api.github.com/user/orgs?page=1&per_page=1>; rel="prev", <https://api.github.com/user/orgs?page=3&per_page=1>; rel="next", <https://api.github.com/user/orgs?page=1&per_page=1>; rel="first"'
+    body:
+      encoding: UTF-8
+      string: '[{"login":"org2"}]'
     http_version:
   recorded_at: Thu, 27 Jul 2017 16:09:04 GMT
 recorded_with: VCR 3.0.3
