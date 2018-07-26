@@ -67,6 +67,17 @@ be aware of the following requirements:
     maintenance purposes). You cannot change the password of this hidden user as
     you would do with other users. Instead, you have to update this secret and
     restart Portus.
+- *Advanced*: the [official Docker
+  image](https://hub.docker.com/r/opensuse/portus/) assumes that you only want
+  to expose the Puma process externally (the actual process running
+  Portus). However, in some unusual deployments (such as the one described
+  [here](https://flavio.castelli.me/2018/07/18/hackweek-project-docker-registry-mirror/)),
+  you may want to expose this process only in a Unix socket (i.e. in short,
+  because you are sharing this socket with other processes). If you want Portus
+  to do this, you have to set the `PORTUS_PUMA_USE_UNIX_SOCKET` environment
+  variable to `"true"`. Note that the default behavior should be fine for the vast
+  majority of deployments, so only touch this if you are *really* sure about
+  what you are doing.
 
 Finally, you might want to take a look at some of the examples based on
 docker-compose that we have implemented
