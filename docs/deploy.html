@@ -377,6 +377,17 @@ you would do with other users. Instead, you have to update this secret and
 restart Portus.</li>
     </ul>
   </li>
+  <li><em>Advanced</em>: the <a href="https://hub.docker.com/r/opensuse/portus/">official Docker
+image</a> assumes that you only want
+to expose the Puma process externally (the actual process running
+Portus). However, in some unusual deployments (such as the one described
+<a href="https://flavio.castelli.me/2018/07/18/hackweek-project-docker-registry-mirror/">here</a>),
+you may want to expose this process only in a Unix socket (i.e. in short,
+because you are sharing this socket with other processes). If you want Portus
+to do this, you have to set the <code class="highlighter-rouge">PORTUS_PUMA_USE_UNIX_SOCKET</code> environment
+variable to <code class="highlighter-rouge">"true"</code>. Note that the default behavior should be fine for the vast
+majority of deployments, so only touch this if you are <em>really</em> sure about
+what you are doing.</li>
 </ul>
 
 <p>Finally, you might want to take a look at some of the examples based on
