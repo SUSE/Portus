@@ -104,6 +104,13 @@ class User < ActiveRecord::Base
   # Adds an error if the user to be updated is the portus one. This is a
   # validation on update, so it can be skipped when strictly required.
   def portus_user_validation
+    # If nothing really changed (e.g. Rails simply touched this record), then we
+    # can leave early.
+    return if changed.empty?
+
+    # If validation for this was temporarily disabled (e.g. we are creating the
+    # Portus hidden user for the first time), then enable it back but return
+    # early.
     if User.skip_portus_validation
       User.skip_portus_validation = nil
       return

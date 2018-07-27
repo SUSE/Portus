@@ -119,6 +119,34 @@ describe User do
       described_class.create_portus_user!
       expect(User.skip_portus_validation).to be_nil
     end
+
+    it "does not create a namespace or a team because there's no registry" do
+      described_class.create_portus_user!
+      expect(Team.count).to eq 0
+      expect(Namespace.count).to eq 0
+    end
+  end
+
+  describe "#portus_user_validation" do
+    it "does nothing if the portus user was simply touched" do
+      described_class.create_portus_user!
+      portus = User.find_by(username: "portus")
+
+      portus.touch
+      expect(portus.errors.any?).to be_falsey
+    end
+
+    it "does nothing if the portus user has a new team" do
+      User.delete_all
+      described_class.create_portus_user!
+
+      r = Registry.new(name: "r", hostname: "registry.mssola.cat:5000", use_ssl: true)
+      r.save!
+
+      portus = User.find_by(username: "portus")
+      expect(portus.namespace).not_to be_nil
+      expect(portus.namespace.team).not_to be_nil
+    end
   end
 
   describe "#create_personal_namespace!" do
