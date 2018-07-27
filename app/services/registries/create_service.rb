@@ -11,6 +11,7 @@ module Registries
       check!
       if @valid
         Namespace.update_all(registry_id: @registry.id) if @registry.save
+        @valid = @registry.persisted?
       end
 
       @registry
