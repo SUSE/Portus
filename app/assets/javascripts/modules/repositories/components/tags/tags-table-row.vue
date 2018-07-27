@@ -10,7 +10,7 @@
       <input type="checkbox" v-model="selected" @change="toggleTag()">
     </td>
     <td>
-      <tag v-for="t in tag" :key="t.name" :tag="t" :repository="state.repository"></tag>
+      <tag v-for="t in tag" :key="t.name" :tag="t" :repository="repository"></tag>
     </td>
 
     <td>{{ tag[0].author.name }}</td>
@@ -52,6 +52,7 @@
       securityEnabled: Boolean,
       state: Object,
       tagsPath: String,
+      repository: Object,
     },
 
     components: {

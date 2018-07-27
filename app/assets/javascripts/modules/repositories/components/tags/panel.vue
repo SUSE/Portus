@@ -11,7 +11,7 @@
 
       <div class="table-responsive tags">
         <tags-not-loaded v-if="state.notLoaded"></tags-not-loaded>
-        <tags-table v-if="!state.isLoading && !state.notLoaded" :tags="tags" :can-destroy="repository.destroyable" :state="state" :security-enabled="securityEnabled" :tags-path="tagsPath"></tags-table>
+        <tags-table v-if="!state.isLoading && !state.notLoaded" :tags="tags" :can-destroy="repository.destroyable" :state="state" :security-enabled="securityEnabled" :tags-path="tagsPath" :repository="repository"></tags-table>
       </div>
     </div>
   </panel>

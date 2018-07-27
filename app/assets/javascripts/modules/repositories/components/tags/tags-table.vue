@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        <tag-row v-for="tag in filteredTags" :key="tag[0].digest" :tag="tag" :can-destroy="canDestroy" :security-enabled="securityEnabled" :state="state" :tags-path="tagsPath"></tag-row>
+        <tag-row v-for="tag in filteredTags" :key="tag[0].digest" :tag="tag" :can-destroy="canDestroy" :security-enabled="securityEnabled" :state="state" :tags-path="tagsPath" :repository="repository"></tag-row>
       </tbody>
     </table>
 
@@ -40,6 +40,7 @@
       securityEnabled: Boolean,
       state: Object,
       tagsPath: String,
+      repository: Object,
     },
 
     mixins: [TablePaginatedMixin],
