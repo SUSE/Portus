@@ -56,6 +56,22 @@ module API
         type: ::Grape::API::Boolean,
         desc: "Whether this is a bot or not"
       }
+      expose :display_username, documentation: {
+        type: String,
+        desc: "Displayable name"
+      }, if: { type: :internal }
+      expose :namespaces_count, documentation: {
+        type: Integer,
+        desc: "The number of namespaces that user has access to"
+      }, if: { type: :internal } do |u|
+        u.teams.reduce(0) { |sum, t| sum + t.namespaces.count }
+      end
+      expose :teams_count, documentation: {
+        type: Integer,
+        desc: "The number of teams that the user belongs to"
+      }, if: { type: :internal } do |u|
+        u.teams.all_non_special.count
+      end
     end
 
     class ApplicationTokens < Grape::Entity

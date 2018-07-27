@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "Admin - Users panel" do
+describe "Admin - Users panel", js: true do
   let!(:registry) { create(:registry) }
   let!(:admin) { create(:admin) }
   let!(:user) { create(:user) }
@@ -12,9 +12,11 @@ describe "Admin - Users panel" do
     visit admin_users_path
   end
 
-  describe "create users", js: true do
+  describe "create users" do
     it "admin creates a user" do
-      visit new_admin_user_path
+      visit admin_users_path
+
+      find(".toggle-link-new-user").click
 
       fill_in "Username",              with: "username"
       fill_in "Email",                 with: "email@email.com"
@@ -28,7 +30,9 @@ describe "Admin - Users panel" do
     end
 
     it "admin creates a bot" do
-      visit new_admin_user_path
+      visit admin_users_path
+
+      find(".toggle-link-new-user").click
 
       fill_in "Username",              with: "username"
       fill_in "Email",                 with: "email@email.com"
@@ -36,15 +40,12 @@ describe "Admin - Users panel" do
       fill_in "Password confirmation", with: "password123"
       check "Bot"
 
-      expect do
-        click_button("Create")
-      end.to(change { ApplicationToken.all.size }.from(0).to(1))
+      click_button "Create"
+      expect(page).to have_content("Bot 'username' was created successfully")
 
+      # TODO: remove lines below. They are not supposed to be in a feature test
       user = User.find_by(username: "username")
       expect(user.bot).to be_truthy
-
-      expect(page).to have_current_path(admin_users_path)
-      expect(page).to have_content("Bot 'username' was created successfully")
 
       # A new application token has been associated to this bot, but the
       # activity belongs to the admin.
@@ -54,14 +55,16 @@ describe "Admin - Users panel" do
     end
 
     it "admin adds back a removed user" do
-      expect(page).to have_css("#user_#{user.id}")
+      expect(page).to have_css(".user_#{user.id}")
 
-      find("#user_#{user.id} .remove-btn").click
-      find("#user_#{user.id} .btn-confirm-remove").click
+      find(".user_#{user.id} .delete-user-btn").click
+      find(".user_#{user.id} .yes").click
 
       expect(page).to have_content("User '#{user.username}' was removed successfully")
 
-      visit new_admin_user_path
+      visit admin_users_path
+
+      find(".toggle-link-new-user").click
 
       fill_in "Username",              with: user.username
       fill_in "Email",                 with: user.email
@@ -76,79 +79,77 @@ describe "Admin - Users panel" do
   end
 
   describe "remove users" do
-    it "allows the admin to remove other users", js: true do
-      expect(page).to have_css("#user_#{user.id}")
+    it "allows the admin to remove other users" do
+      expect(page).to have_css(".user_#{user.id}")
       expect(page).to have_content(user.username)
 
-      find("#user_#{user.id} .remove-btn").click
-      find("#user_#{user.id} .btn-confirm-remove").click
+      find(".user_#{user.id} .delete-user-btn").click
+      find(".user_#{user.id} .yes").click
 
-      expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect(page).to have_content("User '#{user.username}' was removed successfully")
     end
 
-    it "allows the admin to remove other users from the show page", js: true do
+    it "allows the admin to remove other users from the show page" do
       visit edit_admin_user_path(user.id)
 
-      expect(page).not_to have_css("#user_#{user.id}")
+      expect(page).not_to have_css(".user_#{user.id}")
       expect(page).to have_content(user.username)
 
       find(".btn-danger").click
       expect(page).to have_current_path(admin_users_path)
 
-      expect { User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect(page).to have_content("User '#{user.username}' was removed successfully")
-      expect(page).not_to have_css("#user_#{user.id}")
+      expect(page).not_to have_css(".user_#{user.id}")
     end
   end
 
   describe "disable users" do
-    it "allows the admin to disable other users", js: true do
-      expect(page).to have_css("#user_#{user.id}")
-      find("#user_#{user.id} .enabled-btn").click
+    it "allows the admin to disable other users" do
+      expect(page).to have_css(".user_#{user.id}")
+      find(".user_#{user.id} .toggle-user-enabled-btn").click
 
-      expect(page).to have_css("#user_#{user.id} .fa-toggle-off")
-      expect(page).to have_content("User '#{user.username}' has been disabled.")
+      expect(page).to have_css(".user_#{user.id} .fa-toggle-off")
+      expect(page).to have_content("User '#{user.username}' has been disabled")
     end
 
-    it "allows the admin to enable back a user", js: true do
+    it "allows the admin to enable back a user" do
       user.update(enabled: false)
       visit admin_users_path
 
-      expect(page).to have_css("#user_#{user.id}")
-      find("#user_#{user.id} .enabled-btn").click
+      expect(page).to have_css(".user_#{user.id}")
+      find(".user_#{user.id} .toggle-user-enabled-btn").click
 
-      expect(page).to have_css("#user_#{user.id} .fa-toggle-on")
-      expect(page).to have_content("User '#{user.username}' has been enabled.")
+      expect(page).to have_css(".user_#{user.id} .fa-toggle-on")
+      expect(page).to have_content("User '#{user.username}' has been enabled")
     end
   end
 
   describe "toggle admin" do
-    it "allows the admin to toggle a regular user into becoming an admin", js: true do
-      expect(page).to have_css("#user_#{user.id}")
-      expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-off")
-      find("#user_#{user.id} .admin-btn").click
+    it "allows the admin to toggle a regular user into becoming an admin" do
+      expect(page).to have_css(".user_#{user.id}")
+      expect(page).to have_css(".user_#{user.id} .toggle-user-admin-btn .fa-toggle-off")
+      find(".user_#{user.id} .toggle-user-admin-btn").click
 
-      expect(page).not_to have_css("#user_#{user.id} .admin-btn .fa-toggle-off")
-      expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-on")
+      expect(page).not_to have_css(".user_#{user.id} .toggle-user-admin-btn .fa-toggle-off")
+      expect(page).to have_css(".user_#{user.id} .toggle-user-admin-btn .fa-toggle-on")
       expect(page).to have_content("User '#{user.username}' is now an admin")
     end
 
-    it "allows the admin to remove another admin", js: true do
+    it "allows the admin to remove another admin" do
       user.update(admin: true)
       visit admin_users_path
 
-      expect(page).to have_css("#user_#{user.id}")
-      expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-on")
-      find("#user_#{user.id} .admin-btn").click
+      expect(page).to have_css(".user_#{user.id}")
+      expect(page).to have_css(".user_#{user.id} .toggle-user-admin-btn .fa-toggle-on")
+      find(".user_#{user.id} .toggle-user-admin-btn").click
 
-      expect(page).not_to have_css("#user_#{user.id} .admin-btn .fa-toggle-on")
-      expect(page).to have_css("#user_#{user.id} .admin-btn .fa-toggle-off")
+      expect(page).not_to have_css(".user_#{user.id} .toggle-user-admin-btn .fa-toggle-on")
+      expect(page).to have_css(".user_#{user.id} .toggle-user-admin-btn .fa-toggle-off")
       expect(page).to have_content("User '#{user.username}' is no longer an admin")
     end
   end
 
-  describe "Edit user", js: true do
+  describe "Edit user" do
     it "allows the admin to update a user" do
       visit edit_admin_user_path(user)
 

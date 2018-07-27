@@ -13,11 +13,6 @@ RSpec.describe Admin::UsersController, type: :controller do
     end
 
     describe "GET #index" do
-      it "paginates users" do
-        get :index
-        expect(assigns(:users)).to respond_to(:total_pages)
-      end
-
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
@@ -95,7 +90,7 @@ RSpec.describe Admin::UsersController, type: :controller do
           email:                 "soloman@example.org",
           password:              "password",
           password_confirmation: "password"
-        }
+        }, format: :json
       end.to change(User, :count).by(1)
     end
 
@@ -106,7 +101,7 @@ RSpec.describe Admin::UsersController, type: :controller do
           email:                 "soloman@example.org",
           password:              "password",
           password_confirmation: "drowssap"
-        }
+        }, format: :json
       end.not_to change(User, :count)
     end
   end

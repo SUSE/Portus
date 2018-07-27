@@ -14,7 +14,19 @@ const customActions = {
   },
 };
 
+const oldCustomActions = {
+  toggleAdmin: {
+    method: 'PUT',
+    url: 'admin/users/{id}/toggle_admin',
+  },
+  toggleEnabled: {
+    method: 'PUT',
+    url: 'toggle_enabled/{id}',
+  },
+};
+
 const resource = Vue.resource('api/v1/users{/id}', {}, customActions);
+const oldResource = Vue.resource('admin/users{/id}', {}, oldCustomActions);
 
 function createToken(userId, appToken) {
   return resource.createToken({ userId }, appToken);
@@ -24,7 +36,27 @@ function destroyToken(id) {
   return resource.destroyToken({ id });
 }
 
+function save(user) {
+  return oldResource.save({}, { user });
+}
+
+function destroy({ id }) {
+  return resource.delete({ id });
+}
+
+function toggleAdmin({ id }) {
+  return oldResource.toggleAdmin({ id }, {});
+}
+
+function toggleEnabled({ id }) {
+  return oldResource.toggleEnabled({ id }, {});
+}
+
 export default {
+  save,
+  destroy,
+  toggleAdmin,
+  toggleEnabled,
   createToken,
   destroyToken,
 };
