@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://gitlab.com/api/v4/groups?access_token=1234567890
+    uri: https://gitlab.com/api/v4/groups?access_token=1234567890&page=1&per_page=100
     body:
       encoding: US-ASCII
       string: ''
@@ -36,9 +36,54 @@ http_interactions:
       - 83f721d1-af21-4040-991b-a63f9ca2b59c
       X-Runtime:
       - '0.031551'
+      X-Next-Page:
+      - "3"
     body:
       encoding: UTF-8
       string: '[{"name":"group"}]'
+    http_version:
+  recorded_at: Thu, 27 Jul 2017 14:17:23 GMT
+- request:
+    method: get
+    uri: https://gitlab.com/api/v4/groups?access_token=1234567890&page=2&per_page=100
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.1
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: Ok
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 27 Jul 2017 14:17:23 GMT
+      Content-Type:
+      - application/json
+      # Content-Length:
+      # - '30'
+      Cache-Control:
+      - no-cache
+      Vary:
+      - Origin
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Request-Id:
+      - 83f721d1-af21-4040-991b-a63f9ca2b59c
+      X-Runtime:
+      - '0.031551'
+      X-Next-Page:
+      - ""
+    body:
+      encoding: UTF-8
+      string: '[{"name":"group2"}]'
     http_version:
   recorded_at: Thu, 27 Jul 2017 14:17:23 GMT
 recorded_with: VCR 3.0.3

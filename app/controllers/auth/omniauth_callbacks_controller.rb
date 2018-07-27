@@ -24,6 +24,22 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # Callback for Bitbucket.
   alias bitbucket google_oauth2
 
+  protected
+
+  def github_next(resp)
+    # -> gitlab: x-next-page is in headers, and not empty
+    resp.headers.key?("x-next-page") && \
+      resp.headers["x-next-page"].present?
+  end
+
+  def gitlab_next(resp)
+    # -> github: Link is in headers
+    #            and if we are not on last page, we have a last link
+    resp.headers.key?("Link") && \
+      resp.headers["Link"].include?('rel="last"') && \
+      !resp.headers.key?("x-next-page")
+  end
+
   private
 
   # If user does not exist then ask for username and display_name.
@@ -70,7 +86,8 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     when "gitlab"
       if conf["group"].present?
         # Get user's groups.
-        is_member = member_of("https://gitlab.com/api/v4/groups") do |g|
+        server = conf.fetch("server", "").presence || "https://gitlab.com"
+        is_member = member_of("#{server}/api/v4/groups", per_page: 100) do |g|
           g["name"] == conf["group"]
         end
         "The Gitlab account isn't in allowed group." unless is_member
@@ -97,11 +114,21 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   # Get user's teams and check if one match to restriction.
-  def member_of(url)
+  # This method uses pagination, and the caller can specify
+  # the number of teams per page in the `per_page` parameter.
+  def member_of(url, per_page: nil)
     # Get user's groups.
     token = request.env["omniauth.auth"].credentials["token"]
-    resp = Faraday.get url, access_token: token
-    teams = JSON.parse resp.body
+    teams = []
+    np = 0
+    loop do
+      np += 1
+      resp = Faraday.get url, { page: np, per_page: per_page,
+                                access_token: token }.compact
+      teams.concat JSON.parse resp.body
+      # if no last/next page, we stop iteration
+      break unless gitlab_next(resp) || github_next(resp)
+    end
 
     # Check if the user is member of allowed group.
     !teams.find_all { |t| yield(t) }.empty?
