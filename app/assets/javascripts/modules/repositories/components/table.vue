@@ -13,7 +13,7 @@
             }"></i>
             Repository
           </th>
-          <th @click="sort('namespace.name')">
+          <th @click="sort('namespace.name')" v-if="showNamespaces">
             <i class="fa fa-fw fa-sort" :class="{
               'fa-sort-amount-asc': sorting.by === 'namespace.name' && sorting.asc,
               'fa-sort-amount-desc': sorting.by === 'namespace.name' && !sorting.asc,
@@ -68,6 +68,7 @@
       },
       showNamespaces: {
         type: Boolean,
+        default: true,
       },
       prefix: {
         type: String,
