@@ -1,3 +1,15 @@
+## 2.3.4
+
+- ced82ca92149 oauth/gitlab: be sure to load all groups (#1903)
+- 23b7daef71e8 oauth/gitlab: fix for local servers (#1903)
+- f2a3ef0eee62 fixed regression on registries not being created (#1911)
+- 7da007a5e604 portusctl: improved the detection of containerized deployments (#1879)
+- b1c803a70146 user: do not allow the update of the portus user (#1896)
+- 1bd967039787 passwords: don't allow the portus user to reset (#1896)
+- 7b54698625d4 user: skip validations when creating portus user (#1896)
+- 58a2c3bd04dc config: allow Puma to bind to unix socket also in production (#1880)
+- 7ac882a6ebbc config: make it possible to connect to a database socket (#1880)
+
 ## 2.3.3
 
 - 93df51cce0da ldap: don't crash on search when guessing an email (#1832)
