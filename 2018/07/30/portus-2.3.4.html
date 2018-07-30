@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Portus - Blog</title>
+    <title>Portus 2.3.4 released</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Claim control of your Docker images">
+    <meta name="description" content="This new patch-level release includes some important fixes, so we recommendeveryone using this branch to upgrade as soon as possible. In particular, thisrele...">
 
     <link href="/stylesheets/portus.css" type="text/css" rel="stylesheet" />
     <script src="/javascripts/dist/portus.min.js"    type="text/javascript" charset="utf-8"></script>
@@ -71,76 +71,63 @@
 
 
     <div class="container">
-  <div id="posts-list" class="row">
-    
-    <div class="post-preview col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      <a href="/2016/07/26/webhooks.html">
-      <h2 class="post-title">Introducing webhooks</h2>
+      <div id="post-body" class="row">
+        <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <a href="/2018/07/30/portus-2.3.4.html">
+          <h2 class="post-title">Portus 2.3.4 released</h2>
 
-      
-      </a>
+          
+          </a>
 
-      <p class="post-meta">
-        Posted on July 26, 2016
-        by Thomas Hipp
-      </p>
+          <p class="post-meta">
+            Posted on July 30, 2018
+            by Miquel Sabaté Solà
+          </p>
 
-      <div class="post-entry">
-        Hello! I am pleased to announce one of the new features which will be shipped with Portus version 2.1. What are webhooks and how do they work? Simply put, a webhook is a user-defined HTTP callback which notifies a specified endpoint about some sort...
-      <a href="/2016/07/26/webhooks.html" class="post-read-more">[Read&nbsp;More]</a>
+          <div class="post-body">
+            <p>This new patch-level release includes some important fixes, so we recommend
+everyone using this branch to upgrade as soon as possible. In particular, this
+release includes the following fixes and enhancements:</p>
+
+<ul>
+  <li>More things can be configured with environment variables for the deployment of
+Portus. See the pull request
+<a href="https://github.com/SUSE/Portus/pull/1880">#1880</a>.</li>
+  <li>We added more protection around the portus hidden user. This user is meant for
+background purposes, so it doesn’t make sense to update it in any way (besides
+changing the password, which has been protected as well). See the pull request
+<a href="https://github.com/SUSE/Portus/pull/1896">#1896</a>.</li>
+  <li>Containerized deployments are now properly detected by <code class="highlighter-rouge">portusctl</code>. Note that
+this version of <code class="highlighter-rouge">portusctl</code> being fixed is the one included on the <code class="highlighter-rouge">v2.3</code>
+branch, not <a href="https://github.com/openSUSE/portusctl">the new one</a>. See the pull
+request <a href="https://github.com/SUSE/Portus/pull/1879">#1879</a>.</li>
+  <li>Thanks to <a href="https://github.com/kiorky">@kiorky</a>, a couple of fixes around
+Gitlab OAuth support have also been included. See the pull request
+<a href="https://github.com/SUSE/Portus/pull/1903">#1903</a>.</li>
+</ul>
+
+<h3 id="changing-the-password-of-the-portus-hidden-user">Changing the password of the portus hidden user</h3>
+
+<p>Before this patch-level release, changing the password of this hidden user
+involved performing some updates on the database and being really careful. This
+is no longer the case now: you can simply change the value of the secret
+containing this password and Portus will automatically update the password on
+start. This means that you will have to restart Portus whenever you decide to
+change the value of this secret.</p>
+
+<h3 id="whats-next">What’s next</h3>
+
+<p>All these fixes are also available inside of the
+<a href="https://github.com/SUSE/Portus/commits/master">master</a> branch, together with a
+bunch of new features and shiny improvements. The release process for <code class="highlighter-rouge">2.4</code> has
+been delayed a bit more than anticipated, but once we are done with the latest
+feature that we want to include, we will start a code freeze and then the new
+release will be out as soon as possible.</p>
+
+          </div>
+        </div>
       </div>
     </div>
-    
-    <div class="post-preview col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      <a href="/2016/06/20/removing-images-and-tags.html">
-      <h2 class="post-title">Removing images and tags</h2>
-
-      
-      </a>
-
-      <p class="post-meta">
-        Posted on June 20, 2016
-        by Miquel Sabaté Solà
-      </p>
-
-      <div class="post-entry">
-        Hello again! Some months ago we implemented one of the most requested features for Portus: removing images and tags. This is one of the most important features that will be available on the 2.1 release (due in September), and it has been a bit challenging...
-      <a href="/2016/06/20/removing-images-and-tags.html" class="post-read-more">[Read&nbsp;More]</a>
-      </div>
-    </div>
-    
-    <div class="post-preview col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      <a href="/2016/05/30/first-post.html">
-      <h2 class="post-title">Portus and Google Summer of Code</h2>
-
-      
-      </a>
-
-      <p class="post-meta">
-        Posted on May 30, 2016
-        by Miquel Sabaté Solà
-      </p>
-
-      <div class="post-entry">
-        Hello! It’s my pleasure to write the first post on the Portus’ blog. In this blog we will try to communicate as much as possible regarding our plans for the future, new features and other exciting news. For this post, we’ve been honored to be...
-      <a href="/2016/05/30/first-post.html" class="post-read-more">[Read&nbsp;More]</a>
-      </div>
-    </div>
-    
-  </div>
-
-  
-  <ul class="pager main-pager">
-    
-    <li class="previous">
-      <a href="/blog/page2">&larr; Newer Posts</a>
-    </li>
-    
-    
-  </ul>
-  
-</div>
-
 
     <footer>
       <div class="row row-0">

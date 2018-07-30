@@ -7,6 +7,55 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Portus 2.3.4 released</title>
+        <description>
+          
+          &lt;p&gt;This new patch-level release includes some important fixes, so we recommend
+everyone using this branch to upgrade as soon as possible. In particular, this
+release includes the following fixes and enhancements:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;More things can be configured with environment variables for the deployment of
+Portus. See the pull request
+&lt;a href=&quot;https://github.com/SUSE/Portus/pull/1880&quot;&gt;#1880&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;We added more protection around the portus hidden user. This user is meant for
+background purposes, so it doesn’t make sense to update it in any way (besides
+changing the password, which has been protected as well). See the pull request
+&lt;a href=&quot;https://github.com/SUSE/Portus/pull/1896&quot;&gt;#1896&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Containerized deployments are now properly detected by &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt;. Note that
+this version of &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; being fixed is the one included on the &lt;code class=&quot;highlighter-rouge&quot;&gt;v2.3&lt;/code&gt;
+branch, not &lt;a href=&quot;https://github.com/openSUSE/portusctl&quot;&gt;the new one&lt;/a&gt;. See the pull
+request &lt;a href=&quot;https://github.com/SUSE/Portus/pull/1879&quot;&gt;#1879&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Thanks to &lt;a href=&quot;https://github.com/kiorky&quot;&gt;@kiorky&lt;/a&gt;, a couple of fixes around
+Gitlab OAuth support have also been included. See the pull request
+&lt;a href=&quot;https://github.com/SUSE/Portus/pull/1903&quot;&gt;#1903&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;changing-the-password-of-the-portus-hidden-user&quot;&gt;Changing the password of the portus hidden user&lt;/h3&gt;
+
+&lt;p&gt;Before this patch-level release, changing the password of this hidden user
+involved performing some updates on the database and being really careful. This
+is no longer the case now: you can simply change the value of the secret
+containing this password and Portus will automatically update the password on
+start. This means that you will have to restart Portus whenever you decide to
+change the value of this secret.&lt;/p&gt;
+
+&lt;h3 id=&quot;whats-next&quot;&gt;What’s next&lt;/h3&gt;
+
+&lt;p&gt;All these fixes are also available inside of the
+&lt;a href=&quot;https://github.com/SUSE/Portus/commits/master&quot;&gt;master&lt;/a&gt; branch, together with a
+bunch of new features and shiny improvements. The release process for &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4&lt;/code&gt; has
+been delayed a bit more than anticipated, but once we are done with the latest
+feature that we want to include, we will start a code freeze and then the new
+release will be out as soon as possible.&lt;/p&gt;
+
+        </description>
+        <pubDate>Mon, 30 Jul 2018 00:00:00 +0200</pubDate>
+        <link>/2018/07/30/portus-2.3.4.html</link>
+        <guid isPermaLink="true">/2018/07/30/portus-2.3.4.html</guid>
+      </item>
+    
+      <item>
         <title>Portus 2.3.3 released</title>
         <description>
           
