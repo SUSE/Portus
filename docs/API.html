@@ -439,6 +439,1060 @@ response body like so:</p>
 
 
 
+  <h3 id="spec-users" class="swagger-tag">Users</h3>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-get">
+        <h4 id="spec-method-get-api-v1-users-{id}-application_tokens" class="swagger-method-title">
+            <span class="swagger-method-name">GET</span>
+            <span class="swagger-method-route">/api/v1/users/{id}/application_tokens</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Returns list of user's tokens.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      User ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 200)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"plain_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-users-{id}-application_tokens" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/users/{id}/application_tokens</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Create user's token.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>application</i> (string, <b>required</b>):
+                      Application name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      User ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 201)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"plain_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-delete">
+        <h4 id="spec-method-delete-api-v1-users-application_tokens-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">DELETE</span>
+            <span class="swagger-method-route">/api/v1/users/application_tokens/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Delete application token.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (string, <b>required</b>):
+                      Token id.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">204</td>
+                    <td class="swagger-response-message">Delete application token.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-users" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/users</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Create new user.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>user[username]</i> (string, <b>required</b>):
+                      User name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[email]</i> (string, <b>required</b>):
+                      E-mail.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[password]</i> (string, <b>required</b>):
+                      Password.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[display_name]</i> (string):
+                      Display name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[bot]</i> (boolean):
+                      Whether this is a bot or not.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 201)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-get">
+        <h4 id="spec-method-get-api-v1-users" class="swagger-method-title">
+            <span class="swagger-method-name">GET</span>
+            <span class="swagger-method-route">/api/v1/users</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">This will expose all users.</p>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 200)</h4>
+                      <p>
+                        Returns list of users.
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"bot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-put">
+        <h4 id="spec-method-put-api-v1-users-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">PUT</span>
+            <span class="swagger-method-route">/api/v1/users/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Update user.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>user[username]</i> (string):
+                      User name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[email]</i> (string):
+                      E-mail.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[password]</i> (string):
+                      Password.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[display_name]</i> (string):
+                      Display name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      User ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 200)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-delete">
+        <h4 id="spec-method-delete-api-v1-users-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">DELETE</span>
+            <span class="swagger-method-route">/api/v1/users/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Delete user.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      User ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">204</td>
+                    <td class="swagger-response-message">Delete user.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class="swagger-method swagger-method-get">
+        <h4 id="spec-method-get-api-v1-users-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">GET</span>
+            <span class="swagger-method-route">/api/v1/users/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Show user by id or email.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (string, <b>required</b>):
+                      User ID or email.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 200)</h4>
+                      <p>
+                        
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"bot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+     
+
+
+
+<div class="swagger-paths">
+    
+    <div class="swagger-method swagger-method-post">
+        <h4 id="spec-method-post-api-v1-users-bootstrap" class="swagger-method-title">
+            <span class="swagger-method-name">POST</span>
+            <span class="swagger-method-route">/api/v1/users/bootstrap</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Use this method to create the first admin user. The response will include an application token so you can use this user right away. This method should be used when bootstrapping a Portus instance by using the REST API. Last but not least, it will respond with a 405 if the `first_user_admin` configuration value has been disabled.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>user[username]</i> (string, <b>required</b>):
+                      User name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[email]</i> (string, <b>required</b>):
+                      E-mail.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[password]</i> (string, <b>required</b>):
+                      Password.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                    <li>
+                      <i>user[display_name]</i> (string):
+                      Display name.
+                      
+                        This parameter is part of the data to be sent as a form.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                    
+                      <h4>Response Class (status: 201)</h4>
+                      <p>
+                        Create the first admin user.
+                        Format of the response:
+                      </p>
+                      
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"plain_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+                    
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">400</td>
+                    <td class="swagger-response-message">Bad request.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">405</td>
+                    <td class="swagger-response-message">Method Not Allowed.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+  
+
   <h3 id="spec-health" class="swagger-tag">Health</h3>
 
   
@@ -610,6 +1664,7 @@ response body like so:</p>
     </span><span class="s2">"webhooks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"global"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updatable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
@@ -716,6 +1771,7 @@ response body like so:</p>
   </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updatable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="s2">"namespaces_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
@@ -1021,6 +2077,101 @@ response body like so:</p>
         </div>
     </div>
     
+    <div class="swagger-method swagger-method-delete">
+        <h4 id="spec-method-delete-api-v1-namespaces-{id}" class="swagger-method-title">
+            <span class="swagger-method-name">DELETE</span>
+            <span class="swagger-method-route">/api/v1/namespaces/{id}</span>
+        </h4>
+
+        <div class="swagger-method-details">
+          <p class="swagger-method-description">Delete namespace.</p>
+            
+            <div class="swagger-parameters">
+                <h4>Parameters</h4>
+
+                <ul>
+                  
+                    <li>
+                      <i>id</i> (integer, <b>required</b>):
+                      Namespace ID.
+                      
+                        This parameter has to be included as part of the path.
+                      
+                    </li>
+                  
+                </ul>
+            </div>
+            
+
+            
+            <div class="swagger-response">
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+                  
+                  
+                
+
+                <h4>Response Messages</h4>
+
+                <table cellspacing="0" cellpadding="0">
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">204</td>
+                    <td class="swagger-response-message">Delete namespace.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">401</td>
+                    <td class="swagger-response-message">Authentication fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">403</td>
+                    <td class="swagger-response-message">Authorization fails.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">404</td>
+                    <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
+                  </tr>
+                  
+                
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
     <div class="swagger-method swagger-method-get">
         <h4 id="spec-method-get-api-v1-namespaces-{id}" class="swagger-method-title">
             <span class="swagger-method-name">GET</span>
@@ -1071,6 +2222,7 @@ response body like so:</p>
   </span><span class="s2">"webhooks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"global"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updatable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
@@ -1184,7 +2336,9 @@ response body like so:</p>
     </span><span class="s2">"tags_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="s2">"strings"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"starred"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"destroyable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
 
@@ -1789,7 +2943,9 @@ response body like so:</p>
     </span><span class="s2">"tags_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="s2">"strings"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"starred"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"destroyable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
 
@@ -2230,7 +3386,9 @@ response body like so:</p>
   </span><span class="s2">"tags_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"strings"</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"starred"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"destroyable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
                     
@@ -2324,6 +3482,9 @@ response body like so:</p>
                   
                   
                 
+                  
+                  
+                
 
                 <h4>Response Messages</h4>
 
@@ -2358,6 +3519,14 @@ response body like so:</p>
                   <tr>
                     <td class="swagger-response-code">404</td>
                     <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -2605,6 +3774,9 @@ response body like so:</p>
                   
                   
                 
+                  
+                  
+                
 
                 <h4>Response Messages</h4>
 
@@ -2639,6 +3811,14 @@ response body like so:</p>
                   <tr>
                     <td class="swagger-response-code">404</td>
                     <td class="swagger-response-message">Not found.</td>
+                  </tr>
+                  
+                
+                  
+                  
+                  <tr>
+                    <td class="swagger-response-code">422</td>
+                    <td class="swagger-response-message">Unprocessable Entity.</td>
                   </tr>
                   
                 
@@ -2696,6 +3876,7 @@ response body like so:</p>
     </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updatable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"namespaces_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2803,6 +3984,7 @@ response body like so:</p>
   </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updatable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="s2">"namespaces_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
@@ -3048,6 +4230,7 @@ response body like so:</p>
   </span><span class="s2">"description_md"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"hidden"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updatable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"users_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="s2">"namespaces_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
@@ -3162,6 +4345,7 @@ response body like so:</p>
     </span><span class="s2">"webhooks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="s2">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"global"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updatable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
@@ -3276,7 +4460,8 @@ response body like so:</p>
     </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"bot"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span></code></pre></figure>
 
@@ -3690,1048 +4875,6 @@ response body like so:</p>
                   <tr>
                     <td class="swagger-response-code">404</td>
                     <td class="swagger-response-message">Not found.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">422</td>
-                    <td class="swagger-response-message">Unprocessable Entity.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-</div>
-
-  
-
-  <h3 id="spec-users" class="swagger-tag">Users</h3>
-
-  
-     
-
-
-
-<div class="swagger-paths">
-    
-    <div class="swagger-method swagger-method-get">
-        <h4 id="spec-method-get-api-v1-users-{id}-application_tokens" class="swagger-method-title">
-            <span class="swagger-method-name">GET</span>
-            <span class="swagger-method-route">/api/v1/users/{id}/application_tokens</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Returns list of user's tokens.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>id</i> (integer, <b>required</b>):
-                      User ID.
-                      
-                        This parameter has to be included as part of the path.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                    
-                      <h4>Response Class (status: 200)</h4>
-                      <p>
-                        
-                        Format of the response:
-                      </p>
-                      
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"plain_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span></code></pre></figure>
-
-                    
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">404</td>
-                    <td class="swagger-response-message">Not found.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-    <div class="swagger-method swagger-method-post">
-        <h4 id="spec-method-post-api-v1-users-{id}-application_tokens" class="swagger-method-title">
-            <span class="swagger-method-name">POST</span>
-            <span class="swagger-method-route">/api/v1/users/{id}/application_tokens</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Create user's token.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>application</i> (string, <b>required</b>):
-                      Application name.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>id</i> (integer, <b>required</b>):
-                      User ID.
-                      
-                        This parameter has to be included as part of the path.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                    
-                      <h4>Response Class (status: 201)</h4>
-                      <p>
-                        
-                        Format of the response:
-                      </p>
-                      
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"plain_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-</span><span class="p">}</span></code></pre></figure>
-
-                    
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">400</td>
-                    <td class="swagger-response-message">Bad request.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">422</td>
-                    <td class="swagger-response-message">Unprocessable Entity.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-</div>
-
-  
-     
-
-
-
-<div class="swagger-paths">
-    
-    <div class="swagger-method swagger-method-delete">
-        <h4 id="spec-method-delete-api-v1-users-application_tokens-{id}" class="swagger-method-title">
-            <span class="swagger-method-name">DELETE</span>
-            <span class="swagger-method-route">/api/v1/users/application_tokens/{id}</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Delete application token.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>id</i> (string, <b>required</b>):
-                      Token id.
-                      
-                        This parameter has to be included as part of the path.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">204</td>
-                    <td class="swagger-response-message">Delete application token.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">404</td>
-                    <td class="swagger-response-message">Not found.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-</div>
-
-  
-     
-
-
-
-<div class="swagger-paths">
-    
-    <div class="swagger-method swagger-method-post">
-        <h4 id="spec-method-post-api-v1-users" class="swagger-method-title">
-            <span class="swagger-method-name">POST</span>
-            <span class="swagger-method-route">/api/v1/users</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Create new user.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>user[username]</i> (string, <b>required</b>):
-                      User name.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[email]</i> (string, <b>required</b>):
-                      E-mail.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[password]</i> (string, <b>required</b>):
-                      Password.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[display_name]</i> (string):
-                      Display name.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                    
-                      <h4>Response Class (status: 201)</h4>
-                      <p>
-                        
-                        Format of the response:
-                      </p>
-                      
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-</span><span class="p">}</span></code></pre></figure>
-
-                    
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">400</td>
-                    <td class="swagger-response-message">Bad request.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">422</td>
-                    <td class="swagger-response-message">Unprocessable Entity.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-    <div class="swagger-method swagger-method-get">
-        <h4 id="spec-method-get-api-v1-users" class="swagger-method-title">
-            <span class="swagger-method-name">GET</span>
-            <span class="swagger-method-route">/api/v1/users</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">This will expose all users.</p>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                    
-                      <h4>Response Class (status: 200)</h4>
-                      <p>
-                        Returns list of users.
-                        Format of the response:
-                      </p>
-                      
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span></code></pre></figure>
-
-                    
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-</div>
-
-  
-     
-
-
-
-<div class="swagger-paths">
-    
-    <div class="swagger-method swagger-method-put">
-        <h4 id="spec-method-put-api-v1-users-{id}" class="swagger-method-title">
-            <span class="swagger-method-name">PUT</span>
-            <span class="swagger-method-route">/api/v1/users/{id}</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Update user.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>user[username]</i> (string):
-                      User name.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[email]</i> (string):
-                      E-mail.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[password]</i> (string):
-                      Password.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[display_name]</i> (string):
-                      Display name.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>id</i> (integer, <b>required</b>):
-                      User ID.
-                      
-                        This parameter has to be included as part of the path.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                    
-                      <h4>Response Class (status: 200)</h4>
-                      <p>
-                        
-                        Format of the response:
-                      </p>
-                      
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-</span><span class="p">}</span></code></pre></figure>
-
-                    
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">400</td>
-                    <td class="swagger-response-message">Bad request.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">404</td>
-                    <td class="swagger-response-message">Not found.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">422</td>
-                    <td class="swagger-response-message">Unprocessable Entity.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-    <div class="swagger-method swagger-method-delete">
-        <h4 id="spec-method-delete-api-v1-users-{id}" class="swagger-method-title">
-            <span class="swagger-method-name">DELETE</span>
-            <span class="swagger-method-route">/api/v1/users/{id}</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Delete user.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>id</i> (integer, <b>required</b>):
-                      User ID.
-                      
-                        This parameter has to be included as part of the path.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">204</td>
-                    <td class="swagger-response-message">Delete user.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">404</td>
-                    <td class="swagger-response-message">Not found.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-    <div class="swagger-method swagger-method-get">
-        <h4 id="spec-method-get-api-v1-users-{id}" class="swagger-method-title">
-            <span class="swagger-method-name">GET</span>
-            <span class="swagger-method-route">/api/v1/users/{id}</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Show user by id or email.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>id</i> (string, <b>required</b>):
-                      User ID or email.
-                      
-                        This parameter has to be included as part of the path.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                    
-                      <h4>Response Class (status: 200)</h4>
-                      <p>
-                        
-                        Format of the response:
-                      </p>
-                      
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"current_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"last_sign_in_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"locked_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;date-time&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"namespace_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-</span><span class="p">}</span></code></pre></figure>
-
-                    
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">404</td>
-                    <td class="swagger-response-message">Not found.</td>
-                  </tr>
-                  
-                
-                </table>
-            </div>
-            
-        </div>
-    </div>
-    
-</div>
-
-  
-     
-
-
-
-<div class="swagger-paths">
-    
-    <div class="swagger-method swagger-method-post">
-        <h4 id="spec-method-post-api-v1-users-bootstrap" class="swagger-method-title">
-            <span class="swagger-method-name">POST</span>
-            <span class="swagger-method-route">/api/v1/users/bootstrap</span>
-        </h4>
-
-        <div class="swagger-method-details">
-          <p class="swagger-method-description">Use this method to create the first admin user. The response will include an application token so you can use this user right away. This method should be used when bootstrapping a Portus instance by using the REST API. Last but not least, it will respond with a 405 if the `first_user_admin` configuration value has been disabled.</p>
-            
-            <div class="swagger-parameters">
-                <h4>Parameters</h4>
-
-                <ul>
-                  
-                    <li>
-                      <i>user[username]</i> (string, <b>required</b>):
-                      User name.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[email]</i> (string, <b>required</b>):
-                      E-mail.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[password]</i> (string, <b>required</b>):
-                      Password.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                    <li>
-                      <i>user[display_name]</i> (string):
-                      Display name.
-                      
-                        This parameter is part of the data to be sent as a form.
-                      
-                    </li>
-                  
-                </ul>
-            </div>
-            
-
-            
-            <div class="swagger-response">
-                
-                  
-                  
-                    
-                      <h4>Response Class (status: 201)</h4>
-                      <p>
-                        Create the first admin user.
-                        Format of the response:
-                      </p>
-                      
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"plain_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-</span><span class="p">}</span></code></pre></figure>
-
-                    
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-                  
-                  
-                
-
-                <h4>Response Messages</h4>
-
-                <table cellspacing="0" cellpadding="0">
-                
-                  
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">400</td>
-                    <td class="swagger-response-message">Bad request.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">401</td>
-                    <td class="swagger-response-message">Authentication fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">403</td>
-                    <td class="swagger-response-message">Authorization fails.</td>
-                  </tr>
-                  
-                
-                  
-                  
-                  <tr>
-                    <td class="swagger-response-code">405</td>
-                    <td class="swagger-response-message">Method Not Allowed.</td>
                   </tr>
                   
                 
