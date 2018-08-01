@@ -18,6 +18,8 @@ security:
 - api_key: []
 host: 172.17.0.1:3000
 tags:
+- name: users
+  description: Operations about users
 - name: health
   description: Operations about healths
 - name: namespaces
@@ -30,13 +32,343 @@ tags:
   description: Operations about tags
 - name: teams
   description: Operations about teams
-- name: users
-  description: Operations about users
 - name: vulnerabilities
   description: Operations about vulnerabilities
 - name: version
   description: Operations about versions
 paths:
+  "/api/v1/users/{id}/application_tokens":
+    get:
+      summary: Returns list of user's tokens
+      description: Returns list of user's tokens
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: User ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Returns list of user's tokens
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ApplicationTokens"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - users
+      operationId: getApiV1UsersIdApplicationTokens
+    post:
+      summary: Create user's token
+      description: Create user's token
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: application
+        description: Application name
+        type: string
+        required: true
+      - in: path
+        name: id
+        description: User ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '201':
+          description: Create user's token
+          schema:
+            "$ref": "#/definitions/ApplicationTokens"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - users
+      operationId: postApiV1UsersIdApplicationTokens
+  "/api/v1/users/application_tokens/{id}":
+    delete:
+      summary: Delete application token
+      description: Delete application token
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Token id
+        type: string
+        required: true
+      responses:
+        '204':
+          description: Delete application token
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - users
+      operationId: deleteApiV1UsersApplicationTokensId
+  "/api/v1/users":
+    post:
+      summary: Create new user
+      description: Create new user
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: user[username]
+        description: User name
+        type: string
+        required: true
+      - in: formData
+        name: user[email]
+        description: E-mail
+        type: string
+        required: true
+      - in: formData
+        name: user[password]
+        description: Password
+        type: string
+        required: true
+      - in: formData
+        name: user[display_name]
+        description: Display name
+        type: string
+        required: false
+      - in: formData
+        name: user[bot]
+        description: Whether this is a bot or not
+        type: boolean
+        required: false
+      responses:
+        '201':
+          description: Create new user
+          schema:
+            "$ref": "#/definitions/Users"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - users
+      operationId: postApiV1Users
+    get:
+      summary: Returns list of users
+      description: This will expose all users
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Returns list of users
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/Users"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+      tags:
+      - users
+      operationId: getApiV1Users
+  "/api/v1/users/{id}":
+    put:
+      summary: Update user
+      description: Update user
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: user[username]
+        description: User name
+        type: string
+        required: false
+      - in: formData
+        name: user[email]
+        description: E-mail
+        type: string
+        required: false
+      - in: formData
+        name: user[password]
+        description: Password
+        type: string
+        required: false
+      - in: formData
+        name: user[display_name]
+        description: Display name
+        type: string
+        required: false
+      - in: path
+        name: id
+        description: User ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Update user
+          schema:
+            "$ref": "#/definitions/Users"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - users
+      operationId: putApiV1UsersId
+    delete:
+      summary: Delete user
+      description: Delete user
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: User ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '204':
+          description: Delete user
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - users
+      operationId: deleteApiV1UsersId
+    get:
+      summary: Show user by id or email
+      description: Show user by id or email
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: User ID or email
+        type: string
+        required: true
+      responses:
+        '200':
+          description: Show user by id or email
+          schema:
+            "$ref": "#/definitions/Users"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - users
+      operationId: getApiV1UsersId
+  "/api/v1/users/bootstrap":
+    post:
+      summary: Create the first admin user
+      description: Use this method to create the first admin user. The response will
+        include an application token so you can use this user right away. This method
+        should be used when bootstrapping a Portus instance by using the REST API.
+        Last but not least, it will respond with a 405 if the `first_user_admin` configuration
+        value has been disabled
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: user[username]
+        description: User name
+        type: string
+        required: true
+      - in: formData
+        name: user[email]
+        description: E-mail
+        type: string
+        required: true
+      - in: formData
+        name: user[password]
+        description: Password
+        type: string
+        required: true
+      - in: formData
+        name: user[display_name]
+        description: Display name
+        type: string
+        required: false
+      responses:
+        '201':
+          description: Create the first admin user
+          schema:
+            "$ref": "#/definitions/ApplicationTokens"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '405':
+          description: Method Not Allowed
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - users
+      operationId: postApiV1UsersBootstrap
   "/api/v1/health":
     get:
       summary: Returns hash of metrics
@@ -203,6 +535,32 @@ paths:
       tags:
       - namespaces
       operationId: putApiV1NamespacesId
+    delete:
+      summary: Delete namespace
+      description: Delete namespace
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Namespace ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '204':
+          description: Delete namespace
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+      tags:
+      - namespaces
+      operationId: deleteApiV1NamespacesId
     get:
       summary: Show namespaces by id
       description: Show namespaces by id
@@ -597,6 +955,8 @@ paths:
           description: Authorization fails
         '404':
           description: Not found
+        '422':
+          description: Unprocessable Entity
       tags:
       - repositories
       operationId: deleteApiV1RepositoriesId
@@ -668,6 +1028,8 @@ paths:
           description: Authorization fails
         '404':
           description: Not found
+        '422':
+          description: Unprocessable Entity
       tags:
       - tags
       operationId: deleteApiV1TagsId
@@ -989,333 +1351,6 @@ paths:
       tags:
       - teams
       operationId: putApiV1TeamsIdMembersMemberId
-  "/api/v1/users/{id}/application_tokens":
-    get:
-      summary: Returns list of user's tokens
-      description: Returns list of user's tokens
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: User ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Returns list of user's tokens
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/ApplicationTokens"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - users
-      operationId: getApiV1UsersIdApplicationTokens
-    post:
-      summary: Create user's token
-      description: Create user's token
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      parameters:
-      - in: formData
-        name: application
-        description: Application name
-        type: string
-        required: true
-      - in: path
-        name: id
-        description: User ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '201':
-          description: Create user's token
-          schema:
-            "$ref": "#/definitions/ApplicationTokens"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '422':
-          description: Unprocessable Entity
-          schema:
-            "$ref": "#/definitions/FullApiErrors"
-      tags:
-      - users
-      operationId: postApiV1UsersIdApplicationTokens
-  "/api/v1/users/application_tokens/{id}":
-    delete:
-      summary: Delete application token
-      description: Delete application token
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Token id
-        type: string
-        required: true
-      responses:
-        '204':
-          description: Delete application token
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - users
-      operationId: deleteApiV1UsersApplicationTokensId
-  "/api/v1/users":
-    post:
-      summary: Create new user
-      description: Create new user
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      parameters:
-      - in: formData
-        name: user[username]
-        description: User name
-        type: string
-        required: true
-      - in: formData
-        name: user[email]
-        description: E-mail
-        type: string
-        required: true
-      - in: formData
-        name: user[password]
-        description: Password
-        type: string
-        required: true
-      - in: formData
-        name: user[display_name]
-        description: Display name
-        type: string
-        required: false
-      responses:
-        '201':
-          description: Create new user
-          schema:
-            "$ref": "#/definitions/Users"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '422':
-          description: Unprocessable Entity
-          schema:
-            "$ref": "#/definitions/FullApiErrors"
-      tags:
-      - users
-      operationId: postApiV1Users
-    get:
-      summary: Returns list of users
-      description: This will expose all users
-      produces:
-      - application/json
-      responses:
-        '200':
-          description: Returns list of users
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/Users"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-      tags:
-      - users
-      operationId: getApiV1Users
-  "/api/v1/users/{id}":
-    put:
-      summary: Update user
-      description: Update user
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      parameters:
-      - in: formData
-        name: user[username]
-        description: User name
-        type: string
-        required: false
-      - in: formData
-        name: user[email]
-        description: E-mail
-        type: string
-        required: false
-      - in: formData
-        name: user[password]
-        description: Password
-        type: string
-        required: false
-      - in: formData
-        name: user[display_name]
-        description: Display name
-        type: string
-        required: false
-      - in: path
-        name: id
-        description: User ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Update user
-          schema:
-            "$ref": "#/definitions/Users"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-        '422':
-          description: Unprocessable Entity
-          schema:
-            "$ref": "#/definitions/FullApiErrors"
-      tags:
-      - users
-      operationId: putApiV1UsersId
-    delete:
-      summary: Delete user
-      description: Delete user
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: User ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '204':
-          description: Delete user
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - users
-      operationId: deleteApiV1UsersId
-    get:
-      summary: Show user by id or email
-      description: Show user by id or email
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: User ID or email
-        type: string
-        required: true
-      responses:
-        '200':
-          description: Show user by id or email
-          schema:
-            "$ref": "#/definitions/Users"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - users
-      operationId: getApiV1UsersId
-  "/api/v1/users/bootstrap":
-    post:
-      summary: Create the first admin user
-      description: Use this method to create the first admin user. The response will
-        include an application token so you can use this user right away. This method
-        should be used when bootstrapping a Portus instance by using the REST API.
-        Last but not least, it will respond with a 405 if the `first_user_admin` configuration
-        value has been disabled
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      parameters:
-      - in: formData
-        name: user[username]
-        description: User name
-        type: string
-        required: true
-      - in: formData
-        name: user[email]
-        description: E-mail
-        type: string
-        required: true
-      - in: formData
-        name: user[password]
-        description: Password
-        type: string
-        required: true
-      - in: formData
-        name: user[display_name]
-        description: Display name
-        type: string
-        required: false
-      responses:
-        '201':
-          description: Create the first admin user
-          schema:
-            "$ref": "#/definitions/ApplicationTokens"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '405':
-          description: Method Not Allowed
-          schema:
-            "$ref": "#/definitions/ApiErrors"
-        '422':
-          description: Unprocessable Entity
-          schema:
-            "$ref": "#/definitions/FullApiErrors"
-      tags:
-      - users
-      operationId: postApiV1UsersBootstrap
   "/api/v1/vulnerabilities":
     post:
       summary: Force re-schedule for all tags
@@ -1387,6 +1422,77 @@ paths:
       - version
       operationId: getApiVersion
 definitions:
+  ApplicationTokens:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      application:
+        type: string
+      plain_token:
+        type: string
+    description: Use this method to create the first admin user. The response will
+      include an application token so you can use this user right away. This method
+      should be used when bootstrapping a Portus instance by using the REST API. Last
+      but not least, it will respond with a 405 if the `first_user_admin` configuration
+      value has been disabled
+  ApiErrors:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Error message
+    description: Updates a member from a team
+  FullApiErrors:
+    type: object
+    properties:
+      message:
+        type: object
+        description: Detailed hash with the fields
+    description: Update team
+  Users:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: User ID
+      username:
+        type: string
+        description: User name
+      email:
+        type: string
+        description: E-mail
+      current_sign_in_at:
+        type: string
+        format: date-time
+      last_sign_in_at:
+        type: string
+        format: date-time
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      admin:
+        type: boolean
+      enabled:
+        type: boolean
+      locked_at:
+        type: string
+        format: date-time
+      namespace_id:
+        type: integer
+        format: int32
+      display_name:
+        type: string
+        description: Display name
+      bot:
+        type: boolean
+        description: Whether this is a bot or not
+    description: Returns the list of team members
   Health:
     type: object
     properties:
@@ -1449,6 +1555,9 @@ definitions:
       global:
         type: boolean
         description: Whether this is the global namespace or not
+      updatable:
+        type: string
+        description: Boolean that tells if the current user can manage the namespace
       permissions:
         type: string
         description: Different permissions for the current user
@@ -1494,6 +1603,9 @@ definitions:
       role:
         type: string
         description: The role this of the current user within this team
+      updatable:
+        type: string
+        description: Boolean that tells if the current user can manage the team
       users_count:
         type: integer
         format: int32
@@ -1503,28 +1615,6 @@ definitions:
         format: int32
         description: The number of namespaces that belong to this team
     description: Show teams by id
-  ApiErrors:
-    type: object
-    properties:
-      message:
-        type: string
-        description: Error message
-    description: Use this method to create the first admin user. The response will
-      include an application token so you can use this user right away. This method
-      should be used when bootstrapping a Portus instance by using the REST API. Last
-      but not least, it will respond with a 405 if the `first_user_admin` configuration
-      value has been disabled
-  FullApiErrors:
-    type: object
-    properties:
-      message:
-        type: object
-        description: Detailed hash with the fields
-    description: Use this method to create the first admin user. The response will
-      include an application token so you can use this user right away. This method
-      should be used when bootstrapping a Portus instance by using the REST API. Last
-      but not least, it will respond with a 405 if the `first_user_admin` configuration
-      value has been disabled
   Repositories:
     type: object
     properties:
@@ -1565,6 +1655,13 @@ definitions:
         items:
           type: string
         description: The repository's tags grouped by digest
+      starred:
+        type: string
+        description: Boolean that tells if the current user starred the repository
+      destroyable:
+        type: string
+        description: Boolean that tells if the current user can destroy or not the
+          repository
     description: Show repositories by id
   Registries:
     type: object
@@ -1628,45 +1725,6 @@ definitions:
         description: A hash of vulnerabilities for this tag, or null if the feature
           is not enabled
     description: Show tag by id
-  Users:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int32
-        description: User ID
-      username:
-        type: string
-        description: User name
-      email:
-        type: string
-        description: E-mail
-      current_sign_in_at:
-        type: string
-        format: date-time
-      last_sign_in_at:
-        type: string
-        format: date-time
-      created_at:
-        type: string
-        format: date-time
-      updated_at:
-        type: string
-        format: date-time
-      admin:
-        type: boolean
-      enabled:
-        type: boolean
-      locked_at:
-        type: string
-        format: date-time
-      namespace_id:
-        type: integer
-        format: int32
-      display_name:
-        type: string
-        description: Display name
-    description: Show user by id or email
   TeamMembers:
     type: object
     properties:
@@ -1701,21 +1759,6 @@ definitions:
         type: string
         description: Tells if it's the current session user
     description: Adds a user as member in a team
-  ApplicationTokens:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int32
-      application:
-        type: string
-      plain_token:
-        type: string
-    description: Use this method to create the first admin user. The response will
-      include an application token so you can use this user right away. This method
-      should be used when bootstrapping a Portus instance by using the REST API. Last
-      but not least, it will respond with a 405 if the `first_user_admin` configuration
-      value has been disabled
   Version:
     type: object
     properties:
