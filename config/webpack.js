@@ -27,44 +27,15 @@ var config = {
 
   entry: {
     application: './main.js',
+    unauthenticated: './unauthenticated.js',
   },
 
   output: {
     path: path.join(ROOT_PATH, 'public/assets/webpack'),
     publicPath: '/assets/webpack/',
     filename: IS_PRODUCTION ? '[name]-[chunkhash].js' : '[name].js',
+    chunkFilename: IS_PRODUCTION ? '[name]-[chunkhash].chunk.js' : '[name].chunk.js',
   },
-
-  plugins: [
-    // Manifest filename must match config.webpack.manifest_filename
-    // webpack-rails only needs assetsByChunkName to function properly
-    new StatsPlugin('manifest.json', {
-      chunkModules: false,
-      source: false,
-      chunks: false,
-      modules: false,
-      assets: true,
-    }),
-
-    new VueLoaderPlugin(),
-
-    // fix legacy jQuery plugins which depend on globals
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-    }),
-
-    new webpack.IgnorePlugin(/^\.\/jquery$/, /jquery-ujs$/),
-
-    WEBPACK_REPORT && new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      generateStatsFile: true,
-      openAnalyzer: false,
-      reportFilename: path.join(ROOT_PATH, 'webpack-report/index.html'),
-      statsFilename: path.join(ROOT_PATH, 'webpack-report/stats.json'),
-    }),
-  ].filter(Boolean),
 
   resolve: {
     extensions: ['.js', '.vue'],
@@ -112,23 +83,66 @@ var config = {
       },
     ],
   },
+
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        default: false,
+        vendors: {
+          priority: 10,
+          test: /[\\/](node_modules|vendor[\\/]assets[\\/]javascripts)[\\/]/,
+        },
+      },
+    },
+  },
+
+  plugins: [
+    // Manifest filename must match config.webpack.manifest_filename
+    // webpack-rails only needs assetsByChunkName to function properly
+    new StatsPlugin('manifest.json', {
+      chunkModules: false,
+      source: false,
+      chunks: false,
+      modules: false,
+      assets: true,
+    }),
+
+    new VueLoaderPlugin(),
+
+    // fix legacy jQuery plugins which depend on globals
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+    }),
+
+    new webpack.IgnorePlugin(/^\.\/jquery$/, /jquery-ujs$/),
+
+    WEBPACK_REPORT && new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      generateStatsFile: true,
+      openAnalyzer: false,
+      reportFilename: path.join(ROOT_PATH, 'webpack-report/index.html'),
+      statsFilename: path.join(ROOT_PATH, 'webpack-report/stats.json'),
+    }),
+  ].filter(Boolean),
 };
 
 if (IS_PRODUCTION) {
-  config.optimization = {
-    minimizer: [
-      new UglifyJSPlugin({
-        sourceMap: true,
-        cache: true,
-        parallel: true,
-        uglifyOptions: {
-          output: {
-            comments: false
-          }
+  config.optimization.minimizer = [
+    new UglifyJSPlugin({
+      sourceMap: true,
+      cache: true,
+      parallel: true,
+      uglifyOptions: {
+        output: {
+          comments: false
         }
-      })
-    ],
-  };
+      }
+    })
+  ];
+
   config.plugins.push(
     new webpack.NoEmitOnErrorsPlugin(),
 

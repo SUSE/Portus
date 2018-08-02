@@ -12,41 +12,17 @@ import 'bootstrap/js/collapse';
 // Life it up
 import 'vendor/lifeitup_layout';
 
-import './bootstrap';
-import './vue-shared';
+// misc
+import './plugins';
 import './polyfill';
 
 // modules
 import './modules/admin/registries';
 import './modules/users';
 import './modules/dashboard';
-import './modules/explore';
 import './modules/repositories';
 import './modules/namespaces';
 import './modules/teams';
 import './modules/webhooks';
 
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-
-import Alert from './shared/components/alert';
-
-import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects';
-
-dayjs.extend(relativeTime);
-
-// Actions to be done to initialize any page.
-$(function () {
-  // process scheduled alerts
-  Alert.$process();
-
-  refreshFloatAlertPosition();
-
-  // disable effects during tests
-  $.fx.off = $('body').data('disable-effects');
-
-  // necessary to be compatible with the js rendered
-  // on the server-side via jquery-ujs
-  window.setTimeOutAlertDelay = setTimeOutAlertDelay;
-  window.refreshFloatAlertPosition = refreshFloatAlertPosition;
-});
+import './bootstrap';

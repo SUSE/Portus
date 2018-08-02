@@ -28,7 +28,8 @@ html
     meta content="/favicon/browserconfig.xml" name="msapplication-config"
     meta content="#205683" name="theme-color"
 
-    = javascript_include_tag(*webpack_asset_paths("application"))
+    = javascript_include_tag(*webpack_asset_paths("vendors~application~unauthenticated"), defer: true)
+    = javascript_include_tag(*webpack_asset_paths("unauthenticated"),  defer: true)
     = yield :js_header
 
   body.login data-controller="#{js_controller}" data-route="#{js_route}"
