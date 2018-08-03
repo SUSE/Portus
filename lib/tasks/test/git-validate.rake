@@ -31,6 +31,13 @@ def git_validation?
   spawn_cmd(cmd: "which git-validation", output: false).zero?
 end
 
+# Returns the first commit to be considered by git-validation.
+def from
+  return FROM_SHA unless ENV["CI"] == "true"
+  return ENV["TRAVIS_BRANCH"] if ENV["TRAVIS_BRANCH"].present?
+  FROM_SHA
+end
+
 namespace :test do
   desc "Run git-validate on the source code"
   task git: :environment do
@@ -40,8 +47,8 @@ namespace :test do
     end
 
     path = Rails.root
-    puts "cd #{path} && git-validation -q -range #{FROM_SHA}..HEAD"
-    status = spawn_cmd(cmd: "cd #{path} && git-validation -q -range #{FROM_SHA}..HEAD")
+    puts "cd #{path} && git-validation -range #{from}..HEAD"
+    status = spawn_cmd(cmd: "cd #{path} && git-validation -range #{from}..HEAD")
     exit status
   end
 end
