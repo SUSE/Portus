@@ -1,0 +1,151 @@
+version: "2"
+
+services:
+  portus:
+    image: opensuse/portus:head
+    restart: unless-stopped
+    environment:
+      - CCONFIG_PREFIX=PORTUS
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
+
+      # DB. The password for the database should definitely not be here. You are
+      # probably better off with Docker Swarm secrets.
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_DATABASE=portus_production
+      - PORTUS_DB_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
+
+      # Secrets. It can possibly be handled better with Swarm's secrets.
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
+
+      # SSL
+      - PORTUS_PUMA_TLS_KEY=/certificates/portus.key
+      - PORTUS_PUMA_TLS_CERT=/certificates/portus.crt
+
+      # NGinx is serving the assets instead of Puma. If you want to change this,
+      # uncomment this line.
+      #- RAILS_SERVE_STATIC_FILES='true'
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    links:
+      - db
+    volumes:
+      - ./secrets:/certificates:ro
+      - static:/srv/Portus/public
+
+  background:
+    image: opensuse/portus:head
+    restart: unless-stopped
+    depends_on:
+      - portus
+      - db
+    environment:
+      # Theoretically not needed, but cconfig's been buggy on this...
+      - CCONFIG_PREFIX=PORTUS
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
+
+      # DB. The password for the database should definitely not be here. You are
+      # probably better off with Docker Swarm secrets.
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_DATABASE=portus_production
+      - PORTUS_DB_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
+
+      # Secrets. It can possibly be handled better with Swarm's secrets.
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
+
+      - PORTUS_BACKGROUND=true
+    links:
+      - db
+    volumes:
+      - ./secrets:/certificates:ro
+
+  db:
+    image: library/mariadb:10.0.23
+    restart: unless-stopped
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;' --innodb-flush-log-at-trx-commit=0
+    environment:
+      - MYSQL_DATABASE=portus_production
+
+      # Again, the password shouldn't be handled like this.
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - /var/lib/portus/mariadb:/var/lib/mysql
+
+  registry:
+    image: library/registry:2.6
+    command: ["/bin/sh", "/etc/docker/registry/init"]
+    restart: unless-stopped
+    environment:
+      # Authentication
+      REGISTRY_AUTH_TOKEN_REALM: https://${MACHINE_FQDN}/v2/token
+      REGISTRY_AUTH_TOKEN_SERVICE: ${MACHINE_FQDN}
+      REGISTRY_AUTH_TOKEN_ISSUER: ${MACHINE_FQDN}
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /secrets/portus.crt
+
+      # SSL
+      REGISTRY_HTTP_TLS_CERTIFICATE: /secrets/portus.crt
+      REGISTRY_HTTP_TLS_KEY: /secrets/portus.key
+
+      # Portus endpoint
+      REGISTRY_NOTIFICATIONS_ENDPOINTS: >
+        - name: portus
+          url: https://${MACHINE_FQDN}/v2/webhooks/events
+          timeout: 2000ms
+          threshold: 5
+          backoff: 1s
+    volumes:
+      - /var/lib/portus/registry:/var/lib/registry
+      - ./secrets:/secrets:ro
+      - ./registry/config.yml:/etc/docker/registry/config.yml:ro
+      - ./registry/init:/etc/docker/registry/init:ro
+    ports:
+      - 5000:5000
+      - 5001:5001 # required to access debug service
+    links:
+      - portus:portus
+
+  nginx:
+    image: library/nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./secrets:/secrets:ro
+      - static:/srv/Portus/public:ro
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - registry:registry
+      - portus:portus
+
+  clair:
+    image: quay.io/coreos/clair:v2.0.1
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - "6060-6061:6060-6061"
+    volumes:
+      - /tmp:/tmp
+      - ./clair/clair.yml:/clair.yml
+    command: [-config, /clair.yml]
+
+  postgres:
+    image: library/postgres:10-alpine
+    environment:
+      POSTGRES_PASSWORD: portus
+
+volumes:
+  static:
+    driver: local
