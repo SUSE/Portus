@@ -1,5 +1,23 @@
 # Deploying Portus
 
+## Important note
+
+These examples are distributed and maintained in the hope that they will be
+useful, but without any warranty. We do *not* claim that these examples are
+bug-free or 100% secure. It's up to you to decide how to use them, and we expect
+you to review these files so they fit your purposes before doing anything with
+them.
+
+Moreover, we also tried to show as many different ways of deploying Portus as
+possible. This ranges from using certain environment variables which might not
+fit your use case, or features like static volumes that might not be strictly
+needed or useful to you. Hence, we recommend to all of those willing to use
+these files to first try them, tune them, and review them carefully.
+
+All that being said, enhancements are always welcomed.
+
+## What is this?
+
 In this directory we've compiled the files of different deployment
 strategies. All these examples are based on the [official Portus
 image](https://hub.docker.com/r/opensuse/portus/), and they only work for Portus
