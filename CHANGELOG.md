@@ -2,6 +2,10 @@
 
 Under development
 
+## 2.3.5
+
+- 7755c7201d61 Update sprockets to fix cve-2018-3760
+
 ## 2.3.4
 
 - ced82ca92149 oauth/gitlab: be sure to load all groups (#1903)
