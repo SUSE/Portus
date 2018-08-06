@@ -2,7 +2,7 @@
 
 - [Website](http://port.us.org/) | [Documentation](http://port.us.org/documentation.html) | [Blog](http://port.us.org/blog/index.html) | [Supported versions](http://port.us.org/docs/versions.html) | [How to deploy](http://port.us.org/docs/deploy.html)
 - Mailing list: [Google Groups](https://groups.google.com/forum/#!forum/portus-dev)
-- Last stable release: **2.3.4** (`2.3` and `latest` tags from the [official Docker image](https://hub.docker.com/r/opensuse/portus/))
+- Last stable release: **2.3.5** (`2.3` and `latest` tags from the [official Docker image](https://hub.docker.com/r/opensuse/portus/))
 
 Portus is an authorization server and a user interface for the next generation
 of the Docker registry. Portus targets [version
