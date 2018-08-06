@@ -32,6 +32,7 @@
         tempInput.value = this.commandToPull;
         tempInput.select();
         document.execCommand('copy');
+        tempInput.parentNode.removeChild(tempInput);
 
         this.$alert.$show('Copied pull command to clipboard');
       },
