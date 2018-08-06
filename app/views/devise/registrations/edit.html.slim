@@ -31,17 +31,7 @@
 
     - if current_user.email?
       - unless current_user.admin? && @admin_count == 1
-        .panel.panel-default
-          .panel-heading
-            h5
-              ' Disable account
-          .panel-body
-            = form_tag(toggle_enabled_path(current_user), method: :put, remote: true, id: 'disable-form') do
-                .form-group
-                  p
-                    | By disabling the account, you won't be able to access Portus with it, and
-                      any affiliations with any team will be lost.
-                  = submit_tag('Disable', class: 'btn btn-primary')
+        <disable-account-panel :user-id="#{current_user.id}"></disable-account-panel>
 
   - if APP_CONFIG.disabled?("ldap")
     - if current_user.email?

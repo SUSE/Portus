@@ -75,8 +75,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
 
     if current_user.toggle_enabled!(user)
       sign_out user if current_user == user && !user.enabled?
-      render template: "auth/registrations/toggle_enabled",
-             locals:   { user: user, path: request.fullpath }
+      render nothing: true
     else
       render nothing: true, status: 403
     end

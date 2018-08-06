@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import AppTokensWrapper from './components/application-tokens/wrapper';
+import DisableAccountPanel from './components/disable-account-panel';
 
 import UsersIndexPage from './pages/index';
 import UsersEditPage from './pages/edit';
@@ -33,6 +34,7 @@ $(() => {
 
       components: {
         AppTokensWrapper,
+        DisableAccountPanel,
         UsersIndexPage,
       },
 

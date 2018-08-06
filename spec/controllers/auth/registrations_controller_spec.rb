@@ -138,14 +138,14 @@ describe Auth::RegistrationsController do
 
     it "sends a 200 if the action is allowed" do
       sign_in admin
-      put :toggle_enabled, id: user.id, format: :erb
+      put :toggle_enabled, id: user.id
       expect(response.status).to be 200
     end
 
     it "signs out if the user disable itself" do
       sign_in user
       expect(warden.authenticated?(:user)).to be true
-      put :toggle_enabled, id: user.id, format: :erb
+      put :toggle_enabled, id: user.id
       expect(response.status).to be 200
       expect(warden.authenticated?(:user)).to be false
     end

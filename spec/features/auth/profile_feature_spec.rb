@@ -114,6 +114,6 @@ describe "Update password feature" do
   end
 
   it 'The "disable" pannel does not exists if it\'s the only admin' do
-    expect(page).not_to have_css("#disable-form")
+    expect(page).not_to have_button("Disable")
   end
 end

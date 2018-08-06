@@ -1,5 +1,3 @@
-import 'jquery-ujs';
-
 // Bootstrap
 import 'bootstrap/js/transition';
 import 'bootstrap/js/tab';
