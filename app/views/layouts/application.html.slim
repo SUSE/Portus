@@ -29,7 +29,9 @@ html
     meta content="#205683" name="theme-color"
 
     = render "shared/config"
-    = javascript_include_tag(*webpack_asset_paths("application"))
+    = javascript_include_tag(*webpack_asset_paths("vendors~application~unauthenticated"), defer: true)
+    = javascript_include_tag(*webpack_asset_paths("vendors~application"), defer: true)
+    = javascript_include_tag(*webpack_asset_paths("application"), defer: true)
     = yield :js_header
 
   body data-controller="#{js_controller}" data-route="#{js_route}" class="#{'is-admin' if current_user.admin?}" data-disable-effects="#{Rails.env.test?}"
