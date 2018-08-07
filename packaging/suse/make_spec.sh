@@ -78,9 +78,10 @@ pushd build/$packagename-$branch/
   # format (when in depth=0): "├─ NAME@VERSION". So, we have to replace @ by an
   # empty space, and this way we'll be able to awk it away.
   js_provides="# Provides extracted from the yarn.lock file."
-  for js in $(NODE_ENV=production yarn -s list --depth=0 | tr "@" " "); do
-    js_name=$(echo $js | awk '{ print $2 }')
-    js_version=$(echo $js | awk '{ print $3 }')
+  for js in $(NODE_ENV=production yarn -s list --depth=0 | cut -d" " -f2); do
+    js=$(echo $js | tr "@" " ")
+    js_name=$(echo $js | awk '{ print $1 }')
+    js_version=$(echo $js | awk '{ print $2 }')
     js_provides="$js_provides\nProvides: bundled(js($js_name)) = $js_version"
   done
 popd
