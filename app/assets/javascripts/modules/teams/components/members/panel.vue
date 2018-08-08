@@ -22,18 +22,13 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import TeamMembersTable from './table';
 
   export default {
     props: ['members', 'team', 'state', 'currentMember'],
 
     components: {
-      Panel,
       TeamMembersTable,
-      ToggleLink,
     },
   };
 </script>

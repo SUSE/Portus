@@ -13,9 +13,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import AppTokensTable from './table';
 
   export default {
@@ -27,8 +24,6 @@
 
     components: {
       AppTokensTable,
-      Panel,
-      ToggleLink,
     },
 
     computed: {

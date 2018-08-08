@@ -1,4 +1,4 @@
-import Alert from '~/shared/components/alert';
+import Alert from '~/utils/alert';
 
 export function handleHttpResponseError(response) {
   const errors = response.data.message || response.data;

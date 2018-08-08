@@ -20,8 +20,6 @@
 </template>
 
 <script>
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import CommentsList from './list';
 
   export default {
@@ -29,7 +27,6 @@
 
     components: {
       CommentsList,
-      ToggleLink,
     },
   };
 </script>

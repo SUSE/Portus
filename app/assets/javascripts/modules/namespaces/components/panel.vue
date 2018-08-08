@@ -17,10 +17,6 @@
 </template>
 
 <script>
-  import LoadingIcon from '~/shared/components/loading-icon';
-  import ToggleLink from '~/shared/components/toggle-link';
-  import Panel from '~/shared/components/panel';
-
   import NamespacesTable from './table';
 
   import NamespacesStore from '../store';
@@ -35,10 +31,7 @@
     },
 
     components: {
-      LoadingIcon,
       NamespacesTable,
-      ToggleLink,
-      Panel,
     },
   };
 </script>

@@ -10,8 +10,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-
   import { handleHttpResponseError } from '~/utils/http';
 
   import UsersService from '../service';
@@ -19,10 +17,6 @@
   export default {
     props: {
       userId: Number,
-    },
-
-    components: {
-      Panel,
     },
 
     methods: {

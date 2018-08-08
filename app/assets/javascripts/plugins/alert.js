@@ -1,4 +1,4 @@
-import Alert from '~/shared/components/alert';
+import Alert from '~/utils/alert';
 
 export default function install(Vue) {
   Object.defineProperties(Vue.prototype, {

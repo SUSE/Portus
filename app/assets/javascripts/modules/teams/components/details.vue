@@ -26,9 +26,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import TeamEditForm from './edit-form';
   import TeamInfo from './info';
 
@@ -43,8 +40,6 @@
     },
 
     components: {
-      Panel,
-      ToggleLink,
       TeamEditForm,
       TeamInfo,
     },

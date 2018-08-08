@@ -20,8 +20,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-
   import RegistryForm from '../components/form';
 
   export default {
@@ -33,7 +31,6 @@
 
     components: {
       RegistryForm,
-      Panel,
     },
   };
 </script>
