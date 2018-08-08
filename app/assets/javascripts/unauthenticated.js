@@ -1,8 +1,8 @@
-
 // Bootstrap
 import 'bootstrap/js/tooltip';
 
 // misc
+import './plugins/unauthenticated';
 import './polyfill';
 
 // modules

@@ -10,6 +10,14 @@ import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects
 dayjs.extend(relativeTime);
 
 $(function () {
+  // this is a fallback to always instantiate a vue instance
+  // useful for isolated shared components like <sign-out-btn>
+  // eslint-disable-next-line no-underscore-dangle
+  if (!$('.vue-root')[0].__vue__) {
+    // eslint-disable-next-line no-new
+    new Vue({ el: '.vue-root' });
+  }
+
   if ($.fn.popover) {
     $('a[rel~=popover], .has-popover').popover();
   }
@@ -17,6 +25,8 @@ $(function () {
   if ($.fn.tooltip) {
     $('a[rel~=tooltip], .has-tooltip').tooltip();
   }
+
+  $('.alert .close').on('click', function () { $(this).closest('.alert-wrapper').fadeOut(); });
 
   // process scheduled alerts
   Alert.$process();

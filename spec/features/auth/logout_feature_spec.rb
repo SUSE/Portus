@@ -2,24 +2,26 @@
 
 require "rails_helper"
 
-describe "Logout feature" do
+describe "Logout feature", js: true do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:user) }
 
   before do
-    login user
+    login_as user
+    visit authenticated_root_path
   end
 
   it "Redirects to login screen" do
+    expect(page).to have_css("#logout")
     click_link("logout")
-    expect(current_url).to eq new_user_session_url
-    expect(page).not_to have_content("Signed out")
+    expect(page).to have_content("Signed out successfully")
   end
 
   it "After login guest redirects to login page when he attempts to access dashboard again" do
+    expect(page).to have_css("#logout")
     click_link("logout")
-    visit root_url
+
+    visit authenticated_root_path
     expect(page).to have_content("Login")
-    expect(current_url).to eq root_url
   end
 end

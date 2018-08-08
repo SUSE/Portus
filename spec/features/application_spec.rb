@@ -13,7 +13,7 @@ describe "Global application" do
       expect(page).to have_current_path(root_path)
     end
 
-    it "redirects properly for accounts without email" do
+    it "redirects properly for accounts without email", js: true do
       APP_CONFIG["ldap"]["enabled"] = true
       incomplete = create(:user, email: "")
       login_as incomplete, scope: :user
