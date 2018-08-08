@@ -23,9 +23,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import WebhookHeadersTable from './table';
 
   export default {
@@ -42,8 +39,6 @@
     },
 
     components: {
-      Panel,
-      ToggleLink,
       WebhookHeadersTable,
     },
   };

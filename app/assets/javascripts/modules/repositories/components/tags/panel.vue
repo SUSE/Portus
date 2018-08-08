@@ -18,9 +18,6 @@
 </template>
 
 <script>
-  import LoadingIcon from '~/shared/components/loading-icon';
-  import Panel from '~/shared/components/panel';
-
   import TagsTable from './tags-table';
   import TagsNotLoaded from './tags-not-loaded';
   import DeleteTagAction from './delete-tag-action';
@@ -45,8 +42,6 @@
     },
 
     components: {
-      Panel,
-      LoadingIcon,
       TagsTable,
       TagsNotLoaded,
       DeleteTagAction,

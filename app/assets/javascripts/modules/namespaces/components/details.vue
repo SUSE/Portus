@@ -26,9 +26,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import NamespaceInfo from './info';
   import EditNamespaceForm from './edit-form';
 
@@ -49,8 +46,6 @@
     },
 
     components: {
-      Panel,
-      ToggleLink,
       NamespaceInfo,
       EditNamespaceForm,
     },

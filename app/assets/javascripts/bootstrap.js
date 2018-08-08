@@ -3,7 +3,7 @@ import Vue from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
-import Alert from './shared/components/alert';
+import Alert from './utils/alert';
 
 import { setTimeOutAlertDelay, refreshFloatAlertPosition } from './utils/effects';
 

@@ -29,9 +29,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import WebhookInfo from './info';
   import EditWebhookForm from './edit-form';
 
@@ -46,8 +43,6 @@
     },
 
     components: {
-      Panel,
-      ToggleLink,
       EditWebhookForm,
       WebhookInfo,
     },

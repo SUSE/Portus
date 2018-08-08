@@ -24,3 +24,4 @@ import './modules/teams';
 import './modules/webhooks';
 
 import './bootstrap';
+import './globals';

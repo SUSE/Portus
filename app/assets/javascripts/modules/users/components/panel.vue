@@ -11,9 +11,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import UsersTable from './table';
 
   export default {
@@ -24,8 +21,6 @@
     },
 
     components: {
-      Panel,
-      ToggleLink,
       UsersTable,
     },
   };

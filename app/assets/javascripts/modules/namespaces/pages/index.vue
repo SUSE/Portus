@@ -30,8 +30,6 @@
 <script>
   import Vue from 'vue';
 
-  import ToggleLink from '~/shared/components/toggle-link';
-
   import NamespacesPanel from '../components/panel';
   import NewNamespaceForm from '../components/new-form';
 
@@ -63,7 +61,6 @@
     components: {
       NewNamespaceForm,
       NamespacesPanel,
-      ToggleLink,
     },
 
     data() {

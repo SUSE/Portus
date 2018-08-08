@@ -15,8 +15,6 @@
 </template>
 
 <script>
-  import Panel from '~/shared/components/panel';
-
   import RepositoriesTable from './table';
 
   export default {
@@ -41,7 +39,6 @@
     },
 
     components: {
-      Panel,
       RepositoriesTable,
     },
   };
