@@ -35,9 +35,4 @@ class Auth::SessionsController < Devise::SessionsController
       flash[:notice] = nil
     end
   end
-
-  def destroy
-    super
-    flash[:notice] = nil
-  end
 end

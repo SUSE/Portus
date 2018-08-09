@@ -15,5 +15,4 @@
         = link_to edit_user_registration_path, class: 'btn-inline-header', data: {placement: 'bottom', toggle: 'tooltip'}, title: 'My profile' do
           = user_image_tag(current_user)
           span.username = current_user.display_username
-      = link_to destroy_user_session_path, method: :delete, class: 'topbar btn btn-default', id: 'logout', data: {placement: 'bottom', toggle: 'tooltip'}, title: 'Logout' do
-        i.fa.fa-sign-out
+      <sign-out-btn class="topbar" href="#{destroy_user_session_path}" title="Logout"></sign-out-btn>
