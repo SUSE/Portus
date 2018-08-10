@@ -42,7 +42,7 @@ Source1:        node_modules.tar.gz
 Source2:        yarn.lock
 __PATCHSOURCES__
 
-# Add gems as sources with the https://github.com/openSUSE/obs-service-bundle_gems
+# Add gems as sources with the https://github.com/openSUSE/obs-service-bundle_gems service
 
 Requires:       timezone
 Requires:       net-tools
@@ -82,7 +82,6 @@ Requires: libmysqlclient18 < 10.1
 BuildRequires: libmysqlclient-devel
 Requires: libmysqlclient18
 %endif
-Recommends: mariadb
 BuildRequires: libxml2-devel libxslt-devel
 BuildRequires: postgresql-devel
 Requires: postgresql-devel
