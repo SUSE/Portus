@@ -65,7 +65,7 @@ module RepositoriesHelper
     owner = content_tag(:strong, "#{activity_owner(activity)} #{action} ")
 
     namespace = render_namespace(activity)
-    namespace += " / " unless namespace.empty?
+    namespace += "/" unless namespace.empty?
 
     owner + namespace + render_repository(activity)
   end
@@ -78,7 +78,7 @@ module RepositoriesHelper
   def render_namespace(activity)
     tr = activity.trackable
 
-    if tr.nil? || tr.is_a?(Namespace)
+    if tr.nil? || tr.is_a?(Namespace) || tr.is_a?(Registry)
       if activity.parameters[:namespace_name].nil?
         ""
       else
@@ -111,7 +111,7 @@ module RepositoriesHelper
   def get_repo_link_tag(activity)
     tr = activity.trackable
 
-    if tr.nil?
+    if tr.nil? || tr.is_a?(Registry)
       if repo_name(activity).nil?
         ["a repository", nil, ""]
       else

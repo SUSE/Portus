@@ -20,6 +20,7 @@
 class Repository < ActiveRecord::Base
   include PublicActivity::Common
   include SearchCop
+  include ::Activity::Fallback
 
   belongs_to :namespace
   has_many :tags, dependent: :delete_all
@@ -247,12 +248,7 @@ class Repository < ActiveRecord::Base
 
   # Create/update the activities for a delete operation.
   def create_delete_activities!(actor)
-    # Take care of current activities.
-    PublicActivity::Activity.where(trackable: self).update_all(
-      trackable_type: Namespace,
-      trackable_id:   namespace.id,
-      recipient_type: nil
-    )
+    fallback_activity(Namespace, namespace.id)
 
     # Add a "delete" activity"
     namespace.create_activity(

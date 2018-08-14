@@ -8,6 +8,10 @@ module API
         NamespacePolicy.new(user, namespace).update?
       end
 
+      def can_destroy_namespace?(namespace, user)
+        NamespacePolicy.new(user, namespace).destroy? && !User.exists?(namespace: namespace)
+      end
+
       def can_change_visibility?(namespace, user)
         NamespacePolicy.new(user, namespace).change_visibility?
       end

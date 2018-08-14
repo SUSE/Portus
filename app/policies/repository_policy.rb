@@ -19,13 +19,7 @@ class RepositoryPolicy
 
   # Returns true if the repository can be destroyed.
   def destroy?
-    raise Pundit::NotAuthorizedError, "must be logged in" unless @user
-
-    delete_enabled         = APP_CONFIG.enabled?("delete")
-    is_owner               = @repository.namespace.team.owners.exists?(user.id)
-    can_contributor_delete = APP_CONFIG["delete"]["contributors"] &&
-                             @repository.namespace.team.contributors.exists?(user.id)
-    delete_enabled && (@user.admin? || is_owner || can_contributor_delete)
+    NamespacePolicy.new(@user, @repository.namespace).destroy?
   end
 
   class Scope

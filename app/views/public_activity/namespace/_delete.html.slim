@@ -9,11 +9,11 @@ li
         strong
           = " #{activity_owner(activity)} deleted "
         - if activity.parameters[:repository_name]
-          = link_to activity.trackable.clean_name, activity.trackable
-          = " / #{activity.parameters[:repository_name]}"
+          = render_namespace_name(activity)
+          = "/#{activity.parameters[:repository_name]}"
         - else
-          = "a repository under the "
-          = link_to activity.trackable.clean_name, activity.trackable
+          = "a repository under "
+          = render_namespace_name(activity)
           = " namespace"
       small
         i.fa.fa-clock-o

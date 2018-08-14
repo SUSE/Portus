@@ -244,6 +244,70 @@ describe API::V1::Namespaces do
     end
   end
 
+  context "DELETE /api/v1/namespaces/:id" do
+    let!(:registry) { create(:registry) }
+
+    before do
+      APP_CONFIG["delete"]["enabled"] = true
+    end
+
+    it "deletes a namespace" do
+      namespace = create(:namespace, registry: registry, team: team)
+
+      delete "/api/v1/namespaces/#{namespace.id}", nil, @admin_header
+      expect(response).to have_http_status(:no_content)
+      expect { Namespace.find(namespace.id) }.to raise_exception(ActiveRecord::RecordNotFound)
+    end
+
+    it "returns 403 when delete is disabled" do
+      APP_CONFIG["delete"]["enabled"] = false
+
+      namespace = create(:namespace, registry: registry, team: team)
+
+      delete "/api/v1/namespaces/#{namespace.id}", nil, @admin_header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns 404 when not found" do
+      namespace = create(:namespace, registry: registry, team: team)
+
+      delete "/api/v1/namespaces/#{namespace.id + 1}", nil, @admin_header
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 422 when a tag could not be removed" do
+      namespace = create(:namespace, name: "espriu", registry: registry, team: team)
+      repo      = create(:repository, namespace: namespace, name: "sinera")
+      create(:tag, repository: repo, name: "cementiri", digest: "1", author: admin)
+
+      allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
+        raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
+      end
+
+      delete "/api/v1/namespaces/#{namespace.id}", nil, @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      body = JSON.parse(response.body)
+      expect(body["message"]["espriu/sinera"]).to(
+        eq "Could not remove repository: could not remove cementiri tag(s)"
+      )
+    end
+
+    it "returns 422 when the namespace could not be removed" do
+      allow_any_instance_of(::Namespaces::DestroyService).to(
+        receive(:destroy_repositories!).and_return(true)
+      )
+      allow_any_instance_of(Namespace).to(receive(:delete_by!).and_return(false))
+
+      namespace = create(:namespace, registry: registry, team: team)
+      delete "/api/v1/namespaces/#{namespace.id}", nil, @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      body = JSON.parse(response.body)
+      expect(body["message"]).to eq "Could not remove namespace"
+    end
+  end
+
   context "GET /api/v1/namespaces/validate" do
     it "returns the proper response when the namespace exists" do
       ns = create(:namespace, visibility: public_visibility, team: team)

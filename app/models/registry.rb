@@ -24,6 +24,8 @@
 # NOTE: currently only one Registry is allowed to exist in the database. This
 # might change in the future.
 class Registry < ActiveRecord::Base
+  include PublicActivity::Common
+
   has_many :namespaces, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true

@@ -338,6 +338,11 @@ module API
       }, if: { type: :internal } do |namespace, options|
         can_manage_namespace?(namespace, options[:current_user])
       end
+      expose :destroyable, documentation: {
+        desc: "Boolean that tells if the current user can destroy the namespace"
+      }, if: { type: :internal } do |namespace, options|
+        can_destroy_namespace?(namespace, options[:current_user])
+      end
       expose :permissions, documentation: {
         desc: "Different permissions for the current user"
       }, if: { type: :internal } do |namespace, options|
