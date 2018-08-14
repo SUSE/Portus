@@ -45,7 +45,6 @@ describe "Repositories comments support" do
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
-      wait_for_ajax
 
       expect(page).to have_content("Something")
       expect(page).not_to have_content("Nobody has left a comment")
@@ -60,7 +59,6 @@ describe "Repositories comments support" do
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
-      wait_for_ajax
 
       expect(page).to have_content("Something")
       expect(page).not_to have_content("Nobody has left a comment")
@@ -76,7 +74,6 @@ describe "Repositories comments support" do
 
       fill_in "comment[body]", with: "Something"
       click_button "Add"
-      wait_for_ajax
 
       expect(page).to have_content("Something")
       expect(page).not_to have_content("Nobody has left a comment")
@@ -107,12 +104,9 @@ describe "Repositories comments support" do
 
       find("#comment_#{comment.id}").hover
       expect(page).to have_content("Delete comment")
-
       expect(page).to have_content(comment.body)
-      find("#comment_#{comment.id} .delete-comment-btn").click
-      find(".popover-content .yes").click
-      wait_for_ajax
 
+      click_confirm_popover("#comment_#{comment.id} .delete-comment-btn")
       expect(page).not_to have_content(comment.body)
     end
 
@@ -130,12 +124,9 @@ describe "Repositories comments support" do
 
       find("#comment_#{comment.id}").hover
       expect(page).to have_content("Delete comment")
-
       expect(page).to have_content(comment.body)
-      find("#comment_#{comment.id} .delete-comment-btn").click
-      find(".popover-content .yes").click
-      wait_for_ajax
 
+      click_confirm_popover("#comment_#{comment.id} .delete-comment-btn")
       expect(page).not_to have_content(comment.body)
     end
   end

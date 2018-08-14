@@ -39,7 +39,6 @@ module Helpers
     execute_script("document.querySelector('#{element} .multiselect__input').value = '#{text}'")
     execute_script("document.querySelector('#{element} .multiselect__input')
                     .dispatchEvent(new Event('input'))")
-    wait_for_ajax
   end
 
   def deselect_vue_multiselect(element, text)
@@ -54,6 +53,12 @@ module Helpers
     expect(page).to have_css("#{element} .multiselect__option--highlight")
     execute_script("document.querySelector('#{element} .multiselect__option--highlight')
                     .dispatchEvent(new Event('click'))")
+  end
+
+  def click_confirm_popover(element)
+    expect(page).to have_css(element)
+    find(element).click
+    find(".popover-content .yes").click
   end
 end
 

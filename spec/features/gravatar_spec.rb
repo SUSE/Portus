@@ -12,13 +12,13 @@ describe "Gravatar support" do
 
   it "If gravatar support is on, there should be an image" do
     APP_CONFIG["gravatar"] = { "enabled" => true }
-    visit root_url
+    visit root_path
     expect(page).to have_selector(".user-header img")
   end
 
   it "If gravatar suppor is disabled, there should be an icon" do
     APP_CONFIG["gravatar"] = { "enabled" => false }
-    visit root_url
+    visit root_path
     expect(page).to have_selector(".user-header .user-picture")
   end
 end

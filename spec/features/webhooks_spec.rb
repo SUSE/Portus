@@ -41,8 +41,6 @@ describe "Webhooks support", js: true do
       fill_in "URL", with: "http://url-here"
       click_button "Add"
 
-      wait_for_ajax
-
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Webhook 'webhook name' was created successfully")
 
@@ -60,13 +58,11 @@ describe "Webhooks support", js: true do
 
       expect(page).to have_css(".webhook_#{id} .fa-toggle-on")
       find(".webhook_#{id} .toggle").click
-      wait_for_ajax
 
       expect(page).to have_css(".webhook_#{id} .fa-toggle-off")
       expect(page).to have_content("Webhook '#{webhook.name}' is now disabled")
 
       find(".webhook_#{id} .toggle").click
-      wait_for_ajax
 
       expect(page).to have_css(".webhook_#{id} .fa-toggle-on")
       expect(page).to have_content("Webhook '#{webhook.name}' is now enabled")
@@ -75,9 +71,7 @@ describe "Webhooks support", js: true do
     it "A user deletes a webhook" do
       expect(page).to have_link(webhook.name)
 
-      find(".webhook_#{webhook.id} .delete-webhook-btn").click
-      find(".popover-content .yes").click
-      wait_for_ajax
+      click_confirm_popover(".webhook_#{webhook.id} .delete-webhook-btn")
 
       expect(page).not_to have_link(webhook.name)
       expect(page).to have_content("Webhook '#{webhook.name}' was removed successfully")
@@ -104,28 +98,12 @@ describe "Webhooks support", js: true do
       fill_in "Username", with: "new-username"
       fill_in "Password", with: "password"
       click_button "Save"
-      wait_for_ajax
 
       expect(page).to have_content("new_name webhook")
       expect(page).to have_content("new-webhook-url")
       expect(page).to have_content("new-username")
       expect(page).to have_content("********")
       expect(page).to have_content("Webhook 'new_name' was updated successfully")
-    end
-
-    it 'The "Edit webhook" link has a toggle effect' do
-      expect(page).to have_css(".toggle-link-edit-webhook .fa-pencil")
-      expect(page).not_to have_css(".toggle-link-edit-webhook .fa-close")
-
-      find(".toggle-link-edit-webhook").click
-
-      expect(page).not_to have_css(".toggle-link-edit-webhook .fa-pencil")
-      expect(page).to have_css(".toggle-link-edit-webhook .fa-close")
-
-      find(".toggle-link-edit-webhook").click
-
-      expect(page).to have_css(".toggle-link-edit-webhook .fa-pencil")
-      expect(page).not_to have_css(".toggle-link-edit-webhook .fa-close")
     end
 
     describe "webhook_header" do
@@ -137,8 +115,6 @@ describe "Webhooks support", js: true do
         fill_in "Name", with: "cool-header"
         fill_in "Value", with: "cool-value"
         click_button "Add"
-
-        wait_for_ajax
 
         expect(page).to have_css("#float-alert")
         expect(page).to have_content("cool-header")
@@ -157,8 +133,6 @@ describe "Webhooks support", js: true do
         fill_in "Value", with: "something"
         click_button "Add"
 
-        wait_for_ajax
-
         expect(page).to have_css("#float-alert")
         expect(page).to have_content("Name has already been taken")
         expect(webhook.headers.count).to eql webhook_headers_count
@@ -168,8 +142,7 @@ describe "Webhooks support", js: true do
         expect(page).to have_content(webhook_header.name)
         expect(page).to have_content(webhook_header.value)
 
-        find(".webhook_header_#{webhook_header.id} .delete-webhook-header-btn").click
-        find(".popover-content .yes").click
+        click_confirm_popover(".webhook_header_#{webhook_header.id} .delete-webhook-header-btn")
 
         expect(page).to have_css("#float-alert")
         expect(page).to have_content("Header '#{webhook_header.name}' was removed successfully")

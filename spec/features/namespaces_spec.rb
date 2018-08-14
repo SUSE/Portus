@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "Namespaces support" do
+describe "Namespaces support", js: true do
   let!(:registry) { create(:registry) }
   let!(:user) { create(:admin) }
   let!(:user2) { create(:user) }
@@ -15,16 +15,15 @@ describe "Namespaces support" do
   end
 
   describe "Namespaces#index" do
-    it "An user cannot submit with invalid form", js: true do
+    before do
       visit namespaces_path
-
+    end
+    it "An user cannot submit with invalid form" do
       find(".toggle-link-new-namespace").click
       expect(page).to have_button("Create", disabled: true)
     end
 
-    it "A user cannot leave name field empty", js: true do
-      visit namespaces_path
-
+    it "A user cannot leave name field empty" do
       find(".toggle-link-new-namespace").click
 
       fill_in "Name", with: "something"
@@ -34,9 +33,7 @@ describe "Namespaces support" do
       expect(page).to have_button("Create", disabled: true)
     end
 
-    it "A user cannot fill field with an invalid name", js: true do
-      visit namespaces_path
-
+    it "A user cannot fill field with an invalid name" do
       find(".toggle-link-new-namespace").click
 
       fill_in "Name", with: "!@#!@#"
@@ -47,50 +44,39 @@ describe "Namespaces support" do
 
     # TODO: move this test to a component level one instead of feature once
     # form component is migrated to a vue file
-    it "shows team field if no team", js: true do
-      visit namespaces_path
-
+    it "shows team field if no team" do
       find(".toggle-link-new-namespace").click
 
       expect(page).to have_css(".namespace_team")
     end
 
-    it "An user cannot create a namespace that already exists", js: true do
-      visit namespaces_path
-
+    it "An user cannot create a namespace that already exists" do
       find(".toggle-link-new-namespace").click
 
       fill_in "Name", with: Namespace.first.name
-      wait_for_ajax
 
       expect(page).to have_content("Name has already been taken")
       expect(page).to have_button("Create", disabled: true)
     end
 
-    it "An user cannot create a namespace for a hidden team", js: true do
-      visit namespaces_path
-
+    it "An user cannot create a namespace for a hidden team" do
       find(".toggle-link-new-namespace").click
 
       fill_in "Name", with: Namespace.first.name
       fill_vue_multiselect(".namespace_team", Team.where(hidden: true).first.name)
-      wait_for_ajax
 
       expect(page).to have_content("Oops! No team found.")
       expect(page).to have_button("Create", disabled: true)
     end
 
-    it "A namespace can be created from the index page", js: true do
+    it "A namespace can be created from the index page" do
       namespaces_count = Namespace.count
 
-      visit namespaces_path
       find(".toggle-link-new-namespace").click
 
       fill_in "Name", with: "valid-namespace"
       select_vue_multiselect(".namespace_team", namespace.team.name)
       click_button "Create"
-
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Namespace 'valid-namespace' was created successfully")
@@ -104,29 +90,26 @@ describe "Namespaces support" do
       expect(page).to have_current_path(namespace_path(namespace))
     end
 
-    it "The namespace visibility can be changed", js: true do
-      visit namespaces_path
+    it "The namespace visibility can be changed" do
       id = namespace.id
 
       expect(namespace.visibility_private?).to be true
       expect(page).to have_css(".namespace_#{id} .private-btn.btn-primary")
 
       find(".namespace_#{id} .protected-btn").click
-      wait_for_ajax
 
       expect(page).to have_css(".namespace_#{id} .protected-btn.btn-primary")
       namespace = Namespace.find(id)
       expect(namespace.visibility_protected?).to be true
 
       find(".namespace_#{id} .public-btn").click
-      wait_for_ajax
 
       expect(page).to have_css(".namespace_#{id} .public-btn.btn-primary")
       namespace = Namespace.find(id)
       expect(namespace.visibility_public?).to be true
     end
 
-    it "Namespace table sorting is reachable through url", js: true do
+    it "Namespace table sorting is reachable through url" do
       # sort asc
       visit namespaces_path(ns_sort_asc: true)
 
@@ -148,9 +131,7 @@ describe "Namespaces support" do
       expect(page).to have_css("th:nth-child(4) .fa-sort-amount-desc")
     end
 
-    it "URL is updated when namespaces column is sorted", js: true do
-      visit namespaces_path
-
+    it "URL is updated when namespaces column is sorted" do
       expect(page).to have_css(".member-namespaces-panel th:nth-child(4)")
 
       # sort asc & created_at
@@ -168,7 +149,7 @@ describe "Namespaces support" do
       expect(page).to have_current_path(path)
     end
 
-    it "Namespace table pagination is reachable through url", js: true do
+    it "Namespace table pagination is reachable through url" do
       create_list(:namespace, 15, team: team, registry: registry)
 
       # page 2
@@ -182,7 +163,7 @@ describe "Namespaces support" do
       expect(page).to have_css(".namespaces-panel .pagination li.active:nth-child(2)")
     end
 
-    it "URL is updated when page is changed", js: true do
+    it "URL is updated when page is changed" do
       create_list(:namespace, 15, team: team, registry: registry)
 
       visit namespaces_path
@@ -205,52 +186,43 @@ describe "Namespaces support" do
   end
 
   describe "#update" do
-    it "user inputs a team does not exist", js: true do
+    before do
       visit namespace_path(namespace.id)
-      find(".toggle-link-edit-namespace").click
+    end
 
+    it "user inputs a team does not exist" do
+      find(".toggle-link-edit-namespace").click
       fill_vue_multiselect(".namespace_team", "unknown")
-      wait_for_ajax
 
       expect(page).to have_content("Oops! No team found.")
     end
 
-    it "user removes the team", js: true do
-      visit namespace_path(namespace.id)
+    it "user removes the team" do
       find(".toggle-link-edit-namespace").click
-
       deselect_vue_multiselect(".namespace_team", namespace.team.name)
 
       expect(page).to have_content("Team can't be blank")
     end
 
-    it "user updates namespace's team", js: true do
+    it "user updates namespace's team" do
       new_team = create(:team, owners: [user])
 
       visit namespace_path(namespace.id)
       find(".toggle-link-edit-namespace").click
 
       select_vue_multiselect(".namespace_team", new_team.name)
-      wait_for_ajax
 
       click_button "Save"
-
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
     end
 
-    it "user updates namespace's description", js: true do
-      visit namespace_path(namespace.id)
+    it "user updates namespace's description" do
       find(".toggle-link-edit-namespace").click
 
       fill_in "Description", with: "Cool description"
-      wait_for_ajax
-
       click_button "Save"
-
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Cool description")
@@ -258,7 +230,7 @@ describe "Namespaces support" do
     end
   end
 
-  describe "#show", js: true do
+  describe "#show" do
     it "shows the proper visual aid for each role" do
       visit namespace_path(namespace.id)
       expect(page).to have_content("Push Pull Owner")
@@ -298,9 +270,7 @@ describe "Namespaces support" do
       APP_CONFIG["delete"] = { "enabled" => true }
       visit namespace_path(namespace)
 
-      expect(page).to have_css(".namespace-delete-btn")
-      find(".namespace-delete-btn").click
-      find(".popover-content .yes").click
+      click_confirm_popover(".namespace-delete-btn")
       expect(page).to have_content("Namespace removed with all its repositories")
       expect(page).not_to have_link(namespace.clean_name)
     end

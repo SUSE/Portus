@@ -18,7 +18,6 @@ describe "Application tokens" do
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -35,7 +34,6 @@ describe "Application tokens" do
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Application has already been taken")
@@ -51,7 +49,6 @@ describe "Application tokens" do
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -73,24 +70,10 @@ describe "Application tokens" do
 
       visit edit_user_registration_path
 
-      find(".application_token_#{token.id} button").click
-      find(".popover-content .yes").click
-      wait_for_ajax
+      click_confirm_popover(".application_token_#{token.id} button")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was removed successfully")
-    end
-  end
-
-  describe "Toggle effect on form" do
-    it "The toggle effect works on the Create new token link", js: true do
-      visit edit_user_registration_path
-
-      expect(page).to have_css(".toggle-link-new-app-token i.fa-plus-circle")
-      find(".toggle-link-new-app-token").click
-      expect(page).to have_css(".toggle-link-new-app-token i.fa-minus-circle")
-      find(".toggle-link-new-app-token").click
-      expect(page).to have_css(".toggle-link-new-app-token i.fa-plus-circle")
     end
   end
 end
