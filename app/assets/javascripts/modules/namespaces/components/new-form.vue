@@ -101,6 +101,7 @@
             name: '',
             team: this.teamName || '',
           });
+          set(this, 'selectedTeam', '');
 
           this.$bus.$emit('namespaceCreated', namespace);
           this.$alert.$show(`Namespace '${namespace.name}' was created successfully`);
