@@ -4,7 +4,7 @@
     <div class="form-group has-feedback" :class="{ 'has-error': $v.webhook.name.$error }">
       <label for="webhook_name" class="control-label col-md-2">Name</label>
       <div class="col-md-7">
-        <input placeholder="Name of the webhook" type="text" name="webhook[name]" id="webhook_name" class="form-control" v-model.trim="webhook.name" @input="$v.webhook.name.$touch()" autofocus>
+        <input placeholder="Name of the webhook" type="text" name="webhook[name]" id="webhook_name" class="form-control" v-model.trim="webhook.name" @input="$v.webhook.name.$touch()" ref="firstField" autofocus>
         <span class="help-block">
           <span v-if="!$v.webhook.name.required">
             Name can't be blank

@@ -3,7 +3,7 @@
     <div class="form-group" :class="{ 'has-error': $v.team.name.$error }">
       <label class="control-label col-md-2" for="team_name">Name</label>
       <div class="col-md-7">
-        <input type="text" id="team_name" name="team[name]" class="form-control" placeholder="New team's name" @input="$v.team.name.$touch()" v-model.trim="team.name" required />
+        <input type="text" id="team_name" name="team[name]" class="form-control" placeholder="New team's name" @input="$v.team.name.$touch()" v-model.trim="team.name" ref="firstField" required />
         <span class="help-block">
           <span v-if="!$v.team.name.required">Name can't be blank</span>
           <span v-if="!$v.team.name.available">Name is reserved or has already been taken</span>

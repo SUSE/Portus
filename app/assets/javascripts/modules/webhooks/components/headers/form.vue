@@ -4,7 +4,7 @@
     <div class="form-group has-feedback" :class="{ 'has-error': $v.header.name.$error }">
       <label for="header_name" class="control-label col-md-2">Name</label>
       <div class="col-md-7">
-        <input placeholder="e.g.: Authorization" type="text" name="header[name]" id="header_name" class="form-control" v-model.trim="header.name" @input="$v.header.name.$touch()" autofocus>
+        <input placeholder="e.g.: Authorization" type="text" name="header[name]" id="header_name" class="form-control" v-model.trim="header.name" @input="$v.header.name.$touch()" ref="firstField" autofocus>
         <span class="help-block">
           <span v-if="!$v.header.name.required">
             Name can't be blank

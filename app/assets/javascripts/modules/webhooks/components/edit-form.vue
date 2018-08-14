@@ -3,7 +3,7 @@
     <div class="form-group has-feedback" :class="{ 'has-error': $v.webhookCopy.name.$error }">
       <label for="webhook_name" class="control-label col-md-2">Name</label>
       <div class="col-md-7">
-        <input placeholder="Name of the webhook" type="text" name="webhook[name]" id="webhook_name" class="form-control" v-model.trim="webhookCopy.name" @input="$v.webhookCopy.name.$touch()" autofocus>
+        <input placeholder="Name of the webhook" type="text" name="webhook[name]" id="webhook_name" class="form-control" v-model.trim="webhookCopy.name" @input="$v.webhookCopy.name.$touch()" ref="firstField" autofocus>
         <span class="help-block">
           <span v-if="!$v.webhookCopy.name.required">
             Name can't be blank
