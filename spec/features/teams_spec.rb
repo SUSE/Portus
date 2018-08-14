@@ -32,7 +32,6 @@ describe "Teams support" do
       find(".toggle-link-new-team").click
 
       fill_in "Name", with: Team.last.name
-      wait_for_ajax
 
       expect(page).to have_content("Name is reserved or has already been taken")
       expect(page).to have_button("Add", disabled: true)
@@ -45,10 +44,8 @@ describe "Teams support" do
 
       fill_in "Name", with: "valid-team"
       select admin.username, from: "team_owner_id"
-      wait_for_ajax
 
       click_button "Add"
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Team 'valid-team' was created successfully")
@@ -97,7 +94,6 @@ describe "Teams support" do
       select another_user.username, from: "team_owner_id"
 
       click_button "Add"
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Team 'another' was created successfully")
@@ -132,7 +128,6 @@ describe "Teams support" do
       new_team_name = "New #{team.name}"
       fill_in "team[name]", with: new_team_name
       click_button "Save"
-      wait_for_ajax
 
       expect(page).to have_content("Team '#{new_team_name}' was updated successfully")
       expect(find(".team-name").text).to eq(new_team_name)
@@ -169,8 +164,6 @@ describe "Teams support" do
       # Fill the form and wait for the AJAX response.
       fill_in "Name", with: "new-namespace"
       click_button "Create"
-
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Namespace 'new-namespace' was created successfully")
@@ -264,8 +257,6 @@ describe "Teams support" do
       expect(page).to have_button("Add")
       click_button "Add"
 
-      wait_for_ajax
-
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("'#{another.username}' was successfully added to the team")
       expect(page).to have_css(".team_member_#{TeamUser.last.id} .role", text: "Contributor")
@@ -279,8 +270,6 @@ describe "Teams support" do
 
       expect(page).to have_button("Add")
       click_button "Add"
-
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content(
@@ -309,8 +298,6 @@ describe "Teams support" do
       select "Contributor", from: "select_role_#{tu.id}"
       find(".team_member_#{tu.id} .btn-primary").click
 
-      wait_for_ajax
-
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("User '#{another.username}' was
        successfully updated")
@@ -321,10 +308,7 @@ describe "Teams support" do
       tu = TeamUser.create!(team: team, user: another, role: TeamUser.roles["viewer"])
       visit team_path(team)
 
-      find(".team_member_#{tu.id} .delete-team-user-btn").click
-      find(".popover-content .yes").click
-
-      wait_for_ajax
+      click_confirm_popover(".team_member_#{tu.id} .delete-team-user-btn")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("User '#{another.username}' was
@@ -332,10 +316,7 @@ describe "Teams support" do
     end
 
     it "The only member of a team cannot be removed", js: true do
-      find(".delete-team-user-btn").click
-      find(".popover-content .yes").click
-
-      wait_for_ajax
+      click_confirm_popover(".delete-team-user-btn")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Cannot remove the only owner of the team")

@@ -10,11 +10,6 @@
 # corner cases. All the public methods respect a timeout of
 # `Capybara.default_max_wait_time`.
 module WaitForEvents
-  # Wait for all the AJAX requests to have concluded.
-  def wait_for_ajax
-    wait_until_zero("$.active")
-  end
-
   # This method will loop until the given block evaluates to true. It will
   # respect to default timeout as specifyied by Capybara.
   def wait_until

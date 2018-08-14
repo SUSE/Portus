@@ -182,7 +182,6 @@ describe "Feature: Repositories" do
 
       it "reports vulnerabilities" do
         visit repository_path(repository)
-        wait_for_ajax
         expect(page).to have_content("2 vulnerabilities")
       end
     end
@@ -191,7 +190,6 @@ describe "Feature: Repositories" do
       visit repository_path(repository)
       expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
-      wait_for_ajax
       expect(page).to have_current_path(repository_path(repository))
 
       # See the response.
@@ -204,7 +202,6 @@ describe "Feature: Repositories" do
       visit repository_path(starred_repo)
       expect(page).to have_css("#toggle_star")
       find("#toggle_star").click
-      wait_for_ajax
       expect(page).to have_current_path(repository_path(starred_repo))
 
       # See the response.
@@ -261,11 +258,8 @@ describe "Feature: Repositories" do
       it "A user can delete a repository" do
         visit repository_path(repository)
 
-        repository_count = Repository.count
-        find(".repository-delete-btn").click
-        find(".popover-content .yes").click
+        click_confirm_popover(".repository-delete-btn")
         expect(page).to have_content("Repository removed with all its tags")
-        expect(Repository.count).to be(repository_count - 1)
       end
 
       it "A user deletes a tag" do

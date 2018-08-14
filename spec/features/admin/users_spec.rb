@@ -170,7 +170,6 @@ describe "Admin - Users panel", js: true do
       fill_in "Application", with: "awesome-application"
 
       click_button "Create"
-      wait_for_ajax
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -182,9 +181,7 @@ describe "Admin - Users panel", js: true do
       token = create(:application_token, user: bot)
       visit edit_admin_user_path(bot)
 
-      find(".application_token_#{token.id} button").click
-      find(".popover-content .yes").click
-      wait_for_ajax
+      click_confirm_popover(".application_token_#{token.id} button")
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was removed successfully")
