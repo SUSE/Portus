@@ -3,7 +3,7 @@
     <div class="form-group" :class="{ 'has-error': $v.user.username.$error }">
       <label class="control-label col-md-2" for="user_username">Username</label>
       <div class="col-md-7">
-        <input type="text" id="user_username" name="user[username]" class="form-control" placeholder="Enter users's username" @input="$v.user.username.$touch()" v-model.trim="user.username" required />
+        <input type="text" id="user_username" name="user[username]" class="form-control" placeholder="Enter users's username" @input="$v.user.username.$touch()" v-model.trim="user.username" ref="firstField" required />
         <span class="help-block">
           <span v-if="!$v.user.username.required">Username can't be blank</span>
         </span>
