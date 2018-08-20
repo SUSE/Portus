@@ -60,6 +60,26 @@ module Helpers
     find(element).click
     find(".popover-content .yes").click
   end
+
+  def toggle_new_namespace_form
+    find(".toggle-link-new-namespace").click
+  end
+
+  def toggle_edit_namespace_form
+    find(".toggle-link-edit-namespace").click
+  end
+
+  def toggle_edit_team_form
+    find(".toggle-link-edit-team").click
+  end
+
+  def toggle_new_team_form
+    find(".toggle-link-new-team").click
+  end
+
+  def toggle_new_member_form
+    find(".toggle-link-new-member").click
+  end
 end
 
 RSpec.configure { |config| config.include Helpers }

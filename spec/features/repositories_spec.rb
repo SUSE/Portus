@@ -10,11 +10,14 @@ end
 describe "Feature: Repositories" do
   let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:user) { create(:admin) }
-  let!(:contributor) { create(:user) }
+  let!(:contributor) { create(:user, username: "contributor") }
   let!(:viewer) { create(:user) }
   let!(:team) { create(:team, owners: [user], contributors: [contributor], viewers: [viewer]) }
-  let!(:namespace) { create(:namespace, team: team, name: "user") }
+  let!(:team2) { create(:team, owners: [contributor], viewers: [viewer]) }
+  let!(:namespace) { create(:namespace, team: team, name: "team1") }
+  let!(:namespace2) { create(:namespace, team: team2, name: "team2") }
   let!(:repository) { create(:repository, namespace: namespace, name: "busybox") }
+  let!(:repository2) { create(:repository, namespace: namespace2, name: "busybox2") }
   let!(:starred_repo) { create(:repository, namespace: namespace) }
   let!(:star) { create(:star, user: user, repository: starred_repo) }
 
@@ -25,94 +28,88 @@ describe "Feature: Repositories" do
   describe "repository#index", js: true do
     before do
       create_list(:repository, 15, namespace: namespace)
-    end
-
-    it "Repositories table sorting is reachable through url" do
-      # sort asc
-      visit repositories_path(sort_asc: true)
-
-      expect(page).to have_css(".fa-sort-amount-asc")
-
-      # sort desc
-      visit repositories_path(sort_asc: false)
-
-      expect(page).to have_css(".fa-sort-amount-desc")
-
-      # sort asc & namespace.name
-      visit repositories_path(sort_asc: true, sort_by: "namespace.name")
-
-      expect(page).to have_css("th:nth-child(2) .fa-sort-amount-asc")
-
-      # sort desc & namespace.name
-      visit repositories_path(sort_asc: false, sort_by: "namespace.name")
-
-      expect(page).to have_css("th:nth-child(2) .fa-sort-amount-desc")
-    end
-
-    it "URL is updated when repositories column is sorted" do
       visit repositories_path
-
-      expect(page).to have_css(".repositories-panel:last-of-type th:nth-child(2)")
-
-      # sort asc & namespace.name
-      find(".repositories-panel:last-of-type th:nth-child(2)").click
-
-      expect(page).to have_css(".repositories-panel th:nth-child(2) .fa-sort-amount-asc")
-      path = repositories_path(sort_asc: true, sort_by: "namespace.name")
-      expect(page).to have_current_path(path)
-
-      # sort desc & namespace.name
-      find(".repositories-panel:last-of-type th:nth-child(2)").click
-
-      expect(page).to have_css(".repositories-panel th:nth-child(2) .fa-sort-amount-desc")
-      path = repositories_path(sort_asc: false, sort_by: "namespace.name")
-      expect(page).to have_current_path(path)
     end
 
-    it "Repositories table pagination is reachable through url" do
-      # page 2
-      visit repositories_path(page: 2)
+    context "table sorting" do
+      it "considers url parameters" do
+        # sort asc & namespace.name
+        visit repositories_path(sort_asc: true, sort_by: "namespace.name")
+        expect(page).to have_css("th:nth-child(2) .fa-sort-amount-asc")
 
-      expect(page).to have_css(".repositories-panel .pagination li.active:nth-child(3)")
+        # sort desc & namespace.name
+        visit repositories_path(sort_asc: false, sort_by: "namespace.name")
+        expect(page).to have_css("th:nth-child(2) .fa-sort-amount-desc")
+      end
 
-      # page 1
-      visit repositories_path(page: 1)
+      it "updates url when sorted" do
+        path = repositories_path(sort_asc: true, sort_by: "namespace.name")
+        find(".repositories-panel:last-of-type th:nth-child(2)").click
 
-      expect(page).to have_css(".repositories-panel .pagination li.active:nth-child(2)")
+        expect(page).to have_css(".repositories-panel th:nth-child(2) .fa-sort-amount-asc")
+        expect(page).to have_current_path(path)
+
+        # sort desc & namespace.name
+        path = repositories_path(sort_asc: false, sort_by: "namespace.name")
+        find(".repositories-panel:last-of-type th:nth-child(2)").click
+
+        expect(page).to have_css(".repositories-panel th:nth-child(2) .fa-sort-amount-desc")
+        expect(page).to have_current_path(path)
+      end
     end
 
-    it "URL is updated when page is changed" do
-      visit repositories_path
+    context "table pagination" do
+      it "considers url parameters" do
+        # page 2
+        visit repositories_path(page: 2)
+        expect(page).to have_css(".repositories-panel .pagination li.active:nth-child(3)")
 
-      expect(page).to have_css(".repositories-panel:last-of-type .pagination li:nth-child(3)")
+        # page 1
+        visit repositories_path(page: 1)
+        expect(page).to have_css(".repositories-panel .pagination li.active:nth-child(2)")
+      end
 
-      # page 2
-      find(".repositories-panel:last-of-type .pagination li:nth-child(3) a").click
+      it "updates url when paginated" do
+        within ".repositories-panel:first-of-type" do
+          # page 2
+          find(" .pagination li:nth-child(3) a").click
 
-      selector = ".repositories-panel:last-of-type .pagination li.active:nth-child(3)"
-      expect(page).to have_css(selector)
-      expect(page).to have_current_path(repositories_path(page: 2))
+          expect(page).to have_css(".pagination li.active:nth-child(3)")
+          expect(page).to have_current_path(repositories_path(page: 2))
 
-      # page 1
-      find(".repositories-panel:last-of-type .pagination li:nth-child(2) a").click
+          # page 1
+          find(".pagination li:nth-child(2) a").click
 
-      selector = ".repositories-panel:last-of-type .pagination li.active:nth-child(2)"
-      expect(page).to have_css(selector)
-      expect(page).to have_current_path(repositories_path(page: 1))
+          expect(page).to have_css(".pagination li.active:nth-child(2)")
+          expect(page).to have_current_path(repositories_path(page: 1))
+        end
+      end
     end
 
-    it "doesn't show 'other repositories' panel when empty" do
-      visit repositories_path
+    context "when admin" do
+      it "shows all repositories" do
+        expect(page).to have_content(repository.name)
+        expect(page).to have_content("Other repositories")
+      end
+    end
 
-      expect(page).to have_content(repository.name)
-      expect(page).not_to have_content("Other repositories")
+    context "when not admin" do
+      before do
+        login_as contributor, scope: :user
+        visit repositories_path
+      end
+
+      it "doesn't show 'other repositories' panel" do
+        expect(page).to have_content(repository.name)
+        expect(page).to have_content(repository2.name)
+        expect(page).not_to have_content("Other repositories")
+      end
     end
   end
 
   describe "repository#show", js: true do
     it "Visual aid for each role is shown properly" do
       visit repository_path(repository)
-      expect(page).to have_css(".repository-information-icon")
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
@@ -122,7 +119,6 @@ describe "Feature: Repositories" do
 
       login_as contributor, scope: :user
       visit repository_path(repository)
-      expect(page).to have_css(".repository-information-icon")
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can push images")
       expect(info).to have_content("You can pull images")
@@ -132,7 +128,6 @@ describe "Feature: Repositories" do
 
       login_as viewer, scope: :user
       visit repository_path(repository)
-      expect(page).to have_css(".repository-information-icon")
       info = page.find(".repository-information-icon")["data-content"]
       expect(info).to have_content("You can pull images")
       expect(info).to have_content("You are a viewer in this repository")
@@ -146,7 +141,7 @@ describe "Feature: Repositories" do
         APP_CONFIG["user_permission"]["push_images"]["policy"] = "allow-personal"
       end
 
-      it "Visual  aid for each role is shown properly" do
+      it "Visual aid for each role is shown properly" do
         login_as user
         visit repository_path(repository)
         info = page.find(".repository-information-icon")["data-content"]
