@@ -106,7 +106,7 @@ module Portus
     # registry has sent the proper "WWW-Authenticate" header value that will
     # allow us the request a new authorization token for this client.
     def request_auth_token(unhauthorized_response)
-      bearer_realm, query = parse_unhauthorized_response(unhauthorized_response)
+      bearer_realm, query = parse_unauthorized_response(unhauthorized_response)
       uri = URI("#{bearer_realm}?#{query.to_query}")
 
       req = Net::HTTP::Get.new(uri)
@@ -123,10 +123,15 @@ module Portus
 
     # For the given 401 response, try to extract the token and the parameters
     # that this client should use in order to request an authorization token.
-    def parse_unhauthorized_response(res)
-      auth_args = res.to_hash["www-authenticate"].first.split(",").each_with_object({}) do |i, h|
+    def parse_unauthorized_response(res)
+
+      # Keys for accessing the parsed hash
+      scope = "scope"
+      realm = "realm"
+
+      auth_args = res.to_hash["www-authenticate"].first.scan(/[a-z]+="[^"]*"/).each_with_object({}) do |i, h|
         key, val = i.split("=")
-        h[key] = val.delete('"')
+        h[key] = val[1, val.length - 1]
       end
 
       unless credentials?
@@ -138,13 +143,13 @@ module Portus
         "service" => auth_args["service"],
         "account" => @username
       }
-      query_params["scope"] = auth_args["scope"] if auth_args.key?("scope")
+      query_params[scope] = auth_args[scope] if auth_args.key?(scope)
 
-      unless auth_args.key?("Bearer realm")
+      unless auth_args.key?(realm)
         raise(NoBearerRealmException, "Cannot find bearer realm")
       end
 
-      [auth_args["Bearer realm"], query_params]
+      [auth_args[realm], query_params]
     end
 
     # Performs an HTTP request to the given URI and request object. You may
