@@ -124,8 +124,11 @@ module Portus
     # For the given 401 response, try to extract the token and the parameters
     # that this client should use in order to request an authorization token.
     def parse_unauthorized_response(res)
-
-      auth_args = res.to_hash["www-authenticate"].first.scan(/[a-z]+="[^"]*"/).each_with_object({}) do |i, h|
+      auth_args = res
+                  .to_hash["www-authenticate"]
+                  .first
+                  .scan(/[a-z]+="[^"]*"/)
+                  .each_with_object({}) do |i, h|
         key, val = i.split("=")
         h[key] = val.delete('"')
       end
@@ -141,9 +144,7 @@ module Portus
       }
       query_params["scope"] = auth_args["scope"] if auth_args.key?("scope")
 
-      unless auth_args.key?("realm")
-        raise(NoBearerRealmException, "Cannot find bearer realm")
-      end
+      raise(NoBearerRealmException, "Cannot find bearer realm") unless auth_args.key?("realm")
 
       [auth_args["realm"], query_params]
     end
