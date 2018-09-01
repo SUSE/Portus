@@ -125,13 +125,9 @@ module Portus
     # that this client should use in order to request an authorization token.
     def parse_unauthorized_response(res)
 
-      # Keys for accessing the parsed hash
-      scope = "scope"
-      realm = "realm"
-
       auth_args = res.to_hash["www-authenticate"].first.scan(/[a-z]+="[^"]*"/).each_with_object({}) do |i, h|
         key, val = i.split("=")
-        h[key] = val[1, val.length - 1]
+        h[key] = val.delete('"')
       end
 
       unless credentials?
@@ -143,13 +139,13 @@ module Portus
         "service" => auth_args["service"],
         "account" => @username
       }
-      query_params[scope] = auth_args[scope] if auth_args.key?(scope)
+      query_params["scope"] = auth_args["scope"] if auth_args.key?("scope")
 
-      unless auth_args.key?(realm)
+      unless auth_args.key?("realm")
         raise(NoBearerRealmException, "Cannot find bearer realm")
       end
 
-      [auth_args[realm], query_params]
+      [auth_args["realm"], query_params]
     end
 
     # Performs an HTTP request to the given URI and request object. You may
