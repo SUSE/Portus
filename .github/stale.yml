@@ -12,6 +12,7 @@ exemptLabels:
   - junior job
   - feature
   - enhancement
+  - documentation
 
 # Set to true to ignore issues in a project (defaults to false)
 exemptProjects: true
