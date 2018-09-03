@@ -88,3 +88,36 @@ simple. You just have to call the registry command with the new
 Moreover, if you just want to check whether there are orphaned blobs or not,
 you can simulate the garbage collection by using the dry-run mode with the
 `-d` flag.
+
+## Automating the removal of images and tags
+
+<div class="alert alert-info">
+  Only available in <strong>2.4 or later</strong>.
+</div>
+
+The `delete` option from the Portus configuration contains also another section:
+`garbage_collector`. This is not the garbage collector as described from the
+registry. Instead, it allows administrators to setup Portus so images considered
+old are deleted. The section is as follows:
+
+{% highlight yaml %}
+garbage_collector:
+  enabled: false
+  older_than: 30
+  tag: ""
+{% endhighlight %}
+
+Some notes:
+
+1. It's disabled by default.
+2. `older_than` specifies the number of days in which an `image:tag` is
+   considered old. By default, an image older than 30 days will be considered
+   old.
+3. `tag` is a filter that acts over old tags. That is, if you specify a value,
+   then only old tags that follow the given format will be automatically
+   removed. This option is expected to be a valid regular expression. Some
+   examples:
+    - `jenkins`: if you anticipate that you will always have a tag with a
+      specific name, you can simply use that.
+    - `build-\\d+`: your tag follows a format like "build-1234" (note that
+      we need to specify `\\d` and not just `\d`).

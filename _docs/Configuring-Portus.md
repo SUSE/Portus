@@ -98,6 +98,10 @@ order to do so just enable the `delete` option:
 delete:
   enabled: true
   contributors: false
+  garbage\_collector:
+    enabled: false
+    older\_than: 30
+    tag: ""
 {% endhighlight %}
 
 This option is **disabled** by default. This is because we want users enabling
@@ -107,6 +111,10 @@ more information, read [this page](/features/removing_images.html).
 Moreover, this action can only be performed by team owners at first. You can
 change this by setting `contributors` to `true`, in which case contributors will
 also be able to remove images and tags.
+
+Last but not least, you can tell Portus to automatically remove tags which are
+considered old. This is documented
+[here](/features/removing_images.html#automating-the-removal-of-images-and-tags).
 
 ### LDAP Support
 
