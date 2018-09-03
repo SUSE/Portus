@@ -391,7 +391,11 @@ order to do so just enable the <code class="highlighter-rouge">delete</code> opt
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">delete</span><span class="pi">:</span>
   <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
-  <span class="na">contributors</span><span class="pi">:</span> <span class="no">false</span></code></pre></figure>
+  <span class="na">contributors</span><span class="pi">:</span> <span class="no">false</span>
+  <span class="s">garbage\_collector</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="s">older\_than</span><span class="pi">:</span> <span class="s">30</span>
+    <span class="na">tag</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span></code></pre></figure>
 
 <p>This option is <strong>disabled</strong> by default. This is because we want users enabling
 this if they are really sure about the feature itself and its requirements. For
@@ -400,6 +404,10 @@ more information, read <a href="/features/removing_images.html">this page</a>.</
 <p>Moreover, this action can only be performed by team owners at first. You can
 change this by setting <code class="highlighter-rouge">contributors</code> to <code class="highlighter-rouge">true</code>, in which case contributors will
 also be able to remove images and tags.</p>
+
+<p>Last but not least, you can tell Portus to automatically remove tags which are
+considered old. This is documented
+<a href="/features/removing_images.html#automating-the-removal-of-images-and-tags">here</a>.</p>
 
 <h3 id="ldap-support">LDAP Support</h3>
 
