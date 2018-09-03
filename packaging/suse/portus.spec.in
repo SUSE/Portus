@@ -18,6 +18,12 @@
 %define branch    __BRANCH__
 %define portusdir /srv/Portus
 
+# Base ruby engine.
+%define rb_build_versions ruby25
+%define rb_build_abi      ruby:2.5.0
+%define rb_suffix         ruby2.5
+%define rb_ver            2.5.0
+
 %define fix_sheb() ( \
   for i in $(grep '^#!/usr/bin/env ruby$' * -r | cut -d: -f1 | uniq);do\
     sed -e 's|^#!/usr/bin/env ruby$|#!/usr/bin/ruby.%{rb_suffix}|g' -i $i;\
@@ -65,11 +71,6 @@ BuildRequires:  nodejs6
 BuildRequires:  yarn
 BuildRequires:  yarn-packaging
 
-# Base ruby engine.
-%define rb_build_versions ruby25
-%define rb_build_abi      ruby:2.5.0
-%define rb_suffix         ruby2.5
-%define rb_ver            2.5.0
 Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi}
 
 BuildRequires: libcurl-devel
