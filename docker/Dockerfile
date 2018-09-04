@@ -1,4 +1,4 @@
-FROM opensuse/amd64:42.3
+FROM opensuse/leap:42.3
 MAINTAINER SUSE Containers Team <containers@suse.com>
 
 # Install the entrypoint of this image.
