@@ -234,6 +234,9 @@ from one of the supported platforms. Here is the full list:
 
 {% highlight yaml %}
 oauth:
+  local_login:
+    enabled: true
+
   google_oauth2:
     enabled: false
     id: ""
@@ -274,6 +277,10 @@ oauth:
       team: ""
 {% endhighlight %}
 
+As you can see, the only option enabled by default is `local_login`, which tells
+Portus that users can log in with their Portus credentials. You can disable this
+if you want users to only login with OAuth credentials.
+
 All supported platforms have their own settings, but there are some common
 attributes that might not be evident:
 
@@ -286,6 +293,9 @@ attributes that might not be evident:
   fetch the proper source. That is, you can specify the Gitlab server (by
   default gitlab.com), or the OpenID provider (by default you'll be prompted
   with a form asking for this information).
+
+For more info, take a look at the [dedicated page](/features/oauth.html) for
+OAuth support.
 
 ### Advanced registry options
 
