@@ -7,4 +7,5 @@ if [ $? -ne 0 ]; then
   yarn install --no-emoji --no-progress
 fi
 
+yarn upgrade
 yarn run webpack
