@@ -313,16 +313,30 @@
 <h2 id="oauth-and-openid-connect-support">OAuth and OpenID Connect support</h2>
 
 <p>You can tell Portus to use an OAuth or an OpenID Connect provider to login. The
-currently supported providers are: Google, Github, Gitlab and Bitbucket. An
-example (with a Github provider):</p>
+currently supported providers are: Google, Github, Gitlab and Bitbucket. For the
+full configuration read <a href="/docs/Configuring-Portus.html">this page</a>. An example
+(with a Github provider):</p>
 
 <p><img src="/images/docs/oauth.gif" alt="OAuth" /></p>
 
-<p>One thing to notice is that the password is auto-generated. So, if you want to
-login afterwards with the given username and a password, you will have to go to
-your profile and change your password. Another possibility is to simply create an
-<a href="/features/application_tokens.html">application token</a>. This is also important
-if you want to login with the docker CLI.</p>
+<p>Some things to note:</p>
+
+<ol>
+  <li>The password for the user is auto-generated. So, if you want to login
+afterwards with the given username and a password, you will have to go to
+your profile and change your password. Another possibility is to simply
+create an <a href="/features/application_tokens.html">application token</a>. This is
+also important if you want to login with the Docker CLI.</li>
+  <li>The callback URL to be used for each provider is different for each of them:
+    <ul>
+      <li>Google: <code class="highlighter-rouge">&lt;host&gt;/users/auth/google_oauth2/callback</code></li>
+      <li>Open ID: <code class="highlighter-rouge">&lt;host&gt;/users/auth/open_id/callback</code></li>
+      <li>Github: <code class="highlighter-rouge">&lt;host&gt;/users/auth/github/callback</code></li>
+      <li>Gitlab: <code class="highlighter-rouge">&lt;host&gt;/users/auth/gitlab/callback</code></li>
+      <li>Bitbucket: <code class="highlighter-rouge">&lt;host&gt;/users/auth/bitbucket/callback</code></li>
+    </ul>
+  </li>
+</ol>
 
               </article>
             </div>

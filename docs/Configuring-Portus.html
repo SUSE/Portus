@@ -524,6 +524,9 @@ by this configuration setting:</p>
 from one of the supported platforms. Here is the full list:</p>
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">oauth</span><span class="pi">:</span>
+  <span class="na">local_login</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
   <span class="na">google_oauth2</span><span class="pi">:</span>
     <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
     <span class="na">id</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
@@ -563,6 +566,10 @@ from one of the supported platforms. Here is the full list:</p>
     <span class="na">options</span><span class="pi">:</span>
       <span class="na">team</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span></code></pre></figure>
 
+<p>As you can see, the only option enabled by default is <code class="highlighter-rouge">local_login</code>, which tells
+Portus that users can log in with their Portus credentials. You can disable this
+if you want users to only login with OAuth credentials.</p>
+
 <p>All supported platforms have their own settings, but there are some common
 attributes that might not be evident:</p>
 
@@ -577,6 +584,9 @@ fetch the proper source. That is, you can specify the Gitlab server (by
 default gitlab.com), or the OpenID provider (by default you’ll be prompted
 with a form asking for this information).</li>
 </ul>
+
+<p>For more info, take a look at the <a href="/features/oauth.html">dedicated page</a> for
+OAuth support.</p>
 
 <h3 id="advanced-registry-options">Advanced registry options</h3>
 
