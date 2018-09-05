@@ -47,8 +47,9 @@ Source0:        %{branch}.tar.gz
 Source1:        node_modules.tar.gz
 Source2:        yarn.lock
 __PATCHSOURCES__
-
-# Add gems as sources with the https://github.com/openSUSE/obs-service-bundle_gems service
+# We need to add bundler cause https://github.com/openSUSE/obs-service-bundle_gems
+# does not add it by default
+Source100:      bundler-1.16.4.gem
 
 Requires:       timezone
 Requires:       net-tools
@@ -114,7 +115,11 @@ tar xzvf node_modules.tar.gz
 
 # Deal with Ruby gems.
 install -d vendor/cache
-cp %{_sourcedir}/*.gem vendor/cache
+# obs-service-bundle_gems will install gems in SOURCE/vendor/cache when using the cpio strategy
+# https://github.com/openSUSE/obs-service-bundle_gems/
+cp %{_sourcedir}/vendor/cache/*.gem vendor/cache
+# copy bundler gem
+cp %{S:100} vendor/cache
 
 # Deploy gems for compiling the assets.
 export GEM_HOME=$PWD/vendor GEM_PATH=$PWD/vendor PATH=$PWD/vendor/bin:$PWD/bin:$PATH
