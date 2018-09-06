@@ -5,13 +5,13 @@ order: 0
 longtitle: The first steps into using Docker and your registry
 ---
 
-<div class="alert alert-info">
-  This page is targetted towards newcomers to the Docker ecosystem that want
-  to get acquainted with commands such as <strong>login</strong> or
-  <strong>push</strong>. If this is not your case, feel free to skip this page.
-</div>
 
 # Basic definitions
+
+<div class="alert alert-info">
+This section is targetted towards newcomers to the Docker ecosystem. If you are
+already acquainted with Docker and the Docker registry, you can skip this section.
+</div>
 
 ## The Docker Engine
 
@@ -130,13 +130,26 @@ following command:
 
 # Next steps
 
-If you are also an administrator make sure to understand all the nuts and
-bolts regarding deploying and configuring Portus. In order to do this, just go
-to the [documentation page](/documentation.html). Another interesting page is
-the [features](/features.html) page, in which you will learn about the
+The [namespaces and teams](/features/3_teams_namespaces_and_users.html) page
+will show you the most basic feature of Portus: how permissions are set for any
+image on the registry. But besides that page, there are other pages showing
+important features that might be interesting for any user:
+
+- [Auditing](/features/4_audit.html) actions that have occurred inside of the
+  registry.
+- [Application tokens](/features/application_tokens.html): another way of
+  authentication that is useful when you want to avoid using passwords.
+- [Search](/features/5_search.html).
+
+If you are also an administrator make sure to understand all the nuts and bolts
+regarding [deploying](/docs/deploy.html) and
+[configuring](/docs/Configuring-Portus.html) Portus. Note that the
+[documentation page](/documentation.html) has many more resources that might be
+useful when setting up Portus. Another interesting page is the
+[features](/features.html) page, in which you will learn about all the
 capabilities that Portus has to offer.
 
-Otherwise, if you have any doubt that the documentation fails to cover, don't be
-shy and ask in our [Google group](https://groups.google.com/forum/#!forum/portus-dev).
-We are eager to understand what we can do to improve your experience with
-Portus!
+Last but not least, if you have any doubt that the documentation fails to cover,
+don't be shy and ask in our [Google
+group](https://groups.google.com/forum/#!forum/portus-dev).  We are eager to
+understand what we can do to improve your experience with Portus!
