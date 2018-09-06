@@ -64,7 +64,7 @@ update_package() {
 
   cp _service _service.orig
   echo "Disabling service"
-  sed -e "s/<service name=\"download_url\">/<service name=\"download_url\" mode=\"disabled\">/g" -i _service
+  sed -E "s/<service name=\"(.*)\">/<service name=\"\1\" mode=\"disabled\">/g" -i _service
   if [ $? -eq 0 ];then
     echo "WARNING: _service file has not been changed"
   fi
