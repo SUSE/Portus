@@ -4,7 +4,7 @@
     <title>Docker and Portus for newcomers</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="  This page is targetted towards newcomers to the Docker ecosystem that want  to get acquainted with commands such as login or  push. If this is not your cas...">
+    <meta name="description" content="Basic definitions">
 
     <link href="/stylesheets/portus.css"  type="text/css" rel="stylesheet" />
     <script src="/javascripts/dist/portus.min.js" type="text/javascript" charset="utf-8"></script>
@@ -306,13 +306,12 @@
             </div>
             <div class="row post">
               <article>
-                <div class="alert alert-info">
-  This page is targetted towards newcomers to the Docker ecosystem that want
-  to get acquainted with commands such as <strong>login</strong> or
-  <strong>push</strong>. If this is not your case, feel free to skip this page.
-</div>
+                <h1 id="basic-definitions">Basic definitions</h1>
 
-<h1 id="basic-definitions">Basic definitions</h1>
+<div class="alert alert-info">
+This section is targetted towards newcomers to the Docker ecosystem. If you are
+already acquainted with Docker and the Docker registry, you can skip this section.
+</div>
 
 <h2 id="the-docker-engine">The Docker Engine</h2>
 
@@ -442,16 +441,31 @@ following command:</p>
 
 <h1 id="next-steps">Next steps</h1>
 
-<p>If you are also an administrator make sure to understand all the nuts and
-bolts regarding deploying and configuring Portus. In order to do this, just go
-to the <a href="/documentation.html">documentation page</a>. Another interesting page is
-the <a href="/features.html">features</a> page, in which you will learn about the
+<p>The <a href="/features/3_teams_namespaces_and_users.html">namespaces and teams</a> page
+will show you the most basic feature of Portus: how permissions are set for any
+image on the registry. But besides that page, there are other pages showing
+important features that might be interesting for any user:</p>
+
+<ul>
+  <li><a href="/features/4_audit.html">Auditing</a> actions that have occurred inside of the
+registry.</li>
+  <li><a href="/features/application_tokens.html">Application tokens</a>: another way of
+authentication that is useful when you want to avoid using passwords.</li>
+  <li><a href="/features/5_search.html">Search</a>.</li>
+</ul>
+
+<p>If you are also an administrator make sure to understand all the nuts and bolts
+regarding <a href="/docs/deploy.html">deploying</a> and
+<a href="/docs/Configuring-Portus.html">configuring</a> Portus. Note that the
+<a href="/documentation.html">documentation page</a> has many more resources that might be
+useful when setting up Portus. Another interesting page is the
+<a href="/features.html">features</a> page, in which you will learn about all the
 capabilities that Portus has to offer.</p>
 
-<p>Otherwise, if you have any doubt that the documentation fails to cover, don’t be
-shy and ask in our <a href="https://groups.google.com/forum/#!forum/portus-dev">Google group</a>.
-We are eager to understand what we can do to improve your experience with
-Portus!</p>
+<p>Last but not least, if you have any doubt that the documentation fails to cover,
+don’t be shy and ask in our <a href="https://groups.google.com/forum/#!forum/portus-dev">Google
+group</a>.  We are eager to
+understand what we can do to improve your experience with Portus!</p>
 
               </article>
             </div>
