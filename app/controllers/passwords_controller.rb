@@ -19,8 +19,9 @@ class PasswordsController < Devise::PasswordsController
     else
       redirect_to new_user_password_path, alert: resource.errors.full_messages, float: true
     end
-  rescue *::Portus::Errors::NET => e
-    msg = "#{e}: #{::Portus::Errors.message_from_exception(e)}"
+  rescue *::Portus::Errors::NET, ::Net::SMTPAuthenticationError => e
+    from = ::Portus::Errors.message_from_exception(e)
+    msg  = "#{e}: #{from if from}"
     Rails.logger.tagged("Mailer") { Rails.logger.info msg }
     redirect_to new_user_password_path,
                 alert: "Something went wrong. Check the configuration of Portus",

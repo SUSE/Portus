@@ -3,7 +3,9 @@
 # (it will be ignored by git). For more info, you can read the dedicated page
 # here: http://port.us.org/docs/Configuring-Portus.html.
 
-# Settings for the Portus mailer.
+# Settings for the Portus mailer. It's strongly recommended to read the
+# following documentation link before configuring the mailer:
+#   http://port.us.org/docs/Configuring-Portus.html#email-configuration
 email:
   from: "portus@example.com"
   name: "Portus"
@@ -16,10 +18,24 @@ email:
   smtp:
     enabled: false
     address: "smtp.example.com"
-    port: 587,
-    user_name: "username@example.com"
-    password: "password"
-    domain: "example.com"
+    port:    587,
+    domain:  "example.com"
+
+    ##
+    # SSL.
+
+    ssl_tls:              ""
+    enable_starttls_auto: false
+    openssl_verify_mode:  "none"
+    ca_path:              ""
+    ca_file:              ""
+
+    ##
+    # Authentication
+
+    user_name:      ""
+    password:       ""
+    authentication: "login"
 
 # If enabled, then the profile picture will be picked from the Gravatar
 # associated with each user. See: https://en.gravatar.com/

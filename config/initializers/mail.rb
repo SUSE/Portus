@@ -1,41 +1,25 @@
 # frozen_string_literal: true
 
-def check_email!(key)
-  value = APP_CONFIG["email"][key]
-  return if value.match?(Devise.email_regexp)
-  raise "Mail: bad config value for '#{key}'. '#{value}' is not a proper email..."
-end
+require "portus/mail"
 
 unless Rails.env.test?
-  check_email!("from")
-  check_email!("reply_to") if APP_CONFIG["email"]["reply_to"].present?
+  # In some weird cases APP_CONFIG is not even there. In these cases, just go
+  # back to sendmail.
+  if defined?(APP_CONFIG)
+    # Check that emails have the proper format.
+    mail = ::Portus::Mail::Utils.new(APP_CONFIG["email"])
+    mail.check_email_configuration!
 
-  # If SMTP was set, then use it as the delivery method and configure it with the
-  # given config.
-
-  if defined?(APP_CONFIG) && APP_CONFIG["email"]["smtp"]["enabled"]
-    Portus::Application.config.action_mailer.delivery_method = :smtp
-    smtp = APP_CONFIG["email"]["smtp"]
-    smtp_settings = {
-      address:              smtp["address"],
-      port:                 smtp["port"],
-      domain:               smtp["domain"],
-      enable_starttls_auto: false
-    }
-    if smtp["user_name"].blank?
-      Rails.logger.info "No smtp username supplied, not using smtp authentication"
+    # Fetch SMTP settings. On success, it will set SMTP as the delivery method,
+    # otherwise we fall back to sendmail.
+    settings = mail.smtp_settings
+    if settings
+      Portus::Application.config.action_mailer.delivery_method = :smtp
+      ActionMailer::Base.smtp_settings = settings
     else
-      auth_settings = {
-        user_name:            smtp["user_name"],
-        password:             smtp["password"],
-        authentication:       :login,
-        enable_starttls_auto: true
-      }
-      smtp_settings = smtp_settings.merge(auth_settings)
+      Portus::Application.config.action_mailer.delivery_method = :sendmail
     end
-    ActionMailer::Base.smtp_settings = smtp_settings
   else
-    # If SMTP is not enabled, then go for sendmail.
     Portus::Application.config.action_mailer.delivery_method = :sendmail
   end
 end
