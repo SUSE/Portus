@@ -41,7 +41,10 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Set this to true when debugging a mailer.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+  # Uncomment the following two lines to test the mailer in the real world.
+  # config.action_mailer.perform_deliveries = true
+  # config.action_mailer.raise_delivery_errors = true
 
   # Control which IP's have access to the console. In Dev mode we can allow all private networks
   config.web_console.whitelisted_ips = %w[127.0.0.1/1 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16]

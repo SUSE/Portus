@@ -45,6 +45,14 @@ describe PasswordsController do
     expect(response.status).to eq 302
   end
 
+  it "redirects on ::Net::SMTPAuthenticationError" do
+    allow(User).to receive(:send_reset_password_instructions) do
+      raise ::Net::SMTPAuthenticationError, "error"
+    end
+    post :create, "user" => { "email" => @user.email }
+    expect(response.status).to eq 302
+  end
+
   describe "LDAP support is enabled" do
     before do
       APP_CONFIG["ldap"]["enabled"] = true
