@@ -63,18 +63,80 @@ here](/docs/secrets.html).
 email:
   from: "portus@example.com"
   name: "Portus"
-  reply_to: "no-reply@example.com"
+  reply_to: ""
 
   smtp:
     enabled: false
     address: "smtp.example.com"
-    port: 587,
-    user_name: "username@example.com"
-    password: "password"
-    domain: "example.com"
+    port:    587,
+    domain:  "example.com"
+
+    ##
+    # SSL.
+
+    ssl_tls:              ""
+    enable_starttls_auto: false
+    openssl_verify_mode:  "none"
+    ca_path:              ""
+    ca_file:              ""
+
+    ##
+    # Authentication
+
+    user_name:      ""
+    password:       ""
+    authentication: "login"
 {% endhighlight %}
 
-Note that if **smtp** is disabled, then `sendmail` is used instead (the specific command being: `/usr/sbin/sendmail -i -t`).
+There are some important things to note from **SMTP** support:
+
+1. If SMTP is disabled, then `sendmail` is used instead (the specific command
+   being: `/usr/sbin/sendmail -i -t`).
+2. Most options described here have a direct translation in
+   [ActiveMailer::Base](https://api.rubyonrails.org/v5.1/classes/ActionMailer/Base.html),
+   which is the mailer used by Portus. If you go over the "Configuration
+   options" section, you will start to see the same keys as in the Portus
+   configuration, and their documentation.
+3. The `ssl_tls` key is a combination of the `ssl` and the `tls` options as
+   described in the [documentation of
+   ActiveMailer::Base](https://api.rubyonrails.org/v5.1/classes/ActionMailer/Base.html). If
+   you don't want SSL support, then simply leave this option empty. Otherwise,
+   you will have to write either "ssl" or "tls" to enable any of these
+   options. Moreover, `openssl_verify_mode` accepts only two values: "none" (the
+   default), or "peer". Again, refer to the same documentation for more info.
+3. Authentication is only enabled if you provide a `user_name`. Moreover, note
+   that the password that you have to write might be different than the one you
+   have on your personal account (e.g. some providers like GMail ask you to
+   create application passwords if you are using two-factor
+   authentication). Last but not least, `authentication` can only have three
+   values: "login", "plain" or "cram_md5". Check the [documentation of
+   ActiveMailer::Base](https://api.rubyonrails.org/v5.1/classes/ActionMailer/Base.html)
+   in order to see what's the right value for you.
+4. Note that this configuration section will be directly mapped into options
+   that are passed into the mailer. We are using the same mailer as many other
+   Ruby on Rails applications, so all the examples posted on different places
+   should also apply here. For example, Gitlab has written an [awesome
+   list](https://docs.gitlab.com/omnibus/settings/smtp.html) which describes
+   which options are to be used for each mail provider.
+
+An example configuration for GMail might look like:
+
+{% highlight yaml %}
+email:
+ from: "account@gmail.com"
+ name: "Name"
+
+ smtp:
+   enabled: true
+   address: "smtp.gmail.com"
+   port: 587,
+   domain: "smtp.gmail.com"
+   user_name: "account@gmail.com"
+   password: "two-factor-password"
+   authentication: "login"
+   enable_starttls_auto: true
+   openssl_verify_mode:  "none"
+{% endhighlight %}
 
 ### Gravatar
 
