@@ -361,17 +361,79 @@ here</a>.</p>
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">email</span><span class="pi">:</span>
   <span class="na">from</span><span class="pi">:</span> <span class="s2">"</span><span class="s">portus@example.com"</span>
   <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Portus"</span>
-  <span class="na">reply_to</span><span class="pi">:</span> <span class="s2">"</span><span class="s">no-reply@example.com"</span>
+  <span class="na">reply_to</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
 
   <span class="na">smtp</span><span class="pi">:</span>
     <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
     <span class="na">address</span><span class="pi">:</span> <span class="s2">"</span><span class="s">smtp.example.com"</span>
-    <span class="na">port</span><span class="pi">:</span> <span class="s">587,</span>
-    <span class="na">user_name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">username@example.com"</span>
-    <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">password"</span>
-    <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">example.com"</span></code></pre></figure>
+    <span class="na">port</span><span class="pi">:</span>    <span class="s">587,</span>
+    <span class="na">domain</span><span class="pi">:</span>  <span class="s2">"</span><span class="s">example.com"</span>
 
-<p>Note that if <strong>smtp</strong> is disabled, then <code class="highlighter-rouge">sendmail</code> is used instead (the specific command being: <code class="highlighter-rouge">/usr/sbin/sendmail -i -t</code>).</p>
+    <span class="c1">##</span>
+    <span class="c1"># SSL.</span>
+
+    <span class="na">ssl_tls</span><span class="pi">:</span>              <span class="s2">"</span><span class="s">"</span>
+    <span class="na">enable_starttls_auto</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">openssl_verify_mode</span><span class="pi">:</span>  <span class="s2">"</span><span class="s">none"</span>
+    <span class="na">ca_path</span><span class="pi">:</span>              <span class="s2">"</span><span class="s">"</span>
+    <span class="na">ca_file</span><span class="pi">:</span>              <span class="s2">"</span><span class="s">"</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Authentication</span>
+
+    <span class="na">user_name</span><span class="pi">:</span>      <span class="s2">"</span><span class="s">"</span>
+    <span class="na">password</span><span class="pi">:</span>       <span class="s2">"</span><span class="s">"</span>
+    <span class="na">authentication</span><span class="pi">:</span> <span class="s2">"</span><span class="s">login"</span></code></pre></figure>
+
+<p>There are some important things to note from <strong>SMTP</strong> support:</p>
+
+<ol>
+  <li>If SMTP is disabled, then <code class="highlighter-rouge">sendmail</code> is used instead (the specific command
+being: <code class="highlighter-rouge">/usr/sbin/sendmail -i -t</code>).</li>
+  <li>Most options described here have a direct translation in
+<a href="https://api.rubyonrails.org/v5.1/classes/ActionMailer/Base.html">ActiveMailer::Base</a>,
+which is the mailer used by Portus. If you go over the “Configuration
+options” section, you will start to see the same keys as in the Portus
+configuration, and their documentation.</li>
+  <li>The <code class="highlighter-rouge">ssl_tls</code> key is a combination of the <code class="highlighter-rouge">ssl</code> and the <code class="highlighter-rouge">tls</code> options as
+described in the <a href="https://api.rubyonrails.org/v5.1/classes/ActionMailer/Base.html">documentation of
+ActiveMailer::Base</a>. If
+you don’t want SSL support, then simply leave this option empty. Otherwise,
+you will have to write either “ssl” or “tls” to enable any of these
+options. Moreover, <code class="highlighter-rouge">openssl_verify_mode</code> accepts only two values: “none” (the
+default), or “peer”. Again, refer to the same documentation for more info.</li>
+  <li>Authentication is only enabled if you provide a <code class="highlighter-rouge">user_name</code>. Moreover, note
+that the password that you have to write might be different than the one you
+have on your personal account (e.g. some providers like GMail ask you to
+create application passwords if you are using two-factor
+authentication). Last but not least, <code class="highlighter-rouge">authentication</code> can only have three
+values: “login”, “plain” or “cram_md5”. Check the <a href="https://api.rubyonrails.org/v5.1/classes/ActionMailer/Base.html">documentation of
+ActiveMailer::Base</a>
+in order to see what’s the right value for you.</li>
+  <li>Note that this configuration section will be directly mapped into options
+that are passed into the mailer. We are using the same mailer as many other
+Ruby on Rails applications, so all the examples posted on different places
+should also apply here. For example, Gitlab has written an <a href="https://docs.gitlab.com/omnibus/settings/smtp.html">awesome
+list</a> which describes
+which options are to be used for each mail provider.</li>
+</ol>
+
+<p>An example configuration for GMail might look like:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">email</span><span class="pi">:</span>
+ <span class="na">from</span><span class="pi">:</span> <span class="s2">"</span><span class="s">account@gmail.com"</span>
+ <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Name"</span>
+
+ <span class="na">smtp</span><span class="pi">:</span>
+   <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+   <span class="na">address</span><span class="pi">:</span> <span class="s2">"</span><span class="s">smtp.gmail.com"</span>
+   <span class="na">port</span><span class="pi">:</span> <span class="s">587,</span>
+   <span class="na">domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">smtp.gmail.com"</span>
+   <span class="na">user_name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">account@gmail.com"</span>
+   <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">two-factor-password"</span>
+   <span class="na">authentication</span><span class="pi">:</span> <span class="s2">"</span><span class="s">login"</span>
+   <span class="na">enable_starttls_auto</span><span class="pi">:</span> <span class="no">true</span>
+   <span class="na">openssl_verify_mode</span><span class="pi">:</span>  <span class="s2">"</span><span class="s">none"</span></code></pre></figure>
 
 <h3 id="gravatar">Gravatar</h3>
 
