@@ -41,18 +41,22 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   end
 
   def update
+    msg = "Profile updated successfully!"
+
     success =
       if password_update?
         succ = current_user.update_with_password(user_params)
-        bypass_sign_in(current_user) if succ
+        if succ
+          bypass_sign_in(current_user)
+          msg += " Remember to login again on the Docker CLI."
+        end
         succ
       else
         current_user.update_without_password(params.require(:user).permit(:email, :display_name))
       end
 
     if success
-      redirect_to edit_user_registration_path,
-                  notice: "Profile updated successfully!", float: true
+      redirect_to edit_user_registration_path, notice: msg, float: true
     else
       redirect_to edit_user_registration_path,
                   alert: resource.errors.full_messages, float: true
