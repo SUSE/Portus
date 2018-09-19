@@ -65,7 +65,7 @@ class Tag < ActiveRecord::Base
     dig = fetch_digest
     return false if dig.blank?
 
-    Tag.where(digest: dig).update_all(marked: true)
+    Tag.where(repository: repository, digest: dig).update_all(marked: true)
 
     begin
       Registry.get.client.delete(repository.full_name, dig, "manifests")
@@ -76,7 +76,7 @@ class Tag < ActiveRecord::Base
     end
 
     success = true
-    Tag.where(digest: dig).find_each do |tag|
+    Tag.where(repository: repository, digest: dig).find_each do |tag|
       success &&= tag&.delete_by!(actor)
     end
     success
