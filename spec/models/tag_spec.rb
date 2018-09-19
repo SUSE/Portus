@@ -34,9 +34,10 @@ class TagMock < Tag
 end
 
 describe Tag do
-  let!(:registry)   { create(:registry, hostname: "registry.test.lan") }
-  let!(:user)       { create(:admin) }
-  let!(:repository) { create(:repository, namespace: registry.global_namespace, name: "repo") }
+  let!(:registry)    { create(:registry, hostname: "registry.test.lan") }
+  let!(:user)        { create(:admin) }
+  let!(:repository)  { create(:repository, namespace: registry.global_namespace, name: "repo") }
+  let!(:repository1) { create(:repository, namespace: registry.global_namespace, name: "repo1") }
 
   it { is_expected.to belong_to(:repository) }
   it { is_expected.to belong_to(:author) }
@@ -71,6 +72,7 @@ describe Tag do
   describe "#delete_by_digest!" do
     let!(:tag)  { create(:tag, name: "tag1", repository: repository, digest: "1") }
     let!(:tag2) { create(:tag, name: "tag2", repository: repository, digest: "2") }
+    let!(:tag3) { create(:tag, name: "tag3", repository: repository1, digest: "2") }
 
     it "returns false if there is no digest" do
       allow_any_instance_of(described_class).to receive(:fetch_digest).and_return(nil)
@@ -150,6 +152,20 @@ describe Tag do
       tag.delete_by_digest!(user)
 
       expect(described_class.find_by(name: "t")).to be_nil
+    end
+
+    it "does not remove tags from other repositories" do
+      allow_any_instance_of(Tag).to receive(:fetch_digest).and_return("2")
+      allow_any_instance_of(Portus::RegistryClient).to(
+        receive(:delete)
+          .with(repository.full_name, "2", "manifests")
+          .and_return(true)
+      )
+
+      tag2.delete_by_digest!(user)
+
+      expect(repository.tags.count).to eq 1
+      expect(repository1.tags.count).to eq 1
     end
   end
 
