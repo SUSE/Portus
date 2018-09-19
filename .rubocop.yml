@@ -30,11 +30,12 @@ Layout/AlignHash:
 Metrics/AbcSize:
   Max: 30
 
-# We will skip it for tests and the Grape API.
+# We will skip it for tests, the Grape API and Rake tasks.
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
     - lib/api/**/*
+    - lib/tasks/**/*
 
 # NOTE: this could be further trimmed down but the following refactorings are
 # needed:
