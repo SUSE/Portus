@@ -1,6 +1,185 @@
 ## Upcoming Version
 
-Under development
+## 2.4.0
+
+### Highlight
+
+#### Configuration changes
+
+We have introduced quite some configurable options. Some of them are new, and
+some other are merely additions to existing ones.
+
+First of all, we have expanded the configuration for the mailer. We are now
+providing more options so administrators have more flexibility in regards to how
+they manage SSL/TLS. You can read the update documentation of the mailer
+[here](http://port.us.org/docs/Configuring-Portus.html#email-configuration).
+
+Moreover, the `delete` option has now two new options:
+
+1. You can allow contributors to delete namespaces/repositories/etc. with the
+   `delete.contributors` option (it's set to `false` by default).
+2. The background process can now automatically remove images that are older
+   than a certain date, or that match a given tag. This is disabled by default
+   and it's under the `delete.garbage_collector` option.
+
+You can read more about this
+[here](http://port.us.org/docs/Configuring-Portus.html#delete-support).
+
+LDAP has also seen some updates. First of all, this release includes the changes
+described in the `2.3.3` release when it comes to encryption, but it also adds
+the new `timeout` option, in which you can tune the timeout in seconds for LDAP
+lookups. You can read more about this
+[here](http://port.us.org/docs/Configuring-Portus.html#ldap-support).
+
+We have also expanded the `user_permission` section, so administrators can
+further tune what regular users can do. In more details:
+
+- We have added the `create_webhook` and the `manage_webhook` options, in order
+  to restrict webhook management (it is not restricted by default).
+- We have added the `push_images` option, which accepts three possible values
+  under its `policy` key:
+  - `allow-teams`: the default policy, which works as how Portus used to work up
+    until now: owners and contributors of teams can push.
+  - `allow-personal`: team policy is removed, non-admin users will only be able
+    to push into their personal namespaces.
+  - `admin-only`: only administrators are allowed to push images.
+
+You can read a summary of the `user_permission.push_images` option
+[here](http://port.us.org/features/3_teams_namespaces_and_users.html#summary-with-all-the-options).
+
+Furthermore, you can now also tune the `pagination` rule being applied to all UI
+elements which contain a list (e.g. the list of repositories).
+
+Last but not least, we have increased the default value for the JWT token
+expiration time, since it has been reported that the default value was just too
+small.
+
+#### Moved portusctl into another project
+
+The `portusctl` tool has been rewritten and moved into its own
+[project](https://github.com/openSUSE/portusctl). This has allowed us to expand
+its possibilities, since now it will mainly interact with your Portus instance
+through the API. The interface of this tool has changed quite a lot, but we
+kept the ability to execute commands inside of your Portus instance (i.e. the
+existing `exec` command). This new tool is already included in Docker images
+based on this `2.4` version of Portus.
+
+#### Changes on the API
+
+We have added new endpoints, as you will see on the list below. We would like to
+highlight the `bootstrap` endpoint. This endpoint allows an administrator of a
+Portus instance to create the first admin user of Portus and to fetch an
+application token that has been created for this same user. This way, you no
+longer need the UI in order to perform the first steps of your instance.
+
+Besides this, the Portus UI itself is using more and more this API, instead of
+using a more traditional approach. Last but not least, we have changed existing
+endpoints with more refined status codes, better response objects, etc. Make
+sure to visit the [API documentation](http://port.us.org/docs/API.html).
+
+#### Added bots
+
+We have introduced a new concept: bots. Bots are regular users that are created
+by administrators, but with some subtleties:
+
+- A bot doesn't own a personal namespace.
+- A bot cannot login via web.
+- A bot can only log in with application tokens (a token is generated
+  automatically when creating a bot).
+
+#### Namespace deletion
+
+After much delay, we have implemented namespace deletion. You don't have to
+change anything from your configuration in order to have this enabled (it
+depends on the same `delete.enabled` configuration).
+
+### Features
+
+- 20c7e04acdfb Local login form can be disabled (#1603)
+- 23e455516156 webhooks: added the name column (#1581)
+- 53ce8967395b Allow contributors to delete repositories/tags (#1696)
+- 0c0d46b67f6c config: added option to generally disable push access to non-admin users (#1705)
+- f0432d102b49 api: added bootstrap endpoint (#1681)
+- 2fcbeda7edbb api: added update methods for namespaces and teams (#1794)
+- c9e32324a848 Added permissions on webhooks (#1806)
+- bf4e913552b8 config: removed the deprecated `ldap.method` key (#1821)
+- 7f82a44078c3 Added the possibility to create bots (#1856)
+- 5ee93c4b1b96 background: implemented garbage collector (#1864)
+- 94f78377e699 Implemented namespace deletion (#1938)
+
+### Fixes
+
+- 0b7a651e8114 api: take the relative url root into account (#1610)
+- 7b28926a34b8 api: removed slash duplication from ajax calls (#1628)
+- 57d1f93f9931 health: don't panic on malformed Clair URL (#1665)
+- e85ed519974d Increased the text storage for vulnerabilities (#1670)
+- 02d387363881 sync: rollback if events have happened (#1675)
+- 7e60b7155429 sync: added sync-strategy as a config value (#1675)
+- 459c1953a0f9 security: don't crash on clair timeouts (#1762)
+- 640e48c7b9a4 security: fetch the manifest more safely (#1768)
+- b97636183d0e sync: do not remove repositories on some errors (#1787)
+- 83b4b3a9fa97 ui: fixed hostname copied to clipboard on tags (#1792)
+- 4625761e8ede api: explicitly set 204 status instead of nothing (#1804)
+- ae80df228db8 ldap: fixed a couple of bugs around SSL support (#1817)
+- 4c25b2367349 health: catch all exceptions for registries (#1831)
+- 291b049e1e8d ldap: fixed a crash when search fails (#1834)
+- fc133a48787f user: do not allow the update of the portus user (#1896)
+- cef7f4c506bd passwords: don't allow the portus user to reset (#1896)
+- 67ba269d33ee user: skip validations when creating portus user (#1896)
+- 9af3f2277d7b Restrict deletes into the repository (#1973)
+
+### Improvements
+
+- 9aa3ee218ffd api: added create and update methods to registries (#1663)
+- aa3ccb19132e background: mark failed scans as re-schedulable (#1671)
+- 54dade970964 api: added endpoints for re-scheduling scanning (#1672)
+- cc6e5046a441 background: add the possibility to disable background tasks (#1679)
+- e6683066f3d8 config: make reply_to setting optional (#1699)
+- 07d33f4ad80b policies: added more fine-grained push policies (#1729)
+- 02fec6da7996 teams: improved team creation form with owner (#1776)
+- 10ab3456bc4d security: added a table for vulnerabilities (#1778)
+- ee295ee896e0 ui: added users and registries into the sidebar (#1784)
+- d2d90d424555 ui: splitted repositories into different panels (#1785)
+- 6482ed7522f5 ui: unified admin page with regular page (#1783)
+- 6cd886a4fad0 ui: show external hostname for registries (#1791)
+- 49c6aefd1e76 authentication: use a more fine-grained scope for Github (#1800)
+- c524f37461ff ui: added visibility to namespace edit form (#1826)
+- a80fbaa0e880 ui: added enabled toggle to webhooks edit form (#1827)
+- a6f6035d40b9 health: implemented check for LDAP (#1828)
+- ccdbd31bea78 js: replaced typeahead.js w/ vue-multiselect (#1811)
+- ec6adb71f521 ui: improved and refactored namespace#show page (#1837)
+- 6cd0af5f4b93 js: reduced bundle size (#1891)
+- f777a5effb16 oauth/gitlab: allow to use private gitlab server (#1903)
+- f1e8a103dfa4 oauth/gitlab: be sure to load all groups (#1903)
+- 10cb892b0b24 docker: allow Puma to bind to unix socket also in production (#1880)
+- 4b57ad666846 docker: make it possible to connect to a database socket (#1880)
+- 82199e9ade87 js: splitted into bundles and chunks (#1924)
+- 990a04e36116 config: raise the default puma workers number (#1938)
+- 688cb501f7cf config: expanded the mailer section (#1967)
+- bef0fe19d3a5 config: added pagination options (#1815)
+- 35ba42f2a4f1 config: added LDAP timeout option (#1821)
+- 648450748bed Remind users to login again after password update (#1969)
+- 914cc9ebfdee tasks: added portus:db:configure (#1970)
+- bc28c049bd10 config: raised the value for JWT expiration time (#1979)
+
+### Packaging
+
+- 279de0a3762b Add "js()" to the bundled javascript libs (#1744)
+- 66bcd6a58b28 Including gems as sources (#1948)
+- e3ddaa042154 Require portusctl as a separate package (#1948)
+- a6a3a36b00c6 Add automatic generation of bundled js files (#1948)
+- 89566d7da334 Do not recommend mariadb (#1948)
+- e350e0cae365 Define rb\_suffix before its usage in fix\_sheb (#1948)
+- 556778b9f3aa Using the cpio strategy for adding/removing gems as sources (#1962)
+
+### Other
+
+- c97663be06cd Removed deprecated code from 2.3 (#1604)
+- 3b912ebd1684 help: point to the API documentation on production (#1647)
+- 190edbaea06c Introduced unit testing for Javascript components (#1592)
+- ecca2d9c6336 js: added unit tests for vue components and utils (#1661)
+- f297fd71618b Re-implemented from scratch integration tests (#1716)
+- d534723aa762 spec: added chrome headless as default js runner (#1866)
 
 ## 2.3.5
 
