@@ -1,3 +1,8 @@
+## 2.3.6
+
+- 81179951f458 Restrict deletes into the repository (#1973)
+- 066f06f4e713 Remind users to login again after password update (#1969)
+
 ## 2.3.5
 
 - 7755c7201d61 Update sprockets to fix cve-2018-3760
