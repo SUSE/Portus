@@ -1,5 +1,3 @@
-## Upcoming Version
-
 ## 2.4.0
 
 ### Highlight
