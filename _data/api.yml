@@ -1492,6 +1492,17 @@ definitions:
       bot:
         type: boolean
         description: Whether this is a bot or not
+      display_username:
+        type: string
+        description: Displayable name
+      namespaces_count:
+        type: integer
+        format: int32
+        description: The number of namespaces that user has access to
+      teams_count:
+        type: integer
+        format: int32
+        description: The number of teams that the user belongs to
     description: Returns the list of team members
   Health:
     type: object
@@ -1558,6 +1569,9 @@ definitions:
       updatable:
         type: string
         description: Boolean that tells if the current user can manage the namespace
+      destroyable:
+        type: string
+        description: Boolean that tells if the current user can destroy the namespace
       permissions:
         type: string
         description: Different permissions for the current user
