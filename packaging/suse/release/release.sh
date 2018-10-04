@@ -92,6 +92,13 @@ update_package() {
   echo "Fix source filename because when releasing we are using a disabled service"
   echo "which cause the tarball be named differently"
   sed -e "s/Source:.*Portus-%{branch}.tar.gz/Source:        %{branch}.tar.gz/g" -i portus.spec
+
+  echo "Add node modules tarball"
+  $OSC add node_modules.tar.gz
+
+  echo "Add gem tarball"
+  $OSC add vendor.obscpio
+
   popd
 }
 
