@@ -7,6 +7,142 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Portus 2.4 released!</title>
+        <description>
+          
+          &lt;p&gt;It has been half a year more or less since we released Portus 2.3, and now it’s
+time to present to you a shiny new version. This version can be seen as a
+continuation of 2.3, since it simply deepens on some of the ideas introduced in
+2.3, and it adds some nice improvements on top of it. We would like to highlight
+the following changes:&lt;/p&gt;
+
+&lt;h2 id=&quot;highlight&quot;&gt;Highlight&lt;/h2&gt;
+
+&lt;h3 id=&quot;configuration-changes&quot;&gt;Configuration changes&lt;/h3&gt;
+
+&lt;p&gt;We have introduced quite some configurable options. Some of them are new, and
+some other are merely additions to existing ones.&lt;/p&gt;
+
+&lt;p&gt;First of all, we have expanded the configuration for the mailer. We are now
+providing more options so administrators have more flexibility in regards to how
+they manage SSL/TLS. You can read the update documentation of the mailer
+&lt;a href=&quot;/docs/Configuring-Portus.html#email-configuration&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Moreover, the &lt;code class=&quot;highlighter-rouge&quot;&gt;delete&lt;/code&gt; option has now two new options:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;You can allow contributors to delete namespaces/repositories/etc. with the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;delete.contributors&lt;/code&gt; option (it’s set to &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt; by default).&lt;/li&gt;
+  &lt;li&gt;The background process can now automatically remove images that are older
+than a certain date, or that match a given tag. This is disabled by default
+and it’s under the &lt;code class=&quot;highlighter-rouge&quot;&gt;delete.garbage_collector&lt;/code&gt; option.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;You can read more about this
+&lt;a href=&quot;/docs/Configuring-Portus.html#delete-support&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;LDAP has also seen some updates. First of all, this release includes the changes
+described in the &lt;code class=&quot;highlighter-rouge&quot;&gt;2.3.3&lt;/code&gt; release when it comes to encryption, but it also adds
+the new &lt;code class=&quot;highlighter-rouge&quot;&gt;timeout&lt;/code&gt; option, in which you can tune the timeout in seconds for LDAP
+lookups. You can read more about this
+&lt;a href=&quot;/docs/Configuring-Portus.html#ldap-support&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We have also expanded the &lt;code class=&quot;highlighter-rouge&quot;&gt;user_permission&lt;/code&gt; section, so administrators can
+further tune what regular users can do. In more details:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;We have added the &lt;code class=&quot;highlighter-rouge&quot;&gt;create_webhook&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;manage_webhook&lt;/code&gt; options, in order
+to restrict webhook management (it is not restricted by default).&lt;/li&gt;
+  &lt;li&gt;We have added the &lt;code class=&quot;highlighter-rouge&quot;&gt;push_images&lt;/code&gt; option, which accepts three possible values
+under its &lt;code class=&quot;highlighter-rouge&quot;&gt;policy&lt;/code&gt; key:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;allow-teams&lt;/code&gt;: the default policy, which works as how Portus used to work up
+until now: owners and contributors of teams can push.&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;allow-personal&lt;/code&gt;: team policy is removed, non-admin users will only be able to
+push into their personal namespaces.&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;admin-only&lt;/code&gt;: only administrators are allowed to push images.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can read a summary of the &lt;code class=&quot;highlighter-rouge&quot;&gt;user_permission.push_images&lt;/code&gt; option
+&lt;a href=&quot;/features/3_teams_namespaces_and_users.html#summary-with-all-the-options&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Furthermore, you can now also tune the &lt;code class=&quot;highlighter-rouge&quot;&gt;pagination&lt;/code&gt; rule being applied to all UI
+elements which contain a list (e.g. the list of repositories).&lt;/p&gt;
+
+&lt;p&gt;Last but not least, we have increased the default value for the JWT token
+expiration time, since it has been reported that the default value was just too
+small.&lt;/p&gt;
+
+&lt;h3 id=&quot;moved-portusctl-into-another-project&quot;&gt;Moved portusctl into another project&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;portusctl&lt;/code&gt; tool has been rewritten and moved into its own
+&lt;a href=&quot;https://github.com/openSUSE/portusctl&quot;&gt;project&lt;/a&gt;. This has allowed us to expand
+its possibilities, since now it will mainly interact with your Portus instance
+through the API. The interface of this tool has changed quite a lot, but we kept
+the ability to execute commands inside of your Portus instance (i.e. the
+existing &lt;code class=&quot;highlighter-rouge&quot;&gt;exec&lt;/code&gt; command). This new tool is already included in Docker images
+based on this &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4&lt;/code&gt; version of Portus.&lt;/p&gt;
+
+&lt;h3 id=&quot;changes-on-the-api&quot;&gt;Changes on the API&lt;/h3&gt;
+
+&lt;p&gt;We would like to highlight the new &lt;code class=&quot;highlighter-rouge&quot;&gt;bootstrap&lt;/code&gt; endpoint. This endpoint allows an
+administrator of a Portus instance to create the first admin user of Portus and
+to fetch an application token that has been created for this same user. This
+way, you no longer need the UI in order to perform the first steps of your
+instance.&lt;/p&gt;
+
+&lt;p&gt;Besides this, the Portus UI itself is using more and more this API, instead of
+using a more traditional approach. Last but not least, we have changed existing
+endpoints with more refined status codes, better response objects, etc. Make
+sure to visit the &lt;a href=&quot;/docs/API.html&quot;&gt;API documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;bots&quot;&gt;Bots&lt;/h3&gt;
+
+&lt;p&gt;We have introduced a new concept: bots. Bots are regular users that are created
+by administrators, but with some subtleties:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A bot doesn’t own a personal namespace.&lt;/li&gt;
+  &lt;li&gt;A bot cannot login via web.&lt;/li&gt;
+  &lt;li&gt;A bot can only log in with application tokens (a token is generated
+automatically when creating a bot).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;namespace-deletion&quot;&gt;Namespace deletion&lt;/h3&gt;
+
+&lt;p&gt;After much delay, we have implemented namespace deletion. You don’t have to
+change anything from your configuration in order to have this enabled (it
+depends on the same &lt;code class=&quot;highlighter-rouge&quot;&gt;delete.enabled&lt;/code&gt; configuration).&lt;/p&gt;
+
+&lt;h2 id=&quot;upgrading-from-23&quot;&gt;Upgrading from 2.3&lt;/h2&gt;
+
+&lt;p&gt;As always, you should perform a backup of all your data before doing anything at
+all. Afterwards, review the configuration changes that have occurred, just in
+case you’d like to tune some of these options. Finally, you can run again your
+deployment setup, since the &lt;a href=&quot;https://hub.docker.com/r/opensuse/portus/&quot;&gt;official Docker
+image&lt;/a&gt; will take care of everything
+at boot time.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Important note&lt;/strong&gt;: the &lt;code class=&quot;highlighter-rouge&quot;&gt;latest&lt;/code&gt; tag from the Docker image is already pointing
+to the &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4&lt;/code&gt; release. If you’d like to stay on the &lt;code class=&quot;highlighter-rouge&quot;&gt;2.3&lt;/code&gt; branch for a little
+while, make sure to change the label to &lt;code class=&quot;highlighter-rouge&quot;&gt;2.3&lt;/code&gt; (or &lt;code class=&quot;highlighter-rouge&quot;&gt;2.3.6&lt;/code&gt;, the latest
+patch-level release).&lt;/p&gt;
+
+&lt;h3 id=&quot;whats-next&quot;&gt;What’s next&lt;/h3&gt;
+
+&lt;p&gt;We have already documented the &lt;a href=&quot;/docs/release-schedule.html&quot;&gt;release process&lt;/a&gt;
+for 2.5. You can take a look at our planned features for 2.5
+&lt;a href=&quot;https://github.com/SUSE/Portus/projects/3&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+        </description>
+        <pubDate>Thu, 04 Oct 2018 00:00:00 +0200</pubDate>
+        <link>/2018/10/04/portus-2.4.html</link>
+        <guid isPermaLink="true">/2018/10/04/portus-2.4.html</guid>
+      </item>
+    
+      <item>
         <title>Portus 2.3.4 released</title>
         <description>
           
