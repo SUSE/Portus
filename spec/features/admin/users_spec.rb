@@ -42,6 +42,7 @@ describe "Admin - Users panel", js: true do
 
       click_button "Create"
       expect(page).to have_content("Bot 'username' was created successfully")
+      expect(page).not_to have_content("undefined")
 
       # TODO: remove lines below. They are not supposed to be in a feature test
       user = User.find_by(username: "username")
