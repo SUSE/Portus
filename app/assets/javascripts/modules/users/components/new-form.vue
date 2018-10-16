@@ -89,7 +89,8 @@
     methods: {
       onSubmit() {
         UsersService.save(this.user).then((response) => {
-          const { user, token } = response.data;
+          const { user } = response.data;
+          const token = response.data.plain_token;
 
           this.toggleForm();
           this.$v.$reset();
