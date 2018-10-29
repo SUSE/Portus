@@ -55,10 +55,8 @@ class NamespacePolicy
   def destroy?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
 
-    is_owner               = @namespace.team.owners.exists?(user.id)
-    can_contributor_delete = APP_CONFIG["delete"]["contributors"] &&
-                             @namespace.team.contributors.exists?(user.id)
-    delete_enabled? && (@user.admin? || is_owner || can_contributor_delete)
+    can_contributor_delete = APP_CONFIG["delete"]["contributors"] && contributor?
+    delete_enabled? && (@user.admin? || owner? || can_contributor_delete)
   end
 
   def update?

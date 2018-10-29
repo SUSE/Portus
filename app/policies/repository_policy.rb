@@ -1,25 +1,31 @@
 # frozen_string_literal: true
 
 class RepositoryPolicy
-  attr_reader :user, :repository
+  attr_reader :user, :repository, :namespace
 
   def initialize(user, repository)
     @user = user
     @repository = repository
+    @namespace = repository.namespace
   end
 
   def show?
-    return @repository.namespace.visibility_public? unless @user
+    return namespace.visibility_public? unless @user
 
     @user.admin? ||
-      @repository.namespace.visibility_public? ||
-      @repository.namespace.visibility_protected? ||
-      @repository.namespace.team.users.exists?(user.id)
+      namespace.visibility_public? ||
+      namespace.visibility_protected? ||
+      namespace.team.users.exists?(user.id)
   end
 
   # Returns true if the repository can be destroyed.
   def destroy?
-    NamespacePolicy.new(@user, @repository.namespace).destroy?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
+    is_owner               = namespace.team.owners.exists?(user.id)
+    is_contributor         = namespace.team.contributors.exists?(user.id)
+    can_contributor_delete = APP_CONFIG["delete"]["contributors"] && is_contributor
+    delete_enabled? && (@user.admin? || is_owner || can_contributor_delete)
   end
 
   class Scope
@@ -51,5 +57,12 @@ class RepositoryPolicy
           .distinct
       end
     end
+  end
+
+  protected
+
+  # Returns true if delete is enabled
+  def delete_enabled?
+    APP_CONFIG.enabled?("delete")
   end
 end

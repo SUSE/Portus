@@ -73,7 +73,10 @@ describe RepositoryPolicy do
   permissions :destroy? do
     before do
       namespace = create(:namespace, team: team2, registry: registry)
+      global_team = registry.global_namespace.team
+      global_namespace = create(:namespace, team: global_team, registry: registry)
       @repository = create(:repository, namespace: namespace)
+      @global_repository = create(:repository, namespace: global_namespace)
     end
 
     context "delete disabled" do
@@ -84,6 +87,7 @@ describe RepositoryPolicy do
       it "denies access to admin" do
         admin = create(:admin)
         expect(subject).not_to permit(admin, @repository)
+        expect(subject).not_to permit(admin, @global_repository)
       end
 
       it "denies access to owner" do
@@ -91,6 +95,7 @@ describe RepositoryPolicy do
         TeamUser.create(team: team2, user: owner, role: TeamUser.roles["owner"])
 
         expect(subject).not_to permit(owner, @repository)
+        expect(subject).not_to permit(owner, @global_repository)
       end
 
       it "denies access to contributor" do
@@ -98,10 +103,12 @@ describe RepositoryPolicy do
         TeamUser.create(team: team2, user: contributor, role: TeamUser.roles["contributor"])
 
         expect(subject).not_to permit(contributor, @repository)
+        expect(subject).not_to permit(contributor, @global_repository)
       end
 
       it "denies access to non-member" do
         expect(subject).not_to permit(user, @repository)
+        expect(subject).not_to permit(user, @global_repository)
       end
     end
 
@@ -113,24 +120,32 @@ describe RepositoryPolicy do
       it "grants access to admin" do
         admin = create(:admin)
         expect(subject).to permit(admin, @repository)
+        expect(subject).to permit(admin, @global_repository)
       end
 
       it "grants access to owner" do
         owner = create(:user)
+        global_team = @global_repository.namespace.team
         TeamUser.create(team: team2, user: owner, role: TeamUser.roles["owner"])
+        TeamUser.create(team: global_team, user: owner, role: TeamUser.roles["owner"])
 
         expect(subject).to permit(owner, @repository)
+        expect(subject).to permit(owner, @global_repository)
       end
 
       it "denies access to contributor" do
         contributor = create(:user)
+        global_team = @global_repository.namespace.team
         TeamUser.create(team: team2, user: contributor, role: TeamUser.roles["contributor"])
+        TeamUser.create(team: global_team, user: contributor, role: TeamUser.roles["contributor"])
 
         expect(subject).not_to permit(contributor, @repository)
+        expect(subject).not_to permit(contributor, @global_repository)
       end
 
       it "denies access to non-member" do
         expect(subject).not_to permit(user, @repository)
+        expect(subject).not_to permit(user, @global_repository)
       end
     end
 
@@ -144,9 +159,12 @@ describe RepositoryPolicy do
 
       it "grants access to contributor" do
         contributor = create(:user)
+        global_team = @global_repository.namespace.team
         TeamUser.create(team: team2, user: contributor, role: TeamUser.roles["contributor"])
+        TeamUser.create(team: global_team, user: contributor, role: TeamUser.roles["contributor"])
 
         expect(subject).to permit(contributor, @repository)
+        expect(subject).to permit(contributor, @global_repository)
       end
     end
   end
