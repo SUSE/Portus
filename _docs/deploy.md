@@ -29,8 +29,16 @@ This Docker image has in turn a tag policy worth mentioning:
   bleeding edge and want to test the latest features. It's not recommended to
   use this tag in production since it might break every now and then.
 - `latest`: the latest stable release.
-- Version-specific tags (e.g. `2.3`). We recommend using these tags for
-  production clusters.
+- Version-specific tags (e.g. `2.3` or `2.3.1`). We recommend using these tags
+  for production clusters. Note that there are two types of version-specific
+  tags:
+    - Tags which include the patch-level release (e.g. `2.3.1`): these tags
+      reflect the exact version being used.
+    - Tags which do not include the patch-level release (e.g. `2.3`): these tags
+      contain the latest commit from the according branch. This is useful
+      because we sometimes commit fixes into a branch but we may not release
+      said fixes in a patch-level release right away since we might be waiting
+      for more fixes to come.
 
 Once you have decided to use the Docker image for your deployment, you have to
 be aware of the following requirements:
