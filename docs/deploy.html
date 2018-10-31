@@ -331,8 +331,19 @@ production-ready. This is convenient for people that want to be on the
 bleeding edge and want to test the latest features. It’s not recommended to
 use this tag in production since it might break every now and then.</li>
   <li><code class="highlighter-rouge">latest</code>: the latest stable release.</li>
-  <li>Version-specific tags (e.g. <code class="highlighter-rouge">2.3</code>). We recommend using these tags for
-production clusters.</li>
+  <li>Version-specific tags (e.g. <code class="highlighter-rouge">2.3</code> or <code class="highlighter-rouge">2.3.1</code>). We recommend using these tags
+for production clusters. Note that there are two types of version-specific
+tags:
+    <ul>
+      <li>Tags which include the patch-level release (e.g. <code class="highlighter-rouge">2.3.1</code>): these tags
+reflect the exact version being used.</li>
+      <li>Tags which do not include the patch-level release (e.g. <code class="highlighter-rouge">2.3</code>): these tags
+contain the latest commit from the according branch. This is useful
+because we sometimes commit fixes into a branch but we may not release
+said fixes in a patch-level release right away since we might be waiting
+for more fixes to come.</li>
+    </ul>
+  </li>
 </ul>
 
 <p>Once you have decided to use the Docker image for your deployment, you have to
