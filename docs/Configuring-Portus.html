@@ -454,9 +454,9 @@ order to do so just enable the <code class="highlighter-rouge">delete</code> opt
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">delete</span><span class="pi">:</span>
   <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
   <span class="na">contributors</span><span class="pi">:</span> <span class="no">false</span>
-  <span class="s">garbage\_collector</span><span class="pi">:</span>
+  <span class="na">garbage_collector</span><span class="pi">:</span>
     <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
-    <span class="s">older\_than</span><span class="pi">:</span> <span class="s">30</span>
+    <span class="na">older_than</span><span class="pi">:</span> <span class="s">30</span>
     <span class="na">tag</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span></code></pre></figure>
 
 <p>This option is <strong>disabled</strong> by default. This is because we want users enabling
@@ -477,9 +477,17 @@ considered old. This is documented
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">ldap</span><span class="pi">:</span>
   <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
+
   <span class="na">hostname</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ldap_hostname"</span>
   <span class="na">port</span><span class="pi">:</span> <span class="s">389</span>
-  <span class="na">method</span><span class="pi">:</span> <span class="s2">"</span><span class="s">plain"</span>
+  <span class="na">timeout</span><span class="pi">:</span> <span class="s">5</span>
+
+  <span class="na">encryption</span><span class="pi">:</span>
+    <span class="na">method</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+    <span class="na">options</span><span class="pi">:</span>
+      <span class="na">ca_file</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+      <span class="na">ssl_version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">TLSv1_2"</span>
+
   <span class="na">base</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
   <span class="na">filter</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
   <span class="na">uid</span><span class="pi">:</span> <span class="s2">"</span><span class="s">uid"</span>
@@ -496,23 +504,47 @@ considered old. This is documented
 <p>Some notes:</p>
 
 <ul>
-  <li><strong>base</strong>: The base where users are located (e.g. “ou=users,dc=example,dc=com”).</li>
-  <li><strong>filter</strong>: This option comes in handy when you want to filter even further the results that might be hanging from the <em>base</em>.</li>
-  <li><strong>method</strong>: The method of encryption between Portus and the LDAP server. It defaults to “plain”, which means that the communication won’t be encrypted. You can also use “simple_tls”, to setup LDAP over SSL/TLS. However, the recommended value is “starttls”, which sets StartTLS as the encryption method.</li>
-  <li><strong>guess_email</strong>: Portus needs an email for each user, but there’s no standard way to get that from LDAP servers. You can tell Portus how to get the email from users registered in the LDAP server with this configurable value.</li>
-  <li><strong>uid</strong>: The attribute where Portus will look for the user ID when authenticating.</li>
-  <li><strong>authentication</strong>: Some LDAP servers require a binding user in order to authenticate. You can specify this user by enabling this option. Then you should provide the DN of this user in the <code class="highlighter-rouge">bind_dn</code> value.</li>
+  <li><strong>base</strong>: The base where users are located
+(e.g. “ou=users,dc=example,dc=com”).</li>
+  <li><strong>filter</strong>: This option comes in handy when you want to filter even further
+the results that might be hanging from the <em>base</em>.</li>
+  <li><strong>encryption</strong>
+    <ul>
+      <li><strong>method</strong>: The method of encryption between Portus and the LDAP server. It
+defaults to an empty value, which means that the communication won’t be
+encrypted. You can also use “simple_tls” and “starttls”.</li>
+      <li><strong>options</strong>: You can pass some extra options, like a path to a <strong>ca_file</strong>
+(by default it will use the parameters from the host), and the
+<strong>ssl_version</strong>.</li>
+    </ul>
+  </li>
+  <li><strong>guess_email</strong>: Portus needs an email for each user, but there’s no standard
+way to get that from LDAP servers. You can tell Portus how to get the email
+from users registered in the LDAP server with this configurable value.</li>
+  <li><strong>uid</strong>: The attribute where Portus will look for the user ID when
+authenticating.</li>
+  <li><strong>authentication</strong>: Some LDAP servers require a binding user in order to
+authenticate. You can specify this user by enabling this option. Then you
+should provide the DN of this user in the <code class="highlighter-rouge">bind_dn</code> value.</li>
 </ul>
 
 <p>There are three possibilities for the <strong>guess_email</strong> option:</p>
 
 <ul>
-  <li>disabled: this is the default value. It means that Portus won’t do a thing when registering LDAP users (users will be redirected to their profile page until they setup an email account).</li>
-  <li>enabled where “attr” is empty: for this you need “ldap.base” to have some value. In this case, the hostname will be guessed from the domain component of the provided base string. For example, for the dn: “ou=users,dc=example,dc=com”, and a user named “mssola”, the resulting email is “mssola@example.com”.</li>
-  <li>enabled where “attr” is not empty: with this you specify the attribute inside a LDIF record where the email is set.</li>
+  <li>disabled: this is the default value. It means that Portus won’t do a thing
+when registering LDAP users (users will be redirected to their profile page
+until they setup an email account).</li>
+  <li>enabled where “attr” is empty: for this you need “ldap.base” to have some
+value. In this case, the hostname will be guessed from the domain component of
+the provided base string. For example, for the dn:
+“ou=users,dc=example,dc=com”, and a user named “mssola”, the resulting email
+is “mssola@example.com”.</li>
+  <li>enabled where “attr” is not empty: with this you specify the attribute inside
+a LDIF record where the email is set.</li>
 </ul>
 
-<p>If something goes wrong when trying to guess the email, then it just falls back to the default behavior (empty email).</p>
+<p>If something goes wrong when trying to guess the email, then it just falls back
+to the default behavior (empty email).</p>
 
 <h3 id="creating-the-first-admin-user">Creating the first admin user</h3>
 
@@ -708,7 +740,8 @@ vulnerabilities. This feature is disabled by default, but it can be configured
 through the following values:</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">security</span><span class="pi">:</span>
-  <span class="c1"># CoreOS Clair support (https://github.com/coreos/clair).</span>
+  <span class="c1"># CoreOS Clair support (https://github.com/coreos/clair). This is only</span>
+  <span class="c1"># guaranteed to work for v2.0.x releases of Clair.</span>
   <span class="na">clair</span><span class="pi">:</span>
     <span class="na">server</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
     <span class="na">health_port</span><span class="pi">:</span> <span class="s">6061</span>
@@ -775,6 +808,12 @@ the following options:</p>
   <span class="na">manage_namespace</span><span class="pi">:</span>
     <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
 
+  <span class="na">create_webhook</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
+  <span class="na">manage_webhook</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+
   <span class="na">push_images</span><span class="pi">:</span>
     <span class="na">policy</span><span class="pi">:</span> <span class="s">allow-teams</span></code></pre></figure>
 
@@ -788,6 +827,9 @@ defaults to true.</li>
   <li><strong>create/manage_namespace</strong>: allow users to create/modify namespaces if they
 are an owner of it. If this is disabled, only an admin will be able to do
 this. It defaults to true.</li>
+  <li><strong>create/manage_webhook</strong>: allow users to create/modify webhooks if they are
+an owner of it. If this is disabled, only an admin will be able to do this. It
+defaults to true.</li>
   <li><strong>push_images</strong>: set a push policy. Available options are: <code class="highlighter-rouge">allow-teams</code>,
 <code class="highlighter-rouge">allow-personal</code> and <code class="highlighter-rouge">admin-only</code>. You can read more about push policies
 <a href="/features/3_teams_namespaces_and_users.html">here</a>.</li>
