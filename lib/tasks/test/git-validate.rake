@@ -33,8 +33,6 @@ end
 
 # Returns the first commit to be considered by git-validation.
 def from
-  return FROM_SHA unless ENV["CI"] == "true"
-  return ENV["TRAVIS_BRANCH"] if ENV["TRAVIS_BRANCH"].present?
   FROM_SHA
 end
 
