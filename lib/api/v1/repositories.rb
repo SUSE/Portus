@@ -6,6 +6,9 @@ module API
     # endpoints regarding tags that might be convenient to use as a
     # sub-resource.
     class Repositories < Grape::API
+      include PaginationParams
+      include OrderingParams
+
       version "v1", using: :path
 
       resource :repositories do
@@ -23,8 +26,14 @@ module API
                [403, "Authorization fails"]
              ]
 
+        params do
+          use :pagination
+          use :ordering
+        end
+
         get do
-          present policy_scope(Repository), with: API::Entities::Repositories, type: current_type
+          repositories = paginate(order(policy_scope(Repository)))
+          present repositories, with: API::Entities::Repositories, type: current_type
         end
 
         route_param :id, type: String, requirements: { id: /.*/ } do
