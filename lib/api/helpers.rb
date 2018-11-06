@@ -7,6 +7,8 @@ require "api/helpers/comments"
 require "api/helpers/webhooks"
 require "api/helpers/namespaces"
 require "api/helpers/repositories"
+require "api/helpers/pagination"
+require "api/helpers/ordering"
 
 module API
   module Helpers
@@ -21,6 +23,8 @@ module API
     include Webhooks
     include Namespaces
     include Repositories
+    include Pagination
+    include Ordering
 
     # On success it will fill the @user instance variable with the currently
     # authenticated user for the API. Otherwise it will raise:
