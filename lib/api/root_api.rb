@@ -4,6 +4,8 @@ require "grape-swagger"
 
 require "api/entities"
 require "api/helpers"
+require "api/v1/pagination_params"
+require "api/v1/ordering_params"
 require "api/v1/application_tokens"
 require "api/v1/health"
 require "api/v1/namespaces"

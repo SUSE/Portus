@@ -16,21 +16,53 @@ describe API::V1::Repositories do
   end
 
   context "GET /api/v1/repositories" do
-    it "returns an empty list" do
-      get "/api/v1/repositories", nil, @header
+    context "without data" do
+      it "returns an empty list" do
+        get "/api/v1/repositories", nil, @header
 
-      repositories = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(repositories.length).to eq(0)
+        repositories = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(repositories.length).to eq(0)
+      end
     end
 
-    it "returns list of repositories" do
-      create_list(:repository, 5, namespace: public_namespace)
-      get "/api/v1/repositories", nil, @header
+    context "with data" do
+      before do
+        create_list(:repository, 15, namespace: public_namespace)
+      end
 
-      repositories = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(repositories.length).to eq(5)
+      it "returns list of all repositories (not paginated)" do
+        get "/api/v1/repositories", { per_page: 10, all: true }, @header
+
+        repositories = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(repositories.length).to eq(15)
+      end
+
+      it "returns list of repositories paginated" do
+        get "/api/v1/repositories", { per_page: 10 }, @header
+
+        repositories = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(repositories.length).to eq(10)
+      end
+
+      it "returns list of repositories paginated (page 2)" do
+        get "/api/v1/repositories", { page: 2 }, @header
+
+        repositories = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(repositories.length).to eq(0)
+      end
+
+      it "returns list of repositories ordered" do
+        get "/api/v1/repositories", { sort_attr: "id", sort_order: "desc", per_page: 10 }, @header
+
+        repositories = JSON.parse(response.body)
+        repositories.each_slice(2) do |a, b|
+          expect(a["id"]).to be > b["id"]
+        end
+      end
     end
   end
 
