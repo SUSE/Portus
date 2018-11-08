@@ -53,13 +53,19 @@ start_containers() {
             set +e
             docker exec $CNAME portusctl exec rails r /srv/Portus/bin/health.rb
             if [ $? -eq "0" ]; then
-                set -e
-                echo "We are all set, let's go!"
-                break
+                response=$(curl --write-out %{http_code} --silent --output /dev/null 172.17.0.1:3000/api/v1/_ping)
+                if [ "$response" = "200" ]; then
+                    set -e
+                    echo "We are all set, let's go!"
+                    break
+                else
+                    echo "Waiting for the portus service to be ready..."
+                fi
             else
                 echo "Waiting for services to be ready..."
             fi
             set -e
+
 
             if [ "$COUNT" -ge "$TIMEOUT" ]; then
                 echo "[integration] Timeout  reached, exiting with error"
