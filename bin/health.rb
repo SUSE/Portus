@@ -28,6 +28,7 @@ options.quiet = true if truthy?(ENV["PORTUS_HEALTH_QUIET"])
 (1..5).each do |n|
   v = ENV["PORTUS_HEALTH_COMPONENT_#{n}"]
   break if v.nil?
+
   options.components << v
 end
 

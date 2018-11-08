@@ -45,6 +45,11 @@ module API
       bad_request!(e.errors)
     end
 
+    rescue_from Grape::Exceptions::InvalidMessageBody do |e|
+      msg = e.message.split("\n").last.strip.capitalize
+      bad_request!(msg)
+    end
+
     rescue_from Pundit::NotAuthorizedError do |_|
       forbidden!("Authorization fails")
     end

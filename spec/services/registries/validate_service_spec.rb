@@ -37,8 +37,8 @@ describe "Registries::ValidateService" do
       it "returns an object with empty validation on messages" do
         validation = service.execute
 
-        expect(validation[:messages][:name]).to be_falsey
-        expect(validation[:messages][:hostname]).to be_falsey
+        expect(validation[:messages][:name]).to be_blank
+        expect(validation[:messages][:hostname]).to be_blank
       end
 
       it "returns object with valid false if validation succeeds" do
@@ -54,8 +54,8 @@ describe "Registries::ValidateService" do
       it "returns an object with validation messages only on name" do
         validation = service.execute
 
-        expect(validation[:messages][:name]).to be_truthy
-        expect(validation[:messages][:hostname]).to be_falsey
+        expect(validation[:messages][:name]).to_not be_empty
+        expect(validation[:messages][:hostname]).to be_empty
       end
 
       it "returns object with valid false if validation fails" do
@@ -71,8 +71,8 @@ describe "Registries::ValidateService" do
       it "returns an object with empty validation on messages" do
         validation = service.execute
 
-        expect(validation[:messages][:name]).to be_falsey
-        expect(validation[:messages][:hostname]).to be_falsey
+        expect(validation[:messages][:name]).to be_empty
+        expect(validation[:messages][:hostname]).to be_empty
       end
 
       it "returns object with valid false if validation succeeds" do
@@ -84,7 +84,12 @@ describe "Registries::ValidateService" do
 
     context "valid with hostname param" do
       subject(:service) do
-        Registries::ValidateService.new(hostname: "hostname", only: ["hostname"])
+        Registries::ValidateService.new(
+          name:     "test",
+          hostname: "hostname",
+          use_ssl:  false,
+          only:     ["hostname"]
+        )
       end
 
       before do
@@ -94,8 +99,8 @@ describe "Registries::ValidateService" do
       it "returns an object with empty validation on messages" do
         validation = service.execute
 
-        expect(validation[:messages][:name]).to be_falsey
-        expect(validation[:messages][:hostname]).to be_falsey
+        expect(validation[:messages][:name]).to be_empty
+        expect(validation[:messages][:hostname]).to be_empty
       end
 
       it "returns object with valid false if validation succeeds" do
@@ -117,7 +122,7 @@ describe "Registries::ValidateService" do
       it "returns an object with empty validation on messages" do
         validation = service.execute
 
-        expect(validation[:messages][:name]).to be_falsey
+        expect(validation[:messages][:name]).to be_empty
         expect(validation[:messages][:hostname]).to be_truthy
       end
 

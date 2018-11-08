@@ -1,4 +1,4 @@
-class CreateCronoJobs < ActiveRecord::Migration
+class CreateCronoJobs < ActiveRecord::Migration[4.2]
   def self.up
     create_table :crono_jobs do |t|
       t.string    :job_id, null: false

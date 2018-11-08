@@ -1,4 +1,4 @@
-class CreateRegistryEvents < ActiveRecord::Migration
+class CreateRegistryEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :registry_events do |t|
       t.string :event_id, default: ""

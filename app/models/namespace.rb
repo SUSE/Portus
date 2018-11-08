@@ -21,7 +21,7 @@
 #  index_namespaces_on_team_id               (team_id)
 #
 
-class Namespace < ActiveRecord::Base
+class Namespace < ApplicationRecord
   include PublicActivity::Common
   include SearchCop
   include ::Activity::Fallback
@@ -32,7 +32,7 @@ class Namespace < ActiveRecord::Base
 
   # This regexp is extracted from the reference package of Docker Distribution
   # and it matches a valid namespace name.
-  NAME_REGEXP = /\A[a-z0-9]+(?:[._\\-][a-z0-9]+)*\Z/
+  NAME_REGEXP = /\A[a-z0-9]+(?:[._\\-][a-z0-9]+)*\Z/.freeze
 
   # The maximum length of a namespace name.
   MAX_NAME_LENGTH = 255
@@ -106,6 +106,7 @@ class Namespace < ActiveRecord::Base
     # Let's strip extra characters from the beginning and end.
     first = name.index(/[a-z0-9]/)
     return nil if first.nil?
+
     last = name.rindex(/[a-z0-9]/)
     str = name[first..last]
 
@@ -155,7 +156,7 @@ class Namespace < ActiveRecord::Base
     # TODO(2.5): this could be more performant in PostgreSQL if we used its
     # `jsonb_set` function. Plus, in Rails 5 there might be some improvements
     # that might help on this.
-    ActiveRecord::Base.transaction do
+    ApplicationRecord.transaction do
       PublicActivity::Activity.where(trackable: self).find_each do |act|
         act.parameters[:namespace_name] = clean_name
         act.save

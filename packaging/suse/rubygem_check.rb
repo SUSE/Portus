@@ -7,13 +7,14 @@ unless Dir.exist?("build")
   puts <<~HERE
     You are supposed to be running this script inside of packaging/suse and after a
     successful run of `make_spec.sh`.
-HERE
+  HERE
   exit 1
 end
 
 dir = ""
 Dir.entries("build").each do |d|
   next if d == "." || d == ".."
+
   dir = "build/#{d}"
 end
 

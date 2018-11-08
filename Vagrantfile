@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
       cp /vagrant/examples/development/vagrant/conf/registry-config.yml /etc/registry/config.yml
       systemctl enable registry
       systemctl restart registry
-CERTIFICATES
+    CERTIFICATES
   end
 
   config.vm.define :portus do |node|
@@ -93,7 +93,7 @@ CERTIFICATES
       cp /vagrant/examples/development/vagrant/conf/portus/httpd.conf.local /etc/apache2/httpd.conf.local
       cp /vagrant/examples/development/vagrant/conf/portus/portus.test.lan.conf /etc/apache2/vhosts.d/
 
-PROVISION
+    PROVISION
 
     node.vm.provision "shell", inline: <<~APACHE
       cd /vagrant
@@ -107,7 +107,7 @@ PROVISION
 
       systemctl enable apache2
       systemctl start apache2
-APACHE
+    APACHE
   end
 
   config.vm.define :client do |node|

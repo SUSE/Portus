@@ -20,13 +20,16 @@ module Registries
 
     def check!
       return unless @valid
+
       check_hostname!
       return unless @valid
+
       check_reachability! unless @force
     end
 
     def check_hostname!
       return if !Repository.any? || params[:hostname].blank?
+
       @valid = false
       @messages[:hostname] = ["Registry is not empty, cannot change hostname"]
     end

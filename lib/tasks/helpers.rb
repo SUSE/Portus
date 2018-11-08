@@ -28,6 +28,7 @@ module Helpers
   # Check the format as a release number.
   def self.check_release_number(number)
     return if number.match?(/^(\d)+\.(\d)+\.(\d)+$/)
+
     puts "Version number should follow the format X.Y.Z"
     exit(-2)
   end

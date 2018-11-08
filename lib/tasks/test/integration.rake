@@ -35,7 +35,7 @@ MATRIX = matrix.product(SUPPORTED_REGISTRIES).map { |v| v.first.merge(registry: 
 
 namespace :test do
   desc "Run the integration test suite"
-  task integration: :environment do
+  task run: :environment do
     status = 0
 
     MATRIX.each do |env|

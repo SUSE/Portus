@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("boot", __dir__)
+require_relative "boot"
 
 require "rails/all"
 
@@ -25,8 +25,6 @@ module Portus
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
     config.autoload_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("app", "validators")
     config.eager_load_paths << Rails.root.join("lib")
@@ -36,7 +34,7 @@ module Portus
     config.generators do |g|
       g.template_engine :slim
       g.test_framework :rspec
-      g.fixture_replacement :factory_girl
+      g.fixture_replacement :factory_bot
 
       g.fallbacks[:rspec] = :test_unit
     end
@@ -73,7 +71,5 @@ module Portus
     config.webpack.output_dir  = "public/assets/webpack"
     config.webpack.public_path = "assets/webpack"
     config.webpack.dev_server.enabled = false
-
-    config.middleware.insert_before "ActionDispatch::ParamsParser", "CatchJsonParseErrors"
   end
 end

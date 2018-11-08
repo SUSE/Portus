@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "active_support/core_ext/module/aliasing"
 require "omniauth-oauth2"
 
 module OmniAuth
@@ -53,7 +54,11 @@ module OmniAuth
         end
         access_token
       end
-      alias_method_chain :build_access_token, :team_check
+
+      # NOTE: we should be using Module#prepend since it's cleaner, but in order
+      # to do that we'd also need to change how this whole class is tested.
+      alias build_access_token_without_team_check build_access_token
+      alias build_access_token build_access_token_with_team_check
     end
   end
 end

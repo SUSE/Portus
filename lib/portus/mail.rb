@@ -71,6 +71,7 @@ module Portus
       # been left blank.
       def authentication_settings
         return {} if @config["smtp"]["user_name"].blank?
+
         {
           user_name:      @config["smtp"]["user_name"],
           password:       @config["smtp"]["password"],
@@ -83,6 +84,7 @@ module Portus
       def check_email!(key)
         value = @config[key]
         return if value.match?(Devise.email_regexp)
+
         raise ConfigurationError,
               "Mail: bad config value for '#{key}'. '#{value}' is not a proper email..."
       end

@@ -13,7 +13,7 @@ def db_helper_msg
   data["database"]["msg"]
 end
 
-describe API::V1::Health do
+describe API::V1::Health, type: :request do
   describe "GET /_ping" do
     it "gets an 200 response" do
       get "/api/v1/_ping"

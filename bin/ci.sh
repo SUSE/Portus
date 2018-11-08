@@ -59,24 +59,23 @@ bundle exec rake test:git
 bundle exec rubocop -V
 bundle exec rubocop --extra-details --display-style-guide --display-cop-names
 
+# Check that MySQL and PostgreSQL have the same schema version
+bundle exec rails r bin/schema_check.rb
+
 # Compile assets
 bundle exec rake portus:assets:compile
 
 # Ruby tests
 __database restart
 bundle exec rspec spec
-__database stop
 if [[ ! -f /.dockerenv ]]; then
     __docker_insecure
-    bundle exec rake test:integration
+    bundle exec rake test:run
 fi
 
 # Note: it ignores a couple of files which use ruby 2.5 syntax which brakeman
 # does not know how to handle...
 bundle exec brakeman --skip-files lib/portus/background/sync.rb,lib/portus/registry_client.rb
-
-# Make sure that there are no annotations needed.
-bundle exec rake portus:annotate_and_exit
 
 # JavaScript tests and style.
 yarn test

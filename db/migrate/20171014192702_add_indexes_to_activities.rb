@@ -1,4 +1,4 @@
-class AddIndexesToActivities < ActiveRecord::Migration
+class AddIndexesToActivities < ActiveRecord::Migration[4.2]
   def self.up
     add_index :activities, [:trackable_type]
   end

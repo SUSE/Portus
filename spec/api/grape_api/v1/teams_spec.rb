@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe API::V1::Teams do
+describe API::V1::Teams, type: :request do
   let!(:admin) { create(:admin) }
   let!(:user) { create(:user) }
   let!(:token) { create(:application_token, user: admin) }
@@ -21,7 +21,7 @@ describe API::V1::Teams do
 
   context "GET /api/v1/teams" do
     it "returns an empty list" do
-      get "/api/v1/teams", nil, @admin_header
+      get "/api/v1/teams", params: nil, headers: @admin_header
 
       teams = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -30,7 +30,7 @@ describe API::V1::Teams do
 
     it "returns list of teams" do
       create_list(:team, 5, owners: [admin])
-      get "/api/v1/teams", nil, @admin_header
+      get "/api/v1/teams", params: nil, headers: @admin_header
 
       teams = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -41,7 +41,7 @@ describe API::V1::Teams do
   context "GET /api/v1/teams/:id" do
     it "returns a team" do
       team = create(:team, owners: [admin])
-      get "/api/v1/teams/#{team.id}", nil, @admin_header
+      get "/api/v1/teams/#{team.id}", params: nil, headers: @admin_header
 
       team_parsed = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -50,7 +50,7 @@ describe API::V1::Teams do
     end
 
     it "returns 404 if it doesn't exist" do
-      get "/api/v1/teams/222", nil, @admin_header
+      get "/api/v1/teams/222", params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:not_found)
     end
@@ -60,7 +60,7 @@ describe API::V1::Teams do
     it "returns list of namespaces from a team" do
       team = create(:team, owners: [admin])
       create_list(:namespace, 5, team: team)
-      get "/api/v1/teams/#{team.id}/namespaces", nil, @admin_header
+      get "/api/v1/teams/#{team.id}/namespaces", params: nil, headers: @admin_header
 
       namespaces = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -73,7 +73,7 @@ describe API::V1::Teams do
       user = create(:user)
       team = create(:team, owners: [admin])
       TeamUser.create(team: team, user: user, role: TeamUser.roles[:viewer])
-      get "/api/v1/teams/#{team.id}/members", nil, @admin_header
+      get "/api/v1/teams/#{team.id}/members", params: nil, headers: @admin_header
 
       members = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -90,7 +90,7 @@ describe API::V1::Teams do
 
       expect(team.team_users.count).to eq(2)
 
-      delete "/api/v1/teams/#{team.id}/members/#{team_user.id}", nil, @admin_header
+      delete "/api/v1/teams/#{team.id}/members/#{team_user.id}", params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:no_content)
       expect(team.team_users.count).to eq(1)
@@ -99,7 +99,7 @@ describe API::V1::Teams do
     it "returns 404 if member doesn't exist" do
       team = create(:team, owners: [admin])
 
-      delete "/api/v1/teams/#{team.id}/members/123", nil, @admin_header
+      delete "/api/v1/teams/#{team.id}/members/123", params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:not_found)
     end
@@ -107,7 +107,7 @@ describe API::V1::Teams do
     it "returns 404 if team doesn't exist" do
       team_user = TeamUser.create(team: team, user: user, role: TeamUser.roles[:viewer])
 
-      delete "/api/v1/teams/123/members/#{team_user.id}", nil, @admin_header
+      delete "/api/v1/teams/123/members/#{team_user.id}", params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:not_found)
     end
@@ -116,7 +116,8 @@ describe API::V1::Teams do
       team_user_admin = team.team_users.first
       TeamUser.create(team: team, user: user, role: TeamUser.roles[:contributor])
 
-      delete "/api/v1/teams/#{team.id}/members/#{team_user_admin.id}", nil, @admin_header
+      delete "/api/v1/teams/#{team.id}/members/#{team_user_admin.id}",
+             params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
@@ -132,7 +133,7 @@ describe API::V1::Teams do
 
       expect(team_user.role).to eq("viewer")
 
-      put "/api/v1/teams/#{team.id}/members/#{team_user.id}", data, @admin_header
+      put "/api/v1/teams/#{team.id}/members/#{team_user.id}", params: data, headers: @admin_header
 
       member = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -140,13 +141,13 @@ describe API::V1::Teams do
     end
 
     it "returns 400 if data doesn't meet the requirements" do
-      put "/api/v1/teams/#{team.id}/members/123", nil, @admin_header
+      put "/api/v1/teams/#{team.id}/members/123", params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:bad_request)
     end
 
     it "returns 404 if member doesn't exist" do
-      put "/api/v1/teams/#{team.id}/members/123", data, @admin_header
+      put "/api/v1/teams/#{team.id}/members/123", params: data, headers: @admin_header
 
       expect(response).to have_http_status(:not_found)
     end
@@ -154,7 +155,7 @@ describe API::V1::Teams do
     it "returns 404 if team doesn't exist" do
       team_user = TeamUser.create(team: team, user: user, role: TeamUser.roles[:viewer])
 
-      put "/api/v1/teams/123/members/#{team_user.id}", data, @admin_header
+      put "/api/v1/teams/123/members/#{team_user.id}", params: data, headers: @admin_header
 
       expect(response).to have_http_status(404)
     end
@@ -163,7 +164,8 @@ describe API::V1::Teams do
       team_user_admin = team.team_users.first
       TeamUser.create(team: team, user: user, role: TeamUser.roles[:owner])
 
-      put "/api/v1/teams/#{team.id}/members/#{team_user_admin.id}", data, @admin_header
+      put "/api/v1/teams/#{team.id}/members/#{team_user_admin.id}",
+          params: data, headers: @admin_header
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
@@ -173,7 +175,8 @@ describe API::V1::Teams do
       team = create(:team, owners: [owner])
       team_user_owner = team.team_users.first
 
-      delete "/api/v1/teams/#{team.id}/members/#{team_user_owner.id}", nil, @admin_header
+      delete "/api/v1/teams/#{team.id}/members/#{team_user_owner.id}",
+             params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
@@ -191,7 +194,7 @@ describe API::V1::Teams do
 
       expect(team.team_users.count).to eq(1)
 
-      post "/api/v1/teams/#{team.id}/members", data, @admin_header
+      post "/api/v1/teams/#{team.id}/members", params: data, headers: @admin_header
 
       member = JSON.parse(response.body)
       expect(response).to have_http_status(:created)
@@ -207,7 +210,7 @@ describe API::V1::Teams do
         user: another_admin.username
       }
 
-      post "/api/v1/teams/#{team.id}/members", data, @admin_header
+      post "/api/v1/teams/#{team.id}/members", params: data, headers: @admin_header
 
       member = JSON.parse(response.body)
       expect(response).to have_http_status(:created)
@@ -220,7 +223,7 @@ describe API::V1::Teams do
         user: user.username
       }
 
-      post "/api/v1/teams/123/members", data, @admin_header
+      post "/api/v1/teams/123/members", params: data, headers: @admin_header
 
       expect(response).to have_http_status(404)
     end
@@ -231,7 +234,7 @@ describe API::V1::Teams do
         user: "user"
       }
 
-      post "/api/v1/teams/#{team.id}/members", data, @admin_header
+      post "/api/v1/teams/#{team.id}/members", params: data, headers: @admin_header
 
       expect(response).to have_http_status(404)
     end
@@ -242,13 +245,13 @@ describe API::V1::Teams do
         user: admin.username
       }
 
-      post "/api/v1/teams/#{team.id}/members", data, @admin_header
+      post "/api/v1/teams/#{team.id}/members", params: data, headers: @admin_header
 
       expect(response).to have_http_status(422)
     end
 
     it "returns 400 if data doesn't meet the requirements" do
-      post "/api/v1/teams/#{team.id}/members", nil, @admin_header
+      post "/api/v1/teams/#{team.id}/members", params: nil, headers: @admin_header
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -269,7 +272,7 @@ describe API::V1::Teams do
 
     it "creates a team" do
       expect do
-        post "/api/v1/teams", valid_attributes, @admin_header
+        post "/api/v1/teams", params: valid_attributes, headers: @admin_header
       end.to change(Team, :count).by(1)
 
       team = Team.last
@@ -283,7 +286,7 @@ describe API::V1::Teams do
       APP_CONFIG["user_permission"]["create_team"]["enabled"] = false
 
       expect do
-        post "/api/v1/teams", valid_attributes, @admin_header
+        post "/api/v1/teams", params: valid_attributes, headers: @admin_header
       end.to change(Team, :count).by(1)
 
       team = Team.last
@@ -295,7 +298,7 @@ describe API::V1::Teams do
 
     it "creates a team with different owner" do
       expect do
-        post "/api/v1/teams", owner_valid_attributes, @admin_header
+        post "/api/v1/teams", params: owner_valid_attributes, headers: @admin_header
       end.to change(Team, :count).by(1)
 
       team = Team.last
@@ -306,13 +309,13 @@ describe API::V1::Teams do
     end
 
     it "returns 403 if current user is not admin when creating a team with different owner" do
-      post "/api/v1/teams", owner_valid_attributes, @user_header
+      post "/api/v1/teams", params: owner_valid_attributes, headers: @user_header
 
       expect(response).to have_http_status(:forbidden)
     end
 
     it "returns 400 if invalid params" do
-      post "/api/v1/teams", invalid_attributes, @admin_header
+      post "/api/v1/teams", params: invalid_attributes, headers: @admin_header
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -322,15 +325,15 @@ describe API::V1::Teams do
         "CONTENT_TYPE" => "application/json",
         "ACCEPT"       => "application/json"
       )
-      post "/api/v1/teams", "{", @admin_header
+      post "/api/v1/teams", params: "{", headers: @admin_header
       expect(response).to have_http_status(:bad_request)
 
       resp = JSON.parse(response.body)
-      expect(resp["message"]).to match(/There was a problem in the JSON you submitted/)
+      expect(resp["message"]).to match(%r{When specifying application/json as content-type})
     end
 
     it "returns 422 if invalid values" do
-      post "/api/v1/teams", { name: "" }, @admin_header
+      post "/api/v1/teams", params: { name: "" }, headers: @admin_header
 
       parsed = JSON.parse(response.body)
       expect(response).to have_http_status(:unprocessable_entity)
@@ -341,7 +344,7 @@ describe API::V1::Teams do
       APP_CONFIG["user_permission"]["create_team"]["enabled"] = false
 
       expect do
-        post "/api/v1/teams", valid_attributes, @user_header
+        post "/api/v1/teams", params: valid_attributes, headers: @user_header
       end.to change(Team, :count).by(0)
 
       expect(response).to have_http_status(:forbidden)
@@ -349,7 +352,7 @@ describe API::V1::Teams do
 
     it "tracks the creations of new teams" do
       expect do
-        post "/api/v1/teams", valid_attributes, @admin_header
+        post "/api/v1/teams", params: valid_attributes, headers: @admin_header
       end.to change(PublicActivity::Activity, :count).by(1)
 
       team = Team.last
@@ -371,7 +374,7 @@ describe API::V1::Teams do
       team = create :team, name: "somerandomone", description: "lala"
 
       expect do
-        put "/api/v1/teams/#{team.id}", { team: team_data }, @admin_header
+        put "/api/v1/teams/#{team.id}", params: { team: team_data }, headers: @admin_header
       end.to change(PublicActivity::Activity, :count).by(2)
       expect(response).to have_http_status(:success)
 
@@ -405,7 +408,7 @@ describe API::V1::Teams do
                     owners:      [admin],
                     viewers:     [user]
 
-      put "/api/v1/teams/#{team.id}", { team: team_data }, @user_header
+      put "/api/v1/teams/#{team.id}", params: { team: team_data }, headers: @user_header
       expect(response).to have_http_status(:forbidden)
     end
 
@@ -413,7 +416,7 @@ describe API::V1::Teams do
       t = create :team
       t2 = create :team
 
-      put "/api/v1/teams/#{t.id}", { team: { name: t2.name } }, @admin_header
+      put "/api/v1/teams/#{t.id}", params: { team: { name: t2.name } }, headers: @admin_header
       expect(response).to have_http_status(:unprocessable_entity)
 
       data = JSON.parse(response.body)["message"]
@@ -423,12 +426,12 @@ describe API::V1::Teams do
     it "returns status not found" do
       create :team
       team_id = Team.maximum(:id) + 1
-      put "/api/v1/teams/#{team_id}", { team: team_data }, @admin_header
+      put "/api/v1/teams/#{team_id}", params: { team: team_data }, headers: @admin_header
       expect(response).to have_http_status(:not_found)
     end
 
     it "does not allow a hidden team to be changed" do
-      put "/api/v1/teams/#{hidden_team.id}", { team: team_data }, @admin_header
+      put "/api/v1/teams/#{hidden_team.id}", params: { team: team_data }, headers: @admin_header
       expect(response).to have_http_status(:forbidden)
     end
 
@@ -439,7 +442,7 @@ describe API::V1::Teams do
                       description: "lala",
                       owners:      [user]
 
-        put "/api/v1/teams/#{team.id}", { team: team_data }, @user_header
+        put "/api/v1/teams/#{team.id}", params: { team: team_data }, headers: @user_header
         expect(response).to have_http_status(:success)
       end
     end
@@ -455,7 +458,7 @@ describe API::V1::Teams do
                       description: "lala",
                       owners:      [user]
 
-        put "/api/v1/teams/#{team.id}", { team: team_data }, @user_header
+        put "/api/v1/teams/#{team.id}", params: { team: team_data }, headers: @user_header
         expect(response).to have_http_status(:forbidden)
       end
 
@@ -465,7 +468,7 @@ describe API::V1::Teams do
                       description: "lala",
                       owners:      [user]
 
-        put "/api/v1/teams/#{team.id}", { team: team_data }, @admin_header
+        put "/api/v1/teams/#{team.id}", params: { team: team_data }, headers: @admin_header
         expect(response).to have_http_status(:success)
       end
     end

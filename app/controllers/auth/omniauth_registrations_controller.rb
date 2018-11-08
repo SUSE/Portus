@@ -28,8 +28,6 @@ class Auth::OmniauthRegistrationsController < ApplicationController
     else
       redirect_to users_oauth_url, alert: user.errors.full_messages.join("\n")
     end
-  rescue StandardError => e
-    redirect_to users_oauth_url, alert: e.message
   end
 
   private

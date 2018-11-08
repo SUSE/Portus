@@ -9,6 +9,7 @@ module Portus
     # If they are not met, render a page with status 500
     def check_requirements
       return unless fixes.value?(true)
+
       redirect_to "/500?fixes=true"
     end
 

@@ -12,8 +12,8 @@
 
 set -e
 
-setup_database() {
-  set +e
+wait_for_database() {
+  should_setup=${1:-0}
 
   TIMEOUT=90
   COUNT=0
@@ -32,12 +32,14 @@ setup_database() {
         COUNT=$((COUNT+5))
         ;;
       "DB_EMPTY"|"DB_MISSING")
-        # create db, apply schema and seed
-        echo "Initializing database"
-        portusctl exec rake db:setup
-        if [ $? -ne 0 ]; then
+        if [ $should_setup -eq 1 ]; then
+          # create db, apply schema and seed
+          echo "Initializing database"
+          portusctl exec rake db:setup
+          if [ $? -ne 0 ]; then
             echo "Error at setup time"
             exit 1
+          fi
         fi
         ;;
       "DB_READY")
@@ -47,6 +49,10 @@ setup_database() {
     esac
   done
   set -e
+}
+
+setup_database() {
+  wait_for_database 1
 }
 
 # Usage: file_env 'XYZ_DB_PASSWORD' 'example'. This code is taken from:
@@ -99,10 +105,12 @@ fi
 # Go to the Portus directory and execute the proper command.
 cd /srv/Portus
 if [ ! -z "$PORTUS_BACKGROUND" ]; then
+    wait_for_database
     portusctl exec rails r /srv/Portus/bin/background.rb
 elif [ -z "$PORTUS_INIT_COMMAND" ]; then
     setup_database
     portusctl exec "pumactl -F /srv/Portus/config/puma.rb start"
 else
+    wait_for_database
     portusctl exec "$PORTUS_INIT_COMMAND"
 fi

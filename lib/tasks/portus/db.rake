@@ -16,7 +16,7 @@ namespace :portus do
       # If MySQL, turn off foreign key checks
       connection.execute("SET FOREIGN_KEY_CHECKS=0") if ::Portus::DB.mysql?
 
-      tables = connection.tables
+      tables = connection.data_sources
       tables.delete "schema_migrations"
       # Truncate schema_migrations to ensure migrations re-run
       connection.execute("TRUNCATE schema_migrations")
@@ -41,7 +41,7 @@ namespace :portus do
     task configure: :environment do
       begin
         connection   = ActiveRecord::Base.connection
-        only_migrate = connection.tables.count > 1
+        only_migrate = connection.data_sources.count > 1
       rescue ActiveRecord::NoDatabaseError
         Rails.logger.info "Database is missing! Creating..."
         Rake::Task["db:create"].invoke

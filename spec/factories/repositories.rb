@@ -17,7 +17,7 @@
 #  index_repositories_on_namespace_id           (namespace_id)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :repository do
     sequence :name do |n|
       "repository#{n}"

@@ -1,4 +1,4 @@
-class CreateScanResults < ActiveRecord::Migration
+class CreateScanResults < ActiveRecord::Migration[4.2]
   def change
     create_table :scan_results do |t|
       t.integer :tag_id

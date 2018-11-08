@@ -18,7 +18,7 @@
 #  index_registries_on_name      (name) UNIQUE
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :registry do
     before(:create) { create(:admin) }
 
@@ -30,6 +30,6 @@ FactoryGirl.define do
       "registry name #{n}"
     end
 
-    use_ssl false
+    use_ssl { false }
   end
 end

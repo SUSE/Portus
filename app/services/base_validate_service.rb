@@ -17,12 +17,12 @@ class BaseValidateService
   def messages
     return @messages if only_params.nil?
 
-    @messages.keep_if { |key| only_params.include?(key.to_s) }
+    @messages.keep_if { |key, v| v.present? && only_params.include?(key.to_s) }
   end
 
   def valid?
     return @valid if only_params.nil?
 
-    only_params.all? { |field| @messages[field.to_sym].nil? }
+    only_params.all? { |field| @messages[field.to_sym].blank? }
   end
 end

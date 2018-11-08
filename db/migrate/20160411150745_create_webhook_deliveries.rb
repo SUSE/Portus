@@ -1,4 +1,4 @@
-class CreateWebhookDeliveries < ActiveRecord::Migration
+class CreateWebhookDeliveries < ActiveRecord::Migration[4.2]
   def change
     create_table :webhook_deliveries do |t|
       t.references :webhook, index: true, foreign_key: true

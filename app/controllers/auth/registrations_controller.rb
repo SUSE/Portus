@@ -78,10 +78,14 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     user = User.find(params[:id])
 
     if current_user.toggle_enabled!(user)
-      sign_out user if current_user == user && !user.enabled?
-      render nothing: true
+      if current_user == user && !user.enabled?
+        sign_out user
+        render json: { redirect: true }
+      else
+        render body: nil
+      end
     else
-      render nothing: true, status: 403
+      render body: nil, status: :forbidden
     end
   end
 
@@ -93,7 +97,7 @@ class Auth::RegistrationsController < Devise::RegistrationsController
   # the best solution is to just implement a `destroy` method that just returns
   # a 404.
   def destroy
-    render nothing: true, status: 404
+    render body: nil, status: :not_found
   end
 
   def check_admin

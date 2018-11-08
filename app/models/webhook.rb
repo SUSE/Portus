@@ -34,7 +34,7 @@ require "uri"
 # respectively. Webhooks can be enabled or disabled.
 # After a webhook has been triggered with the provided parameters, a
 # WebhookDelivery object is created.
-class Webhook < ActiveRecord::Base
+class Webhook < ApplicationRecord
   include PublicActivity::Common
 
   enum request_method: %w[GET POST]
@@ -112,6 +112,7 @@ class Webhook < ActiveRecord::Base
   # process_auth returns a basic auth string if username and password are provided.
   def process_auth
     return if username.blank? || password.blank?
+
     "#{username}:#{password}"
   end
 

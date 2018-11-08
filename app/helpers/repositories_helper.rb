@@ -43,6 +43,7 @@ module RepositoriesHelper
   # Or false otherwise
   def vulnerable?(vulnerabilities)
     return if vulnerabilities.blank?
+
     !vulnerabilities.reject { |_, vulns| vulns.empty? }.empty?
   end
 

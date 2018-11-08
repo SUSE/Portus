@@ -24,7 +24,7 @@
 # A WebhookDelivery is created once a webhook has been triggered. They hold
 # information regarding both the request and the response.  Webhook deliveries
 # can also be retrigged.
-class WebhookDelivery < ActiveRecord::Base
+class WebhookDelivery < ApplicationRecord
   belongs_to :webhook, inverse_of: "deliveries"
 
   validates :uuid, uniqueness: { scope: :webhook_id }

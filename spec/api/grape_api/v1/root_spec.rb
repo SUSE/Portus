@@ -16,7 +16,7 @@ class ::API::RootAPI
   mount ::TestAPI
 end
 
-describe API::RootAPI do
+describe API::RootAPI, type: :request do
   it "handles unknown routes" do
     get "/api/lala"
     expect(response).to have_http_status(:not_found)

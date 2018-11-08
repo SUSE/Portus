@@ -23,7 +23,7 @@
 #
 # NOTE: currently only one Registry is allowed to exist in the database. This
 # might change in the future.
-class Registry < ActiveRecord::Base
+class Registry < ApplicationRecord
   include PublicActivity::Common
 
   has_many :namespaces, dependent: :destroy
@@ -113,8 +113,10 @@ class Registry < ActiveRecord::Base
   def get_repository_from_event(event, fetch_tag = true)
     ns, repo_name, = get_namespace_from_event(event, fetch_tag)
     return if ns.nil?
+
     repo = ns.repositories.find_by(name: repo_name)
     return if repo.nil? || repo.marked?
+
     repo
   end
 
@@ -179,6 +181,7 @@ class Registry < ActiveRecord::Base
 
     repo = Repository.find_by(name: repository, namespace: namespace)
     return tags.first if repo.nil?
+
     resulting = tags - repo.tags.pluck(:name)
 
     # Note that it might happen that there are multiple tags not yet in sync

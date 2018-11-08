@@ -24,6 +24,7 @@ module API
 
         get do
           raise Pundit::NotAuthorizedError unless @user.admin?
+
           present Tag.all, with: API::Entities::Tags
         end
 

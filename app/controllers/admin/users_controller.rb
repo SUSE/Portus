@@ -80,10 +80,10 @@ class Admin::UsersController < Admin::BaseController
     user = User.find(params[:id])
 
     if user == current_user
-      render nothing: true, status: 403
+      render body: nil, status: :forbidden
     else
       user.toggle_admin!
-      render nothing: true
+      render body: nil
     end
   end
 
@@ -102,7 +102,7 @@ class Admin::UsersController < Admin::BaseController
     return if !@user.nil? && @user != current_user
 
     @user = nil
-    render nothing: true, status: 403
+    render body: nil, status: :forbidden
   end
 
   # It creates an application token associated to the user that is being

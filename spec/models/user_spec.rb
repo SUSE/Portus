@@ -43,7 +43,7 @@ require "rails_helper"
 describe User do
   subject { create(:user) }
 
-  it { is_expected.to validate_uniqueness_of(:email) }
+  it { is_expected.to validate_uniqueness_of(:email).ignoring_case_sensitivity }
   it { is_expected.to validate_uniqueness_of(:username) }
   it { is_expected.to allow_value("test1", "1test").for(:username) }
 
@@ -357,6 +357,15 @@ describe User do
       t = Tag.find_by(name: "t")
       expect(t.user_id).to be_nil
       expect(t.username).to eq "admin"
+    end
+  end
+
+  describe "#suggest_username" do
+    it "selects a username until it finds a proper one" do
+      create(:user, username: "username")
+      user = build(:user)
+      name = user.suggest_username("nickname" => "username")
+      expect(name).to eq "username_01"
     end
   end
 end

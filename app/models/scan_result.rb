@@ -13,7 +13,7 @@
 
 # Relationship linking tags and vulnerabilities: a scan result involves
 # vulnerabilities for tags.
-class ScanResult < ActiveRecord::Base
+class ScanResult < ApplicationRecord
   belongs_to :tag
   belongs_to :vulnerability
 
@@ -39,7 +39,7 @@ class ScanResult < ActiveRecord::Base
   # ones matching a given digest. Do *not* use this method directly: use
   # `squash_data!` instead.
   def self.add_vulnerabilities!(tag:, vulnerabilities:)
-    ScanResult.destroy_all(tag: tag)
+    ScanResult.where(tag: tag).destroy_all
 
     vulnerabilities.each do |scanner, results|
       results.each do |v|

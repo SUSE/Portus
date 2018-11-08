@@ -1,4 +1,4 @@
-class CreateWebhookHeaders < ActiveRecord::Migration
+class CreateWebhookHeaders < ActiveRecord::Migration[4.2]
   def change
     create_table :webhook_headers do |t|
       t.references :webhook, index: true, foreign_key: true

@@ -1,6 +1,6 @@
 AllCops:
   TargetRubyVersion: 2.5
-  TargetRailsVersion: 4.2
+  TargetRailsVersion: 5.2
 
   DisplayCopNames: true
   DisplayStyleGuide: false
@@ -9,6 +9,8 @@ AllCops:
     # Files that are out of our control and that are not excluded in the
     # default config of rubocop.
     - db/schema.rb
+    - db/schema.mysql.rb
+    - db/schema.postgresql.rb
     - db/migrate/*
     - vendor/**/*
 
@@ -98,6 +100,12 @@ Style/StringLiteralsInInterpolation:
 # make sure there are no clashes or misunderstandings). Therefore, we just
 # disable this cop.
 Style/ClassAndModuleChildren:
+  Enabled: false
+
+# This was added in rubocop 0.60, but as seen on a couple of issues upstream, it
+# is not too clear why this cop is needed (DateTime might make sense on some
+# ruby versions). So, it's better to disable this for now.
+Style/DateTime:
   Enabled: false
 
 #

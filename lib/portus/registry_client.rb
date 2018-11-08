@@ -159,6 +159,7 @@ module Portus
       until link.empty?
         page, link = get_page(link)
         next unless page[field]
+
         res += page[field]
       end
       res
@@ -188,6 +189,7 @@ module Portus
     # Fetch the link to the next catalog page from the given response.
     def fetch_link(header)
       return "" if header.blank?
+
       link = header.split(";")[0]
       link.strip[1, link.size - 2]
     end

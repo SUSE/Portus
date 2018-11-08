@@ -15,7 +15,7 @@
 #  index_application_tokens_on_user_id  (user_id)
 #
 
-class ApplicationToken < ActiveRecord::Base
+class ApplicationToken < ApplicationRecord
   include PublicActivity::Common
 
   belongs_to :user

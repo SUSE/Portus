@@ -17,7 +17,7 @@
 #  index_repositories_on_namespace_id           (namespace_id)
 #
 
-class Repository < ActiveRecord::Base
+class Repository < ApplicationRecord
   include PublicActivity::Common
   include SearchCop
   include ::Activity::Fallback
@@ -93,6 +93,7 @@ class Repository < ActiveRecord::Base
     # Fetch the repo.
     registry = Registry.find_from_event(event)
     return if registry.nil?
+
     repo = registry.get_repository_from_event(event, false)
     return if repo.nil?
 
@@ -181,6 +182,7 @@ class Repository < ActiveRecord::Base
   def self.create_or_update!(repo)
     repository = Repository.from_catalog(repo["name"], true)
     return unless repository
+
     tags = repository.tags.pluck(:name)
 
     # Create missing tags and update current ones.

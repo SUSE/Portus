@@ -52,7 +52,7 @@ end
 # configure_backend! calls the specific `_fetch_options` method for the given
 # backend and configures omniauth with the given credentials.
 def configure_backend!(config, backend, id = nil, secret = nil)
-  return unless APP_CONFIG.enabled?("oauth.#{backend}")
+  return unless Rails.env.test? || APP_CONFIG.enabled?("oauth.#{backend}")
 
   options = send("#{backend}_fetch_options")
 

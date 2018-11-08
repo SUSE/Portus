@@ -16,7 +16,7 @@
 #  index_stars_on_user_id        (user_id)
 #
 
-class Star < ActiveRecord::Base
+class Star < ApplicationRecord
   belongs_to :repository
   belongs_to :user
 

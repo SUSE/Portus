@@ -71,6 +71,7 @@ module Namespaces
       parameters = { visibility: params[:namespace][:visibility] }
 
       return unless @namespace.update(visibility: given)
+
       @namespace.create_activity :change_visibility, owner: current_user, parameters: parameters
     end
   end

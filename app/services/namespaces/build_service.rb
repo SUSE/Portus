@@ -21,6 +21,7 @@ module Namespaces
       team = Team.find_by(name: params[:team], hidden: false)
       params.delete(:team)
       raise ActiveRecord::RecordNotFound if team.nil?
+
       team
     end
   end

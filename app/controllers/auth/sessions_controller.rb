@@ -28,11 +28,17 @@ class Auth::SessionsController < Devise::SessionsController
   def create
     super
 
-    if APP_CONFIG.enabled?("ldap") && session[:first_login]
+    if APP_CONFIG.enabled?("ldap") && first_login?
       session[:first_login] = nil
       session_flash(current_user, nil)
     else
       flash[:notice] = nil
     end
+  end
+
+  protected
+
+  def first_login?
+    session[:first_login] || Rails.application.env_config[:first_login]
   end
 end

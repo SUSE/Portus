@@ -21,7 +21,7 @@
 #  index_namespaces_on_team_id               (team_id)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :namespace do
     sequence :name do |n|
       "namespace#{n}"

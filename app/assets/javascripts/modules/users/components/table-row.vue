@@ -69,13 +69,17 @@
       },
 
       toggleEnabled() {
-        UsersService.toggleEnabled(this.user).then(() => {
+        UsersService.toggleEnabled(this.user).then((response) => {
           set(this.user, 'enabled', !this.user.enabled);
 
           if (this.user.enabled) {
             this.$alert.$show(`User '${this.user.username}' has been enabled`);
           } else {
             this.$alert.$show(`User '${this.user.username}' has been disabled`);
+          }
+
+          if (response.data.redirect) {
+            window.location.reload(false);
           }
         }).catch(handleHttpResponseError);
       },

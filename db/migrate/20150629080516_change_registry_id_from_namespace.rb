@@ -1,4 +1,4 @@
-class ChangeRegistryIdFromNamespace < ActiveRecord::Migration
+class ChangeRegistryIdFromNamespace < ActiveRecord::Migration[4.2]
   def change
     # If there are namespaces without a registry_id set, try to migrate them to
     # the existing registry. Otherwise just fail and tell the user to create a

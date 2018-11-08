@@ -16,3 +16,4 @@
 /spec/integration/fixtures/data
 /node_modules
 /webpack-report
+/db/schema.rb

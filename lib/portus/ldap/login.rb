@@ -53,6 +53,7 @@ module Portus
 
         record = connection.search(search_options(configuration))
         return if record&.size != 1
+
         record = record.first
 
         if cfg["attr"].empty?

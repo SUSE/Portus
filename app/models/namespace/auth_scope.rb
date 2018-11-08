@@ -35,6 +35,7 @@ class Namespace::AuthScope < Portus::AuthScope
     super
 
     return unless @resource_name.include?("/")
+
     @namespace_name = @resource_name.split("/").first
   end
 end
