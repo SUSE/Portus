@@ -17,7 +17,7 @@
 #  index_webhook_headers_on_webhook_id_and_name  (webhook_id,name) UNIQUE
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :webhook_header do
   end
 end

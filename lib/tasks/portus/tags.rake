@@ -30,7 +30,7 @@ def warn_user!
     recommended that the registry is running in "readonly" mode, so there are no
     race conditions with concurrent accesses.
 
-HERE
+  HERE
 
   return if ENV["PORTUS_FORCE_DIGEST_UPDATE"]
 

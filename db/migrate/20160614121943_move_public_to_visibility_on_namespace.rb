@@ -1,4 +1,4 @@
-class MovePublicToVisibilityOnNamespace < ActiveRecord::Migration
+class MovePublicToVisibilityOnNamespace < ActiveRecord::Migration[4.2]
   def up
     Namespace.all.each do |namespace|
       namespace.visibility = namespace.public? ? :visibility_public : :visibility_private

@@ -31,6 +31,7 @@ class ExploreController < ActionController::Base
   def search_params
     s = params.permit(explore: [:search])
     return unless s[:explore]
+
     s[:explore][:search]
   end
 

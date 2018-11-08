@@ -127,7 +127,7 @@ if ARGV.size != 2
     the user running this script must have the required privileges to interact with
     it. If the Docker daemon is not running locally, use the `DOCKER_HOST`
     environment variable.
-HERE
+  HERE
   exit 1
 end
 

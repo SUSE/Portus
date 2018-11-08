@@ -10,8 +10,11 @@ supported = Gem::Version.new(File.read(Rails.root.join(".ruby-version")))
 current   = Gem::Version.new(RUBY_VERSION)
 
 if current > supported
-  Rails.logger.tagged("ruby") do
-    Rails.logger.warn "Using #{RUBY_VERSION}, but we recommend #{supported}."
+  # Only complain for major and minor releases, not patch-level releases.
+  unless current.canonical_segments[0..1] == supported.canonical_segments[0..1]
+    Rails.logger.tagged("ruby") do
+      Rails.logger.warn "Using #{RUBY_VERSION}, but we recommend #{supported}."
+    end
   end
 elsif current < supported
   two = supported.to_s.split(".")[0..1].join(".")

@@ -25,6 +25,7 @@ module Teams
       if params[:owner_id]
         user = User.find_by(id: params[:owner_id])
         raise ActiveRecord::RecordNotFound unless user
+
         user
       else
         current_user

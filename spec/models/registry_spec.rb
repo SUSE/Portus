@@ -143,6 +143,7 @@ describe Registry, type: :model do
       ].each do |cs|
         allow_any_instance_of(::Portus::RegistryClient).to receive(:perform_request) do
           raise cs.first if cs.first
+
           cs[1]
         end
         r = Registry.new(hostname: "something", name: "test", use_ssl: cs[2])

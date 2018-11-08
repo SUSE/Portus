@@ -1,6 +1,6 @@
 require "portus/db"
 
-class AddFulltextIndexesOnRepositoriesNamespaces < ActiveRecord::Migration
+class AddFulltextIndexesOnRepositoriesNamespaces < ActiveRecord::Migration[4.2]
   def change
     # This `if` statement has been added after this migration was
     # created. Modifying migrations is generally a *bad* idea but this will only

@@ -16,7 +16,7 @@
 #  index_teams_on_name  (name) UNIQUE
 #
 
-class Team < ActiveRecord::Base
+class Team < ApplicationRecord
   include PublicActivity::Common
   include SearchCop
 

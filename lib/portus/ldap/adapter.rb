@@ -83,6 +83,7 @@ module Portus
         options = config["encryption"]["options"]
         return OpenSSL::SSL::SSLContext::DEFAULT_PARAMS if options.blank? ||
                                                            options["ca_file"].blank?
+
         { ca_file: options["ca_file"] }.tap do |opt|
           opt[:ssl_version] = options["ssl_version"] if options["ssl_version"].present?
         end

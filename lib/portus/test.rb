@@ -23,6 +23,7 @@ module ::Portus
     # named :portus).
     def self.allow_failure?(image)
       return HEAD_IMAGE == image if image.is_a? String
+
       image[:portus] == HEAD_IMAGE
     end
   end

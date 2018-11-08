@@ -6,6 +6,6 @@ class Api::V2::EventsController < Api::BaseController
   def create
     body = JSON.parse(request.body.read)
     Portus::RegistryNotification.process!(body)
-    head status: :accepted
+    head :accepted
   end
 end

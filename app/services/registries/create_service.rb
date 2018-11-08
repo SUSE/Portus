@@ -21,13 +21,16 @@ module Registries
 
     def check!
       return unless @valid
+
       check_uniqueness!
       return unless @valid
+
       check_reachability! unless @force
     end
 
     def check_uniqueness!
       return unless Registry.any?
+
       @valid = false
       @messages[:uniqueness] = ["You can only create one registry"]
     end

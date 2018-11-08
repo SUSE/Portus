@@ -38,7 +38,7 @@
 #  index_users_on_username              (username) UNIQUE
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include PublicActivity::Common
 
   enabled_devise_modules = [:database_authenticatable, :registerable, :lockable,
@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
   def portus_user_validation
     # If nothing really changed (e.g. Rails simply touched this record), then we
     # can leave early.
-    return if changed.empty?
+    return if saved_changes.keys.empty?
 
     # If validation for this was temporarily disabled (e.g. we are creating the
     # Portus hidden user for the first time), then enable it back but return
@@ -116,7 +116,8 @@ class User < ActiveRecord::Base
       return
     end
 
-    return unless portus? || portus?(username_was)
+    return unless portus? || portus?(username_before_last_save)
+
     errors.add(:username, "cannot be updated")
   end
 
@@ -124,6 +125,7 @@ class User < ActiveRecord::Base
   def private_namespace_and_team_available
     ns = Namespace.make_valid(username)
     return if ns
+
     errors.add(:username, "'#{username}' cannot be transformed into a valid namespace name")
   end
 
@@ -142,6 +144,7 @@ class User < ActiveRecord::Base
   # Returns the username to be displayed.
   def display_username
     return username unless APP_CONFIG.enabled?("display_name")
+
     display_name.presence || username
   end
 
@@ -244,7 +247,7 @@ class User < ActiveRecord::Base
     # possible to fix a bug as specified in PR #1144. Now it's handled in a
     # block that ends up performing multiple queries, which we want to perform
     # atomically (thus the transaction).
-    ActiveRecord::Base.transaction do
+    ApplicationRecord.transaction do
       PublicActivity::Activity.where(owner_id: id).find_each do |a|
         a.owner_id   = nil
         a.owner_type = nil
@@ -258,7 +261,7 @@ class User < ActiveRecord::Base
                     parameters: { username: username }
   end
 
-  # Create user form params and omnoauth data.
+  # Create user form params and omniauth data.
   #   params - hash with :username and :display_name
   #   data   - hash from oauth provider. We use info: {:email}, :provider and :uid.
   def self.create_from_oauth(params, data)
@@ -304,7 +307,7 @@ class User < ActiveRecord::Base
 
   # Get username from provider's data.
   def extract_username(data)
-    data["nickname"] || data["username"] || data["email"].match(/^[^@]*/).to_s
+    data["nickname"] || data["username"] || data["email"]&.match(/^[^@]*/).to_s
   end
 
   # Returns whether the given user can be disabled or not. The following rules
@@ -319,6 +322,7 @@ class User < ActiveRecord::Base
       # An admin cannot disable himself if he's the only admin in the system.
       # Otherwise, regular users can disable themselves.
       return true unless admin?
+
       User.admins.count > 1
     else
       # Only admin users can disable other users.

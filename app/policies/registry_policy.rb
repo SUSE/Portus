@@ -7,6 +7,7 @@ class RegistryPolicy
 
   def initialize(user, _)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
     @user = user
   end
 

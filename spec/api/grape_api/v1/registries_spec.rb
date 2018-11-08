@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe API::V1::Registries do
+describe API::V1::Registries, type: :request do
   before do
     admin = create :admin
     token = create :application_token, user: admin
@@ -32,7 +32,7 @@ describe API::V1::Registries do
 
     it "creates a registry" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
-      post "/api/v1/registries", data, @header
+      post "/api/v1/registries", params: data, headers: @header
       expect(response).to have_http_status(:success)
 
       resp = JSON.parse(response.body)
@@ -43,16 +43,16 @@ describe API::V1::Registries do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
 
       @header = @header.merge("CONTENT_TYPE" => "application/json", "ACCEPT" => "application/json")
-      post "/api/v1/registries", "{", @header
+      post "/api/v1/registries", params: "{", headers: @header
       expect(response).to have_http_status(:bad_request)
 
       resp = JSON.parse(response.body)
-      expect(resp["message"]).to match(/There was a problem in the JSON you submitted/)
+      expect(resp["message"]).to match(%r{When specifying application/json as content-type})
     end
 
     it "does not create a registry on a wrong use_ssl value" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
-      post "/api/v1/registries", wrong_data, @header
+      post "/api/v1/registries", params: wrong_data, headers: @header
       expect(response).to have_http_status(:bad_request)
 
       resp = JSON.parse(response.body)
@@ -64,7 +64,7 @@ describe API::V1::Registries do
       create :registry
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
-      post "/api/v1/registries", data, @header
+      post "/api/v1/registries", params: data, headers: @header
       expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
@@ -73,7 +73,7 @@ describe API::V1::Registries do
 
     it "returns an error on unreachable registry" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return("Not reachable")
-      post "/api/v1/registries", data, @header
+      post "/api/v1/registries", params: data, headers: @header
       expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
@@ -100,7 +100,7 @@ describe API::V1::Registries do
       r = create :registry, hostname: "lala"
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
-      put "/api/v1/registries/#{r.id}", data, @header
+      put "/api/v1/registries/#{r.id}", params: data, headers: @header
       expect(response).to have_http_status(:success)
 
       reg  = Registry.first
@@ -116,7 +116,7 @@ describe API::V1::Registries do
       create(:repository, namespace: namespace)
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
-      put "/api/v1/registries/#{r.id}", data, @header
+      put "/api/v1/registries/#{r.id}", params: data, headers: @header
       expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
@@ -130,7 +130,7 @@ describe API::V1::Registries do
       create(:repository, namespace: namespace)
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
-      put "/api/v1/registries/#{r.id}", just_name, @header
+      put "/api/v1/registries/#{r.id}", params: just_name, headers: @header
       expect(response).to have_http_status(:success)
 
       reg  = Registry.first
@@ -143,7 +143,7 @@ describe API::V1::Registries do
       r = create :registry, hostname: "lala"
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return("Not reachable")
-      put "/api/v1/registries/#{r.id}", data, @header
+      put "/api/v1/registries/#{r.id}", params: data, headers: @header
       expect(response).to have_http_status(:unprocessable_entity)
 
       resp = JSON.parse(response.body)
@@ -154,7 +154,7 @@ describe API::V1::Registries do
   context "GET /api/v1/registries" do
     it "returns list of registries" do
       r = create :registry
-      get "/api/v1/registries", nil, @header
+      get "/api/v1/registries", params: nil, headers: @header
       expect(response).to have_http_status(:success)
 
       data = JSON.parse(response.body)
@@ -173,7 +173,7 @@ describe API::V1::Registries do
 
     it "returns valid on a proper registry" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return(nil)
-      get "/api/v1/registries/validate", registry_data, @header
+      get "/api/v1/registries/validate", params: registry_data, headers: @header
 
       data = JSON.parse(response.body)
       expect(data["messages"]["hostname"]).to be_falsey
@@ -182,7 +182,7 @@ describe API::V1::Registries do
 
     it "returns unreachable accordingly" do
       allow_any_instance_of(Registry).to receive(:reachable?).and_return("Error message")
-      get "/api/v1/registries/validate", registry_data, @header
+      get "/api/v1/registries/validate", params: registry_data, headers: @header
 
       data = JSON.parse(response.body)
       expect(data["messages"]["hostname"]).to eq(["Error message"])
@@ -193,7 +193,7 @@ describe API::V1::Registries do
       create :registry, name: registry_data[:name]
 
       allow_any_instance_of(Registry).to receive(:reachable?).and_return("Error message")
-      get "/api/v1/registries/validate", registry_data, @header
+      get "/api/v1/registries/validate", params: registry_data, headers: @header
 
       data = JSON.parse(response.body)
       expect(data["messages"]["name"]).to eq(["has already been taken"])

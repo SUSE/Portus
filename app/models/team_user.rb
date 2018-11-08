@@ -9,7 +9,7 @@
 #  team_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  role       :integer          default(0)
+#  role       :integer          default("viewer")
 #
 # Indexes
 #
@@ -23,7 +23,7 @@
 #   * viewer: has RO access to the namespaces associated with the team
 #   * contributor: has RW access to the namespaces associated with the team
 #   * owner: like contributor, but can also manage the team
-class TeamUser < ActiveRecord::Base
+class TeamUser < ApplicationRecord
   enum role: %i[viewer contributor owner]
 
   scope :enabled, -> { joins(:user).merge(User.enabled).distinct }

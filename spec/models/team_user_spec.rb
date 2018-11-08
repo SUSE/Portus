@@ -9,7 +9,7 @@
 #  team_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  role       :integer          default(0)
+#  role       :integer          default("viewer")
 #
 # Indexes
 #

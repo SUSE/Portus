@@ -5,6 +5,7 @@ class ApplicationTokenPolicy
 
   def initialize(user, application_token)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
     @user = user
     @application_token = application_token
   end

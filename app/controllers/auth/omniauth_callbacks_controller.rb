@@ -44,18 +44,20 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # If user does not exist then ask for username and display_name.
   def check_user
-    data = request.env["omniauth.auth"]
+    data = omniauth_data
     unless data
       redirect_to new_user_session_url
       return
     end
     return unless check_domain
+
     if (alert = check_membership)
       redirect_to new_user_session_url, alert: alert
       return
     end
     @user = User.find_by(email: data.info["email"])
     return if @user
+
     session["omniauth.auth"] = data.except(:extra)
     redirect_to users_oauth_url
   end
@@ -65,7 +67,8 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     domain = APP_CONFIG["oauth"][action_name]["domain"]
     # If domain is blank then all domains are allowed.
     return true if domain.blank?
-    d = request.env["omniauth.auth"].info["email"].match(/(?<=@).*/).to_s
+
+    d = omniauth_data.info["email"].match(/(?<=@).*/).to_s
     if domain == d
       true
     else
@@ -118,7 +121,7 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # the number of teams per page in the `per_page` parameter.
   def member_of(url, per_page: nil)
     # Get user's groups.
-    token = request.env["omniauth.auth"].credentials["token"]
+    token = omniauth_data.credentials["token"]
     teams = []
     np = 0
     loop do
@@ -132,5 +135,10 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     # Check if the user is member of allowed group.
     !teams.find_all { |t| yield(t) }.empty?
+  end
+
+  # Returns the data for the omniauth auth for the current request.
+  def omniauth_data
+    request.env["omniauth.auth"]
   end
 end

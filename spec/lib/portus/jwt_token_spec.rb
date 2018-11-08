@@ -79,14 +79,14 @@ describe Portus::JwtToken do
           APP_CONFIG["registry"]["jwt_expiration_time"] = { "value" => "6" }
 
           now = Time.zone.now
-          expected = now + 6.minutes
+          expected = (now + 6.minutes).to_i
           allow(subject).to receive(:issued_at).and_return(now)
           expect(subject.claim[:exp]).to eq expected
         end
 
         it "uses the default expiration time if nothing is specified" do
           now = Time.zone.now
-          expected = now + 5.minutes
+          expected = (now + 5.minutes).to_i
           allow(subject).to receive(:issued_at).and_return(now)
           expect(subject.claim[:exp]).to eq expected
         end
@@ -96,7 +96,7 @@ describe Portus::JwtToken do
         it "is set to #not_before" do
           now = Time.zone.now
           allow(subject).to receive(:issued_at).and_return(now)
-          expected = now - 5.seconds
+          expected = (now - 5.seconds).to_i
           expect(subject.claim[:nbf]).to eq expected
         end
       end

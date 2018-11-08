@@ -5,6 +5,7 @@ class TeamPolicy
 
   def initialize(user, team)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
     @user = user
     @team = team
   end

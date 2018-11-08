@@ -135,6 +135,7 @@ module API
                      end
               user ||= User.find_by(email: params[:id])
               raise ActiveRecord::RecordNotFound unless user
+
               present user, with: API::Entities::Users
             end
           end

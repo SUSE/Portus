@@ -137,6 +137,7 @@ module Portus
       # ready to be fetched.
       def check_events!
         return unless RegistryEvent.exists?(status: RegistryEvent.statuses[:fresh])
+
         raise ActiveRecord::Rollback
       end
     end

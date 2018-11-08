@@ -25,8 +25,7 @@
 # A tag as defined by Docker. It belongs to a repository and an author. The
 # name follows the format as defined in registry/api/v2/names.go from Docker's
 # Distribution project. The default name for a tag is "latest".
-class Tag < ActiveRecord::Base
-  # NOTE: as a Hash because in Rails 5 we'll be able to pass a proper prefix.
+class Tag < ApplicationRecord
   enum status: { scan_none: 0, scan_working: 1, scan_done: 2 }
 
   # A tag belongs to a repository and has an author.
@@ -35,7 +34,7 @@ class Tag < ActiveRecord::Base
 
   # A tag may have scan results which contain vulnerabilities.
   has_many :scan_results, dependent: :destroy
-  has_many :vulnerabilities, -> { uniq }, through: :scan_results
+  has_many :vulnerabilities, -> { distinct }, through: :scan_results
 
   # We don't validate the tag, because we will fetch that from the registry,
   # and that's guaranteed to have a good format.
@@ -50,6 +49,7 @@ class Tag < ActiveRecord::Base
   # Returns a string containing the username of the user that pushed this tag.
   def owner
     return author.display_username if author
+
     username.presence || "someone"
   end
 
@@ -102,6 +102,7 @@ class Tag < ActiveRecord::Base
   # enabled.
   def fetch_vulnerabilities
     return unless ::Portus::Security.enabled?
+
     vulnerabilities if scanned == Tag.statuses[:scan_done]
   end
 

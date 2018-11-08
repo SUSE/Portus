@@ -5,12 +5,13 @@ require_relative "../helpers"
 # Exits with a proper error message of there is no registry.
 def check_registry!
   return if Registry.any?
+
   puts <<~HERE
 
     ERROR: There is no registry on the DB! You can either call the portus:create_registry
     task, or log in as an administrator into Portus and fill in the form that
     will be presented to you.
-HERE
+  HERE
   exit(-1)
 end
 
@@ -37,7 +38,7 @@ namespace :portus do
 
           * User name: '#{u.username}'
           * Personal namespace: '#{u.namespace.name}'
-HERE
+      HERE
     end
   end
 end

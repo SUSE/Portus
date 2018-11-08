@@ -1,4 +1,4 @@
-class RemovePublicFromNamespace < ActiveRecord::Migration
+class RemovePublicFromNamespace < ActiveRecord::Migration[4.2]
   def up
     remove_column :namespaces, :public, :boolean
   end

@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   include Headers
 
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
 
   add_flash_types :float
 
@@ -77,6 +77,7 @@ class ApplicationController < ActionController::Base
   def protected_controllers?(*controllers)
     controller = params[:controller]
     return true if controller == "auth/registrations" || controller == "auth/sessions"
+
     controllers.each { |c| return true if c == controller }
     false
   end
@@ -86,7 +87,7 @@ class ApplicationController < ActionController::Base
     @status = 401
     respond_to do |format|
       format.html { render template: "errors/401", status: @status, layout: "errors" }
-      format.all { render nothing: true, status: @status }
+      format.all { render body: nil, status: @status }
     end
   end
 end

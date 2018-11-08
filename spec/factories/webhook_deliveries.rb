@@ -21,10 +21,10 @@
 #  index_webhook_deliveries_on_webhook_id_and_uuid  (webhook_id,uuid) UNIQUE
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :webhook_delivery do
     sequence(:uuid) { |n| "uuid_#{n}" }
-    request_body "{}"
-    status 404
+    request_body { "{}" }
+    status { 404 }
   end
 end

@@ -15,12 +15,12 @@ describe "/v2 ping" do
   end
 
   it "returns 200 in case of valid auth" do
-    get v2_ping_url, { service: "test", account: "account" }, valid_auth_header
+    get v2_ping_url, params: { service: "test", account: "account" }, headers: valid_auth_header
     expect(response.status).to eq 200
   end
 
   it "returns 401 in case of invalid auth" do
-    get v2_ping_url, { service: "test", account: "account" }, invalid_auth_header
+    get v2_ping_url, params: { service: "test", account: "account" }, headers: invalid_auth_header
     expect(response.status).to eq 401
   end
 end

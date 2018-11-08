@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 require "database_cleaner"
@@ -16,10 +15,10 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.clean_with :truncation
     DatabaseCleaner.cleaning do
-      factories_to_lint = FactoryGirl.factories.reject do |factory|
+      factories_to_lint = FactoryBot.factories.reject do |factory|
         factory.name =~ /raw_.*_event/
       end
-      FactoryGirl.lint factories_to_lint
+      FactoryBot.lint factories_to_lint
     end
   end
 

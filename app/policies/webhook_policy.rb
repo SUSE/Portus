@@ -61,6 +61,7 @@ class WebhookPolicy < NamespacePolicy
 
   def create_or_manage?(perm)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
     user.admin? || (APP_CONFIG.enabled?("user_permission.#{perm}_webhook") &&
       namespace.team.owners.exists?(user.id))
   end

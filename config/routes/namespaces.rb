@@ -10,4 +10,5 @@ resources :namespaces, only: %i[index show] do
   end
 end
 
-get "namespaces/typeahead/:query" => "namespaces#typeahead", :defaults => { format: "json" }
+get "namespaces/typeahead/:query" => "namespaces#typeahead",
+    as: "namespaces_typeahead", :defaults => { format: "json" }

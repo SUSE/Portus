@@ -82,7 +82,7 @@ RSpec.describe WebhookDelivery, type: :model do
         delivery.retrigger
         expect(delivery.status).to eq 200
         expect(delivery.response_body).to eq %({"hello": "world"})
-        expect(delivery.response_header).to eq "Lorem: ipsum"
+        expect(delivery.response_header).to include "Lorem: ipsum"
       end
     end
   end

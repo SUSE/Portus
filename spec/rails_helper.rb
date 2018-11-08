@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 ENV["RAILS_ENV"] ||= "test"
@@ -19,6 +18,15 @@ Dir[Rails.root.join("spec", "support", "**", "*.rb")].each { |f| require f }
 # Keep the original value of the PORTUS_DB_ADAPTER env. variable.
 CONFIGURED_DB_ADAPTER = ENV["PORTUS_DB_ADAPTER"]
 
+require "shoulda/matchers"
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+
 # To avoid problems, the LDAP authenticatable is enabled always. Since this
 # means trouble for regular logins, we mock Portus::LDAP to implement a fake
 # authenticate method. This method will be used by everyone. Tests that really
@@ -36,13 +44,11 @@ Portus::LDAP::Authenticatable.class_eval do
 end
 
 RSpec.configure do |config|
-  # If we want Capybara + DatabaseCleaner + Poltergeist to work correctly, we
-  # have to just set this to false.
-  config.use_transactional_fixtures = false
-  config.use_instantiated_fixtures  = false
+  # Configure FactoryBot.
+  config.include FactoryBot::Syntax::Methods
 
+  # Infer the spec type from the location.
   config.infer_spec_type_from_file_location!
-  config.include FactoryGirl::Syntax::Methods
   config.infer_base_class_for_anonymous_controllers = true
 
   # By default, LDAP will be faked away.
@@ -51,5 +57,18 @@ RSpec.configure do |config|
       receive(:authenticate!)
         .and_return(:fake_authenticate!)
     )
+  end
+
+  ##
+  # System tests
+
+  config.include Devise::Test::IntegrationHelpers, type: :system
+
+  config.before(:each, type: :system) do
+    driven_by :rack_test
+  end
+
+  config.before(:each, type: :system, js: true) do
+    driven_by :selenium_chrome_headless
   end
 end

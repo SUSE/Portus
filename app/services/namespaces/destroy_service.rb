@@ -6,6 +6,7 @@ module Namespaces
 
     def execute(namespace)
       raise ActiveRecord::RecordNotFound if namespace.nil?
+
       attempt_destroy!(namespace)
     end
 
@@ -35,6 +36,7 @@ module Namespaces
     # accordingly.
     def personal_namespace?(namespace)
       return false unless User.find_by(namespace: namespace)
+
       @error = "Cannot remove personal namespace"
       true
     end

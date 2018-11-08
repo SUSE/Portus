@@ -21,14 +21,14 @@
 #  index_webhooks_on_namespace_id  (namespace_id)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :webhook do
-    name "webhook"
-    url "http://www.example.com"
-    request_method "POST"
-    content_type "application/json"
-    enabled true
-    username ""
-    password ""
+    name { "webhook" }
+    url { "http://www.example.com" }
+    request_method { "POST" }
+    content_type { "application/json" }
+    enabled { true }
+    username { "" }
+    password { "" }
   end
 end

@@ -1,4 +1,4 @@
-class CreateNamespaces < ActiveRecord::Migration
+class CreateNamespaces < ActiveRecord::Migration[4.2]
   def change
     create_table :namespaces do |t|
       t.string :name, default: nil

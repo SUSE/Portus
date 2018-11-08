@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "/v2/token" do
+describe "/v2/token", type: :request do
   describe "get token" do
     def parse_token(body)
       token = JSON.parse(body)["token"]
@@ -40,23 +40,19 @@ describe "/v2/token" do
       end
 
       it "denies access when the password is wrong" do
-        get v2_token_url,
-            valid_request,
-            invalid_auth_header
+        get v2_token_url, params: valid_request, headers: invalid_auth_header
 
         expect(response.status).to eq 401
       end
 
       it "denies access when the user does not exist" do
-        get v2_token_url,
-            valid_request,
-            nonexistent_auth_header
+        get v2_token_url, params: valid_request, headers: nonexistent_auth_header
 
         expect(response.status).to eq 401
       end
 
       it "denies access when basic auth credentials are not defined" do
-        get v2_token_url, valid_request
+        get v2_token_url, params: valid_request
 
         payload = parse_token response.body
         expect(payload["access"]).to be_empty
@@ -64,7 +60,7 @@ describe "/v2/token" do
 
       it "denies access to a disabled user" do
         user.update(enabled: false)
-        get v2_token_url, valid_request, valid_auth_header
+        get v2_token_url, params: valid_request, headers: valid_auth_header
         expect(response.status).to eq 401
       end
 
@@ -76,13 +72,13 @@ describe "/v2/token" do
           user:        user
         )
 
-        get v2_token_url,
-            {
-              service: registry.hostname,
-              account: user.username,
-              scope:   "repository:#{user.username}/busybox:push,pull"
-            },
-            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, token_plain)
+        get v2_token_url, params: {
+          service: registry.hostname,
+          account: user.username,
+          scope:   "repository:#{user.username}/busybox:push,pull"
+        }, headers: {
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, token_plain)
+        }
 
         expect(response.status).to eq 200
       end
@@ -95,13 +91,13 @@ describe "/v2/token" do
           user:        user
         )
 
-        get v2_token_url,
-            {
-              service: registry.hostname,
-              account: user.username,
-              scope:   "repository:#{user.username}/busybox:push,pull"
-            },
-            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, "wrong")
+        get v2_token_url, params: {
+          service: registry.hostname,
+          account: user.username,
+          scope:   "repository:#{user.username}/busybox:push,pull"
+        }, headers: {
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, "wrong")
+        }
 
         expect(response.status).to eq 401
       end
@@ -112,26 +108,26 @@ describe "/v2/token" do
 
       it "does not allow to pull a private namespace from another team" do
         # It works for the regular user
-        get v2_token_url,
-            {
-              service: registry.hostname,
-              account: user.username,
-              scope:   "repository:#{user.username}/busybox:push,pull"
-            },
-            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+        get v2_token_url, params: {
+          service: registry.hostname,
+          account: user.username,
+          scope:   "repository:#{user.username}/busybox:push,pull"
+        }, headers: {
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+        }
 
         expect(response.status).to eq 200
         payload = parse_token response.body
         expect(payload["access"]).not_to be_empty
 
         # But not for another
-        get v2_token_url,
-            {
-              service: registry.hostname,
-              account: another.username,
-              scope:   "repository:#{user.username}/busybox:push,pull"
-            },
-            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+        get v2_token_url, params: {
+          service: registry.hostname,
+          account: another.username,
+          scope:   "repository:#{user.username}/busybox:push,pull"
+        }, headers: {
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+        }
 
         expect(response.status).to eq 200
         payload = parse_token response.body
@@ -142,26 +138,26 @@ describe "/v2/token" do
         scope = "repository:#{user.username}/busybox:*"
 
         # It works for the regular user
-        get v2_token_url,
-            {
-              service: registry.hostname,
-              account: user.username,
-              scope:   scope
-            },
-            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+        get v2_token_url, params: {
+          service: registry.hostname,
+          account: user.username,
+          scope:   scope
+        }, headers: {
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(user.username, password)
+        }
 
         expect(response.status).to eq 200
         payload = parse_token response.body
         expect(payload["access"]).not_to be_empty
 
         # But not for another
-        get v2_token_url,
-            {
-              service: registry.hostname,
-              account: another.username,
-              scope:   scope
-            },
-            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+        get v2_token_url, params: {
+          service: registry.hostname,
+          account: another.username,
+          scope:   scope
+        }, headers: {
+          "HTTP_AUTHORIZATION" => auth_mech.encode_credentials(another.username, password)
+        }
 
         expect(response.status).to eq 200
         payload = parse_token response.body
@@ -181,12 +177,10 @@ describe "/v2/token" do
       end
 
       it "authenticates if the HTTP Basic Authentication was given" do
-        get v2_token_url,
-            {
-              service: registry.hostname,
-              account: "ldapuser"
-            },
-            "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("ldapuser", "12341234")
+        get v2_token_url, params: {
+          service: registry.hostname,
+          account: "ldapuser"
+        }, headers: { "HTTP_AUTHORIZATION" => auth_mech.encode_credentials("ldapuser", "12341234") }
 
         expect(response.status).to eq 200
 
@@ -213,12 +207,12 @@ describe "/v2/token" do
       end
 
       it "performs a request with given data" do
-        get v2_token_url, valid_request, valid_auth_header
+        get v2_token_url, params: valid_request, headers: valid_auth_header
         expect(response.status).to eq 200
       end
 
       it "decoded payload should conform with params sent" do
-        get v2_token_url, valid_request, valid_auth_header
+        get v2_token_url, params: valid_request, headers: valid_auth_header
         payload = parse_token response.body
         expect(payload["sub"]).to eq "account"
         expect(payload["aud"]).to eq registry.hostname
@@ -229,7 +223,10 @@ describe "/v2/token" do
 
       context "no scope requested" do
         before do
-          get v2_token_url, { service: registry.hostname, account: "account" }, valid_auth_header
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: "account"
+          }, headers: valid_auth_header
         end
 
         it "respond with 200" do
@@ -244,9 +241,11 @@ describe "/v2/token" do
 
       context "unknown scope requested" do
         before do
-          get v2_token_url,
-              { service: registry.hostname, account: "account", scope: "whale:foo,bar" },
-              valid_auth_header
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: "account",
+            scope:   "whale:foo,bar"
+          }, headers: valid_auth_header
         end
 
         it "respond with 401" do
@@ -262,13 +261,11 @@ describe "/v2/token" do
           expect_any_instance_of(Api::V2::TokensController).to receive(:authorize)
             .with(personal_namespace, :pull?)
 
-          get v2_token_url,
-              {
-                service: registry.hostname,
-                account: user.username,
-                scope:   "repository:#{user.username}/busybox:push,pull"
-              },
-              valid_auth_header
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:#{user.username}/busybox:push,pull"
+          }, headers: valid_auth_header
         end
 
         it "allows to pull an image in which this user is just a viewer" do
@@ -276,10 +273,11 @@ describe "/v2/token" do
           allow_any_instance_of(NamespacePolicy).to receive(:push?).and_return(false)
           allow_any_instance_of(NamespacePolicy).to receive(:pull?).and_return(true)
 
-          get v2_token_url,
-              { service: registry.hostname, account: user.username,
-                scope: "repository:#{user.username}/busybox:push,pull" },
-              valid_auth_header
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:#{user.username}/busybox:push,pull"
+          }, headers: valid_auth_header
 
           expect(response.status).to eq 200
 
@@ -309,7 +307,7 @@ describe "/v2/token" do
         before { User.create_portus_user! }
 
         it "allows portus to access the Catalog API" do
-          get v2_token_url, valid_request, valid_portus_auth_header
+          get v2_token_url, params: valid_request, headers: valid_portus_auth_header
           expect(response.status).to eq 200
           payload = parse_token response.body
           expect(payload["sub"]).to eq "portus"
@@ -322,13 +320,11 @@ describe "/v2/token" do
 
       context "unknown scope" do
         it "denies access" do
-          get v2_token_url,
-              {
-                service: registry.hostname,
-                account: user.username,
-                scope:   "repository:busybox:fork"
-              },
-              valid_auth_header
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:busybox:fork"
+          }, headers: valid_auth_header
           payload = parse_token response.body
           expect(payload["access"]).to be_empty
         end
@@ -342,7 +338,7 @@ describe "/v2/token" do
                          "scope=repository%3Abusybox%3Apull"
           allow_any_instance_of(ActionDispatch::Request).to receive(:query_string)
             .and_return(query_string)
-          get v2_token_url, query_string, valid_auth_header
+          get v2_token_url, params: query_string, headers: valid_auth_header
           expect(response.status).to eq 200
           payload = parse_token response.body
           expect(payload["access"].size).to eq(1)
@@ -352,9 +348,11 @@ describe "/v2/token" do
 
       context "unknown type" do
         it "denies access" do
-          get v2_token_url,
-              { service: registry.hostname, account: user.username, scope: "lala:busybox:fork" },
-              valid_auth_header
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "lala:busybox:fork"
+          }, headers: valid_auth_header
           expect(response.status).to eq 401
         end
       end
@@ -362,7 +360,10 @@ describe "/v2/token" do
       context "unknown registry" do
         context "no scope requested" do
           it "respond with 200 and no access" do
-            get v2_token_url, { service: "does not exist", account: "account" }, valid_auth_header
+            get v2_token_url, params: {
+              service: "does not exist",
+              account: "account"
+            }, headers: valid_auth_header
             expect(response.status).to eq 200
             payload = parse_token response.body
             expect(payload["access"]).to be_empty
@@ -377,15 +378,11 @@ describe "/v2/token" do
                                registry: registry)
             wrong_registry = create(:registry)
 
-            get(
-              v2_token_url,
-              {
-                service: wrong_registry.hostname,
-                account: user.username,
-                scope:   "repository:#{namespace.name}/busybox:push,pull"
-              },
-              valid_auth_header
-            )
+            get v2_token_url, params: {
+              service: wrong_registry.hostname,
+              account: user.username,
+              scope:   "repository:#{namespace.name}/busybox:push,pull"
+            }, headers: valid_auth_header
             expect(response.status).to eq(200)
             payload = parse_token response.body
             expect(payload["access"]).to be_empty

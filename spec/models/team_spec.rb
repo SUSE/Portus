@@ -28,7 +28,7 @@ describe Team do
     # - default namespace is not provided anymore on team creation
     # [ISSUE #234](https://github.com/SUSE/Portus/issues/234)
     # [PR #235](https://github.com/SUSE/Portus/pull/235)
-    expect { FactoryGirl.create(:team, name: "TeAm") }.not_to raise_error
+    expect { FactoryBot.create(:team, name: "TeAm") }.not_to raise_error
   end
 
   it "Counts all the non special teams" do

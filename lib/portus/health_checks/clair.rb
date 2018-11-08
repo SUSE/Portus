@@ -44,6 +44,7 @@ module Portus
       # protocol. Otherwise it will log a warning and assume "http".
       def self.add_protocol(server)
         return server if server.match? %r{^http(s)?://}
+
         Rails.logger.warn "You did not specify a protocol for the Clair server. Assuming http..."
         "http://#{server}"
       end

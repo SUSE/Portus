@@ -23,7 +23,8 @@ class ErrorsController < ApplicationController
   def status_code
     if params[:fixes]
       @fix = fixes
-      @fix[:database] = env["action_dispatch.exception"].class.name.starts_with? "ActiveRecord"
+      exc  = request.env["action_dispatch.exception"]
+      @fix[:database] = exc.class.name.starts_with? "ActiveRecord"
       500
     else
       status = params[:status]

@@ -8,17 +8,16 @@
 #  event_id   :string(255)      default("")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  status     :integer          default(0)
+#  status     :integer          default("done")
 #  data       :text(65535)
 #
 
 # RegistryEvent represents an event coming from the Registry. This model stores
 # events that are being handled by Portus or that have been handled before. This
 # way we avoid duplication of registry events
-class RegistryEvent < ActiveRecord::Base
+class RegistryEvent < ApplicationRecord
   HANDLERS = [Repository, Webhook].freeze
 
-  # NOTE: as a Hash because in Rails 5 we'll be able to pass a proper prefix.
   enum status: { done: 0, progress: 1, fresh: 2 }
 
   # Processes the notification data with the given handlers. The data is the

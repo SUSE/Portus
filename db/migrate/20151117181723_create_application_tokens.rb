@@ -1,4 +1,4 @@
-class CreateApplicationTokens < ActiveRecord::Migration
+class CreateApplicationTokens < ActiveRecord::Migration[4.2]
   def change
     create_table :application_tokens do |t|
       t.string :application, null: false

@@ -9,7 +9,7 @@ Install docker, docker-compose and
 
 Before submitting a pull request, run:
 
-    $ bundle exec rake test:integration
+    $ bundle exec rake test:run
 
 This is already handled by the `bin/ci.sh` script though, so run that instead.
 
@@ -39,7 +39,7 @@ The integration tests go through some stages before completing:
 
 All this can be accomplished with a simple command:
 
-    $ bundle exec rake test:integration
+    $ bundle exec rake test:run
 
 This is the command we use in Travis CI, and it executes all tests with the
 following matrix:

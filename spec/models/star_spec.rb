@@ -26,9 +26,9 @@ describe Star do
     author = create(:user)
     repository = create(:repository)
 
-    expect { FactoryGirl.create(:star, user: author, repository: repository) }.not_to raise_error
+    expect { FactoryBot.create(:star, user: author, repository: repository) }.not_to raise_error
     expect do
-      FactoryGirl.create(:star, user: author, repository: repository)
+      FactoryBot.create(:star, user: author, repository: repository)
     end.to raise_error(ActiveRecord::RecordInvalid)
   end
 end

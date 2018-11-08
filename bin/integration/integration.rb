@@ -55,6 +55,7 @@ end
 # image and build it again if it's the first time it has to do so.
 def build_local!
   return if local?
+
   $local = true
 
   exists = !`docker images -q #{::Portus::Test::LOCAL_IMAGE}`.empty?
@@ -97,6 +98,7 @@ images = ::Portus::Test::DEVELOPMENT_MATRIX.dup
 ENV.fetch("PORTUS_TEST_INTEGRATION", "").split(" ").each do |obj|
   k, v = obj.split("#")
   next unless images[k.to_sym]
+
   images[k.to_sym] = v
 end
 

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe API::V1::Repositories do
+describe API::V1::Repositories, type: :request do
   let!(:admin) { create(:admin) }
   let!(:token) { create(:application_token, user: admin) }
   let!(:public_namespace) do
@@ -18,7 +18,7 @@ describe API::V1::Repositories do
   context "GET /api/v1/repositories" do
     context "without data" do
       it "returns an empty list" do
-        get "/api/v1/repositories", nil, @header
+        get "/api/v1/repositories", params: nil, headers: @header
 
         repositories = JSON.parse(response.body)
         expect(response).to have_http_status(:success)
@@ -32,7 +32,7 @@ describe API::V1::Repositories do
       end
 
       it "returns list of all repositories (not paginated)" do
-        get "/api/v1/repositories", { per_page: 10, all: true }, @header
+        get "/api/v1/repositories", params: { per_page: 10, all: true }, headers: @header
 
         repositories = JSON.parse(response.body)
         expect(response).to have_http_status(:success)
@@ -40,7 +40,7 @@ describe API::V1::Repositories do
       end
 
       it "returns list of repositories paginated" do
-        get "/api/v1/repositories", { per_page: 10 }, @header
+        get "/api/v1/repositories", params: { per_page: 10 }, headers: @header
 
         repositories = JSON.parse(response.body)
         expect(response).to have_http_status(:success)
@@ -48,7 +48,7 @@ describe API::V1::Repositories do
       end
 
       it "returns list of repositories paginated (page 2)" do
-        get "/api/v1/repositories", { page: 2 }, @header
+        get "/api/v1/repositories", params: { page: 2 }, headers: @header
 
         repositories = JSON.parse(response.body)
         expect(response).to have_http_status(:success)
@@ -56,7 +56,9 @@ describe API::V1::Repositories do
       end
 
       it "returns list of repositories ordered" do
-        get "/api/v1/repositories", { sort_attr: "id", sort_order: "desc", per_page: 10 }, @header
+        get "/api/v1/repositories",
+            params:  { sort_attr: "id", sort_order: "desc", per_page: 10 },
+            headers: @header
 
         repositories = JSON.parse(response.body)
         repositories.each_slice(2) do |a, b|
@@ -69,7 +71,7 @@ describe API::V1::Repositories do
   context "GET /api/v1/repositories/:id" do
     it "returns a team" do
       repository = create(:repository, namespace: public_namespace)
-      get "/api/v1/repositories/#{repository.id}", nil, @header
+      get "/api/v1/repositories/#{repository.id}", params: nil, headers: @header
 
       repository_parsed = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -78,7 +80,7 @@ describe API::V1::Repositories do
     end
 
     it "returns 404 if it doesn't exist" do
-      get "/api/v1/repositories/222", nil, @header
+      get "/api/v1/repositories/222", params: nil, headers: @header
 
       expect(response).to have_http_status(:not_found)
     end
@@ -89,7 +91,7 @@ describe API::V1::Repositories do
       repository = create(:repository, namespace: public_namespace)
       create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
       create_list(:tag, 4, repository: repository, digest: "123123", author: admin)
-      get "/api/v1/repositories/#{repository.id}/tags", nil, @header
+      get "/api/v1/repositories/#{repository.id}/tags", params: nil, headers: @header
 
       tags = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -101,7 +103,7 @@ describe API::V1::Repositories do
     it "returns list of reposiroty tags" do
       repository = create(:repository, namespace: public_namespace)
       tag = create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
-      get "/api/v1/repositories/#{repository.id}/tags/#{tag.id}", nil, @header
+      get "/api/v1/repositories/#{repository.id}/tags/#{tag.id}", params: nil, headers: @header
 
       tag_parsed = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -115,7 +117,7 @@ describe API::V1::Repositories do
       repository = create(:repository, namespace: public_namespace)
       create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
       create_list(:tag, 4, repository: repository, digest: "123123", author: admin)
-      get "/api/v1/repositories/#{repository.id}/tags/grouped", nil, @header
+      get "/api/v1/repositories/#{repository.id}/tags/grouped", params: nil, headers: @header
 
       tags = JSON.parse(response.body)
       expect(response).to have_http_status(:success)
@@ -143,7 +145,7 @@ describe API::V1::Repositories do
 
     it "deletes repository" do
       repository = create(:repository, namespace: public_namespace)
-      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      delete "/api/v1/repositories/#{repository.id}", params: nil, headers: @header
       expect(response).to have_http_status(:no_content)
       expect { Repository.find(repository.id) }.to raise_exception(ActiveRecord::RecordNotFound)
     end
@@ -151,7 +153,7 @@ describe API::V1::Repositories do
     it "forbids deletion of repository (delete disabled)" do
       APP_CONFIG["delete"]["enabled"] = false
       repository = create(:repository, namespace: public_namespace)
-      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      delete "/api/v1/repositories/#{repository.id}", params: nil, headers: @header
       expect(response).to have_http_status(:forbidden)
     end
 
@@ -162,7 +164,7 @@ describe API::V1::Repositories do
 
       repository = create(:repository, namespace: public_namespace)
       create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
-      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      delete "/api/v1/repositories/#{repository.id}", params: nil, headers: @header
       body = JSON.parse(response.body)
       expect(body["message"]).to include("could not remove taggg tag")
       expect(response).to have_http_status(:unprocessable_entity)
@@ -172,12 +174,12 @@ describe API::V1::Repositories do
       repository = create(:repository, namespace: public_namespace)
       allow_any_instance_of(Repository).to receive(:destroy).and_return(false)
 
-      delete "/api/v1/repositories/#{repository.id}", nil, @header
+      delete "/api/v1/repositories/#{repository.id}", params: nil, headers: @header
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it "returns status 404" do
-      delete "/api/v1/repositories/999", nil, @header
+      delete "/api/v1/repositories/999", params: nil, headers: @header
       expect(response).to have_http_status(:not_found)
     end
   end

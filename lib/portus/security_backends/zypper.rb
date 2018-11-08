@@ -48,7 +48,7 @@ module Portus
       end
 
       def error_message(msg)
-        msg["Error"] ? msg["Error"] : msg
+        msg["Error"] || msg
       end
     end
   end

@@ -24,6 +24,7 @@ module Portus
       results = CHECKS.map do |c|
         ready, s = c.ready
         next if ready.nil?
+
         success = false unless s
         [c.name, { msg: ready, success: s }]
       end

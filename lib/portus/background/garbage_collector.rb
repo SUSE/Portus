@@ -15,6 +15,7 @@ module Portus
 
       def work?
         return false unless enabled?
+
         @tags = tags_to_be_collected
         @tags.any?
       end
@@ -33,6 +34,7 @@ module Portus
 
         @tags.each do |tag|
           next if service.execute(tag)
+
           Rails.logger.tagged(:garbage_collector) { Rails.logger.warn(service.error.to_s) }
         end
       end

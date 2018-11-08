@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe API::V1::Vulnerabilities do
+describe API::V1::Vulnerabilities, type: :request do
   let!(:admin) { create(:admin) }
   let!(:token) { create(:application_token, user: admin) }
   let!(:public_namespace) do
@@ -21,7 +21,7 @@ describe API::V1::Vulnerabilities do
   context "POST /api/v1/vulnerabilities" do
     it "forces the re-schedule for all tags" do
       Tag.update_all(scanned: Tag.statuses[:scan_done])
-      post "/api/v1/vulnerabilities", nil, @header
+      post "/api/v1/vulnerabilities", params: nil, headers: @header
       expect(response).to have_http_status(:accepted)
 
       expect(Tag.any? { |t| t.scanned != Tag.statuses[:scan_none] }).to be_falsey
@@ -31,7 +31,7 @@ describe API::V1::Vulnerabilities do
   context "POST /api/v1/vulnerabilities/:id" do
     it "forces the re-schedule for a single tag" do
       Tag.update_all(scanned: Tag.statuses[:scan_done])
-      post "/api/v1/vulnerabilities/#{tag1.id}", nil, @header
+      post "/api/v1/vulnerabilities/#{tag1.id}", params: nil, headers: @header
       expect(response).to have_http_status(:accepted)
 
       t = Tag.find_by(name: tag1.name)

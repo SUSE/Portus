@@ -37,8 +37,8 @@ module Portus
         hash[:sub]    = @account
         hash[:aud]    = @service
         hash[:iat]    = issued_at
-        hash[:nbf]    = issued_at - 5.seconds
-        hash[:exp]    = issued_at + expiration_time
+        hash[:nbf]    = (issued_at - 5.seconds).to_i
+        hash[:exp]    = (issued_at + expiration_time).to_i
         hash[:jti]    = jwt_id
         hash[:access] = authorized_access if @scopes
       end

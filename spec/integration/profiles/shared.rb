@@ -4,7 +4,7 @@
 def clean_db!
   ActiveRecord::Base.establish_connection
   ActiveRecord::Base.connection.execute("SET FOREIGN_KEY_CHECKS = 0")
-  ActiveRecord::Base.connection.tables.each do |table|
+  ActiveRecord::Base.connection.data_sources.each do |table|
     next if table == "schema_migrations"
 
     ActiveRecord::Base.connection.execute("TRUNCATE #{table}")

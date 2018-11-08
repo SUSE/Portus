@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe API::Version do
+describe API::Version, type: :request do
   let!(:admin) { create(:admin) }
   let!(:token) { create(:application_token, user: admin) }
 
@@ -14,7 +14,7 @@ describe API::Version do
     it "returns the proper versioning" do
       expect(::Version).to receive(:git?).and_return(true)
 
-      get "/api/version", nil, @header
+      get "/api/version", params: nil, headers: @header
 
       resp = JSON.parse(response.body)
       expect(resp["api-versions"]).to eq(["v1"])
@@ -26,7 +26,7 @@ describe API::Version do
       expect(::Version).to receive(:git?).and_return(true)
       expect(::Version::TAG).to receive(:present?).and_return(true)
 
-      get "/api/version", nil, @header
+      get "/api/version", params: nil, headers: @header
 
       resp = JSON.parse(response.body)
       expect(resp["git"]).to include("tag")
@@ -35,7 +35,7 @@ describe API::Version do
     it "returns a null git on stable releases" do
       expect(::Version).to receive(:git?).and_return(false)
 
-      get "/api/version", nil, @header
+      get "/api/version", params: nil, headers: @header
 
       resp = JSON.parse(response.body)
       expect(resp["api-versions"]).to eq(["v1"])

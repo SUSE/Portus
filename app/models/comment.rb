@@ -17,7 +17,7 @@
 #  index_comments_on_user_id        (user_id)
 #
 
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   include PublicActivity::Common
   belongs_to :repository
   belongs_to :author, class_name: "User", foreign_key: "user_id", inverse_of: "comments"

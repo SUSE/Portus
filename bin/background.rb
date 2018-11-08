@@ -55,6 +55,7 @@ slept = 0
 loop do
   they.each_with_index do |t, idx|
     next if slept % t.sleep_value != 0
+
     t.execute! if t.work?
 
     if t.disable?
@@ -64,6 +65,7 @@ loop do
   end
 
   break if ARGV.first == "--one-shot"
+
   sleep SLEEP_VALUE
 
   # Increase the sleep value by SLEEP_VALUE. If it turns out we reached out the

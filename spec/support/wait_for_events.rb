@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 # Theoretically, Capybara is clever enough to wait for asynchronous events to

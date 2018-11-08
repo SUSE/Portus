@@ -31,6 +31,7 @@ module Helpers
     def change_description(object, symbol, old_description, new_description, activity_params)
       return if new_description.nil? || old_description == new_description ||
                 !object.update(description: new_description)
+
       create_activity(object, "#{symbol}_description", old_description,
                       new_description, activity_params)
     end
@@ -38,6 +39,7 @@ module Helpers
     # Change name and track activity if successful.
     def change_name(object, symbol, old_name, new_name, activity_params)
       return if old_name == new_name || new_name.blank? || !object.update(name: new_name)
+
       create_activity(object, "#{symbol}_name", old_name, new_name, activity_params)
     end
   end

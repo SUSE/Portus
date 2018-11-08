@@ -37,7 +37,7 @@ class WebhookHeadersController < ApplicationController
 
     @webhook_header.destroy
 
-    render nothing: true
+    render body: nil
   end
 
   private

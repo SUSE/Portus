@@ -21,7 +21,7 @@ class PasswordsController < Devise::PasswordsController
     end
   rescue *::Portus::Errors::NET, ::Net::SMTPAuthenticationError => e
     from = ::Portus::Errors.message_from_exception(e)
-    msg  = "#{e}: #{from if from}"
+    msg  = "#{e}: #{from}"
     Rails.logger.tagged("Mailer") { Rails.logger.info msg }
     redirect_to new_user_password_path,
                 alert: "Something went wrong. Check the configuration of Portus",

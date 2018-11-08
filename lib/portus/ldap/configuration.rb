@@ -30,6 +30,7 @@ module Portus
       # LDAP). Otherwise it returns an empty string.
       def reason_message
         return "" if @enabled
+
         @reason.presence || "LDAP is not enabled"
       end
 

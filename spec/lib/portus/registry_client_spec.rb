@@ -23,6 +23,7 @@ class RegistryPerformRequest < Portus::RegistryClient
     # We don't care about the given parameters.
 
     return nil if @status.nil?
+
     OpenStruct.new(code: @status, header: { "Docker-Distribution-Api-Version" => "registry/2.0" })
   end
 end

@@ -15,6 +15,7 @@ Rails.application.configure do
   # Set consider_all_requests_local to false to see the errors as in production
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
+  config.cache_store                       = :null_store
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -26,6 +27,9 @@ Rails.application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+
+  # Previous "quiet_assets" gem is built in sprockets since 3.1.0.
+  config.assets.quiet = true
 
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
@@ -42,10 +46,19 @@ Rails.application.configure do
 
   # Set this to true when debugging a mailer.
   config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_caching = false
   # Uncomment the following two lines to test the mailer in the real world.
   # config.action_mailer.perform_deliveries = true
   # config.action_mailer.raise_delivery_errors = true
 
   # Control which IP's have access to the console. In Dev mode we can allow all private networks
   config.web_console.whitelisted_ips = %w[127.0.0.1/1 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16]
+
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+
+  # Log into the stdout
+  STDOUT.sync      = true
+  logger           = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
 end

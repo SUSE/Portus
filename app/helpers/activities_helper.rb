@@ -36,6 +36,7 @@ module ActivitiesHelper
   # parameter is returned as-is.
   def activity_user(activity, method, param, empty_user)
     return activity.send(method).display_username if activity.send(method)
+
     activity.parameters[param].presence || empty_user
   end
 end
