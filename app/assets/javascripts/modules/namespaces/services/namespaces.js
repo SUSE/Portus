@@ -17,7 +17,7 @@ const customActions = {
 const resource = Vue.resource('api/v1/namespaces{/id}', {}, customActions);
 
 function all(params = {}) {
-  return resource.get({}, params);
+  return resource.get(params);
 }
 
 function searchTeam(teamName) {

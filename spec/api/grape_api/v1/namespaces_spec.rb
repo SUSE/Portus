@@ -42,11 +42,37 @@ describe API::V1::Namespaces, type: :request do
       it "returns list of accessible namespaces" do
         get "/api/v1/namespaces", params: nil, headers: @admin_header
 
-        # global + personal + weird ones that I have no idea where it comes from
-        # so, magic number :(
+        # global + admin + 4 users + 1 from who knows where
         namespaces = JSON.parse(response.body)
         expect(response).to have_http_status(:success)
         expect(namespaces.length).to eq(7)
+      end
+
+      it "returns list of all accessible namespaces paginated" do
+        get "/api/v1/namespaces", params: { per_page: 5 }, headers: @admin_header
+
+        namespaces = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(namespaces.length).to eq(5)
+      end
+
+      it "returns list of all accessible namespaces paginated (page 2)" do
+        get "/api/v1/namespaces", params: { per_page: 5, page: 2 }, headers: @admin_header
+
+        namespaces = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(namespaces.length).to eq(2)
+      end
+
+      it "returns list of all accessible namespaces ordered" do
+        get "/api/v1/namespaces",
+            params:  { sort_attr: "id", sort_order: "desc", per_page: 6 },
+            headers: @admin_header
+
+        namespaces = JSON.parse(response.body)
+        namespaces.each_slice(2) do |a, b|
+          expect(a["id"]).to be > b["id"]
+        end
       end
     end
 
@@ -54,7 +80,6 @@ describe API::V1::Namespaces, type: :request do
       it "returns list of accessible namespaces" do
         get "/api/v1/namespaces", params: nil, headers: @owner_header
 
-        # only personal one
         namespaces = JSON.parse(response.body)
         expect(response).to have_http_status(:success)
         expect(namespaces.length).to eq(1)

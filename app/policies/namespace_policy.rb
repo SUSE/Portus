@@ -110,7 +110,7 @@ class NamespacePolicy
 
     def resolve
       if user.admin?
-        scope.not_portus.order(created_at: :asc)
+        scope.not_portus
       else
         scope
           .joins(team: [:team_users])

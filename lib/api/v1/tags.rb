@@ -5,6 +5,9 @@ module API
     # Tags implements all the endpoints regarding tags that have not been
     # addressed in other classes.
     class Tags < Grape::API
+      include PaginationParams
+      include OrderingParams
+
       version "v1", using: :path
 
       resource :tags do
@@ -22,10 +25,15 @@ module API
                [403, "Authorization fails"]
              ]
 
+        params do
+          use :pagination
+          use :ordering
+        end
+
         get do
           raise Pundit::NotAuthorizedError unless @user.admin?
 
-          present Tag.all, with: API::Entities::Tags
+          present paginate(order(Tag.all)), with: API::Entities::Tags
         end
 
         route_param :id, type: Integer, requirements: { id: /.*/ } do
