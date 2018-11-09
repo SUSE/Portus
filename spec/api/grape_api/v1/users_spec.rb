@@ -21,12 +21,39 @@ describe API::V1::Users, type: :request do
   end
 
   context "GET /api/v1/users" do
-    it "returns list of users" do
-      create :user
-      get "/api/v1/users", params: nil, headers: @header
-      expect(response).to have_http_status(:success)
-      expect(User.count).to eq 2
-      expect(JSON.parse(response.body).size).to eq 2
+    context "with data" do
+      before do
+        create_list(:user, 15)
+      end
+
+      it "returns list of all users (not paginated)" do
+        get "/api/v1/users", params: { all: true }, headers: @header
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body).size).to eq User.count
+      end
+
+      it "returns list of users paginated" do
+        get "/api/v1/users", params: { per_page: 10 }, headers: @header
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body).size).to eq 10
+      end
+
+      it "returns list of users paginated (page 2)" do
+        get "/api/v1/users", params: { per_page: 10, page: 2 }, headers: @header
+        expect(response).to have_http_status(:success)
+        expect(JSON.parse(response.body).size).to eq 6
+      end
+
+      it "returns list of users ordered " do
+        get "/api/v1/users",
+            params:  { sort_attr: "id", sort_order: "desc", per_page: 10 },
+            headers: @header
+
+        users = JSON.parse(response.body)
+        users.each_slice(2) do |a, b|
+          expect(a["id"]).to be > b["id"]
+        end
+      end
     end
 
     it "authentication fails" do

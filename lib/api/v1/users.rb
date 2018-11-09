@@ -6,6 +6,9 @@ module API
   module V1
     # Users implements all the endpoints regarding users
     class Users < Grape::API
+      include PaginationParams
+      include OrderingParams
+
       version "v1", using: :path
 
       helpers ::API::Helpers::ApplicationTokens
@@ -108,8 +111,13 @@ module API
                  [403, "Authorization fails"]
                ]
 
+          params do
+            use :pagination
+            use :ordering
+          end
+
           get do
-            users = User.all
+            users = paginate(order(User.all))
             present users, with: API::Entities::Users
           end
 

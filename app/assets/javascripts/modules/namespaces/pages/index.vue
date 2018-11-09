@@ -106,7 +106,7 @@
       },
 
       loadData() {
-        NamespacesService.all().then((response) => {
+        NamespacesService.all({ all: true }).then((response) => {
           const namespaces = response.data;
 
           set(this, 'namespaces', namespaces);

@@ -4,6 +4,9 @@ module API
   module V1
     # Namespaces implements all the endpoints regarding namespaces.
     class Namespaces < Grape::API
+      include PaginationParams
+      include OrderingParams
+
       version "v1", using: :path
 
       resource :namespaces do
@@ -24,8 +27,14 @@ module API
                [403, "Authorization fails"]
              ]
 
+        params do
+          use :pagination
+          use :ordering
+        end
+
         get do
-          present policy_scope(Namespace),
+          namespaces = paginate(order(policy_scope(Namespace)))
+          present namespaces,
                   with:         API::Entities::Namespaces,
                   current_user: current_user,
                   type:         current_type

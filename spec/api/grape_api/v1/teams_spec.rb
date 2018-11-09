@@ -20,21 +20,55 @@ describe API::V1::Teams, type: :request do
   end
 
   context "GET /api/v1/teams" do
-    it "returns an empty list" do
-      get "/api/v1/teams", params: nil, headers: @admin_header
+    context "without data" do
+      it "returns an empty list" do
+        get "/api/v1/teams", params: nil, headers: @admin_header
 
-      teams = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(teams.length).to eq(0)
+        teams = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(teams.length).to eq(0)
+      end
     end
 
-    it "returns list of teams" do
-      create_list(:team, 5, owners: [admin])
-      get "/api/v1/teams", params: nil, headers: @admin_header
+    context "with data" do
+      before do
+        create_list(:team, 15, owners: [admin])
+      end
 
-      teams = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(teams.length).to eq(5)
+      it "returns list of all teams (not paginated)" do
+        get "/api/v1/teams", params: { per_page: 10, all: true }, headers: @admin_header
+
+        teams = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(teams.length).to eq(15)
+      end
+
+      it "returns list of teams paginated" do
+        get "/api/v1/teams", params: { per_page: 10 }, headers: @admin_header
+
+        teams = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(teams.length).to eq(10)
+      end
+
+      it "returns list of teams paginated (page 2)" do
+        get "/api/v1/teams", params: { per_page: 10, page: 2 }, headers: @admin_header
+
+        teams = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(teams.length).to eq(5)
+      end
+
+      it "returns list of all teams ordered" do
+        get "/api/v1/teams",
+            params:  { sort_attr: "id", sort_order: "desc", per_page: 10 },
+            headers: @admin_header
+
+        teams = JSON.parse(response.body)
+        teams.each_slice(2) do |a, b|
+          expect(a["id"]).to be > b["id"]
+        end
+      end
     end
   end
 

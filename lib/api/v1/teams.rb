@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 module API
   module V1
     class Teams < Grape::API
+      include PaginationParams
+      include OrderingParams
+
       version "v1", using: :path
 
       resource :teams do
@@ -23,8 +27,14 @@ module API
                [403, "Authorization fails"]
              ]
 
+        params do
+          use :pagination
+          use :ordering
+        end
+
         get do
-          present policy_scope(Team), with: API::Entities::Teams, type: current_type
+          teams = paginate(order(policy_scope(Team)))
+          present teams, with: API::Entities::Teams, type: current_type
         end
 
         desc "Create a team",
@@ -248,3 +258,4 @@ module API
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

@@ -17,23 +17,57 @@ describe API::V1::Tags, type: :request do
   end
 
   context "GET /api/v1/tags" do
-    it "returns an empty list" do
-      get "/api/v1/tags", params: nil, headers: @header
+    context "without data" do
+      it "returns an empty list" do
+        get "/api/v1/tags", params: nil, headers: @header
 
-      repositories = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(repositories.length).to eq(0)
+        repositories = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(repositories.length).to eq(0)
+      end
     end
 
-    it "returns list of tags" do
-      create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
-      create(:tag, name: "another_tag", repository: repository, digest: "1", author: nil)
-      create_list(:tag, 4, repository: repository, digest: "123123", author: admin)
-      get "/api/v1/tags", params: nil, headers: @header
+    context "with data" do
+      before do
+        create(:tag, name: "taggg", repository: repository, digest: "1", author: admin)
+        create(:tag, name: "another_tag", repository: repository, digest: "1", author: nil)
+        create_list(:tag, 13, repository: repository, digest: "123123", author: admin)
+      end
 
-      tags = JSON.parse(response.body)
-      expect(response).to have_http_status(:success)
-      expect(tags.length).to eq(6)
+      it "returns list of all tags (not paginated)" do
+        get "/api/v1/tags", params: { all: true }, headers: @header
+
+        tags = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(tags.length).to eq(15)
+      end
+
+      it "returns list of tags paginated" do
+        get "/api/v1/tags", params: { per_page: 10 }, headers: @header
+
+        tags = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(tags.length).to eq(10)
+      end
+
+      it "returns list of tags paginated (page 2)" do
+        get "/api/v1/tags", params: { per_page: 10, page: 2 }, headers: @header
+
+        tags = JSON.parse(response.body)
+        expect(response).to have_http_status(:success)
+        expect(tags.length).to eq(5)
+      end
+
+      it "returns list of tags ordered" do
+        get "/api/v1/tags",
+            params:  { sort_attr: "id", sort_order: "desc", per_page: 10 },
+            headers: @header
+
+        tags = JSON.parse(response.body)
+        tags.each_slice(2) do |a, b|
+          expect(a["id"]).to be > b["id"]
+        end
+      end
     end
   end
 
