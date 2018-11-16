@@ -62,7 +62,7 @@ layout: default
         <ul>
             <li><b>Viewers</b>: can only pull images.</li>
             <li><b>Contributors</b>: can push and pull images.</li>
-            <li><b>Owners</b>: like contrinutors, but can also add and remove users from the team</li>
+            <li><b>Owners</b>: like contributors, but can also add and remove users from the team</li>
         </ul>
         <a href="/features/2_LDAP-support.html">LDAP</a> is also supported!
     </div>
