@@ -2,7 +2,7 @@
 
 - [Website](http://port.us.org/) | [Documentation](http://port.us.org/documentation.html) | [Blog](http://port.us.org/blog/index.html) | [Supported versions](http://port.us.org/docs/versions.html) | [How to deploy](http://port.us.org/docs/deploy.html)
 - Mailing list: [Google Groups](https://groups.google.com/forum/#!forum/portus-dev)
-- Last stable release: **2.3.5** (`2.3` and `latest` tags from the [official Docker image](https://hub.docker.com/r/opensuse/portus/))
+- Last stable release: **2.4.0** (`2.4` and `latest` tags from the [official Docker image](https://hub.docker.com/r/opensuse/portus/))
 
 Portus is an authorization server and a user interface for the next generation
 of the Docker registry. Portus targets [version
@@ -10,9 +10,9 @@ of the Docker registry. Portus targets [version
 Docker Registry API. The minimum required version of Registry is 2.1, which is
 the first version supporting soft deletes of blobs.
 
-| master | v2.3 | Code Climate |
+| master | v2.4 | Code Climate |
 |--------|------|--------------|
-| [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus) | [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=v2.3)](https://travis-ci.org/SUSE/Portus) | [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus) [![Test Coverage](https://codeclimate.com/github/SUSE/Portus/badges/coverage.svg)](https://codeclimate.com/github/SUSE/Portus/coverage) |
+| [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=master)](https://travis-ci.org/SUSE/Portus) | [![Build Status](https://travis-ci.org/SUSE/Portus.svg?branch=v2.4)](https://travis-ci.org/SUSE/Portus) | [![Code Climate](https://codeclimate.com/github/SUSE/Portus/badges/gpa.svg)](https://codeclimate.com/github/SUSE/Portus) [![Test Coverage](https://codeclimate.com/github/SUSE/Portus/badges/coverage.svg)](https://codeclimate.com/github/SUSE/Portus/coverage) |
 
 ## Features
 
