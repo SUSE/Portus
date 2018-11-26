@@ -24,7 +24,10 @@ module API
         header "X-Prev-Page",   paginated_data.prev_page.to_s
         header "X-Total",       paginated_data.total_count.to_s
         header "X-Total-Pages", total_pages(paginated_data).to_s
-        header "Link",          pagination_links(paginated_data)
+
+        return if params[:action] && params[:controller]
+
+        header "Link", pagination_links(paginated_data)
       end
 
       def pagination_links(paginated_data)

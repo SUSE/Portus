@@ -11,6 +11,7 @@ describe('table-pagination', () => {
     wrapper = mount(TablePagination, {
       propsData: {
         total: 10,
+        totalPages: 4,
         itensPerPage: 3,
         currentPage: 1,
       },
@@ -21,12 +22,12 @@ describe('table-pagination', () => {
   });
 
   it('shows "No entry" if total is zero', () => {
-    wrapper.setProps({ total: 0 });
+    wrapper.setProps({ total: 0, totalPages: 1 });
     expect(wrapper.html()).toContain('No entry');
   });
 
   it('shows no pagination element', () => {
-    wrapper.setProps({ total: 0 });
+    wrapper.setProps({ total: 0, totalPages: 1 });
     expect(wrapper.find('.previous').exists()).toBe(false);
     expect(wrapper.find('.next').exists()).toBe(false);
     expect(wrapper.find('.page').exists()).toBe(false);

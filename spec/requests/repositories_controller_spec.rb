@@ -21,13 +21,6 @@ describe RepositoriesController do
     sign_in user
   end
 
-  describe "GET #index" do
-    it "assigns all repositories as @repositories" do
-      get repositories_url
-      expect(assigns(:repositories)).to eq([visible_repository])
-    end
-  end
-
   describe "GET #show" do
     it "assigns the requested repository as @repository" do
       get repository_url(visible_repository.to_param)

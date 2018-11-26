@@ -31,7 +31,7 @@ describe('tags-table', () => {
     const $config = {
       pagination: {
         beforeAfter: 2,
-        limit: 3,
+        perPage: 3,
       },
     };
 

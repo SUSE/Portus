@@ -58,7 +58,7 @@
       </tbody>
     </table>
 
-    <table-pagination :total.sync="users.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>
+    <table-pagination :total.sync="users.length" :current-page="currentPage" :itens-per-page.sync="perPage" @update="updateCurrentPage"></table-pagination>
   </div>
 </template>
 
@@ -101,7 +101,7 @@
         });
 
         // pagination
-        const slicedUsers = sortedUsers.slice(this.offset, this.limit * this.currentPage);
+        const slicedUsers = sortedUsers.slice(this.offset, this.perPage * this.currentPage);
 
         return slicedUsers;
       },
