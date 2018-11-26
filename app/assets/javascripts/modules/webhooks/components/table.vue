@@ -24,7 +24,7 @@
       </tbody>
     </table>
 
-    <table-pagination :total.sync="webhooks.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>
+    <table-pagination :total.sync="webhooks.length" :current-page="currentPage" :itens-per-page.sync="perPage" @update="updateCurrentPage"></table-pagination>
   </div>
 </template>
 

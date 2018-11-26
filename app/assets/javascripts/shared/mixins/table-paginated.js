@@ -19,14 +19,19 @@ export default {
 
   data() {
     return {
-      limit: this.$config.pagination.limit,
+      perPage: this.$config.pagination.perPage,
       currentPage: 1,
+      totalPages: 1,
     };
   },
 
   computed: {
     offset() {
-      return (this.currentPage - 1) * this.limit;
+      return (this.currentPage - 1) * this.perPage;
+    },
+
+    pageParam() {
+      return this.prefix + 'page';
     },
   },
 
@@ -40,7 +45,7 @@ export default {
     updateUrlPaginationState() {
       const queryObject = queryString.parse(window.location.search);
 
-      queryObject[this.prefix + 'page'] = this.currentPage;
+      queryObject[this.pageParam] = this.currentPage;
 
       const queryParams = queryString.stringify(queryObject);
       const url = [
@@ -56,7 +61,7 @@ export default {
 
   beforeMount() {
     const queryObject = queryString.parse(window.location.search);
-    const pageQuery = parseInt(queryObject[this.prefix + 'page'], 10) || this.currentPage;
+    const pageQuery = parseInt(queryObject[this.pageParam], 10) || 1;
 
     set(this, 'currentPage', pageQuery);
   },

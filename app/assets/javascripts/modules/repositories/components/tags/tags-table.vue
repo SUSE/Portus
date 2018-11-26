@@ -24,7 +24,7 @@
       </tbody>
     </table>
 
-    <table-pagination :total.sync="tags.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>
+    <table-pagination :total.sync="tags.length" :current-page="currentPage" :itens-per-page.sync="perPage" @update="updateCurrentPage"></table-pagination>
   </div>
 </template>
 
@@ -51,7 +51,7 @@
 
     computed: {
       filteredTags() {
-        return this.tags.slice(this.offset, this.limit * this.currentPage);
+        return this.tags.slice(this.offset, this.perPage * this.currentPage);
       },
     },
   };

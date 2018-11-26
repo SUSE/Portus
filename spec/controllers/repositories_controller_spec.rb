@@ -39,13 +39,6 @@ describe RepositoriesController, type: :controller do
     sign_in user
   end
 
-  describe "GET #index" do
-    it "assigns all repositories as @repositories" do
-      get :index, {}, valid_session
-      expect(assigns(:repositories)).to eq([visible_repository])
-    end
-  end
-
   describe "GET #show" do
     it "assigns the requested repository as @repository" do
       get :show, { id: visible_repository.to_param }, valid_session
