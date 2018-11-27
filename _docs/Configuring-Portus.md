@@ -604,6 +604,13 @@ pagination:
   before_after: 2
 {% endhighlight %}
 
+From Portus 2.5 onwards, `limit` was renamed to `per_page`. See below:
+
+{% highlight yaml %}
+pagination:
+  per_page: 10
+  before_after: 2
+{% endhighlight %}
 
 ## Deploying Portus in a Sub-URI
 
