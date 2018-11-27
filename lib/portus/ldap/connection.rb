@@ -8,8 +8,12 @@ module Portus
     # LDAP server by considering the given configuration.
     module Connection
       # Bind to the LDAP server with the given configuration by using the given
-      # connection. Returns true if everything went alright, false otherwise. On
-      # failure it will also log the error and call `fail!`.
+      # connection.
+      #
+      # On success, it will return two values: the entry and a boolean value
+      # instructing whether this user should be considered an admin or not. On
+      # failure, it will log the error, call `fail!` and return only a falsey
+      # value.
       #
       # It will raise a ::Portus::LDAP::Error exception if the given
       # configuration is incomplete (e.g. missing parameters) or LDAP is
@@ -19,21 +23,48 @@ module Portus
         raise ::Portus::LDAP::Error, "LDAP is disabled" unless cfg.enabled?
         raise ::Portus::LDAP::Error, "Some parameters are missing" unless cfg.initialized?
 
-        res = connection.bind_as(bind_options(cfg))
+        res, admin = bind_admin_or_user(connection, cfg)
         logged_error_message!(connection, cfg.username) unless res
-        res
+        [res, admin]
       end
 
       protected
 
-      # Returns a hash with the search options with the given configuration with
-      # the password also in it.
-      def bind_options(cfg)
-        search_options(cfg).merge(password: cfg.password)
+      # If `ldap.admin_base` is enabled, then it tries to bind first on the
+      # admin route, and then as a regular user. Otherwise, it tries to bind
+      # considering only the `ldap.base` as a base if provided.
+      #
+      # Returns two values: first of all the entry, and then a boolean value
+      # specifying whether we should consider this user as an admin or not.
+      def bind_admin_or_user(connection, cfg)
+        if APP_CONFIG["ldap"]["admin_base"].present?
+          res = connection.bind_as(bind_options(cfg, admin: true))
+          return [res, true] if res
+        end
+
+        [connection.bind_as(bind_options(cfg, admin: false)), false]
       end
 
-      # Returns a hash with the search options to be applied.
-      def search_options(cfg)
+      # Performs a search operation by first assuming that it's an admin user,
+      # and then assuming that it's a regular one.
+      def search_admin_or_user(connection, cfg)
+        if APP_CONFIG["ldap"]["admin_base"].present?
+          record = connection.search(search_options(cfg, admin: true))
+          return record if record&.size == 1
+        end
+
+        connection.search(search_options(cfg, admin: false))
+      end
+
+      # Returns a hash with the search options with the given configuration with
+      # the password also in it.
+      def bind_options(cfg, admin:)
+        search_options(cfg, admin: admin).merge(password: cfg.password)
+      end
+
+      # Returns a hash with the search options to be applied. The base to be
+      # taken into consideration will depend on the `admin` parameter.
+      def search_options(cfg, admin:)
         # Filter for uid.
         uid = APP_CONFIG["ldap"]["uid"]
         filter = Net::LDAP::Filter.equals(uid, cfg.username)
@@ -47,7 +78,11 @@ module Portus
 
         {}.tap do |opts|
           opts[:filter] = filter
-          opts[:base]   = APP_CONFIG["ldap"]["base"] unless APP_CONFIG["ldap"]["base"].empty?
+          if admin
+            opts[:base] = APP_CONFIG["ldap"]["admin_base"]
+          elsif APP_CONFIG["ldap"]["base"].present?
+            opts[:base] = APP_CONFIG["ldap"]["base"]
+          end
         end
       end
     end

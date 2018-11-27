@@ -35,8 +35,8 @@ end
 
 originals = {}
 
-ARGV[2].to_s.split(",").each do |env|
-  k, val = env.split("=")
+ARGV[2].to_s.split(";").each do |env|
+  k, val = env.split("=", 2)
 
   *key, last = k.split(":")
   hsh = APP_CONFIG["ldap"]
@@ -45,6 +45,8 @@ ARGV[2].to_s.split(",").each do |env|
   originals[k] = hsh[last].dup
   hsh[last] = val
 end
+
+puts "APP_CONFIG for LDAP: #{APP_CONFIG["ldap"]}"
 
 # Regardless of what happens in the end, set the APP_CONFIG to the original
 # values.

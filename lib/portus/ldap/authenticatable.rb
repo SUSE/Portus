@@ -44,7 +44,8 @@ module Portus
         # rubocop:disable Style/GuardClause
         if cfg.enabled?
           connection = initialized_adapter
-          portus_login!(connection, cfg) if bind_as(connection, cfg)
+          entry, admin = bind_as(connection, cfg)
+          portus_login!(connection, cfg, admin) if entry
         else
           # rubocop:disable Style/SignalException
           fail cfg.reason_message

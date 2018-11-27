@@ -9,8 +9,8 @@ module Portus
       # Fetch the user assumed from `cfg` and log it. If the user does not
       # exist yet, it will be created and the `session[:first_login]` value will
       # be set to true, so the sessions controller can act accordingly.
-      def portus_login!(connection, cfg)
-        user, created = find_or_create_user!(connection, cfg)
+      def portus_login!(connection, cfg, admin)
+        user, created = find_or_create_user!(connection, cfg, admin)
         if user.valid?
           session[:first_login] = true if created
           success!(user)
@@ -24,7 +24,7 @@ module Portus
       # Retrieve the given user as an LDAP user. If it doesn't exist, create it
       # with the parameters given in `cfg`. Returns two objects: the user object
       # and a boolean set to true if the returned user was just created.
-      def find_or_create_user!(connection, cfg)
+      def find_or_create_user!(connection, cfg, admin)
         user = User.find_by(username: cfg.username)
         created = false
 
@@ -37,7 +37,7 @@ module Portus
             username: cfg.username,
             email:    em,
             password: cfg.password,
-            admin:    User.not_portus.where(bot: false).none?
+            admin:    admin || User.not_portus.where(bot: false).none?
           )
           created = user.persisted?
         end
@@ -51,7 +51,7 @@ module Portus
         cfg = APP_CONFIG["ldap"]["guess_email"]
         return if cfg.nil? || !cfg["enabled"]
 
-        record = connection.search(search_options(configuration))
+        record = search_admin_or_user(connection, configuration)
         return if record&.size != 1
 
         record = record.first
