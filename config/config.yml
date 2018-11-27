@@ -107,6 +107,12 @@ ldap:
   # The base where users are located (e.g. "ou=users,dc=example,dc=com").
   base: ""
 
+  # The base where admin users are located.
+  # (e.g. "ou=admin,dc=example,dc=com"). Use this base if you have a separate
+  # route for admin users. Users logging in from this base will be considered
+  # Portus administrators automatically.
+  admin_base: ""
+
   # User filter (e.g. "mail=george*").
   filter: ""
 

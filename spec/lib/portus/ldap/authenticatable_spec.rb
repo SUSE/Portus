@@ -3,6 +3,23 @@
 require "ostruct"
 require "rails_helper"
 
+class ConnectionMock
+  def initialize(n)
+    @n = n
+    @ary = Array.new(n, true)
+  end
+
+  def bind_as(_param)
+    @n -= 1
+    @n == 0
+  end
+
+  def search(_param)
+    @ary.pop
+    @ary
+  end
+end
+
 # AuthenticatableMock is a thin layer on top of ::Portus::LDAP::Authenticatable,
 # that allows you to define the request parameters. It also allows you to access
 # the `session` object. Therefore, this class is designed to mock as least as
@@ -22,9 +39,17 @@ class AuthenticatableMock < ::Portus::LDAP::Authenticatable
 
   # Calls the protected `bind_options`. The parameter to be used is guessed from
   # the `params` instance variable.
-  def bind_options_test
+  def bind_options_test(admin:)
     cfg = ::Portus::LDAP::Configuration.new(@params)
-    bind_options(cfg)
+    bind_options(cfg, admin: admin)
+  end
+
+  def bind_admin_or_user_test(n)
+    bind_admin_or_user(ConnectionMock.new(n), nil)
+  end
+
+  def search_admin_or_user_test(n)
+    search_admin_or_user(ConnectionMock.new(n), nil)
   end
 
   def fail(msg)
@@ -171,34 +196,190 @@ describe ::Portus::LDAP::Authenticatable do
     expect(cfg[:auth][:method]).to eq :simple
   end
 
-  it "fetches the right bind options" do
-    original = APP_CONFIG["ldap"].dup
+  context "bind options" do
+    let(:params)   { { user: { username: "name", password: "1234" } } }
+    let(:instance) { AuthenticatableMock.new(params) }
 
-    APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "uid" }
-    params = { user: { username: "name", password: "1234" } }
-    ldap   = AuthenticatableMock.new(params)
-    opts   = ldap.bind_options_test
-    expect(opts.size).to eq 2
-    expect(opts[:filter].to_s).to eq "(uid=name)"
-    expect(opts[:password]).to eq "1234"
+    it "filters according to the given uid" do
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "uid" }
 
-    APP_CONFIG["ldap"] = original
-    opts = ldap.bind_options_test
-    expect(opts.size).to eq 3
-    expect(opts[:filter].to_s).to eq "(uid=name)"
-    expect(opts[:password]).to eq "1234"
-    expect(opts[:base]).to eq "ou=users,dc=example,dc=com"
+      opts = instance.bind_options_test(admin: false)
 
-    APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "foo" }
-    params = { user: { username: "name", password: "12341234" } }
-    ldap = AuthenticatableMock.new(params)
-    opts = ldap.bind_options_test
-    expect(opts[:filter].to_s).to eq "(foo=name)"
+      expect(opts.size).to eq 2
+      expect(opts[:filter].to_s).to eq "(uid=name)"
+      expect(opts[:password]).to eq "1234"
+    end
 
-    APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "foo", "filter" => "mail=g*" }
-    ldap = AuthenticatableMock.new(params)
-    opts = ldap.bind_options_test
-    expect(opts[:filter].to_s).to eq "(&(foo=name)(mail=g*))"
+    it "includes the base if given" do
+      APP_CONFIG["ldap"] = {
+        "enabled" => true,
+        "base"    => "ou=users,dc=example,dc=com",
+        "uid"     => "uid"
+      }
+
+      opts = instance.bind_options_test(admin: false)
+
+      expect(opts.size).to eq 3
+      expect(opts[:filter].to_s).to eq "(uid=name)"
+      expect(opts[:password]).to eq "1234"
+      expect(opts[:base]).to eq "ou=users,dc=example,dc=com"
+    end
+
+    it "the base is the admin if requested and both bases are present" do
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      opts = instance.bind_options_test(admin: true)
+
+      expect(opts.size).to eq 3
+      expect(opts[:filter].to_s).to eq "(uid=name)"
+      expect(opts[:password]).to eq "1234"
+      expect(opts[:base]).to eq "ou=admins,dc=example,dc=com"
+    end
+
+    it "the base is nil if requested admin but it's not provided" do
+      APP_CONFIG["ldap"] = {
+        "enabled" => true,
+        "base"    => "ou=users,dc=example,dc=com",
+        "uid"     => "uid"
+      }
+
+      opts = instance.bind_options_test(admin: true)
+
+      expect(opts.size).to eq 3
+      expect(opts[:filter].to_s).to eq "(uid=name)"
+      expect(opts[:password]).to eq "1234"
+      expect(opts[:base]).to be_nil
+    end
+
+    it "the base is the normal one if both were provided but the normal was requested" do
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      opts = instance.bind_options_test(admin: false)
+
+      expect(opts.size).to eq 3
+      expect(opts[:filter].to_s).to eq "(uid=name)"
+      expect(opts[:password]).to eq "1234"
+      expect(opts[:base]).to eq "ou=users,dc=example,dc=com"
+    end
+
+    it "the filter for the uid is properly updated" do
+      APP_CONFIG["ldap"] = { "enabled" => true, "base" => "", "uid" => "foo" }
+
+      opts = instance.bind_options_test(admin: false)
+
+      expect(opts[:filter].to_s).to eq "(foo=name)"
+    end
+
+    it "knows how to build more complex filters" do
+      APP_CONFIG["ldap"] = {
+        "enabled" => true,
+        "base"    => "",
+        "uid"     => "foo",
+        "filter"  => "mail=g*"
+      }
+
+      opts = instance.bind_options_test(admin: false)
+
+      expect(opts[:filter].to_s).to eq "(&(foo=name)(mail=g*))"
+    end
+  end
+
+  describe "#bind_admin_user" do
+    let(:params)   { { user: { username: "name", password: "1234" } } }
+    let(:instance) { AuthenticatableMock.new(params) }
+
+    it "returns an admin when admin_base present" do
+      allow_any_instance_of(AuthenticatableMock).to receive(:bind_options).and_return(nil)
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      _res, admin = instance.bind_admin_or_user_test(1)
+      expect(admin).to be_truthy
+    end
+
+    it "returns an user when admin_base present but failed" do
+      allow_any_instance_of(AuthenticatableMock).to receive(:bind_options).and_return(nil)
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      _res, admin = instance.bind_admin_or_user_test(2)
+      expect(admin).to be_falsey
+    end
+
+    it "returns an user when admin_base was not set" do
+      allow_any_instance_of(AuthenticatableMock).to receive(:bind_options).and_return(nil)
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      _res, admin = instance.bind_admin_or_user_test(1)
+      expect(admin).to be_truthy
+    end
+  end
+
+  describe "#search_admin_or_user" do
+    let(:params)   { { user: { username: "name", password: "1234" } } }
+    let(:instance) { AuthenticatableMock.new(params) }
+
+    it "returns an admin when admin_base present" do
+      allow_any_instance_of(AuthenticatableMock).to receive(:search_options).and_return(nil)
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      res = instance.search_admin_or_user_test(2)
+      expect(res.size).to eq 1
+    end
+
+    it "returns an user when admin_base present but failed" do
+      allow_any_instance_of(AuthenticatableMock).to receive(:search_options).and_return(nil)
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      res = instance.search_admin_or_user_test(3)
+      expect(res.size).to eq 1
+    end
+
+    it "returns an user when admin_base was not set" do
+      allow_any_instance_of(AuthenticatableMock).to receive(:search_options).and_return(nil)
+      APP_CONFIG["ldap"] = {
+        "enabled"    => true,
+        "base"       => "ou=users,dc=example,dc=com",
+        "admin_base" => "ou=admins,dc=example,dc=com",
+        "uid"        => "uid"
+      }
+
+      res = instance.search_admin_or_user_test(2)
+      expect(res.size).to eq 1
+    end
   end
 
   describe "#find_or_create_user!" do

@@ -59,8 +59,14 @@ function setup() {
     [ $status -eq 0 ]
 }
 
-@test "LDAP: portus user is skipped" {
+@test "LDAP: bot user is not expected to be present on LDAP" {
     helper_runner ldap.rb pfabra giecftw1918
     [ $status -eq 0 ]
     [[ "${lines[-1]}" =~ "Soft fail: Bot user is not expected to be present on LDAP" ]]
+}
+
+@test "LDAP: admin user can login" {
+    helper_runner ldap.rb calbert victorcatala admin_base='cn=admins,dc=example,dc=org'
+    [ $status -eq 0 ]
+    [[ "${lines[-1]}" =~ "name: calbert, email: , admin: true, display_name:" ]]
 }

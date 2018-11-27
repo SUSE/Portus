@@ -120,6 +120,7 @@ RSpec.configure do |config|
         }
       },
       "base"           => "ou=users,dc=example,dc=com",
+      "base_admin"     => "",
       "filter"         => "",
       "uid"            => "uid",
       "authentication" => {

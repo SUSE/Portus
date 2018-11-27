@@ -43,7 +43,17 @@ end
 ldap = Net::LDAP.new(params)
 
 ##
-# Add a test user.
+# Add test users and admins group.
+
+# Prints the last operation result, and if it's not ok (neither 0 nor 68 (entry
+# already exists)), then it will raise an exception.
+def handle_ldap_result!(ldap, params)
+  puts "#{ldap.get_operation_result.message} (code #{ldap.get_operation_result.code})."
+  code = ldap.get_operation_result.code
+  return if code.zero? || code == 68
+
+  raise StandardError, "Parameters used: #{params}"
+end
 
 ldap.add(
   dn:         "uid=jverdaguer,dc=example,dc=org",
@@ -57,6 +67,24 @@ ldap.add(
     mail:         "jverdaguer@renaixenca.cat"
   }
 )
+handle_ldap_result!(ldap, params)
 
-puts "#{ldap.get_operation_result.message} (code #{ldap.get_operation_result.code})."
-puts "Parameters used: #{params}" if ldap.get_operation_result.code != 0
+ldap.add(
+  dn:         "dc=admins,dc=example,dc=org",
+  attributes: { dc: "admins", objectclass: %w[top domain] }
+)
+handle_ldap_result!(ldap, params)
+
+ldap.add(
+  dn:         "uid=calbert,dc=admins,dc=example,dc=org",
+  attributes: {
+    cn:           "Caterina Albert",
+    givenName:    "Caterina",
+    sn:           "Albert",
+    displayName:  "Caterina Albert",
+    objectclass:  %w[top inetorgperson],
+    userPassword: Net::LDAP::Password.generate(:md5, "victorcatala"),
+    mail:         "calbert@renaixenca.cat"
+  }
+)
+handle_ldap_result!(ldap, params)
