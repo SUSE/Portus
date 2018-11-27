@@ -489,6 +489,7 @@ considered old. This is documented
       <span class="na">ssl_version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">TLSv1_2"</span>
 
   <span class="na">base</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
+  <span class="na">admin_base</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
   <span class="na">filter</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span>
   <span class="na">uid</span><span class="pi">:</span> <span class="s2">"</span><span class="s">uid"</span>
 
@@ -506,6 +507,10 @@ considered old. This is documented
 <ul>
   <li><strong>base</strong>: The base where users are located
 (e.g. “ou=users,dc=example,dc=com”).</li>
+  <li><strong>admin_base</strong>: The base where admin users are located.
+(e.g. “ou=admin,dc=example,dc=com”). Use this base if you have a separate
+route for admin users. Users logging in from this base will be considered
+Portus administrators automatically. Available since <strong>Portus 2.5</strong>.</li>
   <li><strong>filter</strong>: This option comes in handy when you want to filter even further
 the results that might be hanging from the <em>base</em>.</li>
   <li><strong>encryption</strong>
@@ -888,6 +893,12 @@ descibred as below:</p>
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">pagination</span><span class="pi">:</span>
   <span class="na">limit</span><span class="pi">:</span> <span class="s">10</span>
+  <span class="na">before_after</span><span class="pi">:</span> <span class="s">2</span></code></pre></figure>
+
+<p>From Portus 2.5 onwards, <code class="highlighter-rouge">limit</code> was renamed to <code class="highlighter-rouge">per_page</code>. See below:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">pagination</span><span class="pi">:</span>
+  <span class="na">per_page</span><span class="pi">:</span> <span class="s">10</span>
   <span class="na">before_after</span><span class="pi">:</span> <span class="s">2</span></code></pre></figure>
 
 <h2 id="deploying-portus-in-a-sub-uri">Deploying Portus in a Sub-URI</h2>
