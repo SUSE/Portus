@@ -197,6 +197,7 @@ ldap:
       ssl_version: "TLSv1_2"
 
   base: ""
+  admin_base: ""
   filter: ""
   uid: "uid"
 
@@ -214,6 +215,10 @@ Some notes:
 
 - **base**: The base where users are located
   (e.g. "ou=users,dc=example,dc=com").
+- **admin_base**: The base where admin users are located.
+  (e.g. "ou=admin,dc=example,dc=com"). Use this base if you have a separate
+  route for admin users. Users logging in from this base will be considered
+  Portus administrators automatically. Available since **Portus 2.5**.
 - **filter**: This option comes in handy when you want to filter even further
   the results that might be hanging from the *base*.
 - **encryption**
