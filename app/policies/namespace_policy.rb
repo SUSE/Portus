@@ -117,6 +117,7 @@ class NamespacePolicy
             protected: Namespace.visibilities[:visibility_protected],
             user_id:   user.id
           )
+          .distinct
       end
     end
   end
