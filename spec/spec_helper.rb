@@ -103,7 +103,7 @@ RSpec.configure do |config|
     }
 
     APP_CONFIG["pagination"] = {
-      "limit"        => 10,
+      "per_page"     => 10,
       "before_after" => 2
     }
 

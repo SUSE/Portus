@@ -3,10 +3,10 @@
     <div v-if="total === 0">
       No entry
     </div>
-    <div class="col-sm-6 text-left" v-if="totalPages > 1">
+    <div class="col-sm-6 text-left" v-if="totalPagesComputed > 1">
       Showing from {{ start }} to {{ end }} of {{ total }} entries
     </div>
-    <div class="col-sm-6 text-right" v-if="totalPages > 1">
+    <div class="col-sm-6 text-right" v-if="totalPagesComputed > 1">
       <ul class="pagination">
         <li class="previous" :class="{ 'disabled': previousDisabled }">
           <a href="#" @click.prevent="setCurrentPage(currentPage - 1)">Previous</a>
@@ -30,7 +30,12 @@
   import range from '~/utils/range';
 
   export default {
-    props: ['total', 'itensPerPage', 'currentPage'],
+    props: {
+      total: Number,
+      totalPages: Number,
+      itensPerPage: Number,
+      currentPage: Number,
+    },
 
     data() {
       return {
@@ -49,12 +54,16 @@
         return end <= this.total ? end : this.total;
       },
 
-      totalPages() {
+      totalPagesComputed() {
+        if (this.totalPages > 1) {
+          return this.totalPages;
+        }
+
         return Math.ceil(this.total / this.itensPerPage);
       },
 
       displayedPages() {
-        if (this.totalPages === 0) {
+        if (this.totalPagesComputed < 2) {
           return [];
         }
 
@@ -62,18 +71,18 @@
         let maxRange = this.currentPage + this.beforeAfter;
 
         const distanceLeft = Math.abs(1 - minRange);
-        const distanceRight = Math.abs(this.totalPages - maxRange);
+        const distanceRight = Math.abs(this.totalPagesComputed - maxRange);
 
-        if (minRange <= 0 && maxRange < this.totalPages) {
+        if (minRange <= 0 && maxRange < this.totalPagesComputed) {
           maxRange += distanceLeft;
         }
 
-        if (maxRange > this.totalPages && minRange > 1) {
+        if (maxRange > this.totalPagesComputed && minRange > 1) {
           minRange -= distanceRight;
         }
 
         const start = minRange < 1 ? 1 : minRange;
-        const end = maxRange > this.totalPages ? this.totalPages : maxRange;
+        const end = maxRange > this.totalPagesComputed ? this.totalPagesComputed : maxRange;
 
         return range(start, end);
       },
@@ -83,13 +92,13 @@
       },
 
       nextDisabled() {
-        return this.currentPage === this.totalPages;
+        return this.currentPage === this.totalPagesComputed;
       },
     },
 
     methods: {
       setCurrentPage(page) {
-        if (page === 0 || page > this.totalPages) {
+        if (page === 0 || page > this.totalPagesComputed) {
           return;
         }
 

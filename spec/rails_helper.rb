@@ -8,6 +8,8 @@ require File.expand_path("../config/environment", __dir__)
 require "rspec/rails"
 require "pundit/rspec"
 
+Capybara.server = :puma, { Silent: true }
+
 # Raise exception for pending migrations after reading the schema.
 ActiveRecord::Migration.maintain_test_schema!
 

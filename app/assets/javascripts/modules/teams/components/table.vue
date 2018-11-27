@@ -34,7 +34,7 @@
       </tbody>
     </table>
 
-    <table-pagination :total.sync="teams.length" :current-page="currentPage" :itens-per-page.sync="limit" @update="updateCurrentPage"></table-pagination>
+    <table-pagination :total.sync="teams.length" :current-page="currentPage" :itens-per-page.sync="perPage" @update="updateCurrentPage"></table-pagination>
   </div>
 </template>
 
@@ -85,7 +85,7 @@
         });
 
         // pagination
-        const slicedTeams = sortedTeams.slice(this.offset, this.limit * this.currentPage);
+        const slicedTeams = sortedTeams.slice(this.offset, this.perPage * this.currentPage);
 
         return slicedTeams;
       },

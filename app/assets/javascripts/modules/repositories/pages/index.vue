@@ -1,38 +1,23 @@
 <template>
   <div class="repositories-index-page">
-    <repositories-panel title="Repositories via team membership" :repositories="teamRepositories" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath"></repositories-panel>
-    <repositories-panel title="Other repositories" :repositories="otherRepositories" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath" v-if="otherRepositories.length > 0"></repositories-panel>
+    <repositories-remote-panel title="Repositories via team membership" :repositories-endpoint="teamRepositoriesEndpoint" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath"></repositories-remote-panel>
+    <repositories-remote-panel title="Other repositories" :repositories-path="repositoriesPath" :namespaces-path="namespacesPath" :repositories-endpoint="otherRepositoriesEndpoint" prefix="o_"></repositories-remote-panel>
   </div>
 </template>
 
 <script>
-  import RepositoriesPanel from '../components/panel';
+  import RepositoriesRemotePanel from '../components/remote-panel';
 
   export default {
     props: {
-      teamRepositoriesRef: {
-        type: Array,
-      },
-      otherRepositoriesRef: {
-        type: Array,
-      },
-      repositoriesPath: {
-        type: String,
-      },
-      namespacesPath: {
-        type: String,
-      },
+      teamRepositoriesEndpoint: String,
+      otherRepositoriesEndpoint: String,
+      repositoriesPath: String,
+      namespacesPath: String,
     },
 
     components: {
-      RepositoriesPanel,
-    },
-
-    data() {
-      return {
-        teamRepositories: [...this.teamRepositoriesRef],
-        otherRepositories: [...this.otherRepositoriesRef],
-      };
+      RepositoriesRemotePanel,
     },
   };
 </script>
