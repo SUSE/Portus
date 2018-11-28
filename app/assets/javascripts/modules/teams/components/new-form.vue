@@ -73,7 +73,13 @@
 
     methods: {
       onSubmit() {
-        TeamsService.save(this.team).then((response) => {
+        const params = { ...this.team };
+
+        if (!this.isAdmin) {
+          delete params.owner_id;
+        }
+
+        TeamsService.save(params).then((response) => {
           const team = response.data;
 
           this.toggleForm();

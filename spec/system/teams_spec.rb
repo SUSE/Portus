@@ -88,6 +88,25 @@ describe "Teams support", type: :system, js: true do
 
         expect(page).not_to have_css("#team_owner_id")
       end
+
+      it "creates a team" do
+        toggle_new_team_form
+        fill_in "Name", with: "valid-team2"
+
+        click_button "Add"
+
+        expect(page).to have_content("Team 'valid-team2' was created successfully")
+        expect(page).to have_link("valid-team2")
+      end
+
+      context "permission disabled" do
+        it "doesn't see link to create team" do
+          APP_CONFIG["user_permission"]["create_team"]["enabled"] = false
+          visit teams_path
+
+          expect(page).not_to have_content("Create new team")
+        end
+      end
     end
   end
 
