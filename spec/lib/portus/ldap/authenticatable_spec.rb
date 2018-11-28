@@ -569,6 +569,16 @@ describe ::Portus::LDAP::Authenticatable do
       expect { lm.authenticate! }.to(change { User.all.size }.by(1))
       expect(lm.fail_message).to eq ""
     end
+
+    it "returns successful if binding failed but it was on the database" do
+      create(:user, username: "user", password: "12341234")
+      allow_any_instance_of(Net::LDAP).to receive(:bind_as).and_return(false)
+      params = { user: { username: "user", password: "12341234" } }
+
+      lm = AuthenticatableMock.new(params)
+      expect { lm.authenticate! }.to_not raise_error
+      expect(lm.fail_message).to eq ""
+    end
   end
 
   describe "#guess_email" do

@@ -5,12 +5,17 @@ require_relative "shared"
 
 clean_db!
 create_registry!
+
+##
+# Create bot and DB user.
+
 User.create!(
   username: "pfabra",
   password: "giecftw1918",
   email:    "pfabra@iec.cat",
   bot:      true
 )
+User.create!(username: "noller", password: "lapapallona", email: "noller@renaixenca.cat")
 
 ##
 # Set parameters and initialize LDAP object.
