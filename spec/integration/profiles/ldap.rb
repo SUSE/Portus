@@ -16,6 +16,7 @@ User.create!(
   bot:      true
 )
 User.create!(username: "noller", password: "lapapallona", email: "noller@renaixenca.cat")
+User.create!(username: "rllull", password: "lomeuart", admin: true, email: "rllull@medieval.cat")
 
 ##
 # Set parameters and initialize LDAP object.

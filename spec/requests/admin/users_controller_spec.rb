@@ -82,7 +82,22 @@ RSpec.describe Admin::UsersController do
       end.to change(User, :count).by(1)
     end
 
-    it "failes to create new user without matching password" do
+    it "fails to create new user without matching password" do
+      expect do
+        post admin_users_url, params: { user: {
+          username:              "solomon",
+          email:                 "soloman@example.org",
+          password:              "password",
+          password_confirmation: "drowssap"
+        }, format: :json }
+      end.not_to change(User, :count)
+    end
+
+    it "fails to create new user if check_ldap_user! fails" do
+      allow_any_instance_of(::Portus::LDAP::Search).to(
+        receive(:with_error_message).and_return("error message")
+      )
+
       expect do
         post admin_users_url, params: { user: {
           username:              "solomon",

@@ -42,11 +42,18 @@ module API
           end
 
           post do
-            user = User.create declared(params)[:user]
-            if user.valid?
-              present user, with: API::Entities::Users
+            attrs = declared(params)[:user]
+            msg = ::Portus::LDAP::Search.new.with_error_message(attrs[:username])
+
+            if msg.nil?
+              user = User.create attrs
+              if user.valid?
+                present user, with: API::Entities::Users
+              else
+                unprocessable_entity!(user.errors)
+              end
             else
-              unprocessable_entity!(user.errors)
+              unprocessable_entity!(ldap: [msg])
             end
           end
 

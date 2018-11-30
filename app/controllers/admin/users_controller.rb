@@ -2,6 +2,7 @@
 
 class Admin::UsersController < Admin::BaseController
   before_action :another_user_access, only: %i[edit update destroy]
+  before_action :check_ldap_user!, only: %i[create]
 
   def index
     @admin_count = User.admins.count
@@ -113,5 +114,17 @@ class Admin::UsersController < Admin::BaseController
       user_id:      user.id,
       params:       { application: "default" }
     )
+  end
+
+  # If LDAP is enabled, it checks that the user to be created does not collide
+  # with the username of an LDAP existing user.
+  def check_ldap_user!
+    msg = ::Portus::LDAP::Search.new.with_error_message(user_create_params[:username])
+    return if msg.nil?
+
+    Rails.logger.tagged(:ldap) { Rails.logger.debug msg }
+    respond_to do |format|
+      format.json { render json: { ldap: [msg] }, status: :unprocessable_entity }
+    end
   end
 end

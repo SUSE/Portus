@@ -7,6 +7,7 @@ function setup() {
 }
 
 @test "LDAP: health status is up" {
-    helper_runner curl.rb /api/v1/health
-    [[ "${lines[-2]}" =~ "LDAP server is reachable" ]]
+    helper_runner curl.rb get /api/v1/health
+    [ $status -eq 0 ]
+    [[ "${lines[-1]}" =~ "LDAP server is reachable" ]]
 }
