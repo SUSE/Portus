@@ -1,14 +1,6 @@
 <template>
   <div class="namespaces-show-page">
-    <div class="header clearfix">
-      <div class="btn-toolbar pull-right">
-        <div class="btn-group">
-          <delete-namespace-btn :namespace="namespace" :redirect-path="namespacesPath" v-if="namespace.destroyable"></delete-namespace-btn>
-        </div>
-      </div>
-    </div>
-
-    <namespace-details-panel :namespace="namespace" :state="state" :teams-path="teamsPath" :webhooks-path="webhooksPath"></namespace-details-panel>
+    <namespace-details-panel :namespace="namespace" :state="state" :teams-path="teamsPath" :webhooks-path="webhooksPath" :namespaces-path="namespacesPath"></namespace-details-panel>
     <repositories-panel title="Namespace's repositories" :repositories="repositories" :show-namespaces="false" :repositories-path="repositoriesPath">
       <div slot="heading-right">
         <div v-if="namespace.permissions.push"
@@ -76,7 +68,6 @@
 
   import RepositoriesPanel from '~/modules/repositories/components/panel';
   import WebhooksPanel from '~/modules/webhooks/components/panel';
-  import DeleteNamespaceBtn from '../components/delete-btn';
 
   import NamespaceDetailsPanel from '../components/details';
 
@@ -104,13 +95,15 @@
       webhooksPath: {
         type: String,
       },
+      userNamespaceId: {
+        type: Number,
+      },
     },
 
     components: {
       NamespaceDetailsPanel,
       RepositoriesPanel,
       WebhooksPanel,
-      DeleteNamespaceBtn,
     },
 
     data() {
@@ -121,6 +114,12 @@
       };
     },
 
+    computed: {
+      isSpecial() {
+        return this.namespace.global || this.namespace.id === this.userNamespaceId;
+      },
+    },
+
     methods: {
       onUpdate(namespace) {
         set(this.state, 'editFormVisible', false);
@@ -129,6 +128,7 @@
     },
 
     mounted() {
+      set(this.state, 'isSpecialNamespace', this.isSpecial);
       this.$bus.$on('namespaceUpdated', namespace => this.onUpdate(namespace));
     },
   };

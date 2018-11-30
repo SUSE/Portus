@@ -146,37 +146,68 @@ describe "Namespaces support", type: :system, js: true do
   describe "#update" do
     before do
       visit namespace_path(namespace.id)
-      toggle_edit_namespace_form
     end
 
-    context "invalid fields" do
-      it "shows team not found message" do
-        fill_vue_multiselect(".namespace_team", Team.where(hidden: true).first.name)
-
-        expect(page).to have_content("Oops! No team found.")
+    context "form" do
+      before do
+        toggle_edit_namespace_form
       end
 
-      it "shows team can't be blank message" do
-        deselect_vue_multiselect(".namespace_team", namespace.team.name)
+      context "invalid fields" do
+        it "shows team not found message" do
+          fill_vue_multiselect(".namespace_team", Team.where(hidden: true).first.name)
 
-        expect(page).to have_content("Team can't be blank")
-        expect(page).to have_button("Save", disabled: true)
+          expect(page).to have_content("Oops! No team found.")
+        end
+
+        it "shows team can't be blank message" do
+          deselect_vue_multiselect(".namespace_team", namespace.team.name)
+
+          expect(page).to have_content("Team can't be blank")
+          expect(page).to have_button("Save", disabled: true)
+        end
+      end
+
+      it "updates namespace's team" do
+        select_vue_multiselect(".namespace_team", team2.name)
+        click_button "Save"
+
+        expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
+      end
+
+      it "user updates namespace's description" do
+        fill_in "Description", with: "Cool description"
+        click_button "Save"
+
+        expect(page).to have_content("Cool description")
+        expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
       end
     end
 
-    it "updates namespace's team" do
-      select_vue_multiselect(".namespace_team", team2.name)
-      click_button "Save"
+    context "transfer" do
+      let(:submit_btn) { "I understand, transfer this namespace" }
+      before do
+        toggle_namespace_transfer_modal
+      end
 
-      expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
-    end
+      it "transfers namespace to a new team" do
+        select_vue_multiselect(".namespace_team", team2.name)
+        click_button submit_btn
 
-    it "user updates namespace's description" do
-      fill_in "Description", with: "Cool description"
-      click_button "Save"
+        expect(page).to have_content("Namespace '#{namespace.name}' has been transferred "\
+          "successfully")
+      end
 
-      expect(page).to have_content("Cool description")
-      expect(page).to have_content("Namespace '#{namespace.name}' was updated successfully")
+      it "cannot submit an empty team" do
+        expect(page).to have_button(submit_btn, disabled: true)
+      end
+
+      it "cannot transfer to the same team" do
+        select_vue_multiselect(".namespace_team", team.name)
+
+        expect(page).to have_content("You cannot select the original team")
+        expect(page).to have_button(submit_btn, disabled: true)
+      end
     end
   end
 
@@ -233,6 +264,7 @@ describe "Namespaces support", type: :system, js: true do
       visit namespace_path(namespace)
 
       click_confirm_popover(".namespace-delete-btn")
+      expect(page).to have_current_path(namespaces_path)
       expect(page).to have_content("Namespace removed with all its repositories")
       expect(page).not_to have_link(namespace.clean_name)
     end

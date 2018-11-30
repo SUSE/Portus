@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <span>
     <button
-      class="btn btn-danger namespace-delete-btn"
+      class="btn btn-danger btn-sm namespace-delete-btn"
       data-container="body"
       data-placement="left"
       data-toggle="popover"
@@ -13,9 +13,9 @@
       title="Delete image"
       :disabled="state.isDeleting">
       <i class="fa fa-trash"></i>
-      Delete namespace
+      Delete
     </button>
-  </div>
+  </span>
 </template>
 
 <script>

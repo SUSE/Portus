@@ -3515,6 +3515,10 @@ just-extend@^1.1.27:
   version "1.1.27"
   resolved "https://registry.yarnpkg.com/just-extend/-/just-extend-1.1.27.tgz#ec6e79410ff914e472652abfa0e603c03d60e905"
 
+keycode-js@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/keycode-js/-/keycode-js-1.0.3.tgz#f37334d4c6f63caade93ef899c91c1f6c12f485a"
+
 keyv@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-3.0.0.tgz#44923ba39e68b12a7cec7df6c3268c031f2ef373"

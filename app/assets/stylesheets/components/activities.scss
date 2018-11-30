@@ -70,6 +70,9 @@
       &.repo-pushed {
         background: $activity-repo-pushed;
       }
+      &.change-team {
+        background: $activity-change-team;
+      }
       &.team-created {
         background: $activity-team-created;
       }

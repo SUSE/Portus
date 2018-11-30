@@ -79,6 +79,10 @@ module Helpers
   def toggle_new_member_form
     find(".toggle-link-new-member").click
   end
+
+  def toggle_namespace_transfer_modal
+    find(".toggle-transfer-modal").click
+  end
 end
 
 RSpec.configure { |config| config.include Helpers }

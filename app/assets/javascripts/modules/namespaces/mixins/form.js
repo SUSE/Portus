@@ -6,7 +6,6 @@ import NamespacesService from '../services/namespaces';
 const { set } = Vue;
 
 export default {
-
   components: {
     VueMultiselect,
   },
