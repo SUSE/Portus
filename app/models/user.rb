@@ -60,6 +60,7 @@ class User < ApplicationRecord
 
   # Actions performed before/after create.
   validates :username, presence: true, uniqueness: true
+  validates :password, confirmation: true
   validate :private_namespace_and_team_available, on: :create
   validate :portus_user_validation, on: :update
   after_create :create_personal_namespace!, if: :needs_namespace?

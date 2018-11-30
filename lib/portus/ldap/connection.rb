@@ -24,11 +24,18 @@ module Portus
         raise ::Portus::LDAP::Error, "Some parameters are missing" unless cfg.initialized?
 
         res, admin = bind_admin_or_user(connection, cfg)
-        logged_error_message!(connection, cfg.username) unless res
+        binding_failed!(connection, cfg.username) unless res
         [res, admin]
       end
 
       protected
+
+      # Tries to fallback into the DB, otherwise it logs an error and fails.
+      def binding_failed!(connection, username)
+        return if User.exists?(username: username)
+
+        logged_error_message!(connection, username)
+      end
 
       # If `ldap.admin_base` is enabled, then it tries to bind first on the
       # admin route, and then as a regular user. Otherwise, it tries to bind

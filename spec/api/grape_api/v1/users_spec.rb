@@ -105,20 +105,42 @@ describe API::V1::Users, type: :request do
   describe "POST /api/v1/users" do
     context "with valid params" do
       it "creates new user" do
+        allow_any_instance_of(::Portus::LDAP::Search).to(
+          receive(:with_error_message).and_return(nil)
+        )
+
         post "/api/v1/users", params: { user: user_data }, headers: @header
         expect(response).to have_http_status(:created)
         expect(User.find_by(email: user_data[:email])).not_to be_nil
       end
 
       it "creates a new bot" do
+        allow_any_instance_of(::Portus::LDAP::Search).to(
+          receive(:with_error_message).and_return(nil)
+        )
+
         data = user_data.merge(bot: true)
         post "/api/v1/users", params: { user: data }, headers: @header
         expect(User.find_by(email: data[:email]).bot).to be_truthy
+      end
+
+      it "refuses to create existing LDAP user" do
+        allow_any_instance_of(::Portus::LDAP::Search).to(
+          receive(:with_error_message).and_return("error message")
+        )
+
+        post "/api/v1/users", params: { user: user_data }, headers: @header
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)["message"]).not_to be_nil
       end
     end
 
     context "with invalid params" do
       it "returns errors" do
+        allow_any_instance_of(::Portus::LDAP::Search).to(
+          receive(:with_error_message).and_return(nil)
+        )
+
         post "/api/v1/users", params: {
           user: { username: "", email: "", password: "" }
         }, headers: @header
@@ -127,12 +149,20 @@ describe API::V1::Users, type: :request do
       end
 
       it "returns user error" do
+        allow_any_instance_of(::Portus::LDAP::Search).to(
+          receive(:with_error_message).and_return(nil)
+        )
+
         post "/api/v1/users", headers: @header
         expect(response).to have_http_status(:bad_request)
       end
     end
 
     it "with invalid JSON returns error" do
+      allow_any_instance_of(::Portus::LDAP::Search).to(
+        receive(:with_error_message).and_return(nil)
+      )
+
       headers = @header.merge(
         "Content-Type": "application/json",
         "Accept":       "application/json"

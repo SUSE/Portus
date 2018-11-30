@@ -9,7 +9,7 @@ function setup() {
 @test "LDAP: proper user can login" {
     helper_runner ldap.rb jverdaguer folgueroles
     [ $status -eq 0 ]
-    [[ "${lines[-1]}" =~ "name: jverdaguer, email: , admin: true, display_name:" ]]
+    [[ "${lines[-1]}" =~ "name: jverdaguer, email: , admin: false, display_name:" ]]
 }
 
 @test "LDAP: bad password" {
@@ -66,7 +66,12 @@ function setup() {
 }
 
 @test "LDAP: admin user can login" {
-    helper_runner ldap.rb calbert victorcatala admin_base='cn=admins,dc=example,dc=org'
+    helper_runner ldap.rb calbert victorcatala admin_base='dc=admins,dc=example,dc=org'
     [ $status -eq 0 ]
     [[ "${lines[-1]}" =~ "name: calbert, email: , admin: true, display_name:" ]]
+}
+
+@test "LDAP: DB user can log in" {
+    helper_runner ldap.rb noller lapapallona
+    [ $status -eq 0 ]
 }

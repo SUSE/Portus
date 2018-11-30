@@ -401,7 +401,7 @@ RSpec.describe WebhooksController do
       expect(activity.trackable).to eq(Webhook.last)
     end
 
-    it "tracks set webhook enabled", lala: true do
+    it "tracks set webhook enabled" do
       webhook.update(enabled: false)
 
       expect do
