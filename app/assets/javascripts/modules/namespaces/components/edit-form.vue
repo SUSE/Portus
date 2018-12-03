@@ -1,6 +1,6 @@
 <template>
   <form role="form" class="edit-namespace-form" @submit.prevent="onSubmit" novalidate>
-    <div class="form-group has-feedback" :class="{ 'has-error': $v.namespaceParams.team.$error }">
+    <div class="form-group has-feedback" :class="{ 'has-error': $v.namespaceParams.team.$error }" v-if="!hideTeam">
       <label class="control-label" for="namespace_team">Team</label>
       <vue-multiselect
         class="namespace_team"
@@ -18,6 +18,10 @@
         @search-change="searchTeam">
         <span slot="noResult">Oops! No team found. Consider changing the search query.</span>
       </vue-multiselect>
+      <!-- once we fix the condition to show error messages we merge this with the block below -->
+      <span class="help-block show" v-if="hasTeamChanged">
+        <span class="text-danger">By changing the team you will transfer this namespace. Are you sure?</span>
+      </span>
       <span class="help-block">
         <span v-if="!$v.namespaceParams.team.required">Team can't be blank</span>
       </span>
@@ -53,9 +57,10 @@
   import VisibilityChooser from './visibility-chooser';
 
   export default {
-    template: '#js-edit-namespace-form-tmpl',
-
-    props: ['namespace'],
+    props: {
+      namespace: Object,
+      hideTeam: Boolean,
+    },
 
     mixins: [NamespacesFormMixin],
 
@@ -76,6 +81,13 @@
           team: null,
         },
       };
+    },
+
+    computed: {
+      hasTeamChanged() {
+        return this.namespaceParams.team
+            && this.namespace.team.name !== this.namespaceParams.team;
+      },
     },
 
     methods: {
