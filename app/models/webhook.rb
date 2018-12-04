@@ -63,7 +63,7 @@ class Webhook < ApplicationRecord
     registry = Registry.find_from_event(event)
     return if registry.nil?
 
-    namespace, = Namespace.get_from_name(event["target"]["repository"], registry)
+    namespace, = Namespace.get_from_repository_name(event["target"]["repository"], registry)
     return if namespace.nil?
 
     hydra = Typhoeus::Hydra.hydra

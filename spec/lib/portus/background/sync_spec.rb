@@ -143,24 +143,29 @@ describe ::Portus::Background::Sync do
         expect(tags.map(&:name)).to match_array(["latest"])
       end
 
-      it "handles registries even if there some namespaces missing" do
+      it "handles registries and namespaces even with missing namespaces" do
         VCR.turn_on!
 
         allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
         registry = create(:registry, "hostname" => "registry.test.lan")
 
+        # In this scenario, we have only the global namespace
         VCR.use_cassette("registry/get_registry_catalog_namespace_missing", record: :none) do
           sync = SyncMock.new
           sync.execute!
         end
 
         repos = Repository.all
-        expect(repos.count).to eq 1
-        repo = repos[0]
-        expect(repo.name).to eq "busybox"
+        repo = repos[1]
+        repo_missing = repos[0]
+
+        expect(repos.count).to eq 2
+        expect(repo.full_name).to eq "busybox"
+        expect(repo_missing.full_name).to eq "missing/busybox"
         expect(repo.namespace.id).to eq registry.namespaces.first.id
-        tags = repo.tags
-        expect(tags.map(&:name)).to match_array(["latest"])
+        expect(repo_missing.namespace.name).to eq "missing"
+        expect(repo.tags.map(&:name)).to match_array(["latest"])
+        expect(repo_missing.tags.map(&:name)).to match_array(["latest", "2.0"])
       end
     end
 

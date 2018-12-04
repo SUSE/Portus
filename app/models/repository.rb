@@ -157,7 +157,7 @@ class Repository < ApplicationRecord
   # found, then it returns nil.
   def self.from_catalog(name, create_if_missing = false)
     # If the namespace does not exist, get out.
-    namespace, name = Namespace.get_from_name(name)
+    namespace, name = Namespace.get_from_repository_name(name, nil, create_if_missing)
     return if namespace.nil?
 
     if create_if_missing
@@ -187,9 +187,9 @@ class Repository < ApplicationRecord
 
     # Create missing tags and update current ones.
     client = Registry.get.client
-    portus = User.find_by(username: "portus")
-    update_tags client, repository, portus, repo["tags"] & tags
-    create_tags client, repository, portus, repo["tags"] - tags
+    portus = User.portus
+    update_tags(client, repository, portus, repo["tags"] & tags)
+    create_tags(client, repository, portus, repo["tags"] - tags)
 
     # Finally remove the tags that are left and return the repo.
     to_be_deleted_tags = tags - repo["tags"]

@@ -49,6 +49,11 @@ class Team < ApplicationRecord
     team_users.pluck(:user_id)
   end
 
+  # Returns the main global team
+  def self.global
+    find_by(name: "portus_global_team_1")
+  end
+
   # Returns all teams whose name match the query
   def self.search_from_query(valid_teams, query)
     all_non_special.where(id: valid_teams).where(arel_table[:name].matches(query))

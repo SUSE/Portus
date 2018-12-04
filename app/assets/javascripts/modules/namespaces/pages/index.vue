@@ -21,6 +21,10 @@
       <h5 slot="name">Namespaces you have access to through membership</h5>
     </namespaces-panel>
 
+    <namespaces-panel :namespaces="orphanNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="ons_" :table-sortable="true" v-if="orphanNamespaces.length">
+      <h5 slot="name">Orphan namespaces (no team assigned)</h5>
+    </namespaces-panel>
+
     <namespaces-panel :namespaces="otherNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="ons_" :table-sortable="true" v-if="otherNamespaces.length">
       <h5 slot="name">Other namespaces</h5>
     </namespaces-panel>
@@ -76,7 +80,8 @@
         return this.namespaces.filter((n) => {
           return !n.global
               && n.id !== this.userNamespaceId
-              && this.accessibleTeamsIds.indexOf(n.team.id) === -1;
+              && this.accessibleTeamsIds.indexOf(n.team.id) === -1
+              && n.team.name.indexOf('global_team') === -1;
         });
       },
 
@@ -86,6 +91,13 @@
           return !n.global
               && n.id !== this.userNamespaceId
               && this.accessibleTeamsIds.indexOf(n.team.id) !== -1;
+        });
+      },
+
+      orphanNamespaces() {
+        // eslint-disable-next-line
+        return this.namespaces.filter((n) => {
+          return n.orphan;
         });
       },
 

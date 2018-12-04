@@ -8,7 +8,11 @@ class NamespacePolicy
     @namespace = namespace
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def pull?
+    # If user is portus, it can pull anything
+    return true if user&.portus?
+
     # Even non-logged in users can pull from a public namespace.
     return true if namespace.visibility_public?
 
@@ -24,6 +28,7 @@ class NamespacePolicy
     # Everybody can pull from the global namespace
     namespace.global? || user.admin? || member?
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   alias show? pull?
 
