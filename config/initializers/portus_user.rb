@@ -15,6 +15,6 @@ end
 
 password = Rails.application.secrets.portus_password
 if portus_exists && password.present?
-  portus = User.find_by(username: "portus")
+  portus = User.portus
   portus&.update_attribute("password", Rails.application.secrets.portus_password)
 end

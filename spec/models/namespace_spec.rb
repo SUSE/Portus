@@ -126,7 +126,7 @@ describe Namespace do
     end
   end
 
-  describe "get_from_name" do
+  describe "get_from_repository_name" do
     let!(:registry)    { create(:registry) }
     let!(:owner)       { create(:user) }
     let!(:team)        { create(:team, owners: [owner]) }
@@ -135,13 +135,13 @@ describe Namespace do
 
     it "works for global namespaces" do
       ns = described_class.find_by(global: true)
-      namespace, name = described_class.get_from_name(repo.name)
+      namespace, name = described_class.get_from_repository_name(repo.name)
       expect(namespace.id).to eq ns.id
       expect(name).to eq repo.name
     end
 
     it "works for user namespaces" do
-      ns, name = described_class.get_from_name("#{namespace.name}/#{repo.name}")
+      ns, name = described_class.get_from_repository_name("#{namespace.name}/#{repo.name}")
       expect(ns.id).to eq namespace.id
       expect(name).to eq repo.name
     end
@@ -149,13 +149,14 @@ describe Namespace do
     context "when providing a registry" do
       it "works for global namespaces" do
         ns = described_class.find_by(global: true)
-        namespace, name = described_class.get_from_name(repo.name, registry)
+        namespace, name = described_class.get_from_repository_name(repo.name, registry)
         expect(namespace.id).to eq ns.id
         expect(name).to eq repo.name
       end
 
       it "works for user namespaces" do
-        ns, name = described_class.get_from_name("#{namespace.name}/#{repo.name}", registry)
+        repository_name = "#{namespace.name}/#{repo.name}"
+        ns, name = described_class.get_from_repository_name(repository_name, registry)
         expect(ns.id).to eq namespace.id
         expect(name).to eq repo.name
       end

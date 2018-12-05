@@ -624,7 +624,10 @@ describe Repository do
 
       # Trying to create a repo into an unknown namespace.
       repo = { "name" => "unknown/repo1", "tags" => ["latest", "0.1"] }
-      expect(described_class.create_or_update!(repo)).to be_nil
+      repo = described_class.create_or_update!(repo)
+      expect(repo.name).to eq "repo1"
+      expect(repo.namespace.name).to eq "unknown"
+      expect(repo.tags.map(&:name).sort).to match_array(["latest", "0.1"])
     end
 
     it "doesn't remove tags of same name for different repo" do

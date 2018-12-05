@@ -19,11 +19,10 @@ describe Namespace::AuthScope, type: :model do
     expect(scope.scopes).to match_array(["pull"])
   end
 
-  it "raises an exception when it's not found" do
+  it "returns namespace instance (not persisted) when it's not found" do
     scope = Namespace::AuthScope.new(registry, "registry:mssola/busybox:pull")
-    expect do
-      scope.resource
-    end.to raise_error(Portus::AuthScope::ResourceNotFound)
+    expect(scope.resource.id).to be_nil
+    expect(scope.resource).not_to be_persisted
   end
 
   it "handles the special action *" do

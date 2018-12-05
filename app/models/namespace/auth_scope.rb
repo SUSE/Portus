@@ -5,15 +5,15 @@ class Namespace::AuthScope < Portus::AuthScope
   attr_accessor :actions, :resource_type, :resource_name
 
   def resource
-    found_resource = if @namespace_name.blank?
-                       @registry.namespaces.find_by(global: true)
-                     else
-                       @registry.namespaces.find_by(name: @namespace_name)
-                     end
+    resource = if @namespace_name.blank?
+                 @registry.namespaces.find_by(global: true)
+               else
+                 @registry.namespaces.find_by(name: @namespace_name)
+               end
 
-    raise ResourceNotFound, "Cannot find namespace #{@namespace_name}" if found_resource.nil?
+    resource = Namespace.new(name: @namespace_name) if resource.nil?
 
-    found_resource
+    resource
   end
 
   # Re-impemented to handle the special "*" action. If the action is "*", then

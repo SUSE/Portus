@@ -372,7 +372,9 @@ describe "/v2/token", type: :request do
 
         context "reposity scope" do
           it "responds with 200 and no access" do
-            # force creation of the namespace
+            allow_any_instance_of(NamespacePolicy).to receive(:push?).and_call_original
+            allow_any_instance_of(NamespacePolicy).to receive(:pull?).and_call_original
+
             namespace = create(:namespace,
                                team:     Team.find_by(name: user.username),
                                registry: registry)
@@ -383,6 +385,7 @@ describe "/v2/token", type: :request do
               account: user.username,
               scope:   "repository:#{namespace.name}/busybox:push,pull"
             }, headers: valid_auth_header
+
             expect(response.status).to eq(200)
             payload = parse_token response.body
             expect(payload["access"]).to be_empty

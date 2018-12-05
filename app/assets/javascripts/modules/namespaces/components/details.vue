@@ -3,7 +3,6 @@
     <h5 slot="heading-left">
       <a data-placement="right"
         data-toggle="popover"
-        data-container=".panel-heading"
         data-content="<p>Information about the namespace.</p>"
         data-original-title="What's this?"
         tabindex="0"

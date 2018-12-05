@@ -333,6 +333,14 @@ module API
         type: "Boolean",
         desc: "Whether this is the global namespace or not"
       }
+      # rubocop:disable Style/SymbolProc
+      expose :orphan, documentation: {
+        type: "Boolean",
+        desc: "Whether this is an orphan namespace or not"
+      }, if: { type: :internal } do |namespace|
+        namespace.orphan?
+      end
+      # rubocop:enable Style/SymbolProc
       expose :updatable, documentation: {
         desc: "Boolean that tells if the current user can manage the namespace"
       }, if: { type: :internal } do |namespace, options|

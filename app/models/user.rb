@@ -77,9 +77,9 @@ class User < ApplicationRecord
   has_many :tags, dependent: :nullify
   has_many :comments, dependent: :destroy
 
-  scope :not_portus, -> { where.not username: "portus" }
-  scope :enabled,    -> { not_portus.where enabled: true }
-  scope :admins,     -> { not_portus.where enabled: true, admin: true }
+  scope :not_portus, -> { where.not(username: "portus") }
+  scope :enabled,    -> { not_portus.where(enabled: true) }
+  scope :admins,     -> { not_portus.where(enabled: true, admin: true) }
 
   class <<self
     attr_accessor :skip_portus_validation
@@ -94,6 +94,11 @@ class User < ApplicationRecord
       email:    "portus@portus.com",
       admin:    true
     )
+  end
+
+  # Returns portus user
+  def self.portus
+    find_by(username: "portus")
   end
 
   # Special method used by Devise to require an email on signup. This is always

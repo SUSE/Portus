@@ -5,6 +5,21 @@
       <col class="col-80">
     </colgroup>
     <tbody>
+      <tr v-if="namespace.orphan">
+        <th class="v-align-top">Team</th>
+        <td>
+          None (aka orphan)
+          <a data-placement="right"
+            data-toggle="popover"
+            data-content="<p>An orphan namespace is a namespace that was created automatically
+              via background sync job because it previously existed in your registry when Portus was set up.</p>"
+            data-original-title="What's this?"
+            tabindex="0"
+            data-html="true">
+            <i class="fa fa-info-circle"></i>
+          </a>
+      </td>
+      </tr>
       <tr v-if="!namespace.global && !namespace.team.hidden">
         <th class="v-align-top">Team</th>
         <td><a :href="teamHref">{{ namespace.team.name }}</a></td>

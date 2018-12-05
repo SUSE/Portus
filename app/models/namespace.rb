@@ -58,6 +58,11 @@ class Namespace < ApplicationRecord
     name == "portus"
   end
 
+  # Returns true if namespace is orphan (no public team assigned)
+  def orphan?
+    !global && team.name.include?("global_team")
+  end
+
   # global_namespace_cannot_be_private adds an error and returns false if the
   # visibility of the global namespace is set to private. Otherwise, it returns
   # true. This function is used to validate the visibility.
@@ -74,22 +79,50 @@ class Namespace < ApplicationRecord
   #   1. The namespace where the given repository belongs to.
   #   2. The name of the repository itself.
   # If a registry is provided, it will query it for the given repository name.
-  def self.get_from_name(name, registry = nil)
-    if name.include?("/")
-      namespace, name = name.split("/", 2)
-      namespace = if registry.nil?
-                    Namespace.find_by(name: namespace)
-                  else
-                    registry.namespaces.find_by(name: namespace)
-                  end
+  def self.get_from_repository_name(repo_name, registry = nil, create_if_missing = false)
+    if repo_name.include?("/")
+      namespace_name, repo_name = repo_name.split("/", 2)
+      namespace = get_non_global_namespace(namespace_name, registry)
+      namespace = create_from_name!(namespace_name) if namespace.nil? && create_if_missing
     else
-      namespace = if registry.nil?
-                    Namespace.find_by(global: true)
-                  else
-                    Namespace.find_by(registry: registry, global: true)
-                  end
+      namespace = get_global_namespace(registry)
     end
-    [namespace, name, registry]
+    [namespace, repo_name, registry]
+  end
+
+  # Returns the global namespace based on registry
+  def self.get_global_namespace(registry = nil)
+    if registry.nil?
+      Namespace.find_by(global: true)
+    else
+      registry.namespaces.find_by(global: true)
+    end
+  end
+
+  # Returns a non global namespace based on its name and registry
+  def self.get_non_global_namespace(namespace_name, registry = nil)
+    if registry.nil?
+      Namespace.find_by(name: namespace_name)
+    else
+      registry.namespaces.find_by(name: namespace_name)
+    end
+  end
+
+  # Creates an orphan namespace attached to the global registry and team
+  # with private visibility.
+  def self.create_from_name!(name)
+    namespace = Namespace.new(
+      name:       name,
+      registry:   Registry.get,
+      visibility: Namespace.visibilities[:visibility_private],
+      team:       Team.global
+    )
+
+    namespace = ::Namespaces::CreateService.new(User.portus, namespace).execute
+
+    return unless namespace.persisted?
+
+    namespace
   end
 
   # Tries to transform the given name to a valid namespace name without

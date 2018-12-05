@@ -158,7 +158,7 @@ http_interactions:
       - Mon, 10 Aug 2015 16:06:08 GMT
     body:
       string: |
-        {"name": "missing/busybox", "tags":["latest"]}
+        {"name": "missing/busybox", "tags":["latest", "2.0"]}
   http_version:
   recorded_at: Mon, 10 Aug 2015 16:06:08 GMT
 - request:
