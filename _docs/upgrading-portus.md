@@ -5,6 +5,17 @@ order: 6
 longtitle: How to upgrade Portus across different versions
 ---
 
+## Upgrading from 2.3 to 2.4
+
+<div class="alert alert-info">
+  <strong>Important note</strong>: before doing anything at all, make sure to
+  backup the contents of the database.
+</div>
+
+There's nothing special to be done when moving from 2.3.x to 2.4.x besides some
+configuration changes. You can read about these configuration changes
+[here](https://github.com/SUSE/Portus/blob/master/CHANGELOG.md#configuration-changes).
+
 ## Upgrading from 2.2 to 2.3
 
 <div class="alert alert-info">
