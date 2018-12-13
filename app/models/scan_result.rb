@@ -10,6 +10,10 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
+# Indexes
+#
+#  index_scan_results_on_vulnerability_id_and_tag_id  (vulnerability_id,tag_id)
+#
 
 # Relationship linking tags and vulnerabilities: a scan result involves
 # vulnerabilities for tags.
