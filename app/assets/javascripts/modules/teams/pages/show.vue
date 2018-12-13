@@ -1,6 +1,6 @@
 <template>
   <div class="teams-show-page">
-    <team-details-panel :team="team" :state="teamsState"></team-details-panel>
+    <team-details-panel :team="team" :state="teamsState" :teams-path="teamsPath"></team-details-panel>
     <new-team-member-form :state="teamsState" form-state="membersFormVisible" :team-id="team.id"></new-team-member-form>
     <team-members-panel :members="members" :team="team" :state="teamsState" :current-member="currentMember"></team-members-panel>
     <new-namespace-form :state="namespaceState" form-state="newFormVisible" :team-name="team.name"></new-namespace-form>
@@ -60,6 +60,9 @@
       },
       availableRoles: {
         type: Array,
+      },
+      teamsPath: {
+        type: String,
       },
     },
 

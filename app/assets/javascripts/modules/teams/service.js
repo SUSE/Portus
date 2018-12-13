@@ -36,6 +36,10 @@ function update(team) {
   return resource.update({ id: team.id }, { team });
 }
 
+function remove(id, params) {
+  return resource.delete({ id }, params);
+}
+
 function searchTeam(teamName, options = {}) {
   const params = Object.assign({ teamName }, options);
 
@@ -101,6 +105,7 @@ export default {
   all,
   save,
   update,
+  remove,
   exists,
   searchMember,
   destroyMember,

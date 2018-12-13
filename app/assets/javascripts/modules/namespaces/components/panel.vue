@@ -4,7 +4,7 @@
       <slot name="name"></slot>
     </div>
 
-    <toggle-link slot="heading-right" text="Create new namespace" :state="state" state-key="newFormVisible" class="toggle-link-new-namespace" v-if="canCreate"></toggle-link>
+    <toggle-link slot="heading-right" text="Create" :state="state" state-key="newFormVisible" class="toggle-link-new-namespace" v-if="canCreate"></toggle-link>
 
     <div slot="body">
       <loading-icon v-if="state.isLoading"></loading-icon>

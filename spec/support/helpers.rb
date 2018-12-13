@@ -83,6 +83,10 @@ module Helpers
   def toggle_namespace_transfer_modal
     find(".toggle-transfer-modal").click
   end
+
+  def toggle_team_delete_modal
+    find(".toggle-delete-modal").click
+  end
 end
 
 RSpec.configure { |config| config.include Helpers }
