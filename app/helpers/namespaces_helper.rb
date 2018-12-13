@@ -19,7 +19,7 @@ module NamespacesHelper
     name = activity.parameters[:namespace_name]
 
     if name
-      articled("the ", name, article)
+      articled("the ", content_tag(:strong, name), article)
     elsif activity.trackable && activity.trackable_type == "Namespace"
       articled("the ", link_to(activity.trackable.name, activity.trackable), article)
     else
@@ -36,7 +36,7 @@ module NamespacesHelper
     if activity.trackable_type == "Namespace" && activity.trackable&.team
       content_tag(:span, "the ") + link_to(activity.trackable.team.name, activity.trackable.team)
     elsif name
-      content_tag(:span, "the ") + name
+      content_tag(:span, "the ") + content_tag(:strong, name)
     else
       content_tag(:span, "a")
     end

@@ -115,6 +115,106 @@ describe API::V1::Teams, type: :request do
     end
   end
 
+  context "DELETE /api/v1/teams/:id" do
+    let!(:registry) { create(:registry) }
+
+    before do
+      APP_CONFIG["delete"]["enabled"] = true
+    end
+
+    it "deletes a team" do
+      team = create(:team, owners: [admin])
+
+      delete "/api/v1/teams/#{team.id}", params: nil, headers: @admin_header
+      expect(response).to have_http_status(:no_content)
+      expect { Team.find(team.id) }.to raise_exception(ActiveRecord::RecordNotFound)
+    end
+
+    it "deletes a team and migrate all namespaces" do
+      team = create(:team, owners: [admin])
+      new_team = create(:team, owners: [admin])
+      create(:namespace, name: "espriu", registry: registry, team: team)
+      params = { new_team: new_team.name }
+
+      delete "/api/v1/teams/#{team.id}", params: params, headers: @admin_header
+      expect(response).to have_http_status(:no_content)
+      expect(team.namespaces.count).to be 0
+      expect(new_team.namespaces.count).to be 1
+    end
+
+    it "returns 403 when delete is disabled" do
+      APP_CONFIG["delete"]["enabled"] = false
+
+      team = create(:team, owners: [admin])
+
+      delete "/api/v1/teams/#{team.id}", params: nil, headers: @admin_header
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns 404 when not found" do
+      team = create(:team, owners: [admin])
+
+      delete "/api/v1/teams/#{team.id + 1}", params: nil, headers: @admin_header
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 when new team not found" do
+      team = create(:team, owners: [admin])
+      params = { new_team: "not_found" }
+
+      delete "/api/v1/teams/#{team.id}", params: params, headers: @admin_header
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 422 when namespaces could not be migrated" do
+      team = create(:team, owners: [admin])
+      new_team = create(:team, owners: [admin])
+      create(:namespace, name: "espriu", registry: registry, team: team)
+      params = { new_team: new_team.name }
+
+      allow_any_instance_of(team.namespaces.class).to(receive(:update_all).and_return(false))
+
+      delete "/api/v1/teams/#{team.id}", params: params, headers: @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      body = JSON.parse(response.body)
+      expect(body["message"]).to eq "Could not migrate namespaces"
+    end
+
+    it "returns 422 when the team could not be removed" do
+      allow_any_instance_of(::Teams::DestroyService).to(
+        receive(:destroy_namespaces!).and_return(true)
+      )
+      allow_any_instance_of(Team).to(receive(:delete_by!).and_return(false))
+
+      team = create(:team, owners: [admin])
+      delete "/api/v1/teams/#{team.id}", params: nil, headers: @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      body = JSON.parse(response.body)
+      expect(body["message"]).to eq "Could not remove team"
+    end
+
+    it "returns 422 when a tag could not be removed" do
+      team      = create(:team, owners: [admin])
+      namespace = create(:namespace, name: "espriu", registry: registry, team: team)
+      repo      = create(:repository, namespace: namespace, name: "sinera")
+      create(:tag, repository: repo, name: "cementiri", digest: "1", author: admin)
+
+      allow_any_instance_of(Portus::RegistryClient).to receive(:delete) do
+        raise ::Portus::RegistryClient::RegistryError, "I AM ERROR."
+      end
+
+      delete "/api/v1/teams/#{team.id}", params: nil, headers: @admin_header
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      body = JSON.parse(response.body)
+      expect(body["message"]["espriu"]["espriu/sinera"]).to(
+        eq "Could not remove repository: could not remove cementiri tag(s)"
+      )
+    end
+  end
+
   context "DELETE /api/v1/teams/:id/members/:member_id" do
     let(:user) { create(:user) }
     let(:team) { create(:team, owners: [admin]) }

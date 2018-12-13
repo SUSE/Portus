@@ -8,7 +8,7 @@ li
       h6
         strong
           = "#{activity_owner(activity)} created "
-        - if activity.trackable.orphan?
+        - if activity.trackable.respond_to?(:orphan?) && activity.trackable.orphan?
           = render_namespace_name(activity, true)
           |  namespace automatically (orphan)
         - else

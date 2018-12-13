@@ -1,0 +1,19 @@
+li
+  .activitie-container
+    .activity-type.change-team
+      i.fa.fa-arrow-right
+    .user-image
+      = user_image_tag(activity.owner)
+    .description
+      h6
+        strong
+          = "#{activity_owner(activity)} migrated all namespaces"
+        |  from&nbsp;
+        strong
+          = activity.parameters[:old_team]
+        |  team to&nbsp;
+        = link_to activity_team(activity), activity.trackable
+        |  team
+      small
+        i.fa.fa-clock-o
+        = activity_time_tag activity.created_at
