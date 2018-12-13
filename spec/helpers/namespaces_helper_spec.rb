@@ -31,11 +31,11 @@ RSpec.describe NamespacesHelper, type: :helper do
 
       # Namespace
       text = render_namespace_name(activity)
-      expect(text).to eq "name"
+      expect(text).to eq "<strong>name</strong>"
 
       # Team
       text = render_namespace_team(activity)
-      expect(text).to eq "<span>the </span>#{team.name}"
+      expect(text).to eq "<span>the </span><strong>#{team.name}</strong>"
     end
   end
 

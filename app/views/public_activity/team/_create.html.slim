@@ -8,7 +8,11 @@ li
       h6
         strong
           = "#{activity_owner(activity)} created team "
-        = link_to activity_team(activity), activity.trackable
+        - if activity.trackable_type == "Team"
+          = link_to activity_team(activity), activity.trackable
+        - else
+          strong
+            = "'#{activity_team(activity)}'"
       small
         i.fa.fa-clock-o
         = activity_time_tag activity.created_at

@@ -38,9 +38,14 @@ class TeamUser < ApplicationRecord
   belongs_to :user
 
   # Create the activity regarding this team member. If no parameters are
-  # specified, then it's assumed: { role: role }.
+  # specified, then it's assumed: { role: role, team: team.name }.
   def create_activity!(type, owner, parameters = nil)
-    params = parameters ? parameters.merge(role: role) : { role: role }
+    params = if parameters
+               parameters.merge(role: role, team: team.name)
+             else
+               { role: role, team: team.name }
+             end
+
     team.create_activity type, owner: owner, recipient: user, parameters: params
   end
 

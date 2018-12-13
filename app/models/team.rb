@@ -19,6 +19,7 @@
 class Team < ApplicationRecord
   include PublicActivity::Common
   include SearchCop
+  include ::Activity::Fallback
 
   search_scope :search do
     attributes :name, :description
@@ -47,6 +48,23 @@ class Team < ApplicationRecord
   # Returns all the member-IDs
   def member_ids
     team_users.pluck(:user_id)
+  end
+
+  # Tries to delete a team and, on success, it will create delete
+  # activities and update related ones. This method assumes that all
+  # namespaces, repositories and tags under this team have already
+  # been destroyed.
+  def delete_by!(actor)
+    destroy ? create_delete_activities!(actor) : false
+  end
+
+  def create_delete_activities!(actor)
+    registry = Registry.get
+
+    fallback_activity(Registry, registry.id)
+
+    # Add a "delete" activity
+    registry.create_activity(:remove_team, owner: actor, parameters: { team: name })
   end
 
   # Returns the main global team
