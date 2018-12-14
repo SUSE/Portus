@@ -11,17 +11,17 @@ subproject contains the related Portus version with its dependencies (build and
 runtime dependencies).
 
 The `portus` package contains the `spec` file and some patches. The `spec` file
-is produced with the `make_spec.rb` script like this:
+is produced with the `make_spec.sh` script like this:
 
 ```bash
-$ ./make_spec.rb portus
+$ ./make_spec.sh portus
 ```
 
 This generated file is then used in OBS. That being said, in the `master` branch
 we allow Travis CI to do this. On a successful Travis CI build, the
 `package_and_push_to_obs.sh` script will be run. This script will:
 
-- Call `make_spec.rb` and push the generated `spec` file.
+- Call `make_spec.sh` and push the generated `spec` file.
 - Push the patches inside of the `patches` directory.
 
 ## Ruby and Javascript dependencies
