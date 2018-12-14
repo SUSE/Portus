@@ -8,6 +8,7 @@ describe "Teams support", type: :system, js: true do
   let!(:another_user) { create(:user) }
   let!(:team) { create(:team, owners: [admin]) }
   let!(:team2) { create(:team, owners: [another_user]) }
+  let!(:namespace) { create(:namespace, team: team, registry: registry) }
 
   before do
     login_as admin, scope: :user
@@ -139,6 +140,56 @@ describe "Teams support", type: :system, js: true do
         expect(page).to have_content("Name is reserved or has already been taken")
         expect(page).to have_button("Save", disabled: true)
       end
+    end
+  end
+
+  context "#destroy" do
+    let(:delete_migrate_btn) { "Migrate namespaces and delete team" }
+
+    before do
+      APP_CONFIG["delete"] = { "enabled" => true }
+      visit team_path(team)
+      toggle_team_delete_modal
+    end
+
+    it "deletes team with namespaces" do
+      click_button "Delete team and its namespaces"
+
+      expect(page).to have_content("Team '#{team.name}' was removed successfully")
+    end
+
+    it "deletes team without namespaces" do
+      visit team_path(team2)
+      toggle_team_delete_modal
+      click_button "I understand, delete team"
+
+      expect(page).to have_content("Team '#{team2.name}' was removed successfully")
+    end
+
+    it "deletes team migrating all its namespaces" do
+      select_vue_multiselect(".team_select", team2.name)
+      click_button delete_migrate_btn
+
+      expect(page).to have_content("Team '#{team.name}' was removed successfully and its "\
+        "namespaces were migrated to '#{team2.name}'")
+      expect(page).to have_current_path(teams_path)
+
+      visit team_path(team2)
+      expect(page).to have_link(namespace.name)
+    end
+
+    it "cannot migrate namespaces to the same team" do
+      select_vue_multiselect(".team_select", team.name)
+
+      expect(page).to have_content("You cannot select the original team")
+      expect(page).to have_button(delete_migrate_btn, disabled: true)
+    end
+
+    it "doesn't show delete options if delete is disabled" do
+      APP_CONFIG["delete"] = { "enabled" => false }
+      visit team_path(team)
+
+      expect(page).not_to have_css(".toggle-delete-modal")
     end
   end
 

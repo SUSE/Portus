@@ -30,6 +30,11 @@ describe "Teams::MigrationService" do
       service.execute(team, new_team)
       expect(service.error).to eq "Could not migrate namespaces"
     end
+
+    it "stores the error if same team" do
+      service.execute(team, team)
+      expect(service.error).to eq "You cannot choose the same team to migrate namespaces"
+    end
   end
 
   context "without params" do

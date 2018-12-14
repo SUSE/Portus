@@ -19,6 +19,10 @@ module API
       def can_manage_team?(team, user)
         TeamPolicy.new(user, team).update?
       end
+
+      def can_destroy_team?(team, user)
+        TeamPolicy.new(user, team).destroy?
+      end
     end
   end
 end

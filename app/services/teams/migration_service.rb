@@ -9,6 +9,8 @@ module Teams
 
       return false if team.namespaces.empty?
 
+      return false if same_team?(team, new_team)
+
       migrate_namespaces!(team, new_team)
     end
 
@@ -28,6 +30,11 @@ module Teams
     def create_activity!(team, new_team)
       p = { old_team: team.name, team: new_team.name }
       new_team.create_activity(:migration, owner: current_user, parameters: p)
+    end
+
+    def same_team?(team, new_team)
+      @error = "You cannot choose the same team to migrate namespaces" if team.id == new_team.id
+      @error.present?
     end
   end
 end

@@ -13,7 +13,7 @@
       Members
     </h5>
 
-    <toggle-link slot="heading-right" text="Add members" :state="state" state-key="membersFormVisible" class="toggle-link-new-member"></toggle-link>
+    <toggle-link slot="heading-right" text="Add member" :state="state" state-key="membersFormVisible" class="toggle-link-new-member"></toggle-link>
 
     <div slot="body" class="table-responsive">
       <team-members-table :members="members" sort-by="display_name" :current-member="currentMember"></team-members-table>
