@@ -146,7 +146,7 @@ module API
         type: Integer,
         desc: "The repository's registry hostname. Prioritizes external hostname value" \
               "if present, otherwise internal hostname is shown"
-      }, if: { type: :internal } do |repository|
+      }, if: :type do |repository|
         repository.registry.reachable_hostname
       end
       expose :stars, documentation: {
@@ -164,19 +164,19 @@ module API
       expose :tags, documentation: {
         is_array: true,
         desc:     "The repository's tags grouped by digest"
-      }, if: { type: :internal } do |repository|
+      }, if: { type: :search } do |repository|
         repository.groupped_tags.map do |k1|
           API::Entities::Tags.represent(k1)
         end
       end
       expose :starred, documentation: {
         desc: "Boolean that tells if the current user starred the repository"
-      }, if: { type: :internal } do |repository, options|
+      }, if: :type do |repository, options|
         repository.starred_by?(options[:current_user])
       end
       expose :destroyable, documentation: {
         desc: "Boolean that tells if the current user can destroy or not the repository"
-      }, if: { type: :internal } do |repository, options|
+      }, if: :type do |repository, options|
         user = options[:current_user]
         can_destroy_repository?(repository, user) if user
       end
