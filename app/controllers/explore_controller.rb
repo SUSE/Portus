@@ -19,7 +19,7 @@ class ExploreController < ActionController::Base
     if @current
       repository    = @current.split(":").first
       repositories  = policy_scope(Repository).includes(:stars).search(repository)
-      @repositories = API::Entities::Repositories.represent(repositories, type: :internal).to_json
+      @repositories = API::Entities::Repositories.represent(repositories, type: :search).to_json
     else
       @repositories = []
     end
