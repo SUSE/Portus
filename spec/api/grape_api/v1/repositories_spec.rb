@@ -43,6 +43,7 @@ describe API::V1::Repositories do
       expect(response).to have_http_status(:success)
       expect(repository_parsed["id"]).to eq(repository.id)
       expect(repository_parsed["name"]).to eq(repository.name)
+      expect(repository_parsed["tags"]).to be_nil
     end
 
     it "returns 404 if it doesn't exist" do
