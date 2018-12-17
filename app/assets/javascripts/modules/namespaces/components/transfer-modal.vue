@@ -15,7 +15,8 @@
     </template>
 
     <template slot="body">
-      <p>You are about to transfer the <strong>{{ namespace.name }}</strong> namespace from the <strong>{{ namespace.team.name }}</strong> team. Please select the new team below:</p>
+      <p v-if="namespace.orphan">You are about to transfer the <strong>{{ namespace.name }}</strong> namespace. Please select the new team below:</p>
+      <p v-else>You are about to transfer the <strong>{{ namespace.name }}</strong> namespace from the <strong>{{ namespace.team.name }}</strong> team. Please select the new team below:</p>
 
       <form role="form" class="edit-namespace-form" novalidate>
         <div class="form-group has-feedback" :class="{ 'has-error': $v.namespaceParams.team.$error }">

@@ -89,6 +89,7 @@
         // eslint-disable-next-line
         return this.namespaces.filter((n) => {
           return !n.global
+              && !n.orphan
               && n.id !== this.userNamespaceId
               && this.accessibleTeamsIds.indexOf(n.team.id) !== -1;
         });
