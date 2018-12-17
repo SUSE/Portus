@@ -77,16 +77,11 @@ Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi}
 BuildRequires: libcurl-devel
 Requires: libcurl4
 BuildRequires: libffi-devel
-%if 0%{?suse_version} <= 1320
-BuildRequires: libmysqlclient-devel < 10.1
-Requires: libmysqlclient18 < 10.1
-%else
-BuildRequires: libmysqlclient-devel
-Requires: libmysqlclient18
-%endif
 BuildRequires: libxml2-devel libxslt-devel
+
+# DB-related libraries.
+BuildRequires: mysql-devel
 BuildRequires: postgresql-devel
-Requires: postgresql-devel
 
 Requires: %rb_default_ruby_suffix
 BuildRequires:  %rb_default_ruby_suffix %{rb_default_ruby_suffix}-rubygem-gem2rpm
