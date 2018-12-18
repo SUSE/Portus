@@ -13,7 +13,7 @@ module WithPagination
   # Adds some default pagination parameters.
   def default_pagination_params
     params[:page] ||= 1
-    params[:per_page] = APP_CONFIG["pagination"]["per_page"]
+    params[:per_page] = APP_CONFIG["pagination"]["limit"] || APP_CONFIG["pagination"]["per_page"]
   end
 
   def header(header, value)

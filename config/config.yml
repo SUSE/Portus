@@ -392,6 +392,9 @@ background:
 
 # Pagination configuration
 pagination:
+  # Number of entries to be listed per page (deprecated)
+  limit: 10
+
   # Number of entries to be listed per page
   per_page: 10
 

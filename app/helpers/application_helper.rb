@@ -57,7 +57,7 @@ module ApplicationHelper
 
   # Returns pagination limit config
   def pagination_per_page
-    APP_CONFIG["pagination"]["per_page"]
+    APP_CONFIG["pagination"]["limit"] || APP_CONFIG["pagination"]["per_page"]
   end
 
   # Returns pagination before after config
