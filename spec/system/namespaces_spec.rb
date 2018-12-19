@@ -10,6 +10,9 @@ describe "Namespaces support", type: :system, js: true do
   let!(:team) { create(:team, owners: [user], contributors: [user2], viewers: [user3]) }
   let!(:team2) { create(:team, owners: [user]) }
   let!(:namespace) { create(:namespace, team: team, registry: registry) }
+  let!(:orphan_namespace) do
+    create(:namespace, team: registry.global_namespace.team, registry: registry)
+  end
 
   before do
     login_as user, scope: :user
@@ -19,6 +22,12 @@ describe "Namespaces support", type: :system, js: true do
     before do
       visit namespaces_path
       toggle_new_namespace_form
+    end
+
+    it "shows proper namespace and orphan one submit button" do
+      expect(page).to have_link(orphan_namespace.name, count: 1)
+      expect(page).to have_link(namespace.name, count: 1)
+      expect(page).to have_content("Orphan namespaces (no team assigned)")
     end
 
     context "invalid fields" do
@@ -196,6 +205,13 @@ describe "Namespaces support", type: :system, js: true do
 
         expect(page).to have_content("Namespace '#{namespace.name}' has been transferred "\
           "successfully")
+      end
+
+      it "doesn't show global team on modal if orphan" do
+        visit namespace_path(orphan_namespace)
+        toggle_namespace_transfer_modal
+
+        expect(page).not_to have_content("namespace from the #{orphan_namespace.team.name} team")
       end
 
       it "cannot submit an empty team" do
