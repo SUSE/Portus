@@ -1,32 +1,23 @@
-const AVAILABLE_BACKENDS = ['clair', 'zypper', 'dummy'];
-
-const parse = function (vulnerabilities) {
+const countBySeverities = function (vulnerabilities) {
   const severities = {
-    High: 0,
-    Normal: 0,
+    Negligible: 0,
+    Unknown: 0,
     Low: 0,
+    Medium: 0,
+    High: 0,
+    Critical: 0,
+    Defcon1: 0,
   };
-  let total = 0;
 
   if (vulnerabilities) {
-    AVAILABLE_BACKENDS.forEach((backend) => {
-      if (!vulnerabilities[backend]) {
-        return;
-      }
-
-      vulnerabilities[backend].forEach((vul) => {
-        severities[vul.severity] += 1;
-        total += 1;
-      });
+    vulnerabilities.forEach((vul) => {
+      severities[vul.severity] += 1;
     });
   }
 
-  return {
-    total,
-    severities,
-  };
+  return severities;
 };
 
 export default {
-  parse,
+  countBySeverities,
 };

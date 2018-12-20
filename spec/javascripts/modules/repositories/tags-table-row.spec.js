@@ -19,9 +19,7 @@ describe('tags-table-row', () => {
       created_at: '2018-02-06T12:54:31.000Z',
       updated_at: '2018-02-06T12:54:31.000Z',
       scanned: 2,
-      vulnerabilities: {
-        clair: [],
-      },
+      vulnerabilities: [],
     },
   ];
 
@@ -79,6 +77,6 @@ describe('tags-table-row', () => {
   });
 
   it('shows # of vulnerabilities if security scan finished', () => {
-    expect(wrapper.find('.vulns').text()).toBe('0 vulnerabilities');
+    expect(wrapper.find('.vulns').text()).toBe('Passed');
   });
 });

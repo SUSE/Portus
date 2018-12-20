@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button type="button" class="btn btn-danger tag-delete-btn" @click="deleteTags()" :disabled="state.isDeleting" v-if="state.selectedTags.length > 0">
+    <button type="button" class="btn btn-danger btn-sm tag-delete-btn" @click="deleteTags()" :disabled="state.isDeleting" v-if="state.selectedTags.length > 0">
       <i class="fa fa-trash"></i>
       Delete {{ tagNormalized }}
     </button>

@@ -122,12 +122,13 @@ module API
         desc: "Whether vulnerabilities have been scanned or not. The values available are: " \
               "0 (not scanned), 1 (work in progress) and 2 (scanning done)."
       }
+      # rubocop:disable Style/SymbolProc
       expose :vulnerabilities, documentation: {
         desc: "A hash of vulnerabilities for this tag, or null if the feature is not enabled"
-      } do |t|
-        vulns = t.fetch_vulnerabilities
-        vulns&.group_by(&:scanner)
+      } do |tag|
+        tag.fetch_vulnerabilities
       end
+      # rubocop:enable Style/SymbolProc
     end
 
     class Repositories < Grape::Entity
