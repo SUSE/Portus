@@ -7,7 +7,7 @@
         <col class="col-20">
         <col class="col-10">
         <col class="col-15">
-        <col class="col-10" v-if="securityEnabled">
+        <col width="170px" v-if="securityEnabled">
       </colgroup>
       <thead>
         <tr>
@@ -15,7 +15,7 @@
           <th>Tag</th>
           <th>Author</th>
           <th>Image</th>
-          <th>Pushed at</th>
+          <th>Last modified</th>
           <th v-if="securityEnabled">Security</th>
         </tr>
       </thead>
@@ -53,6 +53,12 @@
       filteredTags() {
         return this.tags.slice(this.offset, this.perPage * this.currentPage);
       },
+    },
+
+    mounted() {
+      if ($.fn.tooltip) {
+        $('.has-tooltip').tooltip();
+      }
     },
   };
 </script>

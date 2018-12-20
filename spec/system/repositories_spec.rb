@@ -4,7 +4,7 @@ require "rails_helper"
 
 def find_tag_checkbox(name)
   tag = find("div", text: /\A#{name}\z/)
-  tag.find(:xpath, "../..").find("input[type='checkbox']")
+  tag.find(:xpath, "../..").find(".pretty-checkbox")
 end
 
 describe "Feature: Repositories" do
@@ -164,7 +164,7 @@ describe "Feature: Repositories" do
 
       it "reports vulnerabilities" do
         visit repository_path(repository)
-        expect(page).to have_content("2 vulnerabilities")
+        expect(page).to have_content("2 High - 2 total")
       end
     end
 
@@ -291,8 +291,8 @@ describe "Feature: Repositories" do
             visit repository_path(repository)
 
             expect(page).not_to have_content("Delete tags")
-            find("tbody tr input[type='checkbox']", match: :first)
-            all("tbody tr input[type='checkbox']").each(&:click)
+            find("tbody tr .pretty-checkbox", match: :first)
+            all("tbody tr .pretty-checkbox").each(&:click)
             expect(page).to have_content("Delete tags")
             find(".tag-delete-btn").click
             expect(page).to have_content("Repository removed with all its tags")

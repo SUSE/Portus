@@ -21,9 +21,7 @@ describe('tags-table', () => {
       created_at: '2018-02-06T12:54:31.000Z',
       updated_at: '2018-02-06T12:54:31.000Z',
       scanned: 2,
-      vulnerabilities: {
-        clair: [],
-      },
+      vulnerabilities: [],
     },
   ]);
 

@@ -2,13 +2,22 @@
   .selected td {
     background-color: #e8f1f6;
   }
+
+  .vulns-link {
+    text-decoration: none;
+  }
+
+  .image-id {
+    font-family: monospace;
+  }
 </style>
 
 <template>
   <tr :class="{ 'selected': selected }">
     <td v-if="canDestroy">
-      <input type="checkbox" v-model="selected" @change="toggleTag()">
+      <checkbox v-model="selected" @change="toggleTag()"></checkbox>
     </td>
+
     <td>
       <tag v-for="t in tag" :key="t.name" :tag="t" :repository="repository"></tag>
     </td>
@@ -22,13 +31,17 @@
       </span>
     </td>
 
-    <td>{{ pushedAt }}</td>
+    <td>
+      <span data-placement="top" :title="pushedAtFull" class="has-tooltip">
+        {{ pushedAt }}
+      </span>
+    </td>
 
     <td class="vulns" v-if="securityEnabled">
       <span v-if="scanPending">Pending</span>
       <span v-if="scanInProgress">In progress</span>
-      <a :href="tagLink" v-if="scanDone">
-        {{ vulns }} vulnerabilities
+      <a :href="tagLink" v-if="scanDone" class="vulns-link" title="Click for details">
+        <vulnerabilities-preview :vulnerabilities="this.tag[0].vulnerabilities"></vulnerabilities-preview>
       </a>
     </td>
   </tr>
@@ -38,8 +51,8 @@
   import dayjs from 'dayjs';
 
   import Tag from './tag';
-
-  import VulnerabilitiesParser from '../../services/vulnerabilities-parser';
+  import VulnerabilitiesPreview from './vulnerabilities-preview';
+  import Checkbox from '~/shared/components/checkbox';
 
   const NOT_SCANNED = 0;
   const SCAN_DONE = 2;
@@ -57,6 +70,8 @@
 
     components: {
       Tag,
+      Checkbox,
+      VulnerabilitiesPreview,
     },
 
     data() {
@@ -95,16 +110,12 @@
         return `${this.tagsPath}/${this.tag[0].id}`;
       },
 
-      vulns() {
-        const vulns = VulnerabilitiesParser.parse(this.tag[0].vulnerabilities);
-
-        // TODO: proper doughnut chart
-        // https://github.com/apertureless/vue-chartjs
-        return vulns.total;
+      pushedAt() {
+        return dayjs(this.tag[0].updated_at).fromNow();
       },
 
-      pushedAt() {
-        return dayjs(this.tag[0].updated_at).format('MMMM DD, YYYY HH:mm');
+      pushedAtFull() {
+        return dayjs(this.tag[0].updated_at).format('MMMM DD, YYYY hh:mm A');
       },
     },
 
