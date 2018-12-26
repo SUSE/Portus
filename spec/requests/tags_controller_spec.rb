@@ -23,11 +23,5 @@ describe TagsController do
       expect(assigns(:tag)).to eq(tag)
       expect(response.status).to eq 200
     end
-
-    it "assigns the tag's vulnerabilities as @vulnerabilities" do
-      get tag_url(tag.to_param)
-      expect(assigns(:vulnerabilities)["clair"]).to eq([vulnerability])
-      expect(response.status).to eq 200
-    end
   end
 end

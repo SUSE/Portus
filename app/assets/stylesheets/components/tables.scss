@@ -38,3 +38,25 @@
     cursor: default;
   }
 }
+
+.table-striped.table-multiple-tbody {
+  > tbody {
+    &:not(:first-child) {
+      border-top: none;
+    }
+
+    &:nth-of-type(odd) tr {
+      background-color: #f9f9f9 !important;
+    }
+
+    > tr {
+      &:hover {
+        background-color: transparent;
+      }
+
+      &:nth-of-type(odd) {
+        background-color: transparent;
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+.vulnerabilities-summary {
+  .highlight {
+    font-size: 16px;
+  }
+
+  .list {
+    list-style: none;
+    padding-left: 0;
+    font-size: 14px;
+
+    li {
+      margin-bottom: 3px;
+    }
+
+    strong {
+      width: 25px;
+      text-align: right;
+      display: inline-block;
+    }
+  }
+}

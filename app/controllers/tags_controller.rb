@@ -2,11 +2,15 @@
 
 class TagsController < ApplicationController
   def show
-    @tag = Tag.find(params[:id])
+    @tag = Tag.includes(:repository, :namespace).find(params[:id])
+    @repository = @tag.repository
+    @namespace = @tag.repository.namespace
     authorize @tag
 
-    @names = Tag.where(digest: @tag.digest).sort.map(&:name)
-    vulns = @tag.fetch_vulnerabilities
-    @vulnerabilities = vulns ? vulns.group_by(&:scanner) : nil
+    @tag_serialized = API::Entities::Tags.represent(
+      @tag,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
   end
 end

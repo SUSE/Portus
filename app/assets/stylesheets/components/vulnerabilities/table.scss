@@ -1,0 +1,31 @@
+.vulnerabilities-table {
+  .fa-link {
+    margin-left: 5px;
+  }
+
+  .col-caret {
+    padding-right: 1px;
+
+    .fa {
+      padding: 0 3px;
+      cursor: pointer;
+    }
+  }
+
+  .vulnerability-details {
+    td {
+      padding: 17px 10px;
+    }
+
+    .title {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .description {
+      margin-bottom: 0;
+    }
+  }
+}

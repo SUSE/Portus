@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 
-import VulnerabilitiesPreview from '~/modules/repositories/components/tags/vulnerabilities-preview';
+import VulnerabilitiesPreview from '~/modules/vulnerabilities/components/preview';
 
 describe('vulnerabilities-preview', () => {
   let wrapper;
@@ -15,7 +15,7 @@ describe('vulnerabilities-preview', () => {
 
   context('when no vulnerabilities', () => {
     it('shows passed', () => {
-      expect(wrapper.find('.passed').text()).toBe('Passed');
+      expect(wrapper.find('.severity-passed').text()).toBe('Passed');
     });
   });
 
@@ -29,7 +29,7 @@ describe('vulnerabilities-preview', () => {
       ];
 
       wrapper.setProps({ vulnerabilities });
-      expect(wrapper.find('.highlight').text()).toBe('2 High');
+      expect(wrapper.find('.severity-high').text()).toBe('2 High');
       expect(wrapper.find('.total').text()).toBe('4 total');
     });
 
@@ -43,7 +43,7 @@ describe('vulnerabilities-preview', () => {
       ];
 
       wrapper.setProps({ vulnerabilities });
-      expect(wrapper.find('.highlight').text()).toBe('1 Critical');
+      expect(wrapper.find('.severity-critical').text()).toBe('1 Critical');
       expect(wrapper.find('.total').text()).toBe('5 total');
     });
   });

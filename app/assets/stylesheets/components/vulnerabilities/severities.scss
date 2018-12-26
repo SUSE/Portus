@@ -1,0 +1,26 @@
+.severity {
+  &-critical,
+  &-defcon1 {
+    color: #B9121B;
+  }
+
+  &-high {
+    color: #FF5E38;
+  }
+
+  &-medium {
+    color: #f28c33;
+  }
+
+  &-low {
+    color: #f8ca1c;
+  }
+
+  &-unknown {
+    color: #5b5b5b;
+  }
+
+  &-passed {
+    color: #5cb85c;
+  }
+}
