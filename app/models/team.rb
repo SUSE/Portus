@@ -4,12 +4,13 @@
 #
 # Table name: teams
 #
-#  id          :integer          not null, primary key
-#  name        :string(255)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  hidden      :boolean          default(FALSE)
-#  description :text(65535)
+#  id                 :integer          not null, primary key
+#  name               :string(255)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  hidden             :boolean          default(FALSE)
+#  description        :text(65535)
+#  ldap_group_checked :integer          default(0)
 #
 # Indexes
 #
@@ -20,6 +21,8 @@ class Team < ApplicationRecord
   include PublicActivity::Common
   include SearchCop
   include ::Activity::Fallback
+
+  enum ldap_status: { unchecked: 0, checked: 1, disabled: 2 }
 
   search_scope :search do
     attributes :name, :description
@@ -94,5 +97,40 @@ class Team < ApplicationRecord
     end
 
     name
+  end
+
+  # Checks whether the current team exists on the LDAP server as a group. If so,
+  # it will add users that already exist on the database into this team as team
+  # members (with the given ldap.group_sync_default_role role, unless the user
+  # is a Portus administrator, in which case it will be added as an owner).
+  def ldap_add_members!
+    Rails.logger.tagged(:ldap) { Rails.logger.info "Looking up an LDAP group matching '#{name}'" }
+
+    portus_user = User.portus
+    usernames   = users.map(&:username)
+
+    ::Portus::LDAP::Search.new.find_group_and_members(name).each do |member|
+      next if usernames.include?(member)
+      next unless User.exists?(username: member)
+
+      add_team_member!(portus_user, member)
+    end
+
+    update_attributes!(ldap_group_checked: Team.ldap_statuses[:checked])
+  end
+
+  # If possible, add the user with the given username into the team. The
+  # activity will set the given author as the tracker.
+  def add_team_member!(author, username)
+    role = APP_CONFIG["ldap"]["group_sync"]["default_role"]
+    params = { id: id, role: TeamUser.roles[role], user: username }
+
+    team_user = ::TeamUsers::BuildService.new(author, params).execute
+    team_user = ::TeamUsers::CreateService.new(author, team_user).execute
+    return if team_user.valid? && team_user.persisted?
+
+    Rails.logger.tagged(:ldap) do
+      Rails.logger.warn "Could not add team member: #{team_user.errors.full_messages.join(", ")}"
+    end
   end
 end

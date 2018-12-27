@@ -12,6 +12,7 @@
 #
 
 require "portus/background/garbage_collector"
+require "portus/background/ldap"
 require "portus/background/registry"
 require "portus/background/security_scanning"
 require "portus/background/sync"
@@ -20,7 +21,8 @@ they = [
   ::Portus::Background::Registry.new,
   ::Portus::Background::SecurityScanning.new,
   ::Portus::Background::Sync.new,
-  ::Portus::Background::GarbageCollector.new
+  ::Portus::Background::GarbageCollector.new,
+  ::Portus::Background::LDAP.new
 ].select(&:enabled?)
 
 values = they.map { |v| "'#{v}'" }.join(", ")
