@@ -23,7 +23,7 @@ rescue StandardError
   portus_exists = false
 end
 
-if portus_exists && !Registry.any?
+if portus_exists && Registry.none?
   params = {
     name:     ENV["PORTUS_INIT_REGISTRY_NAME"] || "registry",
     hostname: ENV["PORTUS_INIT_REGISTRY_HOSTNAME"] || "",

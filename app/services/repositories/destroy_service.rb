@@ -33,7 +33,7 @@ module Repositories
         ::Tags::DestroyService.new(current_user).execute(t.first)
       end
 
-      destroyed_tags = !repository.reload.tags.any?
+      destroyed_tags = repository.reload.tags.none?
       unless destroyed_tags
         remaining_tags = repository.tags.pluck(:name).join(", ")
         @error = "Could not remove repository: could not remove #{remaining_tags} tag(s)"
