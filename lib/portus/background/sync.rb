@@ -26,7 +26,7 @@ module Portus
         when "on-start"
           !@executed
         when "initial"
-          !@executed && !Repository.any?
+          !@executed && Repository.none?
         else
           Rails.logger.error "Unrecognized value '#{val}' for strategy"
           false

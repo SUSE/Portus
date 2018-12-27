@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class Auth::RegistrationsController < Devise::RegistrationsController
   layout "authentication", except: :edit
 
@@ -151,3 +152,4 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     signed_in_root_path(resource)
   end
 end
+# rubocop:enable Metrics/ClassLength

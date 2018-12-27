@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 module API
   module V1
     class Teams < Grape::API
@@ -289,4 +288,3 @@ module API
     end
   end
 end
-# rubocop:enable Metrics/ClassLength

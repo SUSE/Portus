@@ -10,7 +10,7 @@ class Admin::RegistriesController < Admin::BaseController
   def index
     @registries = Registry.all
 
-    redirect_to new_admin_registry_url unless Registry.any?
+    redirect_to new_admin_registry_url if Registry.none?
   end
 
   # GET /admin/registries/new
@@ -46,7 +46,7 @@ class Admin::RegistriesController < Admin::BaseController
   # Note that the admin will only be able to edit the hostname if there are no
   # repositories.
   def edit
-    @can_change_hostname = !Repository.any?
+    @can_change_hostname = Repository.none?
     @registry            = Registry.find(params[:id])
     @registry_serialized = API::Entities::Registries.represent(
       @registry,
@@ -70,7 +70,7 @@ class Admin::RegistriesController < Admin::BaseController
       redirect_to admin_registries_path, notice: "Registry updated successfully!"
     else
       flash[:alert] = svc.messages
-      @can_change_hostname = !Repository.any?
+      @can_change_hostname = Repository.none?
       render "edit", status: :unprocessable_entity
     end
   end

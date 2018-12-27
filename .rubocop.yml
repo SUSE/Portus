@@ -39,14 +39,13 @@ Metrics/BlockLength:
     - lib/api/**/*
     - lib/tasks/**/*
 
-# NOTE: this could be further trimmed down but the following refactorings are
-# needed:
-#   1. The Grape API classes should be further modularized (probably in helper
-#      modules).
-#   2. The models regarding the registry have to be modularized.
-#   3. LDAP has to be refactored.
+# Some classes (e.g. API) are either too difficult to modularize in a reasonable
+# (readable) manner, or are intentionally fat (e.g. some models). Let's leave
+# out these kinds of classes from this cop.
 Metrics/ClassLength:
-  Max: 210
+  Exclude:
+    - app/models/**/*
+    - lib/api/**/*
 
 # The default is just too small. A limit of 100 looks reasonable and many other
 # projects (including inside of SUSE) are also using this value.
@@ -77,11 +76,6 @@ Rails/SkipsModelValidations:
 Style/Documentation:
   Enabled: false
 
-# NOTE: this is giving false positives because it assumes some Rails 5 methods
-# are available.
-Style/InverseMethods:
-  Enabled: false
-
 # This forces us to create a new object for no real reason.
 Style/MultipleComparison:
   Enabled: false
@@ -100,12 +94,6 @@ Style/StringLiteralsInInterpolation:
 # make sure there are no clashes or misunderstandings). Therefore, we just
 # disable this cop.
 Style/ClassAndModuleChildren:
-  Enabled: false
-
-# This was added in rubocop 0.60, but as seen on a couple of issues upstream, it
-# is not too clear why this cop is needed (DateTime might make sense on some
-# ruby versions). So, it's better to disable this for now.
-Style/DateTime:
   Enabled: false
 
 #

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
+
 # WebhooksController manages the creation/removal/update of webhooks.
 # Also, it manages their state, i.e. enabled/disabled.
 class WebhooksController < ApplicationController
@@ -140,3 +142,4 @@ class WebhooksController < ApplicationController
     )
   end
 end
+# rubocop:enable Metrics/ClassLength
