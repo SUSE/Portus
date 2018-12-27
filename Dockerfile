@@ -19,7 +19,7 @@ RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go
     zypper -n in --no-recommends ruby2.5-devel \
            libmysqlclient-devel postgresql-devel \
            nodejs libxml2-devel libxslt1 git-core \
-           go1.10 phantomjs && \
+           go1.10 phantomjs gcc-c++ && \
     zypper -n in --no-recommends -t pattern devel_basis && \
     gem install bundler --no-ri --no-rdoc -v 1.16.0 && \
     update-alternatives --install /usr/bin/bundle bundle /usr/bin/bundle.ruby2.5 3 && \
