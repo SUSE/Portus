@@ -2,10 +2,10 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="row">
-        <div class="col-sm-6">
+        <div :class="headingLeftClass">
           <slot name="heading-left"></slot>
         </div>
-        <div class="col-sm-6 text-right">
+        <div class="col-sm-6 text-right" v-if="hasHeadingRight">
           <slot name="heading-right"></slot>
         </div>
       </div>
@@ -20,3 +20,21 @@
     </div>
   </div>
 </template>
+
+<script>
+  export default {
+    computed: {
+      headingLeftClass() {
+        if (this.hasHeadingRight) {
+          return 'col-sm-6';
+        }
+
+        return 'col-sm-12';
+      },
+
+      hasHeadingRight() {
+        return !!this.$slots['heading-right'];
+      },
+    },
+  };
+</script>

@@ -20,6 +20,7 @@ import './modules/users';
 import './modules/dashboard';
 import './modules/repositories';
 import './modules/namespaces';
+import './modules/tags';
 import './modules/teams';
 import './modules/webhooks';
 

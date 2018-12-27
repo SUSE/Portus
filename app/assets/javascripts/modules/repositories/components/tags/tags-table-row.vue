@@ -6,10 +6,6 @@
   .vulns-link {
     text-decoration: none;
   }
-
-  .image-id {
-    font-family: monospace;
-  }
 </style>
 
 <template>
@@ -24,7 +20,7 @@
 
     <td>{{ tag[0].author.name }}</td>
 
-    <td class="image-id">
+    <td class="image-id text-monospace">
       <span v-if="tag[0].image_id === ''">-</span>
       <span v-else :title="prettyFormatID">
         {{ shortFormatID }}
@@ -51,7 +47,7 @@
   import dayjs from 'dayjs';
 
   import Tag from './tag';
-  import VulnerabilitiesPreview from './vulnerabilities-preview';
+  import VulnerabilitiesPreview from '~/modules/vulnerabilities/components/preview';
   import Checkbox from '~/shared/components/checkbox';
 
   const NOT_SCANNED = 0;

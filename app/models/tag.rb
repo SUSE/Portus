@@ -36,6 +36,9 @@ class Tag < ApplicationRecord
   has_many :scan_results, dependent: :destroy
   has_many :vulnerabilities, -> { distinct }, through: :scan_results
 
+  # Just to take advantage of "includes" for performance
+  has_one :namespace, through: :repository
+
   # We don't validate the tag, because we will fetch that from the registry,
   # and that's guaranteed to have a good format.
   #

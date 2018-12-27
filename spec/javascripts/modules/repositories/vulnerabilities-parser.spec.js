@@ -12,7 +12,7 @@ describe('VulnerabilitiesParser', () => {
       { severity: 'Low' },
       { severity: 'Negligible' },
     ];
-    const severitiesNames = ['Negligible', 'Unknown', 'Low', 'Medium', 'High', 'Critical', 'Defcon1'];
+    const severitiesNames = ['Defcon1', 'Critical', 'High', 'Medium', 'Low', 'Unknown', 'Negligible'];
 
     it('returns object with severities categories', () => {
       const severities = VulnerabilitiesParser.countBySeverities(vulnerabilities);
