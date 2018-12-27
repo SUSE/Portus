@@ -8,10 +8,10 @@ li
       h6
         strong
           - if activity.recipient
-            = "#{activity_owner(activity)} added user #{activity.recipient.display_username} "
+            = "#{activity_owner(activity)} added user '#{activity.recipient.display_username}' "
           - else
             - if activity.parameters[:team_user]
-              = "#{activity_owner(activity)} added user #{activity.parameters[:team_user]} "
+              = "#{activity_owner(activity)} added user '#{activity.parameters[:team_user]}' "
             - else
               = "#{activity_owner(activity)} added a user "
 
