@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_09_112643) do
+ActiveRecord::Schema.define(version: 2019_01_03_113934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,6 +144,8 @@ ActiveRecord::Schema.define(version: 2019_01_09_112643) do
     t.datetime "updated_at", null: false
     t.boolean "hidden", default: false
     t.text "description"
+    t.integer "ldap_group_checked", default: 0
+    t.datetime "checked_at"
     t.index ["name"], name: "index_teams_on_name", unique: true
   end
 

@@ -46,7 +46,7 @@ describe ::Portus::LDAP::Search do
       )
 
       results = described_class.new.find_group_and_members("name")
-      expect(results.sort).to eq ["another", "user"]
+      expect(results.sort).to eq %w[another user]
     end
   end
 end

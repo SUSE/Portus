@@ -11,6 +11,7 @@
 #  hidden             :boolean          default(FALSE)
 #  description        :text(65535)
 #  ldap_group_checked :integer          default(0)
+#  checked_at         :datetime
 #
 # Indexes
 #
@@ -116,7 +117,7 @@ class Team < ApplicationRecord
       add_team_member!(portus_user, member)
     end
 
-    update_attributes!(ldap_group_checked: Team.ldap_statuses[:checked])
+    update!(ldap_group_checked: Team.ldap_statuses[:checked], checked_at: Time.zone.now)
   end
 
   # If possible, add the user with the given username into the team. The

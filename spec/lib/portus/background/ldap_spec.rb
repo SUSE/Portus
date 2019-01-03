@@ -35,13 +35,13 @@ describe ::Portus::Background::LDAP do
   end
 
   describe "#execute!" do
-    it "receives the ldap_group_check! method for teams that need a check" do
+    it "receives the ldap_add_members! method for teams that need a check" do
       create(:team, ldap_group_checked: Team.ldap_statuses[:disabled])
       create(:team, ldap_group_checked: Team.ldap_statuses[:checked])
       unchecked_team = create(:team, ldap_group_checked: Team.ldap_statuses[:unchecked])
 
       received = []
-      allow_any_instance_of(Team).to receive(:ldap_group_check!) do |t|
+      allow_any_instance_of(Team).to receive(:ldap_add_members!) do |t|
         received << t.name
         true
       end
@@ -49,6 +49,22 @@ describe ::Portus::Background::LDAP do
       subject.execute!
       expect(received.size).to eq 1
       expect(received.first).to eq unchecked_team.name
+    end
+
+    it "sets as unchecked the proper teams" do
+      create(:team, name: "t1", ldap_group_checked: Team.ldap_statuses[:disabled])
+      create(:team, name: "t2", ldap_group_checked: Team.ldap_statuses[:checked])
+      create(:team, name: "t3", ldap_group_checked: Team.ldap_statuses[:checked], checked_at: Time.zone.now)
+      create(:team, name: "t4", ldap_group_checked: Team.ldap_statuses[:unchecked])
+
+      received = []
+      allow_any_instance_of(Team).to receive(:ldap_add_members!) do |t|
+        received << t.name
+        true
+      end
+
+      subject.execute!
+      expect(received.sort).to eq %w[t2 t4]
     end
   end
 

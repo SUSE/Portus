@@ -11,6 +11,7 @@
 #  hidden             :boolean          default(FALSE)
 #  description        :text(65535)
 #  ldap_group_checked :integer          default(0)
+#  checked_at         :datetime
 #
 # Indexes
 #
@@ -75,11 +76,13 @@ describe Team do
       )
       t = create(:team, owners: [create(:user, username: "user")])
 
+      expect(t.checked_at).to be_nil
       expect { t.ldap_add_members! }.to(
         change { t.ldap_group_checked }
           .from(Team.ldap_statuses[:unchecked])
           .to(Team.ldap_statuses[:checked])
       )
+      expect(t.checked_at).not_to be_nil
     end
 
     it "skips users that already exist" do
@@ -122,7 +125,7 @@ describe Team do
 
       t.ldap_add_members!
       t = t.reload
-      expect(t.owners.map(&:username).sort).to eq ["admin", "user"]
+      expect(t.owners.map(&:username).sort).to eq %w[admin user]
     end
   end
 

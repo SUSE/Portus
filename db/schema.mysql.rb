@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_24_123453) do
+ActiveRecord::Schema.define(version: 2019_01_03_113934) do
 
   create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "trackable_id"
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 2018_12_24_123453) do
     t.boolean "hidden", default: false
     t.text "description"
     t.integer "ldap_group_checked", default: 0
+    t.datetime "checked_at"
     t.index ["name"], name: "index_teams_on_name", unique: true
   end
 

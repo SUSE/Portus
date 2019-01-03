@@ -30,7 +30,7 @@ module Portus
 
         connection = initialized_adapter
         results = connection.search(group_search_options(name))
-        return filtered_results(results) unless results.blank?
+        return filtered_results(results) if results.present?
 
         Rails.logger.tagged(:ldap) do
           o = ldap.get_operation_result
