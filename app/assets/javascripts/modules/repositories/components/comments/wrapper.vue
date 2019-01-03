@@ -1,7 +1,10 @@
 <template>
   <div class="comments-wrapper">
     <comments-form :state="state" form-state="commentFormVisible" :repository="repository"></comments-form>
-    <comments-panel :comments="comments" :state="state"></comments-panel>
+
+    <hr v-if="state.commentFormVisible"/>
+
+    <comments-list :comments="comments"></comments-list>
   </div>
 </template>
 
@@ -9,7 +12,7 @@
   import Vue from 'vue';
 
   import CommentsForm from './form';
-  import CommentsPanel from './panel';
+  import CommentsList from './list';
 
   const { set } = Vue;
 
@@ -24,7 +27,7 @@
 
     components: {
       CommentsForm,
-      CommentsPanel,
+      CommentsList,
     },
 
     methods: {

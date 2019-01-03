@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_13_101302) do
+ActiveRecord::Schema.define(version: 2019_01_02_143451) do
 
   create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "trackable_type"
@@ -87,6 +87,7 @@ ActiveRecord::Schema.define(version: 2018_12_13_101302) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "marked", default: false
+    t.text "description"
     t.index ["name", "namespace_id"], name: "index_repositories_on_name_and_namespace_id", unique: true
     t.index ["namespace_id"], name: "index_repositories_on_namespace_id"
   end

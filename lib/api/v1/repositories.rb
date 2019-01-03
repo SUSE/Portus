@@ -36,6 +36,42 @@ module API
           present repositories, with: API::Entities::Repositories, type: current_type
         end
 
+        # Update team with given :id.
+        desc "Update team",
+             params:   API::Entities::Teams.documentation.slice(:id),
+             failure:  [
+               [400, "Bad request", API::Entities::ApiErrors],
+               [401, "Authentication fails"],
+               [403, "Authorization fails"],
+               [404, "Not found"],
+               [422, "Unprocessable Entity", API::Entities::FullApiErrors]
+             ],
+             consumes: ["application/x-www-form-urlencoded", "application/json"]
+
+        params do
+          requires :repository, type: Hash do
+            optional :all,
+                     only:  [:description],
+                     using: API::Entities::Teams.documentation.slice(:description)
+          end
+        end
+
+        put ":id" do
+          attrs = permitted_params.merge(id: params[:id])
+          svc = ::Repositories::UpdateService.new(current_user, attrs)
+          repository = svc.build
+          authorize repository, :update?
+
+          if svc.execute
+            present repository.reload,
+                    with:         API::Entities::Repositories,
+                    current_user: current_user,
+                    type:         current_type
+          else
+            unprocessable_entity!(repository.errors.messages)
+          end
+        end
+
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :tags do
             desc "Returns the list of the tags for the given repository",
