@@ -10,6 +10,7 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  marked       :boolean          default(FALSE)
+#  description  :text(65535)
 #
 # Indexes
 #

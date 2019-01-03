@@ -2,16 +2,6 @@
   <div class="repositories-show-page">
     <div class="header clearfix">
       <h4 class="repository-title pull-left">
-        <a href="javascript:void(0)"
-          class="btn-link repository-information-icon"
-          data-placement="right"
-          data-toggle="popover"
-          data-trigger="focus click hover"
-          data-title="More information"
-          :data-content="repositoryInformation"
-          data-html="true">
-          <i class="fa fa-info-circle"></i>
-        </a>
         <a :href="namespacePath">{{ namespaceName }}</a>/{{ repository.name }}
       </h4>
 
@@ -37,8 +27,41 @@
       </div>
     </div>
 
-    <tags-panel :state="state" :tags="tags" :tags-path="tagsPath" :security-enabled="securityEnabled" :repository="repository"></tags-panel>
-    <comments-wrapper :state="state" :comments-ref="commentsRef" :repository="repository"></comments-wrapper>
+    <panel>
+      <div slot="heading-left">
+        <ul id="repository-tabs" role="tablist" class="nav nav-tabs">
+          <li role="presentation">
+            <a aria-controls="overview-tab" data-toggle="tab" href="#overview-tab" role="tab" aria-expanded="true" @click="setTab('overview')">Overview</a>
+          </li>
+          <li role="presentation" class="active">
+            <a aria-controls="tags-tab" data-toggle="tab" href="#tags-tab" role="tab" aria-expanded="true" @click="setTab('tags')">Tags</a>
+          </li>
+          <li role="presentation">
+            <a aria-controls="comments-tab" data-toggle="tab" href="#comments-tab" role="tab" aria-expanded="false" @click="setTab('comments')">Comments</a>
+          </li>
+        </ul>
+      </div>
+
+      <div slot="heading-right">
+        <toggle-link text="Edit description" :state="state" state-key="descriptionFormVisible" class="toggle-link-edit-description" false-icon="fa-pencil" true-icon="fa-close" v-if="state.currentTab == 'overview' && !!repository.description_md"></toggle-link>
+        <delete-tag-action :state="state" v-if="state.currentTab == 'tags'"></delete-tag-action>
+        <toggle-link text="Write comment" :state="state" state-key="commentFormVisible" class="toggle-link-new-comment" false-icon="fa-comment" true-icon="fa-close" v-if="state.currentTab == 'comments'"></toggle-link>
+      </div>
+
+      <div slot="body" class="tab-content">
+        <div id="overview-tab" class="tab-pane">
+          <repository-overview :state="state" :repository="repository" :info="repositoryInformation"></repository-overview>
+        </div>
+
+        <div id="tags-tab" class="table-responsive tags tab-pane active">
+          <tags-wrapper :state="state" :repository="repository" :tags="tags" :tags-path="tagsPath" :security-enabled="securityEnabled"></tags-wrapper>
+        </div>
+
+        <div id="comments-tab" class="tab-pane">
+          <comments-wrapper :state="state" :comments-ref="commentsRef" :repository="repository"></comments-wrapper>
+        </div>
+      </div>
+    </panel>
   </div>
 </template>
 
@@ -47,9 +70,11 @@
 
   import { handleHttpResponseError } from '~/utils/http';
 
+  import TagsWrapper from '../components/tags/wrapper';
+  import DeleteTagAction from '../components/tags/delete-tag-action';
   import CommentsWrapper from '../components/comments/wrapper';
-  import TagsPanel from '../components/tags/panel';
   import Star from '../components/star';
+  import RepositoryOverview from '../components/overview';
 
   import RepositoriesService from '../services/repositories';
   import TagsService from '../services/tags';
@@ -62,33 +87,21 @@
 
   export default {
     props: {
-      repositoryRef: {
-        type: Object,
-      },
-      commentsRef: {
-        type: Array,
-      },
-      namespacePath: {
-        type: String,
-      },
-      namespaceName: {
-        type: String,
-      },
-      tagsPath: {
-        type: String,
-      },
-      securityEnabled: {
-        type: Boolean,
-      },
-      repositoryInformation: {
-        type: String,
-      },
+      repositoryRef: Object,
+      commentsRef: Array,
+      namespacePath: String,
+      namespaceName: String,
+      tagsPath: String,
+      securityEnabled: Boolean,
+      repositoryInformation: String,
     },
 
     components: {
-      TagsPanel,
+      DeleteTagAction,
       CommentsWrapper,
+      TagsWrapper,
       Star,
+      RepositoryOverview,
     },
 
     data() {
@@ -197,6 +210,14 @@
           set(this, 'repository', response.body);
         }).catch(handleHttpResponseError);
       },
+
+      setTab(tab) {
+        set(this.state, 'currentTab', tab);
+      },
+
+      updateRepository(repository) {
+        set(this, 'repository', repository);
+      },
     },
 
     mounted() {
@@ -211,6 +232,7 @@
 
       this.loadData();
       this.$bus.$on('deleteTags', () => this.deleteTags());
+      this.$bus.$on('repositoryUpdated', r => this.updateRepository(r));
     },
   };
 </script>

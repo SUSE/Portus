@@ -7,7 +7,7 @@ def find_tag_checkbox(name)
   tag.find(:xpath, "../..").find(".pretty-checkbox")
 end
 
-describe "Feature: Repositories" do
+describe "Feature: Repositories", js: true do
   let!(:registry) { create(:registry, hostname: "registry.test.lan") }
   let!(:user) { create(:admin) }
   let!(:contributor) { create(:user, username: "contributor") }
@@ -17,6 +17,9 @@ describe "Feature: Repositories" do
   let!(:namespace) { create(:namespace, team: team, name: "team1") }
   let!(:namespace2) { create(:namespace, team: team2, name: "team2") }
   let!(:repository) { create(:repository, namespace: namespace, name: "busybox") }
+  let!(:repository_with_description) do
+    create(:repository, namespace: namespace, name: "box_desc", description: "description here")
+  end
   let!(:repository2) { create(:repository, namespace: namespace2, name: "busybox2") }
   let!(:starred_repo) { create(:repository, namespace: namespace) }
   let!(:star) { create(:star, user: user, repository: starred_repo) }
@@ -25,7 +28,7 @@ describe "Feature: Repositories" do
     login_as user, scope: :user
   end
 
-  describe "repository#index", js: true do
+  describe "repository#index" do
     before do
       create_list(:repository, 15, namespace: namespace)
       visit repositories_path
@@ -94,33 +97,61 @@ describe "Feature: Repositories" do
     end
   end
 
-  describe "repository#show", js: true do
+  describe "repository#show" do
     it "Visual aid for each role is shown properly" do
       visit repository_path(repository)
-      info = page.find(".repository-information-icon")["data-content"]
-      expect(info).to have_content("You can push images")
-      expect(info).to have_content("You can pull images")
-      expect(info).to have_content("You are an owner of this repository")
-      expect(info).not_to have_content("You are a contributor in this repository")
-      expect(info).not_to have_content("You are a viewer in this repository")
+      click_link "Overview"
+      expect(page).to have_content("You can push images")
+      expect(page).to have_content("You can pull images")
+      expect(page).to have_content("You are an owner of this repository")
+      expect(page).not_to have_content("You are a contributor in this repository")
+      expect(page).not_to have_content("You are a viewer in this repository")
 
       login_as contributor, scope: :user
       visit repository_path(repository)
-      info = page.find(".repository-information-icon")["data-content"]
-      expect(info).to have_content("You can push images")
-      expect(info).to have_content("You can pull images")
-      expect(info).to have_content("You are a contributor in this repository")
-      expect(info).not_to have_content("You are an owner of this repository")
-      expect(info).not_to have_content("You are a viewer in this repository")
+      click_link "Overview"
+      expect(page).to have_content("You can push images")
+      expect(page).to have_content("You can pull images")
+      expect(page).to have_content("You are a contributor in this repository")
+      expect(page).not_to have_content("You are an owner of this repository")
+      expect(page).not_to have_content("You are a viewer in this repository")
 
       login_as viewer, scope: :user
       visit repository_path(repository)
-      info = page.find(".repository-information-icon")["data-content"]
-      expect(info).to have_content("You can pull images")
-      expect(info).to have_content("You are a viewer in this repository")
-      expect(info).not_to have_content("You can push images")
-      expect(info).not_to have_content("You are an owner of this repository")
-      expect(info).not_to have_content("You are a contributor in this repository")
+      click_link "Overview"
+      expect(page).to have_content("You can pull images")
+      expect(page).to have_content("You are a viewer in this repository")
+      expect(page).not_to have_content("You can push images")
+      expect(page).not_to have_content("You are an owner of this repository")
+      expect(page).not_to have_content("You are a contributor in this repository")
+    end
+
+    context "overview description" do
+      before do
+        visit repository_path(repository)
+        click_link "Overview"
+      end
+
+      it "shows 'click to set description'" do
+        expect(page).to have_content("Click to set repository description")
+      end
+
+      it "shows 'edit description' button" do
+        visit repository_path(repository_with_description)
+        click_link "Overview"
+
+        expect(page).to have_content("Edit description")
+      end
+
+      it "updates a repository description" do
+        find(".click-description").click
+        description = "New description"
+        fill_in "repository[description]", with: description
+        click_button "Save"
+
+        expect(page).to have_content("Repository's description was updated successfully")
+        expect(page).to have_content(description)
+      end
     end
 
     context "when user_permission.push_images is disabled" do
@@ -131,21 +162,21 @@ describe "Feature: Repositories" do
       it "Visual aid for each role is shown properly" do
         login_as user
         visit repository_path(repository)
-        info = page.find(".repository-information-icon")["data-content"]
-        expect(info).to have_content("You can push images")
-        expect(info).to have_content("You can pull images")
-        expect(info).to have_content("You are an owner of this repository")
-        expect(info).not_to have_content("You are a contributor in this repository")
-        expect(info).not_to have_content("You are a viewer in this repository")
+        click_link "Overview"
+        expect(page).to have_content("You can push images")
+        expect(page).to have_content("You can pull images")
+        expect(page).to have_content("You are an owner of this repository")
+        expect(page).not_to have_content("You are a contributor in this repository")
+        expect(page).not_to have_content("You are a viewer in this repository")
 
         login_as contributor, scope: :user
         visit repository_path(repository)
-        info = page.find(".repository-information-icon")["data-content"]
-        expect(info).not_to have_content("You can push images")
-        expect(info).to have_content("You can pull images")
-        expect(info).not_to have_content("You are an owner of this repository")
-        expect(info).to have_content("You are a contributor in this repository")
-        expect(info).not_to have_content("You are a viewer in this repository")
+        click_link "Overview"
+        expect(page).not_to have_content("You can push images")
+        expect(page).to have_content("You can pull images")
+        expect(page).not_to have_content("You are an owner of this repository")
+        expect(page).to have_content("You are a contributor in this repository")
+        expect(page).not_to have_content("You are a viewer in this repository")
       end
     end
 

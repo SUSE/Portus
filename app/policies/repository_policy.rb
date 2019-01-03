@@ -18,14 +18,23 @@ class RepositoryPolicy
       namespace.team.users.exists?(user.id)
   end
 
+  def update?
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
+    user.admin? || owner?
+  end
+
   # Returns true if the repository can be destroyed.
   def destroy?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
 
-    is_owner               = namespace.team.owners.exists?(user.id)
     is_contributor         = namespace.team.contributors.exists?(user.id)
     can_contributor_delete = APP_CONFIG["delete"]["contributors"] && is_contributor
-    delete_enabled? && (@user.admin? || is_owner || can_contributor_delete)
+    delete_enabled? && (@user.admin? || owner? || can_contributor_delete)
+  end
+
+  def owner?
+    namespace.team.owners.exists?(user.id)
   end
 
   class Scope

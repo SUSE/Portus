@@ -1,0 +1,19 @@
+.repository-overview {
+  .title {
+    font-weight: 600;
+  }
+
+  .click-description {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  .more-info {
+    ul {
+      padding-left: 20px;
+    }
+  }
+}

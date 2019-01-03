@@ -25,6 +25,10 @@ function get(id) {
   return resource.get({ id });
 }
 
+function update(repository) {
+  return resource.update({ id: repository.id }, { repository });
+}
+
 function toggleStar(id) {
   return oldResource.toggleStar({ id }, {});
 }
@@ -39,6 +43,7 @@ function groupedTags(repositoryId) {
 
 export default {
   get,
+  update,
   groupedTags,
   toggleStar,
   remove,

@@ -38,6 +38,7 @@ describe "Repositories comments support" do
   describe "comment#create" do
     it "An user comments on a repository under a public namespace", js: true do
       visit repository_path(visible_repository)
+      click_link "Comments"
 
       expect(page).to have_content("Nobody has left a comment")
 
@@ -52,6 +53,7 @@ describe "Repositories comments support" do
 
     it "An user comments on a repository under a protected namespace", js: true do
       visit repository_path(protected_repository)
+      click_link "Comments"
 
       expect(page).to have_content("Nobody has left a comment")
 
@@ -67,6 +69,7 @@ describe "Repositories comments support" do
     it "An admin comments on any repository", js: true do
       login_as admin, scope: :user
       visit repository_path(invisible_repository)
+      click_link "Comments"
 
       expect(page).to have_content("Nobody has left a comment")
 
@@ -87,6 +90,7 @@ describe "Repositories comments support" do
 
     it "An user cannot comment an empty text", js: true do
       visit repository_path(visible_repository)
+      click_link "Comments"
 
       find(".toggle-link-new-comment").click
 
@@ -101,6 +105,7 @@ describe "Repositories comments support" do
     it "An user deletes his own comment", js: true do
       login_as owner, scope: :user
       visit repository_path(commented_repository)
+      click_link "Comments"
 
       find("#comment_#{comment.id}").hover
       expect(page).to have_content("Delete comment")
@@ -112,6 +117,7 @@ describe "Repositories comments support" do
 
     it "An user cannot delete other users' comment", js: true do
       visit repository_path(commented_repository)
+      click_link "Comments"
 
       expect(page).to have_content(comment.body)
       find("#comment_#{comment.id}").hover
@@ -121,6 +127,7 @@ describe "Repositories comments support" do
     it "An admin deletes any comment", js: true do
       login_as admin, scope: :user
       visit repository_path(commented_repository)
+      click_link "Comments"
 
       find("#comment_#{comment.id}").hover
       expect(page).to have_content("Delete comment")

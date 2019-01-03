@@ -138,6 +138,16 @@ module API
       expose :name, documentation: { type: String, desc: "Repository name" }
       expose :full_name, documentation: { type: String, desc: "Repository full name" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :description, documentation: {
+        type: String,
+        desc: "The description of the repository"
+      }
+      expose :description_md, documentation: {
+        type: String,
+        desc: "The description of the repository parsed by markdown"
+      }, if: { type: :internal } do |r|
+        markdown(r.description)
+      end
       expose :namespace, documentation: {
         desc: "The ID of the namespace containing this repository"
       } do |r|
