@@ -128,10 +128,11 @@ class Team < ApplicationRecord
 
     team_user = ::TeamUsers::BuildService.new(author, params).execute
     team_user = ::TeamUsers::CreateService.new(author, team_user).execute
-    return if team_user.valid? && team_user.persisted?
+    return true if team_user.valid? && team_user.persisted?
 
     Rails.logger.tagged(:ldap) do
       Rails.logger.warn "Could not add team member: #{team_user.errors.full_messages.join(", ")}"
     end
+    false
   end
 end

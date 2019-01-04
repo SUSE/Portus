@@ -28,6 +28,7 @@
 #  provider               :string(255)
 #  uid                    :string(255)
 #  bot                    :boolean          default(FALSE)
+#  ldap_group_checked     :integer          default(0)
 #
 # Indexes
 #
@@ -40,6 +41,8 @@
 
 class User < ApplicationRecord
   include PublicActivity::Common
+
+  enum ldap_status: { unchecked: 0, checked: 1, disabled: 2 }
 
   enabled_devise_modules = [:database_authenticatable, :registerable, :lockable,
                             :recoverable, :rememberable, :trackable, :validatable,
@@ -293,6 +296,26 @@ class User < ApplicationRecord
       num += 1
     end
     self.username = suggest_username unless user
+  end
+
+  # Checks memberships for this user on LDAP groups and tries to add this same
+  # user into existing teams as a member.
+  def ldap_add_as_member!
+    Rails.logger.tagged(:ldap) do
+      Rails.logger.info "Looking up an LDAP group membership for '#{username}'"
+    end
+
+    portus_user = User.portus
+
+    ::Portus::LDAP::Search.new.user_groups(username).each do |group|
+      t = Team.find_by(name: group)
+      next if t.nil?
+      next if t.users.map(&:id).include?(id)
+
+      t.add_team_member!(portus_user, username)
+    end
+
+    update!(ldap_group_checked: User.ldap_statuses[:checked])
   end
 
   protected

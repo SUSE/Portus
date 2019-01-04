@@ -28,6 +28,7 @@
 #  provider               :string(255)
 #  uid                    :string(255)
 #  bot                    :boolean          default(FALSE)
+#  ldap_group_checked     :integer          default(0)
 #
 # Indexes
 #
@@ -366,6 +367,66 @@ describe User do
       user = build(:user)
       name = user.suggest_username("nickname" => "username")
       expect(name).to eq "username_01"
+    end
+  end
+
+  describe "#ldap_add_as_member!" do
+    it "adds a member" do
+      allow_any_instance_of(::Portus::LDAP::Search).to(
+        receive(:user_groups).and_return(["newteam"])
+      )
+
+      t = create(:team, name: "newteam", owners: [create(:user, username: "user")])
+      u = create(:user)
+
+      expect { u.ldap_add_as_member! }.to(
+        change { u.ldap_group_checked }
+          .from(User.ldap_statuses[:unchecked])
+          .to(User.ldap_statuses[:checked])
+      )
+      expect(t.viewers.map(&:username)).to eq [u.username]
+    end
+
+    it "doesn't do anything if the team doesn't exist" do
+      allow_any_instance_of(::Portus::LDAP::Search).to(
+        receive(:user_groups).and_return(["newteam"])
+      )
+      received = 0
+      allow_any_instance_of(Team).to receive(:add_team_member!) do
+        received += 1
+      end
+
+      u = create(:user)
+      u.ldap_add_as_member!
+      expect(received).to eq 0
+      expect(u.ldap_group_checked).to eq User.ldap_statuses[:checked]
+    end
+
+    it "doesn't do anything if the user is already a member" do
+      allow_any_instance_of(::Portus::LDAP::Search).to(
+        receive(:user_groups).and_return(["newteam"])
+      )
+
+      u = create(:user)
+      t = create(:team, name: "newteam", owners: [u])
+      expect { t.users.size }.not_to(
+        change { u.ldap_add_as_member! }
+      )
+      expect(u.ldap_group_checked).to eq User.ldap_statuses[:checked]
+    end
+
+    it "doesn't do anything when no groups have been returned" do
+      allow_any_instance_of(::Portus::LDAP::Search).to(receive(:user_groups).and_return([]))
+      received = 0
+      allow_any_instance_of(Team).to receive(:add_team_member!) do
+        received += 1
+      end
+
+      t = create(:team, name: "newteam", owners: [create(:user, username: "user")])
+      u = create(:user)
+      u.ldap_add_as_member!
+      expect(received).to eq 0
+      expect(u.ldap_group_checked).to eq User.ldap_statuses[:checked]
     end
   end
 end

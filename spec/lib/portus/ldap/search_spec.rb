@@ -49,4 +49,33 @@ describe ::Portus::LDAP::Search do
       expect(results.sort).to eq %w[another user]
     end
   end
+
+  describe "#user_groups" do
+    let(:user_entries) { [OpenStruct.new(dn: "uid=user,dn=example,dn=org")] }
+    let(:group_entries) { [OpenStruct.new(dn: "cn=team1,ou=groups,dn=example,dn=org")] }
+
+    before do
+      APP_CONFIG["ldap"]["enabled"] = true
+    end
+
+    it "returns an empty array if the user could not be found" do
+      allow_any_instance_of(::Portus::LDAP::Search).to receive(:find_user).and_return([])
+
+      expect(subject.user_groups("whatever")).to be_empty
+    end
+
+    it "returns an empty array if no groups were found" do
+      allow_any_instance_of(::Portus::LDAP::Search).to receive(:find_user).and_return(user_entries)
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return([])
+
+      expect(subject.user_groups("user")).to be_empty
+    end
+
+    it "returns a list of groups" do
+      allow_any_instance_of(::Portus::LDAP::Search).to receive(:find_user).and_return(user_entries)
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(group_entries)
+
+      expect(subject.user_groups("user")).to eq ["team1"]
+    end
+  end
 end

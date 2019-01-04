@@ -15,12 +15,16 @@ module Portus
       # Returns true if the given name exists on the LDAP server, false
       # otherwise.
       def exists?(name)
+        find_user(name)&.size != 0
+      end
+
+      # Returns the entry matching the given user name.
+      def find_user(name)
         return if APP_CONFIG.disabled?("ldap")
 
         configuration = ::Portus::LDAP::Configuration.new(user: { username: name })
         connection = initialized_adapter
-        record = search_admin_or_user(connection, configuration)
-        record&.size != 0
+        search_admin_or_user(connection, configuration)
       end
 
       # Returns a list of usernames containing the members of the specified LDAP
@@ -40,6 +44,14 @@ module Portus
         []
       end
 
+      # Returns an array with the name of the groups where this user belongs.
+      def user_groups(user)
+        record = find_user(user)
+        return [] if record&.size != 1
+
+        groups_from_unique_member(record.first.dn)
+      end
+
       # Returns nil if the given user was not found, otherwise it returns an
       # error message.
       def with_error_message(name)
@@ -52,7 +64,33 @@ module Portus
 
       protected
 
+      # Returns a list with the name of the groups where the given dn is set as
+      # a `uniqueMember`.
+      def groups_from_unique_member(dn)
+        connection = initialized_adapter
+
+        options = search_options_for(filter: "(&(cn=*)(uniqueMember=#{dn}))", attributes: %w[cn])
+        results = connection.search(options)
+        return [] if results.blank?
+
+        results.map do |r|
+          cn = r.dn.split(",").first
+          cn.split("=", 2).last
+        end
+      end
+
+      # Returns a hash with the search options given some parameters.
+      def search_options_for(filter:, attributes:)
+        {}.tap do |opts|
+          group_base        = APP_CONFIG["ldap"]["group_base"]
+          opts[:base]       = group_base if group_base.present?
+          opts[:filter]     = Net::LDAP::Filter.construct(filter)
+          opts[:attributes] = attributes
+        end
+      end
+
       # Returns the search options for the given team name.
+      # TODO: see search_options_for
       def group_search_options(name)
         {}.tap do |opts|
           group_base        = APP_CONFIG["ldap"]["group_base"]
