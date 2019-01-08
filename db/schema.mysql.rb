@@ -10,17 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_03_124548) do
+ActiveRecord::Schema.define(version: 2019_01_09_112643) do
 
-  create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "trackable_id"
+  create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "trackable_type"
-    t.integer "owner_id"
+    t.integer "trackable_id"
     t.string "owner_type"
+    t.integer "owner_id"
     t.string "key"
     t.text "parameters"
-    t.integer "recipient_id"
     t.string "recipient_type"
+    t.integer "recipient_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["key"], name: "index_activities_on_key"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["trackable_type"], name: "index_activities_on_trackable_type"
   end
 
-  create_table "application_tokens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "application_tokens", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "application", null: false
     t.string "token_hash", null: false
     t.string "token_salt", null: false
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["user_id"], name: "index_application_tokens_on_user_id"
   end
 
-  create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "body"
     t.integer "repository_id"
     t.datetime "created_at", null: false
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "namespaces", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "namespaces", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["team_id"], name: "index_namespaces_on_team_id"
   end
 
-  create_table "registries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "registries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
     t.string "hostname", null: false
     t.datetime "created_at", null: false
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["name"], name: "index_registries_on_name", unique: true
   end
 
-  create_table "registry_events", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "registry_events", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event_id", default: ""
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.text "data"
   end
 
-  create_table "repositories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "repositories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "namespace_id"
     t.datetime "created_at", null: false
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["namespace_id"], name: "index_repositories_on_namespace_id"
   end
 
-  create_table "scan_results", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "scan_results", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "tag_id"
     t.integer "vulnerability_id"
     t.datetime "created_at", null: false
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["vulnerability_id", "tag_id"], name: "index_scan_results_on_vulnerability_id_and_tag_id"
   end
 
-  create_table "stars", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "stars", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "repository_id"
     t.datetime "created_at", null: false
@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["user_id"], name: "index_stars_on_user_id"
   end
 
-  create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "latest", null: false
     t.integer "repository_id", null: false
     t.datetime "created_at", null: false
@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["user_id"], name: "index_tags_on_user_id"
   end
 
-  create_table "team_users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "team_users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "team_id"
     t.datetime "created_at", null: false
@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["user_id"], name: "index_team_users_on_user_id"
   end
 
-  create_table "teams", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "teams", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["name"], name: "index_teams_on_name", unique: true
   end
 
-  create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "username", default: "", null: false
     t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
@@ -178,7 +178,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  create_table "vulnerabilities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "vulnerabilities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
     t.string "scanner", default: "", null: false
     t.string "severity", default: "", null: false
@@ -191,7 +191,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["name"], name: "index_vulnerabilities_on_name", unique: true
   end
 
-  create_table "webhook_deliveries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "webhook_deliveries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "webhook_id"
     t.string "uuid"
     t.integer "status"
@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id"
   end
 
-  create_table "webhook_headers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "webhook_headers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "webhook_id"
     t.string "name"
     t.string "value"
@@ -215,7 +215,7 @@ ActiveRecord::Schema.define(version: 2019_01_03_124548) do
     t.index ["webhook_id"], name: "index_webhook_headers_on_webhook_id"
   end
 
-  create_table "webhooks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "webhooks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "namespace_id"
     t.string "url"
     t.string "username"

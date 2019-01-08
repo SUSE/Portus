@@ -18,8 +18,9 @@ module Portus
       def work?
         return false unless enabled?
 
-        # Are there teams to be checked?
-        Team.where(ldap_group_checked: Team.ldap_statuses[:unchecked]).any?
+        # Are there teams or users to be checked?
+        Team.where(ldap_group_checked: Team.ldap_statuses[:unchecked]).any? ||
+          User.not_portus.where(ldap_group_checked: User.ldap_statuses[:unchecked]).any?
       end
 
       # Returns true only if LDAP is enabled.
@@ -28,6 +29,9 @@ module Portus
       end
 
       def execute!
+        Rails.logger.tagged(:ldap) { Rails.logger.info "Starting check..." }
+
+        force_check!
         team_count = execute_team!
         execute_user!(team_count)
       end
@@ -43,22 +47,28 @@ module Portus
 
       protected
 
-      # Processes the LDAP check for teams and returns the teams that have been
-      # updated.
-      def execute_team!
+      # Updates the rows which should be checked even if they were already
+      # checked in the past.
+      def force_check!
         # Disable all hidden teams that weren't disabled yet.
         Team.where(hidden: true).where.not(ldap_group_checked: Team.ldap_statuses[:disabled])
-          .update_all(ldap_group_checked: Team.ldap_statuses[:disabled])
+            .update_all(ldap_group_checked: Team.ldap_statuses[:disabled])
 
         # Force the check for teams that have never been checked (checked_at is
         # nil and they have not been disabled), or that they have been checked a
         # long time ago.
-        Team.where(checked_at: nil)
-            .where.not(ldap_group_checked: Team.ldap_statuses[:disabled]).or(
-          Team.where(ldap_group_checked: Team.ldap_statuses[:checked])
-              .where("checked_at < ?", FORCE_CHECK_IN_DAYS.days.ago)
-        ).update_all(ldap_group_checked: Team.ldap_statuses[:unchecked])
+        Team
+          .where(checked_at: nil)
+          .where.not(ldap_group_checked: Team.ldap_statuses[:disabled])
+          .or(
+            Team.where(ldap_group_checked: Team.ldap_statuses[:checked])
+                .where("checked_at < ?", FORCE_CHECK_IN_DAYS.days.ago)
+          ).update_all(ldap_group_checked: Team.ldap_statuses[:unchecked])
+      end
 
+      # Processes the LDAP check for teams and returns the teams that have been
+      # updated.
+      def execute_team!
         # For each team to be checked, let's check LDAP groups. Notice that they
         # both have a query which is nearly identical. This is because we need
         # #find_each for batch processing, but this method doesn't return the
@@ -67,7 +77,7 @@ module Portus
         # processing.
         count = Team.where(ldap_group_checked: Team.ldap_statuses[:unchecked]).count
         Team.where(ldap_group_checked: Team.ldap_statuses[:unchecked])
-          .find_each(&:ldap_add_members!)
+            .find_each(&:ldap_add_members!)
         count
       end
 
@@ -86,7 +96,7 @@ module Portus
           User.not_portus.update_all(ldap_group_checked: User.ldap_statuses[:checked])
         else
           User.not_portus.where(ldap_group_checked: User.ldap_statuses[:unchecked])
-            .find_each(&:ldap_add_as_member!)
+              .find_each(&:ldap_add_as_member!)
         end
       end
     end

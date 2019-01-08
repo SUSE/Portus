@@ -75,11 +75,20 @@ environment variables:
   tests have finished. This is disabled by default so you can check the logs
   after tests have finished, and to re-use these same containers on successive
   runs with the `SKIP_ENV_TESTS` environment variables.
+- `PROFILES`: there are multiple profiles that you can pick when running
+  tests. There are two profiles (by default both of them will be selected):
+  - `clair`: the tests that are inside of `spec/integration` (without
+    subdirectories).
+  - `ldap`: the tests that are inside of `spec/integration/ldap`.
 
 As an example, this is how you'd run this script if you are just interesed in
 the `spec/integration/push.bats` test:
 
     $ TESTS="push" ./bin/test-integration.sh
+
+As another example, if you want to run all the LDAP-only tests, you can perform:
+
+    $ PROFILES=ldap ./bin/test-integration.sh
 
 This script will perform the stages described above. As a final note, the first
 stage (setting up the `build` directory) is done by another script:

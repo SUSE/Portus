@@ -94,3 +94,62 @@ ldap.add(
   }
 )
 handle_ldap_result!(ldap, params)
+
+##
+# Adding an organizationUnit and some users that will be placed inside of it.
+
+ldap.add(
+  dn:         "uid=flordeneu,dc=admins,dc=example,dc=org",
+  attributes: {
+    cn:           "Flordeneu",
+    givenName:    "Flordeneu",
+    sn:           "Flordeneu",
+    displayName:  "Flordeneu",
+    objectclass:  %w[top inetorgperson],
+    userPassword: Net::LDAP::Password.generate(:md5, "fada"),
+    mail:         "flordeneu@canigo.cat"
+  }
+)
+handle_ldap_result!(ldap, params)
+
+ldap.add(
+  dn:         "uid=gentil,dc=example,dc=org",
+  attributes: {
+    cn:           "Gentil",
+    givenName:    "Gentil",
+    sn:           "Gentil",
+    displayName:  "Gentil",
+    objectclass:  %w[top inetorgperson],
+    userPassword: Net::LDAP::Password.generate(:md5, "tallaferro"),
+    mail:         "gentil@canigo.cat"
+  }
+)
+handle_ldap_result!(ldap, params)
+
+ldap.add(
+  dn:         "ou=canigo,dc=example,dc=org",
+  attributes: {
+    ou:          "canigo",
+    objectclass: %w[top organizationalUnit],
+    description: "Somni d'aloja que del cel davalla"
+  }
+)
+handle_ldap_result!(ldap, params)
+
+ldap.add(
+  dn:         "cn=lopirineu,ou=canigo,dc=example,dc=org",
+  attributes: {
+    objectclass:  %w[top groupOfUniquenames],
+    uniqueMember: %w[uid=flordeneu,dc=admins,dc=example,dc=org uid=gentil,dc=example,dc=org]
+  }
+)
+handle_ldap_result!(ldap, params)
+
+ldap.add(
+  dn:         "cn=arria,ou=canigo,dc=example,dc=org",
+  attributes: {
+    objectclass: %w[top groupOfNames],
+    member:      %w[uid=gentil,dc=example,dc=org]
+  }
+)
+handle_ldap_result!(ldap, params)

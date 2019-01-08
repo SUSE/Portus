@@ -402,6 +402,26 @@ describe User do
       expect(u.ldap_group_checked).to eq User.ldap_statuses[:checked]
     end
 
+    it "doesn't do anything if the team is marked as disabled" do
+      allow_any_instance_of(::Portus::LDAP::Search).to(
+        receive(:user_groups).and_return(["newteam"])
+      )
+      received = 0
+      allow_any_instance_of(Team).to receive(:add_team_member!) do
+        received += 1
+      end
+
+      create(:team,
+             name:               "newteam",
+             owners:             [create(:user, username: "user")],
+             ldap_group_checked: Team.ldap_statuses[:disabled])
+
+      u = create(:user)
+      u.ldap_add_as_member!
+      expect(received).to eq 0
+      expect(u.ldap_group_checked).to eq User.ldap_statuses[:checked]
+    end
+
     it "doesn't do anything if the user is already a member" do
       allow_any_instance_of(::Portus::LDAP::Search).to(
         receive(:user_groups).and_return(["newteam"])
@@ -422,7 +442,7 @@ describe User do
         received += 1
       end
 
-      t = create(:team, name: "newteam", owners: [create(:user, username: "user")])
+      create(:team, name: "newteam", owners: [create(:user, username: "user")])
       u = create(:user)
       u.ldap_add_as_member!
       expect(received).to eq 0

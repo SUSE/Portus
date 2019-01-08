@@ -310,6 +310,7 @@ class User < ApplicationRecord
     ::Portus::LDAP::Search.new.user_groups(username).each do |group|
       t = Team.find_by(name: group)
       next if t.nil?
+      next if t.ldap_group_checked == Team.ldap_statuses[:disabled]
       next if t.users.map(&:id).include?(id)
 
       t.add_team_member!(portus_user, username)

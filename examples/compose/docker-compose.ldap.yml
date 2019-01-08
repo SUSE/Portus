@@ -29,6 +29,7 @@ services:
       - PORTUS_LDAP_PORT=389
       - PORTUS_LDAP_UID=uid
       - PORTUS_LDAP_BASE=dc=example,dc=org
+      - PORTUS_LDAP_GROUP_BASE=ou=canigo,dc=example,dc=org
       - PORTUS_LDAP_FILTER=
       - PORTUS_LDAP_AUTHENTICATION_ENABLED=true
       - PORTUS_LDAP_AUTHENTICATION_BIND_DN=cn=admin,dc=example,dc=org
@@ -70,11 +71,27 @@ services:
       - PORTUS_KEY_PATH=/certificates/portus.key
       - PORTUS_PASSWORD=${PORTUS_PASSWORD}
 
+      # LDAP
+      - PORTUS_LDAP_ENABLED=true
+      - PORTUS_LDAP_HOSTNAME=ldap
+      - PORTUS_LDAP_PORT=389
+      - PORTUS_LDAP_UID=uid
+      - PORTUS_LDAP_BASE=dc=example,dc=org
+      - PORTUS_LDAP_GROUP_BASE=ou=canigo,dc=example,dc=org
+      - PORTUS_LDAP_FILTER=
+      - PORTUS_LDAP_AUTHENTICATION_ENABLED=true
+      - PORTUS_LDAP_AUTHENTICATION_BIND_DN=cn=admin,dc=example,dc=org
+      - PORTUS_LDAP_AUTHENTICATION_PASSWORD=admin
+      - PORTUS_LDAP_ENCRYPTION_METHOD=start_tls
+      - PORTUS_LDAP_ENCRYPTION_OPTIONS_CA_FILE=/ldap-certificates/ca.pem
+      - PORTUS_LDAP_ENCRYPTION_OPTIONS_SSL_VERSION=TLSv1_2
+
       - PORTUS_BACKGROUND=true
     links:
       - db
     volumes:
       - ./secrets:/certificates:ro
+      - ./secrets/ldap:/ldap-certificates:ro
 
   db:
     image: library/mariadb:10.0.23

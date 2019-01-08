@@ -129,7 +129,8 @@ ldap:
     password: ""
 
   # Automatically add team members from a matching LDAP group into each
-  # team. Note that this will not delete nor update existing team members.
+  # team. Note that this will not delete nor update existing team members. Only
+  # `groupOfNames` and `groupOfUniqueNames` are supported.
   group_sync:
     enabled: true
 
