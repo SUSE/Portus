@@ -12,5 +12,5 @@ TAG        = ARGV.last.dup
 RegistryEvent.all.destroy_all
 
 client = Registry.get.client
-_, digest, = client.manifest(REPOSITORY, TAG)
-client.delete(REPOSITORY, digest, "manifests")
+manifest = client.manifest(REPOSITORY, TAG)
+client.delete(REPOSITORY, manifest.digest, "manifests")

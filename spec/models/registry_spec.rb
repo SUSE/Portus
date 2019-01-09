@@ -44,7 +44,9 @@ class RegistryMock < Registry
       end
     else
       def o.manifest(*_)
-        ["id", "digest", { "tag" => "latest" }]
+        manifest = { "tag" => "latest", "config": { "size": 1000 }, "layers": [] }
+
+        OpenStruct.new(id: "id", digest: "digest", size: 1000, manifest: manifest)
       end
 
       def o.tags(*_)
@@ -153,15 +155,6 @@ describe Registry, type: :model do
   end
 
   describe "#get_tag_from_manifest" do
-    it "returns a tag on success" do
-      mock = RegistryMock.new(false)
-
-      ret = mock.get_tag_from_target_test(nil, "busybox",
-                                          "application/vnd.docker.distribution.manifest.v1+json",
-                                          "sha:1234")
-      expect(ret).to eq "latest"
-    end
-
     it "returns a tag on v2 manifests" do
       owner     = create(:user)
       team      = create(:team, owners: [owner])

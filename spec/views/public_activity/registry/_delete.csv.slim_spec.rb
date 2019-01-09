@@ -9,13 +9,14 @@ describe "public_activity/webhook/_delete.csv.slim" do
   let!(:namespace)      { create(:namespace, team: team, registry: registry) }
   let(:repository_name) { "busybox" }
   let(:tag_name)        { "latest" }
+  let(:manifest)        { OpenStruct.new(id: "id", digest: "digest") }
 
   before do
     user.create_personal_namespace!
   end
 
   it "renders the activity properly" do
-    allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(%w[id foo])
+    allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
     allow_any_instance_of(::Portus::RegistryClient).to receive(:delete).and_return(true)
 
     # Adding a repo like this so it also creates a tag and activities beneath it

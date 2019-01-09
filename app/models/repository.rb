@@ -109,6 +109,7 @@ class Repository < ApplicationRecord
 
   # Add the repository with the given `repo` name and the given `tag`. The
   # actor is guessed from the given `event`.
+  # rubocop:disable Metrics/MethodLength
   def self.add_repo(event, namespace, repo, tag)
     actor = User.find_from_event(event)
     return if actor.nil?
@@ -120,10 +121,11 @@ class Repository < ApplicationRecord
       repository = Repository.create(namespace: namespace, name: repo)
     elsif repository.tags.exists?(name: tag)
       # Update digest and status if the given tag already exists.
-      id, digest = Repository.id_and_digest_from_event(event, repository.full_name)
+      data = Repository.data_from_event(event, repository.full_name)
       tag = repository.tags.find_by(name: tag)
-      tag.update_columns(image_id:   id,
-                         digest:     digest,
+      tag.update_columns(image_id:   data.id,
+                         digest:     data.digest,
+                         size:       data.size,
                          scanned:    Tag.statuses[:scan_none],
                          updated_at: Time.current)
       repository.create_activity(:push, owner: actor, recipient: tag)
@@ -131,27 +133,38 @@ class Repository < ApplicationRecord
     end
 
     # And store the tag and its activity.
-    id, digest = Repository.id_and_digest_from_event(event, repository.full_name)
-    tag = repository.tags.create(name: tag, author: actor, digest: digest, image_id: id)
+    data = Repository.data_from_event(event, repository.full_name)
+    tag = repository.tags.create(name:     tag,
+                                 author:   actor,
+                                 digest:   data.digest,
+                                 image_id: data.id,
+                                 size:     data.size)
     repository.create_activity(:push, owner: actor, recipient: tag)
     repository
   end
+  # rubocop:enable Metrics/MethodLength
 
-  # Fetch the image ID and the manifest digest from the given event.
-  def self.id_and_digest_from_event(event, repo)
+  # Fetch the image ID and the manifest digest from the given event and returns
+  # an OpenStruct object containing the following attributes:
+  #
+  #   - id:     The image ID (without the "sha256:" prefix)
+  #   - digest: The manifest digest
+  #   - size:   The tag size
+  def self.data_from_event(event, repo)
     digest = event.try(:[], "target").try(:[], "digest")
-    id = ""
+    manifest = OpenStruct.new(id: "", digest: digest, size: nil)
 
     if digest.present?
       begin
-        id, = Registry.get.client.manifest(repo, digest)
+        manifest = Registry.get.client.manifest(repo, digest)
       rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
              ::Portus::RegistryClient::ManifestError => e
         logger.warn "Could not fetch manifest for '#{repo}' with digest '#{digest}': " + e.to_s
       end
     end
 
-    [id, digest]
+    manifest.digest = digest
+    manifest
   end
 
   # Returns the repository for the given full repository name. If it cannot be
@@ -203,7 +216,7 @@ class Repository < ApplicationRecord
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
-        _, digest, = client.manifest(repository.full_name, tag)
+        manifest = client.manifest(repository.full_name, tag)
       rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
              ::Portus::RegistryClient::ManifestError => e
         logger.tagged("catalog") do
@@ -215,8 +228,8 @@ class Repository < ApplicationRecord
 
       # Let's update the tag, if it really changed,
       t = repository.tags.find_by(name: tag)
-      if t.digest != digest
-        t.update_column(:digest, digest)
+      if t.digest != manifest.digest || t.size != manifest.size
+        t.update_columns(digest: manifest.digest, size: manifest.size)
         repository.create_activity(:push, owner: portus, recipient: t)
       end
     end
@@ -224,23 +237,24 @@ class Repository < ApplicationRecord
 
   # Create new tags by using the Portus user.
   def self.create_tags(client, repository, portus, tags)
+    manifest = OpenStruct.new(id: "", digest: "", size: nil)
+
     tags.each do |tag|
       # Try to fetch the manifest digest of the tag.
       begin
-        id, digest, = client.manifest(repository.full_name, tag)
+        manifest = client.manifest(repository.full_name, tag)
       rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
              ::Portus::RegistryClient::ManifestError => e
         Rails.logger.info e.to_s
-        id = ""
-        digest = ""
       end
 
       t = Tag.create!(
         name:       tag,
         repository: repository,
         author:     portus,
-        digest:     digest,
-        image_id:   id
+        digest:     manifest.digest,
+        image_id:   manifest.id,
+        size:       manifest.size
       )
       repository.create_activity(:push, owner: portus, recipient: t)
       logger.tagged("catalog") { logger.info "Created the tag '#{tag}'." }

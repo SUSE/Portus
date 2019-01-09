@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_02_143451) do
+ActiveRecord::Schema.define(version: 2019_01_09_112643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,6 +123,7 @@ ActiveRecord::Schema.define(version: 2019_01_02_143451) do
     t.boolean "marked", default: false
     t.string "username"
     t.integer "scanned", default: 0
+    t.integer "size"
     t.index ["repository_id"], name: "index_tags_on_repository_id"
     t.index ["user_id"], name: "index_tags_on_user_id"
   end

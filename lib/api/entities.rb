@@ -117,6 +117,13 @@ module API
       expose :digest, documentation: { type: String, desc: "The digest of the tag" }
       expose :image_id, documentation: { type: String, desc: "The internal image ID" }
       expose :created_at, :updated_at, documentation: { type: DateTime }
+      expose :size, documentation: { type: Integer, desc: "The size of the tag" }
+      expose :size_human, documentation: {
+        type: String,
+        desc: "The size of the tag for humans"
+      }, if: { type: :internal } do |tag|
+        ActiveSupport::NumberHelper.number_to_human_size(tag.size) if tag.size
+      end
       expose :scanned, documentation: {
         type: Integer,
         desc: "Whether vulnerabilities have been scanned or not. The values available are: " \

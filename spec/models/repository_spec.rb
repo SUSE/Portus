@@ -101,7 +101,10 @@ describe Repository do
       end
 
       it "updates the digest of an already existing tag" do
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(%w[id foo])
+        data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+        allow_any_instance_of(::Portus::RegistryClient).to(
+          receive(:manifest).and_return(data)
+        )
 
         event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
         described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
@@ -120,7 +123,8 @@ describe Repository do
       end
 
       it "updates the image id of an already existing tag" do
-        allow(described_class).to receive(:id_and_digest_from_event).and_return(%w[image_id foo])
+        data = OpenStruct.new(id: "image_id", digest: "foo", size: 1000)
+        allow(described_class).to(receive(:data_from_event).and_return(data))
         event = { "actor" => { "name" => user.username }, "target" => { "digest" => "foo" } }
         described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
         expect(described_class.find_by(name: repository_name).tags.first.digest).to eq("foo")
@@ -130,7 +134,8 @@ describe Repository do
         tag.update_columns(updated_at: 2.hours.ago)
         ua = tag.updated_at
 
-        allow(described_class).to receive(:id_and_digest_from_event).and_return(%w[id bar])
+        data = OpenStruct.new(id: "id", digest: "bar", size: 1000)
+        allow(described_class).to(receive(:data_from_event).and_return(data))
         described_class.add_repo(event, registry.global_namespace, repository_name, tag_name)
         tag = described_class.find_by(name: repository_name).tags.first
         expect(tag.image_id).to eq("id")
@@ -299,7 +304,8 @@ describe Repository do
         end
 
         it "creates repository and tag objects" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
@@ -320,7 +326,8 @@ describe Repository do
         end
 
         it "creates the repo also for version 2 schema 2" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           repository = nil
           @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
@@ -343,7 +350,8 @@ describe Repository do
         end
 
         it "tracks the event" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
@@ -369,7 +377,8 @@ describe Repository do
         end
 
         it "creates a new tag" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
@@ -390,7 +399,8 @@ describe Repository do
         end
 
         it "tracks the event" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_webhook", record: :none) do
@@ -419,7 +429,8 @@ describe Repository do
         end
 
         it "preserves the previous namespace" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           event = @event
           event["target"]["repository"] = repository_namespaced_name
@@ -465,7 +476,8 @@ describe Repository do
         end
 
         it "creates repository and tag objects when the repository is unknown to portus" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id digest])
+          data = OpenStruct.new(id: "id", digest: "digest", size: 1000)
+          allow(Repository).to(receive(:data_from_event).and_return(data))
 
           repository = nil
           VCR.use_cassette("registry/get_image_manifest_namespaced_webhook", record: :none) do
@@ -486,7 +498,8 @@ describe Repository do
         end
 
         it "creates a new tag when the repository is already known to portus" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           repository = create(:repository, name: repository_name, namespace: @namespace)
           repository.tags << Tag.new(name: "1.0.0")
@@ -508,7 +521,8 @@ describe Repository do
         end
 
         it "repo is unknown - manifest version 2, schema 2" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id digest])
+          data = OpenStruct.new(id: "id", digest: "digest", size: 1000)
+          allow(Repository).to(receive(:data_from_event).and_return(data))
 
           @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
 
@@ -533,7 +547,8 @@ describe Repository do
         end
 
         it "repo exists - manifest version 2, schema 2" do
-          allow(Repository).to receive(:id_and_digest_from_event).and_return(%w[id foo])
+          data = OpenStruct.new(id: "id", digest: "foo", size: 1000)
+          allow(Repository).to receive(:data_from_event).and_return(data)
 
           @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v2+json"
           repository = create(:repository, name: repository_name, namespace: @namespace)
@@ -574,6 +589,9 @@ describe Repository do
       # given arguments are set accordingly. The checked values are basically
       # hardcoded, which shouldn't be a problem since there are not a lot of
       # tests anyways.
+      allow_any_instance_of(Portus::RegistryClient).to(
+        receive(:calculate_tag_size).and_return(1000)
+      )
       allow_any_instance_of(Portus::RegistryClient).to receive(:manifest) do |_, *args|
         if args.first != "busybox" && !args.first.include?("/")
           raise ::Portus::RegistryClient::ManifestError, "Should be included inside of a namespace"
@@ -582,10 +600,11 @@ describe Repository do
           raise ::Portus::RegistryClient::ManifestError, "Using an unknown tag"
         end
 
-        ["id", "digest", ""]
+        OpenStruct.new(id: "id", digest: "digest", size: 1000, mf: "")
       end
 
-      allow(described_class).to receive(:id_and_digest_from_event).and_return(%w[id digest])
+      data = OpenStruct.new(id: "id", digest: "digest", size: 1000)
+      allow(described_class).to receive(:data_from_event).and_return(data)
 
       User.create_portus_user!
     end

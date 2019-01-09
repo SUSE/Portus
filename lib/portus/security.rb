@@ -63,8 +63,8 @@ module Portus
     # Returns an array with the layers as given in the manifest. If an error
     # occured then nil will be returned and the error will be logged.
     def fetch_layers(rc)
-      ary = rc.manifest(@repo, @tag)
-      ary.last["layers"]
+      manifest = rc.manifest(@repo, @tag)
+      manifest.mf["layers"]
     rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
            ::Portus::RegistryClient::ManifestError => e
       Rails.logger.info e.to_s

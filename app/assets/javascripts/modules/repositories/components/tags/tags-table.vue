@@ -3,11 +3,12 @@
     <table class="table table-striped table-hover no-margin">
       <colgroup>
         <col width="10" v-if="canDestroy">
-        <col class="col-45">
-        <col class="col-20">
-        <col class="col-10">
-        <col class="col-15">
-        <col width="170px" v-if="securityEnabled">
+        <col>
+        <col width="120">
+        <col width="120">
+        <col width="70">
+        <col width="130">
+        <col width="155" v-if="securityEnabled">
       </colgroup>
       <thead>
         <tr>
@@ -15,6 +16,7 @@
           <th>Tag</th>
           <th>Author</th>
           <th>Image</th>
+          <th>Size</th>
           <th>Last modified</th>
           <th v-if="securityEnabled">Security</th>
         </tr>

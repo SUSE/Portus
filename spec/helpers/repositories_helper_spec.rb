@@ -83,9 +83,10 @@ RSpec.describe RepositoriesHelper, type: :helper do
     let!(:tag2)       { create(:tag, name: "0.2", author: owner, repository: repo1) }
     let!(:tag3)       { create(:tag, name: "0.3", author: owner, repository: repo2) }
     let!(:tag4)       { create(:tag, name: "0.4", author: owner, repository: repo3) }
+    let!(:manifest)   { OpenStruct.new(id: "", digest: "") }
 
     it "creates the proper HTML for each kind of activity" do
-      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
 
       repo.create_activity(:push, owner: owner, recipient: tag, created_at: 1.hour.ago)
       repo.create_activity(:push, owner: owner, recipient: tag1, created_at: 2.hours.ago)

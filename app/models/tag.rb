@@ -15,6 +15,7 @@
 #  marked        :boolean          default(FALSE)
 #  username      :string(255)
 #  scanned       :integer          default(0)
+#  size          :integer
 #
 # Indexes
 #
@@ -138,9 +139,9 @@ class Tag < ApplicationRecord
       client = Registry.get.client
 
       begin
-        _, dig, = client.manifest(repository.full_name, name)
-        update_column(:digest, dig)
-        dig
+        manifest = client.manifest(repository.full_name, name)
+        update_column(:digest, manifest.digest)
+        manifest.digest
       rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
              ::Portus::RegistryClient::ManifestError => e
         Rails.logger.error "Could not fetch manifest digest: #{e}"

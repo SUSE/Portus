@@ -22,9 +22,13 @@
 
     <td class="image-id text-monospace">
       <span v-if="tag[0].image_id === ''">-</span>
-      <span v-else :title="prettyFormatID">
+      <span v-else :title="tag[0].digest">
         {{ shortFormatID }}
       </span>
+    </td>
+
+    <td>
+      {{ size }}
     </td>
 
     <td>
@@ -72,7 +76,6 @@
 
     data() {
       return {
-        prefixID: 'sha256:',
         selected: false,
       };
     },
@@ -88,10 +91,6 @@
 
       scanDone() {
         return this.tag[0].scanned === SCAN_DONE;
-      },
-
-      prettyFormatID() {
-        return `${this.prefixID}${this.tag[0].image_id}`;
       },
 
       shortFormatID() {
@@ -112,6 +111,13 @@
 
       pushedAtFull() {
         return dayjs(this.tag[0].updated_at).format('MMMM DD, YYYY hh:mm A');
+      },
+
+      size() {
+        if (this.tag[0].size_human) {
+          return this.tag[0].size_human;
+        }
+        return '-';
       },
     },
 

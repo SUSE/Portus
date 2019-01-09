@@ -31,6 +31,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: |
-        {"tag": "latest" }
+        { "tag": "latest", "config": { "size": 1000 }, "layers": [] }
     http_version:
   recorded_at: Mon, 20 Apr 2015 10:06:19 GMT

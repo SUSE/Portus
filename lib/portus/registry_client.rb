@@ -5,6 +5,7 @@ module Portus
   # credentials, it's able to call to any endpoint in the registry API. Moreover,
   # it also implements some handy methods on top of some of these endpoints (e.g.
   # the `manifest` method for the Manifest API endpoints).
+  # rubocop:disable Metrics/ClassLength
   class RegistryClient
     attr_accessor :token
     attr_reader   :base_url
@@ -49,12 +50,12 @@ module Portus
     end
 
     # Calls the `/:repository/manifests/:tag` endpoint from the registry. It
-    # returns a three-sized array:
+    # returns an OpenStruct object with the following attributes:
     #
-    #   - The image ID (without the "sha256:" prefix): only available for v2
-    #     manifests (nil if v1).
-    #   - The manifest digest.
-    #   - The manifest itself as a ruby hash.
+    #   - id:     The image ID (without the "sha256:" prefix)
+    #   - digest: The manifest digest
+    #   - size:   The tag size
+    #   - mf:     The manifest itself as a ruby hash
     #
     # Three different exceptions might be raised:
     #
@@ -71,7 +72,8 @@ module Portus
         id = mf.try(:[], "config").try(:[], "digest")
         id = id.split(":").last if id.is_a? String
         digest = res["Docker-Content-Digest"]
-        [id, digest, mf]
+        size = calculate_tag_size(mf)
+        OpenStruct.new(id: id, digest: digest, size: size, mf: mf)
       elsif res.code.to_i == 404
         handle_error res, repository: repository, tag: tag
       else
@@ -79,6 +81,18 @@ module Portus
               "Something went wrong while fetching manifest for " \
               "#{repository}:#{tag}:[#{res.code}] - #{res.body}"
       end
+    end
+
+    # Returns the total compressed size of a tag and its layers in bytes.
+    #
+    # The json navigation is based on Image Manifest Version 2, Schema 2 that
+    # is available at https://docs.docker.com/registry/spec/manifest-v2-2/
+    def calculate_tag_size(manifest)
+      layers = manifest["layers"]
+      size = manifest["config"]["size"]
+      layers.each { |layer| size += layer["size"] } if layers.present?
+
+      size
     end
 
     # Fetches all the repositories available in the registry, with all their
@@ -218,4 +232,5 @@ module Portus
       result
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
