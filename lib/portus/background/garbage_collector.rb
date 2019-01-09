@@ -49,10 +49,10 @@ module Portus
         tags = Tag.where(marked: false).where("updated_at < ?", older_than)
         return tags if APP_CONFIG["delete"]["garbage_collector"]["tag"].blank?
 
-        not_matching_tags = tags.select { |t| !t.name.match(tag_regexp) }
-        not_matching_image_id = not_matching_tags.map { |t| t.image_id }
+        not_match_tags = tags.reject { |t| t.name.match(tag_regexp) }
+        not_match_image = not_match_tags.map(&:image_id)
 
-        tags.select { |t| t.name.match(tag_regexp) and not not_matching_image_id.include?(t.image_id)  }
+        tags.select { |t| t.name.match(tag_regexp) && !not_match_image.include?(t.image_id) }
       end
 
       def older_than
