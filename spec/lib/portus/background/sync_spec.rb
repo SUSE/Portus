@@ -79,8 +79,10 @@ describe ::Portus::Background::Sync do
 
   describe "#execute!" do
     describe "Empty database" do
+      let!(:manifest) { OpenStruct.new(id: "", digest: "") }
+
       it "updates the registry" do
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
 
         registry  = create(:registry)
         namespace = create(:namespace, registry: registry)
@@ -126,7 +128,7 @@ describe ::Portus::Background::Sync do
       it "executes the task as expected" do
         VCR.turn_on!
 
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
         registry = create(:registry, "hostname" => "registry.test.lan")
 
         VCR.use_cassette("registry/get_registry_catalog", record: :none) do
@@ -146,7 +148,7 @@ describe ::Portus::Background::Sync do
       it "handles registries and namespaces even with missing namespaces" do
         VCR.turn_on!
 
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
         registry = create(:registry, "hostname" => "registry.test.lan")
 
         # In this scenario, we have only the global namespace
@@ -178,9 +180,10 @@ describe ::Portus::Background::Sync do
       let!(:tag1)        { create(:tag, name: "tag1", repository: repo1) }
       let!(:tag2)        { create(:tag, name: "tag2", repository: repo2) }
       let!(:tag3)        { create(:tag, name: "tag3", repository: repo2) }
+      let!(:manifest)    { OpenStruct.new(id: "", digest: "") }
 
       it "updates the registry" do
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
 
         sync = SyncMock.new
         sync.update_registry!([{ "name" => "busybox", "tags" => ["latest", "0.1"] },
@@ -209,7 +212,7 @@ describe ::Portus::Background::Sync do
       it "does not remove old repositories if we are using 'update'" do
         APP_CONFIG["background"]["sync"]["strategy"] = "update"
 
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
 
         # With this "repo2" should be removed, but since we are on "update" this
         # won't happen.
@@ -236,7 +239,7 @@ describe ::Portus::Background::Sync do
       it "does not remove a repository with nil tags on update-delete" do
         APP_CONFIG["background"]["sync"]["strategy"] = "update-delete"
 
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
 
         # repo2 is not removed because it exists and the tags is nil. This
         # happens when fetching tags raised a handled exception.
@@ -254,7 +257,7 @@ describe ::Portus::Background::Sync do
 
         VCR.turn_on!
 
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
         allow_any_instance_of(::Portus::RegistryClient).to receive(:tags) do
           raise ::Portus::Errors::NotFoundError, "I AM ERROR"
         end
@@ -290,9 +293,10 @@ describe ::Portus::Background::Sync do
       let!(:owner)      { create(:user) }
       let!(:repo)       { create(:repository, name: "repo", namespace: registry.global_namespace) }
       let!(:tag)        { create(:tag, name: "latest", author: owner, repository: repo) }
+      let!(:manifest)   { OpenStruct.new(id: "", digest: "") }
 
       it "removes activities from dangling tags" do
-        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+        allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
 
         repo.create_activity(:push, owner: owner, recipient: tag)
 
@@ -314,6 +318,7 @@ describe ::Portus::Background::Sync do
     end
 
     it "rolls back if an event happened while syncing" do
+      manifest = OpenStruct.new(id: "", digest: "")
       registry = create(:registry)
       owner = create(:user)
       repo = create(:repository, name: "repo", namespace: registry.global_namespace)
@@ -322,7 +327,7 @@ describe ::Portus::Background::Sync do
       # Event!
       RegistryEvent.create!(event_id: "id", data: "", status: RegistryEvent.statuses[:fresh])
 
-      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(["", ""])
+      allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest).and_return(manifest)
       sync = SyncMock.new
 
       expect do

@@ -201,8 +201,8 @@ class Registry < ApplicationRecord
   #
   # Returns the name of the tag if found, nil otherwise.
   def get_tag_from_manifest(target)
-    _, _, manifest = client.manifest(target["repository"], target["digest"])
-    manifest["tag"]
+    manifest = client.manifest(target["repository"], target["digest"])
+    manifest.mf["tag"]
   end
 
   # Create the global namespace for this registry and create the personal

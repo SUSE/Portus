@@ -15,6 +15,7 @@
 #  marked        :boolean          default(FALSE)
 #  username      :string(255)
 #  scanned       :integer          default(0)
+#  size          :integer
 #
 # Indexes
 #
@@ -136,11 +137,12 @@ describe Tag do
       namespace = create(:namespace, name: "a", team: team, registry: registry)
       repo = create(:repository, name: "repo", namespace: namespace)
       tag = create(:tag, name: "t", repository: repo)
+      manifest = OpenStruct.new(id: nil, digest: "digest", size: nil, manifest: nil)
 
       allow_any_instance_of(Portus::RegistryClient).to(
         receive(:manifest)
           .with(repo.full_name, tag.name)
-          .and_return([nil, "digest", nil])
+          .and_return(manifest)
       )
       allow_any_instance_of(Portus::RegistryClient).to(
         receive(:delete)
@@ -191,9 +193,8 @@ describe Tag do
     end
 
     it "returns the digest as given by the registry" do
-      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return(
-        ["id", "2", ""]
-      )
+      manifest = OpenStruct.new(id: "id", digest: "2", size: nil, manifest: "")
+      allow_any_instance_of(Portus::RegistryClient).to receive(:manifest).and_return(manifest)
 
       tag = TagMock.create(name: "tag", repository: repository)
       expect(tag.fetch_digest_test).to eq "2"

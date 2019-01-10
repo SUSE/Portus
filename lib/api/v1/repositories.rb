@@ -105,7 +105,7 @@ module API
               authorize repo, :show?
 
               grouped_tags = repo.groupped_tags.map do |k1|
-                API::Entities::Tags.represent(k1)
+                API::Entities::Tags.represent(k1, type: current_type)
               end
               present grouped_tags
             end

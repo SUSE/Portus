@@ -50,10 +50,8 @@ describe('tags-table-row', () => {
     expect(wrapper.find('.vulns').exists()).toBe(true);
   });
 
-  it('computes pretty image title id', () => {
-    const prettyFormat = `sha256:${tag[0].image_id}`;
-
-    expect(wrapper.find('.image-id span').attributes().title).toBe(prettyFormat);
+  it('shows digest as title of image id data', () => {
+    expect(wrapper.find('.image-id span').attributes().title).toBe(tag[0].digest);
   });
 
   it('shows a short version of image id', () => {

@@ -183,7 +183,10 @@ describe Portus::RegistryClient do
 
   context "fetching Image manifest" do
     let(:repository) { "foo/busybox" }
-    let(:tag) { "1.0.0" }
+    let(:tag)        { "1.0.0" }
+    let(:id)         { "3a093384ac306cbac30b67f1585e12b30ab1a899374dabc3170b9bca246f1444" }
+    let(:size)       { 757_221 }
+    let(:digest)     { "sha256:bbb143159af9eabdf45511fd5aab4fd2475d4c0e7fd4a5e154b98e838488e510" }
 
     it "authenticates and fetches the image manifest" do
       VCR.use_cassette("registry/get_image_manifest", record: :none) do
@@ -194,9 +197,10 @@ describe Portus::RegistryClient do
           password
         )
 
-        _, _, manifest = registry.manifest(repository, tag)
-        expect(manifest["name"]).to eq(repository)
-        expect(manifest["tag"]).to eq(tag)
+        manifest = registry.manifest(repository, tag)
+        expect(manifest.id).to eq(id)
+        expect(manifest.digest).to eq(digest)
+        expect(manifest.size).to eq(size)
       end
     end
 
