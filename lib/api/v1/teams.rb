@@ -137,6 +137,34 @@ module API
           end
         end
 
+        desc "Disables any LDAP check for the team",
+             params:   API::Entities::Teams.documentation.slice(:id),
+             failure:  [
+               [400, "Bad request", API::Entities::ApiErrors],
+               [401, "Authentication fails"],
+               [403, "Authorization fails"],
+               [404, "Not found"],
+               [405, "Method Not Allowed", API::Entities::ApiErrors]
+             ],
+             consumes: ["application/x-www-form-urlencoded", "application/json"]
+
+        params do
+          requires :id, documentation: { desc: "Team id" }
+        end
+
+        post ":id/ldap_check" do
+          if APP_CONFIG.disabled?("ldap") || APP_CONFIG.disabled?("ldap.group_sync")
+            method_not_allowed!("this instance has disabled this endpoint")
+          else
+            attrs = permitted_params.merge(id: params[:id])
+            team = Team.find(attrs[:id])
+            authorize team, :update?
+
+            team.update!(ldap_group_checked: Team.ldap_statuses[:disabled])
+            status :ok
+          end
+        end
+
         route_param :id, type: String, requirements: { id: /.*/ } do
           resource :namespaces do
             desc "Returns the list of namespaces for the given team",

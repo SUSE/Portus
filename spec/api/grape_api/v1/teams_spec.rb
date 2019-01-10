@@ -316,6 +316,61 @@ describe API::V1::Teams, type: :request do
     end
   end
 
+  context "POST /api/v1/teams/:id/ldap_check" do
+    let(:team) { create(:team, owners: [admin], viewers: [user]) }
+
+    it "disables the LDAP check when everything is fine" do
+      APP_CONFIG["ldap"]["enabled"] = true
+      APP_CONFIG["ldap"]["group_sync"]["enabled"] = true
+
+      expect do
+        post "/api/v1/teams/#{team.id}/ldap_check", headers: @admin_header
+      end.to change { Team.find_by(name: team.name).ldap_group_checked }
+        .from(Team.ldap_statuses[:unchecked])
+        .to(Team.ldap_statuses[:disabled])
+    end
+
+    it "does not allow anonymous users to perform such operation" do
+      APP_CONFIG["ldap"]["enabled"] = true
+      APP_CONFIG["ldap"]["group_sync"]["enabled"] = true
+
+      post "/api/v1/teams/#{team.id}/ldap_check"
+      expect(response).to have_http_status(401)
+    end
+
+    it "does not allow viewer users to perform such operation" do
+      APP_CONFIG["ldap"]["enabled"] = true
+      APP_CONFIG["ldap"]["group_sync"]["enabled"] = true
+
+      post "/api/v1/teams/#{team.id}/ldap_check", headers: @user_header
+      expect(response).to have_http_status(403)
+    end
+
+    it "returns a 404 if the team simply doesn't exist" do
+      APP_CONFIG["ldap"]["enabled"] = true
+      APP_CONFIG["ldap"]["group_sync"]["enabled"] = true
+
+      post "/api/v1/teams/#{team.id * 2}/ldap_check", headers: @admin_header
+      expect(response).to have_http_status(404)
+    end
+
+    it "returns a 405 if LDAP is disabled" do
+      APP_CONFIG["ldap"]["enabled"] = false
+      APP_CONFIG["ldap"]["group_sync"]["enabled"] = false
+
+      post "/api/v1/teams/#{team.id}/ldap_check", headers: @admin_header
+      expect(response).to have_http_status(405)
+    end
+
+    it "returns a 405 if LDAP is enabled but not group_synx" do
+      APP_CONFIG["ldap"]["enabled"] = true
+      APP_CONFIG["ldap"]["group_sync"]["enabled"] = false
+
+      post "/api/v1/teams/#{team.id}/ldap_check", headers: @admin_header
+      expect(response).to have_http_status(405)
+    end
+  end
+
   context "POST /api/v1/teams/:id/members" do
     let(:user) { create(:user) }
     let(:team) { create(:team, owners: [admin]) }
