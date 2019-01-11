@@ -58,6 +58,7 @@ Requires:       portusctl
 BuildRequires: systemd-rpm-macros
 %endif
 BuildRequires:  fdupes
+BuildRequires:  gcc-c++
 BuildRequires:  ruby-macros >= 5
 %{?systemd_requires}
 Provides:       Portus = %{version}
