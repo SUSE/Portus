@@ -158,6 +158,7 @@ echo "__COMMIT__" >> .gitcommit
 # Remove unneeded directories/files
 rm -rf \
    vendor/cache \
+   vendor/bundle/ruby/%{rb_ver}/gems/public_activity-1.6.3/test \
    node_modules \
    public/assets/application-*.js* \
    vendor/assets \
