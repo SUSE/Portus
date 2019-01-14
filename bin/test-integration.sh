@@ -103,12 +103,16 @@ run_tests() {
 ##
 # Setup environment
 
+# Build the image if needed.
+if [[ -z "$PORTUS_INTEGRATION_BUILD_IMAGE" ]]; then
+    pushd $ROOT_DIR
+    docker rmi -f opensuse/portus:development
+    docker build -t opensuse/portus:development .
+    popd
+fi
+
 # We build the development image only once.
 export PORTUS_INTEGRATION_BUILD_IMAGE=false
-pushd $ROOT_DIR
-docker rmi -f opensuse/portus:development
-docker build -t opensuse/portus:development .
-popd
 
 # Integration tests will play with the following images
 export DEVEL_NAME="busybox"

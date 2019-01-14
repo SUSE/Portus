@@ -42,8 +42,10 @@ namespace :test do
       str = env.map { |k, v| "#{k}##{v}" }.join(" ")
       puts "[integration] Environment string: #{str}"
 
-      # Don't build the image multiple times on Travis.
-      ENV["PORTUS_INTEGRATION_BUILD_IMAGE"] = "false" if ENV["CI"].present?
+      # Don't build the image for Travis on master.
+      if ENV["CI"].present? && ENV["TRAVIS_PULL_REQUEST"] == "false"
+        ENV["PORTUS_INTEGRATION_BUILD_IMAGE"] = "false"
+      end
 
       ENV["PORTUS_TEST_INTEGRATION"] = str if str.present?
       ENV["TEARDOWN_TESTS"] = "true"
