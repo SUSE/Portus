@@ -33,9 +33,6 @@ def log(level, str)
   Rails.logger.tagged(:integration) { Rails.logger.send(level.to_sym, str) }
 end
 
-# rubocop:disable Style/GlobalVars
-$local = false
-
 def rebuild!(can_remove)
   if can_remove
     unless ::Portus::Cmd.spawn("docker rmi -f #{::Portus::Test::LOCAL_IMAGE}")
@@ -54,25 +51,11 @@ end
 # Returns the name of the local image to be used. It will remove a previous
 # image and build it again if it's the first time it has to do so.
 def build_local!
-  return if local?
-
-  $local = true
+  return if ENV["PORTUS_INTEGRATION_BUILD_IMAGE"].to_s == "false"
 
   exists = !`docker images -q #{::Portus::Test::LOCAL_IMAGE}`.empty?
-  if exists
-    return if ENV["PORTUS_INTEGRATION_BUILD_IMAGE"].to_s == "false"
-  elsif ENV["PORTUS_INTEGRATION_BUILD_IMAGE"].present?
-    log :warn, "Ignoring `PORTUS_INTEGRATION_BUILD_IMAGE` because image does not exist"
-  end
-
   rebuild!(exists)
 end
-
-# Returns true if there are images built locally.
-def local?
-  $local
-end
-# rubocop:enable Style/GlobalVars
 
 def portus_command
   ["command", "/srv/Portus/bin/integration/init"]
