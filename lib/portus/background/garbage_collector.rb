@@ -29,6 +29,8 @@ module Portus
       end
 
       def execute!
+        return if Tag.all.count <= APP_CONFIG["delete"]["garbage_collector"]["keep_latest"].to_i
+
         @tags ||= tags_to_be_collected
         service = ::Tags::DestroyService.new(User.find_by(username: "portus"))
 
@@ -46,7 +48,10 @@ module Portus
       protected
 
       def tags_to_be_collected
-        tags = Tag.where(marked: false).where("updated_at < ?", older_than)
+        tags = Tag.where(marked: false)
+                  .where("updated_at < ? AND (pulled_at < ? OR pulled_at IS NULL)",
+                         older_than,
+                         older_than)
         return tags if APP_CONFIG["delete"]["garbage_collector"]["tag"].blank?
 
         rx = tag_regexp

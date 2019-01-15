@@ -7,15 +7,16 @@ describe Portus::RegistryNotification do
   let(:relevant)  { ::Portus::Fixtures::RegistryEvent::RELEVANT.dup }
   let(:delete)    { ::Portus::Fixtures::RegistryEvent::DELETE.dup }
   let(:version23) { ::Portus::Fixtures::RegistryEvent::VERSION23.dup }
+  let(:pull)      { ::Portus::Fixtures::RegistryEvent::PULL.dup }
 
   it "processes all the relevant events" do
-    evaluated_events = [relevant, delete, version23]
+    evaluated_events = [relevant, delete, version23, pull]
     evaluated_events.each { |e| body["events"] << e }
 
     described_class.process!(body)
 
     events = RegistryEvent.order(:event_id)
-    expect(events.size).to eq 3
+    expect(events.size).to eq 4
     events.each_with_index do |e, idx|
       data = JSON.parse(e.data)
 

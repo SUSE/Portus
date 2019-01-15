@@ -71,6 +71,44 @@ describe Repository do
     end
   end
 
+  describe "handle pull event" do
+    let(:tag_name) { "latest" }
+    let(:registry) do
+      create(:registry,
+             hostname:          "registry.test.lan",
+             external_hostname: "external.test.lan")
+    end
+    let(:repository) { create(:repository, namespace: registry.global_namespace, name: "busybox") }
+
+    before do
+      @event = build(:raw_pull_event).to_test_hash
+      @event["target"]["repository"] = "busybox"
+      @event["target"]["mediaType"] = "application/vnd.docker.distribution.manifest.v1+json"
+      @event["target"]["tag"] = tag_name
+    end
+
+    context "when the tag is not known by Portus" do
+      it "returns nil" do
+        tag = described_class.handle_pull_event(@event)
+
+        expect(tag).to be_nil
+      end
+    end
+
+    context "when the tag is known by Portus" do
+      let(:tag) { create(:tag, name: tag_name, repository: repository) }
+
+      it "updates `pulled_at` attribute and returns the tag" do
+        expect(tag.pulled_at).to be_nil
+
+        updated_tag = described_class.handle_pull_event(@event)
+
+        expect(updated_tag).not_to be_nil
+        expect(updated_tag.pulled_at).not_to be_nil
+      end
+    end
+  end
+
   describe "handle push event" do
     let(:tag_name) { "latest" }
     let(:repository_name) { "busybox" }

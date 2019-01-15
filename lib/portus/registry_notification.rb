@@ -5,7 +5,7 @@ module Portus
   # consumed later on.
   class RegistryNotification
     # An array with the events that a handler has to support.
-    HANDLED_EVENTS = %w[push delete].freeze
+    HANDLED_EVENTS = %w[push delete pull].freeze
 
     # It filters the event from the registry so the background job can actually
     # handle this request.

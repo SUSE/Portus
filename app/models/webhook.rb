@@ -87,6 +87,9 @@ class Webhook < ApplicationRecord
     hydra.run
   end
 
+  # Pull event is not handled on Webhook yet.
+  def self.handle_pull_event(event); end
+
   # Handle a delete event from the registry. All enabled webhooks of the provided
   # namespace are triggered in parallel.
   def self.handle_delete_event(event)
