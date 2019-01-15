@@ -13,13 +13,28 @@ username   = ARGV[2]
 parameters = ARGV[3]
 
 ##
+# We can have an :id parameter, let's guess it from the last row.
+
+if endpoint.include?(":id")
+  parts    = endpoint.split("/")
+  idx      = parts.index(":id")
+  resource = parts[idx - 1]
+  unless resource.nil?
+    const = resource.singularize.capitalize.constantize
+    id = const.order("created_at ASC").last.id
+    parts[idx] = id
+    endpoint = parts.join("/")
+  end
+end
+
+##
 # Initialize the request object.
 
 uri = URI.parse("http://#{hostname}:3000#{endpoint}")
 req = Net::HTTP.const_get(method.capitalize).new(uri)
 req["Accept"] = "application/json"
 
-if method == "post" && parameters.present?
+if method == "post"
   ##
   # Application token
 
@@ -33,19 +48,21 @@ if method == "post" && parameters.present?
   ##
   # Body
 
-  req["Content-Type"] = "application/json"
-  body = {}
-  parameters.split(",").each do |kv|
-    k, v = kv.split("=", 2)
-    first, second = k.split(".", 2)
-    if second.nil?
-      body[first] = v
-    else
-      body[first] = body.fetch(first, {})
-      body[first][second] = v
+  if parameters.present?
+    req["Content-Type"] = "application/json"
+    body = {}
+    parameters.split(",").each do |kv|
+      k, v = kv.split("=", 2)
+      first, second = k.split(".", 2)
+      if second.nil?
+        body[first] = v
+      else
+        body[first] = body.fetch(first, {})
+        body[first][second] = v
+      end
     end
+    req.body = body.to_json
   end
-  req.body = body.to_json
 end
 
 ##

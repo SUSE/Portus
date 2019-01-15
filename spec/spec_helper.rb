@@ -123,6 +123,10 @@ RSpec.configure do |config|
       "base_admin"     => "",
       "filter"         => "",
       "uid"            => "uid",
+      "group_sync"     => {
+        "enabled"      => true,
+        "default_role" => "viewer"
+      },
       "authentication" => {
         "enabled"  => false,
         "bind_dn"  => "",

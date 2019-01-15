@@ -152,7 +152,9 @@ for p in ${profiles[*]}; do
     status=$?
     set -e
 
-    cleanup_containers "docker-compose.$p.yml"
+    if [[ ! -z "$TEARDOWN_TESTS" ]]; then
+        cleanup_containers "docker-compose.$p.yml"
+    fi
 
     if [ $status -ne 0 ]; then
         exit $status

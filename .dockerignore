@@ -5,3 +5,4 @@ packaging
 log/*
 .DS_Store
 .bundle/config
+config/config-local.yml

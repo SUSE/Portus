@@ -113,6 +113,9 @@ ldap:
   # Portus administrators automatically.
   admin_base: ""
 
+  # The base where groups are located (e.g. "ou=groups,dc=example,dc=com").
+  group_base: ""
+
   # User filter (e.g. "mail=george*").
   filter: ""
 
@@ -124,6 +127,16 @@ ldap:
     enabled: false
     bind_dn: ""
     password: ""
+
+  # Automatically add team members from a matching LDAP group into each
+  # team. Note that this will not delete nor update existing team members. Only
+  # `groupOfNames` and `groupOfUniqueNames` are supported.
+  group_sync:
+    enabled: true
+
+    # The role in which new team members will be added. Note that Portus
+    # administrators will be added as team owners regardless of this setting.
+    default_role: "viewer"
 
   # Portus needs an email for each user, but there's no standard way to get
   # that from LDAP servers. You can tell Portus how to get the email from users

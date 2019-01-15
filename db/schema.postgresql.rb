@@ -144,6 +144,8 @@ ActiveRecord::Schema.define(version: 2019_01_09_112643) do
     t.datetime "updated_at", null: false
     t.boolean "hidden", default: false
     t.text "description"
+    t.integer "ldap_group_checked", default: 0
+    t.datetime "checked_at"
     t.index ["name"], name: "index_teams_on_name", unique: true
   end
 
@@ -171,6 +173,7 @@ ActiveRecord::Schema.define(version: 2019_01_09_112643) do
     t.string "provider"
     t.string "uid"
     t.boolean "bot", default: false
+    t.integer "ldap_group_checked", default: 0
     t.index ["display_name"], name: "index_users_on_display_name", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["namespace_id"], name: "index_users_on_namespace_id"
