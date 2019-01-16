@@ -7,6 +7,35 @@
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>Portus 2.3.7 and 2.4.1 released</title>
+        <description>
+          
+          &lt;p&gt;We start the year with a couple of patch-level releases. First of all, we have
+&lt;code class=&quot;highlighter-rouge&quot;&gt;2.3.7&lt;/code&gt;, in which we upgraded some Ruby gems that had known vulnerability
+issues. Therefore, we strongly recommend users that are still on the &lt;code class=&quot;highlighter-rouge&quot;&gt;v2.3&lt;/code&gt;
+branch to switch to this new version.&lt;/p&gt;
+
+&lt;p&gt;Besides that, we released &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4.0&lt;/code&gt; in October, and meanwhile we’ve been
+accumulating fixes for bugs that the community has been reporting. Now we felt
+like it was a good time to release all these fixes into a new release, and hence
+we deliver to you &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4.1&lt;/code&gt;. You can read the list of bugs that have been fixed
+&lt;a href=&quot;https://github.com/SUSE/Portus/releases/tag/2.4.1&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;2.3&lt;/code&gt; Docker tags have been updated accordingly on the Docker
+hub, and you can also pull from the specific tags &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4.1&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;2.3.7&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Last but not least, we are releasing these two releases on a time in which we
+are pretty close of the deadline for the code freeze for &lt;code class=&quot;highlighter-rouge&quot;&gt;2.5.0&lt;/code&gt;. This release
+will improve upon the previous releases with all the feedback that we’ve
+gathered from the community, and we are pretty excited about. So stay tuned!&lt;/p&gt;
+
+        </description>
+        <pubDate>Wed, 16 Jan 2019 00:00:00 +0100</pubDate>
+        <link>/2019/01/16/portus-2.3.7-and-2.4.1.html</link>
+        <guid isPermaLink="true">/2019/01/16/portus-2.3.7-and-2.4.1.html</guid>
+      </item>
+    
+      <item>
         <title>Portus 2.4 released!</title>
         <description>
           
