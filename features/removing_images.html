@@ -408,6 +408,7 @@ old are deleted. The section is as follows:</p>
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">garbage_collector</span><span class="pi">:</span>
   <span class="na">enabled</span><span class="pi">:</span> <span class="no">false</span>
   <span class="na">older_than</span><span class="pi">:</span> <span class="s">30</span>
+  <span class="na">keep_latest</span><span class="pi">:</span> <span class="s">5</span>
   <span class="na">tag</span><span class="pi">:</span> <span class="s2">"</span><span class="s">"</span></code></pre></figure>
 
 <p>Some notes:</p>
@@ -416,7 +417,10 @@ old are deleted. The section is as follows:</p>
   <li>It’s disabled by default.</li>
   <li><code class="highlighter-rouge">older_than</code> specifies the number of days in which an <code class="highlighter-rouge">image:tag</code> is
 considered old. By default, an image older than 30 days will be considered
-old.</li>
+old. Keep in mind that even if the image is considered old, if it was pulled
+in the latest 30 days, it won’t be removed.</li>
+  <li><code class="highlighter-rouge">keep_latest</code> specifies the number of tags that will be kept regardless if
+it’s older than 30 days.</li>
   <li><code class="highlighter-rouge">tag</code> is a filter that acts over old tags. That is, if you specify a value,
 then only old tags that follow the given format will be automatically
 removed. This option is expected to be a valid regular expression. Some
