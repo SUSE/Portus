@@ -1,3 +1,7 @@
+## 2.3.7
+
+- ad5d649a3344 Upgraded some gems with known vulnerabilities.
+
 ## 2.3.6
 
 - 81179951f458 Restrict deletes into the repository (#1973)
