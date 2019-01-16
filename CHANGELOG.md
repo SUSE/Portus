@@ -1,3 +1,20 @@
+## 2.4.1
+
+- af08f6211abb db: added index on scan_result
+- a282fff71bd4 Properly show tokens for bots
+- a55c0ec2f827 Upgraded cconfig to fix a configuration issue
+- d3be549af55f Fixed namespace duplication
+- 3591e04ba75c ui: fixed team creation for standard user
+- 52915908e36b ui: fixed repositories performance view issue
+- 69e41ece3f8a Reduced amount of rendered data for repository entity
+- 942f18113fa1 Fixed breaking changes from pagination commit
+- 762c9665bb11 policies: fixed destroy for repositories/tags
+- Upgraded the following gems due to vulnerabilities:
+  - 5f90273e0b9a nokogiri
+  - 351fc7d27b3e loofah
+  - d3be549af55f rack
+  - ae62d4c4c0b7 rails
+
 ## 2.4.0
 
 ### Highlight
@@ -178,6 +195,15 @@ depends on the same `delete.enabled` configuration).
 - ecca2d9c6336 js: added unit tests for vue components and utils (#1661)
 - f297fd71618b Re-implemented from scratch integration tests (#1716)
 - d534723aa762 spec: added chrome headless as default js runner (#1866)
+
+## 2.3.7
+
+- ad5d649a3344 Upgraded some gems with known vulnerabilities.
+
+## 2.3.6
+
+- 81179951f458 Restrict deletes into the repository (#1973)
+- 066f06f4e713 Remind users to login again after password update (#1969)
 
 ## 2.3.5
 
