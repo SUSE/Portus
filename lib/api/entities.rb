@@ -57,18 +57,21 @@ module API
         desc: "Whether this is a bot or not"
       }
       expose :display_username, documentation: {
-        type: String,
-        desc: "Displayable name"
+        type:   String,
+        desc:   "Displayable name",
+        hidden: true
       }, if: { type: :internal }
       expose :namespaces_count, documentation: {
-        type: Integer,
-        desc: "The number of namespaces that user has access to"
+        type:   Integer,
+        desc:   "The number of namespaces that user has access to",
+        hidden: true
       }, if: { type: :internal } do |u|
         u.teams.reduce(0) { |sum, t| sum + t.namespaces.count }
       end
       expose :teams_count, documentation: {
-        type: Integer,
-        desc: "The number of teams that the user belongs to"
+        type:   Integer,
+        desc:   "The number of teams that the user belongs to",
+        hidden: true
       }, if: { type: :internal } do |u|
         u.teams.all_non_special.count
       end
@@ -119,8 +122,9 @@ module API
       expose :created_at, :updated_at, documentation: { type: DateTime }
       expose :size, documentation: { type: Integer, desc: "The size of the tag" }
       expose :size_human, documentation: {
-        type: String,
-        desc: "The size of the tag for humans"
+        type:   String,
+        desc:   "The size of the tag for humans",
+        hidden: true
       }, if: { type: :internal } do |tag|
         ActiveSupport::NumberHelper.number_to_human_size(tag.size) if tag.size
       end
@@ -150,8 +154,9 @@ module API
         desc: "The description of the repository"
       }
       expose :description_md, documentation: {
-        type: String,
-        desc: "The description of the repository parsed by markdown"
+        type:   String,
+        desc:   "The description of the repository parsed by markdown",
+        hidden: true
       }, if: { type: :internal } do |r|
         markdown(r.description)
       end
@@ -181,7 +186,8 @@ module API
       end
       expose :tags, documentation: {
         is_array: true,
-        desc:     "The repository's tags grouped by digest"
+        desc:     "The repository's tags grouped by digest",
+        hidden:   true
       }, if: { type: :search } do |repository|
         repository.groupped_tags.map do |k1|
           API::Entities::Tags.represent(k1)
@@ -211,8 +217,9 @@ module API
         desc: "The body of the comment"
       }
       expose :body_md, documentation: {
-        type: String,
-        desc: "The body of the comment parsed by markdown"
+        type:   String,
+        desc:   "The body of the comment parsed by markdown",
+        hidden: true
       }, if: { type: :internal } do |c|
         markdown(c.body)
       end
@@ -222,7 +229,8 @@ module API
         c.author&.slice("id", "username", "avatar_url")
       end
       expose :destroyable, documentation: {
-        desc: "Boolean that tells if the current user can destroy or not the comment"
+        desc:   "Boolean that tells if the current user can destroy or not the comment",
+        hidden: true
       }, if: { type: :internal } do |c, options|
         can_destroy_comment?(c, options[:current_user])
       end
@@ -241,8 +249,9 @@ module API
         desc: "The description of the team"
       }
       expose :description_md, documentation: {
-        type: String,
-        desc: "The description of the team parsed by markdown"
+        type:   String,
+        desc:   "The description of the team parsed by markdown",
+        hidden: true
       }, if: { type: :internal } do |t|
         markdown(t.description)
       end
@@ -251,30 +260,35 @@ module API
         desc: "Whether the team is visible to the final user or not"
       }
       expose :role, documentation: {
-        type: String,
-        desc: "The role this of the current user within this team"
+        type:   String,
+        desc:   "The role this of the current user within this team",
+        hidden: true
       }, if: { type: :internal } do |team, options|
         role_within_team(options[:current_user], team)
       end
       expose :updatable, documentation: {
-        desc: "Boolean that tells if the current user can destroy the team"
+        desc:   "Boolean that tells if the current user can destroy the team",
+        hidden: true
       }, if: { type: :internal } do |team, options|
         can_manage_team?(team, options[:current_user])
       end
       expose :destroyable, documentation: {
-        desc: "Boolean that tells if the current user can destroy the team"
+        desc:   "Boolean that tells if the current user can destroy the team",
+        hidden: true
       }, if: { type: :internal } do |team, options|
         can_destroy_team?(team, options[:current_user])
       end
       expose :users_count, documentation: {
-        type: Integer,
-        desc: "The number of enabled users that belong to this team"
+        type:   Integer,
+        desc:   "The number of enabled users that belong to this team",
+        hidden: true
       }, if: { type: :internal } do |t|
         t.users.enabled.count
       end
       expose :namespaces_count, documentation: {
-        type: Integer,
-        desc: "The number of namespaces that belong to this team"
+        type:   Integer,
+        desc:   "The number of namespaces that belong to this team",
+        hidden: true
       }, if: { type: :internal } do |t|
         t.namespaces.count
       end
@@ -296,14 +310,16 @@ module API
         t.user.display_username
       end
       expose :admin, documentation: {
-        type: String,
-        desc: "Tells if the team member is an admin or not"
+        type:   String,
+        desc:   "Tells if the team member is an admin or not",
+        hidden: true
       }, if: { type: :internal } do |t|
         t.user.admin?
       end
       expose :current, documentation: {
-        type: String,
-        desc: "Tells if it's the current session user"
+        type:   String,
+        desc:   "Tells if it's the current session user",
+        hidden: true
       }, if: { type: :internal } do |t, options|
         user = options[:current_user]
 
@@ -324,8 +340,9 @@ module API
         desc: "The description of the namespace"
       }
       expose :description_md, documentation: {
-        type: String,
-        desc: "The description of the namespace parsed by markdown"
+        type:   String,
+        desc:   "The description of the namespace parsed by markdown",
+        hidden: true
       }, if: { type: :internal } do |n|
         markdown(n.description)
       end
@@ -335,14 +352,16 @@ module API
         namespace.team&.slice("id", "name", "hidden")
       end
       expose :repositories_count, documentation: {
-        type: Integer,
-        desc: "The number of repositories that belong to this namespace"
+        type:   Integer,
+        desc:   "The number of repositories that belong to this namespace",
+        hidden: true
       }, if: { type: :internal } do |n|
         n.repositories.count
       end
       expose :webhooks_count, documentation: {
-        type: Integer,
-        desc: "The number of webooks that belong to this namespace"
+        type:   Integer,
+        desc:   "The number of webooks that belong to this namespace",
+        hidden: true
       }, if: { type: :internal } do |n|
         n.webhooks.count
       end
@@ -358,24 +377,28 @@ module API
       }
       # rubocop:disable Style/SymbolProc
       expose :orphan, documentation: {
-        type: "Boolean",
-        desc: "Whether this is an orphan namespace or not"
+        type:   "Boolean",
+        desc:   "Whether this is an orphan namespace or not",
+        hidden: true
       }, if: { type: :internal } do |namespace|
         namespace.orphan?
       end
       # rubocop:enable Style/SymbolProc
       expose :updatable, documentation: {
-        desc: "Boolean that tells if the current user can manage the namespace"
+        desc:   "Boolean that tells if the current user can manage the namespace",
+        hidden: true
       }, if: { type: :internal } do |namespace, options|
         can_manage_namespace?(namespace, options[:current_user])
       end
       expose :destroyable, documentation: {
-        desc: "Boolean that tells if the current user can destroy the namespace"
+        desc:   "Boolean that tells if the current user can destroy the namespace",
+        hidden: true
       }, if: { type: :internal } do |namespace, options|
         can_destroy_namespace?(namespace, options[:current_user])
       end
       expose :permissions, documentation: {
-        desc: "Different permissions for the current user"
+        desc:   "Different permissions for the current user",
+        hidden: true
       }, if: { type: :internal } do |namespace, options|
         user = options[:current_user]
         {
@@ -414,12 +437,14 @@ module API
         desc: "Webhook request content type"
       }
       expose :updatable, documentation: {
-        desc: "Boolean that tells if the current user can manage the webhook"
+        desc:   "Boolean that tells if the current user can manage the webhook",
+        hidden: true
       }, if: { type: :internal } do |webhook, options|
         can_manage_webhook?(webhook, options[:current_user])
       end
       expose :destroyable, documentation: {
-        desc: "Boolean that tells if the current user can destroy the webhook"
+        desc:   "Boolean that tells if the current user can destroy the webhook",
+        hidden: true
       }, if: { type: :internal } do |webhook, options|
         can_destroy_webhook?(webhook, options[:current_user])
       end
