@@ -163,6 +163,7 @@ delete:
   garbage_collector:
     enabled: false
     older_than: 30
+    keep_latest: 5
     tag: ""
 {% endhighlight %}
 

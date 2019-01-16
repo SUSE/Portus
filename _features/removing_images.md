@@ -104,6 +104,7 @@ old are deleted. The section is as follows:
 garbage_collector:
   enabled: false
   older_than: 30
+  keep_latest: 5
   tag: ""
 {% endhighlight %}
 
@@ -112,8 +113,11 @@ Some notes:
 1. It's disabled by default.
 2. `older_than` specifies the number of days in which an `image:tag` is
    considered old. By default, an image older than 30 days will be considered
-   old.
-3. `tag` is a filter that acts over old tags. That is, if you specify a value,
+   old. Keep in mind that even if the image is considered old, if it was pulled
+   in the latest 30 days, it won't be removed.
+3. `keep_latest` specifies the number of tags that will be kept regardless if
+   it's older than 30 days.
+4. `tag` is a filter that acts over old tags. That is, if you specify a value,
    then only old tags that follow the given format will be automatically
    removed. This option is expected to be a valid regular expression. Some
    examples:
