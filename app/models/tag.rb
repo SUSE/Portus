@@ -16,6 +16,7 @@
 #  username      :string(255)
 #  scanned       :integer          default(0)
 #  size          :integer
+#  pulled_at     :datetime
 #
 # Indexes
 #

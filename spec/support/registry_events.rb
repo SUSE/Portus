@@ -12,11 +12,34 @@ module Portus
             { "action" => "push" },
             { "action" => "push", "target" => { "mediaType" => "some" } },
             {
-              "action" => "pull", "target" => {
-                "mediaType" => "application/vnd.docker.distribution.manifest.v1+json"
+              "action" => "irrelevant",
+              "target" => {
+                "mediaType" => "application/vnd.docker.distribution.manifest.v2+json"
               }
             }
           ]
+        }.freeze
+
+      PULL =
+        {
+          "id"        => "847f45bb-5f19-4c1b-b198-6c5ba467c127",
+          "timestamp" => "2019-01-15T20:17:10.595087128Z",
+          "action"    => "pull",
+          "target"    => {
+            "mediaType"  => "application/vnd.docker.distribution.manifest.v2+json",
+            "size"       => 2193,
+            "digest"     => "sha256:095ca87493f6a2147b8543a669f2d773097df9be7e17a981033c",
+            "length"     => 2193,
+            "repository" => "vitoravelino/etcd",
+            "tag"        => "v3.2.25-arm64"
+          },
+          "actor"     => {
+            "name" => "vitoravelino"
+          },
+          "source"    => {
+            "addr"       => "50549da63cc2:5000",
+            "instanceID" => "a481f8c8-a71c-4395-b90c-f8d32a083d02"
+          }
         }.freeze
 
       RELEVANT =

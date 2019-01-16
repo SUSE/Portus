@@ -63,9 +63,16 @@ delete:
   garbage_collector:
     enabled: false
 
-    # Remove images older than a specific value. This value is interpreted as
-    # the number of days.
+    # Remove images not pulled and older than a specific value. This value is
+    # interpreted as the number of days.
+    #
+    # e.g.: If an image wasn't pulled in the latest 30 days and the image wasn't
+    # updated somehow in the latest 30 days, the image will be deleted.
     older_than: 30
+
+    # Keep the latest X images regardless if it's older than the value set in
+    # `older_than` configuration.
+    keep_latest: 5
 
     # Provide a string containing a regular expression. If you provide a
     # valid regular expression, garbage collector will only be applied into tags

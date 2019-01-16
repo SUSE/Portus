@@ -74,6 +74,24 @@ class Repository < ApplicationRecord
     destroyed
   end
 
+  # Handle a pull event from the registry.
+  def self.handle_pull_event(event)
+    registry = Registry.find_from_event(event)
+    return if registry.nil?
+
+    namespace, repo_name, tag_name = registry.get_namespace_from_event(event)
+    return if namespace.nil?
+
+    repository = namespace.repositories.find_by(name: repo_name)
+    return if repository.nil?
+
+    tag = repository.tags.find_by(name: tag_name)
+    return if tag.nil?
+
+    tag.update_columns(pulled_at: Time.current)
+    tag
+  end
+
   # Handle a push event from the registry.
   def self.handle_push_event(event)
     registry = Registry.find_from_event(event)
