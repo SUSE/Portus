@@ -38,36 +38,7 @@ tags:
   description: Operations about versions
 paths:
   "/api/v1/users/{id}/application_tokens":
-    get:
-      summary: Returns list of user's tokens
-      description: Returns list of user's tokens
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: User ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Returns list of user's tokens
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/ApplicationTokens"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - users
-      operationId: getApiV1UsersIdApplicationTokens
     post:
-      summary: Create user's token
       description: Create user's token
       produces:
       - application/json
@@ -106,9 +77,35 @@ paths:
       tags:
       - users
       operationId: postApiV1UsersIdApplicationTokens
+    get:
+      description: Returns list of user's tokens
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: User ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Returns list of user's tokens
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/ApplicationTokens"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - users
+      operationId: getApiV1UsersIdApplicationTokens
   "/api/v1/users/application_tokens/{id}":
     delete:
-      summary: Delete application token
       description: Delete application token
       produces:
       - application/json
@@ -130,187 +127,6 @@ paths:
       tags:
       - users
       operationId: deleteApiV1UsersApplicationTokensId
-  "/api/v1/users":
-    post:
-      summary: Create new user
-      description: Create new user
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      parameters:
-      - in: formData
-        name: user[username]
-        description: User name
-        type: string
-        required: true
-      - in: formData
-        name: user[email]
-        description: E-mail
-        type: string
-        required: true
-      - in: formData
-        name: user[password]
-        description: Password
-        type: string
-        required: true
-      - in: formData
-        name: user[display_name]
-        description: Display name
-        type: string
-        required: false
-      - in: formData
-        name: user[bot]
-        description: Whether this is a bot or not
-        type: boolean
-        required: false
-      responses:
-        '201':
-          description: Create new user
-          schema:
-            "$ref": "#/definitions/Users"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '422':
-          description: Unprocessable Entity
-          schema:
-            "$ref": "#/definitions/FullApiErrors"
-      tags:
-      - users
-      operationId: postApiV1Users
-    get:
-      summary: Returns list of users
-      description: This will expose all users
-      produces:
-      - application/json
-      responses:
-        '200':
-          description: Returns list of users
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/Users"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-      tags:
-      - users
-      operationId: getApiV1Users
-  "/api/v1/users/{id}":
-    put:
-      summary: Update user
-      description: Update user
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
-      - application/json
-      parameters:
-      - in: formData
-        name: user[username]
-        description: User name
-        type: string
-        required: false
-      - in: formData
-        name: user[email]
-        description: E-mail
-        type: string
-        required: false
-      - in: formData
-        name: user[password]
-        description: Password
-        type: string
-        required: false
-      - in: formData
-        name: user[display_name]
-        description: Display name
-        type: string
-        required: false
-      - in: path
-        name: id
-        description: User ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Update user
-          schema:
-            "$ref": "#/definitions/Users"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-        '422':
-          description: Unprocessable Entity
-          schema:
-            "$ref": "#/definitions/FullApiErrors"
-      tags:
-      - users
-      operationId: putApiV1UsersId
-    delete:
-      summary: Delete user
-      description: Delete user
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: User ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '204':
-          description: Delete user
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - users
-      operationId: deleteApiV1UsersId
-    get:
-      summary: Show user by id or email
-      description: Show user by id or email
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: User ID or email
-        type: string
-        required: true
-      responses:
-        '200':
-          description: Show user by id or email
-          schema:
-            "$ref": "#/definitions/Users"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - users
-      operationId: getApiV1UsersId
   "/api/v1/users/bootstrap":
     post:
       summary: Create the first admin user
@@ -369,6 +185,215 @@ paths:
       tags:
       - users
       operationId: postApiV1UsersBootstrap
+  "/api/v1/users":
+    get:
+      summary: Returns list of users
+      description: This will expose all users
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: all
+        description: Ignores pagination
+        type: boolean
+        required: false
+      - in: query
+        name: page
+        description: Current page number
+        type: integer
+        format: int32
+        default: 1
+        required: false
+      - in: query
+        name: per_page
+        description: Number of items per page
+        type: integer
+        format: int32
+        default: 15
+        required: false
+      - in: query
+        name: sort_attr
+        description: Current page number
+        type: string
+        default: id
+        required: false
+      - in: query
+        name: sort_order
+        description: Number of items per page
+        type: string
+        default: asc
+        required: false
+      responses:
+        '200':
+          description: Returns list of users
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/Users"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+      tags:
+      - users
+      operationId: getApiV1Users
+    post:
+      description: Create new user
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: user[username]
+        description: User name
+        type: string
+        required: true
+      - in: formData
+        name: user[email]
+        description: E-mail
+        type: string
+        required: true
+      - in: formData
+        name: user[password]
+        description: Password
+        type: string
+        required: true
+      - in: formData
+        name: user[display_name]
+        description: Display name
+        type: string
+        required: false
+      - in: formData
+        name: user[bot]
+        description: Whether this is a bot or not
+        type: boolean
+        required: false
+      responses:
+        '201':
+          description: Create new user
+          schema:
+            "$ref": "#/definitions/Users"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - users
+      operationId: postApiV1Users
+  "/api/v1/users/{id}":
+    delete:
+      description: Delete user
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: User ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '204':
+          description: Delete user
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - users
+      operationId: deleteApiV1UsersId
+    put:
+      description: Update user
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: user[username]
+        description: User name
+        type: string
+        required: false
+      - in: formData
+        name: user[email]
+        description: E-mail
+        type: string
+        required: false
+      - in: formData
+        name: user[password]
+        description: Password
+        type: string
+        required: false
+      - in: formData
+        name: user[display_name]
+        description: Display name
+        type: string
+        required: false
+      - in: path
+        name: id
+        description: User ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Update user
+          schema:
+            "$ref": "#/definitions/Users"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - users
+      operationId: putApiV1UsersId
+    get:
+      description: Show user by id or email
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: User ID or email
+        type: string
+        required: true
+      responses:
+        '200':
+          description: Show user by id or email
+          schema:
+            "$ref": "#/definitions/Users"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - users
+      operationId: getApiV1UsersId
   "/api/v1/health":
     get:
       summary: Returns hash of metrics
@@ -387,101 +412,35 @@ paths:
       tags:
       - health
       operationId: getApiV1Health
-  "/api/v1/namespaces":
-    get:
-      summary: Returns a list of namespaces
-      description: |-
-        This will expose all accessible namespaces by the user via either team
-                                membership or visibility. Keep in mind that if the user is an admin, this
-                                will return all the global, personal and other namespaces created by all
-                                the users
+  "/api/v1/namespaces/{id}":
+    delete:
+      description: Delete namespace
       produces:
-      - application/json
-      responses:
-        '200':
-          description: Returns a list of namespaces
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/Namespaces"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-      tags:
-      - namespaces
-      operationId: getApiV1Namespaces
-    post:
-      summary: Create a namespace
-      description: Create a namespace
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
       - application/json
       parameters:
-      - in: formData
-        name: name
-        description: Namespace name
-        type: string
+      - in: path
+        name: id
+        description: Namespace ID
+        type: integer
+        format: int32
         required: true
-      - in: formData
-        name: team
-        description: Team name
-        type: string
-        required: true
-      - in: formData
-        name: description
-        description: Team description
-        type: string
-        required: false
       responses:
-        '201':
-          description: Create a namespace
-          schema:
-            "$ref": "#/definitions/Teams"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
+        '204':
+          description: Delete namespace
         '401':
           description: Authentication fails
         '403':
           description: Authorization fails
+        '404':
+          description: Not found
         '422':
           description: Unprocessable Entity
           schema:
-            "$ref": "#/definitions/FullApiErrors"
+            "$ref": "#/definitions/ApiErrors"
       tags:
       - namespaces
-      operationId: postApiV1Namespaces
-  "/api/v1/namespaces/validate":
-    get:
-      summary: Validates the given namespace
-      description: Validates the given namespace
-      produces:
-      - application/json
-      parameters:
-      - in: query
-        name: name
-        description: Name to be checked
-        type: string
-        required: true
-      responses:
-        '200':
-          description: Validates the given namespace
-          schema:
-            "$ref": "#/definitions/Status"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-      tags:
-      - namespaces
-      operationId: getApiV1NamespacesValidate
-  "/api/v1/namespaces/{id}":
+      operationId: deleteApiV1NamespacesId
     put:
-      summary: Update namespace
       description: Update namespace
       produces:
       - application/json
@@ -535,34 +494,7 @@ paths:
       tags:
       - namespaces
       operationId: putApiV1NamespacesId
-    delete:
-      summary: Delete namespace
-      description: Delete namespace
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Namespace ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '204':
-          description: Delete namespace
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-        '422':
-          description: Unprocessable Entity
-      tags:
-      - namespaces
-      operationId: deleteApiV1NamespacesId
     get:
-      summary: Show namespaces by id
       description: Show namespaces by id
       produces:
       - application/json
@@ -587,9 +519,131 @@ paths:
       tags:
       - namespaces
       operationId: getApiV1NamespacesId
+  "/api/v1/namespaces":
+    post:
+      description: Create a namespace
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: name
+        description: Namespace name
+        type: string
+        required: true
+      - in: formData
+        name: team
+        description: Team name
+        type: string
+        required: true
+      - in: formData
+        name: description
+        description: Team description
+        type: string
+        required: false
+      responses:
+        '201':
+          description: Create a namespace
+          schema:
+            "$ref": "#/definitions/Teams"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - namespaces
+      operationId: postApiV1Namespaces
+    get:
+      summary: Returns a list of namespaces
+      description: |-
+        This will expose all accessible namespaces by the user via either team
+                                membership or visibility. Keep in mind that if the user is an admin, this
+                                will return all the global, personal and other namespaces created by all
+                                the users
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: all
+        description: Ignores pagination
+        type: boolean
+        required: false
+      - in: query
+        name: page
+        description: Current page number
+        type: integer
+        format: int32
+        default: 1
+        required: false
+      - in: query
+        name: per_page
+        description: Number of items per page
+        type: integer
+        format: int32
+        default: 15
+        required: false
+      - in: query
+        name: sort_attr
+        description: Current page number
+        type: string
+        default: id
+        required: false
+      - in: query
+        name: sort_order
+        description: Number of items per page
+        type: string
+        default: asc
+        required: false
+      responses:
+        '200':
+          description: Returns a list of namespaces
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/Namespaces"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+      tags:
+      - namespaces
+      operationId: getApiV1Namespaces
+  "/api/v1/namespaces/validate":
+    get:
+      summary: Validates the given namespace
+      description: Validates the given namespace
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: name
+        description: Name to be checked
+        type: string
+        required: true
+      responses:
+        '200':
+          description: Validates the given namespace
+          schema:
+            "$ref": "#/definitions/Status"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+      tags:
+      - namespaces
+      operationId: getApiV1NamespacesValidate
   "/api/v1/namespaces/{id}/repositories":
     get:
-      summary: Returns the list of the repositories for the given namespace
       description: Returns the list of the repositories for the given namespace
       produces:
       - application/json
@@ -616,80 +670,58 @@ paths:
       tags:
       - namespaces
       operationId: getApiV1NamespacesIdRepositories
-  "/api/v1/registries":
+  "/api/v1/registries/validate":
     get:
-      summary: Returns a list of registries
-      description: This will expose all accessible registries
+      summary: Validates the given registry
+      description: Besides containing the usual Status object, it adds the reachable
+        validation to the `hostname` field in the `messages` hash. This validation
+        returns a string containing the error as given by the registry. If empty then
+        everything went well
       produces:
-      - application/json
-      responses:
-        '200':
-          description: Returns a list of registries
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/Registries"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-      tags:
-      - registries
-      operationId: getApiV1Registries
-    post:
-      summary: Create a registry
-      description: Allow users to create a registry. This will only work if no registry
-        works yet
-      produces:
-      - application/json
-      consumes:
-      - application/x-www-form-urlencoded
       - application/json
       parameters:
-      - in: formData
-        name: registry[name]
+      - in: query
+        name: name
         description: The name of the registry
         type: string
-        required: true
-      - in: formData
-        name: registry[hostname]
+        required: false
+      - in: query
+        name: hostname
         description: The hostname of the registry
         type: string
-        required: true
-      - in: formData
-        name: registry[use_ssl]
-        description: Whether the registry uses SSL or not
-        type: boolean
-        required: true
-      - in: formData
-        name: registry[external_hostname]
+        required: false
+      - in: query
+        name: external_hostname
         description: An external hostname of the registry, useful if behind a proxy
           with a different FQDN
         type: string
         required: false
+      - in: query
+        name: use_ssl
+        description: Whether the registry uses SSL or not
+        type: boolean
+        required: false
+      - in: formData
+        name: only
+        description: Restrict which parameters are to be validated
+        type: array
+        items:
+          type: string
+        required: false
       responses:
-        '201':
-          description: Create a registry
+        '200':
+          description: Validates the given registry
           schema:
-            "$ref": "#/definitions/Registries"
-        '400':
-          description: Bad request
-          schema:
-            "$ref": "#/definitions/ApiErrors"
+            "$ref": "#/definitions/Status"
         '401':
           description: Authentication fails
         '403':
           description: Authorization fails
-        '422':
-          description: Unprocessable Entity
-          schema:
-            "$ref": "#/definitions/FullApiErrors"
       tags:
       - registries
-      operationId: postApiV1Registries
+      operationId: getApiV1RegistriesValidate
   "/api/v1/registries/{id}":
     put:
-      summary: Update registry
       description: Update registry
       produces:
       - application/json
@@ -745,62 +777,207 @@ paths:
       tags:
       - registries
       operationId: putApiV1RegistriesId
-  "/api/v1/registries/validate":
-    get:
-      summary: Validates the given registry
-      description: Besides containing the usual Status object, it adds the reachable
-        validation to the `hostname` field in the `messages` hash. This validation
-        returns a string containing the error as given by the registry. If empty then
-        everything went well
+  "/api/v1/registries":
+    post:
+      summary: Create a registry
+      description: Allow users to create a registry. This will only work if no registry
+        works yet
       produces:
       - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
       parameters:
-      - in: query
-        name: name
+      - in: formData
+        name: registry[name]
         description: The name of the registry
         type: string
-        required: false
-      - in: query
-        name: hostname
+        required: true
+      - in: formData
+        name: registry[hostname]
         description: The hostname of the registry
         type: string
-        required: false
-      - in: query
-        name: external_hostname
+        required: true
+      - in: formData
+        name: registry[use_ssl]
+        description: Whether the registry uses SSL or not
+        type: boolean
+        required: true
+      - in: formData
+        name: registry[external_hostname]
         description: An external hostname of the registry, useful if behind a proxy
           with a different FQDN
         type: string
         required: false
-      - in: query
-        name: use_ssl
-        description: Whether the registry uses SSL or not
-        type: boolean
-        required: false
-      - in: formData
-        name: only
-        description: Restrict which parameters are to be validated
-        type: array
-        items:
-          type: string
-        required: false
+      responses:
+        '201':
+          description: Create a registry
+          schema:
+            "$ref": "#/definitions/Registries"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - registries
+      operationId: postApiV1Registries
+    get:
+      summary: Returns a list of registries
+      description: This will expose all accessible registries
+      produces:
+      - application/json
       responses:
         '200':
-          description: Validates the given registry
+          description: Returns a list of registries
           schema:
-            "$ref": "#/definitions/Status"
+            type: array
+            items:
+              "$ref": "#/definitions/Registries"
         '401':
           description: Authentication fails
         '403':
           description: Authorization fails
       tags:
       - registries
-      operationId: getApiV1RegistriesValidate
+      operationId: getApiV1Registries
+  "/api/v1/repositories/{id}":
+    put:
+      description: Update team
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: repository[description]
+        description: The description of the team
+        type: string
+        required: false
+      - in: path
+        name: id
+        description: Team ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Update team
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - repositories
+      operationId: putApiV1RepositoriesId
+    delete:
+      description: Delete repository
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Repository ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '204':
+          description: Delete repository
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+      tags:
+      - repositories
+      operationId: deleteApiV1RepositoriesId
+    get:
+      description: Show repositories by id
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Repository ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Show repositories by id
+          schema:
+            "$ref": "#/definitions/Repositories"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - repositories
+      operationId: getApiV1RepositoriesId
   "/api/v1/repositories":
     get:
       summary: Returns list of repositories
       description: This will expose all repositories
       produces:
       - application/json
+      parameters:
+      - in: query
+        name: all
+        description: Ignores pagination
+        type: boolean
+        required: false
+      - in: query
+        name: page
+        description: Current page number
+        type: integer
+        format: int32
+        default: 1
+        required: false
+      - in: query
+        name: per_page
+        description: Number of items per page
+        type: integer
+        format: int32
+        default: 15
+        required: false
+      - in: query
+        name: sort_attr
+        description: Current page number
+        type: string
+        default: id
+        required: false
+      - in: query
+        name: sort_order
+        description: Number of items per page
+        type: string
+        default: asc
+        required: false
       responses:
         '200':
           description: Returns list of repositories
@@ -815,38 +992,8 @@ paths:
       tags:
       - repositories
       operationId: getApiV1Repositories
-  "/api/v1/repositories/{id}/tags":
-    get:
-      summary: Returns the list of the tags for the given repository
-      description: Returns the list of the tags for the given repository
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Repository ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Returns the list of the tags for the given repository
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/Tags"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - repositories
-      operationId: getApiV1RepositoriesIdTags
   "/api/v1/repositories/{id}/tags/grouped":
     get:
-      summary: Returns the list of the tags for the given repository groupped by digest
       description: Returns the list of the tags for the given repository groupped
         by digest
       produces:
@@ -875,9 +1022,36 @@ paths:
       tags:
       - repositories
       operationId: getApiV1RepositoriesIdTagsGrouped
+  "/api/v1/repositories/{id}/tags":
+    get:
+      description: Returns the list of the tags for the given repository
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Repository ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '200':
+          description: Returns the list of the tags for the given repository
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/Tags"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+      tags:
+      - repositories
+      operationId: getApiV1RepositoriesIdTags
   "/api/v1/repositories/{id}/tags/{tag_id}":
     get:
-      summary: Show tag by id
       description: Show tag by id
       produces:
       - application/json
@@ -907,65 +1081,44 @@ paths:
       tags:
       - repositories
       operationId: getApiV1RepositoriesIdTagsTagId
-  "/api/v1/repositories/{id}":
-    get:
-      summary: Show repositories by id
-      description: Show repositories by id
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Repository ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Show repositories by id
-          schema:
-            "$ref": "#/definitions/Repositories"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - repositories
-      operationId: getApiV1RepositoriesId
-    delete:
-      summary: Delete repository
-      description: Delete repository
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Repository ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '204':
-          description: Delete repository
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-        '422':
-          description: Unprocessable Entity
-      tags:
-      - repositories
-      operationId: deleteApiV1RepositoriesId
   "/api/v1/tags":
     get:
       summary: Returns list of tags
       description: This will expose all tags
       produces:
       - application/json
+      parameters:
+      - in: query
+        name: all
+        description: Ignores pagination
+        type: boolean
+        required: false
+      - in: query
+        name: page
+        description: Current page number
+        type: integer
+        format: int32
+        default: 1
+        required: false
+      - in: query
+        name: per_page
+        description: Number of items per page
+        type: integer
+        format: int32
+        default: 15
+        required: false
+      - in: query
+        name: sort_attr
+        description: Current page number
+        type: string
+        default: id
+        required: false
+      - in: query
+        name: sort_order
+        description: Number of items per page
+        type: string
+        default: asc
+        required: false
       responses:
         '200':
           description: Returns list of tags
@@ -981,8 +1134,34 @@ paths:
       - tags
       operationId: getApiV1Tags
   "/api/v1/tags/{id}":
+    delete:
+      description: Delete tag
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Tag ID
+        type: integer
+        format: int32
+        required: true
+      responses:
+        '204':
+          description: Delete tag
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+      tags:
+      - tags
+      operationId: deleteApiV1TagsId
     get:
-      summary: Show tag by id
       description: Show tag by id
       produces:
       - application/json
@@ -1007,86 +1186,24 @@ paths:
       tags:
       - tags
       operationId: getApiV1TagsId
-    delete:
-      summary: Delete tag
-      description: Delete tag
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Tag ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '204':
-          description: Delete tag
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-        '422':
-          description: Unprocessable Entity
-      tags:
-      - tags
-      operationId: deleteApiV1TagsId
-  "/api/v1/teams":
-    get:
-      summary: Returns list of teams
-      description: |-
-        This will expose all teams that the user is member of or has access to.
-                                That mean if the user is an admin, this will return all the teams created by
-                                all the users. If you want to check if the user is a member of a team, check
-                                the role attribute.
-      produces:
-      - application/json
-      responses:
-        '200':
-          description: Returns list of teams
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/Teams"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-      tags:
-      - teams
-      operationId: getApiV1Teams
+  "/api/v1/teams/{id}/ldap_check":
     post:
-      summary: Create a team
-      description: Create a team
+      description: Disables any LDAP check for the team
       produces:
       - application/json
       consumes:
       - application/x-www-form-urlencoded
       - application/json
       parameters:
-      - in: formData
-        name: name
-        description: Team name
-        type: string
-        required: true
-      - in: formData
-        name: description
-        description: Team description
-        type: string
-        required: false
-      - in: formData
-        name: owner_id
-        description: Team owner
+      - in: path
+        name: id
+        description: Team ID
         type: integer
         format: int32
-        required: false
+        required: true
       responses:
         '201':
-          description: Create a team
-          schema:
-            "$ref": "#/definitions/Teams"
+          description: Disables any LDAP check for the team
         '400':
           description: Bad request
           schema:
@@ -1095,16 +1212,56 @@ paths:
           description: Authentication fails
         '403':
           description: Authorization fails
+        '404':
+          description: Not found
+        '405':
+          description: Method Not Allowed
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+      tags:
+      - teams
+      operationId: postApiV1TeamsIdLdapCheck
+  "/api/v1/teams/{id}":
+    delete:
+      description: Deletes a team
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Team id
+        type: string
+        required: true
+      - in: query
+        name: new_team
+        description: |-
+          Team that will get the original namespaces
+                      from the deleted team
+        type: string
+        required: false
+      responses:
+        '400':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '204':
+          description: Deletes a team
+          schema:
+            "$ref": "#/definitions/Teams"
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
         '422':
           description: Unprocessable Entity
           schema:
-            "$ref": "#/definitions/FullApiErrors"
+            "$ref": "#/definitions/ApiErrors"
       tags:
       - teams
-      operationId: postApiV1Teams
-  "/api/v1/teams/{id}":
+      operationId: deleteApiV1TeamsId
     put:
-      summary: Update team
       description: Update team
       produces:
       - application/json
@@ -1149,7 +1306,6 @@ paths:
       - teams
       operationId: putApiV1TeamsId
     get:
-      summary: Show teams by id
       description: Show teams by id
       produces:
       - application/json
@@ -1173,9 +1329,108 @@ paths:
       tags:
       - teams
       operationId: getApiV1TeamsId
+  "/api/v1/teams":
+    post:
+      description: Create a team
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      parameters:
+      - in: formData
+        name: name
+        description: Team name
+        type: string
+        required: true
+      - in: formData
+        name: description
+        description: Team description
+        type: string
+        required: false
+      - in: formData
+        name: owner_id
+        description: Team owner
+        type: integer
+        format: int32
+        required: false
+      responses:
+        '201':
+          description: Create a team
+          schema:
+            "$ref": "#/definitions/Teams"
+        '400':
+          description: Bad request
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/FullApiErrors"
+      tags:
+      - teams
+      operationId: postApiV1Teams
+    get:
+      summary: Returns list of teams
+      description: |-
+        This will expose all teams that the user is member of or has access to.
+                                That mean if the user is an admin, this will return all the teams created by
+                                all the users. If you want to check if the user is a member of a team, check
+                                the role attribute.
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: all
+        description: Ignores pagination
+        type: boolean
+        required: false
+      - in: query
+        name: page
+        description: Current page number
+        type: integer
+        format: int32
+        default: 1
+        required: false
+      - in: query
+        name: per_page
+        description: Number of items per page
+        type: integer
+        format: int32
+        default: 15
+        required: false
+      - in: query
+        name: sort_attr
+        description: Current page number
+        type: string
+        default: id
+        required: false
+      - in: query
+        name: sort_order
+        description: Number of items per page
+        type: string
+        default: asc
+        required: false
+      responses:
+        '200':
+          description: Returns list of teams
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/Teams"
+        '401':
+          description: Authentication fails
+        '403':
+          description: Authorization fails
+      tags:
+      - teams
+      operationId: getApiV1Teams
   "/api/v1/teams/{id}/namespaces":
     get:
-      summary: Returns the list of namespaces for the given team
       description: Returns the list of namespaces for the given team
       produces:
       - application/json
@@ -1203,36 +1458,7 @@ paths:
       - teams
       operationId: getApiV1TeamsIdNamespaces
   "/api/v1/teams/{id}/members":
-    get:
-      summary: Returns the list of team members
-      description: Returns the list of team members
-      produces:
-      - application/json
-      parameters:
-      - in: path
-        name: id
-        description: Team ID
-        type: integer
-        format: int32
-        required: true
-      responses:
-        '200':
-          description: Returns the list of team members
-          schema:
-            type: array
-            items:
-              "$ref": "#/definitions/Users"
-        '401':
-          description: Authentication fails
-        '403':
-          description: Authorization fails
-        '404':
-          description: Not found
-      tags:
-      - teams
-      operationId: getApiV1TeamsIdMembers
     post:
-      summary: Adds a user as member in a team
       description: Adds a user as member in a team
       produces:
       - application/json
@@ -1268,45 +1494,35 @@ paths:
       tags:
       - teams
       operationId: postApiV1TeamsIdMembers
-  "/api/v1/teams/{id}/members/{member_id}":
-    delete:
-      summary: Deletes a member from a team
-      description: Deletes a member from a team
+    get:
+      description: Returns the list of team members
       produces:
       - application/json
       parameters:
       - in: path
         name: id
-        description: Team id
-        type: string
-        required: true
-      - in: path
-        name: member_id
-        description: Team member id
-        type: string
+        description: Team ID
+        type: integer
+        format: int32
         required: true
       responses:
-        '400':
-          description: Unprocessable Entity
+        '200':
+          description: Returns the list of team members
           schema:
-            "$ref": "#/definitions/ApiErrors"
+            type: array
+            items:
+              "$ref": "#/definitions/Users"
         '401':
           description: Authentication fails
-        '204':
-          description: Deletes a member from a team
-          schema:
-            "$ref": "#/definitions/TeamMembers"
         '403':
           description: Authorization fails
         '404':
           description: Not found
-        '422':
-          description: Unprocessable Entity
       tags:
       - teams
-      operationId: deleteApiV1TeamsIdMembersMemberId
+      operationId: getApiV1TeamsIdMembers
+  "/api/v1/teams/{id}/members/{member_id}":
     put:
-      summary: Updates a member from a team
       description: Updates a member from a team
       produces:
       - application/json
@@ -1351,6 +1567,43 @@ paths:
       tags:
       - teams
       operationId: putApiV1TeamsIdMembersMemberId
+    delete:
+      description: Deletes a member from a team
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: Team id
+        type: string
+        required: true
+      - in: path
+        name: member_id
+        description: Team member id
+        type: string
+        required: true
+      responses:
+        '400':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+        '401':
+          description: Authentication fails
+        '204':
+          description: Deletes a member from a team
+          schema:
+            "$ref": "#/definitions/TeamMembers"
+        '403':
+          description: Authorization fails
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+          schema:
+            "$ref": "#/definitions/ApiErrors"
+      tags:
+      - teams
+      operationId: deleteApiV1TeamsIdMembersMemberId
   "/api/v1/vulnerabilities":
     post:
       summary: Force re-schedule for all tags
@@ -1443,14 +1696,14 @@ definitions:
       message:
         type: string
         description: Error message
-    description: Updates a member from a team
+    description: Deletes a member from a team
   FullApiErrors:
     type: object
     properties:
       message:
         type: object
         description: Detailed hash with the fields
-    description: Update team
+    description: Create a team
   Users:
     type: object
     properties:
@@ -1492,17 +1745,6 @@ definitions:
       bot:
         type: boolean
         description: Whether this is a bot or not
-      display_username:
-        type: string
-        description: Displayable name
-      namespaces_count:
-        type: integer
-        format: int32
-        description: The number of namespaces that user has access to
-      teams_count:
-        type: integer
-        format: int32
-        description: The number of teams that the user belongs to
     description: Returns the list of team members
   Health:
     type: object
@@ -1527,68 +1769,6 @@ definitions:
       success:
         type: boolean
         description: Whether health checking was successful or not for the component
-  Namespaces:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int32
-        description: Namespace ID
-      name:
-        type: string
-        description: Namespace name
-      created_at:
-        type: string
-        format: date-time
-      updated_at:
-        type: string
-        format: date-time
-      description:
-        type: string
-        description: The description of the namespace
-      description_md:
-        type: string
-        description: The description of the namespace parsed by markdown
-      team:
-        type: string
-        description: The ID and the name of the team containing this namespace
-      repositories_count:
-        type: integer
-        format: int32
-        description: The number of repositories that belong to this namespace
-      webhooks_count:
-        type: integer
-        format: int32
-        description: The number of webooks that belong to this namespace
-      visibility:
-        type: string
-        description: The visibility of namespaces by other people
-      global:
-        type: boolean
-        description: Whether this is the global namespace or not
-      updatable:
-        type: string
-        description: Boolean that tells if the current user can manage the namespace
-      destroyable:
-        type: string
-        description: Boolean that tells if the current user can destroy the namespace
-      permissions:
-        type: string
-        description: Different permissions for the current user
-    description: Returns the list of namespaces for the given team
-  Status:
-    type: object
-    properties:
-      messages:
-        type: object
-        description: Detailed hash with the fields
-      valid:
-        type: boolean
-        description: Whether the given resource is valid or not
-    description: Besides containing the usual Status object, it adds the reachable
-      validation to the `hostname` field in the `messages` hash. This validation returns
-      a string containing the error as given by the registry. If empty then everything
-      went well
   Teams:
     type: object
     properties:
@@ -1608,27 +1788,52 @@ definitions:
       description:
         type: string
         description: The description of the team
-      description_md:
-        type: string
-        description: The description of the team parsed by markdown
       hidden:
         type: boolean
         description: Whether the team is visible to the final user or not
-      role:
-        type: string
-        description: The role this of the current user within this team
-      updatable:
-        type: string
-        description: Boolean that tells if the current user can manage the team
-      users_count:
-        type: integer
-        format: int32
-        description: The number of enabled users that belong to this team
-      namespaces_count:
-        type: integer
-        format: int32
-        description: The number of namespaces that belong to this team
     description: Show teams by id
+  Status:
+    type: object
+    properties:
+      messages:
+        type: object
+        description: Detailed hash with the fields
+      valid:
+        type: boolean
+        description: Whether the given resource is valid or not
+    description: Besides containing the usual Status object, it adds the reachable
+      validation to the `hostname` field in the `messages` hash. This validation returns
+      a string containing the error as given by the registry. If empty then everything
+      went well
+  Namespaces:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: Namespace ID
+      name:
+        type: string
+        description: Namespace name
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      description:
+        type: string
+        description: The description of the namespace
+      team:
+        type: string
+        description: The ID and the name of the team containing this namespace
+      visibility:
+        type: string
+        description: The visibility of namespaces by other people
+      global:
+        type: boolean
+        description: Whether this is the global namespace or not
+    description: Returns the list of namespaces for the given team
   Repositories:
     type: object
     properties:
@@ -1648,6 +1853,9 @@ definitions:
       updated_at:
         type: string
         format: date-time
+      description:
+        type: string
+        description: The description of the repository
       namespace:
         type: string
         description: The ID of the namespace containing this repository
@@ -1664,11 +1872,6 @@ definitions:
         type: integer
         format: int32
         description: The number of tags for this repository
-      tags:
-        type: array
-        items:
-          type: string
-        description: The repository's tags grouped by digest
       starred:
         type: string
         description: Boolean that tells if the current user starred the repository
@@ -1702,7 +1905,7 @@ definitions:
       updated_at:
         type: string
         format: date-time
-    description: Update registry
+    description: This will expose all accessible registries
   Tags:
     type: object
     properties:
@@ -1729,6 +1932,10 @@ definitions:
       updated_at:
         type: string
         format: date-time
+      size:
+        type: integer
+        format: int32
+        description: The size of the tag
       scanned:
         type: integer
         format: int32
@@ -1766,13 +1973,7 @@ definitions:
       display_name:
         type: string
         description: The team member's display name
-      admin:
-        type: string
-        description: Tells if the team member is an admin or not
-      current:
-        type: string
-        description: Tells if it's the current session user
-    description: Adds a user as member in a team
+    description: Deletes a member from a team
   Version:
     type: object
     properties:
