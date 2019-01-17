@@ -5,6 +5,7 @@
 This release consists mostly of bug fixes and upgrades from vulnerable
 gems. Thank you everyone involved!
 
+- af08f6211abb db: added index on scan_result
 - a282fff71bd4 Properly show tokens for bots
 - a55c0ec2f827 Upgraded cconfig to fix a configuration issue
 - d3be549af55f Fixed namespace duplication
