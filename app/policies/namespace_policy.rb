@@ -59,6 +59,8 @@ class NamespacePolicy
     delete_enabled? && (@user.admin? || owner? || can_contributor_delete)
   end
 
+  alias delete? destroy?
+
   def update?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
     (user.admin? || (APP_CONFIG.enabled?("user_permission.manage_namespace") &&
