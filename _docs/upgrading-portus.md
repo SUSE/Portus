@@ -160,3 +160,23 @@ the registry to `readonly` mode before performing this operation, just to avoid
 any concurrency issues. Moreover, this task also asks for confirmation before
 doing anything at all. You can skip this by setting the
 `PORTUS_FORCE_DIGEST_UPDATE` environment variable before calling the rake task.
+
+
+### Upgrading with docker compose
+
+If you are using docker compose containing nginx to deploy Portus, you might end
+up in a broken state after an upgrade. It's a known issue [0] [1] but you should
+not worry about it. This happens because `portus` and `nginx` containers share a
+a volume for the static assets.
+
+Until we find a way to avoid that all you have to do is remove the volumes before
+upgrading `portus` image. You can achieve that by running:
+
+```
+$ docker-compose down -v
+```
+
+Now just run things as normal and you should be good to go.
+
+[0] https://github.com/SUSE/Portus/issues/1902
+[1] https://github.com/SUSE/Portus/issues/2106
