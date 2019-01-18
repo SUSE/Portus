@@ -672,5 +672,12 @@ describe ::Portus::LDAP::Authenticatable do
       allow_any_instance_of(Net::LDAP).to receive(:search).and_return(multiple_emails)
       assert_guess_email(params, "user1@example.com", "email")
     end
+
+    it "returns a nil email if search raises an error" do
+      allow_any_instance_of(Net::LDAP).to receive(:search) do
+        raise ::Net::LDAP::Error, "I AM ERROR"
+      end
+      assert_guess_email(params, nil)
+    end
   end
 end
