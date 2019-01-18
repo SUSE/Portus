@@ -45,8 +45,8 @@ module Portus
       end
 
       # If the "ldap.guess_email" option is enabled, try to guess the email for
-      # the user as specified in the configuration. Returns an nil if nothing
-      # could be guessed.
+      # the user as specified in the configuration. Returns nil if nothing could
+      # be guessed.
       def guess_email(connection, configuration)
         cfg = APP_CONFIG["ldap"]["guess_email"]
         return if cfg.nil? || !cfg["enabled"]
@@ -61,6 +61,9 @@ module Portus
         else
           guess_from_attr(record, cfg["attr"])
         end
+      rescue ::Net::LDAP::Error => e
+        Rails.logger.tagged(:ldap) { Rails.logger.warn "Connection error: #{e.message}" }
+        nil
       end
 
       # Guess the email from the given attribute. Note that if multiple records
@@ -75,16 +78,25 @@ module Portus
       # distinguished name. If the email could not be guessed, then it returns
       # nil.
       def guess_from_dn(dn, username)
-        return nil if dn.nil? || dn.size != 1
+        if dn.nil? || dn.size != 1
+          Rails.logger.tagged(:ldap) { Rails.logger.debug "Empty DN given, skipping..." }
+          return nil
+        end
 
         dc = []
         dn.first.split(",").each do |value|
           kv = value.split("=")
           dc << kv.last if kv.first == "dc"
         end
-        return nil if dc.empty?
 
-        "#{username}@#{dc.join(".")}"
+        if dc.empty?
+          Rails.logger.tagged(:ldap) do
+            Rails.logger.debug "Could not extract domain from dn '#{dn.first}'"
+          end
+          nil
+        else
+          "#{username}@#{dc.join(".")}"
+        end
       end
     end
   end
