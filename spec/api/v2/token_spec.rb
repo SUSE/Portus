@@ -286,6 +286,36 @@ describe "/v2/token", type: :request do
           expect(payload["access"][0]["name"]).to eq "#{user.username}/busybox"
           expect(payload["access"][0]["actions"]).to match_array ["pull"]
         end
+
+        it "allows to delete an image in which this user is just a viewer (2.7+)" do
+          allow_any_instance_of(NamespacePolicy).to receive(:delete?).and_return(true)
+
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:#{user.username}/busybox:delete"
+          }, headers: valid_auth_header
+
+          expect(response.status).to eq 200
+
+          payload = parse_token(response.body)
+          expect(payload["access"][0]["actions"]).to match_array ["delete"]
+        end
+
+        it "allows to delete an image in which this user is just a viewer (<= 2.6)" do
+          allow_any_instance_of(NamespacePolicy).to receive(:all?).and_return(true)
+
+          get v2_token_url, params: {
+            service: registry.hostname,
+            account: user.username,
+            scope:   "repository:#{user.username}/busybox:*"
+          }, headers: valid_auth_header
+
+          expect(response.status).to eq 200
+
+          payload = parse_token(response.body)
+          expect(payload["access"][0]["actions"]).to match_array ["*"]
+        end
       end
 
       context "registry scope" do
