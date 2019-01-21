@@ -18,7 +18,7 @@
     </namespaces-panel>
 
     <namespaces-panel :namespaces="normalNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" :table-sortable="true" class="member-namespaces-panel">
-      <h5 slot="name">Namespaces you have access to through membership</h5>
+      <h5 slot="name">Namespaces you have access to through team membership</h5>
     </namespaces-panel>
 
     <namespaces-panel :namespaces="orphanNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="ons_" :table-sortable="true" v-if="orphanNamespaces.length">

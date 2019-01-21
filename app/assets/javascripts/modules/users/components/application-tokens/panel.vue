@@ -3,7 +3,7 @@
     <h5 slot="heading-left">Application tokens</h5>
 
     <div slot="heading-right" v-if="canCreate">
-      <toggle-link text="Create new token" :state="state" state-key="newFormVisible" class="toggle-link-new-app-token"></toggle-link>
+      <toggle-link text="Create" :state="state" state-key="newFormVisible" class="toggle-link-new-app-token"></toggle-link>
     </div>
 
     <div slot="body">

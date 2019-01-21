@@ -47,7 +47,7 @@
     </div>
     <div class="form-group">
       <div class="col-md-offset-2 col-md-7">
-        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid">Create</button>
+        <button type="submit" class="btn btn-primary" :disabled="$v.$invalid">Save</button>
       </div>
     </div>
   </form>

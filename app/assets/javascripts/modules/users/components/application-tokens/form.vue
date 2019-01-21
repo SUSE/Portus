@@ -14,7 +14,7 @@
     </div>
     <div class="form-group">
       <div class="col-md-offset-2 col-md-7">
-        <input type="submit" name="commit" value="Create" class="btn btn-primary" :disabled="$v.$invalid">
+        <input type="submit" name="commit" value="Save" class="btn btn-primary" :disabled="$v.$invalid">
       </div>
     </div>
   </form>
