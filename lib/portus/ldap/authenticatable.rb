@@ -41,17 +41,17 @@ module Portus
         fill_user_params!
 
         cfg = ::Portus::LDAP::Configuration.new(params)
-        # rubocop:disable Style/GuardClause
         if cfg.enabled?
           connection = initialized_adapter
           entry, admin = bind_as(connection, cfg)
           portus_login!(connection, cfg, admin) if entry
-        else
+        elsif cfg.soft?
           # rubocop:disable Style/SignalException
           fail cfg.reason_message
           # rubocop:enable Style/SignalException
+        else
+          fail! cfg.reason_message
         end
-        # rubocop:enable Style/GuardClause
       rescue ::Portus::LDAP::Error, Net::LDAP::Error => e
         logged_failure!(e.message)
       end

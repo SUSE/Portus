@@ -10,13 +10,22 @@ module Portus
       def initialize(params)
         @username = params.fetch(:user, {})[:username]
         @password = params.fetch(:user, {})[:password]
-        @enabled  = APP_CONFIG.enabled?("ldap") && check_account(params.fetch(:account, ""))
+        @soft     = true
+        @enabled  = check_account(params.fetch(:account, "")) && APP_CONFIG.enabled?("ldap")
       end
 
       # Returns true if LDAP is enabled given the passed parameters during
       # initialization, false otherwise.
       def enabled?
         @enabled
+      end
+
+      # Returns true if the existing error is a soft one (caller can still try
+      # with other authenticatables) or a hard one (caller should stop the
+      # authenticatable chain right now). This is only useful if we know there's
+      # been an error.
+      def soft?
+        @soft
       end
 
       # Returns true if the given parameters have initialized all the required
@@ -43,9 +52,19 @@ module Portus
         if account == "portus"
           @reason = "Portus user does not go through LDAP"
           false
-        elsif @username.present? && User.find_by(username: @username)&.bot
-          @reason = "Bot user is not expected to be present on LDAP"
-          false
+        elsif @username.present?
+          user = User.find_by(username: @username)
+
+          if user&.bot
+            @reason = "Bot user is not expected to be present on LDAP"
+            false
+          elsif user&.encrypted_password == ""
+            @reason = "This user can only authenticate if LDAP is enabled"
+            @soft   = false
+            false
+          else
+            true
+          end
         else
           true
         end
