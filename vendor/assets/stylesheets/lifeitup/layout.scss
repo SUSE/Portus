@@ -130,57 +130,20 @@ body:not([class*="login"]) {
             }
           }
         }
-        li:nth-child(8n+1) {
-          a:hover {
-            border-left: 5px solid $light-blue;
-          }
-        }
-        li:nth-child(8n+2) {
-          a:hover {
-            border-left: 5px solid $blue;
-          }
-        }
-        li:nth-child(8n+3) {
-          a:hover {
-            border-left: 5px solid $dark-green;
-          }
-        }
-        li:nth-child(8n+4) {
-          a:hover {
-            border-left: 5px solid $green;
-          }
-        }
-        li:nth-child(8n+5) {
-          a:hover {
-            border-left: 5px solid $yellow;
-          }
-        }
-        li:nth-child(8n+6) {
-          a:hover {
-            border-left: 5px solid $orange;
-          }
-        }
-        li:nth-child(8n+7) {
-          a:hover {
-            border-left: 5px solid $pink;
-          }
-        }
-        li:nth-child(8n+8) {
-          a:hover {
-            border-left: 5px solid $purple;
-          }
-        }
       }
+
+      li.active a,
+      a:hover {
+        background: darken($aside,10%);
+        text-decoration: none;
+      }
+
       a {
         color: $link-aside;
         background: $aside;
         display: block;
         padding: 25px 15px;
         border-left: 5px solid $aside;
-        &:hover {
-          background: darken($aside,10%);
-          text-decoration: none;
-        }
       }
     }
     section {

@@ -65,6 +65,17 @@ module ApplicationHelper
     APP_CONFIG["pagination"]["before_after"]
   end
 
+  # Returns `active` string if current path includes the passed parameter
+  # or if paremeter is `true`.
+  def active_page?(path_or_bool)
+    case path_or_bool
+    when String
+      "active" if request.fullpath.include?(path_or_bool)
+    when TrueClass
+      "active"
+    end
+  end
+
   # Render markdown to safe HTML.
   # Images, unsafe link protocols and styles are not allowed to render.
   # HTML-Tags will be filtered.
