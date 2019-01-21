@@ -485,7 +485,7 @@ describe ::Portus::LDAP::Authenticatable do
       APP_CONFIG["ldap"]["base"] = ""
     end
 
-    it "raises an exception if ldap is not supported" do
+    it "fails softly if ldap is not supported" do
       APP_CONFIG["ldap"]["enabled"] = false
       params = { user: { username: "name", password: "1234" } }
 
@@ -494,6 +494,20 @@ describe ::Portus::LDAP::Authenticatable do
 
       expect(lm.fail_message).to eq "LDAP is not enabled"
       expect(lm.soft).to be_truthy
+    end
+
+    it "fails hard if a LDAP-only user tried to login with LDAP disabled" do
+      APP_CONFIG["ldap"]["enabled"] = false
+
+      u = create(:user, username: "name")
+      u.update!(encrypted_password: "")
+      params = { user: { username: "name", password: "12341234" } }
+
+      lm = AuthenticatableMock.new(params)
+      lm.authenticate!
+
+      expect(lm.fail_message).to eq "This user can only authenticate if LDAP is enabled"
+      expect(lm.soft).to be_falsey
     end
 
     it "fails if the user couldn't bind" do
@@ -591,6 +605,10 @@ describe ::Portus::LDAP::Authenticatable do
       ]
     end
 
+    let(:no_dn) do
+      [{ "email" => "user@example.com" }]
+    end
+
     let(:multiple_dn) do
       [
         {
@@ -640,6 +658,11 @@ describe ::Portus::LDAP::Authenticatable do
 
     it "returns nil if search fails" do
       allow_any_instance_of(Net::LDAP).to receive(:search).and_return(nil)
+      assert_guess_email(params, nil)
+    end
+
+    it "returns a nil email if the dn attribute is not there" do
+      allow_any_instance_of(Net::LDAP).to receive(:search).and_return(no_dn)
       assert_guess_email(params, nil)
     end
 

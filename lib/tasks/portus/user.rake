@@ -41,4 +41,9 @@ namespace :portus do
       HERE
     end
   end
+
+  desc "Clear out all the passwords from users which are not bots"
+  task clear_passwords: :environment do
+    User.not_portus.where(bot: false).update_all(encrypted_password: "")
+  end
 end

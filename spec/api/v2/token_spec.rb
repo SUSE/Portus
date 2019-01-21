@@ -187,7 +187,7 @@ describe "/v2/token", type: :request do
         # Check that the user has actually been registered.
         ldapuser = User.find_by(username: "ldapuser")
         expect(ldapuser.username).to eq "ldapuser"
-        expect(ldapuser.valid_password?("12341234")).to be true
+        expect(ldapuser.encrypted_password).to be_empty
       end
     end
 

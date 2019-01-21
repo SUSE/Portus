@@ -110,6 +110,22 @@ describe User do
     end
   end
 
+  describe "#create_without_password" do
+    it "allows us to create a user without a password" do
+      u, c = User.create_without_password(username: "test", email: "test@test.org", admin: true)
+
+      expect(c).to be_truthy
+      expect(u.encrypted_password).to be_blank
+    end
+
+    it "does not create a user if one of the parameters is wrong" do
+      _, c = User.create_without_password(username: "test", email: "test", admin: true)
+
+      expect(c).to be_falsey
+      expect(User.find_by(username: "test")).to be_nil
+    end
+  end
+
   describe ".create_portus_user" do
     it "creates the portus user" do
       described_class.create_portus_user!
@@ -232,6 +248,23 @@ describe User do
       expect(user.active_for_authentication?).to be true
       user.update(enabled: false)
       expect(user.active_for_authentication?).to be false
+    end
+
+    context "LDAP-only user" do
+      it "cannot log in if LDAP is disabled" do
+        APP_CONFIG["ldap"]["enabled"] = false
+
+        user.update(encrypted_password: "")
+        expect(user.active_for_authentication?).to be_falsey
+        expect(user.inactive_message).to eq "This user can only login through an LDAP server."
+      end
+
+      it "can log in if LDAP is enabled" do
+        APP_CONFIG["ldap"]["enabled"] = true
+
+        user.update(encrypted_password: "")
+        expect(user.active_for_authentication?).to be_truthy
+      end
     end
   end
 

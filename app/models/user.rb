@@ -104,6 +104,39 @@ class User < ApplicationRecord
     find_by(username: "portus")
   end
 
+  # Creates a user and sets this password as an empty string. This way we don't
+  # store sensible data that is already stored in another place (e.g. LDAP), and
+  # regular login won't be allowed for such users. The `params` argument is the
+  # parameters that will be passed into the `User.create` method call.
+  #
+  # Returns two objects: a user object, and a boolean stating whether everything
+  # was ok or not. Callers should check this second object before doing anything
+  # at all with the first (since it might be an invalid user object).
+  def self.create_without_password(params)
+    user    = nil
+    created = false
+
+    ActiveRecord::Base.transaction do
+      # We create it first with a dummy password that will be erased later on.
+      user = User.create(params.merge(password: SecureRandom.hex(16)))
+
+      if user.persisted?
+        created = user.update(encrypted_password: "")
+        user.destroy unless created
+      end
+    end
+    [user, created]
+  end
+
+  # Returns true this user is allowed to login, otherwise it returns
+  # false. Right now, only users that were created from LDAP cannot login
+  # outside of the LDAP context.
+  def login_allowed?
+    return true if APP_CONFIG.enabled?("ldap")
+
+    encrypted_password != ""
+  end
+
   # Special method used by Devise to require an email on signup. This is always
   # true except for LDAP.
   def email_required?
@@ -220,12 +253,16 @@ class User < ApplicationRecord
 
   # This method is picked up by Devise before signing in a user.
   def active_for_authentication?
-    super && enabled?
+    super && enabled? && login_allowed?
   end
 
   # The flashy message to be shown for disabled users that try to login.
   def inactive_message
-    "Sorry, this account has been disabled."
+    if login_allowed?
+      "Sorry, this account has been disabled."
+    else
+      "This user can only login through an LDAP server."
+    end
   end
 
   # Returns all users who match the query.

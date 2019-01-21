@@ -33,13 +33,11 @@ module Portus
           em = guess_email(connection, cfg)
           em = nil if em && User.exists?(email: em)
 
-          user = User.create(
+          user, created = User.create_without_password(
             username: cfg.username,
             email:    em,
-            password: cfg.password,
             admin:    admin || User.not_portus.where(bot: false).none?
           )
-          created = user.persisted?
         end
         [user, created]
       end
