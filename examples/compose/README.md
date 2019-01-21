@@ -67,7 +67,11 @@ The static assets can be served in two ways:
 
 - With NGinx: this is the case of the *secure* example, in which we share the
   `public` directory between the NGinx and the Portus containers. This way, all
-  assets are served directly and faster from the NGinx container.
+  assets are served directly and faster from the NGinx container. That being
+  said, make sure to read
+  [this note](http://port.us.org/docs/upgrading-portus.html#upgrading-with-docker-compose)
+  from the documentation first if you are planning to deploy it this way, since
+  it clarifies a common pitfall when upgrading Portus.
 - With Rails by setting the `RAILS_SERVE_STATIC_FILES` environment variable to
   true. This is done in the *insecure* example, and it's recommended in
   scenarios where you don't want an extra container for managing your static assets.
