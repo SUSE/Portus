@@ -15,7 +15,7 @@ module ::Portus
       ldap:       "osixia/openldap:1.2.0",
       portus:     LOCAL_IMAGE,
       postgres:   "library/postgres:10-alpine",
-      registry:   "library/registry:2.6"
+      registry:   "library/registry:2.7.1"
     }.freeze
 
     # Returns true if the given image is allowed to fail in an integration

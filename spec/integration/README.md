@@ -11,7 +11,8 @@ Before submitting a pull request, run:
 
     $ bundle exec rake test:run
 
-This is already handled by the `bin/ci.sh` script though, so run that instead.
+This is already handled by the `bin/ci/run.sh` script though, so run that
+instead.
 
 ### Dependencies
 

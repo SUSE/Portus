@@ -106,8 +106,12 @@ run_tests() {
 # Build the image if needed.
 if [[ -z "$PORTUS_INTEGRATION_BUILD_IMAGE" ]]; then
     pushd $ROOT_DIR
-    docker rmi -f opensuse/portus:development
-    docker build -t opensuse/portus:development .
+    if [ -z "$CI" ]; then
+        docker rmi -f opensuse/portus:development
+    fi
+    if [[ "$(docker images -q opensuse/portus:development 2> /dev/null)" == "" ]]; then
+        docker build -t opensuse/portus:development .
+    fi
     popd
 fi
 
@@ -117,7 +121,9 @@ export PORTUS_INTEGRATION_BUILD_IMAGE=false
 # Integration tests will play with the following images
 export DEVEL_NAME="busybox"
 export DEVEL_IMAGE="$DEVEL_NAME:latest"
-docker pull $DEVEL_IMAGE
+if [[ "$(docker images -q $DEVEL_IMAGE 2> /dev/null)" == "" ]]; then
+    docker pull $DEVEL_IMAGE
+fi
 
 # Remove current build directory
 rm -rf "$ROOT_DIR/build"

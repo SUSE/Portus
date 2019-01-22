@@ -34,6 +34,8 @@ def log(level, str)
 end
 
 def rebuild!(can_remove)
+  return if ENV["CI"]
+
   if can_remove
     unless ::Portus::Cmd.spawn("docker rmi -f #{::Portus::Test::LOCAL_IMAGE}")
       log :error, "Could not remove Docker image"
