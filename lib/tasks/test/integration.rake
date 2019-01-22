@@ -15,7 +15,8 @@ require "portus/test"
 # through a cartesian product into the test matrix.
 SUPPORTED_REGISTRIES = [
   "library/registry:2.5",
-  "library/registry:2.6"
+  "library/registry:2.6",
+  "library/registry:2.7.1"
 ].freeze
 
 PRODUCTION = [

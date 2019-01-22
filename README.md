@@ -135,8 +135,8 @@ We use [Travis CI](https://travis-ci.org/) for continuous integration. You can
 run what we run in Travis locally:
 
 ```
-$ chmod +x bin/ci.sh
-$ ./bin/ci.sh
+$ chmod +x bin/ci/run.sh
+$ ./bin/ci/run.sh
 ```
 
 This script simply executes all the tests and checks that we have presented

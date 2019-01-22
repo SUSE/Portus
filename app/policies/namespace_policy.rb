@@ -65,7 +65,8 @@ class NamespacePolicy
     delete_enabled? && (@user.admin? || owner? || can_contributor_delete)
   end
 
-  alias delete? destroy?
+  # TODO: temporary fix for see #2123
+  alias delete? push?
 
   def update?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
