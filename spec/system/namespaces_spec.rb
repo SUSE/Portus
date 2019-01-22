@@ -32,7 +32,7 @@ describe "Namespaces support", type: :system, js: true do
 
     context "invalid fields" do
       it "disables submit button" do
-        expect(page).to have_button("Create", disabled: true)
+        expect(page).to have_button("Save", disabled: true)
       end
 
       it "shows name can't be blank message" do
@@ -40,21 +40,21 @@ describe "Namespaces support", type: :system, js: true do
         clear_field("#namespace_name")
 
         expect(page).to have_content("Name can't be blank")
-        expect(page).to have_button("Create", disabled: true)
+        expect(page).to have_button("Save", disabled: true)
       end
 
       it "shows name invalid chars message" do
         fill_in "Name", with: "!@#!@#"
 
         expect(page).to have_content("Name can only contain lower case alphanumeric characters")
-        expect(page).to have_button("Create", disabled: true)
+        expect(page).to have_button("Save", disabled: true)
       end
 
       it "shows namespace that already exists message" do
         fill_in "Name", with: Namespace.first.name
 
         expect(page).to have_content("Name has already been taken")
-        expect(page).to have_button("Create", disabled: true)
+        expect(page).to have_button("Save", disabled: true)
       end
 
       it "shows team not found message" do
@@ -62,14 +62,14 @@ describe "Namespaces support", type: :system, js: true do
         fill_vue_multiselect(".namespace_team", Team.where(hidden: true).first.name)
 
         expect(page).to have_content("Oops! No team found.")
-        expect(page).to have_button("Create", disabled: true)
+        expect(page).to have_button("Save", disabled: true)
       end
     end
 
     it "creates a namespace" do
       fill_in "Name", with: "valid-namespace"
       select_vue_multiselect(".namespace_team", namespace.team.name)
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_content("Namespace 'valid-namespace' was created successfully")
       expect(page).to have_link("valid-namespace")

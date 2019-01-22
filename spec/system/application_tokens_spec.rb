@@ -17,7 +17,7 @@ describe "Application tokens" do
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -33,7 +33,7 @@ describe "Application tokens" do
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("Application has already been taken")
@@ -48,7 +48,7 @@ describe "Application tokens" do
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
