@@ -1,8 +1,8 @@
 <template>
   <panel>
-    <h5 slot="heading-left">Registered users</h5>
+    <h5 slot="heading-left">Users</h5>
 
-    <toggle-link slot="heading-right" text="Create new user" :state="state" state-key="newFormVisible" class="toggle-link-new-user"></toggle-link>
+    <toggle-link slot="heading-right" text="Create" :state="state" state-key="newFormVisible" class="toggle-link-new-user"></toggle-link>
 
     <div slot="body">
       <users-table :users="users" :sortable="true" sort-by="username" :users-path="usersPath"></users-table>

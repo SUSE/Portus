@@ -25,8 +25,8 @@
             }"></i>
             Role
           </th>
-          <th>Number of members</th>
-          <th>Number of namespaces</th>
+          <th>Members</th>
+          <th>Namespaces</th>
         </tr>
       </thead>
       <tbody>
