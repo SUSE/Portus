@@ -1,45 +1,38 @@
 aside
   ul
-    li.active
+    li class="#{active_page?(current_page?(root_path))}"
       = link_to root_path
         i[class="fa fa-dashboard"]
         | Dashboard
-      - if current_page?(url_for root_path) || current_page?(root_path)
-        .list-selected
-    li.active
+      .list-selected
+    li class="#{active_page?(namespaces_path)}"
       = link_to namespaces_path
         i[class="fa fa-ship"]
         | Namespaces
-      - if current_page?(url_for namespaces_path)
-        .list-selected
-    li.active
+      .list-selected
+    li class="#{active_page?(repositories_path)}"
       = link_to repositories_path
         i[class="fa fa-archive"]
         | Repositories
-      - if current_page?(url_for repositories_path)
-        .list-selected
-    li.active
+      .list-selected
+    li class="#{active_page?(teams_path)}"
       = link_to teams_path
         i[class="fa fa-users"]
         | Teams
-      - if current_page?(url_for teams_path)
-        .list-selected
+      .list-selected
     - if current_user.admin?
-      li.active
+      li class="#{active_page?(admin_users_path)}"
         = link_to admin_users_path
           i[class="fa fa-user"]
           | Users
-        - if current_page?(url_for controller: 'admin/users', action: 'index')
-          .list-selected
-      li.active
+        .list-selected
+      li class="#{active_page?(admin_registries_path)}"
         = link_to admin_registries_path
           i[class="fa fa-server"]
           | Registries
-        - if current_page?(url_for controller: 'admin/registries', action: 'index')
-          .list-selected
-    li.active
+        .list-selected
+    li class="#{active_page?(help_index_path)}"
       = link_to help_index_path
         i[class="fa fa-life-ring"]
         | Help
-      - if current_page?(url_for help_index_path)
-        .list-selected
+      .list-selected
