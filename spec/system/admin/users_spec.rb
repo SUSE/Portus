@@ -23,7 +23,7 @@ describe "Admin - Users panel", type: :system, js: true do
       fill_in "user[password]",        with: "password123"
       fill_in "Password confirmation", with: "password123"
 
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_current_path(admin_users_path)
       expect(page).to have_content("User 'username' was created successfully")
@@ -40,7 +40,7 @@ describe "Admin - Users panel", type: :system, js: true do
       fill_in "Password confirmation", with: "password123"
       check "Bot"
 
-      click_button "Create"
+      click_button "Save"
       expect(page).to have_content("Bot 'username' was created successfully")
       expect(page).not_to have_content("undefined")
 
@@ -72,7 +72,7 @@ describe "Admin - Users panel", type: :system, js: true do
       fill_in "user[password]",        with: "password123"
       fill_in "Password confirmation", with: "password123"
 
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_current_path(admin_users_path)
       expect(page).to have_content("User '#{user.username}' was created successfully")
@@ -181,7 +181,7 @@ describe "Admin - Users panel", type: :system, js: true do
       expect(focused_element_id).to eq "application_token_application"
       fill_in "Application", with: "awesome-application"
 
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")

@@ -23,7 +23,7 @@ describe "Teams support", type: :system, js: true do
     context "when admin" do
       context "invalid fields" do
         it "disables submit button" do
-          expect(page).to have_button("Add", disabled: true)
+          expect(page).to have_button("Save", disabled: true)
         end
 
         it "shows name can't be blank message" do
@@ -31,14 +31,14 @@ describe "Teams support", type: :system, js: true do
           clear_field("#team_name")
 
           expect(page).to have_content("Name can't be blank")
-          expect(page).to have_button("Add", disabled: true)
+          expect(page).to have_button("Save", disabled: true)
         end
 
         it "shows name is reserved/taken message" do
           fill_in "Name", with: Team.last.name
 
           expect(page).to have_content("Name is reserved or has already been taken")
-          expect(page).to have_button("Add", disabled: true)
+          expect(page).to have_button("Save", disabled: true)
         end
       end
 
@@ -46,7 +46,7 @@ describe "Teams support", type: :system, js: true do
         fill_in "Name", with: "valid-team"
         select admin.username, from: "team_owner_id"
 
-        click_button "Add"
+        click_button "Save"
 
         expect(page).to have_content("Team 'valid-team' was created successfully")
         expect(page).to have_link("valid-team")
@@ -67,7 +67,7 @@ describe "Teams support", type: :system, js: true do
         fill_in "Name", with: "another"
         select another_user.username, from: "team_owner_id"
 
-        click_button "Add"
+        click_button "Save"
 
         expect(page).to have_content("Team 'another' was created successfully")
         expect(page).to have_link("another")
@@ -94,7 +94,7 @@ describe "Teams support", type: :system, js: true do
         toggle_new_team_form
         fill_in "Name", with: "valid-team2"
 
-        click_button "Add"
+        click_button "Save"
 
         expect(page).to have_content("Team 'valid-team2' was created successfully")
         expect(page).to have_link("valid-team2")
@@ -205,7 +205,7 @@ describe "Teams support", type: :system, js: true do
       toggle_new_namespace_form
 
       fill_in "Name", with: "new-namespace"
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_content("Namespace 'new-namespace' was created successfully")
       expect(page).to have_link("new-namespace")
