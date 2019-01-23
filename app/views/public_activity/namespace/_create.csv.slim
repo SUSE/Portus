@@ -1,1 +1,3 @@
-= CSV.generate_line(['namespace', activity.trackable.name, 'create', '-', activity_owner(activity), activity.created_at, "owned by team #{activity_team(activity, true)}"])
+- name = activity.parameters[:namespace_name].presence || activity.trackable.name
+
+= CSV.generate_line(['namespace', name, 'create', '-', activity_owner(activity), activity.created_at, "owned by team #{activity_team(activity, true)}"])
