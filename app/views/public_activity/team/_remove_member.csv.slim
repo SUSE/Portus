@@ -1,2 +1,8 @@
+- owner = activity_owner(activity)
+- action = "#{activity_action(owner, "remove")} member"
+- role = "role #{activity.parameters[:role]}"
+- team = activity_team(activity)
+- created_at = activity.created_at
 - removed_user = activity.recipient&.display_username || activity.parameters[:team_user]
-= CSV.generate_line(['team', activity_team(activity), 'remove member', removed_user, activity_owner(activity), activity.created_at, "role #{activity.parameters[:role]}"])
+
+= CSV.generate_line(['team', team, action, removed_user, owner, created_at, role])

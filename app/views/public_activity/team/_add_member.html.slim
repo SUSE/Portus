@@ -1,3 +1,7 @@
+- owner = activity_owner(activity)
+- action = activity_action(owner, "added")
+- team = activity_team(activity)
+
 li
   .activitie-container
     .activity-type.add-member-team
@@ -8,12 +12,12 @@ li
       h6
         strong
           - if activity.recipient
-            = "#{activity_owner(activity)} added user '#{activity.recipient.display_username}' "
+            = "#{owner} #{action} user '#{activity.recipient.display_username}' "
           - else
             - if activity.parameters[:team_user]
-              = "#{activity_owner(activity)} added user '#{activity.parameters[:team_user]}' "
+              = "#{owner} #{action} user '#{activity.parameters[:team_user]}' "
             - else
-              = "#{activity_owner(activity)} added a user "
+              = "#{owner} #{action} a user "
 
         | with role&nbsp;
         strong
@@ -21,10 +25,10 @@ li
         |  to the&nbsp;
 
         - if activity.trackable_type == "Team"
-          = link_to activity_team(activity), activity.trackable
+          = link_to team, activity.trackable
         - else
           strong
-            = activity_team(activity)
+            = team
         |  team
       small
         i.fa.fa-clock-o

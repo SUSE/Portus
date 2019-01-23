@@ -26,12 +26,14 @@ module RepositoriesHelper
 
   # Renders a push activity, that is, a repository/tag has been pushed.
   def render_push_activity(activity)
-    render_repo_activity(activity, "pushed")
+    owner = activity_owner(activity)
+    render_repo_activity(activity, activity_action(owner, "pushed"))
   end
 
   # Renders a delete activity, that is, a repository/tag has been deleted.
   def render_delete_activity(activity)
-    render_repo_activity(activity, "deleted")
+    owner = activity_owner(activity)
+    render_repo_activity(activity, activity_action(owner, "deleted"))
   end
 
   # Returns if any security module is enabled
@@ -117,8 +119,8 @@ module RepositoriesHelper
         ["a repository", nil, ""]
       else
         repo = repo_name(activity)
-        ns   = Namespace.find_by(id: activity.parameters[:namespace_id])
-        link = ns.nil? ? nil : namespace_path(ns.id)
+        ns   = Repository.find_by(id: activity.parameters[:repository_id])
+        link = ns.nil? ? nil : repository_path(ns.id)
         [repo, link, tag_part(activity)]
       end
     else

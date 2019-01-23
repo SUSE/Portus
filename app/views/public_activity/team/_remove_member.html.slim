@@ -1,3 +1,6 @@
+- owner = activity_owner(activity)
+- action = activity_action(owner, "removed")
+
 li
   .activitie-container
     .activity-type.remove-member-team
@@ -8,11 +11,11 @@ li
       h6
         strong
           - if activity.recipient.is_a?(User)
-            = "#{activity_owner(activity)} removed user '#{activity.recipient.display_username}' "
+            = "#{owner} #{action} user '#{activity.recipient.display_username}' "
           - elsif activity.owner == activity.recipient
-            = "#{activity_owner(activity)} removed itself "
+            = "#{owner} #{action} itself "
           - else
-            = "#{activity_owner(activity)} removed user '#{activity.parameters[:team_user]}' "
+            = "#{owner} #{action} user '#{activity.parameters[:team_user]}' "
         = "from the "
         = link_to activity_team(activity), activity.trackable
         |  team
