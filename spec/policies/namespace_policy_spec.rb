@@ -87,8 +87,7 @@ describe NamespacePolicy do
     end
   end
 
-  # The push? and all? are aliases, so they should share the same tests.
-  push_all = lambda { |_example|
+  permissions :push? do
     context "global namespace" do
       it "allows access to administrators" do
         expect(subject).to permit(@admin, registry.global_namespace)
@@ -220,10 +219,44 @@ describe NamespacePolicy do
         expect(subject).to_not permit(@admin, namespace)
       end
     end
+  end
+
+  # The push? and all? are aliases, so they should share the same tests.
+  delete_all = lambda { |_example|
+    before do
+      APP_CONFIG["delete"]["enabled"] = true
+    end
+
+    it "allows access to administrators" do
+      expect(subject).to permit(@admin, namespace)
+    end
+
+    it "allows access to owners" do
+      expect(subject).to permit(owner, namespace)
+    end
+
+    it "allows access to contributors if config enabled it" do
+      APP_CONFIG["delete"]["contributors"] = true
+      expect(subject).to permit(contributor, namespace)
+    end
+
+    it "denies access to contributors if config disabled it" do
+      APP_CONFIG["delete"]["contributors"] = false
+      expect(subject).not_to permit(contributor, namespace)
+    end
+
+    it "denies access to other users" do
+      expect(subject).not_to permit(user, namespace)
+    end
+
+    it "denies access if delete is disabled" do
+      APP_CONFIG["delete"]["enabled"] = false
+      expect(subject).not_to permit(@admin, namespace)
+    end
   }
 
-  permissions :push?, &push_all
-  permissions :all?, &push_all
+  permissions :delete?, &delete_all
+  permissions :all?, &delete_all
 
   permissions :destroy? do
     before do

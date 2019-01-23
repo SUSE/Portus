@@ -59,14 +59,8 @@ class NamespacePolicy
   end
 
   def destroy?
-    raise Pundit::NotAuthorizedError, "must be logged in" unless user
-
-    can_contributor_delete = APP_CONFIG["delete"]["contributors"] && contributor?
-    delete_enabled? && (@user.admin? || owner? || can_contributor_delete)
+    all_destroy?(force_non_global: true)
   end
-
-  # TODO: temporary fix for see #2123
-  alias delete? push?
 
   def update?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
@@ -75,7 +69,17 @@ class NamespacePolicy
                      owner?)) && push?
   end
 
-  alias all? push?
+  # On the context of the registry, all? is only used by delete
+  # operations. Therefore, this method will only take delete permissions into
+  # account.
+  def all?
+    all_destroy?(force_non_global: false)
+  end
+
+  # Notice that this delete? action is called when removing resources beneath a
+  # namespace (e.g. repository). Therefore, it's semantically different than the
+  # destroy? method.
+  alias delete? all?
 
   def change_visibility?
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
@@ -136,10 +140,27 @@ class NamespacePolicy
 
   protected
 
+  # The all? and the destroy? methods have almost the same implementation, but
+  # they only differ on whether we should allow the action for global namespaces
+  # or not (which is the parameter to be passed).
+  def all_destroy?(force_non_global:)
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
+    delete_enabled?(force_non_global) && (user.admin? || owner? || can_contributor_delete?)
+  end
+
+  # Returns true if contributors can perform delete operations.
+  def can_contributor_delete?
+    APP_CONFIG["delete"]["contributors"] && contributor?
+  end
+
   # Returns true if delete is enabled and delete is generally allowed for the
   # given namespace.
-  def delete_enabled?
-    APP_CONFIG.enabled?("delete") && !@namespace.global?
+  def delete_enabled?(force_non_global = false)
+    enabled = APP_CONFIG.enabled?("delete")
+    return enabled unless force_non_global
+
+    enabled && !@namespace.global?
   end
 
   # Returns true if the given push policy allows the push. This method assumes
