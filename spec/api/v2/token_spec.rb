@@ -135,6 +135,8 @@ describe "/v2/token", type: :request do
       end
 
       it "does not allow a regular user to delete an image from another user" do
+        APP_CONFIG["delete"]["enabled"] = true
+
         scope = "repository:#{user.username}/busybox:*"
 
         # It works for the regular user
