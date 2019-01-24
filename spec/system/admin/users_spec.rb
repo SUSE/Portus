@@ -93,14 +93,11 @@ describe "Admin - Users panel", type: :system, js: true do
     it "allows the admin to remove other users from the show page" do
       visit edit_admin_user_path(user.id)
 
-      expect(page).not_to have_css(".user_#{user.id}")
-      expect(page).to have_content(user.username)
+      toggle_user_deletion_modal
+      click_button "I understand, delete user"
 
-      find(".btn-danger").click
       expect(page).to have_current_path(admin_users_path)
-
       expect(page).to have_content("User '#{user.username}' was removed successfully")
-      expect(page).not_to have_css(".user_#{user.id}")
     end
   end
 
@@ -165,11 +162,15 @@ describe "Admin - Users panel", type: :system, js: true do
     it "allows the admin to update a user" do
       visit edit_admin_user_path(user)
 
-      fill_in "Email", with: "another@example.com"
-      click_button "Update"
+      within("#edit-user-form") do
+        fill_in "Email", with: "another@example.com"
+        click_button "Save"
+      end
 
-      expect(page).to have_content("another@example.com")
       expect(page).to have_content("User '#{user.username}' was updated successfully")
+
+      visit admin_users_path
+      expect(page).to have_content("another@example.com")
     end
 
     it "allows admin to create bot application token" do
@@ -178,10 +179,12 @@ describe "Admin - Users panel", type: :system, js: true do
 
       find(".toggle-link-new-app-token").click
 
-      expect(focused_element_id).to eq "application_token_application"
-      fill_in "Application", with: "awesome-application"
+      within("#new-app-token-form") do
+        expect(focused_element_id).to eq "application_token_application"
+        fill_in "Application", with: "awesome-application"
 
-      click_button "Save"
+        click_button "Save"
+      end
 
       expect(page).to have_css("#float-alert")
       expect(page).to have_content("was created successfully")
@@ -202,8 +205,10 @@ describe "Admin - Users panel", type: :system, js: true do
     it "disallows the admin to update a user with a wrong name" do
       visit edit_admin_user_path(user)
 
-      fill_in "Email", with: admin.email
-      click_button "Update"
+      within("#edit-user-form") do
+        fill_in "Email", with: admin.email
+        click_button "Save"
+      end
 
       expect(page).to have_content("has already been taken")
     end

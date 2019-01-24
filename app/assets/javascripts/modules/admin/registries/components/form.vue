@@ -51,7 +51,7 @@
       <div class="col-md-offset-2 col-md-7">
         <div class="btn-toolbar" role="toolbar">
           <div class="btn-group" role="group">
-            <button type="submit" class="btn btn-primary" :disabled="submitDisabled">{{ submitName }}</button>
+            <button type="submit" class="btn btn-primary" :disabled="submitDisabled">Save</button>
           </div>
           <div class="btn-group" role="group">
             <span data-toggle="collapse" data-target="#advanced">

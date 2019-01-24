@@ -14,7 +14,7 @@
 
       <br/>
 
-      <registry-form :url="url" :can-change-hostname="canChangeHostname" :show-force="showForce" submit-name="Create"></registry-form>
+      <registry-form :url="url" :can-change-hostname="canChangeHostname" :show-force="showForce"></registry-form>
     </div>
   </panel>
 </template>

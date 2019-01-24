@@ -87,6 +87,10 @@ module Helpers
   def toggle_team_delete_modal
     find(".toggle-delete-modal").click
   end
+
+  def toggle_user_deletion_modal
+    find(".toggle-deletion-modal").click
+  end
 end
 
 RSpec.configure { |config| config.include Helpers }

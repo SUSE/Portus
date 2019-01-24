@@ -23,7 +23,7 @@
         <i class="fa fa-lg" :class="enabledClass"></i>
       </a>
     </td>
-    <td>{{ user.bot }}</td>
+    <td>{{ isBot }}</td>
     <td>
       <a class="btn btn-default delete-user-btn"
         data-placement="left"
@@ -95,6 +95,14 @@
     computed: {
       scopeClass() {
         return `user_${this.user.id}`;
+      },
+
+      isBot() {
+        if (this.user.bot) {
+          return 'Yes';
+        }
+
+        return 'No';
       },
 
       enabledClass() {

@@ -25,7 +25,7 @@
 
           .form-group
             .actions
-              = f.submit('Update', class: 'btn btn-primary', disabled: true)
+              = f.submit('Save', class: 'btn btn-primary', disabled: true)
 
     <app-tokens-wrapper :user-id="#{current_user.id}" :app-tokens-ref="#{@app_tokens_serialized}" :max-tokens="#{User::APPLICATION_TOKENS_MAX}"></app-tokens-wrapper>
 
@@ -59,4 +59,4 @@
                   = f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control'
               .form-group
                 .actions
-                  = f.submit('Change', class: 'btn btn-primary', disabled: true)
+                  = f.submit('Save', class: 'btn btn-primary', disabled: true)
