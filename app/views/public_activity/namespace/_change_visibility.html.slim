@@ -7,8 +7,9 @@ li
     .description
       h6
         strong
-          = "#{activity_owner(activity)} set the "
-        = link_to activity.trackable.name, activity.trackable
+          = "#{activity_owner(activity)} set "
+        | the&nbsp;
+        = render_namespace_name(activity)
         = " namespace as #{activity.parameters[:visibility].sub('visibility_', '')}"
       small
         i.fa.fa-clock-o
