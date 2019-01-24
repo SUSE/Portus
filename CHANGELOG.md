@@ -1,3 +1,9 @@
+## 2.4.2
+
+- e960c96dc821 Fixed nil exceptions for activities
+- 627a990b9829 Fixed all? and delete? namespace policies
+- 56385ecf8bc6 Fixed deletion for registry 2.7
+
 ## 2.4.1
 
 - af08f6211abb db: added index on scan_result
