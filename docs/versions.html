@@ -330,21 +330,27 @@ each Portus version:</p>
       <td style="text-align: center">2.0.x</td>
     </tr>
     <tr>
-      <td style="text-align: center">2.4.x</td>
+      <td style="text-align: center">2.4.2</td>
       <td style="text-align: center">1.6+</td>
       <td style="text-align: center">2.0+</td>
+      <td style="text-align: center">2.0.x</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2.4.0 &amp; 2.4.1</td>
+      <td style="text-align: center">1.6+</td>
+      <td style="text-align: center">2.0 to 2.6.x</td>
       <td style="text-align: center">2.0.x</td>
     </tr>
     <tr>
       <td style="text-align: center">2.3.x</td>
       <td style="text-align: center">1.6+</td>
-      <td style="text-align: center">2.0+</td>
+      <td style="text-align: center">2.0 to 2.6.x</td>
       <td style="text-align: center">2.0.x</td>
     </tr>
     <tr>
       <td style="text-align: center">2.1.x &amp; 2.2.x</td>
       <td style="text-align: center">1.6+</td>
-      <td style="text-align: center">2.0+</td>
+      <td style="text-align: center">2.0 to 2.6.x</td>
       <td style="text-align: center">-</td>
     </tr>
     <tr>
@@ -374,10 +380,12 @@ each Portus version:</p>
   <li>Docker Engine <code class="highlighter-rouge">1.6</code> is the first version supported by Docker Distribution 2.
 Therefore, this requirement is also the same for Portus.</li>
   <li>As of Docker <code class="highlighter-rouge">1.10</code>, the Manifest Version 2, Schema 2 is the one being used.
-This is only supported by Portus in the <code class="highlighter-rouge">master</code> branch and in <code class="highlighter-rouge">2.0.3</code>.</li>
+This is supported by Portus in <code class="highlighter-rouge">2.0.3</code> onwards.</li>
   <li>Docker Distribution <code class="highlighter-rouge">2.3</code> supports both Manifest versions, but some changes
 had to be made in order to offer backwards compatibility. This is not
 supported neither for Portus <code class="highlighter-rouge">2.0.0</code> nor <code class="highlighter-rouge">2.0.1</code>.</li>
+  <li>Docker Distribution <code class="highlighter-rouge">2.7</code> changed the semantics around the <code class="highlighter-rouge">delete</code>
+action. This is supported in <code class="highlighter-rouge">2.4.2+</code> and in the <code class="highlighter-rouge">master</code> branch of Portus.</li>
   <li>CoreOS Clair has been supported as a security scanner since <code class="highlighter-rouge">2.3.0</code>.</li>
 </ul>
 
