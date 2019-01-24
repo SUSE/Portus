@@ -14,14 +14,13 @@ require "portus/test"
 # Images for the supported registry versions. These versions will be applied
 # through a cartesian product into the test matrix.
 SUPPORTED_REGISTRIES = [
-  "library/registry:2.5",
-  "library/registry:2.6"
+  "library/registry:2.7.1"
 ].freeze
 
 PRODUCTION = [
   {
-    background: "opensuse/portus:head",
-    portus:     "opensuse/portus:head"
+    background: "opensuse/portus:2.4",
+    portus:     "opensuse/portus:2.4"
   }
 ].freeze
 

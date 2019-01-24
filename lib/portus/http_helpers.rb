@@ -15,9 +15,10 @@ module Portus
     # Returns an URI object and a request object for the given path & method
     # pair.
     def get_request(path, method)
-      uri = URI.join(@base_url, path)
-      req = Net::HTTP.const_get(method.capitalize).new(uri)
-      [uri, req]
+      @uri    = URI.join(@base_url, path)
+      @method = method
+      req     = Net::HTTP.const_get(method.capitalize).new(@uri)
+      [@uri, req]
     end
 
     # This is the general method to perform an HTTP request to an endpoint
@@ -71,7 +72,8 @@ module Portus
     # response as given by the registry, and the params hash are extra arguments
     # that will be passed to the exception message.
     def handle_error(response, params = {})
-      str = "\nCode: #{response.code}\n"
+      str = "\nError on request: #{@method} #{@uri}\n" \
+            "Code: #{response.code}\n"
 
       # Add the errors as given by the registry.
       begin
