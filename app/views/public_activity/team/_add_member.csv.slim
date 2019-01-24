@@ -1,6 +1,12 @@
+- owner = activity_owner(activity)
+- action = "#{activity_action(owner, "add")} member"
+- created_at = activity.created_at
+- role = "role #{activity.parameters[:role]}"
+- team = activity_team(activity)
+
 - if activity.recipient
-  = CSV.generate_line(['team', activity_team(activity), 'add member', activity.recipient.display_username, activity_owner(activity), activity.created_at, "role #{activity.parameters[:role]}"])
+  = CSV.generate_line(['team', team, action, activity.recipient.display_username, owner, created_at, role])
 - elsif activity.parameters[:team_user]
-  = CSV.generate_line(['team', activity_team(activity), 'add member', activity.parameters[:team_user], activity_owner(activity), activity.created_at, "role #{activity.parameters[:role]}"])
+  = CSV.generate_line(['team', team, action, activity.parameters[:team_user], owner, created_at, role])
 - else
-  = CSV.generate_line(['team', activity_team(activity), 'add member', "a user", activity_owner(activity), activity.created_at, "role #{activity.parameters[:role]}"])
+  = CSV.generate_line(['team', team, action, "a user", owner, created_at, role])
