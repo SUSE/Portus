@@ -32,7 +32,7 @@ class Namespace < ApplicationRecord
 
   # This regexp is extracted from the reference package of Docker Distribution
   # and it matches a valid namespace name.
-  NAME_REGEXP = /\A[a-z0-9]+(?:[._\\-][a-z0-9]+)*\Z/.freeze
+  NAME_REGEXP = /\A[a-z0-9]+(?:[\._\-][a-z0-9]+)*\Z/.freeze
 
   # The maximum length of a namespace name.
   MAX_NAME_LENGTH = 255
@@ -144,12 +144,12 @@ class Namespace < ApplicationRecord
     str = name[first..last]
 
     # Replace weird characters with underscores.
-    str = str.gsub(/[^[a-z0-9\\.\\-_]]/, "_")
+    str = str.gsub(/[^[a-z0-9\.\-_]]/, "_")
 
     # Only one special character is allowed in between of alphanumeric
     # characters. Thus, let's merge multiple appearences into one on each case.
     # After that, the name should be fine, so let's trim it if it's too large.
-    final = str.gsub(/[._\\-]{2,}/, "_")
+    final = str.gsub(/[\._\-]{2,}/, "_")
     name = final[0..MAX_NAME_LENGTH]
 
     return nil if name !~ NAME_REGEXP
