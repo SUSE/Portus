@@ -168,7 +168,7 @@ describe Namespace do
     let!(:namespace) { create(:namespace, team: team) }
 
     it "does nothing on already valid names" do
-      ["name", "a", "a_a", "45", "n4", "h2o", "flavio.castelli"].each do |name|
+      ["name", "a", "a_a", "45", "n4", "h2o", "flavio.castelli", "kurt-haegeman"].each do |name|
         expect(described_class.make_valid(name)).to eq name
       end
     end
