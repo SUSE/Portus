@@ -40,6 +40,10 @@ function save(user) {
   return oldResource.save({}, { user });
 }
 
+function update(user) {
+  return resource.update({ id: user.id }, { user });
+}
+
 function destroy({ id }) {
   return resource.delete({ id });
 }
@@ -55,6 +59,7 @@ function toggleEnabled({ id }) {
 export default {
   save,
   destroy,
+  update,
   toggleAdmin,
   toggleEnabled,
   createToken,

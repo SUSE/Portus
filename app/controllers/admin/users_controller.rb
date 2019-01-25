@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::UsersController < Admin::BaseController
-  before_action :another_user_access, only: %i[edit update destroy]
+  before_action :another_user_access, only: %i[edit]
   before_action :check_ldap_user!, only: %i[create]
 
   def index
@@ -40,40 +40,16 @@ class Admin::UsersController < Admin::BaseController
 
   # GET /admin/user/1/edit
   def edit
+    @user_serialized = API::Entities::Users.represent(
+      @user,
+      current_user: current_user,
+      type:         :internal
+    ).to_json
     @app_tokens_serialized = API::Entities::ApplicationTokens.represent(
       @user.application_tokens,
       current_user: current_user,
       type:         :internal
     ).to_json
-  end
-
-  # PATCH/PUT /admin/user/1
-  def update
-    return if @user.nil?
-
-    attr = params.require(:user).permit(%i[email display_name])
-
-    if @user.update(attr)
-      redirect_to admin_users_path,
-                  notice: "User '#{@user.username}' was updated successfully",
-                  float:  true
-    else
-      redirect_to edit_admin_user_path(@user),
-                  alert: @user.errors.full_messages,
-                  float: true
-    end
-  end
-
-  # DELETE /admin/user/:id
-  def destroy
-    return if @user.nil?
-
-    @user.update_activities!(current_user)
-    @user.destroy!
-
-    redirect_to admin_users_path,
-                notice: "User '#{@user.username}' was removed successfully",
-                float:  true
   end
 
   # PATCH/PUT /admin/user/1/toggle_admin

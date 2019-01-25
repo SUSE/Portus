@@ -14,39 +14,39 @@ describe "Update password feature" do
 
   it "enables the button if the user pressed a key", js: true do
     # Change the contents and see that it gets enabled.
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
     fill_in "Email", with: "another@example.com"
-    expect(page).to have_button("Update")
+    expect(page).to have_button("Save")
 
     # Click the button, the contents should be updated.
-    click_button("Update")
+    click_button("Save")
     expect(page).to have_current_path(edit_user_registration_path)
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
     expect(find("#user_email").value).to eq "another@example.com"
   end
 
   it "disables the 'Update' button if email becomes empty", js: true do
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
     fill_in "Email", with: ""
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
   end
 
   it "enables the 'Update' button if email != empty", js: true do
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
     fill_in "Email", with: "email@email.com"
-    expect(page).to have_button("Update")
+    expect(page).to have_button("Save")
   end
 
   it "disables the 'Update' button if email == original value", js: true do
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
     fill_in "Email", with: "email@email.com"
-    expect(page).to have_button("Update")
+    expect(page).to have_button("Save")
     fill_in "Email", with: user.email
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
   end
 
   it "keeps the 'Update' button disabled if no changes", js: true do
-    expect(page).to have_button("Update", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
   end
 
   describe "Display name enabled" do
@@ -60,20 +60,20 @@ describe "Update password feature" do
     end
 
     it "keeps the 'Update' button disabled if no changes", js: true do
-      expect(page).to have_button("Update", disabled: true)
+      expect(page).to have_button("Save", disabled: true)
     end
 
     it "enables the 'Update' button if display name != original value", js: true do
-      expect(page).to have_button("Update", disabled: true)
+      expect(page).to have_button("Save", disabled: true)
       fill_in "Display name", with: "name"
-      expect(page).to have_button("Update")
+      expect(page).to have_button("Save")
 
-      click_button("Update")
+      click_button("Save")
 
       expect(page).to have_content("Profile updated successfully!")
-      expect(page).to have_button("Update", disabled: true)
+      expect(page).to have_button("Save", disabled: true)
       clear_field("#user_display_name")
-      expect(page).to have_button("Update")
+      expect(page).to have_button("Save")
     end
   end
 
@@ -81,23 +81,23 @@ describe "Update password feature" do
 
   it "enables/disables the submit button properly", js: true do
     # By default it's disabled.
-    expect(page).to have_button("Change", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
 
     # Now we fill the current and the new password.
     fill_in "user_current_password", with: user.password
     fill_in "user_password", with: "12341234"
-    expect(page).to have_button("Change", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
 
     # We write the confirmation but it differs from the one we just wrote.
     fill_in "user_password_confirmation", with: "1234"
-    expect(page).to have_button("Change", disabled: true)
+    expect(page).to have_button("Save", disabled: true)
 
     # Now we write the proper copnfirmation
     fill_in "user_password_confirmation", with: "12341234"
-    expect(page).to have_button("Change")
+    expect(page).to have_button("Save")
 
     # Click the button and see that everything is as expected.
-    click_button "Change"
+    click_button "Save"
     expect(page).to have_current_path(edit_user_registration_path)
     expect(User.first.valid_password?("12341234")).to be true
   end

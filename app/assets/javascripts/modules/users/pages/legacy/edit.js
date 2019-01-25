@@ -1,7 +1,7 @@
 import BaseComponent from '~/base/component';
 
-import ProfileForm from '../components/profile-form';
-import PasswordForm from '../components/password-form';
+import ProfileForm from '../../components/profile-form';
+import PasswordForm from '../../components/password-form';
 
 const PROFILE_FORM = 'form.profile';
 const PASSWORD_FORM = 'form.password';
