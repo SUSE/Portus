@@ -58,11 +58,11 @@ module Portus
           if user&.bot
             @reason = "Bot user is not expected to be present on LDAP"
             false
-          elsif user&.encrypted_password == ""
-            @reason = "This user can only authenticate if LDAP is enabled"
-            @soft   = false
-            false
           else
+            if user&.encrypted_password == ""
+              @reason = "This user can only authenticate if LDAP is enabled"
+              @soft   = false
+            end
             true
           end
         else
