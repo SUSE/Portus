@@ -20,9 +20,9 @@
 
 # Base ruby engine.
 %define rb_build_versions ruby25
-%define rb_build_abi      ruby:2.5.0
+%define rb_build_abi      ruby:2.5.3
 %define rb_suffix         ruby2.5
-%define rb_ver            2.5.0
+%define rb_ver            2.5.3
 
 %define fix_sheb() ( \
   for i in $(grep '^#!/usr/bin/env ruby$' * -r | cut -d: -f1 | uniq);do\

@@ -7,9 +7,9 @@ Suport: jing
 
 %define rb_default_ruby        ruby25
 %define rb_default_ruby_suffix ruby2.5
-%define rb_default_ruby_abi    ruby:2.5.0
+%define rb_default_ruby_abi    ruby:2.5.3
 
-%define rb_build_ruby_abis     ruby:2.5.0
+%define rb_build_ruby_abis     ruby:2.5.3
 %define rb_build_versions      ruby25
 %define _with_ruby20               0
 %define _with_ruby21               0
@@ -17,6 +17,7 @@ Suport: jing
 %define _with_ruby23               0
 %define _with_ruby24               0
 %define _with_ruby25               1
+%define _with_ruby26               0
 Macros:
 %_with_ruby20               0
 %_with_ruby21               0
@@ -24,15 +25,16 @@ Macros:
 %_with_ruby23               0
 %_with_ruby24               0
 %_with_ruby25               1
+%_with_ruby26               0
 %rb_default_ruby        ruby25
 %rb_default_ruby_suffix ruby2.5
-%rb_default_ruby_abi    ruby:2.5.0
+%rb_default_ruby_abi    ruby:2.5.3
 
-%rb_build_ruby_abis     ruby:2.5.0
+%rb_build_ruby_abis     ruby:2.5.3
 %rb_build_versions      ruby25
 :Macros
 
-Prefer: rubygem(ruby:2.5.0:gem2rpm)
+Prefer: rubygem(ruby:2.5.3:gem2rpm)
 Prefer: ruby2.5-rubygem-gem2rpm
 
 Substitute: kiwi-image:ext4 e2fsprogs virt-utils parted
