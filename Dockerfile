@@ -1,4 +1,4 @@
-FROM opensuse/ruby:2.5
+FROM opensuse/ruby:2.6
 MAINTAINER SUSE Containers Team <containers@suse.com>
 
 ENV COMPOSE=1
@@ -16,14 +16,14 @@ COPY Gemfile* ./
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
 RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go/openSUSE_Leap_15.0/devel:languages:go.repo && \
     zypper --gpg-auto-import-keys ref && \
-    zypper -n in --no-recommends ruby2.5-devel \
+    zypper -n in --no-recommends ruby2.6-devel \
            libmysqlclient-devel postgresql-devel \
            nodejs libxml2-devel libxslt1 git-core \
            go1.10 phantomjs gcc-c++ && \
     zypper -n in --no-recommends -t pattern devel_basis && \
     gem install bundler --no-ri --no-rdoc -v 1.17.3 && \
-    update-alternatives --install /usr/bin/bundle bundle /usr/bin/bundle.ruby2.5 3 && \
-    update-alternatives --install /usr/bin/bundler bundler /usr/bin/bundler.ruby2.5 3 && \
+    update-alternatives --install /usr/bin/bundle bundle /usr/bin/bundle.ruby2.6.1 && \
+    update-alternatives --install /usr/bin/bundler bundler /usr/bin/bundler.ruby2.6.1 && \
     bundle install --retry=3 && \
     go get -u github.com/vbatts/git-validation && \
     go get -u github.com/openSUSE/portusctl && \
