@@ -2,7 +2,7 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-  - 2.5.0
+  - 2.5.3
 cache: bundler
 
 install:
