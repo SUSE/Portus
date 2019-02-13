@@ -29,6 +29,21 @@ def open_id_fetch_options
   options
 end
 
+def openid_connect_fetch_options
+  {
+    name: :openid_connect,
+    scope: [:openid, :email, :profile, :address],
+    response_type: :code,
+    discovery: true,
+    issuer: APP_CONFIG["oauth"]["openid_connect"]["issuer"],
+    client_options: {
+      identifier: APP_CONFIG["oauth"]["openid_connect"]["identifier"],
+      secret: APP_CONFIG["oauth"]["openid_connect"]["secret"],
+      redirect_uri: APP_CONFIG["oauth"]["openid_connect"]["redirect_uri"],
+    },
+  }
+end
+
 def github_fetch_options
   { scope: "read:user,user:email,read:org" }
 end
@@ -68,6 +83,7 @@ def configure_oauth!(config)
   [
     { backend: :google_oauth2, id: "id", secret: "secret" },
     { backend: :open_id },
+    { backend: :openid_connect },
     { backend: :github, id: "client_id", secret: "client_secret" },
     { backend: :gitlab, id: "application_id", secret: "secret" },
     { backend: :bitbucket, id: "key", secret: "secret" }

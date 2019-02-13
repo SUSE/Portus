@@ -14,6 +14,12 @@
         i.fa.fa-openid
         '&nbsp;Open Id
 
+  - if APP_CONFIG.enabled? "oauth.openid_connect"
+    .col-xs-12.col-sm-6
+      = link_to user_openid_connect_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
+        i.fa.fa-openid
+        '&nbsp;Open Id Connect
+
   - if APP_CONFIG.enabled? "oauth.github"
     .col-xs-12.col-sm-6
       = link_to user_github_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
