@@ -150,16 +150,16 @@ describe Auth::OmniauthRegistrationsController do
   describe "openid_connect" do
     let(:openid_connect_mock_data) do
       {
-        provider: :openid_connect,
-        uid: "12345",
-        info: {
+        provider:    :openid_connect,
+        uid:         "12345",
+        info:        {
           email: "testuser@email.net",
-          name: "John Smith"
+          name:  "John Smith"
         },
         credentials: {
-          token: "abcdefg12345",
+          token:         "abcdefg12345",
           refresh_token: "12345abcdefg",
-          expires_at: Time.zone.now
+          expires_at:    Time.zone.now
         }
       }
     end

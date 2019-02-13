@@ -31,16 +31,16 @@ end
 
 def openid_connect_fetch_options
   {
-    name: :openid_connect,
-    scope: [:openid, :email, :profile, :address],
-    response_type: :code,
-    discovery: true,
-    issuer: APP_CONFIG["oauth"]["openid_connect"]["issuer"],
+    name:           :openid_connect,
+    scope:          %i[openid email profile address],
+    response_type:  :code,
+    discovery:      true,
+    issuer:         APP_CONFIG["oauth"]["openid_connect"]["issuer"],
     client_options: {
-      identifier: APP_CONFIG["oauth"]["openid_connect"]["identifier"],
-      secret: APP_CONFIG["oauth"]["openid_connect"]["secret"],
-      redirect_uri: APP_CONFIG["oauth"]["openid_connect"]["redirect_uri"],
-    },
+      identifier:   APP_CONFIG["oauth"]["openid_connect"]["identifier"],
+      secret:       APP_CONFIG["oauth"]["openid_connect"]["secret"],
+      redirect_uri: APP_CONFIG["oauth"]["openid_connect"]["redirect_uri"]
+    }
   }
 end
 
