@@ -147,6 +147,73 @@ describe Auth::OmniauthRegistrationsController do
     end
   end
 
+  describe "openid_connect" do
+    let(:openid_connect_mock_data) do
+      {
+        provider: :openid_connect,
+        uid: "12345",
+        info: {
+          email: "testuser@email.net",
+          name: "John Smith"
+        },
+        credentials: {
+          token: "abcdefg12345",
+          refresh_token: "12345abcdefg",
+          expires_at: Time.zone.now
+        }
+      }
+    end
+
+    before do
+      APP_CONFIG["oauth"]["openid_connect"] = {
+        "enabled" => true
+      }
+
+      # Magic for Devise.
+      Rails.application.env_config["devise.mapping"] = Devise.mappings[:user]
+
+      # Magic for omniauth.
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new(openid_connect_mock_data)
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:openid_connect]
+    end
+
+    it "when user doesn't exist, redirect to /users/oauth" do
+      visit root_path
+      click_link("Open Id Connect")
+
+      expect(page).to have_content("Create account")
+      expect(page).to have_selector("#user_username[value='testuser']")
+      expect(page).to have_selector("#user_display_name[value='John Smith']")
+    end
+
+    it "when user doesn't exist, we can create it afterwards" do
+      visit root_path
+      click_link "Open Id Connect"
+      click_button "Create account"
+
+      expect(User.find_by(username: "testuser")).not_to be_nil
+    end
+
+    it "when user exists, sign in and redirect to /" do
+      create :user, email: "testuser@email.net"
+      visit root_path
+      click_link "Open Id Connect"
+
+      expect(page).to have_current_path(authenticated_root_path)
+      expect(page).to have_content("Successfully authenticated from Openid connect account")
+    end
+
+    it "redirects to /uses/oauth if there was a problem when entering the user" do
+      allow_any_instance_of(User).to receive(:persisted?).and_return(false)
+      visit root_path
+      click_link "Open Id Connect"
+      click_button "Create account"
+
+      expect(page).to have_current_path(users_oauth_url)
+    end
+  end
+
   describe "#github" do
     let(:github_mock_data) do
       {
