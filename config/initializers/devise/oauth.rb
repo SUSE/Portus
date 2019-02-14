@@ -37,9 +37,17 @@ def openid_connect_fetch_options
     discovery:      true,
     issuer:         APP_CONFIG["oauth"]["openid_connect"]["issuer"],
     client_options: {
-      identifier:   APP_CONFIG["oauth"]["openid_connect"]["identifier"],
-      secret:       APP_CONFIG["oauth"]["openid_connect"]["secret"],
-      redirect_uri: APP_CONFIG["oauth"]["openid_connect"]["redirect_uri"]
+      identifier: APP_CONFIG["oauth"]["openid_connect"]["identifier"],
+      secret:     APP_CONFIG["oauth"]["openid_connect"]["secret"]
+    },
+    setup:          lambda { |env|
+      # Set client_options.redirect_uri to <protocol>://<host>/users/auth/openid_connect/callback
+      strategy = env["omniauth.strategy"]
+
+      if strategy.request_path == "/users/auth/openid_connect"
+        redirect_uri = strategy.full_host + strategy.script_name + strategy.callback_path
+        strategy.options["client_options"]["redirect_uri"] = redirect_uri
+      end
     }
   }
 end

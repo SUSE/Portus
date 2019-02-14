@@ -208,8 +208,6 @@ oauth:
     # Credentials.
     identifier: ""
     secret: ""
-    # <protocol>://<host>/users/auth/openid_connect/callback
-    redirect_uri: ""
 
   # Github authentication support.
   # Callback url: <host>/users/auth/github/callback
