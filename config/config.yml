@@ -202,7 +202,7 @@ oauth:
   # OpenID Connect authentication support. If enabled, then users can authenticate with OpenID/Connect
   # Callback url: <host>/users/auth/openid_connect/callback
   openid_connect:
-    enabled: true
+    enabled: false
     # E.g. https://accounts.google.com
     issuer: ""
     # Credentials.
