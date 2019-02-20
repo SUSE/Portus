@@ -199,6 +199,16 @@ oauth:
     # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
     domain: ""
 
+  # OpenID Connect authentication support. If enabled, then users can authenticate with OpenID/Connect
+  # Callback url: <host>/users/auth/openid_connect/callback
+  openid_connect:
+    enabled: false
+    # E.g. https://accounts.google.com
+    issuer: ""
+    # Credentials.
+    identifier: ""
+    secret: ""
+
   # Github authentication support.
   # Callback url: <host>/users/auth/github/callback
   github:

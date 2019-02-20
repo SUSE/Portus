@@ -29,6 +29,29 @@ def open_id_fetch_options
   options
 end
 
+def openid_connect_fetch_options
+  {
+    name:           :openid_connect,
+    scope:          %i[openid email profile address],
+    response_type:  :code,
+    discovery:      true,
+    issuer:         APP_CONFIG["oauth"]["openid_connect"]["issuer"],
+    client_options: {
+      identifier: APP_CONFIG["oauth"]["openid_connect"]["identifier"],
+      secret:     APP_CONFIG["oauth"]["openid_connect"]["secret"]
+    },
+    setup:          lambda { |env|
+      # Set client_options.redirect_uri to <protocol>://<host>/users/auth/openid_connect/callback
+      strategy = env["omniauth.strategy"]
+
+      if strategy.request_path == "/users/auth/openid_connect"
+        redirect_uri = strategy.full_host + strategy.script_name + strategy.callback_path
+        strategy.options["client_options"]["redirect_uri"] = redirect_uri
+      end
+    }
+  }
+end
+
 def github_fetch_options
   { scope: "read:user,user:email,read:org" }
 end
@@ -68,6 +91,7 @@ def configure_oauth!(config)
   [
     { backend: :google_oauth2, id: "id", secret: "secret" },
     { backend: :open_id },
+    { backend: :openid_connect },
     { backend: :github, id: "client_id", secret: "client_secret" },
     { backend: :gitlab, id: "application_id", secret: "secret" },
     { backend: :bitbucket, id: "key", secret: "secret" }
