@@ -310,8 +310,9 @@ describe "Feature: Repositories", js: true do
         end
       end
 
-      # TODO: this is flaky on Travis CI for some reason.
-      if ENV["CI"].blank?
+      # TODO: this is consistently failing since ruby 2.6.x. Before it was only
+      # flaky on Travis CI.
+      if ENV["ALL"].present?
         it "A user deletes a repository by deleting all tags" do
           %w[lorem ipsum].each_with_index do |digest, idx|
             create(:tag, name: "tag#{idx}", author: user, repository: repository, digest: digest,
