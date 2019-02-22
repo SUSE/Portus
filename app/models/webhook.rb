@@ -45,15 +45,7 @@ class Webhook < ApplicationRecord
   has_many :deliveries, class_name: "WebhookDelivery", dependent: :destroy, inverse_of: "webhook"
   has_many :headers, class_name: "WebhookHeader", dependent: :destroy, inverse_of: "webhook"
 
-  validates :url, presence: true, url: true
-
-  # default to http if no protocol has been specified. If unspecified, the URL
-  # validator will fail.
-  before_validation do
-    unless url.nil? || url.blank?
-      self.url = "http://#{url}" unless url.start_with?("http://", "https://")
-    end
-  end
+  validates :url, presence: true, http: true
 
   before_destroy :update_activities!
 
