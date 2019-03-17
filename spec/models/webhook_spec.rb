@@ -33,8 +33,11 @@ RSpec.describe Webhook, type: :model do
   it { is_expected.to have_many(:deliveries) }
   it { is_expected.to belong_to(:namespace) }
 
-  it { is_expected.to validate_presence_of(:url) }
+  it { is_expected.to allow_value("example.org").for(:url) }
   it { is_expected.not_to allow_value("won't work").for(:url) }
+  it { is_expected.not_to allow_value("ftp:///home/mssola").for(:url) }
+
+  it { is_expected.to validate_presence_of(:url) }
   it { is_expected.to define_enum_for(:request_method) }
   it { is_expected.to allow_value(*request_methods).for(:request_method) }
   it { is_expected.to define_enum_for(:content_type) }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_15_133935) do
+ActiveRecord::Schema.define(version: 2019_03_14_173309) do
 
   create_table "activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "trackable_type"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2019_01_15_133935) do
     t.boolean "marked", default: false
     t.string "username"
     t.integer "scanned", default: 0
-    t.integer "size"
+    t.bigint "size"
     t.datetime "pulled_at"
     t.index ["repository_id"], name: "index_tags_on_repository_id"
     t.index ["user_id"], name: "index_tags_on_user_id"

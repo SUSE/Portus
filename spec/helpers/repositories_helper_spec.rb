@@ -74,6 +74,7 @@ RSpec.describe RepositoriesHelper, type: :helper do
     let!(:registry)   { create(:registry, hostname: "registry:5000") }
     let!(:namespace)  { create(:namespace, name: "namespace", registry: registry) }
     let!(:owner)      { create(:user) }
+    let!(:unknown)    { create(:user) }
     let!(:portus)     { User.create_portus_user! }
     let!(:repo)       { create(:repository, name: "repo", namespace: registry.global_namespace) }
     let!(:repo1)      { create(:repository, name: "repo1", namespace: registry.global_namespace) }
@@ -84,6 +85,7 @@ RSpec.describe RepositoriesHelper, type: :helper do
     let!(:tag2)       { create(:tag, name: "0.2", author: owner, repository: repo1) }
     let!(:tag3)       { create(:tag, name: "0.3", author: owner, repository: repo2) }
     let!(:tag4)       { create(:tag, name: "0.4", author: owner, repository: repo3) }
+    let!(:tag5)       { create(:tag, name: "0.5", author: unknown, repository: repo3) }
     let!(:manifest)   { OpenStruct.new(id: "", digest: "") }
 
     it "creates the proper HTML for each kind of activity" do
@@ -94,9 +96,12 @@ RSpec.describe RepositoriesHelper, type: :helper do
       repo1.create_activity(:push, owner: owner, recipient: tag2, created_at: 3.hours.ago)
       repo1.create_activity(:push, owner: nil, recipient: tag3, created_at: 2.hours.ago)
       repo3.create_activity(:push, owner: portus, recipient: tag4, created_at: 1.hour.ago)
+      repo3.create_activity(:push, owner: unknown, recipient: tag5, created_at: 1.minute.ago)
 
       tag1.destroy
       repo1.destroy
+      unknown.update_activities!(portus)
+      unknown.destroy
 
       nameo  = owner.username
       global = registry.global_namespace.id
@@ -109,11 +114,14 @@ RSpec.describe RepositoriesHelper, type: :helper do
         "<strong>#{nameo} pushed </strong><span>a repository</span>",
         "<strong>Someone pushed </strong><span>a repository</span>",
         "<strong>portus pushed (sync) </strong><a href=\"/namespaces/#{namespace.id}\">"\
-          "namespace</a>/<a href=\"/repositories/#{repo3.id}\">repo3:0.4</a>"
+          "namespace</a>/<a href=\"/repositories/#{repo3.id}\">repo3:0.4</a>",
+        "<strong>#{unknown.username} pushed </strong><a href=\"/namespaces/#{namespace.id}\">"\
+          "namespace</a>/<a href=\"/repositories/#{repo3.id}\">repo3:0.5</a>"
       ]
 
       idx = 0
-      PublicActivity::Activity.all.order(id: :asc).each do |activity|
+      wh = { key: "repository.push" }
+      PublicActivity::Activity.where(wh).order(id: :asc).each do |activity|
         html = render_push_activity(activity)
         expect(html).to eq expectations[idx]
         idx += 1
@@ -136,10 +144,11 @@ RSpec.describe RepositoriesHelper, type: :helper do
       expectations[3] = "<strong>Someone pushed </strong><a href=\"/namespaces/#{global}\">"\
         "registry:5000</a>/<span>repo2:0.3</span>"
       expectations[4] = "<strong>portus pushed (sync) </strong><span>namespace</span>/<span>repo"\
-          "3:0.4</span>"
+        "3:0.4</span>"
+      expectations[5] = "<strong>Someone pushed </strong><span>namespace</span>/<span>repo3"\
+        ":0.5</span>"
 
       # Push activities
-      wh = { key: "repository.push" }
       PublicActivity::Activity.where(wh).order(id: :asc).each do |activity|
         html = render_push_activity(activity)
         expect(html).to eq expectations[idx]
@@ -155,6 +164,7 @@ RSpec.describe RepositoriesHelper, type: :helper do
         "<strong>portus deleted (sync) </strong><span>namespace</span>/<span>repo3:0.4</span>",
         "<strong>portus deleted (sync) </strong><a href=\"/namespaces/#{global}\">registry:5000"\
           "</a>/<span>repo2</span>",
+        "<strong>portus deleted (sync) </strong><span>namespace</span>/<span>repo3:0.5</span>",
         "<strong>portus deleted (sync) </strong><span>namespace</span>/<span>repo3</span>"
       ]
 

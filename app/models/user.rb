@@ -50,6 +50,7 @@ class User < ApplicationRecord
                             omniauth_providers:  %i[
                               google_oauth2
                               open_id
+                              openid_connect
                               github
                               gitlab
                               bitbucket

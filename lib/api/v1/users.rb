@@ -103,7 +103,7 @@ module API
 
           delete ":id" do
             user = User.find(params[:id])
-            user.update_activities! @user
+            user.update_activities!(@user)
             user.destroy
             status 204
           end

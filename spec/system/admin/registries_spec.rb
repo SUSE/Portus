@@ -33,7 +33,7 @@ describe "Admin - Registries panel" do
       clear_field("#registry_name")
 
       expect(page).to have_content("Name can't be blank")
-      expect(page).to have_button("Create", disabled: true)
+      expect(page).to have_button("Save", disabled: true)
     end
 
     it "shows an error if hostname is blank" do
@@ -43,7 +43,7 @@ describe "Admin - Registries panel" do
       clear_field("#registry_hostname")
 
       expect(page).to have_content("Hostname can't be blank")
-      expect(page).to have_button("Create", disabled: true)
+      expect(page).to have_button("Save", disabled: true)
     end
 
     it "shows an error if hostname is not reachable" do
@@ -58,7 +58,7 @@ describe "Admin - Registries panel" do
 
       expect(page).to have_content("Skip remote checks")
       expect(page).to have_content("connection refused")
-      expect(page).to have_button("Create", disabled: true)
+      expect(page).to have_button("Save", disabled: true)
     end
 
     it "shows an error (hostname), but you can force it afterwards" do
@@ -80,9 +80,9 @@ describe "Admin - Registries panel" do
       # Use the force, Luke.
 
       check "force"
-      expect(page).to have_button("Create")
+      expect(page).to have_button("Save")
 
-      click_button "Create"
+      click_button "Save"
 
       expect(page).to have_current_path(admin_registries_path)
       expect(page).to have_content("Registry was successfully created.")
@@ -115,7 +115,7 @@ describe "Admin - Registries panel" do
     end
   end
 
-  describe "update", js: true do
+  describe "Save", js: true do
     let!(:registry) { create(:registry) }
 
     before do
@@ -139,7 +139,7 @@ describe "Admin - Registries panel" do
 
       expect(page).to have_content("Skip remote checks")
       expect(page).to have_content("connection refused")
-      expect(page).to have_button("Update", disabled: true)
+      expect(page).to have_button("Save", disabled: true)
     end
 
     it "shows advanced options when clicking on Show Advanced" do

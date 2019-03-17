@@ -58,11 +58,14 @@ module Portus
           if user&.bot
             @reason = "Bot user is not expected to be present on LDAP"
             false
-          elsif user&.encrypted_password == ""
-            @reason = "This user can only authenticate if LDAP is enabled"
-            @soft   = false
-            false
           else
+            # This case only makes sense if the LDAP authenticatable has been
+            # added even when it shouldn't (i.e. the code on
+            # config/initializers/devise.rb failed for whatever reason).
+            if user&.encrypted_password == ""
+              @reason = "This user can only authenticate if LDAP is enabled"
+              @soft   = false
+            end
             true
           end
         else

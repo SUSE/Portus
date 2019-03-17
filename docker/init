@@ -94,7 +94,7 @@ export RAILS_ENV="production"
 export CCONFIG_PREFIX="PORTUS"
 
 if [ -z "$PORTUS_GEM_GLOBAL" ]; then
-    export GEM_PATH="/srv/Portus/vendor/bundle/ruby/2.5.0"
+    export GEM_PATH="/srv/Portus/vendor/bundle/ruby/2.5.3"
 fi
 
 # On debug, print the environment in which we'll call Portus.

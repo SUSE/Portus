@@ -17,6 +17,8 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # Callback for Open ID.
   alias open_id google_oauth2
+  # Callback for Open ID Connect.
+  alias openid_connect google_oauth2
   # Callback for GitHub. Need API permission to check team and organization membership.
   alias github google_oauth2
   # Callback for GitLab. Need API permission to check group membership.

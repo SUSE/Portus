@@ -15,7 +15,7 @@
 #  marked        :boolean          default(FALSE)
 #  username      :string(255)
 #  scanned       :integer          default(0)
-#  size          :integer
+#  size          :bigint(8)
 #  pulled_at     :datetime
 #
 # Indexes

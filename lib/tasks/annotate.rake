@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if (Rails.env.development? || Rails.env.test?) && ENV["CI"].blank?
+if Rails.env.development? && ENV["CI"].blank?
   require "annotate"
   require "portus/db"
 
