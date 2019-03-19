@@ -1,3 +1,8 @@
+## 2.4.3
+
+- f4d6914850a4 Upgraded the omniauth-google-oauth2 gem
+- 67a0d4c0f54b Fix style inconsistencies on password reset pages
+
 ## 2.4.2
 
 - e960c96dc821 Fixed nil exceptions for activities
