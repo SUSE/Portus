@@ -51,22 +51,6 @@ $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function () {
 });
 
 // BOOTSTRAP INITS
-$(function () {
-  if ($.fn.popover) {
-    $('body').popover({
-      selector: '[data-toggle="popover"]',
-      trigger: 'focus',
-    });
-    // to destroy the popovers that are hidden
-    $('[data-toggle="popover"]').on('hidden.bs.popover', function () {
-      var popover = $('.popover').not('.in');
-      if (popover) {
-        popover.remove();
-      }
-    });
-  }
-});
-
 // init tooltip
 $(function () {
   if ($.fn.tooltip) {

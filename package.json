@@ -52,6 +52,7 @@
     "keycode-js": "^1.0.3",
     "lodash": "^4.17.10",
     "query-string": "^5.1.1",
+    "uiv": "^0.31.4",
     "vue": "^2.5.16",
     "vue-loader": "^15.2.4",
     "vue-multiselect": "shentao/vue-multiselect#496937bee",

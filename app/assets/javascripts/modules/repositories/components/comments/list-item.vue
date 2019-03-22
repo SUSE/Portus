@@ -13,19 +13,19 @@
           <span class="text-muted space-xs-sides">{{ createdAt }}</span>
         </p>
         <div class="col-xs-4 text-right" v-if="comment.destroyable">
-          <button class="btn btn-link btn-xs delete-comment-btn"
-            data-placement="left"
-            data-toggle="popover"
-            data-title="Please confirm"
-            data-content="<p>Are you sure you want to remove this\
-            comment?</p><a class='btn btn-default'>No</a> <a class='btn \
-            btn-primary yes'>Yes</a>"
-            data-template="<div class='popover popover-comment-delete' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>'"
-            data-html="true"
-            role="button">
-            <i class="fa fa-trash"></i>
-            Delete comment
-          </button>
+          <popover title="Please confirm" placement="left" v-model="confirm">
+            <button class="btn btn-default delete-app-token-btn" role="button">
+              <i class="fa fa-trash"></i>
+              Delete comment
+            </button>
+            <template slot="popover">
+              <div class='popover-content'>
+                <p>Are you sure you want to remove this comment?</p>
+                <a class='btn btn-default' @click="confirm = false">No</a>
+                <a class='btn btn-primary yes' @click="destroy">Yes</a>
+              </div>
+            </template>
+          </popover>
         </div>
       </div>
       <div v-html="comment.body_md"></div>
@@ -36,10 +36,21 @@
 <script>
   import dayjs from 'dayjs';
 
+  import { Popover } from 'uiv';
   import CommentsService from '../../services/comments';
 
   export default {
+    data() {
+      return {
+        confirm: false,
+      };
+    },
+
     props: ['comment'],
+
+    components: {
+      Popover,
+    },
 
     computed: {
       commentId() {
@@ -52,23 +63,12 @@
     },
 
     methods: {
-      delete() {
+      destroy() {
         CommentsService.remove(this.comment.repository_id, this.comment.id).then(() => {
           this.$bus.$emit('commentDestroyed', this.comment);
           this.$alert.$show('Comment was deleted successfully');
         });
       },
-    },
-
-    mounted() {
-      const DELETE_BTN = '.delete-comment-btn';
-      const POPOVER_DELETE = '.popover-comment-delete';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', DELETE_BTN, () => {
-        const $yes = $(POPOVER_DELETE).find('.yes');
-        $yes.click(this.delete.bind(this));
-      });
     },
   };
 </script>

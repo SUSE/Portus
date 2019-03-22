@@ -7,9 +7,9 @@
     <td>{{ user.email }}</td>
     <td>
       <a class="btn btn-default toggle-user-admin-btn"
-        role="button"
-        :disabled="isCurrentUser"
-        @click="toggleAdmin">
+         role="button"
+         :disabled="isCurrentUser"
+         @click="toggleAdmin">
         <i class="fa fa-lg" :class="adminClass"></i>
       </a>
     </td>
@@ -17,25 +17,26 @@
     <td>{{ user.teams_count }}</td>
     <td>
       <a class="btn btn-default toggle-user-enabled-btn"
-        role="button"
-        :disabled="singleAdmin && isCurrentUser"
-        @click="toggleEnabled">
+         role="button"
+         :disabled="singleAdmin && isCurrentUser"
+         @click="toggleEnabled">
         <i class="fa fa-lg" :class="enabledClass"></i>
       </a>
     </td>
     <td>{{ isBot }}</td>
     <td>
-      <a class="btn btn-default delete-user-btn"
-        data-placement="left"
-        data-toggle="popover"
-        data-title="Please confirm"
-        data-content="<p>Are you sure you want to remove this user?</p><a class='btn btn-default'>No</a> <a class='btn btn-primary yes' rel='nofollow'>Yes</a>"
-        data-html="true"
-        tabindex="0"
-        role="button"
-        :disabled="isCurrentUser">
-        <i class="fa fa-trash fa-lg"></i>
-      </a>
+      <popover title="Please confirm" v-model="confirm">
+        <a class="btn btn-default" role="button" tabindex="0" :disabled="isCurrentUser">
+          <i class="fa fa-trash fa-lg"></i>
+        </a>
+        <template slot="popover">
+          <div class='popover-content'>
+            <p>Are you sure you want to remove this user?</p>
+            <a class='btn btn-default' @click="confirm = false">No</a>
+            <a class='btn btn-primary yes' @click="destroy">Yes</a>
+          </div>
+        </template>
+      </popover>
     </td>
   </tr>
 </template>
@@ -45,6 +46,7 @@
 
   import { handleHttpResponseError } from '~/utils/http';
 
+  import { Popover } from 'uiv';
   import UsersStore from '../store';
 
   import UsersService from '../service';
@@ -53,6 +55,12 @@
   const { set } = Vue;
 
   export default {
+    data() {
+      return {
+        confirm: false,
+      };
+    },
+
     props: ['user', 'usersPath'],
 
     methods: {
@@ -134,14 +142,8 @@
       },
     },
 
-    mounted() {
-      const REMOVE_BTN = '.delete-user-btn';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', REMOVE_BTN, () => {
-        const $yes = $(this.$el).find(REMOVE_BTN).next().find('.yes');
-        $yes.click(this.destroy.bind(this));
-      });
+    components: {
+      Popover,
     },
   };
 </script>

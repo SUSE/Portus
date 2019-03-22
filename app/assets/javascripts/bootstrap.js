@@ -18,10 +18,6 @@ $(function () {
     new Vue({ el: '.vue-root' });
   }
 
-  if ($.fn.popover) {
-    $('a[rel~=popover], .has-popover').popover();
-  }
-
   if ($.fn.tooltip) {
     $('a[rel~=tooltip], .has-tooltip').tooltip();
   }

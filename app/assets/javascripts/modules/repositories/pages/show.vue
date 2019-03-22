@@ -8,21 +8,19 @@
       <div class="btn-toolbar pull-right">
         <star :repository="repository" @click.native.prevent="toggleStar"></star>
         <div class="btn-group" v-if="repository.destroyable">
-          <button
-            class="btn btn-danger repository-delete-btn"
-            data-container="body"
-            data-placement="left"
-            data-toggle="popover"
-            data-content="<p>Are you sure you want to remove this repository?</p>
-            <a class='btn btn-default'>No</a> <a class='btn btn-primary yes'>Yes</a>"
-            data-template="<div class='popover popover-repository-delete' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>'"
-            data-html="true"
-            role="button"
-            title="Delete image"
-            :disabled="state.isDeleting">
-            <i class="fa fa-trash"></i>
-            Delete repository
-          </button>
+          <popover title="Please confirm" placement="left" v-model="confirm">
+            <button class="btn btn-danger" :disabled="state.isDeleting" role="button">
+              <i class="fa fa-trash"></i>
+              Delete image
+            </button>
+            <template slot="popover">
+              <div class='popover-content'>
+                <p>Are you sure you want to remove this repository?</p>
+                <a class='btn btn-default' @click="confirm = false">No</a>
+                <a class='btn btn-primary yes' @click="deleteRepository">Yes</a>
+              </div>
+            </template>
+          </popover>
         </div>
       </div>
     </div>
@@ -70,6 +68,7 @@
 
   import { handleHttpResponseError } from '~/utils/http';
 
+  import { Popover } from 'uiv';
   import TagsWrapper from '../components/tags/wrapper';
   import DeleteTagAction from '../components/tags/delete-tag-action';
   import CommentsWrapper from '../components/comments/wrapper';
@@ -102,6 +101,7 @@
       TagsWrapper,
       Star,
       RepositoryOverview,
+      Popover,
     },
 
     data() {
@@ -112,6 +112,7 @@
         unableToFetchBefore: false,
         repository: { ...this.repositoryRef },
         tags: [],
+        confirm: false,
       };
     },
 
@@ -221,15 +222,6 @@
     },
 
     mounted() {
-      const DELETE_BTN = '.repository-delete-btn';
-      const POPOVER_DELETE = '.popover-repository-delete';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', DELETE_BTN, () => {
-        const $yes = $(POPOVER_DELETE).find('.yes');
-        $yes.click(this.deleteRepository.bind(this));
-      });
-
       this.loadData();
       this.$bus.$on('deleteTags', () => this.deleteTags());
       this.$bus.$on('repositoryUpdated', r => this.updateRepository(r));

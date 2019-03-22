@@ -6,15 +6,15 @@
     <new-namespace-form :state="namespaceState" form-state="newFormVisible" :team-name="team.name"></new-namespace-form>
     <namespaces-panel :namespaces="namespaces" :namespaces-path="namespacesPath" webhooks-path="webhooks" :table-sortable="true" :can-create="team.updatable">
       <h5 slot="name">
-        <a data-placement="right"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content='<p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p><p>It is possible to add read only (pull) access to logged-in users or all Portus users by changing the visibility to "protected" or "public" respectively.</p>'
-          data-original-title="What's this?"
-          tabindex="0"
-          data-html="true">
-          <i class="fa fa-info-circle"></i>
-        </a>
+        <popover title="What's this?" trigger="hover-focus">
+          <a tabindex="0">
+            <i class="fa fa-info-circle"></i>
+          </a>
+          <template slot="popover">
+            <p>A team can own one or more namespaces. By default all the namespaces can be accessed only by the members of the team.</p>
+            <p>It is possible to add read only (pull) access to logged-in users or all Portus users by changing the visibility to "protected" or "public" respectively.</p>
+          </template>
+        </popover>
         Namespaces
       </h5>
     </namespaces-panel>
@@ -24,6 +24,7 @@
 <script>
   import Vue from 'vue';
 
+  import { Popover } from 'uiv';
   import TeamDetailsPanel from '../components/details';
 
   import NamespacesPanel from '../../namespaces/components/panel';
@@ -72,6 +73,7 @@
       NamespacesPanel,
       NewTeamMemberForm,
       TeamMembersPanel,
+      Popover,
     },
 
     data() {

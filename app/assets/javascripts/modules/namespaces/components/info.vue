@@ -9,15 +9,16 @@
         <th class="v-align-top">Team</th>
         <td>
           None (aka orphan)
-          <a data-placement="right"
-            data-toggle="popover"
-            data-content="<p>An orphan namespace is a namespace that was created automatically
-              via background sync job because it previously existed in your registry when Portus was set up.</p>"
-            data-original-title="What's this?"
-            tabindex="0"
-            data-html="true">
-            <i class="fa fa-info-circle"></i>
-          </a>
+
+          <popover title="What's this?" trigger="hover-focus">
+            <a tabindex="0">
+              <i class="fa fa-info-circle"></i>
+            </a>
+            <template slot="popover">
+              <p>An orphan namespace is a namespace that was created automatically
+                via background sync job because it previously existed in your registry when Portus was set up.</p>
+            </template>
+          </popover>
       </td>
       </tr>
       <tr v-if="!namespace.global && !namespace.team.hidden">
@@ -49,6 +50,8 @@
 </template>
 
 <script>
+  import { Popover } from 'uiv';
+
   export default {
     props: {
       namespace: {
@@ -88,6 +91,10 @@
       is(visibility) {
         return this.namespace.visibility === visibility;
       },
+    },
+
+    components: {
+      Popover,
     },
   };
 </script>

@@ -1,20 +1,18 @@
 <template>
   <span>
-    <button
-      class="btn btn-danger btn-sm namespace-delete-btn"
-      data-container="body"
-      data-placement="left"
-      data-toggle="popover"
-      data-content="<p>Are you sure you want to remove this namespace?</p>
-      <a class='btn btn-default'>No</a> <a class='btn btn-primary yes'>Yes</a>"
-      data-template="<div class='popover popover-namespace-delete' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>'"
-      data-html="true"
-      role="button"
-      title="Delete image"
-      :disabled="state.isDeleting">
-      <i class="fa fa-trash"></i>
-      Delete
-    </button>
+    <popover title="Delete namespace" placement="left" v-model="confirm">
+      <button class="btn btn-danger btn-sm" role="button" :disabled="state.isDeleting">
+        <i class="fa fa-trash"></i>
+        Delete
+      </button>
+      <template slot="popover">
+        <div class='popover-content'>
+          <p>Are you sure you want to remove this namespace?</p>
+          <a class='btn btn-default' @click="confirm = false">No</a>
+          <a class='btn btn-primary yes' @click="deleteNamespace">Yes</a>
+        </div>
+      </template>
+    </popover>
   </span>
 </template>
 
@@ -23,6 +21,7 @@
 
   import { handleHttpResponseError } from '~/utils/http';
 
+  import { Popover } from 'uiv';
   import NamespacesStore from '../store';
   import NamespacesService from '../services/namespaces';
 
@@ -40,6 +39,7 @@
     data() {
       return {
         state: NamespacesStore.state,
+        confirm: false,
       };
     },
 
@@ -55,15 +55,8 @@
       },
     },
 
-    mounted() {
-      const DELETE_BTN = '.namespace-delete-btn';
-      const POPOVER_DELETE = '.popover-namespace-delete';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', DELETE_BTN, () => {
-        const $yes = $(POPOVER_DELETE).find('.yes');
-        $yes.click(this.deleteNamespace.bind(this));
-      });
+    components: {
+      Popover,
     },
   };
 </script>

@@ -1,14 +1,14 @@
 <template>
   <panel>
     <h5 slot="heading-left">
-      <a data-placement="right"
-        data-toggle="popover"
-        data-content="<p>Information about the namespace.</p>"
-        data-original-title="What's this?"
-        tabindex="0"
-        data-html="true">
-        <i class="fa fa-info-circle"></i>
-      </a>
+      <popover title="What's this?" trigger="hover-focus">
+        <a tabindex="0">
+          <i class="fa fa-info-circle"></i>
+        </a>
+        <template slot="popover">
+          <p>Information about the namespace.</p>
+        </template>
+      </popover>
       <strong> {{ namespace.name }} </strong>
       namespace
     </h5>
@@ -32,6 +32,7 @@
 <script>
   import Vue from 'vue';
 
+  import { Popover } from 'uiv';
   import NamespaceInfo from './info';
   import EditNamespaceForm from './edit-form';
   import DeleteNamespaceBtn from './delete-btn';
@@ -63,6 +64,7 @@
       EditNamespaceForm,
       DeleteNamespaceBtn,
       TransferModal,
+      Popover,
     },
 
     data() {

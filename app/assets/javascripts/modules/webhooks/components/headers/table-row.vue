@@ -3,18 +3,18 @@
     <td>{{ header.name }}</td>
     <td>{{ header.value }}</td>
     <td v-if="webhook.updatable">
-      <button class="btn btn-default delete-webhook-header-btn"
-        data-placement="left"
-        data-toggle="popover"
-        data-title="Please confirm"
-        data-content="<p>Are you sure you want to remove this\
-        webhook header?</p><a class='btn btn-default'>No</a> <a class='btn \
-        btn-primary yes'>Yes</a>"
-        data-template="<div class='popover popover-webhook-header-delete' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>'"
-        role="button"
-        data-html="true">
-        <i class="fa fa-trash"></i>
-      </button>
+      <popover title="Please confirm" placement="left" v-model="confirm">
+        <button class="btn btn-default" role="button">
+          <i class="fa fa-trash"></i>
+        </button>
+        <template slot="popover">
+          <div class='popover-content'>
+            <p>Are you sure you want to remove this webhook header?</p>
+            <a class='btn btn-default' @click="confirm = false">No</a>
+            <a class='btn btn-primary yes' @click="destroy">Yes</a>
+          </div>
+        </template>
+      </popover>
     </td>
   </tr>
 </template>
@@ -23,8 +23,15 @@
   import { handleHttpResponseError } from '~/utils/http';
 
   import WebhookHeadersService from '../../services/headers';
+  import { Popover } from 'uiv';
 
   export default {
+    data() {
+      return {
+        confirm: false,
+      };
+    },
+
     props: ['header', 'webhook'],
 
     computed: {
@@ -45,15 +52,8 @@
       },
     },
 
-    mounted() {
-      const REMOVE_BTN = '.delete-webhook-header-btn';
-      const POPOVER_DELETE = '.popover-webhook-header-delete';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', REMOVE_BTN, () => {
-        const $yes = $(POPOVER_DELETE).find('.yes');
-        $yes.click(this.destroy.bind(this));
-      });
+    components: {
+      Popover,
     },
   };
 </script>

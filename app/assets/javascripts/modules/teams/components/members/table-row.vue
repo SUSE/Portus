@@ -26,16 +26,18 @@
       </button>
     </td>
     <td v-if="canManage">
-      <a class="btn btn-default delete-team-user-btn"
-        data-placement="left"
-        data-toggle="popover"
-        data-title="Please confirm"
-        data-content="<p>Are you sure you want to remove this team member?</p><a class='btn btn-default'>No</a> <a class='btn btn-primary yes' rel='nofollow'>Yes</a>"
-        data-html="true"
-        tabindex="0"
-        role="button">
-        <i class="fa fa-trash fa-lg"></i>
-      </a>
+      <popover title="Please confirm" placement="left" v-model="confirm">
+        <a class="btn btn-default" tabindex="0" role="button">
+          <i class="fa fa-trash fa-lg"></i>
+        </a>
+        <template slot="popover">
+          <div class='popover-content'>
+            <p>Are you sure you want to remove this team member?</p>
+            <a class='btn btn-default' @click="confirm = false">No</a>
+            <a class='btn btn-primary yes' @click="deleteMember">Yes</a>
+          </div>
+        </template>
+      </popover>
     </td>
   </tr>
 </template>
@@ -45,6 +47,7 @@
 
   import { handleHttpResponseError } from '~/utils/http';
 
+  import { Popover } from 'uiv';
   import TeamsService from '../../service';
   import TeamsStore from '../../store';
 
@@ -58,6 +61,7 @@
         editing: false,
         selectedRole: this.member.role,
         availableRoles: TeamsStore.state.availableRoles,
+        confirm: false,
       };
     },
 
@@ -100,7 +104,7 @@
         set(this, 'selectedRole', this.member.role);
       },
 
-      delete() {
+      deleteMember() {
         TeamsService.destroyMember(this.member).then(() => {
           if (this.member.current) {
             this.$alert.$show('You removed yourself from the team, you\'ll be redirected in 3 seconds...');
@@ -123,14 +127,8 @@
       },
     },
 
-    mounted() {
-      const DELETE_BTN = '.delete-team-user-btn';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', DELETE_BTN, () => {
-        const $yes = $(this.$el).find(DELETE_BTN).next().find('.yes');
-        $yes.click(this.delete.bind(this));
-      });
+    components: {
+      Popover,
     },
   };
 </script>

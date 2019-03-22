@@ -2,7 +2,6 @@
 import 'bootstrap/js/transition';
 import 'bootstrap/js/tab';
 import 'bootstrap/js/tooltip';
-import 'bootstrap/js/popover';
 import 'bootstrap/js/dropdown';
 import 'bootstrap/js/button';
 import 'bootstrap/js/collapse';

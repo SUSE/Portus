@@ -1,15 +1,15 @@
 <template>
   <panel>
     <h5 slot="heading-left">
-      <a data-placement="right"
-        data-toggle="popover"
-        data-container=".panel-heading"
-        data-content="<p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like 'contributor', but can also manage the team.</p>"
-        data-original-title="What's this?"
-        tabindex="0"
-        data-html="true">
-        <i class="fa fa-info-circle"></i>
-      </a>
+      <popover title="What's this?" trigger="hover-focus">
+        <a tabindex="0">
+          <i class="fa fa-info-circle"></i>
+        </a>
+        <template slot="popover">
+          <p>There are three types of users inside of a team:<br><strong>Viewer:</strong> has read only access. Only pull operations are permitted.<br/><strong>Contributor:</strong> has read and write access. Both pull and push operations are permitted.<br/><strong>Owner:</strong> like
+            'contributor', but can also manage the team.</p>
+        </template>
+      </popover>
       Members
     </h5>
 
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import { Popover } from 'uiv';
   import TeamMembersTable from './table';
 
   export default {
@@ -29,6 +30,7 @@
 
     components: {
       TeamMembersTable,
+      Popover,
     },
   };
 </script>

@@ -2,17 +2,18 @@
   <tr :class="scopeClass">
     <td>{{ appToken.application }}</td>
     <td>
-      <button class="btn btn-default delete-app-token-btn"
-        data-placement="left"
-        data-toggle="popover"
-        data-title="Please confirm"
-        data-content="<p>Are you sure you want to remove this token?</p>
-        <a class='btn btn-default'>No</a> <a class='btn btn-primary yes'>Yes</a>"
-        data-template="<div class='popover popover-app-token-delete' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>'"
-        data-html="true"
-        role="button">
-        <i class="fa fa-trash"></i>
-      </button>
+      <popover title="Please confirm" placement="left" v-model="confirm">
+        <button class="btn btn-default delete-app-token-btn" role="button">
+          <i class="fa fa-trash"></i>
+        </button>
+        <template slot="popover">
+          <div class='popover-content'>
+            <p>Are you sure you want to remove this token?</p>
+            <a class='btn btn-default' @click="confirm = false">No</a>
+            <a class='btn btn-primary yes' @click="destroy">Yes</a>
+          </div>
+        </template>
+      </popover>
     </td>
   </tr>
 </template>
@@ -21,8 +22,15 @@
   import { handleHttpResponseError } from '~/utils/http';
 
   import UsersService from '../../service';
+  import { Popover } from 'uiv';
 
   export default {
+    data() {
+      return {
+        confirm: false,
+      };
+    },
+
     props: ['appToken'],
 
     computed: {
@@ -40,15 +48,8 @@
       },
     },
 
-    mounted() {
-      const REMOVE_BTN = '.delete-app-token-btn';
-      const POPOVER_DELETE = '.popover-app-token-delete';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', REMOVE_BTN, () => {
-        const $yes = $(POPOVER_DELETE).find('.yes');
-        $yes.click(this.destroy.bind(this));
-      });
+    components: {
+      Popover,
     },
   };
 </script>

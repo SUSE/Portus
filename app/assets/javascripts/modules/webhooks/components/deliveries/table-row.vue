@@ -11,19 +11,18 @@
         v-if="webhook.enabled">
         <i class="fa fa-refresh" :class="{'fa-spin': ongoingRequest}"></i>
       </button>
-      <button class="btn btn-default delete-webhook-btn"
-        data-placement="left"
-        data-toggle="popover"
-        data-title="Please confirm"
-        data-content="<p>This webhook is disabled. Are you sure you want to retrigger it?</p>
-        <a class='btn btn-default'>No</a> <a class='btn btn-primary yes'>Yes</a>"
-        data-template="<div class='popover popover-webhook-delete' role='tooltip'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div></div>'"
-        data-html="true"
-        role="button"
-        :disabled="ongoingRequest"
-        v-else>
-        <i class="fa fa-refresh" :class="{'fa-spin': ongoingRequest}"></i>
-      </button>
+      <popover title="Please confirm" placement="left" v-model="confirm" v-else>
+        <button class="btn btn-default" role="button" :disabled="ongoingRequest">
+          <i class="fa fa-refresh" :class="{'fa-spin': ongoingRequest}"></i>
+        </button>
+        <template slot="popover">
+          <div class='popover-content'>
+            <p>This webhook is disabled. Are you sure you want to retrigger it?</p>
+            <a class='btn btn-default' @click="confirm = false">No</a>
+            <a class='btn btn-primary yes' @click="retrigger">Yes</a>
+          </div>
+        </template>
+      </popover>
     </td>
   </tr>
 </template>
@@ -34,6 +33,7 @@
 
   import { handleHttpResponseError } from '~/utils/http';
 
+  import { Popover } from 'uiv';
   import WebhookDeliveriesService from '../../services/deliveries';
 
   const { set } = Vue;
@@ -44,6 +44,7 @@
     data() {
       return {
         ongoingRequest: false,
+        confirm: false,
       };
     },
 
@@ -82,15 +83,8 @@
       },
     },
 
-    mounted() {
-      const REMOVE_BTN = '.delete-webhook-delivery-btn';
-      const POPOVER_DELETE = '.popover-webhook-delivery-delete';
-
-      // TODO: refactor bootstrap popover to a component
-      $(this.$el).on('inserted.bs.popover', REMOVE_BTN, () => {
-        const $yes = $(POPOVER_DELETE).find('.yes');
-        $yes.click(this.retrigger.bind(this));
-      });
+    components: {
+      Popover,
     },
   };
 </script>

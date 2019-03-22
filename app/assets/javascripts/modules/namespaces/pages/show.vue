@@ -3,61 +3,55 @@
     <namespace-details-panel :namespace="namespace" :state="state" :teams-path="teamsPath" :webhooks-path="webhooksPath" :namespaces-path="namespacesPath"></namespace-details-panel>
     <repositories-panel title="Namespace's repositories" :repositories="repositories" :show-namespaces="false" :repositories-path="repositoriesPath">
       <div slot="heading-right">
-        <div v-if="namespace.permissions.push"
-          class="circle-label permissions-label circle-label-sm"
-          data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You can push images"
-          data-original-title="What can I do?"
-          tabindex="0" data-html="true">
-          <i class="fa fa-arrow-up"></i>
-          Push
-        </div>
-        <div v-if="namespace.permissions.pull"
-          class="circle-label permissions-label circle-label-sm"
-          data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You can pull images"
-          data-original-title="What can I do?"
-          tabindex="0" data-html="true">
-          <i class="fa fa-arrow-down"></i>
-          Pull
-        </div>
-        <div v-if="namespace.permissions.role == 'owner'"
-          class="circle-label permissions-label circle-label-sm"
-          data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You are an owner of this namespace"
-          data-original-title="What's my role?"
-          tabindex="0" data-html="true">
-          <i class="fa fa-male"></i>
-          Owner
-        </div>
-        <div v-if="namespace.permissions.role == 'contributor'"
-          class="circle-label permissions-label circle-label-sm"
-          data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You are a contributor in this namespace"
-          data-original-title="What's my role?"
-          tabindex="0" data-html="true">
-          <i class="fa fa-exchange"></i>
-          Contr.
-        </div>
-        <div v-if="namespace.permissions.role == 'viewer'"
-          class="circle-label permissions-label circle-label-sm"
-          data-placement="left"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="You are a viewer in this namespace"
-          data-original-title="What's my role?"
-          tabindex="0" data-html="true">
-          <i class="fa fa-eye"></i>
-          Viewer
-        </div>
+        <popover title="What can I do?" trigger="hover-focus" v-if="namespace.permissions.push">
+          <div tabindex="0" class="circle-label permissions-label circle-label-sm">
+            <i class="fa fa-arrow-up"></i>
+            Push
+          </div>
+          <template slot="popover">
+            You can push images
+          </template>
+        </popover>
+
+        <popover title="What can I do?" trigger="hover-focus" v-if="namespace.permissions.pull">
+          <div tabindex="0" class="circle-label permissions-label circle-label-sm">
+            <i class="fa fa-arrow-down"></i>
+            Pull
+          </div>
+          <template slot="popover">
+            You can pull images
+          </template>
+        </popover>
+
+        <popover title="What's my role?" trigger="hover-focus" v-if="namespace.permissions.role == 'owner'">
+          <div tabindex="0" class="circle-label permissions-label circle-label-sm">
+            <i class="fa fa-male"></i>
+            Owner
+          </div>
+          <template slot="popover">
+            You are an owner of this namespace
+          </template>
+        </popover>
+
+        <popover title="What's my role?" trigger="hover-focus" v-if="namespace.permissions.role == 'contributor'">
+          <div tabindex="0" class="circle-label permissions-label circle-label-sm">
+            <i class="fa fa-exchange"></i>
+            Contr.
+          </div>
+          <template slot="popover">
+            You are a contributor in this namespace
+          </template>
+        </popover>
+
+        <popover title="What's my role?" trigger="hover-focus" v-if="namespace.permissions.role == 'viewer'">
+          <div tabindex="0" class="circle-label permissions-label circle-label-sm">
+            <i class="fa fa-eye"></i>
+            Viewer
+          </div>
+          <template slot="popover">
+            You are a viewer in this namespace
+          </template>
+        </popover>
       </div>
     </repositories-panel>
   </div>
@@ -69,6 +63,7 @@
   import RepositoriesPanel from '~/modules/repositories/components/panel';
   import WebhooksPanel from '~/modules/webhooks/components/panel';
 
+  import { Popover } from 'uiv';
   import NamespaceDetailsPanel from '../components/details';
 
   import NamespacesStore from '../store';
@@ -104,6 +99,7 @@
       NamespaceDetailsPanel,
       RepositoriesPanel,
       WebhooksPanel,
+      Popover,
     },
 
     data() {

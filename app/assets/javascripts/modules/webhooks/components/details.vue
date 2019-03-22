@@ -1,19 +1,19 @@
 <template>
   <panel>
     <h5 slot="heading-left">
-      <a data-placement="right"
-        data-toggle="popover"
-        data-container=".panel-heading"
-        data-content="<b>Name</b>: Name of the webhook.<br>
-        <b>Request method</b>: URL endpoint where the HTTP request is sent to.<br/>
-        <b>Content type</b>: Description of the webhook request content.<br/>
-        <b>Username</b>: Username used for basic HTTP auth.<br/>
-        <b>Password</b>: Password used for basic HTTP auth."
-        data-original-title="What's this?"
-        tabindex="0"
-        data-html="true">
-        <i class="fa fa-info-circle"></i>
-      </a>
+
+      <popover title="What's this?" trigger="hover-focus">
+        <a tabindex="0">
+          <i class="fa fa-info-circle"></i>
+        </a>
+        <template slot="popover">
+          <b>Name</b>: Name of the webhook.<br>
+          <b>Request method</b>: URL endpoint where the HTTP request is sent to.<br/>
+          <b>Content type</b>: Description of the webhook request content.<br/>
+          <b>Username</b>: Username used for basic HTTP auth.<br/>
+          <b>Password</b>: Password used for basic HTTP auth.
+        </template>
+      </popover>
       <strong>{{ webhook.name }}</strong> webhook
     </h5>
 
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+  import { Popover } from 'uiv';
   import WebhookInfo from './info';
   import EditWebhookForm from './edit-form';
 
@@ -45,6 +46,7 @@
     components: {
       EditWebhookForm,
       WebhookInfo,
+      Popover,
     },
   };
 </script>

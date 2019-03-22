@@ -1,14 +1,14 @@
 <template>
   <panel>
     <h5 slot="heading-left">
-      <a data-placement="right"
-        data-toggle="popover"
-        data-container=".panel-heading"
-        data-content="A delivery is created once a webhook has been triggered. They are not re-created but updated after retriggering."
-        data-original-title="What's this?"
-        tabindex="0">
-        <i class="fa fa-info-circle"></i>
-      </a>
+      <popover title="What's this?" trigger="hover-focus">
+        <a tabindex="0">
+          <i class="fa fa-info-circle"></i>
+        </a>
+        <template slot="popover">
+          A delivery is created once a webhook has been triggered. They are not re-created but updated after retriggering.
+        </template>
+      </popover>
       Deliveries
     </h5>
 
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+  import { Popover } from 'uiv';
   import WebhookDeliveriesTable from './table';
 
   export default {
@@ -33,6 +34,7 @@
 
     components: {
       WebhookDeliveriesTable,
+      Popover,
     },
   };
 </script>

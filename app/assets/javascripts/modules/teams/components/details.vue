@@ -1,14 +1,14 @@
 <template>
   <panel>
     <h5 slot="heading-left">
-      <a data-placement="right"
-        data-toggle="popover"
-        data-container=".panel-heading"
-        data-content="<p>Information about the team.</p>"
-        data-original-title="What's this?"
-        tabindex="0" data-html="true">
-        <i class="fa fa-info-circle"></i>
-      </a>
+      <popover title="What's this?" trigger="hover-focus">
+        <a tabindex="0">
+          <i class="fa fa-info-circle"></i>
+        </a>
+        <template slot="popover">
+          <p>Information about the team.</p>
+        </template>
+      </popover>
       <strong class="team-name"> {{ team.name }} </strong>
       team
     </h5>
@@ -32,6 +32,7 @@
 <script>
   import Vue from 'vue';
 
+  import { Popover } from 'uiv';
   import TeamEditForm from './edit-form';
   import TeamInfo from './info';
   import DeleteModal from './delete-modal';
@@ -49,6 +50,7 @@
       TeamEditForm,
       TeamInfo,
       DeleteModal,
+      Popover,
     },
 
     data() {

@@ -4,15 +4,14 @@
 
     <namespaces-panel :namespaces="specialNamespaces" :namespaces-path="namespacesPath" :webhooks-path="webhooksPath" prefix="sns_" :can-create="canCreateNamespace">
       <h5 slot="name">
-        <a data-placement="right"
-          data-toggle="popover"
-          data-container=".panel-heading"
-          data-content="<p>A namespace groups a series of repositories.</p>"
-          data-original-title="What's this?"
-          tabindex="0"
-          data-html="true">
-          <i class="fa fa-info-circle"></i>
-        </a>
+        <popover title="What's this?" trigger="hover-focus">
+          <a tabindex="0">
+            <i class="fa fa-info-circle"></i>
+          </a>
+          <template slot="popover">
+            <p>A namespace groups a series of repositories.</p>
+          </template>
+        </popover>
         Special namespaces
       </h5>
     </namespaces-panel>
@@ -34,6 +33,7 @@
 <script>
   import Vue from 'vue';
 
+  import { Popover } from 'uiv';
   import NamespacesPanel from '../components/panel';
   import NewNamespaceForm from '../components/new-form';
 
@@ -65,6 +65,7 @@
     components: {
       NewNamespaceForm,
       NamespacesPanel,
+      Popover,
     },
 
     data() {
@@ -79,9 +80,9 @@
         // eslint-disable-next-line
         return this.namespaces.filter((n) => {
           return !n.global
-              && n.id !== this.userNamespaceId
-              && this.accessibleTeamsIds.indexOf(n.team.id) === -1
-              && n.team.name.indexOf('global_team') === -1;
+            && n.id !== this.userNamespaceId
+            && this.accessibleTeamsIds.indexOf(n.team.id) === -1
+            && n.team.name.indexOf('global_team') === -1;
         });
       },
 
@@ -89,9 +90,9 @@
         // eslint-disable-next-line
         return this.namespaces.filter((n) => {
           return !n.global
-              && !n.orphan
-              && n.id !== this.userNamespaceId
-              && this.accessibleTeamsIds.indexOf(n.team.id) !== -1;
+            && !n.orphan
+            && n.id !== this.userNamespaceId
+            && this.accessibleTeamsIds.indexOf(n.team.id) !== -1;
         });
       },
 

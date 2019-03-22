@@ -1,15 +1,15 @@
 <template>
   <panel>
     <h5 slot="heading-left">
-      <a data-placement="right"
-        data-toggle="popover"
-        data-container=".panel-heading"
-        data-content="<p>A webhook is an HTTP callback which is triggered after an event, e.g. a push event, occurs.</p>"
-        data-original-title="What's this?"
-        tabindex="0"
-        data-html="true">
-        <i class="fa fa-info-circle"></i>
-      </a>
+      <popover title="What's this?" trigger="hover-focus">
+        <a tabindex="0">
+          <i class="fa fa-info-circle"></i>
+        </a>
+        <template slot="popover">
+          <p>A webhook is an HTTP callback which is triggered after an event, e.g. a push event, occurs.</p>
+        </template>
+      </popover>
+
       Webhooks for namespace <strong><a :href="namespacePath">{{ parentNamespace.name }}</a></strong>
     </h5>
 
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+  import { Popover } from 'uiv';
   import WebhooksTable from './table';
 
   export default {
@@ -50,6 +51,7 @@
 
     components: {
       WebhooksTable,
+      Popover,
     },
   };
 </script>
