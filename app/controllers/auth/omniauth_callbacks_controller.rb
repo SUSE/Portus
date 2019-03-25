@@ -102,16 +102,18 @@ class Auth::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # Checks if the user member of github organization and team.
   def github_member?(conf)
+    server = conf.fetch("server", "").presence || "github.com"
+    
     if conf["team"].present?
       # Get user's teams.
-      is_member = member_of("https://api.github.com/user/teams") do |t|
+      is_member = member_of("https://api.#{server}/user/teams") do |t|
         t["name"] == conf["team"] &&
           t["organization"]["login"] == conf["organization"]
       end
       "The Github account isn't in allowed team." unless is_member
     elsif conf["organization"].present?
       # Get user's organizations.
-      is_member = member_of("https://api.github.com/user/orgs") do |t|
+      is_member = member_of("https://api.#{server}/user/orgs") do |t|
         t["login"] == conf["organization"]
       end
       "The Github account isn't in allowed organization." unless is_member
