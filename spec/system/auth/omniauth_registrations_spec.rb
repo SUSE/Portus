@@ -305,6 +305,98 @@ describe Auth::OmniauthRegistrationsController do
     end
   end
 
+  describe "Custom #github" do
+    let(:github_mock_data) do
+      {
+        provider:    :github,
+        uid:         "12345",
+        credentials: { token: "1234567890" },
+        info:        { email: "testuser@email.net" }
+      }
+    end
+
+    before do
+      APP_CONFIG["oauth"]["github"] = {
+        "enabled"      => true,
+        "server"       => "github.com",
+        "organization" => "",
+        "domain"       => "",
+        "team"         => ""
+      }
+
+      # Magic for Devise.
+      Rails.application.env_config["devise.mapping"] = Devise.mappings[:user]
+
+      # Magic for omniauth.
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(github_mock_data)
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:github]
+
+      create :user, email: "testuser@email.net"
+    end
+
+    it "signs in and redirects to / when user exists" do
+      visit root_path
+      click_link("Github")
+      expect(page).to have_current_path(authenticated_root_path)
+      expect(page).to have_content("Successfully authenticated from Github account")
+    end
+
+    context "when organization was set" do
+      it "when organization matches, sign in and redirect to /" do
+        APP_CONFIG["oauth"]["github"]["organization"] = "org"
+
+        visit root_path
+        VCR.use_cassette("api_github_orgs") { click_link("Github") }
+
+        expect(page).to have_current_path(authenticated_root_path)
+        expect(page).to have_content("Successfully authenticated from Github account")
+      end
+
+      it "when organization doesn't match, redirect to /users/sign_in" do
+        APP_CONFIG["oauth"]["github"]["organization"] = "wrong_org"
+
+        visit root_path
+        VCR.use_cassette("api_github_orgs") { click_link("Github") }
+
+        expect(page).to have_current_path(new_user_session_path)
+      end
+    end
+
+    context "when both the team and organization are set" do
+      it "when team and organization match, sign in and redirect to /" do
+        APP_CONFIG["oauth"]["github"]["organization"] = "org"
+        APP_CONFIG["oauth"]["github"]["team"] = "team"
+
+        visit root_path
+        VCR.use_cassette("api_github_teams") { click_link("Github") }
+
+        expect(page).to have_current_path(authenticated_root_path)
+        expect(page).to have_content("Successfully authenticated from Github account")
+      end
+
+      it "when organization matches but team doesn't match, redirect to /users/sign_in" do
+        APP_CONFIG["oauth"]["github"]["organization"] = "org"
+        APP_CONFIG["oauth"]["github"]["team"] = "wrong_team"
+
+        visit root_path
+        VCR.use_cassette("api_github_teams") { click_link("Github") }
+
+        expect(page).to have_current_path(new_user_session_path)
+      end
+
+      it "when team matches but organization doen't match, redirect to /users/sign_in" do
+        APP_CONFIG["oauth"]["github"]["organization"] = "wrong_org"
+        APP_CONFIG["oauth"]["github"]["team"] = "team"
+
+        visit root_path
+        VCR.use_cassette("api_github_teams") { click_link("Github") }
+
+        expect(page).to have_current_path(new_user_session_path)
+      end
+    end
+  end
+
   describe "Custom Gitlab" do
     let(:gitlab_mock_data) do
       {
