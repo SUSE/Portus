@@ -53,7 +53,17 @@ def openid_connect_fetch_options
 end
 
 def github_fetch_options
-  { scope: "read:user,user:email,read:org" }
+  server = APP_CONFIG["oauth"]["github"]["server"].presence || "github.com"
+
+  {
+    scope: "read:user,user:email,read:org",
+    client_options: {
+      site: "https://api.#{server}",
+      authorize_url: "https://#{server}/login/oauth/authorize",
+      token_url: "https://#{server}/login/oauth/access_token",
+    }
+  }
+
 end
 
 def gitlab_fetch_options
