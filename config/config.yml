@@ -221,6 +221,8 @@ oauth:
     team: ""
      # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
     domain: ""
+    # The Github server to be used. If empty, then github.com is assumed.
+    server: ""
 
   # Gitlab authentication support.
   # Callback url: <host>/users/auth/gitlab/callback
