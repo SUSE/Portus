@@ -30,6 +30,9 @@ env:
     # DB options for both adapters and Travis.
     - PORTUS_DB_USERNAME=travis
 
+    # Make codeclimeate happy
+    - CC_TEST_REPORTER_ID=portusunittest
+
   matrix:
     - PORTUS_CI=integration PROFILES=clair
     - PORTUS_CI=integration PROFILES=ldap

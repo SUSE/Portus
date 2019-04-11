@@ -120,13 +120,13 @@ cp %{S:100} vendor/cache
 # Deploy gems for compiling the assets.
 export GEM_HOME=$PWD/vendor GEM_PATH=$PWD/vendor PATH=$PWD/vendor/bin:$PWD/bin:$PATH
 # Install bundler in the build system
-gem.%{rb_suffix} install --no-rdoc --no-ri vendor/cache/bundler-*.gem
+gem.%{rb_suffix} install --no-document vendor/cache/bundler-*.gem
 
 %fix_sheb
 
 bundle config build.nokogiri --use-system-libraries
 bundle install --retry=3 --local --deployment --without test development
-gem.%{rb_suffix} install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+gem.%{rb_suffix} install --no-document --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
 
 %fix_sheb
 
@@ -140,7 +140,7 @@ PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
 # given group. So, we have to remove all of them, and then install the ones we
 # want...
 rm -r vendor/bundle/ruby/%{rb_ver}/*
-gem.%{rb_suffix} install --no-rdoc --no-ri --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+gem.%{rb_suffix} install --no-document --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
 
 %fix_sheb
 
