@@ -29,7 +29,7 @@ if [ $TRAVIS_PULL_REQUEST == "false" ] && [ $OBS_BRANCH ] && [ $TRAVIS_COMMIT ] 
   # new node_modules.tar.gz file.
   curl -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/yarn.lock > obs-yarn.lock
   if ! diff -q yarn.lock obs-yarn.lock &>/dev/null; then
-      tar czvf node_modules.tar.gz node_modules
+      tar czf node_modules.tar.gz node_modules
       curl -X PUT -T node_modules.tar.gz -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/node_modules.tar.gz?comment=update_node_modules.tar.gz\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
       curl -X PUT -T yarn.lock -u $OSC_CREDENTIALS https://api.opensuse.org/source/$OBS_REPO/portus/yarn.lock?comment=update_yarn.lock\_to_commit_$TRAVIS_COMMIT\_from_branch_$OBS_BRANCH
   fi
