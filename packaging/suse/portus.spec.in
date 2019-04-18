@@ -19,8 +19,9 @@
 %define portusdir /srv/Portus
 
 # Base ruby engine.
+%define portus_ruby_abi   2.6.0
 %define rb_build_versions ruby26
-%define rb_build_abi      ruby:2.6.2
+%define rb_build_abi      ruby:%{portus_ruby_abi}
 %define rb_suffix         ruby2.6
 %define rb_ver            2.6.2
 
@@ -29,7 +30,7 @@
     sed -e 's|^#!/usr/bin/env ruby$|#!/usr/bin/ruby.%{rb_suffix}|g' -i $i;\
   done;\
   for i in $(grep '^#!/usr/bin/ruby$' * -r | cut -d: -f1 | uniq);do\
-     sed -e 's|^#!/usr/bin/ruby$|#!/usr/bin/ruby.ruby2.6|g' -i $i;\
+     sed -e 's|^#!/usr/bin/ruby$|#!/usr/bin/ruby.%{rb_suffix}|g' -i $i;\
   done;\
 )
 
@@ -73,8 +74,6 @@ BuildRequires:  nodejs6
 BuildRequires:  yarn
 BuildRequires:  yarn-packaging
 
-Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi}
-
 BuildRequires: libcurl-devel
 Requires: libcurl4
 BuildRequires: libffi-devel
@@ -84,7 +83,8 @@ BuildRequires: libxml2-devel libxslt-devel
 BuildRequires: mysql-devel
 BuildRequires: postgresql-devel
 
-Requires: %rb_default_ruby_suffix
+Requires:       config(%{rb_suffix}) >= %{rb_default_ruby_abi}
+Requires:       %rb_default_ruby_suffix
 BuildRequires:  %rb_default_ruby_suffix %{rb_default_ruby_suffix}-rubygem-gem2rpm
 BuildRequires:  %{rb_suffix}-devel
 
@@ -97,7 +97,7 @@ Portus targets version 2 of the Docker registry API. It aims to act both as an
 authoritzation server and as a user interface for the next generation of the
 Docker registry.
 
-This package has been built with commit __COMMIT__ from branch __BRANCH__ on
+This package has been built with commit __COMMIT__ from branch %{branch} on
 date __DATE__
 
 %prep
@@ -107,7 +107,7 @@ __PATCHEXECS__
 %build
 # Untar Javascript dependencies
 cp %{SOURCE1} .
-tar xzvf node_modules.tar.gz
+tar xzf node_modules.tar.gz
 
 # Deal with Ruby gems.
 install -d vendor/cache
@@ -119,14 +119,14 @@ cp %{S:100} vendor/cache
 
 # Deploy gems for compiling the assets.
 export GEM_HOME=$PWD/vendor GEM_PATH=$PWD/vendor PATH=$PWD/vendor/bin:$PWD/bin:$PATH
-# Install bundler in the build system
-gem.%{rb_suffix} install --no-document vendor/cache/bundler-*.gem
 
+# Install bundler in the build system
 %fix_sheb
+gem.%{rb_suffix} install --no-document vendor/cache/bundler-*.gem
 
 bundle config build.nokogiri --use-system-libraries
 bundle install --retry=3 --local --deployment --without test development
-gem.%{rb_suffix} install --no-document --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
+gem.%{rb_suffix} install --no-document --install-dir vendor/bundle/ruby/%{portus_ruby_abi}/ vendor/cache/bundler-*.gem
 
 %fix_sheb
 
@@ -139,12 +139,10 @@ PORTUS_SECRET_KEY_BASE="ap" PORTUS_KEY_PATH="ap" PORTUS_PASSWORD="ap" \
 # bundle). Unfortunately, bundler does not have a way to remove gems from a
 # given group. So, we have to remove all of them, and then install the ones we
 # want...
-rm -r vendor/bundle/ruby/%{rb_ver}/*
-gem.%{rb_suffix} install --no-document --install-dir vendor/bundle/ruby/%{rb_ver}/ vendor/cache/bundler-*.gem
-
-%fix_sheb
-
+rm -r vendor/bundle/ruby
+gem.%{rb_suffix} install --no-document --install-dir vendor/bundle/ruby/%{portus_ruby_abi}/ vendor/cache/bundler-*.gem
 bundle install --retry=3 --local --deployment --without test development assets
+rm -r vendor/bundle/ruby/%{portus_ruby_abi}/cache/*
 
 %fix_sheb
 
@@ -152,17 +150,25 @@ bundle install --retry=3 --local --deployment --without test development assets
 APPLICATION_CSS=$(find . -name application-*.css 2>/dev/null)
 cp $APPLICATION_CSS public/landing.css
 
+# Fix schema.rb softlink to its final destination
+rm db/schema.rb
+ln -s %{portusdir}/db/schema.mysql.rb db/schema.rb
+
 # Save the commit so it can later be used by Portus.
 echo "__COMMIT__" >> .gitcommit
 
 # Remove unneeded directories/files
 rm -rf \
    vendor/cache \
-   vendor/bundle/ruby/%{rb_ver}/gems/public_activity-1.6.3/test \
    node_modules \
    public/assets/application-*.js* \
    vendor/assets \
    examples \
+   packaging \
+   tmp \
+   log \
+   docker \
+   doc \
    *.orig
 
 # Removing irrelevant files for production.
@@ -171,52 +177,59 @@ declare -a ary=(
   ".yardopts" ".ruby-gemset" ".rubocop.yml" ".document" ".eslintrc"
   ".eslintignore" ".env" ".dockerignore" ".editorconfig" ".erdconfig"
   "*.pem" ".rubocop_todo.yml" ".concourse.yml" "Dockerfile" "Vagrantfile"
-  "node_modules.tar.gz"
+  "node_modules.tar.gz" ".babelrc" "docker-compose.yml"
 )
 for i in "${ary[@]}"; do
   find . -name "$i" -type f -delete
 done
 
 # Remove directories.
-find . -name "spec" -type d -exec rm -rv {} +
-find . -name ".github" -type d -exec rm -rv {} +
+find . -name "spec" -type d -exec rm -rfv {} +
+find vendor/bundle -name "test" -type d ! -path "*rack*/test" -exec rm -rfv {} +
+find . -name ".github" -type d -exec rm -rfv {} +
 find . -name ".empty_directory" -type d -delete
 
 # Remove empty files which are not important.
 find . -size 0 ! -path "*gem.build_complete" -delete
 
 %install
-install -d %{buildroot}/%{portusdir}
+install -d %{buildroot}%{portusdir}
 
-cp -av . %{buildroot}/%{portusdir}
+cp -av . %{buildroot}%{portusdir}
 
-rm -rf %{buildroot}/%{portusdir}/log
-mkdir %{buildroot}/%{portusdir}/log
-rm -rf %{buildroot}/%{portusdir}/tmp
-mkdir %{buildroot}/%{portusdir}/tmp
+mkdir %{buildroot}%{portusdir}/log
+mkdir %{buildroot}%{portusdir}/tmp
 
-%fdupes %{buildroot}/%{portusdir}
+%fdupes %{buildroot}%{portusdir}
 
 %files
 %defattr(-,root,root)
-%{portusdir}
-%exclude %{portusdir}/packaging/suse/.gitignore
-%exclude %{portusdir}/packaging/suse/package_and_push_to_obs.sh
-%exclude %{portusdir}/packaging/suse/portus.spec.in
-%exclude %{portusdir}/packaging/suse/README.md
-%exclude %{portusdir}/packaging/suse/conf
-%exclude %{portusdir}/packaging/suse/make_spec.sh
-%exclude %{portusdir}/packaging/suse/patches
-%exclude %{portusdir}/packaging/suse/portus.spec.in
-%exclude %{portusdir}/packaging/suse/release
+%dir %{portusdir}
+%{portusdir}/.bundle
+%{portusdir}/.gitcommit
+%{portusdir}/.ruby-version
+%{portusdir}/Gemfile
+%{portusdir}/Gemfile.lock
+%{portusdir}/Guardfile
+%{portusdir}/Rakefile
+%{portusdir}/VERSION
+%{portusdir}/app
+%{portusdir}/bin
+%{portusdir}/config.ru
+%{portusdir}/db
+%{portusdir}/lib
+%{portusdir}/log
+%{portusdir}/package.json
+%{portusdir}/public
+%{portusdir}/tmp
+%{portusdir}/vendor
+%{portusdir}/yarn.lock
+
 %doc %{portusdir}/README.md
 %doc %{portusdir}/CONTRIBUTING.md
+%doc %{portusdir}/CHANGELOG.md
 %doc %{portusdir}/LICENSE
-%defattr(0640, root, www)
-%config(noreplace) %{portusdir}/config/environment.rb
-%defattr(-, root, www, 1770)
-%{portusdir}/log/
-%{portusdir}/tmp/
-%{portusdir}/db/
+
+%config(noreplace) %{portusdir}/config
 
 %changelog
