@@ -1,46 +1,25 @@
-%if "%_repository" == "images"
-Type: kiwi
-Patterntype: none
-Repotype: staticlinks
-Suport: jing
-%endif
+##
+# Go
+
+Substitute: golang go
+Prefer: go
+Prefer: go-md2man
+
+##
+# Ruby
 
 %define rb_default_ruby        ruby26
 %define rb_default_ruby_suffix ruby2.6
-%define rb_default_ruby_abi    ruby:2.6.2
+%define rb_default_ruby_abi    ruby:2.6.0
 
-%define rb_build_ruby_abis     ruby:2.6.2
-%define rb_build_versions      ruby26
-%define _with_ruby20               0
-%define _with_ruby21               0
-%define _with_ruby22               0
-%define _with_ruby23               0
-%define _with_ruby24               0
-%define _with_ruby25               0
-%define _with_ruby26               1
+%define _with_ruby26 1
 Macros:
-%_with_ruby20               0
-%_with_ruby21               0
-%_with_ruby22               0
-%_with_ruby23               0
-%_with_ruby24               0
-%_with_ruby25               0
-%_with_ruby26               1
 %rb_default_ruby        ruby26
 %rb_default_ruby_suffix ruby2.6
-%rb_default_ruby_abi    ruby:2.6.2
+%rb_default_ruby_abi    ruby:2.6.0
 
-%rb_build_ruby_abis     ruby:2.6.2
-%rb_build_versions      ruby26
+%_with_ruby26 1
 :Macros
 
-#Prefer: rubygem(ruby:2.6.1:gem2rpm)
-#Prefer: ruby2.6-rubygem-gem2rpm
-
-Substitute: kiwi-image:ext4 e2fsprogs virt-utils parted
-Substitute: kiwi-image:tbz parted
-Substitute: kiwi-image:vmx e2fsprogs virt-utils parted grub
-Prefer: systemd-presets-branding-openSUSE
-Prefer: plymouth-branding-openSUSE
-
-Substitute: golang go
+Prefer: rubygem(ruby:2.6.0:gem2rpm)
+Prefer: ruby2.6-rubygem-gem2rpm
