@@ -95,6 +95,10 @@ module Portus
       raise ::Portus::Errors::NotFoundError, str
     end
 
+    def impersonate(account)
+      @account = account
+    end
+
     private
 
     # Returns true if this client has the credentials set.
@@ -136,8 +140,8 @@ module Portus
 
       query_params = {
         "service" => auth_args["service"],
-        "account" => @username
       }
+      query_params["account"] = @account if @username == "portus" and !@account.nil?
       query_params["scope"] = auth_args["scope"] if auth_args.key?("scope")
 
       unless auth_args.key?("Bearer realm")

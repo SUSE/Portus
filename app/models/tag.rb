@@ -73,7 +73,9 @@ class Tag < ApplicationRecord
     Tag.where(repository: repository, digest: dig).update_all(marked: true)
 
     begin
-      Registry.get.client.delete(repository.full_name, dig, "manifests")
+      client = Registry.get.client
+      client.impersonate actor.username
+      client.delete(repository.full_name, dig, "manifests")
     rescue ::Portus::RequestError, ::Portus::Errors::NotFoundError,
            ::Portus::RegistryClient::RegistryError => e
       Rails.logger.error "Could not delete tag on the registry: #{e.message}"
