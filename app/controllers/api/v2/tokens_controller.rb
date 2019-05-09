@@ -24,6 +24,7 @@ class Api::V2::TokensController < Api::BaseController
   def show
     authenticate_user! if request.headers["Authorization"]
     registry = Registry.by_hostname_or_external(params[:service])
+    raise RegistryNotHandled, "Unknown registry" if registry.nil?
 
     auth_scopes = []
     auth_scopes = authorize_scopes(registry) unless registry.nil?
