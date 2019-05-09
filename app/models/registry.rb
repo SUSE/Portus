@@ -46,6 +46,7 @@ class Registry < ApplicationRecord
   # Finds the registry with the given hostname. It first looks for the
   # `hostname` column, and then it fallbacks to `external_hostname`.
   def self.by_hostname_or_external(hostname)
+    return if hostname.nil? || hostname.empty?
     registry = Registry.find_by(hostname: hostname)
     if registry.nil?
       Rails.logger.debug("No hostname matching `#{hostname}', testing external_hostname")
