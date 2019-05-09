@@ -31,8 +31,8 @@ module Portus
       uri, req = get_request(path, method)
 
       # So we deal with compatibility issues in distribution 2.3 and later.
-      # See: https://github.com/docker/distribution/blob/master/docs/compatibility.md#content-addressable-storage-cas
-      req["Accept"] = "application/vnd.docker.distribution.manifest.v2+json"
+      # See: https://docs.docker.com/registry/compatibility/#content-addressable-storage-cas
+      req["Accept"] = "application/vnd.docker.distribution.manifest.v2+json" if path.match(/\/manifests\/[^\/]+$/)
 
       # This only happens if the auth token has already been set by a previous
       # call.
