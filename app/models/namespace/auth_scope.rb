@@ -20,11 +20,7 @@ class Namespace::AuthScope < Portus::AuthScope
   # it returns the generic ["all"]. Otherwise it calls this same method from
   # the superclass.
   def scopes
-    if @actions[0] == "*"
-      ["all"]
-    else
-      super
-    end
+    ["push", "pull", "delete"]
   end
 
   protected
