@@ -94,7 +94,7 @@ class Api::V2::TokensController < Api::BaseController
   # From the given scope string, try to fetch a scope handler class for it.
   # Scope handlers are defined in "app/models/*/auth_scope.rb" files.
   def scope_handler(registry, scope_string)
-    str = scope_string.split(":", 3)
+    str = scope_string.split(":")
     raise ScopeNotHandled, "Wrong format for scope string" if str.length != 3
 
     case str[0]
