@@ -4,33 +4,22 @@
   <person userid="flavio_castelli" role="maintainer"/>
   <person userid="jordimassaguerpla" role="maintainer"/>
   <person userid="mssola" role="maintainer"/>
-  <build>
-    <disable repository="images"/>
-  </build>
-  <publish>
-    <disable repository="images"/>
-  </publish>
-  <debuginfo>
-    <enable repository="openSUSE_Leap_42.3"/>
-  </debuginfo>
-  <useforbuild>
-    <disable arch="i586" repository="images"/>
-    <disable repository="images"/>
-  </useforbuild>
-  <repository name="openSUSE_Leap_42.3">
-    <path project="openSUSE:Leap:42.3" repository="standard"/>
-    <path project="devel:languages:go" repository="openSUSE_Leap_42.3"/>
-    <path project="devel:languages:ruby" repository="openSUSE_Leap_42.3"/>
+  <repository name="openSUSE_Leap_15.1">
+    <path project="openSUSE:Leap:15.1" repository="standard"/>
+    <path project="devel:languages:go" repository="openSUSE_Leap_15.1"/>
+    <path project="devel:languages:ruby" repository="openSUSE_Leap_15.1"/>
+    <path project="devel:languages:nodejs" repository="openSUSE_Leap_15.1"/>
     <arch>x86_64</arch>
   </repository>
-  <repository name="images">
+  <repository name="openSUSE_Leap_15.0">
+    <path project="openSUSE:Leap:15.0" repository="standard"/>
+    <path project="devel:languages:go" repository="openSUSE_Leap_15.0"/>
+    <path project="devel:languages:ruby" repository="openSUSE_Leap_15.0"/>
+    <path project="devel:languages:nodejs" repository="openSUSE_Leap_15.0"/>
     <arch>x86_64</arch>
   </repository>
-  <repository name="SLE_12">
-    <path project="SUSE:SLE-12:Update" repository="standard"/>
-    <path project="SUSE:SLE-12:GA" repository="standard"/>
-    <path project="devel:languages:go" repository="SLE_12"/>
-    <path project="devel:languages:ruby" repository="SLE_12"/>
+  <repository name="CaaSP_SLE_12_SP3">
+    <path project="devel:CaaSP:Head:ControllerNode" repository="SLE_12_SP3"/>
     <arch>x86_64</arch>
   </repository>
 </project>

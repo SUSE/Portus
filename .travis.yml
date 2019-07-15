@@ -2,7 +2,7 @@ language: ruby
 sudo: required
 dist: trusty
 rvm:
-  - 2.6.1
+  - 2.6.2
 cache: bundler
 
 install:
@@ -25,10 +25,13 @@ env:
     # more info at: http://docs.travis-ci.com/user/environment-variables/#Secure-Variables
     - OBS_REPO=Virtualization:containers:Portus
     - OBS_BRANCH=master
-    - secure: "SgH8Wvm6n71GTZqTk2Ww/vLg3KK1QhgBMRSs+85TFemJvUDEWLKtANGI2szlqJOfOEWqHZ4rdzgMamtYfGmOZvjUBebaIXlYMcPyKSmcQZX/80R1/v7KFyhP2vqrb+ok/rK6lLXX06jDhohUS04vnx4i1EtoxH62dKImdlZsjzI="
+    - secure: "AmbAcW+pgKDcwdYILHqKYOsFldp8d9IqvJu9hofIskwaiepAPKD0ezrNLQ9ZxRy3L7JgZTV+15BuSJRHTffN0z5xuoR113Vgh441LHYWE7qbKx6s+Zxtz6MKjYNVILcY77B+k9v52pxcf7rtQpBkV1VJaRZlAApGxXDl4rgHH8s="
 
     # DB options for both adapters and Travis.
     - PORTUS_DB_USERNAME=travis
+
+    # Make codeclimeate happy
+    - CC_TEST_REPORTER_ID=portusunittest
 
   matrix:
     - PORTUS_CI=integration PROFILES=clair
