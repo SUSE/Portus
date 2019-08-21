@@ -133,4 +133,24 @@ describe Auth::RegistrationsController do
       expect(response.status).to be 200
     end
   end
+
+  # Make sure that https://nvd.nist.gov/vuln/detail/CVE-2015-9284 is mitigated
+  describe "CVE-2015-9284", type: :request, focus: true do
+    describe "POST /users/auth/:provider without CSRF token" do
+      before do
+        @allow_forgery_protection = ActionController::Base.allow_forgery_protection
+        ActionController::Base.allow_forgery_protection = true
+      end
+
+      it do
+        expect { post "/users/auth/google_oauth2" }.to(
+          raise_error(ActionController::InvalidAuthenticityToken)
+        )
+      end
+
+      after do
+        ActionController::Base.allow_forgery_protection = @allow_forgery_protection
+      end
+    end
+  end
 end

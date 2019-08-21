@@ -93,6 +93,7 @@ describe "Admin - Users panel", type: :system, js: true do
     it "allows the admin to remove other users from the show page" do
       visit edit_admin_user_path(user.id)
 
+      Capybara.page.driver.browser.manage.window.resize_to(1024, 768)
       toggle_user_deletion_modal
       click_button "I understand, delete user"
 

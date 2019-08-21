@@ -4,36 +4,36 @@
 .row.social-btns
   - if APP_CONFIG.enabled? "oauth.google_oauth2"
     .col-xs-12.col-sm-6
-      = link_to user_google_oauth2_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
+      = link_to user_google_oauth2_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg', method: :post do
         i.fa.fa-google
         '&nbsp;Google
 
   - if APP_CONFIG.enabled? "oauth.open_id"
     .col-xs-12.col-sm-6
-      = link_to user_open_id_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
+      = link_to user_open_id_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg', method: :post do
         i.fa.fa-openid
         '&nbsp;Open Id
 
   - if APP_CONFIG.enabled? "oauth.openid_connect"
     .col-xs-12.col-sm-6
-      = link_to user_openid_connect_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
+      = link_to user_openid_connect_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg', method: :post do
         i.fa.fa-openid
         '&nbsp;Open Id Connect
 
   - if APP_CONFIG.enabled? "oauth.github"
     .col-xs-12.col-sm-6
-      = link_to user_github_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
+      = link_to user_github_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg', method: :post do
         i.fa.fa-github
         '&nbsp;Github
 
   - if APP_CONFIG.enabled? "oauth.gitlab"
     .col-xs-12.col-sm-6
-      = link_to user_gitlab_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
+      = link_to user_gitlab_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg', method: :post do
         i.fa.fa-gitlab
         '&nbsp;Gitlab
 
   - if APP_CONFIG.enabled? "oauth.bitbucket"
     .col-xs-12.col-sm-6
-      = link_to user_bitbucket_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg' do
+      = link_to user_bitbucket_omniauth_authorize_path, class: 'btn btn-primary btn-block btn-lg', method: :post do
         i.fa.fa-bitbucket
         '&nbsp;Bitbucket

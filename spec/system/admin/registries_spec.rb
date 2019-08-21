@@ -79,6 +79,7 @@ describe "Admin - Registries panel" do
 
       # Use the force, Luke.
 
+      Capybara.page.driver.browser.manage.window.resize_to(1024, 768)
       check "force"
       expect(page).to have_button("Save")
 
@@ -94,6 +95,7 @@ describe "Admin - Registries panel" do
 
       expect(page).not_to have_css("#advanced.collapse.in")
 
+      Capybara.page.driver.browser.manage.window.resize_to(1024, 768)
       click_button "Show Advanced"
 
       expect(page).to have_content("External Registry Name")
@@ -103,6 +105,7 @@ describe "Admin - Registries panel" do
     it "hides advanced options when clicking on Hide Advanced", js: true do
       visit new_admin_registry_path
 
+      Capybara.page.driver.browser.manage.window.resize_to(1024, 768)
       click_button "Show Advanced"
 
       expect(page).to have_content("External Registry Name")

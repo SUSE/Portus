@@ -108,6 +108,7 @@ describe "Update password feature" do
     create(:admin)
     visit edit_user_registration_path
 
+    Capybara.page.driver.browser.manage.window.resize_to(1024, 768)
     click_button "Disable"
     expect(page).to have_current_path(root_path)
     expect(page).to have_content("Login")

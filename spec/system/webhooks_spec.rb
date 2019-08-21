@@ -142,6 +142,7 @@ describe "Webhooks support", type: :system, js: true do
         expect(page).to have_content(webhook_header.name)
         expect(page).to have_content(webhook_header.value)
 
+        Capybara.page.driver.browser.manage.window.resize_to(1024, 768)
         click_confirm_popover(".webhook_header_#{webhook_header.id} .delete-webhook-header-btn")
 
         expect(page).to have_css("#float-alert")
