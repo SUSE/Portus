@@ -1,0 +1,121 @@
+version: "3.7"
+
+services:
+  portus:
+    image: opensuse/portus:head
+    environment:
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_DATABASE=portus_production
+      - PORTUS_DB_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
+      - PORTUS_CHECK_SSL_USAGE_ENABLED='false'
+      - RAILS_SERVE_STATIC_FILES='true'
+      - PORTUS_DELETE_ENABLED=true
+    networks:
+      - portus-net
+      - traefik-net
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-net"
+        - "traefik.general.port=3000"
+        - "traefik.general.frontend.rule=Host:${MACHINE_FQDN}"
+        - "traefik.token.enable=true"
+        - "traefik.token.port=3000"
+        - "traefik.token.frontend.rule=Host:${MACHINE_FQDN};PathPrefix:/v2/token"
+    configs:
+      - source: portus_crt
+        target: /certificates/portus.crt
+    secrets:
+      - source: portus_key
+        target: /certificates/portus.key
+
+  db:
+    image: library/mariadb:10.0.23
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;' --innodb-flush-log-at-trx-commit=0
+    environment:
+      - MYSQL_DATABASE=portus_production
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+    networks:
+      - portus-net
+    volumes:
+      - portus_mariadb:/var/lib/mysql
+
+  background:
+    image: opensuse/portus:head
+    environment:
+      - CCONFIG_PREFIX=PORTUS
+      - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
+      - PORTUS_DB_HOST=db
+      - PORTUS_DB_DATABASE=portus_production
+      - PORTUS_DB_PASSWORD=${DATABASE_PASSWORD}
+      - PORTUS_DB_POOL=5
+      - PORTUS_SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - PORTUS_KEY_PATH=/certificates/portus.key
+      - PORTUS_PASSWORD=${PORTUS_PASSWORD}
+      - PORTUS_BACKGROUND=true
+      - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
+    networks:
+      - portus-net
+    configs:
+      - source: portus_crt
+        target: /certificates/portus.crt
+    secrets:
+      - source: portus_key
+        target: /certificates/portus.key
+
+  registry:
+    image: library/registry:2.6
+    environment:
+      REGISTRY_HTTP_SECRET: ${REGISTRY_SECRET}
+      REGISTRY_AUTH_TOKEN_REALM: http://${MACHINE_FQDN}/v2/token
+      REGISTRY_AUTH_TOKEN_SERVICE: ${MACHINE_FQDN}:80
+      REGISTRY_AUTH_TOKEN_ISSUER: ${MACHINE_FQDN}
+      REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: /secrets/portus.crt
+      REGISTRY_STORAGE_DELETE_ENABLED: 'true'
+      REGISTRY_NOTIFICATIONS_ENDPOINTS: >
+        - name: portus
+          url: http://portus:3000/v2/webhooks/events
+          timeout: 2000ms
+          threshold: 5
+          backoff: 1s
+    networks:
+      - portus-net
+      - traefik-net
+    volumes:
+      - portus_registry:/var/lib/registry
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.port=5000"
+        - "traefik.docker.network=traefik-net"
+        - "traefik.frontend.rule=Host:${MACHINE_FQDN};PathPrefix:/v2/"
+    configs:
+      - source: portus_crt
+        target: /secrets/portus.crt
+      - source: portus_registry
+        target: /etc/docker/registry/config.yml
+
+networks:
+    portus-net:
+    traefik-net:
+        external:
+            name: traefik-net
+
+configs:
+    portus_crt:
+        file: ./secrets/portus.crt
+    portus_registry:
+        file: ./registry/config.yml
+
+secrets:
+    portus_key:
+        file: ./secrets/portus.key
+
+volumes:
+    portus_mariadb:
+    portus_registry:
