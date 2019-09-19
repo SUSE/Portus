@@ -12,7 +12,7 @@
     <div class="form-group" :class="{ 'has-error': $v.user.email.$error }">
       <label class="control-label col-md-2" for="user_email">Email</label>
       <div class="col-md-7">
-        <input type="email" id="user_email" name="user[email]" class="form-control" placeholder="Enter users's password" @input="$v.user.email.$touch()" v-model.trim="user.email" required />
+        <input type="email" id="user_email" name="user[email]" class="form-control" placeholder="Enter users's email" @input="$v.user.email.$touch()" v-model.trim="user.email" required />
         <span class="help-block">
           <span v-if="!$v.user.email.required">Email can't be blank</span>
           <span v-if="!$v.user.email.email">Email is invalid</span>
