@@ -1,0 +1,170 @@
+# Anchore Service Configuration File
+#
+
+# General system-wide configuration options, these should not need to
+# be altered for basic operation
+#
+# service_dir: '/config'
+# tmp_dir: '/tmp'
+# log_level: 'DEBUG'
+log_level: 'INFO'
+cleanup_images: True
+# allow_awsecr_iam_auto: False
+# docker_conn: 'unix://var/run/docker.sock'
+# docker_conn_timeout: 600
+host_id: '${ANCHORE_HOST_ID}'
+internal_ssl_verify: False
+auto_restart_services: True
+#catalog_endpoint: 'http://${ANCHORE_ENDPOINT_HOSTNAME}:8082/v1'
+#
+
+# Uncomment if you would like to enable prometheus metrics routes in
+# anchore-engine (enables metric gathering and /metrics route for all
+# services)
+#
+#metrics:
+#  enabled: True
+#
+
+# Uncomment if you have a local endpoint that can accept
+# notifications from the anchore-engine, as configured below
+#
+#webhooks:
+#  webhook_user: 'user'
+#  webhook_pass: 'pass'
+#  ssl_verify: False
+#  general:
+#    url: 'http://localhost:9090/general/<notification_type>/<userId>'
+#  policy_eval:
+#    url: 'http://localhost:9090/policy_eval/<userId>'
+#    webhook_user: 'mehuser'
+#    webhook_pass: 'mehpass'
+#  event_log:
+#    # Uncomment the event_log section in addition to configuring this webhook to receive event log notifications
+#    url: 'http://localhost:9090/event_log/<userId>'
+
+# A feeds section is available for override, but shouldn't be
+# needed. By default, the 'admin' credentials are used if present,
+# otherwise anonymous access for feed sync is used
+#
+#feeds:
+#  # If set to False, instruct anchore-engine to skip (all) feed sync operations
+#  sync_enabled: True
+#  selective_sync:
+#    # If enabled only sync specific feeds instead of all.
+#    enabled: True
+#    feeds:
+#      vulnerabilities: True
+#      # Warning: enabling the packages and nvd sync causes the service to require much
+#      #   more memory to do process the significant data volume. We recommend at least 4GB available for the container
+#      packages: False
+#      nvd: False
+#  anonymous_user_username: anon@ancho.re
+#  anonymous_user_password: pbiU2RYZ2XrmYQ
+#  url: 'https://ancho.re/v1/service/feeds'
+#  client_url: 'https://ancho.re/v1/account/users'
+#  token_url: 'https://ancho.re/oauth/token'
+#  connection_timeout_seconds: 3
+#  read_timeout_seconds: 60
+#
+
+credentials:
+  users:
+     admin:
+       password: 'foobar'
+       email: 'admin@myemail.com'
+       external_service_auths:
+       #  anchoreio:
+       #    anchorecli:
+       #      auth: 'myanchoreiouser:myanchoreiopass'
+       #auto_policy_sync: True
+
+  database:
+    db_connect: 'postgresql+pg8000://postgres:portus@postgres:5432/postgres'
+    db_connect_args:
+      timeout: 120
+      ssl: False
+    db_pool_size: 30
+    db_pool_max_overflow: 100
+services:
+  apiext:
+    enabled: True
+    require_auth: True
+    endpoint_hostname: '${ANCHORE_ENDPOINT_HOSTNAME}'
+    listen: '0.0.0.0'
+    port: 8228
+    authorization_handler: native
+  kubernetes_webhook:
+    enabled: True
+    require_auth: False
+    endpoint_hostname: '${ANCHORE_ENDPOINT_HOSTNAME}'
+    listen: '0.0.0.0'
+    port: 8338
+  catalog:
+    enabled: True
+    require_auth: True
+    endpoint_hostname: '${ANCHORE_ENDPOINT_HOSTNAME}'
+    listen: '0.0.0.0'
+    port: 8082
+# NOTE: use the below external_* parameters to define the port/tls
+# setting that will allow other internal services to access this
+# service - if left unset services will use the above,
+# e.g. http://<endpoint_hostname>:<port>
+#    external_port: 8082
+#    external_tls: False
+    archive:
+      compression:
+        enabled: False
+        min_size_kbytes: 100
+      storage_driver:
+        name: db
+        config: {}
+    cycle_timer_seconds: '1'
+    cycle_timers:
+      image_watcher: 3600
+      policy_eval: 3600
+      vulnerability_scan: 14400
+      analyzer_queue: 1
+      notifications: 30
+      service_watcher: 15
+      policy_bundle_sync: 300
+      repo_watcher: 60
+# Uncomment if you would like to receive notifications for events triggered by asynchronous operations in the system.
+# In addition, uncomment the webhooks section and supply the configuration for either a 'general' or an 'event_log' webhook
+#    event_log:
+#      notification:
+#        enabled: True
+#        # (optional) notify events that match these levels. If this section is commented, notifications for all events are sent
+#        level:
+#        - error
+  simplequeue:
+    enabled: True
+    require_auth: True
+    endpoint_hostname: '${ANCHORE_ENDPOINT_HOSTNAME}'
+    listen: '0.0.0.0'
+    port: 8083
+#    external_port: 8083
+#    external_tls: False
+  analyzer:
+    enabled: True
+    require_auth: True
+    cycle_timer_seconds: 1
+    max_threads: 1
+    analyzer_driver: 'nodocker'
+    endpoint_hostname: '${ANCHORE_ENDPOINT_HOSTNAME}'
+    listen: '0.0.0.0'
+    port: 8084
+#    external_port: 8084
+#    external_tls: False
+  policy_engine:
+    enabled: True
+    require_auth: True
+    endpoint_hostname: '${ANCHORE_ENDPOINT_HOSTNAME}'
+    listen: '0.0.0.0'
+    port: 8087
+#    external_port: 8087
+#    external_tls: False
+    cycle_timer_seconds: 1
+    cycle_timers:
+      feed_sync: 21600 # 6 hours between feed syncs
+      feed_sync_checker: 3600 # 1 hour between checks to see if there needs to be a task queued

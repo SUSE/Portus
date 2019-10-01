@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   portus:
@@ -10,6 +10,8 @@ services:
       - PORTUS_PUMA_HOST=0.0.0.0:3000
       - PORTUS_CHECK_SSL_USAGE_ENABLED=false
       - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
+      - PORTUS_SECURITY_ANCHORE_SERVER=http://anchore:8228
+      - PORTUS_REGISTRY_OPENSSL_VERIFY_MODE=none
 
       - CCONFIG_PREFIX=PORTUS
 
@@ -36,6 +38,10 @@ services:
     environment:
       - PORTUS_MACHINE_FQDN_VALUE=${MACHINE_FQDN}
       - PORTUS_SECURITY_CLAIR_SERVER=http://clair:6060
+      - PORTUS_SECURITY_ANCHORE_SERVER=http://anchore:8228
+      - PORTUS_SECURITY_ANCHORE_USERNAME=admin
+      - PORTUS_SECURITY_ANCHORE_PASSWORD=foobar
+      - PORTUS_REGISTRY_OPENSSL_VERIFY_MODE=none
 
       # Theoretically not needed, but cconfig's been buggy on this...
       - CCONFIG_PREFIX=PORTUS
@@ -47,6 +53,8 @@ services:
       - .:/srv/Portus
     links:
       - db
+    external_links:
+      - portus:portus.localhost.banzaicloud.io
 
   webpack:
     image: kkarczmarczyk/node-yarn:latest
@@ -55,8 +63,25 @@ services:
     volumes:
       - .:/srv/Portus
 
+  # The registry has to be registered with anchore
+  # http --auth admin:foobar localhost:8228/v1/registries < anchore-registry.json
+  anchore:
+    image: anchore/anchore-engine:v0.5.0
+    depends_on:
+        - postgres
+    environment:
+        - ANCHORE_HOST_ID=dockerhostid-anchore
+        - ANCHORE_ENDPOINT_HOSTNAME=anchore
+    ports:
+        - "8228:8228"
+        - "8338:8338"
+    volumes:
+        - ./examples/compose/anchore/config.yml:/config/config.yaml:z
+    external_links:
+      - portus:portus.localhost.banzaicloud.io
+
   clair:
-    image: quay.io/coreos/clair:v2.0.2
+    image: quay.io/coreos/clair:v2.0.9
     restart: unless-stopped
     depends_on:
       - postgres
@@ -67,21 +92,25 @@ services:
     volumes:
       - /tmp:/tmp
       - ./examples/compose/clair/clair.yml:/clair.yml
-    command: [-config, /clair.yml]
+    command: [-config, /clair.yml, -log-level=debug, "-insecure-tls=true"]
 
   db:
     image: library/mariadb:10.0.23
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;' --innodb-flush-log-at-trx-commit=0
+    ports:
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: portus
 
   postgres:
     image: library/postgres:10-alpine
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: portus
 
   registry:
-    image: library/registry:2.6
+    image: library/registry:2.7
     environment:
       REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /registry_data
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
@@ -94,6 +123,8 @@ services:
       REGISTRY_AUTH_TOKEN_REALM: http://${MACHINE_FQDN}:3000/v2/token
       REGISTRY_AUTH_TOKEN_SERVICE: ${MACHINE_FQDN}:${REGISTRY_PORT}
       REGISTRY_AUTH_TOKEN_ISSUER: ${MACHINE_FQDN}
+      REGISTRY_HTTP_TLS_CERTIFICATE: /etc/docker/registry/registry.crt
+      REGISTRY_HTTP_TLS_KEY: /etc/docker/registry/registry.key
 
       REGISTRY_NOTIFICATIONS_ENDPOINTS: >
         - name: portus
@@ -103,9 +134,13 @@ services:
           backoff: 1s
     volumes:
       - /registry_data
+      - ./examples/development/compose/registry.crt:/etc/docker/registry/registry.crt:ro
+      - ./examples/development/compose/registry.key:/etc/docker/registry/registry.key:ro
       - ./examples/development/compose/portus.crt:/etc/docker/registry/portus.crt:ro
     ports:
       - ${REGISTRY_PORT}:5000
       - 5001:5001
     links:
       - portus
+    external_links:
+      - portus:portus.localhost.banzaicloud.io
