@@ -42,7 +42,7 @@ module Portus
       # given digest.
       def layer_vulnerabilities(digest)
         layer = fetch_layer(digest)
-        return nil if layer.nil?
+        return [] if layer.nil?
 
         res = []
         known = []

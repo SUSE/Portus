@@ -11,12 +11,13 @@ describe ::Portus::Background::SecurityScanning do
 
   before do
     APP_CONFIG["security"] = {
-      "clair"  => {
+      "clair"   => {
         "server"  => "http://my.clair:6060",
         "timeout" => 900
       },
-      "zypper" => { "server" => "" },
-      "dummy"  => { "server" => "" }
+      "zypper"  => { "server" => "" },
+      "dummy"   => { "server" => "" },
+      "anchore" => { "server" => "" }
     }
   end
 
@@ -185,9 +186,10 @@ describe ::Portus::Background::SecurityScanning do
 
     it "returns false when not enabled" do
       APP_CONFIG["security"] = {
-        "clair"  => { "server" => "" },
-        "zypper" => { "server" => "" },
-        "dummy"  => { "server" => "" }
+        "clair"   => { "server" => "" },
+        "zypper"  => { "server" => "" },
+        "dummy"   => { "server" => "" },
+        "anchore" => { "server" => "" }
       }
       expect(subject.enabled?).to be_falsey
     end

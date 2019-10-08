@@ -12,10 +12,12 @@ describe ::Portus::Security do
           "server" => ""
         }, "dummy" => {
           "server" => ""
+        }, "anchore" => {
+          "server" => ""
         }
       }
 
-      sec = described_class.new("some", "tag")
+      sec = described_class.new("some", "tag", "digest")
       expect(sec).not_to be_available
       expect(described_class).not_to be_enabled
     end
@@ -28,10 +30,12 @@ describe ::Portus::Security do
           "server" => ""
         }, "dummy" => {
           "server" => "dummy"
+        }, "anchore" => {
+          "server" => ""
         }
       }
 
-      sec = described_class.new("some", "tag")
+      sec = described_class.new("some", "tag", "digest")
       expect(sec).to be_available
       expect(described_class).to be_enabled
     end
@@ -44,10 +48,12 @@ describe ::Portus::Security do
           "server" => "http://some.server"
         }, "dummy" => {
           "server" => "dummy"
+        }, "anchore" => {
+          "server" => "http://anchore.server"
         }
       }
 
-      sec = described_class.new("some", "tag")
+      sec = described_class.new("some", "tag", "digest")
       expect(sec).to be_available
       expect(described_class).to be_enabled
     end

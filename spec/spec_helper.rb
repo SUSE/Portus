@@ -85,6 +85,8 @@ RSpec.configure do |config|
         "server" => ""
       }, "dummy" => {
         "server" => ""
+      }, "anchore" => {
+        "server" => ""
       }
     }
 
