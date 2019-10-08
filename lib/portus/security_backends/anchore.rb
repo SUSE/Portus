@@ -7,7 +7,6 @@ module Portus
     # Anchore implements all security-related methods by using Anchore Engine
     # (https://github.com/anchore/anchore-engine)
     class Anchore < ::Portus::SecurityBackend::Base
-
       def initialize(repo, tag, digest)
         super(repo, tag, digest)
         @username = APP_CONFIG["security"]["anchore"]["username"]
@@ -15,11 +14,17 @@ module Portus
       end
 
       def vulnerabilities(params)
-
         @registry = params[:host]
 
         # Check that Anchore has done at least it's first full sync, so we don't
         # return an empty (no vuln) result, rather nil which means in-progress.
+        return unless feeds_synced
+
+        # Now we fetch the vulnerabilities discovered by Anchore on that digest.
+        fetch_vulnerabilities
+      end
+
+      def feeds_synced
         uri, req = get_request("/v1/system/feeds", "get")
         req["Accept"] = "application/json"
         req.basic_auth(@username, @password)
@@ -36,11 +41,14 @@ module Portus
         end
 
         msg = JSON.parse(res.body)
-        if msg.select {| feed| feed["name"] == "vulnerabilities" and feed["last_full_sync"] }.empty?
-          return nil
+        if msg.select { |feed| feed["name"] == "vulnerabilities" && feed["last_full_sync"] }.empty?
+          return
         end
 
-        # Now we fetch the vulnerabilities discovered by Anchore on that digest.
+        true
+      end
+
+      def fetch_vulnerabilities
         uri, req = get_request("/v1/images/#{@digest}/vuln/all", "get")
         req["Accept"] = "application/json"
         req.basic_auth(@username, @password)
@@ -55,26 +63,29 @@ module Portus
         if res.code.to_i == 200
           msg = JSON.parse(res.body)
           Rails.logger.tagged("anchore.get") { Rails.logger.debug msg }
-          vulnerabilities = msg["vulnerabilities"]
-          vulnerabilities.map do |v|
+          msg["vulnerabilities"].map do |v|
             { "Name" => v["vuln"], "Link" => v["url"], "Severity" => v["severity"] }
           end
         elsif res.code.to_i == 404
-          uri, req = get_request("/v1/images", "post")
-          req["Accept"] = "application/json"
-          req["Content-Type"] = "application/json"
-          req.basic_auth(@username, @password)
-          req.body = {tag: "#{@registry}/#{@repo}:#{@tag}"}.to_json
-          begin
-            res = get_response_token(uri, req)
-            handle_response(res, @digest, "anchore.post")
-            return
-          rescue *::Portus::Errors::NET => e
-            Rails.logger.tagged("anchore.post") { Rails.logger.debug e.message }
-            return
-          end
+          initiate_scan
         else
           handle_response(res, @digest, "anchore.get")
+        end
+      end
+
+      def initiate_scan
+        uri, req = get_request("/v1/images", "post")
+        req["Accept"] = "application/json"
+        req["Content-Type"] = "application/json"
+        req.basic_auth(@username, @password)
+        req.body = { tag: "#{@registry}/#{@repo}:#{@tag}" }.to_json
+        begin
+          res = get_response_token(uri, req)
+          handle_response(res, @digest, "anchore.post")
+          return
+        rescue *::Portus::Errors::NET => e
+          Rails.logger.tagged("anchore.post") { Rails.logger.debug e.message }
+          return
         end
       end
 

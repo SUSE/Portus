@@ -14,7 +14,8 @@ module Portus
       end
 
       def work?
-        ::Portus::Security.enabled? && Tag.exists?(scanned: [Tag.statuses[:scan_none], Tag.statuses[:scan_working]])
+        ::Portus::Security.enabled? &&
+          Tag.exists?(scanned: [Tag.statuses[:scan_none], Tag.statuses[:scan_working]])
       end
 
       def enabled?
@@ -46,7 +47,7 @@ module Portus
           # in progress and nil was returned, simply skip this iteration.
           sec = ::Portus::Security.new(tag.repository.full_name, tag.name, tag.digest)
           vulns = sec.vulnerabilities
-          next unless vulns && vulns.none? { |k,v| v.nil? }
+          next unless vulns && vulns&.none? { |_, v| v.nil? }
 
           # And now update the tag with the vulnerabilities.
           dig = update_tag(tag, vulns)
