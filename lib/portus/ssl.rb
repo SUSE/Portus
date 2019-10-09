@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nocov:
 require "openssl"
 
 module Portus
@@ -16,3 +17,4 @@ module Portus
     end
   end
 end
+# :nocov:
