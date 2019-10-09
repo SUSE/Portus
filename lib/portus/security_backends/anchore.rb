@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nocov:
 require "portus/security_backends/base"
 
 module Portus
@@ -108,3 +109,4 @@ module Portus
     end
   end
 end
+# :nocov:

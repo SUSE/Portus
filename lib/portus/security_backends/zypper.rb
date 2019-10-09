@@ -13,7 +13,7 @@ module Portus
       #   - An array containing the vulnerabilities found.
       #   - nil if zypper-docker is still working on it.
       def vulnerabilities(_params)
-        uri, req = get_request("/images?image=#{@repo}:#{@tag}")
+        uri, req = get_request("/images?image=#{@repo}:#{@tag}", "get")
         res = get_response_token(uri, req)
 
         msg = JSON.parse(res.body)
