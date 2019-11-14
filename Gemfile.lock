@@ -189,7 +189,7 @@ GEM
     io-like (0.3.0)
     jaro_winkler (1.5.2)
     json (2.1.0)
-    json-jwt (1.10.0)
+    json-jwt (1.11.0)
       activesupport (>= 4.2)
       aes_key_wrap
       bindata
