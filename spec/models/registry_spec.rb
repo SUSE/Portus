@@ -225,7 +225,7 @@ describe Registry, type: :model do
 
       # We leave everything empty to show that if the tag is provided, we pick
       # it, regardless of any other information.
-      ret  = mock.get_tag_from_target_test(nil, "", "", "", "0.1")
+      ret = mock.get_tag_from_target_test(nil, "", "", "", "0.1")
       expect(ret).to eq "0.1"
     end
   end

@@ -24,7 +24,7 @@
 #   * contributor: has RW access to the namespaces associated with the team
 #   * owner: like contributor, but can also manage the team
 class TeamUser < ApplicationRecord
-  enum role: %i[viewer contributor owner]
+  enum role: { viewer: 0, contributor: 1, owner: 2 }
 
   scope :enabled, -> { joins(:user).merge(User.enabled).distinct }
   scope :owner, -> { where(role: roles[:owner]) }

@@ -42,7 +42,7 @@ class Namespace < ApplicationRecord
   belongs_to :registry
   belongs_to :team
 
-  enum visibility: %i[visibility_private visibility_protected visibility_public]
+  enum visibility: { visibility_private: 0, visibility_protected: 1, visibility_public: 2 }
 
   validate :global_namespace_cannot_be_private
   validates :name,

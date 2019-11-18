@@ -65,7 +65,7 @@ describe ::Portus::SecurityBackend::Clair do
       res = clair.vulnerabilities
     end
 
-    expect_cve_match(["CVE-2016-6301", "CVE-2016-8859"], res[:clair], proper[:clair])
+    expect_cve_match(%w[CVE-2016-6301 CVE-2016-8859], res[:clair], proper[:clair])
   end
 
   it "returns no CVEs if 'Features' is nil" do

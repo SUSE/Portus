@@ -61,8 +61,7 @@ Metrics/MethodLength:
 # Rails
 #
 
-Rails:
-  Enabled: true
+require: rubocop-rails
 
 Rails/SkipsModelValidations:
   Enabled: false

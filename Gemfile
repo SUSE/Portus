@@ -95,6 +95,7 @@ group :development, :test do
   gem "grape-swagger-rails"
   gem "hirb"
   gem "rubocop", require: false
+  gem "rubocop-rails", require: false
   gem "wirb"
   gem "wirble"
 end

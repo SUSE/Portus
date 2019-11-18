@@ -33,7 +33,7 @@ describe "Feature: Tags", js: true do
   it "reports vulnerabilities" do
     expect(page).to have_content("Vulnerabilities for tag #{tag.name} of #{tag.namespace.name}"\
       "/#{tag.repository.name}")
-    ["Dummy", "Clair", "CVE-1234", "CVE-5678", "High"].each do |i|
+    %w[Dummy Clair CVE-1234 CVE-5678 High].each do |i|
       expect(page).to have_content(i)
     end
   end

@@ -37,8 +37,8 @@ require "uri"
 class Webhook < ApplicationRecord
   include PublicActivity::Common
 
-  enum request_method: %w[GET POST]
-  enum content_type: ["application/json", "application/x-www-form-urlencoded"]
+  enum request_method: { "GET" => 0, "POST" => 1 }
+  enum content_type: { "application/json" => 0, "application/x-www-form-urlencoded" => 1 }
 
   belongs_to :namespace
 
