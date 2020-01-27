@@ -31,13 +31,24 @@ wait_for_database() {
         sleep 5
         COUNT=$((COUNT+5))
         ;;
-      "DB_EMPTY"|"DB_MISSING")
+      "DB_MISSING")
         if [ $should_setup -eq 1 ]; then
-          # create db, apply schema and seed
-          echo "Initializing database"
-          portusctl exec rake db:setup
+          # create db
+          echo "Creating database"
+          portusctl exec rake db:create
           if [ $? -ne 0 ]; then
-            echo "Error at setup time"
+            echo "Error creating database"
+            exit 1
+          fi
+        fi
+        ;;
+      "DB_EMPTY")
+        if [ $should_setup -eq 1 ]; then
+          # apply schema and seed
+          echo "Initializing database"
+          portusctl exec rake db:schema:load db:seed
+          if [ $? -ne 0 ]; then
+            echo "Error initializing database"
             exit 1
           fi
         fi
