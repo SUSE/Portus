@@ -1,4 +1,4 @@
-FROM opensuse/ruby:2.6
+FROM opensuse/leap:15.1
 MAINTAINER SUSE Containers Team <containers@suse.com>
 
 ENV COMPOSE=1
@@ -8,14 +8,15 @@ WORKDIR /srv/Portus
 COPY Gemfile* ./
 
 # Let's explain this RUN command:
-#   1. First of all we add d:l:go repo to get the latest go version.
-#   2. Then refresh, since opensuse/ruby does zypper clean -a in the end.
+#   1. First of all we add d:l:go and d:l:ruby repo to get the latest go and ruby versions.
+#   2. Then refresh, since opensuse/leap does zypper clean -a in the end.
 #   3. Then we install dev. dependencies and the devel_basis pattern (used for
 #      building stuff like nokogiri). With that we can run bundle install.
 #   4. We then proceed to remove unneeded clutter: first we remove some packages
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
-RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go/openSUSE_Leap_15.0/devel:languages:go.repo && \
-    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/ devel:tools && \
+RUN zypper addrepo obs://devel:languages:go/openSUSE_Leap_15.1 go && \
+    zypper addrepo obs://devel:languages:ruby/openSUSE_Leap_15.1 ruby && \
+    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.1/ devel:tools && \
     zypper --gpg-auto-import-keys ref && \
     zypper -n in --no-recommends ruby2.6-devel \
            libmariadb-devel postgresql-devel \
