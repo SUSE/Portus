@@ -77,7 +77,8 @@ file_env() {
 
 # Setup environment variables from secrets.
 secrets=( PORTUS_DB_PASSWORD PORTUS_PASSWORD PORTUS_SECRET_KEY_BASE
-          PORTUS_EMAIL_SMTP_PASSWORD PORTUS_LDAP_AUTHENTICATION_PASSWORD )
+          PORTUS_EMAIL_SMTP_PASSWORD PORTUS_LDAP_AUTHENTICATION_PASSWORD
+          PORTUS_OAUTH_OPENID_CONNECT_SECRET )
 for s in "${secrets[@]}"; do
     if [[ -z "${!s}" ]]; then
         file_env "$s"
