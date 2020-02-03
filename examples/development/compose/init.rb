@@ -7,7 +7,8 @@
 
 begin
   ::Portus::DB.wait_until(:ready) do |status|
-    system("bundle exec rake db:setup") if status == :missing
+    system("bundle exec rake db:create") if status == :missing
+    system("bundle exec rake db:schema:load db:seed") if status == :empty
   end
 rescue ::Portus::DB::TimeoutReachedError => e
   Rails.logger.error "Exception: #{e.message}"
