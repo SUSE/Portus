@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 gem "active_record_union"
+gem "activerecord-session_store"
 gem "base32"
 gem "devise"
 gem "font-awesome-rails"
