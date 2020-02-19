@@ -88,9 +88,10 @@ module Portus
     # The json navigation is based on Image Manifest Version 2, Schema 2 that
     # is available at https://docs.docker.com/registry/spec/manifest-v2-2/
     def calculate_tag_size(manifest)
+      size = 0
       layers = manifest["layers"]
-      size = manifest["config"]["size"]
-      layers.each { |layer| size += layer["size"] } if layers.present?
+      size += manifest["config"]["size"] if manifest.key?("config") && manifest["config"].key?("size")
+      layers.each { |layer| size += layer["size"] } if !layers.nil? && layers.present?
 
       size
     end
