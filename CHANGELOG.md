@@ -1,5 +1,16 @@
 ## Upcoming Version
 
+## 2.4.3
+
+- f4d6914850a4 Upgraded the omniauth-google-oauth2 gem
+- 67a0d4c0f54b Fix style inconsistencies on password reset pages
+
+## 2.4.2
+
+- e960c96dc821 Fixed nil exceptions for activities
+- 627a990b9829 Fixed all? and delete? namespace policies
+- 56385ecf8bc6 Fixed deletion for registry 2.7
+
 ## 2.4.1
 
 This release consists mostly of bug fixes and upgrades from vulnerable
