@@ -48,7 +48,7 @@
     "bootstrap-sass": "^3.3.6",
     "core-js": "^2.5.7",
     "dayjs": "^1.7.4",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "keycode-js": "^1.0.3",
     "lodash": "^4.17.10",
     "query-string": "^5.1.1",
