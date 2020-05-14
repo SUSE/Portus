@@ -22,6 +22,8 @@ describe ::Portus::SecurityBackend::Clair do
         "server" => ""
       }, "dummy" => {
         "server" => ""
+      }, "anchore" => {
+        "server" => ""
       }
     }
   end
@@ -61,7 +63,7 @@ describe ::Portus::SecurityBackend::Clair do
     res = {}
 
     VCR.use_cassette("security/clair", record: :none) do
-      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
       res = clair.vulnerabilities
     end
 
@@ -73,7 +75,7 @@ describe ::Portus::SecurityBackend::Clair do
     res = {}
 
     VCR.use_cassette("security/clair_features_nil", record: :none) do
-      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
       res = clair.vulnerabilities
     end
 
@@ -85,7 +87,7 @@ describe ::Portus::SecurityBackend::Clair do
     res = {}
 
     VCR.use_cassette("security/clair-wrong-post", record: :none) do
-      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
       res = clair.vulnerabilities
     end
 
@@ -97,7 +99,7 @@ describe ::Portus::SecurityBackend::Clair do
     res = {}
 
     VCR.use_cassette("security/clair-wrong-get", record: :none) do
-      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
       res = clair.vulnerabilities
     end
 
@@ -111,7 +113,7 @@ describe ::Portus::SecurityBackend::Clair do
     res = {}
 
     VCR.use_cassette("security/clair-is-not-there", record: :none) do
-      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
       res = clair.vulnerabilities
     end
 
@@ -133,7 +135,7 @@ describe ::Portus::SecurityBackend::Clair do
                        "features=false&vulnerabilities=true").to_raise(Errno::ECONNREFUSED)
 
     VCR.use_cassette("security/clair-is-unknown", record: :none) do
-      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
       res = clair.vulnerabilities
     end
 
@@ -155,7 +157,7 @@ describe ::Portus::SecurityBackend::Clair do
                        "features=false&vulnerabilities=true").to_raise(Errno::ECONNREFUSED)
 
     VCR.use_cassette("security/clair-is-unknown", record: :none) do
-      clair = ::Portus::Security.new("coreos/dex", "unrelated")
+      clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
       res = clair.vulnerabilities
     end
 
@@ -166,7 +168,7 @@ describe ::Portus::SecurityBackend::Clair do
     allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest)
       .and_raise(::Portus::RequestError, exception: Net::ReadTimeout, message: "something")
 
-    clair = ::Portus::Security.new("coreos/dex", "unrelated")
+    clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
     expect(clair.vulnerabilities).to be_nil
   end
 
@@ -174,7 +176,7 @@ describe ::Portus::SecurityBackend::Clair do
     allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest)
       .and_raise(::Portus::Errors::NotFoundError, "something")
 
-    clair = ::Portus::Security.new("coreos/dex", "unrelated")
+    clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
     expect(clair.vulnerabilities).to be_nil
   end
 
@@ -182,7 +184,7 @@ describe ::Portus::SecurityBackend::Clair do
     allow_any_instance_of(::Portus::RegistryClient).to receive(:manifest)
       .and_raise(::Portus::RegistryClient::ManifestError, "something")
 
-    clair = ::Portus::Security.new("coreos/dex", "unrelated")
+    clair = ::Portus::Security.new("coreos/dex", "unrelated", "somedigest")
     expect(clair.vulnerabilities).to be_nil
   end
 end

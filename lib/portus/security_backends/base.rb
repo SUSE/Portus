@@ -9,9 +9,10 @@ module Portus
     class Base
       include ::Portus::HttpHelpers
 
-      def initialize(repo, tag)
+      def initialize(repo, tag, digest)
         @repo     = repo
         @tag      = tag
+        @digest   = digest
         @base_url = self.class.configuration["server"]
       end
 

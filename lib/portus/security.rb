@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "portus/security_backends/anchore"
 require "portus/security_backends/clair"
 require "portus/security_backends/dummy"
 require "portus/security_backends/zypper"
@@ -10,17 +11,19 @@ module Portus
   class Security
     # Supported backends.
     BACKENDS = [
+      ::Portus::SecurityBackend::Anchore,
       ::Portus::SecurityBackend::Clair,
       ::Portus::SecurityBackend::Dummy,
       ::Portus::SecurityBackend::Zypper
     ].freeze
 
-    def initialize(repo, tag)
+    def initialize(repo, tag, digest)
       @repo     = repo
       @tag      = tag
+      @digest   = digest
       @backends = []
 
-      BACKENDS.each { |b| @backends << b.new(repo, tag) if b.enabled? }
+      BACKENDS.each { |b| @backends << b.new(repo, tag, digest) if b.enabled? }
     end
 
     # Returns true if there is backends that work available, false otherwise.
@@ -49,7 +52,8 @@ module Portus
       params = {
         layers:       layers.map { |l| l["digest"] },
         token:        client.token,
-        registry_url: client.base_url
+        registry_url: client.base_url,
+        host:         client.host
       }
 
       res = {}

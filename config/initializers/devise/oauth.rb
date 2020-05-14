@@ -32,7 +32,7 @@ end
 def openid_connect_fetch_options
   {
     name:           :openid_connect,
-    scope:          %i[openid email profile address],
+    scope:          %i[openid email profile],
     response_type:  :code,
     discovery:      true,
     issuer:         APP_CONFIG["oauth"]["openid_connect"]["issuer"],

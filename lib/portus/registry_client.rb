@@ -9,6 +9,7 @@ module Portus
   class RegistryClient
     attr_accessor :token
     attr_reader   :base_url
+    attr_reader   :host
 
     include HttpHelpers
 

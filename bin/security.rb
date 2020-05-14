@@ -2,13 +2,13 @@
 
 require "portus/security"
 
-if ARGV.size != 2
-  puts "Usage: rails runner bin/security.rb <image> <tag>"
+if ARGV.size != 3
+  puts "Usage: rails runner bin/security.rb <image> <tag> <digest>"
   exit 1
 end
 
-image, tag = ARGV
-sec = ::Portus::Security.new(image, tag)
+image, tag, digest = ARGV
+sec = ::Portus::Security.new(image, tag, digest)
 vulns = sec.vulnerabilities
 
 vulns.each do |name, result|

@@ -161,6 +161,7 @@ module Portus
 
       options = {
         use_ssl:      uri.scheme == "https",
+        verify_mode:  SSL.verify_mode,
         open_timeout: open.to_i,
         read_timeout: read.to_i
       }
