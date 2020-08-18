@@ -1,12 +1,9 @@
 FROM opensuse/ruby:2.6
 MAINTAINER SUSE Containers Team <containers@suse.com>
-
 ENV COMPOSE=1
 EXPOSE 3000
-
 WORKDIR /srv/Portus
 COPY Gemfile* ./
-
 # Let's explain this RUN command:
 #   1. First of all we add d:l:go repo to get the latest go version.
 #   2. Then refresh, since opensuse/ruby does zypper clean -a in the end.
@@ -15,7 +12,9 @@ COPY Gemfile* ./
 #   4. We then proceed to remove unneeded clutter: first we remove some packages
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
 RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go/openSUSE_Leap_15.0/devel:languages:go.repo && \
-    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/ devel:tools && \
+    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/ devel:tools
+RUN sed -i 's/15.0/15.1/g' /etc/zypp/repos.d/*
+RUN zypper addrepo https://download.opensuse.org/repositories/devel:/languages:/ruby/openSUSE_Leap_15.2/devel:languages:ruby.repo && \
     zypper --gpg-auto-import-keys ref && \
     zypper -n in --no-recommends ruby2.6-devel \
            libmariadb-devel postgresql-devel \
@@ -34,5 +33,4 @@ RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go
            binutils bison cpp flex gdbm-devel gettext-tools \
            libtool m4 make makeinfo && \
     zypper clean -a
-
 ADD . .
