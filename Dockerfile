@@ -16,7 +16,7 @@ COPY Gemfile* ./
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
 RUN sed -i 's/15.0/15.1/g' /etc/zypp/repos.d/*
 RUN zypper addrepo https://download.opensuse.org/repositories/devel:/languages:/ruby/openSUSE_Leap_15.2/devel:languages:ruby.repo && \
-    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.2/devel:tools && \
+    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.2/devel:tools.repo && \
     zypper --gpg-auto-import-keys ref && \
     zypper -n in --no-recommends ruby2.5-devel \
            libmysqlclient-devel postgresql-devel \
