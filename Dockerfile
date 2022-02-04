@@ -14,8 +14,8 @@ COPY Gemfile* ./
 #      building stuff like nokogiri). With that we can run bundle install.
 #   4. We then proceed to remove unneeded clutter: first we remove some packages
 #      installed with the devel_basis pattern, and finally we zypper clean -a.
-RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go/openSUSE_Leap_15.0/devel:languages:go.repo && \
-    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/ devel:tools && \
+RUN zypper addrepo https://download.opensuse.org/repositories/devel:languages:go/openSUSE_Leap_15.1/devel:languages:go.repo && \
+    zypper addrepo https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.1/ devel:tools && \
     zypper --gpg-auto-import-keys ref && \
     zypper -n in --no-recommends ruby2.6-devel \
            libmariadb-devel postgresql-devel \
